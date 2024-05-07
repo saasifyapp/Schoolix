@@ -1,0 +1,451 @@
+/* Import Google font - Poppins */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+:root {
+    --white-color: #fff;
+    --blue-color: #4070f4;
+    --grey-color: #707070;
+    --grey-color-light: #aaa;
+}
+
+body {
+    background-color: #e7f2fd;
+    transition: all 0.5s ease;
+}
+
+body.dark {
+    background-color: #333;
+}
+
+body.dark {
+    --white-color: #333;
+    --blue-color: #fff;
+    --grey-color: #f2f2f2;
+    --grey-color-light: #aaa;
+}
+
+/* navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    left: 0;
+    background-color: var(--white-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 30px;
+    z-index: 1000;
+    box-shadow: 0 0 2px var(--grey-color-light);
+    overflow: hidden; /* Ensure contents don't overflow outside the navbar */
+}
+
+.logo_item {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--blue-color);
+}
+
+.navbar img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+}
+
+.search_bar {
+    height: 47px;
+    max-width: 430px;
+    width: 100%;
+}
+
+.search_bar input {
+    height: 100%;
+    width: 100%;
+    border-radius: 25px;
+    font-size: 18px;
+    outline: none;
+    background-color: var(--white-color);
+    color: var(--grey-color);
+    border: 1px solid var(--grey-color-light);
+    padding: 0 20px;
+}
+
+.navbar_content {
+    display: flex;
+    align-items: center;
+    column-gap: 25px;
+}
+
+.logo_item,
+.navbar img,
+.search_bar,
+.navbar_content {
+    position: relative; /* Ensure proper positioning for animation */
+    animation: slideFromTop 0.5s ease forwards; /* Apply animation to slide in */
+}
+
+#logo {
+    width: auto; /* Allow the width to adjust based on the image's original size */
+    max-height: 100px; /* Set a maximum height to prevent the logo from becoming too tall */
+    display: block; /* Ensure the image behaves as a block element */
+    margin: 0 auto; /* Center the image horizontally within its container */
+}
+
+
+@keyframes slideFromTop {
+    0% {
+        transform: translateY(-500%); /* Start off-screen above */
+    }
+    100% {
+        transform: translateY(0); /* Slide to the bottom */
+    }
+}
+
+/* sidebar */
+.sidebar {
+    background-color: var(--white-color);
+  width: 260px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  padding: 80px 20px;
+  z-index: 100;
+  overflow-y: scroll;
+  box-shadow: 0 0 1px var(--grey-color-light);
+}
+
+.menu_content, .menu_editor{
+    animation: slideIn 0.5s ease forwards; /* Apply animation to slide in */
+  }
+  
+  @keyframes slideIn {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+
+.item{
+    animation: slideIn 0.9s ease forwards; /* Apply animation to slide in */
+  }
+  
+  @keyframes slideIn {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+.sidebar.close {
+    padding: 60px 0;
+    width: 80px;
+}
+
+.sidebar::-webkit-scrollbar {
+    display: none;
+}
+
+.menu_content {
+    position: relative;
+}
+
+.menu_title {
+    margin: 15px 0;
+    padding: 0 20px;
+    font-size: 18px;
+}
+
+.sidebar.close .menu_title {
+    padding: 6px 30px;
+}
+
+.menu_title::before {
+    color: var(--grey-color);
+    white-space: nowrap;
+}
+
+.menu_dahsboard::before {
+    content: "Academics";
+    font-weight: 500;
+}
+
+.menu_editor::before {
+    content: "Services";
+    font-weight: 500;
+
+}
+
+.menu_setting::before {
+    content: "Setting";
+}
+
+.sidebar.close .menu_title::before {
+    content: "";
+    position: absolute;
+    height: 2px;
+    width: 18px;
+    border-radius: 12px;
+    background: var(--grey-color-light);
+}
+
+.menu_items {
+    padding: 0;
+    list-style: none;
+}
+
+.navlink_icon {
+    position: relative;
+    font-size: 22px;
+    min-width: 50px;
+    line-height: 40px;
+    display: inline-block;
+    text-align: center;
+    border-radius: 6px;
+}
+
+.navlink_icon::before {
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: calc(100% + 100px);
+    left: -20px;
+}
+
+.navlink_icon:hover {
+    background: var(--blue-color);
+}
+
+.sidebar .nav_link {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 4px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--grey-color);
+    white-space: nowrap;
+}
+
+.sidebar.close .navlink {
+    display: none;
+}
+
+.nav_link:hover {
+    color: var(--white-color);
+    background: var(--blue-color);
+}
+
+.sidebar.close .nav_link:hover {
+    background: var(--white-color);
+}
+
+.submenu_item {
+    cursor: pointer;
+}
+
+.submenu {
+    display: none;
+}
+
+.submenu_item .arrow-left {
+    position: absolute;
+    right: 10px;
+    display: inline-block;
+    margin-right: auto;
+}
+
+.sidebar.close .submenu {
+    display: none;
+}
+
+.show_submenu~.submenu {
+    display: block;
+}
+
+.show_submenu .arrow-left {
+    transform: rotate(90deg);
+}
+
+.submenu .sublink {
+    padding: 5px 15px 5px 62px;
+}
+
+.bottom_content {
+    position: fixed;
+    bottom: 60px;
+    left: 0;
+    width: 260px;
+    cursor: pointer;
+    transition: all 0.5s ease;
+}
+
+.bottom {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    left: 0;
+    justify-content: space-around;
+    padding: 18px 0;
+    text-align: center;
+    width: 100%;
+    color: var(--grey-color);
+    border-top: 1px solid var(--grey-color-light);
+    background-color: var(--white-color);
+}
+
+.bottom i {
+    font-size: 20px;
+}
+
+.bottom span {
+    font-size: 18px;
+}
+
+.sidebar.close .bottom_content {
+    width: 50px;
+    left: 15px;
+}
+
+.sidebar.close .bottom span {
+    display: none;
+}
+
+.sidebar.hoverable .collapse_sidebar {
+    display: none;
+}
+
+#sidebarOpen {
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    #sidebarOpen {
+        font-size: 25px;
+        display: block;
+        margin-right: 10px;
+        cursor: pointer;
+        color: var(--grey-color);
+    }
+
+    .sidebar.close {
+        left: -100%;
+    }
+
+    .search_bar {
+        display: none;
+    }
+
+    .sidebar.close .bottom_content {
+        left: -100%;
+    }
+}
+
+
+.custom_icon {
+    width: 25px;
+    height: 25px;
+}
+
+
+.main_container {
+  background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+  position: absolute;
+  top: 70px;
+  /* Adjusted to match the height of the navbar */
+  left: 260px;
+  /* Adjusted to match the width of the sidebar */
+  width: calc(100% - 260px);
+  /* Adjusted to subtract the width of the sidebar */
+  height: calc(100% - 70px);
+  /* Adjusted to match the remaining height after the navbar */
+  /* Adjusted to match the height of the navbar */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  /* 4 equal columns */
+  overflow-y: auto;
+  /* Add overflow-y:auto if you want scrollbars */
+}
+
+  
+@keyframes slid {
+    0% {
+        opacity: 0;
+        transform: translateY(-100px); /* Start off-screen above */
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0); /* Slide to the final position */
+    }
+}
+
+.sub_container {
+    background-color: rgba(255, 255, 255, 0.8);
+    height: 80px;
+    margin: 25px;
+    border-radius: 10px; /* Adjust the border radius as needed */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Adjust the shadow as needed */
+    display: flex;
+    flex-direction: row;
+    animation: slid 1.2s ease forwards; /* Apply animation */
+}
+
+
+
+  .count_details {
+    flex-direction: column;
+    display: flex; /* Use flexbox to align items */
+    align-items: center; /* Align items vertically */
+    flex: 0 0 70%; /* Take 75% width and don't allow shrinking or growing */
+    background-color: white;
+    border-radius: 10px; /* Adjust the border radius as needed */
+    padding-right: 15px; /* Add padding from the right */
+
+  }
+
+  .count_img {
+    flex: 1; /* Take remaining width */
+    background-color: white; /* Red background color */
+    border-radius: 10px; /* Adjust the border radius as needed */
+    margin-top: 2px;
+    margin-right: 3px;
+
+
+  }
+  
+  .title {
+    color: var(--grey-color);
+    flex: 1; /* Expand to fill remaining space */
+    text-align: center; /* Align title at center horizontally */
+    font-weight: 600;
+    margin-top: 8px; /* Remove margin-top */
+    font-size: 12px;
+
+  }
+  
+  .count {
+    flex: 1; /* Expand to fill remaining space */
+    text-align: center; /* Align count at center horizontally */
+    font-weight: 800;
+    font-size: 40px;
+    color: #566573;
+    margin-top: -5px; /* Remove margin-top */
+    margin-bottom: 8px; /* Add margin-bottom to move count slightly up */
+  }
+
+  

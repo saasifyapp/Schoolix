@@ -1,0 +1,279 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+* {
+
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background-image: linear-gradient(-225deg, #E3FDF5 10%, #FFE6FA 100%);  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    max-width: 90%; /* Adjust the maximum width */
+    width: 900px; /* Set a fixed width */
+    height: 600px; /* Set a fixed height */
+    background-color: white;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0;
+    border-radius: 25px;
+    overflow: hidden;
+    opacity: 0;
+    animation: fade-in 1s ease forwards;
+}
+
+.container1 {
+    flex: 0 0 70%;
+    height: 100%;
+    background-color: white;
+    overflow: hidden;
+    position: relative;
+}
+
+.container1 img {
+    width: 90%;
+    height: 90%;
+    object-fit: cover;
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    transition: transform 0.3s ease;
+}
+
+.container1:hover img {
+    transform: translate(-5%, -5%);
+}
+
+.container1 img.flipped {
+    opacity: 0;
+    /* Hide the image */
+}
+
+.container2 {
+    flex: 1;
+    height: 100%;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    box-sizing: border-box;
+    color: white;
+    flex-direction: column;
+    opacity: 0;
+    animation: slide-in 1s ease forwards;
+}
+
+.login-form {
+    width: 100%;
+    max-width: 400px; /* Adjust the maximum width */
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    color: white;
+    flex-direction: column;
+    opacity: 0;
+    animation: slide-in 1s ease forwards;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.login-form img {
+    width: 100px;
+    height: auto;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: slide-in 0.4s ease forwards;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 15px 0px;
+    margin-bottom: 15px;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom: 2px solid #aadfff;
+    position: relative;
+    background-color: transparent;
+    color: #333;
+    outline: none;
+    transition: border-color 0.5s ease;
+    text-align: center;
+    opacity: 0;
+    animation: slide-in 0.6s ease forwards;
+    animation-delay: 0.5s;
+}
+
+.login-form input:focus {
+    border-bottom: 2px solid #5896fb;
+}
+
+.login-form input::before,
+.login-form input::after {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    background: #5896fb;
+    bottom: -1px;
+    transition: width 0.5s ease;
+}
+
+.login-form input::before {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.login-form input::after {
+    right: 50%;
+    transform: translateX(50%);
+}
+
+.login-form input:focus::before,
+.login-form input:focus::after {
+    width: 50%;
+}
+
+.login-form button {
+    width: 70%;
+    padding: 15px;
+    margin-top: 25px;
+    border-radius: 25px;
+    border: none;
+    background-color: #5896fb;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.5s ease;
+    opacity: 0;
+    animation: slide-in 0.4s ease forwards;
+    animation-delay: 1s;
+}
+
+.login-form button:hover {
+    background-color: #ea7a00;
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slide-up {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.slide-up {
+    animation: slide-up 0.5s ease forwards;
+}
+
+/* Responsive Styles */
+@media only screen and (max-width: 768px) {
+    .container {
+        width: 90%;
+        height: auto;
+        flex-direction: column;
+    }
+
+    .container1 {
+        flex: 1;
+        height: 50%;
+    }
+
+    .container2 {
+        flex: 1;
+        height: 50%;
+    }
+
+    .login-form {
+        padding: 20px;
+        max-width: 100%;
+    }
+}
+
+.toast {
+    width: 15rem;
+    position: fixed;
+    top: 20px;
+    right: -200px;
+    /* Initially off-screen to the right */
+    background-color: #4CAF50;
+    /* Green background */
+    color: white;
+    padding: 16px;
+    border-radius: 8px;
+    z-index: 9999;
+    display: none;
+    /* Changed from 'none' to 'block' */
+    animation: slideInRight 0.5s forwards;
+    /* Slide in animation */
+}
+
+@keyframes slideInRight {
+    from {
+        right: -200px;
+        /* Start off-screen to the right */
+    }
+
+    to {
+        right: 20px;
+        /* End at the desired position */
+    }
+}
+
+.toast.error {
+    background-color: #f44336;
+    color: white;
+    /* Red background for error */
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    /* background-color: #f2f2f2; */
+    padding: 0rem 1rem 0rem 0rem;
+    text-align: right;
+    width: 100%;
+    font-weight: bold;
+    font-size: 0.8rem;
+    /* border-top: 1px solid #ddd; */
+}
+
+footer p {
+    margin: 0 0;
+}

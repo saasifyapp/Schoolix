@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/Pre_Admission_Console_Css/register_teacher.css">
+    <link rel="stylesheet" href="/css/Pre_Admission_Console_Css/All.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <title>Register Teacher</title>
+
+
+
+</head>
+
+<body>
+    <!-- <div class="navbar">
+        <nav>
+            <a href="/main_dashboard/dashboard" class="nav-link">Dashboard</a>
+            <a onclick="showCustomAlert()" class="nav-link">Age Calculator</a>
+            <a href="register-student" class="nav-link">Register Student</a>
+            <a href="search-student" class="nav-link">Search Student</a>
+            <a href="search-teacher" class="nav-link">Search Teacher</a>
+            <a href="admitted_student" class="nav-link">Admitted Students</a>
+            <a href="admitted_teacher" class="nav-link">Admitted Teachers</a>
+        </nav>
+    </div> -->
+
+    <div id="toast" class="toast"></div>
+
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loader"></div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-md-3 col-xl-2 px-sm-2 px-0 menu overflow-x-hidden fixed-top"style="height: 100vh;">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-1 pt-1 text-black" style="height: 100%;">
+                    <a href="/pre_adm_dashboard"
+                        class="d-flex align-items-center pb-1 py-0 mb-md-1 me-md-auto text-black text-decoration-none">
+                        <span class="fs-4 d-none d-sm-inline  rounded-pill fw-500 text-decoration-none text-black p-2">
+                            <i class="fs-6"> <i class="bi"><img class="icon" src="/images/preadmin.gif" alt=""></i>
+                            </i>PreAdmission</span>
+                    </a>
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
+                        id="menu">
+                        <li class="nav-item nav-link1">
+                            <a onclick="showCustomAlert()" class="nav-link align-middle px-0">
+                                <i class="bi fs-6 text-black"><img class="icon" src="/images/calculator.gif"></i>
+                                <span class="ms-1 d-none d-sm-inline  text-black">Age Calculator</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item nav-link1 ">
+                            <a href="register-student" class="nav-link px-0 align-middle nav-link1 ">
+                                <i class="fs-4  text-black"><img class="icon" src="/images/student.gif"></i> <span
+                                    class="ms-1 d-none d-sm-inline  text-black">Register Student</span> </a>
+                        </li>
+                        <li class="nav-item nav-link1 active">
+                            <a href="register-teacher" class="nav-link px-0 align-middle nav-link1">
+                                <i class=" fs-4 text-black"><img class="icon" src="/images/professor.gif"></i><span
+                                    class="ms-1 d-none d-sm-inline  text-black">Register Teacher</span> </a>
+                        </li>
+                        <li class="nav-item nav-link1">
+                            <a href="search-student" class="nav-link px-0 align-middle nav-link1">
+                                <i class=" fs-4 text-black "><img class="icon" src="/images/searchstudent.gif"></i>
+                                <span class="ms-1 d-none d-sm-inline  text-black">Search Student</span> </a>
+                        </li>
+                        <li class="nav-item nav-link1">
+                            <a href="search-teacher" class="nav-link px-0 align-middle nav-link1">
+                                <i class=" fs-4 text-black"><img class="icon" src="/images/searchteacher.gif"></i> <span
+                                    class="ms-1 d-none d-sm-inline  text-black">Search Teacher</span> </a>
+                        </li>
+                        <li class="nav-item nav-link1">
+                            <a href="admitted_student" class="nav-link px-0 align-middle nav-link1">
+                                <i class=" fs-4 text-black"><img class="icon" src="/images/admitstudent.gif"></i> <span
+                                    class="ms-1 d-none d-sm-inline  text-black">Admitted Students</span> </a>
+                        </li>
+                        <li class="nav-item nav-link1">
+                            <a href="admitted_teacher" class="nav-link px-0 align-middle nav-link1">
+                                <i class="fs-4 bi text-black"><img class="icon" src="/images/admitteacher.gif"></i>
+                                <span class="ms-1 d-none d-sm-inline  text-black">Admitted Teachers</span> </a>
+                        </li>
+                      
+                    </ul>
+                    <hr>
+                    
+                    <div class="pb-1 d-flex justify-content-between align-items-center w-100 mb-4">
+                        <a onclick="logout()" class="d-flex flex-column align-items-center text-black nav-link1">
+                            <i class=" fs-1 bi nav-item"><img class="" style="transform: rotate(180deg) ;background-color: transparent; 
+                            width: 30px; height: 30px;margin-top: 3px; "src="/images/logout.png"></i>
+                            <span class="ms-1 d-none d-sm-inline text-black mt-1">Signout</span>
+                        </a>
+                        <a href="/dashboard" class="d-flex flex-column align-items-center text-black nav-link1">
+                            <i class=" fs-1 bi nav-item "><img class=""   style="background-color: transparent; width: 30px; height: 29px;" src="/images/homeicon.png"></i>
+                            <span class="ms-1 d-none d-sm-inline text-black ">Home</span>
+                        </a>
+                    </div>
+                            
+                    
+                </div>
+             
+            </div>
+            <div class="col-md-9 col-xl-10 offset-md-3 offset-xl-2 px-0 ">
+                <!-- Content area... -->
+
+                <div id="overlay" class="overlay"></div> <!-- Add overlay element -->
+
+                <div id="customAlert" class="custom-alert">
+                    <div id="toast" class="toast"></div>
+                    <div class="left-container">
+                        <style>
+                        </style>
+                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                            type="module"></script>
+                        <dotlottie-player class="dotlottie-container"
+                            src="https://lottie.host/9edc4e5b-7742-4c6a-a71f-a28f5b8945e7/2BPrQ2yDeu.json"
+                            background="transparent" speed="1" style="width: 100%; height: 100%;" loop
+                            autoplay></dotlottie-player>
+                    </div>
+                    <div class="right-container">
+                        <h2>Age Calculator</h2>
+
+                        <input type="date" id="birthdate" class="date-input">
+                        <button type="button" id="calculateButton" class="calculate-button">Calculate Age</button>
+                        <div id="output"></div> <!-- Placeholder for the output -->
+
+                        <div class="button-container-age">
+                            <button class="clear_btn age-btn" id="clear_btn" onclick="clearPrompt()">
+                                <img src="/images/reset.png" alt="Clear Icon" width="25px" height="25px"
+                                    style="margin-right: 5px;">
+                                Clear
+                            </button>
+                            <button class="close_btn age-btn" id="close_btn">
+                                <img src="/images/Close.png" alt="Close Icon" width="25px" height="25px"
+                                    style="margin-right: 5px;">
+                                Close
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="main  overflow-x-hidden">
+                    <div class="details">
+
+                        <div class="container-wrapper">
+                            <div class="container" style="margin: 0;">
+                                <script
+                                    src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                                    type="module"></script>
+                                <dotlottie-player
+                                    src="https://lottie.host/43d01e1d-7be9-476c-9013-56040590cca4/laWbW19wMV.json"
+                                    background="transparent" speed="1" style="width: 100%; height: 100%;" loop
+                                    autoplay></dotlottie-player>
+                            </div>
+                        </div>
+
+                        <div class="h2-wrapper">
+                            <h2>Register Teacher</h2>
+                        </div>
+
+
+                        <form id="teacher_details">
+                            <div class="input-wrapper">
+                                <input type="text" name="teacher_name" id="name" placeholder="Teacher Name"
+                                    maxlength="30">
+                                <div class="icon-wrapper">
+                                    <img src="/images/name.png" alt="Teacher Icon">
+                                </div>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="text" name="mobile_no" id="mobile" placeholder="Mobile No" maxlength="10">
+                                <div class="icon-wrapper">
+                                    <img src="/images/mobile.png" alt="Mobile Icon">
+                                </div>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="text" name="res_address" id="address" placeholder="Address" maxlength="50">
+                                <div class="icon-wrapper">
+                                    <img src="/images/address.png" alt="Address Icon">
+                                </div>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="date" name="dob" id="dateofbirth" placeholder="Date Of Birth">
+                                <div class="icon-wrapper">
+                                    <img src="/images/birthdate.png" alt="Date Of Birth Icon">
+                                </div>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="text" name="qualification" id="qualification" placeholder="Qualification"
+                                    maxlength="30">
+                                <div class="icon-wrapper">
+                                    <img src="/images/qualification.png" alt="Qualification Icon">
+                                </div>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="text" name="experience" id="experience" placeholder="Experience"
+                                    maxlength="50">
+                                <div class="icon-wrapper">
+                                    <img src="/images/experience.png" alt="Experience Icon">
+                                </div>
+                            </div>
+                            <button class="submit" type="button" onclick="reg_teacher()">Submit</button>
+                            <button class="reset" type="button" onclick="resetForm()">Reset</button>
+                        </form>
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        function showLoadingAnimation() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        function hideLoadingAnimation() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('teacher_details').addEventListener('keydown', function (event) {
+                // Check if the Enter key on the number pad is pressed
+                if (event.key === 'Enter' && event.keyCode === 13) {
+                    // Prevent the default form submission behavior
+                    event.preventDefault();
+
+                    // Submit the form
+                    reg_teacher();
+                }
+            });
+        });
+
+        function reg_teacher() {
+            showLoadingAnimation();
+
+            const teacher_name = document.getElementById("name").value;
+            const mobile_no = document.getElementById("mobile").value;
+            const res_address = document.getElementById("address").value;
+            const dob = document.getElementById("dateofbirth").value;
+            const qualification = document.getElementById("qualification").value;
+            const experience = document.getElementById("experience").value;
+
+
+            if (teacher_name.trim().length === 0 || mobile_no.trim().length === 0 || res_address.trim().length === 0 || dob.trim().length === 0 || qualification.trim().length === 0 || experience.trim().length === 0) {
+                // alert('Please fill all details');
+                showToast('Please fill all details', true); // Show error toast
+                hideLoadingAnimation();
+
+            } else if (mobile_no.trim().length !== 10) {
+                // Second condition: check if mobile number length is not equal to 10
+                showToast('Mobile number should be 10 digits long', true); // Show error toast
+                hideLoadingAnimation();
+            }
+
+            else {
+
+                // Create an object with form data
+                const formData = {
+                    teacher_name: teacher_name,
+                    mobile_no: mobile_no,
+                    res_address: res_address,
+                    dob: dob,
+                    qualification: qualification,
+                    experience: experience
+                };
+
+                // Send form data to server
+                fetch('/submit_teacher', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // alert('Teacher Registered Successfully');
+                            showToast('Teacher Registered Successfully', false); // Show error toast
+                            // Optionally, you can perform actions after successful submission
+                            hideLoadingAnimation();
+                            // window.location.href = '/dashboard';
+                            document.getElementById("teacher_details").reset();
+
+                        } else {
+                            console.error('Error submitting form');
+                            // alert("Error Registering Teacher")
+                            showToast('Error Registering Teacher', true); // Show error toast
+                            hideLoadingAnimation();
+                            // Optionally, you can handle errors here
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Optionally, you can handle errors here
+                        hideLoadingAnimation();
+                        showToast('Error Registering Student', true); // Show success toast
+                    });
+            };
+        }
+
+        function showToast(message, isError) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+
+            // Set class based on isError flag
+            if (isError) {
+                toast.classList.add('error');
+            } else {
+                toast.classList.remove('error');
+            }
+
+            // Show the toast
+            toast.style.display = 'block';
+
+            // Hide the toast after 3 seconds
+            setTimeout(function () {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+
+        function resetForm() {
+            document.getElementById("teacher_details").reset();
+        }
+
+
+
+    </script>
+
+    <script src="/js/Pre_Admission_Console_js/handle_session.js"></script>
+    <script src="/js/Pre_Admission_Console_js/age_calculator.js"></script>
+
+</html>

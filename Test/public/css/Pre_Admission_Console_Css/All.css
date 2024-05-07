@@ -1,0 +1,517 @@
+body {
+    font-family: american typewriter, sans-serif;
+    text-align: center;
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+nav {
+    width: 75%;
+    background-color: #fff;
+    border-radius: 20px;
+    /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Black shadow */
+    padding: 10px;
+    /* Padding around links */
+    display: flex;
+    /* Align links horizontally */
+    justify-content: space-around;
+    /* Distribute space between links */
+    overflow: hidden;
+}
+
+.nav-link1 {
+    height: 4.3rem;
+    width: 15rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    /* Remove underline from links */
+    color: #333;
+    /* Dark gray text color */
+    padding: 8px 12px;
+    /* Padding inside links */
+    border-radius: 10px;
+    /* Rounded corners for links */
+    transition: all 0.08s;
+    /* Smooth transition for hover effect */
+    margin-bottom: 5px;
+}
+
+.nav-link1:last-child {
+    margin-bottom: 0;
+    /* Remove margin-bottom for the last list item */
+}
+
+.nav-link1:hover {
+    background-color: #d8faf9;
+    transform: scale(1.05);
+}
+
+.nav-link1:active {
+    transform: scale(0.99);
+}
+
+.nav-link1 a {
+    background-blend-mode: multiply;
+}
+
+/* menu bar css */
+
+.menu {
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    border-top: 30px;
+    /* Adjust as needed */
+    left: 20px;
+    /* Adjust as needed */
+    bottom: 20px;
+    /* Adjust as needed */
+    overflow-y: hidden;
+    /* to disable vertical scrollbar */
+    overflow-x: hidden;
+    /* to disable horizontal scrollbar */
+    z-index: 1000;
+    /* adjust z-index as needed */
+
+
+
+
+}
+
+.active {
+    background-color: #d8faf9;
+    /* Change color to whatever you prefer */
+}
+
+.icon {
+    width: 32px;
+    /* Set your desired width */
+    height: 32px;
+    /* Set your desired height */
+}
+
+/* Age Calculator CSS */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent black overlay */
+    z-index: 1000;
+    /* Higher z-index to overlay other elements */
+
+}
+
+.custom-alert {
+    display: none;
+    flex-direction: row;
+    /* Change to row to place left and right containers side by side */
+    position: fixed;
+    z-index: 1001;
+    /* Ensure the alert appears above the overlay */
+    padding: 0;
+    /* Remove padding to remove the gap */
+    background-color: #ffffff;
+    border: none;
+    color: #ffffff;
+    /* Text color */
+    width: 750px;
+    height: 500px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 25px;
+    /* Rounded corners */
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+    /* Shadow effect */
+}
+
+
+.left-container {
+    height: 100%;
+    width: 50%;
+    background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
+    border-radius: 25px 0 0 25px;
+    /* Rounded corners only on the left side */
+    float: left;
+}
+
+.right-container {
+    height: 100%;
+    width: 50%;
+    background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
+    float: left;
+    border-radius: 0 25px 25px 0;
+    /* Rounded corners only on the left side */
+    display: flex;
+    flex-direction: column;
+    /* Arrange items in a column */
+    justify-content: flex-start;
+    /* Align items vertically to the start */
+    align-items: center;
+    /* Align items horizontally to the center */
+    position: relative;
+    /* Set position relative */
+}
+
+.right-container h2 {
+    margin-top: 50px;
+    /* Add margin to the top of the heading */
+    margin-bottom: 30px;
+    /* Add margin to the bottom of the heading */
+    color: black;
+}
+
+.date-input {
+    padding: 8px;
+    /* Add padding to the input */
+    border: 2px solid #ccc;
+    /* Add border */
+    border-radius: 10px;
+    /* Add border radius */
+    font-size: 16px;
+    /* Increase font size */
+    outline: none;
+    /* Remove outline */
+    transition: border-color 0.3s ease;
+    /* Add transition effect */
+    margin-bottom: 20px;
+}
+
+.date-input:focus {
+    border-color: #007bff;
+    /* Change border color on focus */
+}
+
+.calculate-button {
+    margin-top: 10px;
+    /* Add margin to the top of the button */
+    margin-bottom: 10px;
+    padding: 10px 10px;
+    /* Add padding to the button */
+    background-color: #3498DB;
+    /* Button background color */
+    color: #ffffff;
+    /* Text color */
+    border: none;
+    /* Remove button border */
+    border-radius: 15px;
+    /* Add border radius */
+    font-size: 16px;
+    /* Button font size */
+    cursor: pointer;
+    /* Add cursor pointer on hover */
+    transition: transform 0.3s, background-color 0.3s ease;
+    /* Add transition for transform and background-color */
+    /* Add transition effect */
+}
+
+.calculate-button:hover {
+    transform: scale(1.1);
+    /* Increase the size by 10% */
+    background-color: #F39C12;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Change background color on hover */
+}
+
+.alert-content {
+    text-align: center;
+}
+
+
+.age-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    /* Add some margin at the top */
+    color: black;
+    /* Set text color to black */
+    border-radius: 20px !important;
+    /* Rounded corners */
+}
+
+.age-table td,
+.age-table th {
+    padding: 8px;
+    border: 1px solid #dddddd;
+    text-align: left;
+}
+
+.age-table th {
+    background-color: #f2f2f2;
+}
+
+.button-container-age {
+    display: flex;
+    justify-content: center;
+    /* Align items to the center of the container */
+    gap: 10px;
+    /* Decrease the space between buttons */
+    position: absolute;
+    /* Set position absolute */
+    bottom: 20px;
+    /* Position at the bottom */
+    left: 50%;
+    /* Position in the center horizontally */
+    transform: translateX(-50%);
+    /* Adjust horizontally to center */
+}
+
+.button-container .age-btn {
+    padding: 10px 20px;
+    /* Add padding to the buttons */
+    background-color: #2596be;
+    /* Button background color */
+    color: #ffffff;
+    /* Text color */
+    border: none;
+    /* Remove button border */
+    border-radius: 20px;
+    /* Add border radius */
+    font-size: 16px;
+    /* Button font size */
+    cursor: pointer;
+    /* Add cursor pointer on hover */
+    transition: background-color 0.3s ease;
+    /* Add transition effect */
+}
+
+.button-container .age-button:hover {
+    background-color: #007bff;
+    /* Change background color on hover */
+}
+
+.age-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.age-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+.age-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.age-table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
+
+.button-container-age {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.clear_btn {
+    padding: 8px 16px;
+    background-color: #34495E;
+    /* Blue color */
+    color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 10px;
+    transition: transform 0.3s, background-color 0.3s ease;
+}
+
+.close_btn {
+    padding: 8px 16px;
+    background-color: #E74C3C;
+    /* Red color */
+    color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: transform 0.3s, background-color 0.3s ease;
+}
+
+.clear_btn:hover,
+.close_btn:hover {
+    transform: scale(1.1);
+}
+
+.clear_btn,
+.close_btn {
+    display: flex;
+    align-items: center;
+}
+
+.clear_btn img,
+.close_btn img {
+    margin-right: 5px;
+    /* Adjust the margin as needed */
+}
+
+.toast {
+    width: 15rem;
+    position: fixed;
+    top: 20px;
+    right: -200px;
+    /* Initially off-screen to the right */
+    background-color: #4CAF50;
+    /* Green background */
+    color: white;
+    padding: 16px;
+    border-radius: 8px;
+    z-index: 9999;
+    display: none;
+    /* Changed from 'none' to 'block' */
+    animation: slideInRight 0.5s forwards;
+    /* Slide in animation */
+}
+
+@keyframes slideInRight {
+    from {
+        right: -200px;
+        /* Start off-screen to the right */
+    }
+
+    to {
+        right: 20px;
+        /* End at the desired position */
+    }
+}
+
+.toast.error {
+    background-color: #f44336;
+    color: white;
+    /* Red background for error */
+}
+
+
+/* loading aniamtion */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    /* Semi-transparent white background */
+    backdrop-filter: blur(5px);
+    /* Adjust blur as needed */
+    z-index: 9999;
+    /* Ensure the overlay appears on top of other content */
+    display: none;
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+    width: 60px;
+    aspect-ratio: 1;
+    display: grid;
+    grid: 50%/50%;
+    color: #25b09b;
+    --_g: no-repeat linear-gradient(currentColor 0 0);
+    background: var(--_g), var(--_g), var(--_g);
+    background-size: 50.1% 50.1%;
+    animation:
+        l6-0 1.5s infinite steps(1) alternate,
+        l6-0-0 3s infinite steps(1);
+}
+
+.loader::before {
+    content: "";
+    background: currentColor;
+    transform: perspective(150px) rotateY(0deg) rotateX(0deg);
+    transform-origin: bottom right;
+    animation: l6-1 1.5s infinite linear alternate;
+}
+
+@keyframes l6-0 {
+    0% {
+        background-position: 0 100%, 100% 100%, 100% 0
+    }
+
+    33% {
+        background-position: 100% 100%, 100% 100%, 100% 0
+    }
+
+    66% {
+        background-position: 100% 0, 100% 0, 100% 0
+    }
+}
+
+@keyframes l6-0-0 {
+    0% {
+        transform: scaleX(1) rotate(0deg)
+    }
+
+    50% {
+        transform: scaleX(-1) rotate(-90deg)
+    }
+}
+
+@keyframes l6-1 {
+    16.5% {
+        transform: perspective(150px) rotateX(-90deg) rotateY(0deg) rotateX(0deg);
+        filter: grayscale(0.8)
+    }
+
+    33% {
+        transform: perspective(150px) rotateX(-180deg) rotateY(0deg) rotateX(0deg)
+    }
+
+    66% {
+        transform: perspective(150px) rotateX(-180deg) rotateY(-180deg) rotateX(0deg)
+    }
+
+    100% {
+        transform: perspective(150px) rotateX(-180deg) rotateY(-180deg) rotateX(-180deg);
+        filter: grayscale(0.8)
+    }
+}
+
+/* Define thin and curved scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    /* Set the width of the scrollbar */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    /* Color of the scrollbar track */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    /* Color of the scrollbar handle */
+    border-radius: 10px;
+    /* Make the scrollbar handle curved */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+    /* Color of the scrollbar handle on hover */
+}

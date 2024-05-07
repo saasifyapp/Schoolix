@@ -1,0 +1,214 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+* {
+
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+}
+
+.main {
+    max-width: 500px;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    display: flex; /* Use flexbox */
+    justify-content: center; /* Center horizontally */
+    opacity: 0; /* Set initial opacity to 0 */
+    animation: fadeIn 1s forwards; /* Apply fade-in animation */
+    flex-direction: column;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0; /* Start with opacity 0 */
+    }
+    to {
+        opacity: 1; /* End with opacity 1 */
+    }
+}
+
+.container {
+    width: 100px;
+    height: 200px;
+    background-color: white;
+    margin-top: 0%;
+}
+
+.container-wrapper {
+    animation: slideInContainer 0.5s forwards;
+    /* Apply slide in animation to the container */
+}
+
+@keyframes slideInContainer {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+        /* Start off-screen to the right */
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+        /* End at the desired position */
+    }
+}
+
+
+.details {
+    text-align: center; /* Center align the contents */
+    width: 100%; /* Make it occupy the full width */
+    margin: 0 auto; /* Center the container horizontally */
+}
+
+h2 {
+    color: #333;
+    font-size: 14px; /* Reduce the font size */
+}
+
+.h2-wrapper {
+    animation: slideInH2 0.8s forwards; /* Apply slide in animation to the h2 */
+}
+
+@keyframes slideInH2 {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+        /* Start off-screen to the right */
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+        /* End at the desired position */
+    }
+}
+
+
+form {
+    margin-top: 20px;
+    animation: slideInFade 0.8s forwards;
+    opacity: 0; /* Set initial opacity to 0 */
+}
+
+/* Define the animation */
+@keyframes slideInFade {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+#name, #mobile, #address, #dateofbirth, #qualification, #experience,
+select {
+    background-color: transparent;
+    width: 70%;
+    padding: 10px 10px 15px 50px;
+    /* Added left padding to move placeholders to the right */
+    margin-bottom: 10px;
+    border: none;
+    /* Remove the border */
+    border-bottom: 1px solid #ccc;
+    /* Add bottom border */
+    border-radius: 0;
+    /* Remove border radius */
+    outline: none;
+    border-bottom-width: 0.6px; /* Adjust this value as needed */
+    /* Remove default input outline */
+    transition: border-color 0.4s ease; /* Change the duration as needed */
+}
+
+#name:focus, 
+#mobile:focus, 
+#address:focus, 
+#dateofbirth:focus, 
+#qualification:focus, 
+#experience:focus,
+select:focus {
+    border-bottom-color: #2ECC71;
+    border-bottom-width: 1.5px; /* Adjust this value as needed */
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+
+.input-wrapper .icon-wrapper {
+    position: absolute;
+    left: 80px;
+    /* Adjust the left position as needed */
+    top: 35%;
+    transform: translateY(-50%);
+}
+
+.input-wrapper .icon-wrapper img {
+    width: 22px;
+    height: 22px;
+}
+
+
+.submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 40px;
+    margin: 20px 10px;
+    background-color: #48C9B0; /* Background color for the submit button */
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold; /* Make the text bold */
+
+    transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s; /* Add transition effect for transform, background-color, and box-shadow */
+}
+
+
+.reset {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 40px;
+    margin: 20px 10px;
+    background-color: #2E4053; /* Background color for the submit button */
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold; /* Make the text bold */
+    transition: transform 0.3s /* Add transition effect for transform, background-color, and box-shadow */
+}
+
+
+.submit:hover {
+    transform: scale(1.1); /* Increase size by 10% on hover */
+}
+
+.reset:hover {
+    transform: scale(1.1); /* Increase size by 10% on hover */
+}
+
+
+

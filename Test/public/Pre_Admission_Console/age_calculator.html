@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Alert Button</title>
+    <link rel="stylesheet" type="text/css" href="../css/Pre_Admission_Console_Css/age_calculator.css">
+</head>
+
+<body>
+
+    <button onclick="showCustomAlert()">Click Me</button>
+
+    <div id="overlay" class="overlay"></div> <!-- Add overlay element -->
+
+    <div id="customAlert" class="custom-alert">
+        <div class="left-container">
+            <style>
+            </style>
+            <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                type="module"></script>
+            <dotlottie-player class="dotlottie-container"
+                src="https://lottie.host/9edc4e5b-7742-4c6a-a71f-a28f5b8945e7/2BPrQ2yDeu.json" background="transparent"
+                speed="1" style="width: 100%; height: 100%;" loop autoplay></dotlottie-player>
+        </div>
+        <div class="right-container">
+            <h2>Age Calculator</h2>
+
+            <input type="date" id="birthdate" class="date-input">
+            <button type="button" id="calculateButton" class="calculate-button">Calculate Age</button>
+            <div id="output"></div> <!-- Placeholder for the output -->
+
+            <div class="button-container">
+                <button class="clear_btn" id="clear_btn" onclick="clearPrompt()">Clear</button>
+                <button class="close_btn" id="close_btn">Close</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="/js/Pre_Admission_Console_js/handle_session.js"></script>
+</body>
+
+</html>

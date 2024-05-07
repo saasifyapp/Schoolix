@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<!-- Coding by CodingNepal || www.codingnepalweb.com -->
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Boxicons CSS -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/css/Main_Dashboard/main_dashboard.css" />
+</head>
+
+<body>
+    <!-- navbar -->
+    <nav class="navbar">
+        <div class="logo_item">
+            <i class="bx bx-menu" id="sidebarOpen"></i>
+            <img id="logo" src="" alt="Logo">
+            <!-- <img src="images/logo.png" alt=""></i> -->
+            <div class="user_name" id="user_name"></div>
+        </div>
+
+        <!-- <div class="search_bar">
+            <input type="text" placeholder="Search" />
+        </div> -->
+
+        <div class="navbar_content">
+            <i class="bi bi-grid"></i>
+            <!-- <i class='bx bx-sun' id="darkLight"></i> -->
+            <i class='bx bx-bell'></i>
+        </div>
+    </nav>
+
+    <!-- sidebar -->
+    <nav class="sidebar">
+        <div class="menu_content">
+            <ul class="menu_items">
+                <div class="menu_title menu_dahsboard"></div>
+                <!-- duplicate or remove this li tag if you want to add or remove navlink with submenu -->
+                <!-- start -->
+                
+                <li class="item">
+                    <a href="/pre_adm_dashboard" class="nav_link">
+                        <span class="navlink_icon">
+                            <img src="/images/register.png" alt="Custom Icon" class="custom_icon">
+                        </span>
+                        <span class="navlink" style="margin-top: -8px">Register</span>
+                    </a>
+                </li>
+
+                <!--<i class="bx bx-chevron-right arrow-left"></i>-->
+        </div>
+
+        <!---------------------------- TO ADD DROPDOWN IN REGISTER, UNCOMMENT BELOW
+
+            <ul class="menu_items submenu">
+              <a href="#" class="nav_link sublink">Nav Sub Link</a>
+              <a href="#" class="nav_link sublink">Nav Sub Link</a>
+              <a href="#" class="nav_link sublink">Nav Sub Link</a>
+              <a href="#" class="nav_link sublink">Nav Sub Link</a>
+            </ul>
+          </li>
+           -->
+
+        <!-- duplicate this li tag if you want to add or remove  navlink with submenu -->
+
+
+        <!-- ------------------------TO ADD A NEW ITEM BELOW REGISTER WITH DROPDOWN, UNCOMMENT BELOW ---------
+          <li class="item">
+            <div href="#" class="nav_link submenu_item">
+              <span class="navlink_icon">
+                <i class="bx bx-grid-alt"></i>
+              </span>
+              <span class="navlink">Overview</span>
+              <i class="bx bx-chevron-right arrow-left"></i>
+            </div>
+
+            <ul class="menu_items submenu">
+              <a href="#" class="nav_link sublink">Nav Sub Link</a>
+              <a href="#" class="nav_link sublink">Nav Sub Link</a>
+              <a href="#" class="nav_link sublink">Nav Sub Link</a>
+              <a href="#" class="nav_link sublink">Nav Sub Link</a>
+            </ul>
+          </li>
+          ------------------>
+
+        </ul>
+
+        <ul class="menu_items">
+            <div class="menu_title menu_editor"></div>
+            <!-- duplicate these li tag if you want to add or remove navlink only -->
+            <!-- Start -->
+            <li class="item">
+                <div href="" class="nav_link submenu_item">
+                    <span class="navlink_icon">
+                        <img src="/images/inventory.png" alt="Custom Icon" class="custom_icon">
+                    </span>
+                    <span class="navlink">Inventory</span>
+                    <i class="bx bx-chevron-right arrow-left"></i>
+                </div>
+
+                <ul class="menu_items submenu">
+                    <a href="" class="nav_link sublink">
+                        <span class="navlink_icon">
+                            <img src="/images/billing_icon.png" alt="Billing Icon" class="custom_icon">
+                        </span>
+                        Billing
+                    </a>
+                    <a href="" class="nav_link sublink">
+                        <span class="navlink_icon">
+                            <img src="/images/store_icon.png" alt="Store Icon" class="custom_icon">
+                        </span>
+                        Store
+                    </a>
+                    <a href="" class="nav_link sublink">
+                        <span class="navlink_icon">
+                            <img src="/images/reports_icon.png" alt="Reports Icon" class="custom_icon">
+                        </span>
+                        Reports
+                    </a>
+                </ul>
+            </li>
+            <!-- End -->
+
+            <li class="item">
+                <a href="" class="nav_link" onclick="staytuned()">
+                    <span class="navlink_icon">
+                        <img src="/images/library.png" alt="Custom Icon" class="custom_icon">
+                    </span>
+                    <span class="navlink" style="margin-top: -8px">Library</span>
+                </a> 
+            </li>
+            <li class="item">
+                <a href="" class="nav_link" onclick="staytuned()">
+                    <span class="navlink_icon">
+                        <img src="/images/school_bus.png" alt="Custom Icon" class="custom_icon">
+                    </span>
+                    <span class="navlink" style="margin-top: -8px">School Bus</span>
+                </a>
+            </li>
+            <!--
+          <li class="item">
+            <a href="#" class="nav_link">
+              <span class="navlink_icon">
+                <i class="bx bx-cloud-upload"></i>
+              </span>
+              <span class="navlink">Upload new</span>
+            </a>
+          </li>
+        </ul>
+        -->
+
+            <!--
+        <ul class="menu_items">
+          <div class="menu_title menu_setting"></div>
+          <li class="item">
+            <a href="#" class="nav_link">
+              <span class="navlink_icon">
+                <i class="bx bx-flag"></i>
+              </span>
+              <span class="navlink">Notice board</span>
+            </a>
+          </li>
+          <li class="item">
+            <a href="#" class="nav_link">
+              <span class="navlink_icon">
+                <i class="bx bx-medal"></i>
+              </span>
+              <span class="navlink">Award</span>
+            </a>
+          </li>
+          <li class="item">
+            <a href="#" class="nav_link">
+              <span class="navlink_icon">
+                <i class="bx bx-cog"></i>
+              </span>
+              <span class="navlink">Setting</span>
+            </a>
+          </li>
+          <li class="item">
+            <a href="#" class="nav_link">
+              <span class="navlink_icon">
+                <i class="bx bx-layer"></i>
+              </span>
+              <span class="navlink">Features</span>
+            </a>
+          </li>
+        </ul>
+
+        -->
+
+            <!-- Sidebar Open / Close -->
+            <div class="bottom_content" id="logoutButton">
+                <div class="bottom collapse_sidebar" id="logoutbtn">
+                    <span> Signout</span>
+                    <i class='bx bx-log-out'></i>
+                </div>
+            </div>
+            </div>
+    </nav>
+
+    <div class="main_container">
+        <div class="sub_container">
+            <div class="count_details">
+                <div class="title" id="registered_students_title">Registered Students</div>
+                <div class="count" id="registeredStudentsCount"></div>
+            </div>
+            <div class="count_img">
+                <img src="/images/registered_student.gif" alt="Your Image" height="98%" width="98%">
+            </div>
+        </div>
+        <div class="sub_container">
+            <div class="count_details">
+                <div class="title" id="admitted_students_title">Admitted Students</div>
+                <div class="count" id="admittedStudentsCount"></div>
+            </div>
+            <div class="count_img">
+                <img src="/images/admitted_student.gif" alt="Your Image" height="95%" width="95%">
+            </div>
+        </div>
+        <div class="sub_container">
+            <div class="count_details">
+                <div class="title" id="registered_teachers_title">Registered Teachers</div>
+                <div class="count" id="registeredTeachersCount"></div>
+            </div>
+            <div class="count_img">
+                <img src="/images/registered_teacher.gif" alt="Your Image" height="95%" width="95%">
+            </div>
+        </div>
+        <div class="sub_container">
+            <div class="count_details">
+                <div class="title" id="admitted_teachers_title">Admitted Teachers</div>
+                <div class="count" id="admittedTeachersCount"></div>
+            </div>
+            <div class="count_img">
+                <img src="/images/admitted_teacher.gif" alt="Your Image" height="95%" width="95%">
+            </div>
+        </div>
+
+        <!-- JavaScript -->
+        <script src="/js/Main_Dashboard/main_dashboard.js"></script>
+        <script src="/js/Pre_Admission_Console_js/handle_session.js"></script>
+        
+</body>
+
+</html>

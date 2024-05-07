@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/Pre_Admission_Console_Css/dashboard.css">
+    <link rel="stylesheet" href="/css/Pre_Admission_Console_Css/All.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap">
+    
+
+
+    <title>Pre-Admission Console</title>
+</head>
+
+<body>
+ 
+    <div class="dropdown" style="float: right; margin-right: 20px;">
+        <button class="dropdown-button">
+            <img src="/images/main-menu.png" alt="Dropdown Icon"
+                style="background-color: transparent; width: 35px; height: 30px;">
+        </button>
+        <div class="dropdown-content">
+            <button onclick="window.location.href='/dashboard'">
+                <img src="/images/homeicon.png" alt="Dashboard Icon"
+                    style="background-color: transparent; width: 20px; height: 20px;"> Home
+            </button>
+            <button class="signout-button" id="logoutButton">
+                <img src="/images/logout.png" alt="Signout Icon"
+                    style="background-color: transparent; width: 20px; height: 20px;"> Signout
+            </button>
+        </div>
+    </div>
+
+    <div class="overlay"></div> <!-- Overlay element -->
+
+    <div id="loadingOverlay2" class="loading-overlay2">
+        <div class="loader2"></div>
+    </div>
+
+    <div class="adm-head">
+        <div class="button-container">
+            <h2>Registeration Console</h2>
+        </div>
+    </div>
+
+
+
+    <div class="main-button-container fadeup">
+        <button class="button" onclick="showCustomAlert()">
+            <div class="button-content">
+                <div class="svg">
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/bddd1f6e-e03d-41d7-8a6f-beffdb6dfc52/HpIhyGVhFm.json"
+                        background="transparent" speed="1.5" style="width: 100%; height: 100%;" loop
+                        autoplay></dotlottie-player>
+                </div>
+                <h3>Age Calculator</h3>
+            </div>
+        </button>
+        <div id="overlay" class="overlay"></div> <!-- Add overlay element -->
+
+        <div id="customAlert" class="custom-alert fade-up">
+            <div id="toast" class="toast"></div>
+            <div class="left-container">
+                <style>
+                </style>
+                <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                    type="module"></script>
+                <dotlottie-player class="dotlottie-container"
+                    src="https://lottie.host/9edc4e5b-7742-4c6a-a71f-a28f5b8945e7/2BPrQ2yDeu.json"
+                    background="transparent" speed="1" style="width: 100%; height: 100%;" loop
+                    autoplay></dotlottie-player>
+            </div>
+            <div class="right-container">
+                <h2>Age Calculator</h2>
+
+                <input type="date" id="birthdate" class="date-input">
+                <button type="button" id="calculateButton" class="calculate-button">Calculate Age</button>
+                <div id="output"></div> <!-- Placeholder for the output -->
+
+                <div class="button-container-age">
+                    <button class="clear_btn age-btn" id="clear_btn" onclick="clearPrompt()">
+                        <img src="/images/reset.png" alt="Clear Icon" width="25px" height="25px"
+                            style="margin-right: 5px;">
+                        Clear
+                    </button>
+                    <button class="close_btn age-btn" id="close_btn">
+                        <img src="/images/Close.png" alt="Close Icon" width="25px" height="25px"
+                            style="margin-right: 5px;">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+        <button class="button" onclick="navigateTo_register_student()">
+            <div class="button-content">
+                <div class="svg">
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                        type="module"></script>
+
+                    <dotlottie-player src="https://lottie.host/f5ac6570-91f7-4888-acab-d7fb4608c741/Fpf0dVddNf.json"
+                        background="transparent" speed="1" style="width: 100%; height: 100%;" loop
+                        autoplay></dotlottie-player>
+                </div>
+                <h3>Register Student</h3>
+            </div>
+        </button>
+        
+        <button class="button" onclick="navigateTo_register_teacher()">
+            <div class="button-content">
+                <div class="svg">
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/b6a05665-065f-4d7c-8c2c-4019b5c71d0b/ss5nLUBKao.json"
+                        background="transparent" speed="1" style="width: 100%; height: 100%;" loop
+                        autoplay></dotlottie-player>
+                </div>
+                <h3>Register Teacher</h3>
+            </div>
+        </button>
+        <button class="button" onclick="navigateTo_search_student()">
+            <div class="button-content">
+                <div class="svg">
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/0ce97e89-9550-4c93-91f6-fe97e214917a/5WOa75Qswy.json"
+                        background="transparent" speed="0.5" style="width: 100%; height: 100%;" loop
+                        autoplay></dotlottie-player>
+                </div>
+                <h3>Search Student</h3>
+            </div>
+        </button>
+        <button class="button" onclick="navigateTo_search_teacher()">
+            <div class="button-content">
+                <div class="svg">
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/59366f6f-e116-43ea-9f18-f3ee10edd733/Y9f02nOwiD.json"
+                        background="transparent" speed="1.5" style="width: 100%; height: 100%;" loop
+                        autoplay></dotlottie-player>
+                </div>
+                <h3>Search Teacher</h3>
+            </div>
+        </button>
+
+    </div>
+
+
+
+    <script src="/js/Pre_Admission_Console_js/dashboard.js"></script>
+    <script src="/js/Pre_Admission_Console_js/age_calculator.js"></script>
+    <script src="/js/Pre_Admission_Console_js/handle_session.js"></script>
+
+
+</body>
+
+</html>

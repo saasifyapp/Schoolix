@@ -1,0 +1,243 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+* {
+
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0; 
+    overflow: hidden;
+} 
+ 
+.main {
+    position: relative;
+}
+
+.top-right-buttons {
+    position: relative; /* Change to relative positioning */
+    float: right; /* Float the buttons to the right */
+    margin-top: -40px; /* Adjust the top margin as needed */
+    animation: slideInRight 0.5s forwards; /* Use slideInRight animation */
+}
+@keyframes slideInRight {
+    from {
+        right: -200px; /* Start off-screen to the right */
+    }
+
+    to {
+        right: 0; /* End at the desired position */
+    }
+
+}
+
+#refreshButton,
+#export_registered_teacher {
+    margin-bottom: 15px; /* Add margin between the buttons */
+    cursor: pointer;
+    background-color: transparent;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    color: black;
+    border: none;
+    border-radius: 20px;
+    height: 2.3rem;
+    width: 6rem;
+    font-size: 1rem; /* Reduce the font size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px; /* Add padding to fit content */
+    transition: all 0.3s; /* Add transition for smooth hover effect */
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#refreshButton img,
+#export_registered_teacher img {
+    height: 80%; /* Set image height to fit button */
+    margin-right: 5px; /* Add a 5px margin to the right of the image */
+}
+
+#export_registered_teacher:hover {
+    background-color: #27AE60; /* Change background color on hover */
+    transform: scale(1.05); /* Increase size on hover */
+}
+
+#refreshButton:hover {
+    background-color: #76D7C4; /* Change background color on hover */
+    transform: scale(1.05); /* Increase size on hover */
+}
+
+#refreshButton img,
+#export_registered_teacher img {
+    height: 80%; /* Set image height to fit button */
+    margin-right: 5px; /* Add a 5px margin to the right of the image */
+}
+
+
+h2 {
+    font-size: 25px; /* Adjust the font size as needed */
+    text-align: center;
+    margin-top: 20px; /* Remove the default margin */
+    margin-bottom: 30px; /* Add margin below the h2 element */
+    
+}
+
+.search_item,
+#output {
+    display: flex;
+    flex-direction: column;
+}
+
+.search_item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 95px; /* Adjust the margin to move it slightly to the right */
+}
+
+#searchField {
+    padding: 5px 10px;
+    width: 20rem;
+    height: 2.3rem;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    outline: none;
+    margin-top: 10px;
+    position: relative; /* Add position relative */
+    transition: box-shadow 0.3s ease; /* Add transition for smooth effect */
+}
+
+#searchField:hover,
+#searchField:focus {
+    box-shadow: 0 0 10px #5DADE2; /* Add shadow on hover and focus */
+}
+
+
+.search-button {
+    cursor: pointer;
+    background-color: transparent;
+    color: white;
+    border: none;
+    height: 2.3rem;
+    width: 2.3rem;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    position: absolute; /* Change to absolute */
+    top: 61%; /* Position in the middle vertically */
+    right: 5px; /* Adjust right position */
+    transform: translateY(-50%); /* Center vertically */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: width 0.3s, box-shadow 0.3s;
+}
+
+.search-button img {
+    height: 100%;
+    border-radius: 50%;
+}
+
+.search-button:hover {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+#output {   
+    margin-top: 20px; /* Add margin at the top */
+    margin-left: 1rem;
+}
+
+
+#teacherTable {
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px #dddddd;
+    table-layout: fixed; /* Fix the table layout */
+}
+
+#teacherTable th,
+#teacherTable td {
+    border: 1px solid #dddddd;
+    padding: 8px;
+    text-align: center;
+    width: calc(100% / 7); /* Set the width for each column */
+}
+
+#teacherTable th {
+    background-color: #2C3E50;
+    color: white;
+}
+
+#teacherTable td {
+    border: 1px solid #dddddd;
+    padding: 0px;
+    text-align: center;
+    height: 50px; /* Fixed height */
+    overflow: hidden; /* Hide content that overflows */
+}
+
+#teacherTable td button {
+    max-height: 100%; /* Ensure buttons do not exceed cell height */
+}
+
+#teacherTable tr:hover {
+    background-color: #D6DBDF; /* Change the background color to a light gray */
+}
+
+#teacherTable tr td {
+    transition: font-weight 0.1s; /* Add a smooth transition */
+}
+
+#teacherTable tr:hover td {
+    font-weight: bold; /* Make the text bold on hover */
+}
+.tableFixHead {
+    overflow-y: auto; /* Make the table scrollable if height is more than 200px */
+    height: 700px; /* Gives an initial height of 200px to the table */
+  }
+  .tableFixHead thead th {
+    position: sticky; /* Make the table heads sticky */
+    top: 0px; /* Table head will be placed from the top of the table and sticks to it */       
+    z-index: 1;
+  }
+  table {
+    border-collapse: collapse; /* Make the table borders collapse to each other */
+    width: 100%;
+  }
+  
+  .tableFixHead tbody {
+min-height: 600px; /* Adjust this value based on your needs */
+
+}
+
+.studentTable{
+    margin-top: 1rem;
+}
+
+
+
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+        /* Initial position */
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        /* Final position */
+    }
+}
+
+/* Apply the animation to table rows */
+tr.fade-up {
+    animation: fadeUp 0.5s ease forwards;
+    /* Adjust animation duration and timing function as needed */
+}
