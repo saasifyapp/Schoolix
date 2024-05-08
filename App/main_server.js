@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 
 ///////////////////////////////// AUTHENTICATION //////////////////////////
 
-const pool = mysql.createPool({
+const connection_auth = mysql.createPool({
     connectionLimit: 10, // Adjust this value based on your application's needs
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -34,20 +34,20 @@ const pool = mysql.createPool({
 const JWT_SECRET = 'this_is_my_secret_key_which_is_highly_confidential';
 
 // Testing the connection
-pool.getConnection((err, connection) => {
+connection_auth.getConnection((err, connection_auth) => {
     if (err) {
         console.error('Error connecting to MySQL database:', err);
         return;
     }
-    console.log('Connected to MySQL database as id', connection.threadId);
-    connection.release(); // Release the connection as it's just for testing the connection
+    console.log('Connected to MySQL database as id', connection_auth.threadId);
+    connection_auth.release(); // Release the connection as it's just for testing the connection
 });
 
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
     const query = 'SELECT * FROM user_details WHERE loginName = ? AND loginPassword = ?';
     
-    pool.getConnection((err, connection) => {
+    connection_auth.getConnection((err, connection) => {
         if (err) {
             console.error('Error getting connection from pool:', err);
             res.status(500).send('Internal Server Error');
@@ -83,7 +83,7 @@ app.post('/login', (req, res) => {
             const { serverName, databaseUser, databasePassword, databaseName, schoolName } = user;
 
             // Create a connection using user's database credentials
-             global.connection = mysql.createConnection({
+             global.connection = mysql.createPool({
                 host: serverName,
                 user: databaseUser,
                 password: databasePassword,
