@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const app = express();
 app.use(express.json());
-app.use(cookieParser()); 
+app.use(cookieParser());
 
 // Configure dotenv to load the .env file from the  src directory
 dotenv.config({ path: path.join(__dirname, 'src', '.env') });
@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Route to serve index.html for login page
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'Login', 'login.html'));
+    res.sendFile(path.join(__dirname, 'public', 'Login', 'index.html'));
 });
 
 // Set up Express to parse request bodies
@@ -23,30 +23,51 @@ app.use(express.urlencoded({ extended: true }));
 
 ///////////////////////////////// AUTHENTICATION //////////////////////////
 
-const connection_auth = mysql.createPool({
-    connectionLimit: 10, // Adjust this value based on your application's needs
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME
-});
+// const connection_auth = mysql.createPool({
+//     connectionLimit: 10, // Adjust this value based on your application's needs
+//     host: process.env.DB_HOST,
+//     user: process.env.DB_USER,
+//     password: process.env.DB_PASS,
+//     database: process.env.DB_NAME
+// });
 
 const JWT_SECRET = 'this_is_my_secret_key_which_is_highly_confidential';
 
-// Testing the connection
-connection_auth.getConnection((err, connection_auth) => {
-    if (err) {
-        console.error('Error connecting to MySQL database:', err);
-        return;
-    }
-    console.log('Connected to MySQL database as id', connection_auth.threadId);
-    connection_auth.release(); // Release the connection as it's just for testing the connection
-});
+// // Testing the connection
+// connection_auth.getConnection((err, connection_auth) => {
+//     if (err) {
+//         console.error('Error connecting to MySQL database:', err);
+//         return;
+//     }
+//     console.log('Connected to MySQL database as id', connection_auth.threadId);
+//     connection_auth.release(); // Release the connection as it's just for testing the connection
+// });
 
 app.post('/login', (req, res) => {
+
+        const connection_auth = mysql.createPool({
+            connectionLimit: 10, // Adjust this value based on your application's needs
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASS,
+            database: process.env.DB_NAME
+        });
+
+        // Testing the connection
+        connection_auth.getConnection((err, connection_auth) => {
+            if (err) {
+                console.error('Error connecting to MySQL database:', err);
+                return;
+            }
+            console.log('Connected to MySQL database as id', connection_auth.threadId);
+            connection_auth.release(); // Release the connection as it's just for testing the connection
+        });
+    
+
+
     const { username, password } = req.body;
     const query = 'SELECT * FROM user_details WHERE loginName = ? AND loginPassword = ?';
-    
+
     connection_auth.getConnection((err, connection) => {
         if (err) {
             console.error('Error getting connection from pool:', err);
@@ -83,7 +104,7 @@ app.post('/login', (req, res) => {
             const { serverName, databaseUser, databasePassword, databaseName, schoolName } = user;
 
             // Create a connection using user's database credentials
-             global.connection = mysql.createPool({
+            global.connection = mysql.createPool({
                 host: serverName,
                 user: databaseUser,
                 password: databasePassword,
@@ -102,6 +123,7 @@ app.post('/login', (req, res) => {
         });
     });
 });
+
 
 
 app.get('/get-variable', (req, res) => {
@@ -198,6 +220,17 @@ app.get('/logout', (req, res) => {
             }
         });
     }
+
+    // // Close the MySQL connection
+    // if (connection_auth) {
+    //     connection_auth.end((err) => {
+    //         if (err) {
+    //             console.error('Error closing MySQL connection:', err);
+    //         } else {
+    //             console.log('MySQL connection closed successfully.');
+    //         }
+    //     });
+    // }
 
     res.redirect('/');
 });
