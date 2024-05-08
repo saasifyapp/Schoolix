@@ -1,103 +1,130 @@
 const express = require('express');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const path = require('path');
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const app = express();
 app.use(express.json());
-app.use(cookieParser()); 
+app.use(cookieParser());
 
-// Configure dotenv to load the .env file from the src  director
+
+// Configure dotenv to load the .env file from the  src directory
 dotenv.config({ path: path.join(__dirname, 'src', '.env') });
 // Serve static files from the parent directory
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Route to serve index.html for login page
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'Login', 'login.html'));
+    res.sendFile(path.join(__dirname, 'public', 'Login', 'index.html'));
 });
 
 // Set up Express to parse request bodies
 app.use(express.urlencoded({ extended: true }));
 
 ///////////////////////////////// AUTHENTICATION //////////////////////////
-// Create a MySQL connection by providong server and database for authentication purpose //
-const connection_auth = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
-    reconnect: true
 
-});
+// const connection_auth = mysql.createPool({
+//     connectionLimit: 10, // Adjust this value based on your application's needs
+//     host: process.env.DB_HOST,
+//     user: process.env.DB_USER,
+//     password: process.env.DB_PASS,
+//     database: process.env.DB_NAME
+// });
+
 const JWT_SECRET = 'this_is_my_secret_key_which_is_highly_confidential';
 
-connection_auth.connect((err) => {
-    if (err) {
-        console.error('Error connecting to MySQL database: ' + err.stack);
-        return;
-    }
-    console.log('Connected to MySQL database as id ' + connection_auth.threadId);
-});
+// // Testing the connection
+// connection_auth.getConnection((err, connection_auth) => {
+//     if (err) {
+//         console.error('Error connecting to MySQL database:', err);
+//         return;
+//     }
+//     console.log('Connected to MySQL database as id', connection_auth.threadId);
+//     connection_auth.release(); // Release the connection as it's just for testing the connection
+// });
 
 app.post('/login', (req, res) => {
 
-    // Taking username and password from Login Form and setting it to two variables
+        const connection_auth = mysql.createPool({
+            connectionLimit: 10, // Adjust this value based on your application's needs
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASS,
+            database: process.env.DB_NAME
+        });
+
+        // Testing the connection
+        connection_auth.getConnection((err, connection_auth) => {
+            if (err) {
+                console.error('Error connecting to MySQL database:', err);
+                return;
+            }
+            console.log('Connected to MySQL database as id', connection_auth.threadId);
+            connection_auth.release(); // Release the connection as it's just for testing the connection
+        });
+    
+
+
     const { username, password } = req.body;
-    // Query the database to check if the user details entered in the login form exists in user_details table
     const query = 'SELECT * FROM user_details WHERE loginName = ? AND loginPassword = ?';
-    connection_auth.query(query, [username, password], (error, results) => {
-        if (error) {
-            console.error('Error querying database:', error);
+
+    connection_auth.getConnection((err, connection) => {
+        if (err) {
+            console.error('Error getting connection from pool:', err);
             res.status(500).send('Internal Server Error');
             return;
         }
 
-        // Check if a session is already active
-        if (req.cookies.jwt && req.cookies.schoolName) {
-            if (!results.length === 0) {
-            // Session is already active, display toast message
-            console.log("A session is already active. Please close that session to continue.")
-            res.status(402).send('A session is already active. Please close that session to continue.');
-            return;
-            }
-        }
+        connection.query(query, [username, password], (error, results) => {
+            connection.release(); // Release the connection back to the pool
 
-        // If results are empty, it means no user found with the given credentials
-        if (results.length === 0) {
-            res.status(401).send('Invalid username or password.');
-            return;
-        }
-
-        // Here results is returning a row datapacket which contains all columns data for specific user
-        // If a user with given credentials exists, set connection as global variable and pass the database credentials based on user//
-        if (results.length > 0) {
-            const user = results[0]; // Fetching user details and storing it to a variable for future use
-            // Assuming queryResults is an array of RowDataPacket objects
-            for (const row of results) {
-                global.serverName = row.serverName;
-                global.databaseUser = row.databaseUser;
-                global.databasePassword = row.databasePassword;
-                global.databaseName = row.databaseName;
-                global.schoolName = row.schoolName;
+            if (error) {
+                console.error('Error querying database:', error);
+                res.status(500).send('Internal Server Error');
+                return;
             }
-            global.connection = mysql.createConnection({
+
+            // Check if a session is already active
+            if (req.cookies.jwt && req.cookies.schoolName) {
+                if (!results.length === 0) {
+                    console.log("A session is already active. Please close that session to continue.");
+                    res.status(402).send('A session is already active. Please close that session to continue.');
+                    return;
+                }
+            }
+
+            // If no user found with given credentials
+            if (results.length === 0) {
+                res.status(401).send('Invalid username or password.');
+                return;
+            }
+
+            // Assuming only one user is found with given credentials
+            const user = results[0];
+            const { serverName, databaseUser, databasePassword, databaseName, schoolName } = user;
+
+            // Create a connection using user's database credentials
+            global.connection = mysql.createPool({
                 host: serverName,
                 user: databaseUser,
                 password: databasePassword,
                 database: databaseName
             });
 
-            global.token = jwt.sign({ userId: user.userI }, JWT_SECRET, { expiresIn: '2h' });
-            // Save JWT to cookie
-            res.cookie('schoolName', schoolName, { maxAge: 7200000    }); // Store schoolName in a cookie
-            res.cookie('jwt', token, { httpOnly: false, maxAge: 7200000  }); // Cookie expires in 1h min    
-            res.redirect('/dashboard');
+            // Generate JWT token
+            const token = jwt.sign({ userId: user.userId }, JWT_SECRET, { expiresIn: '2h' });
 
-        }
+            // Save JWT and schoolName to cookies
+            res.cookie('schoolName', schoolName, { maxAge: 7200000 });
+            res.cookie('jwt', token, { httpOnly: false, maxAge: 7200000 });
+
+            // Redirect to dashboard
+            res.redirect('/dashboard');
+        });
     });
 });
+
 
 
 app.get('/get-variable', (req, res) => {
@@ -194,6 +221,17 @@ app.get('/logout', (req, res) => {
             }
         });
     }
+
+    // // Close the MySQL connection
+    // if (connection_auth) {
+    //     connection_auth.end((err) => {
+    //         if (err) {
+    //             console.error('Error closing MySQL connection:', err);
+    //         } else {
+    //             console.log('MySQL connection closed successfully.');
+    //         }
+    //     });
+    // }
 
     res.redirect('/');
 });
