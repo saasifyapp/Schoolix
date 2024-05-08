@@ -45,92 +45,114 @@ const JWT_SECRET = 'this_is_my_secret_key_which_is_highly_confidential';
 // });
 
 app.post('/login', (req, res) => {
+
     const { username, password } = req.body;
     const query = 'SELECT * FROM user_details WHERE loginName = ? AND loginPassword = ?';
 
-    // Create a new connection pool for authentication
-    const connection_auth = mysql.createPool({
-        connectionLimit: 10,
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASS,
-        database: process.env.DB_NAME
-    });
+    if (req.cookies.jwt && req.cookies.schoolName && req.cookies.username == username) {
+        console.log("same user logged in to new tab | NO NEW CONNECTION ESTABLISHED")
+        res.redirect('/dashboard');
+    }
 
-    // Testing the connection
-    connection_auth.getConnection((err, connection) => {
-        if (err) {
-            console.error('Error connecting to MySQL database:', err);
-            return res.status(500).send('Internal Server Error');
-        }
-        console.log('Connected to MySQL database as id', connection.threadId);
-        connection.release(); // Release the connection as it's just for testing the connection
+    else {
 
-        // Proceed with authentication after successful connection
+        // Create a new connection pool for authentication
+        const connection_auth = mysql.createPool({
+            connectionLimit: 10,
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASS,
+            database: process.env.DB_NAME,
+        });
+
+
+        // Testing the connection
         connection_auth.getConnection((err, connection) => {
             if (err) {
-                console.error('Error getting connection from pool:', err);
-                res.status(500).send('Internal Server Error');
-                return;
+                console.error('Error connecting to MySQL database:', err);
+                return res.status(500).send('Internal Server Error');
             }
+            console.log('Connected to user(demo) database as id', connection.threadId);
+            connection.release(); // Release the connection as it's just for testing the connection
 
-            connection.query(query, [username, password], (error, results) => {
-                connection.release(); // Release the connection back to the pool
-
-                if (error) {
-                    console.error('Error querying database:', error);
+            // Proceed with authentication after successful connection
+            connection_auth.getConnection((err, connection) => {
+                if (err) {
+                    console.error('Error getting connection from pool:', err);
                     res.status(500).send('Internal Server Error');
                     return;
                 }
 
-                // Check if a session is already active
-                if (req.cookies.jwt && req.cookies.schoolName) {
-                    if (!results.length === 0) {
-                        console.log("A session is already active. Please close that session to continue.");
-                        res.status(402).send('A session is already active. Please close that session to continue.');
+                connection.query(query, [username, password], (error, results) => {
+                    connection.release(); // Release the connection back to the pool
+
+                    if (error) {
+                        console.error('Error querying database:', error);
+                        res.status(500).send('Internal Server Error');
                         return;
                     }
-                }
 
-                // If no user found with given credentials
-                if (results.length === 0) {
-                    res.status(401).send('Invalid username or password.');
-                    if (connection_auth) {
+                    // Check if a session is already active
+                    if (req.cookies.jwt && req.cookies.schoolName) {
+                        if (!results.length === 0) {
+                            console.log("A session is already active. Please close that session to continue.");
+                            res.status(402).send('A session is already active. Please close that session to continue.');
+                            return;
+                        }
+                    }
+
+                    // If no user found with given credentials
+                    if (results.length === 0) {
+                        res.status(401).send('Invalid username or password.');
+                        if (connection_auth) {
+                            connection_auth.end((err) => {
+                                if (err) {
+                                    console.error('Error closing MySQL connection:', err);
+                                } else {
+                                    console.log('User(demo) database disconnected.');
+                                }
+                            });
+                        }
+                        return;
+                    }
+
+                    // Close the connection pool of demo database after 5 seconds
+                    setTimeout(() => {
                         connection_auth.end((err) => {
                             if (err) {
-                                console.error('Error closing MySQL connection:', err);
-                            } else {
-                                console.log('MySQL connection closed successfully.');
+                                console.error('Error closing connection pool:', err);
+                                return;
                             }
+                            console.log('User(demo) database disconnected after 5 sec.');
                         });
-                    }
-                    return;
-                }
+                    }, 5000); // 5000 milliseconds = 5 seconds
 
-                // Assuming only one user is found with given credentials
-                const user = results[0];
-                const { serverName, databaseUser, databasePassword, databaseName, schoolName } = user;
+                    // Assuming only one user is found with given credentials
+                    const user = results[0];
+                    const { serverName, databaseUser, databasePassword, databaseName, schoolName, LoginName } = user;
 
-                // Create a connection using user's database credentials
-                global.connection = mysql.createPool({
-                    host: serverName,
-                    user: databaseUser,
-                    password: databasePassword,
-                    database: databaseName
+                    // Create a connection using user's database credentials
+                    global.connection = mysql.createPool({
+                        host: serverName,
+                        user: databaseUser,
+                        password: databasePassword,
+                        database: databaseName
+                    });
+
+                    // Generate JWT token
+                    const token = jwt.sign({ userId: user.userId }, JWT_SECRET, { expiresIn: '2h' });
+
+                    // Save JWT and schoolName to cookies
+                    res.cookie('schoolName', schoolName, { maxAge: 7200000 });
+                    res.cookie('jwt', token, { httpOnly: false, maxAge: 7200000 });
+                    res.cookie('username', LoginName, { httpOnly: false, maxAge: 7200000 });
+
+                    // Redirect to dashboard
+                    res.redirect('/dashboard');
                 });
-
-                // Generate JWT token
-                const token = jwt.sign({ userId: user.userId }, JWT_SECRET, { expiresIn: '2h' });
-
-                // Save JWT and schoolName to cookies
-                res.cookie('schoolName', schoolName, { maxAge: 7200000 });
-                res.cookie('jwt', token, { httpOnly: false, maxAge: 7200000 });
-
-                // Redirect to dashboard
-                res.redirect('/dashboard');
             });
         });
-    });
+    };
 });
 
 
@@ -183,8 +205,9 @@ app.get('/pre_adm/admitted_teacher', authenticateToken, (req, res) => {
 function authenticateToken(req, res, next) {
     const token = req.cookies.jwt;
     const schoolNameCookie = req.cookies.schoolName;
+    const usernameCookie = req.cookies.username;
 
-    if (!schoolNameCookie) {
+    if (!schoolNameCookie || !usernameCookie) {
         return res.redirect('/');
     }
 
@@ -218,6 +241,7 @@ app.get('/logout', (req, res) => {
     // Clear the JWT cookie by setting its expiration to a past date
     res.clearCookie('jwt');
     res.clearCookie('schoolName');
+    res.clearCookie('username');
 
     // Close the MySQL connection
     if (global.connection) {
@@ -225,7 +249,7 @@ app.get('/logout', (req, res) => {
             if (err) {
                 console.error('Error closing MySQL connection:', err);
             } else {
-                console.log('MySQL connection closed successfully.');
+                console.log('School database disconnected on signout.');
             }
         });
     }
