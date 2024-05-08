@@ -8,6 +8,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
+
 // Configure dotenv to load the .env file from the  src directory
 dotenv.config({ path: path.join(__dirname, 'src', '.env') });
 // Serve static files from the parent directory
