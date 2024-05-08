@@ -44,82 +44,90 @@ const JWT_SECRET = 'this_is_my_secret_key_which_is_highly_confidential';
 // });
 
 app.post('/login', (req, res) => {
-
-        const connection_auth = mysql.createPool({
-            connectionLimit: 10, // Adjust this value based on your application's needs
-            host: process.env.DB_HOST,
-            user: process.env.DB_USER,
-            password: process.env.DB_PASS,
-            database: process.env.DB_NAME
-        });
-
-        // Testing the connection
-        connection_auth.getConnection((err, connection_auth) => {
-            if (err) {
-                console.error('Error connecting to MySQL database:', err);
-                return;
-            }
-            console.log('Connected to MySQL database as id', connection_auth.threadId);
-            connection_auth.release(); // Release the connection as it's just for testing the connection
-        });
-    
-
-
     const { username, password } = req.body;
     const query = 'SELECT * FROM user_details WHERE loginName = ? AND loginPassword = ?';
 
+    // Create a new connection pool for authentication
+    const connection_auth = mysql.createPool({
+        connectionLimit: 10,
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: process.env.DB_NAME
+    });
+
+    // Testing the connection
     connection_auth.getConnection((err, connection) => {
         if (err) {
-            console.error('Error getting connection from pool:', err);
-            res.status(500).send('Internal Server Error');
-            return;
+            console.error('Error connecting to MySQL database:', err);
+            return res.status(500).send('Internal Server Error');
         }
+        console.log('Connected to MySQL database as id', connection.threadId);
+        connection.release(); // Release the connection as it's just for testing the connection
 
-        connection.query(query, [username, password], (error, results) => {
-            connection.release(); // Release the connection back to the pool
-
-            if (error) {
-                console.error('Error querying database:', error);
+        // Proceed with authentication after successful connection
+        connection_auth.getConnection((err, connection) => {
+            if (err) {
+                console.error('Error getting connection from pool:', err);
                 res.status(500).send('Internal Server Error');
                 return;
             }
 
-            // Check if a session is already active
-            if (req.cookies.jwt && req.cookies.schoolName) {
-                if (!results.length === 0) {
-                    console.log("A session is already active. Please close that session to continue.");
-                    res.status(402).send('A session is already active. Please close that session to continue.');
+            connection.query(query, [username, password], (error, results) => {
+                connection.release(); // Release the connection back to the pool
+
+                if (error) {
+                    console.error('Error querying database:', error);
+                    res.status(500).send('Internal Server Error');
                     return;
                 }
-            }
 
-            // If no user found with given credentials
-            if (results.length === 0) {
-                res.status(401).send('Invalid username or password.');
-                return;
-            }
+                // Check if a session is already active
+                if (req.cookies.jwt && req.cookies.schoolName) {
+                    if (!results.length === 0) {
+                        console.log("A session is already active. Please close that session to continue.");
+                        res.status(402).send('A session is already active. Please close that session to continue.');
+                        return;
+                    }
+                }
 
-            // Assuming only one user is found with given credentials
-            const user = results[0];
-            const { serverName, databaseUser, databasePassword, databaseName, schoolName } = user;
+                // If no user found with given credentials
+                if (results.length === 0) {
+                    res.status(401).send('Invalid username or password.');
+                    if (connection_auth) {
+                        connection_auth.end((err) => {
+                            if (err) {
+                                console.error('Error closing MySQL connection:', err);
+                            } else {
+                                console.log('MySQL connection closed successfully.');
+                            }
+                        });
+                    }
+                    return;
+                }
 
-            // Create a connection using user's database credentials
-            global.connection = mysql.createPool({
-                host: serverName,
-                user: databaseUser,
-                password: databasePassword,
-                database: databaseName
+                // Assuming only one user is found with given credentials
+                const user = results[0];
+                const { serverName, databaseUser, databasePassword, databaseName, schoolName } = user;
+
+                // Create a connection using user's database credentials
+                global.connection = mysql.createPool({
+                    host: serverName,
+                    user: databaseUser,
+                    password: databasePassword,
+                    database: databaseName
+                });
+
+                // Generate JWT token
+                const token = jwt.sign({ userId: user.userId }, JWT_SECRET, { expiresIn: '2h' });
+
+                // Save JWT and schoolName to cookies
+                res.cookie('schoolName', schoolName, { maxAge: 7200000 });
+                res.cookie('jwt', token, { httpOnly: false, maxAge: 7200000 });
+
+                // Redirect to dashboard
+                res.redirect('/dashboard');
             });
-
-            // Generate JWT token
-            const token = jwt.sign({ userId: user.userId }, JWT_SECRET, { expiresIn: '2h' });
-
-            // Save JWT and schoolName to cookies
-            res.cookie('schoolName', schoolName, { maxAge: 7200000 });
-            res.cookie('jwt', token, { httpOnly: false, maxAge: 7200000 });
-
-            // Redirect to dashboard
-            res.redirect('/dashboard');
         });
     });
 });
