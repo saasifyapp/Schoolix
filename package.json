@@ -1,6 +1,5 @@
 {
-  "start": "node index.js"
-  "main": "App/public/Login/index.html",
+  "start": "node main_server.js"
   "dependencies": {
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
