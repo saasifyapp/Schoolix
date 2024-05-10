@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const app = express();
 app.use(express.json());
-app.use(cookieParser());
+app.use(cookieParser()); 
 
 
 // Configure dotenv to load the .env file from the  src directory
