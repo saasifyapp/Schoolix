@@ -8,6 +8,11 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser()); 
 
+const scheduledTask = require('../App/src/routes/scheduledTask'); // Import the scheduled task module
+
+
+
+
 
 // Configure dotenv to load the .env file from the  src directory
 dotenv.config({ path: path.join(__dirname, 'src', '.env') });
@@ -309,6 +314,11 @@ app.use('/', displayadmTeacherRouter);
 const main_dashboard_dataRouter = require('./src/routes/main_dashboard_data');
 // Mount the student details submission router to the root path
 app.use('/', main_dashboard_dataRouter);
+
+
+/////////////////////// Call a Scheduled Task to send a ping to own server every 25 mins ///////////////////////////////////////
+
+scheduledTask();
 
 
 // Start the server
