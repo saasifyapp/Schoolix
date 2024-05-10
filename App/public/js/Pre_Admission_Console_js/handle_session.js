@@ -104,15 +104,14 @@ function checkJWTExpiration() {
         const currentTime = Date.now();
         const timeUntilExpiration = expirationTime - currentTime;
 
-        // 20 seconds before expiration
         // Use showAlert instead of alert and confirm
         if (timeUntilExpiration <=30000 && !alert30SecShown) {
-            showAlert("Your session will expire in 30 Sec. We are logging you out!");
+            showAlert("Your session will expire in 30 Sec. Click Yes to sign in again!");
             alert30SecShown = true;
             localStorage.setItem('alert30SecShown', 'true');
         }
 
-        if (timeUntilExpiration >= 6900000  && timeUntilExpiration <= 6910000  && !alert5MinShown) {
+        if (timeUntilExpiration >= 300000   && timeUntilExpiration <= 310000   && !alert5MinShown) {
             showAlert("Your session will expire in 5 Min. Do you want to sign in again?", true)
                 .then((result) => {
                     if (result.isConfirmed) {
@@ -135,7 +134,7 @@ function checkJWTExpiration() {
             localStorage.setItem('alert5MinShown', 'true');
         }
 
-        if (timeUntilExpiration >= 6300000  && timeUntilExpiration <= 6310000  && !alert15MinShown) {
+        if (timeUntilExpiration >= 900000   && timeUntilExpiration <= 910000   && !alert15MinShown) {
             showAlert("Your session will expire in 15 Min. Do you want to sign in again?", true)
                 .then((result) => {
                     if (result.isConfirmed) {

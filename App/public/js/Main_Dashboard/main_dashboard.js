@@ -220,14 +220,18 @@ function staytuned() {
 
 
 ///////////////////////////////////////// GET VALUES FOR PREADMISSION CONSOLE ON DASHBOARD ////////////////////////////
+
+let animationFrameId; // Declare a variable to store animation frame ID
+
 fetch('/main_dashboard_data')
     .then(response => response.json())
     .then(data => {
+        console.log(data); // Log fetched data to check if admittedTeachersCount is included
         // Update HTML with counts for each table
-        updateCountWithAnimation('registeredStudentsCount', data.pre_adm_registered_students);
-        updateCountWithAnimation('admittedStudentsCount', data.pre_adm_admitted_students);
-        updateCountWithAnimation('registeredTeachersCount', data.pre_adm_registered_teachers);
-        updateCountWithAnimation('admittedTeachersCount', data.pre_adm_admitted_teachers);
+        updateCountWithAnimation('registeredStudentsCount', () => data.pre_adm_registered_students);
+        updateCountWithAnimation('admittedStudentsCount', () => data.pre_adm_admitted_students);
+        updateCountWithAnimation('registeredTeachersCount', () => data.pre_adm_registered_teachers);
+        updateCountWithAnimation('admittedTeachersCount', () => data.pre_adm_admitted_teachers);
     })
     .catch(error => {
         console.error('Error fetching counts:', error);
@@ -237,12 +241,10 @@ fetch('/main_dashboard_data')
         updateCount('registeredTeachersCount', 'Error fetching count');
         updateCount('admittedTeachersCount', 'Error fetching count');
     });
-
-function updateCountWithAnimation(elementId, newValue) {
+    
+function updateCountWithAnimation(elementId, valueCallback) {
     const element = document.getElementById(elementId);
     const currentValue = parseInt(element.textContent) || 0; // Parse as integer, default to 0 if NaN
-    const difference = newValue - currentValue;
-    const duration = 2000; // 2 seconds
 
     let start;
 
@@ -250,13 +252,24 @@ function updateCountWithAnimation(elementId, newValue) {
         if (!start) start = timestamp;
         const elapsed = timestamp - start;
 
+        const newValue = valueCallback(); // Fetch updated value
+
+        if (typeof newValue !== 'number' || isNaN(newValue)) {
+            // If the fetched value is not a number or NaN, stop animation
+            element.textContent = 'Error fetching count';
+            return;
+        }
+
+        const difference = newValue - currentValue;
+        const duration = 2000; // 2 seconds
+
         // Update count value
-        const newValue = Math.floor(currentValue + (difference * elapsed) / duration);
-        element.textContent = newValue;
+        const updatedValue = Math.floor(currentValue + (difference * elapsed) / duration);
+        element.textContent = updatedValue;
 
         if (elapsed < duration) {
             // Continue animation
-            window.requestAnimationFrame(step);
+            animationFrameId = window.requestAnimationFrame(step);
         } else {
             // Animation complete, set final value
             element.textContent = newValue;
@@ -264,5 +277,21 @@ function updateCountWithAnimation(elementId, newValue) {
     }
 
     // Start animation
-    window.requestAnimationFrame(step);
+    animationFrameId = window.requestAnimationFrame(step);
 }
+
+// Pause animation when tab becomes hidden
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        // Tab is hidden, cancel animation
+        if (animationFrameId) {
+            window.cancelAnimationFrame(animationFrameId);
+        }
+    } else {
+        // Tab is visible again, resume animation
+        updateCountWithAnimation('registeredStudentsCount', /* valueCallback */);
+        updateCountWithAnimation('admittedStudentsCount', /* valueCallback */);
+        updateCountWithAnimation('registeredTeachersCount', /* valueCallback */);
+        updateCountWithAnimation('admittedTeachersCount', /* valueCallback */);
+    }
+});
