@@ -93,7 +93,6 @@ function showAlert(message, confirmButton = true) {
         showConfirmButton: confirmButton, // Show confirm button based on the parameter
         timer: 10000,
         timerProgressBar: true,
-        timerProgressBarColor: '#FF6347',
         toast: true
     });
 }
