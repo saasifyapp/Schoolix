@@ -22,6 +22,7 @@ app.get('/', (req, res) => {
 // Set up Express to parse request bodies
 app.use(express.urlencoded({ extended: true }));
 
+
 ///////////////////////////////// AUTHENTICATION //////////////////////////
 
 // const connection_auth = mysql.createPool({
