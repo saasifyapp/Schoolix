@@ -97,7 +97,7 @@ function showAlert(message, confirmButton = true) {
         toast: true
     });
 }
-
+ 
 // Function to check JWT expiration periodically
 function checkJWTExpiration() {
     const expirationTime = getJWTExpiration();
