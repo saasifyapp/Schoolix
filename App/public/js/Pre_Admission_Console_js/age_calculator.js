@@ -17,14 +17,14 @@ document.getElementById("calculateButton").addEventListener("click", function ()
 
     if (!birthdate) {
         // alert("Please select a date.");
-        showToast('Please select a date.', true); // Show error toast
+        showToast('Please select a valid date.', true); // Show error toast
         return;
     }
 
 
     if (birthDate > today) {
         // alert("Select a date before :" + today.getDate() + "-" + (today.getMonth() + 1) + "-" + today.getFullYear());
-        showToast('Please select a valid date', true); // Show error toast
+        showToast('Please select a date before today', true); // Show error toast
         return;
     }
 
