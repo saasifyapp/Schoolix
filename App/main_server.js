@@ -143,9 +143,9 @@ app.post('/login', (req, res) => {
                     const token = jwt.sign({ userId: user.userId }, JWT_SECRET, { expiresIn: '2h' });
 
                     // Save JWT and schoolName to cookies
-                    res.cookie('schoolName', schoolName, { maxAge: 7200000 });
-                    res.cookie('jwt', token, { httpOnly: false, maxAge: 7200000 });
-                    res.cookie('username', LoginName, { httpOnly: false, maxAge: 7200000 });
+                    res.cookie('schoolName', schoolName, { maxAge: 7200000  });
+                    res.cookie('jwt', token, { httpOnly: false, maxAge: 7200000  });
+                    res.cookie('username', LoginName, { httpOnly: false, maxAge: 7200000  });
 
                     // Redirect to dashboard
                     res.redirect('/dashboard');
