@@ -318,7 +318,7 @@ app.use('/', main_dashboard_dataRouter);
 
 /////////////////////// Call a Scheduled Task to send a ping to own server every 25 mins ///////////////////////////////////////
 
-scheduledTask();
+// scheduledTask();
 
 
 // Start the server
