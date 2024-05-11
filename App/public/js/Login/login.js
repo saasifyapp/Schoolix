@@ -1,23 +1,12 @@
- //======================== TO ANIMATE IMAGE MOVEMENT ON MOUSE TRACKING =============//
+function showLoadingBar() {
+    const loadingBar = document.querySelector('.loading-bar');
+    loadingBar.style.display = 'block';
+}
 
-//  var container = document.getElementById('container1');
-//  var image = container.querySelector('img');
-
-//  container.addEventListener('mousemove', function (e) {
-//      var boundingRect = container.getBoundingClientRect();
-//      var offsetX = e.clientX - boundingRect.left - boundingRect.width / 2;
-//      var offsetY = e.clientY - boundingRect.top - boundingRect.height / 2;
-//      var percentX = offsetX / (boundingRect.width / 2) * 5; // Adjust the speed as needed
-//      var percentY = offsetY / (boundingRect.height / 2) * 5; // Adjust the speed as needed
-//      var rotateX = -3 * percentY; // Adjust the degree of rotation as needed
-//      var rotateY = 3 * percentX; // Adjust the degree of rotation as needed
-//      var transformValue = 'perspective(1000px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) scale(1.05)'; // Magnifying effect
-//      image.style.transform = transformValue;
-//  });
-
-//  container.addEventListener('mouseleave', function () {
-//      image.style.transform = 'none';
-//  });
+function hideLoadingBar() {
+    const loadingBar = document.querySelector('.loading-bar');
+    loadingBar.style.display = 'none';
+}
 
 
 
@@ -94,7 +83,7 @@
 // Handle form submission
 document.getElementById('loginForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent the form from submitting
-
+    showLoadingBar();
     // Get username and password from the form
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
@@ -110,27 +99,33 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     .then(response => {
         if (response.ok) {
             // If login succeeds, redirect to dashboard
+            hideLoadingBar()
             window.location.href = '/dashboard';
         } else if (response.status === 401) {
             // If login fails, display error message
+            hideLoadingBar()
             response.text().then(message => showToast(message, true));
             // window.location.href = '/dashboard';
         } 
         else if (response.status === 402) {
             // If login fails, display error message
             // response.text().then(message => showToast(message, true));
+            hideLoadingBar()
             window.location.href = '/dashboard';
         }
         else if (response.status === 500) {
             // If internal server error, display error message
+            hideLoadingBar()
             showToast('Internal Server Error. Please try again later.', true);
         } else {
             // If other errors (e.g., bad request), display error message
+            hideLoadingBar()
             showToast('An error occurred. Please try again.', true);
         }
     })
     .catch(error => {
         // If network error, display error message
+        hideLoadingBar()
         showToast('Network error. Please check your connection and try again.', true);
         console.error('Error logging in:', error);
     });

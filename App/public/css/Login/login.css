@@ -277,3 +277,26 @@ footer {
 footer p {
     margin: 0 0;
 }
+
+.loading-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0.2rem; /* Height of the loading bar */
+    border-radius: 1rem;
+    background-color: #25b09b; /* Blue color, you can change it as needed */
+    z-index: 9999;
+    display: none;
+    animation: loadingAnimation 2s linear forwards; /* Animation properties */
+}
+
+/* Keyframe animation for loading bar */
+@keyframes loadingAnimation {
+    from {
+        width: 0; /* Start with width 0 */
+    }
+    to {
+        width: 100%; /* End with full width */
+    }
+}
