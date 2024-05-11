@@ -174,6 +174,68 @@ label {
     height: 22px;
 }
 
+#class-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+#alert-box {
+    margin-top: -100px;
+    width: 100%; /* Adjust as needed */
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px #AEB6BF;
+    text-align: center; /* Center text horizontally */
+}
+
+#alert-message {
+    color: black;
+    font-size: 12px;
+}
+
+.radio-wrapper {
+    display: inline-flex;
+    align-items: center;
+    margin: 20px;
+    margin-top: 10px;
+}
+
+.radio-wrapper input[type="radio"] {
+    vertical-align: middle; /* Align the radio button vertically with the label */
+    margin-right: 5px; /* Adjust the margin between the radio button and label */
+}
+
+.radio-wrapper input[type="radio"]:hover {
+    cursor: pointer;
+}
+
+.radio-wrapper label {
+    font-size: 16px; /* Adjust the font size as needed */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+
 .submit {
     display: inline-flex;
     align-items: center;
