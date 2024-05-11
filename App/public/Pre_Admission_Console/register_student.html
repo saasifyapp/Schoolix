@@ -35,8 +35,9 @@
 
     <div class="container-fluid">
         <div class="row  ">
-            <div class="col-md-3 col-xl-2 px-sm-2 px-0 menu overflow-x-hidden fixed-top"  style="height: 100vh;">
-                <div class="d-flex flex-column align-items-center align-items-sm-start px-1 pt-1 text-black " style="height: 100%;">
+            <div class="col-md-3 col-xl-2 px-sm-2 px-0 menu overflow-x-hidden fixed-top" style="height: 100vh;">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-1 pt-1 text-black "
+                    style="height: 100%;">
                     <a href="/pre_adm_dashboard"
                         class="d-flex align-items-center pb-1 py-0 mb-md-1 me-md-auto text-black text-decoration-none">
                         <span class="fs-4 d-none d-sm-inline  rounded-pill fw-500 text-decoration-none text-black p-2">
@@ -85,7 +86,8 @@
 
                     </ul>
                     <hr>
-                    <div class="pb-1 d-flex justify-content-between align-items-center w-100 flex-column flex-sm-row mb-4">
+                    <div
+                        class="pb-1 d-flex justify-content-between align-items-center w-100 flex-column flex-sm-row mb-4">
                         <a onclick="logout()" class="d-flex flex-column align-items-center text-black nav-link1">
                             <i class=" fs-1 bi nav-item"><img class=""
                                     style="transform: rotate(180deg); background-color: transparent; width: 30px; height: 30px;"
@@ -202,31 +204,24 @@
 
 
                                 <div class="input-wrapper">
-                                    <select name="standard" id="standard" placeholder="Select Class">
-                                        <option value="" disabled selected>Select Class</option>
-                                        <option value="Nursery">Nursery</option>
-                                        <option value="KG-1">KG-1</option>
-                                        <option value="KG-2">KG-2</option>
-                                        <option value="1st">1st</option>
-                                        <option value="2nd">2nd</option>
-                                        <option value="3rd">3rd</option>
-                                        <option value="4th">4th</option>
-                                        <option value="5th">5th</option>
-                                        <option value="6th">6th</option>
-                                        <option value="7th">7th</option>
-                                        <option value="8th">8th</option>
-                                        <option value="9th">9th</option>
-                                        <option value="10th">10th</option>
-                                    </select>
+                                    <input type="text" name="standard" id="standard" placeholder="Enter Class" readonly
+                                        onclick="showClassAlert()">
                                     <div class="icon-wrapper">
                                         <img src="/images/standard.png" alt="Date Of Birth Icon">
                                     </div>
                                 </div>
-                            </div>
-                            <div class="button-wrapper">
-                                <button class="submit" type="button" onclick="reg_student()">Submit</button>
-                                <button class="reset" type="button" onclick="resetForm()">Reset</button>
-                            </div>
+
+                                <div id="class-overlay" onclick="hideOverlay()">
+                                    <div id="alert-box">
+                                        <h4>Eligible for Class</h4>
+                                        <span id="alert-message"></span>
+                                    </div>
+                                </div>
+
+                                <div class="button-wrapper">
+                                    <button class="submit" type="button" onclick="reg_student()">Submit</button>
+                                    <button class="reset" type="button" onclick="resetForm()">Reset</button>
+                                </div>
                         </form>
                     </div>
                 </div>
@@ -238,6 +233,196 @@
 
 
     <script>
+        function showClassAlert() {
+            // Get the date from the input field
+
+            // Get the birthdate from the input field
+            var birthdate = document.getElementById("dateofbirth").value;
+            var today = new Date();
+            var birthDate = new Date(birthdate);
+
+            if (!birthdate) {
+                showToast('Please select a valid date.', true); // Show error toast
+                return;
+            }
+
+            if (birthDate > today) {
+                showToast('Please select a date before today', true); // Show error toast
+                return;
+            }
+
+            var years = today.getFullYear() - birthDate.getFullYear();
+            var months = today.getMonth() - birthDate.getMonth();
+            var days = today.getDate() - birthDate.getDate();
+
+            if (months < 0 || (months === 0 && today.getDate() < birthDate.getDate())) {
+                years--;
+                months += 12;
+            }
+
+            if (days < 0) {
+                var lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 0);
+                days += lastMonth.getDate();
+                months--;
+            }
+
+            var current_age = years + " Years " + months + " Months " + days + " Days ";   // Current Age
+
+            var current_year = today.getFullYear();
+            var specificDate = new Date(current_year, 11, 31);  // Month starts from index 0
+
+            var years_1 = specificDate.getFullYear() - birthDate.getFullYear();
+            var months_1 = specificDate.getMonth() - birthDate.getMonth();
+            var days_1 = specificDate.getDate() - birthDate.getDate();
+
+            if (months_1 < 0 || (months_1 === 0 && specificDate.getDate() < birthDate.getDate())) {
+                years_1--;
+                months_1 += 12;
+            }
+
+            if (days_1 < 0) {
+                var lastMonth = new Date(specificDate.getFullYear(), specificDate.getMonth() - 1, 0);
+                days_1 += lastMonth.getDate();
+                months_1--;
+            }
+
+            var age_on_date = years_1 + " Years " + months_1 + " Months " + days_1 + " Days ";  // Age on 31st December 
+
+            var show_class = "";
+            if ((years_1 >= 3 && years_1 <= 4)) {
+                if (years_1 == 3) { show_class = "Nursery"; }
+                else if (years_1 == 4 && months_1 <= 5 && days_1 <= 30) { show_class = "Nursery / KG-1"; }
+                else if (years_1 == 4 && months_1 >= 5 && days_1 <= 30) { show_class = "KG-1"; }
+                else if (years_1 == 4 && months_1 == 5 && days_1 >= 30) { show_class = "KG-1"; }
+            } else if ((years_1 >= 4 && years_1 <= 5)) {
+                if (years_1 == 4) { show_class = "KG-1"; }
+                else if (years_1 == 5 && months_1 <= 5 && days_1 <= 30) { show_class = "KG-1 / KG-2"; }
+                else if (years_1 == 5 && months_1 >= 5 && days_1 <= 30) { show_class = "KG-2"; }
+                else if (years_1 == 5 && months_1 == 5 && days_1 >= 30) { show_class = "KG-2"; }
+            } else if ((years_1 >= 5 && years_1 <= 6)) {
+                if (years_1 == 5) { show_class = "KG-2"; }
+                else if (years_1 == 6 && months_1 <= 5 && days_1 <= 30) { show_class = "KG-2 / 1 ST"; }
+                else if (years_1 == 6 && months_1 >= 5 && days_1 <= 30) { show_class = "1 ST"; }
+                else if (years_1 == 6 && months_1 == 5 && days_1 >= 30) { show_class = "1 ST"; }
+            } else if ((years_1 >= 6 && years_1 <= 7)) {
+                if (years_1 == 6) { show_class = "1 ST"; }
+                else if (years_1 == 7 && months_1 <= 5 && days_1 <= 30) { show_class = "1 ST / 2 ND"; }
+                else if (years_1 == 7 && months_1 >= 5 && days_1 <= 30) { show_class = "2 ND"; }
+                else if (years_1 == 7 && months_1 == 5 && days_1 >= 30) { show_class = "2 ND"; }
+            } else if ((years_1 >= 7 && years_1 <= 8)) {
+                if (years_1 == 7) { show_class = "2 ND"; }
+                else if (years_1 == 8 && months_1 <= 5 && days_1 <= 30) { show_class = "2 ND / 3 RD"; }
+                else if (years_1 == 8 && months_1 >= 5 && days_1 <= 30) { show_class = "3 RD"; }
+                else if (years_1 == 8 && months_1 == 5 && days_1 >= 30) { show_class = "3 RD"; }
+            } else if ((years_1 >= 8 && years_1 <= 9)) {
+                if (years_1 == 8) { show_class = "3 RD"; }
+                else if (years_1 == 9 && months_1 <= 5 && days_1 <= 30) { show_class = "3 RD / 4 TH"; }
+                else if (years_1 == 9 && months_1 >= 5 && days_1 <= 30) { show_class = "4 TH"; }
+                else if (years_1 == 9 && months_1 == 5 && days_1 >= 30) { show_class = "4 TH"; }
+            } else if ((years_1 >= 9 && years_1 <= 10)) {
+                if (years_1 == 9) { show_class = "4th"; }
+                else if (years_1 == 10 && months_1 <= 5 && days_1 <= 30) { show_class = "4 TH / 5 TH"; }
+                else if (years_1 == 10 && months_1 >= 5 && days_1 <= 30) { show_class = "5 TH"; }
+                else if (years_1 == 10 && months_1 == 5 && days_1 >= 30) { show_class = "5 TH"; }
+            } else if ((years_1 >= 10 && years_1 <= 11)) {
+                if (years_1 == 10) { show_class = "5 TH"; }
+                else if (years_1 == 11 && months_1 <= 5 && days_1 <= 30) { show_class = "5 TH / 6 TH"; }
+                else if (years_1 == 11 && months_1 >= 5 && days_1 <= 30) { show_class = "6 TH"; }
+                else if (years_1 == 11 && months_1 == 5 && days_1 >= 30) { show_class = "6 TH"; }
+            } else if ((years_1 >= 11 && years_1 <= 12)) {
+                if (years_1 == 11) { show_class = "6 TH"; }
+                else if (years_1 == 12 && months_1 <= 5 && days_1 <= 30) { show_class = "6 TH / 7 TH"; }
+                else if (years_1 == 12 && months_1 >= 5 && days_1 <= 30) { show_class = "7 TH"; }
+                else if (years_1 == 12 && months_1 == 5 && days_1 >= 30) { show_class = "7 TH"; }
+            } else if ((years_1 >= 12 && years_1 <= 13)) {
+                if (years_1 == 12) { show_class = "7 TH"; }
+                else if (years_1 == 13 && months_1 <= 5 && days_1 <= 30) { show_class = "7 TH / 8 TH"; }
+                else if (years_1 == 13 && months_1 >= 5 && days_1 <= 30) { show_class = "8 TH"; }
+                else if (years_1 == 13 && months_1 == 5 && days_1 >= 30) { show_class = "8 TH"; }
+            } else if ((years_1 >= 13 && years_1 <= 14)) {
+                if (years_1 == 13) { show_class = "8 TH"; }
+                else if (years_1 == 14 && months_1 <= 5 && days_1 <= 30) { show_class = "8 TH / 9 TH"; }
+                else if (years_1 == 14 && months_1 >= 5 && days_1 <= 30) { show_class = "9 TH"; }
+                else if (years_1 == 14 && months_1 == 5 && days_1 >= 30) { show_class = "9 TH"; }
+            } else if ((years_1 >= 14 && years_1 <= 15)) {
+                if (years_1 == 14) { show_class = "9 TH"; }
+                else if (years_1 == 15 && months_1 <= 5 && days_1 <= 30) { show_class = "9 TH / 10 TH"; }
+                else if (years_1 == 15 && months_1 >= 5 && days_1 <= 30) { show_class = "10 TH"; }
+                else if (years_1 == 15 && months_1 == 5 && days_1 >= 30) { show_class = "10 TH"; }
+            } else if (years_1 >= 16) { show_class = "OUT OF SCHOOL"; }
+            else if (years_1 < 3) { show_class = "VISIT NEXT YEAR"; }
+
+            /////////////////////////////// DYNAMICALLY CREATE RADIO BUTTONS ///////////////////////
+
+
+            // Split the show_class string
+            var classes = show_class.split(" / ");
+
+            // Store separate parts in variables
+            var class1 = classes[0];
+            var class2 = classes[1];
+
+            // Show the overlay
+            document.getElementById('class-overlay').style.display = 'flex';
+
+            // Set the alert message
+            var alertMessage = document.getElementById('alert-message');
+
+
+            if (class1 && class2) {
+                // Both class1 and class2 are defined, create two radio buttons
+                var radio1 = createRadioButton(class1, 'class1', class1);
+                var radio2 = createRadioButton(class2, 'class2', class2);
+
+                alertMessage.appendChild(radio1);
+                alertMessage.appendChild(radio2);
+            } else {
+                // Only one class is defined, create one radio button
+                var radio = createRadioButton(class1 || class2, 'class', class1 || class2);
+                alertMessage.appendChild(radio);
+            }
+        }
+
+        function createRadioButton(label, name, value) {
+            var alertMessage = document.getElementById('alert-message');
+
+            // Clear existing radio buttons
+            alertMessage.innerHTML = '';
+
+            var radioInput = document.createElement('input');
+            radioInput.type = 'radio';
+            radioInput.name = name;
+            radioInput.value = value;
+            radioInput.style.marginTop = '10px'; // Add top margin to the radio button
+
+
+            var labelElem = document.createElement('label');
+            labelElem.innerHTML = label;
+
+            var wrapper = document.createElement('div');
+            wrapper.classList.add('radio-wrapper');
+            wrapper.appendChild(radioInput);
+            wrapper.appendChild(labelElem);
+
+            // Add event listener to update the standard input field value
+            radioInput.addEventListener('click', function () {
+                document.getElementById('standard').value = value;
+            });
+
+            // Append the wrapper to the alert message
+            alertMessage.appendChild(wrapper);
+
+            return wrapper;
+        }
+
+        function hideOverlay() {
+            // Hide the overlay
+            document.getElementById('class-overlay').style.display = 'none';
+        }
+
+
+        ///////////////////////////////////////
+
         function showLoadingAnimation() {
             document.getElementById('loadingOverlay').style.display = 'flex';
         }
