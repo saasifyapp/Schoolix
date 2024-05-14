@@ -24,7 +24,6 @@ function closeOverlay() {
     document.getElementById('addVendorOverlay').style.display = 'none';
 }
 
-//function to add a vendor
 document.addEventListener("DOMContentLoaded", function () {
     // Get the form element
     const form = document.getElementById('vendorForm');
@@ -34,8 +33,10 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault(); // Prevent the default form submission
 
         // Get the vendor name and amount paid from the form
-        const vendorName = document.getElementById('vendorName').value;
-        const amountPaid = parseFloat(document.getElementById('amountPaid').value);
+        const vendorNameInput = document.getElementById('vendorName');
+        const amountPaidInput = document.getElementById('amountPaid');
+        const vendorName = vendorNameInput.value;
+        const amountPaid = parseFloat(amountPaidInput.value);
 
         // Prepare the data to send in the request body
         const data = {
@@ -55,7 +56,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                // return response.json();
+                // Clear input fields after successful submission
+                vendorNameInput.value = '';
+                amountPaidInput.value = '';
             })
             .then(data => {
                 console.log('Vendor added successfully');
@@ -95,7 +98,7 @@ function displayVendors(data) {
                 <td>${vendor.paid_till_now}</td>
                 <td>${vendor.balance}</td>
                 <td>
-                <button style="display: inline-block; margin-right: 5px; width:1rem;" onclick="editVendor('${vendor.vendor_name}', '${vendor.net_payable}', '${vendor.paid_till_now}', '${vendor.balance}')">Edit</button>
+                <!--<button style="display: inline-block; margin-right: 5px; width:1rem;" onclick="editVendor('${vendor.vendor_name}', '${vendor.net_payable}', '${vendor.paid_till_now}', '${vendor.balance}')">Edit</button>-->
                 <button style="display: inline-block; width:1rem;" onclick="deleteVendor('${vendor.vendor_name}','${vendor.net_payable}', '${vendor.paid_till_now}', '${vendor.balance}')">Delete</button>
             </td>
             `;
