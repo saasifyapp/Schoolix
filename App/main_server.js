@@ -205,6 +205,18 @@ app.get('/pre_adm/admitted_student', authenticateToken, (req, res) => {
 app.get('/pre_adm/admitted_teacher', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Pre_Admission_Console', 'admitted_teacher.html'));
 });
+//Serve HTML form
+app.get('/inventory/purchase', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_purchase.html'));
+});
+//Serve HTML form
+app.get('/inventory/billing', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_billing.html'));
+});
+//Serve HTML form
+app.get('/inventory/reports', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_reports.html'));
+});
 
 
 // Middleware to authenticate JWT
@@ -276,35 +288,35 @@ app.get('/logout', (req, res) => {
 
 //////////////////////// STUDENT CONSOLE////////////////////////////////
 // Import the router for handling student details submission
-const submitStudentRouter = require('./src/routes/student_details');
+const submitStudentRouter = require('./src/routes/pre_admission_console_routes/student_details');
 // Mount the student details submission router to the root path
 app.use('/', submitStudentRouter);
 
 // Import the router for displaying student data
-const displayStudentRouter = require('./src/routes/display_students');
+const displayStudentRouter = require('./src/routes/pre_admission_console_routes/display_students');
 // Mount the student display router to the root path
 app.use('/', displayStudentRouter);
 
 ////////// ADMITTED STUDENTS
 // Import the router for displaying admitted students
-const displayadmStudentRouter = require('./src/routes/admitted_student');
+const displayadmStudentRouter = require('./src/routes/pre_admission_console_routes/admitted_student');
 // Mount the admitted student display router to the root path
 app.use('/', displayadmStudentRouter);
 
 //////////////////////// TEACHER CONSOLE////////////////////////////////
 // Import the router for handling teacher details submission
-const submitTeacherRouter = require('./src/routes/teacher_details');
+const submitTeacherRouter = require('./src/routes/pre_admission_console_routes/teacher_details');
 // Mount the teacher details submission router to the root path
 app.use('/', submitTeacherRouter);
 
 // Import the router for displaying teacher data
-const displayTeacherRouter = require('./src/routes/display_teacher');
+const displayTeacherRouter = require('./src/routes/pre_admission_console_routes/display_teacher');
 // Mount the teacher display router to the root path
 app.use('/', displayTeacherRouter);
 
 ////////// ADMITTED TEACHERS
 // Import the router for displaying admitted teachers
-const displayadmTeacherRouter = require('./src/routes/admitted_teacher');
+const displayadmTeacherRouter = require('./src/routes/pre_admission_console_routes/admitted_teacher');
 // Mount the admitted teacher display router to the root path
 app.use('/', displayadmTeacherRouter);
 
