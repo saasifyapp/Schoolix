@@ -1,4 +1,8 @@
-.cards-container {
+body{
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+}
+
+ .cards-container {
     display: flex;
     justify-content: space-between;
     /* Adjust as needed */

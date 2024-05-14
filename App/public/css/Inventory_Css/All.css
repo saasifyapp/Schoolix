@@ -1,3 +1,6 @@
+body{
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+}
 /* Toast CSS */
 .toast {
     width: 15rem;
