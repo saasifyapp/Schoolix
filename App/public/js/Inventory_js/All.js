@@ -18,3 +18,23 @@ function showToast(message, isError) {
         toast.style.display = 'none';
     }, 3000);
 }
+
+document.getElementById('logoutButton').addEventListener('click', function () {
+    // Make an AJAX request to logout route
+    const confirmation = confirm(`Are you sure you want to logout ?`);
+    if (confirmation) {
+        fetch('/logout', {
+            method: 'GET',
+            credentials: 'same-origin' // Send cookies with the request
+        })
+            .then(response => {
+                if (response.ok) {
+                    // Redirect to homepage or login page
+                    window.location.href = '/';
+                } else {
+                    console.error('Logout failed');
+                }
+            })
+            .catch(error => console.error('Error during logout:', error));
+    };
+})

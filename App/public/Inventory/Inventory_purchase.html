@@ -9,21 +9,90 @@
 </head>
 
 <body>
+
+  <div class="dropdown" style="float: right; margin-right: 20px;">
+    <button class="dropdown-button">
+      <img src="/images/main-menu.png" alt="Dropdown Icon"
+        style="background-color: transparent; width: 35px; height: 30px;">
+    </button>
+    <div class="dropdown-content">
+      <button onclick="window.location.href='/dashboard'">
+        <img src="/images/homeicon.png" alt="Dashboard Icon"
+          style="background-color: transparent; width: 20px; height: 20px;"> Home
+      </button>
+      <button class="signout-button" id="logoutButton">
+        <img src="/images/logout.png" alt="Signout Icon"
+          style="background-color: transparent; width: 20px; height: 20px;"> Signout
+      </button>
+    </div>
+  </div>
+
+
+  <div class="adm-head">
+    <div class="button-container">
+      <h2>Purchase Console</h2>
+    </div>
+  </div>
+
+
   <!-- Buttons for overlay -->
   <div class="cards-container">
     <div class="card">
-      <a><button>Add Vendor</button></a>
+      <a>
+        <button>
+          <div class="dotlottie-container">
+            <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+              type="module"></script>
+            <dotlottie-player src="https://lottie.host/a2c9be57-829c-4a5f-b68e-a0c20d1bf05e/bUQIIe5xqz.json"
+              background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+          </div>
+          <h3>Add Vendor Name</h3>
+        </button>
+      </a>
+    </div>
+
+    <div class="card">
+      <a>
+        <button>
+          <div class="dotlottie-container" style="">
+            <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+              type="module"></script>
+            <dotlottie-player src="https://lottie.host/751e9208-858f-4336-bf76-92b62c3aced4/H57DKXfEaG.json"
+              background="transparent" speed="1" style="width: 300px; height: 200px; margin-bottom: 2rem;" loop
+              autoplay></dotlottie-player>
+          </div>
+          <h3>Add Book</h3>
+        </button>
+      </a>
     </div>
     <div class="card">
-      <a href=""><button>Add Books</button></a>
+      <a>
+        <button>
+          <div class="dotlottie-container">
+            <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+              type="module"></script>
+            <dotlottie-player src="https://lottie.host/95385bc4-4150-4e73-ac75-b0566da374ee/HzZJOD1n6u.json"
+              background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+          </div>
+          <h3>Add Uniform</h3>
+        </button>
+      </a>
     </div>
     <div class="card">
-      <a href=""> <button>Add Uniform</button></a>
-    </div>
-    <div class="card">
-      <a href=""> <button>Summary</button></a>
+      <a>
+        <button>
+          <div class="dotlottie-container">
+            <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+              type="module"></script>
+            <dotlottie-player src="https://lottie.host/0b40138a-6905-4cd7-acd3-78e660403b7b/i31yhXEfxm.json"
+              background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+          </div>
+          <h3>Purchase Reports</h3>
+        </button>
+      </a>
     </div>
   </div>
+
 
   <!-- Overlay for Add Vendor -->
   <div id="addVendorOverlay" class="overlay">
@@ -31,7 +100,7 @@
     <div class="overlay-content">
       <h2>Add Vendor</h2>
       <!-- Close icon -->
-      <div class="close-icon" onclick="closeOverlay()">×</div>      
+      <div class="close-icon" onclick="closeOverlay()">×</div>
       <form action="/inventory/purchase/add_vendor" method="post" id="vendorForm">
         <label for="vendorName">Vendor Name:</label>
         <input type="text" id="vendorName" name="vendorName" required><br>
@@ -56,8 +125,8 @@
     </div>
   </div>
 
-<script src="/js/Inventory_js/Inventory.js"></script>
-<script src="/js/Inventory_js/All.js"></script>
+  <script src="/js/Inventory_js/Inventory.js"></script>
+  <script src="/js/Inventory_js/All.js"></script>
 </body>
 
 </html>
