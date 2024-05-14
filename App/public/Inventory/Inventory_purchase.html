@@ -1,26 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/css/Inventory_Css/All.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventory Purchase</title>
+  <link rel="stylesheet" href="/css/Inventory_Css/Inventory.css">
 </head>
+
 <body>
-    <div class="cards-container">
-        <div class="card">
-          <a href=""><button>Add Vendor</button></a>
-        </div>
-        <div class="card">
-          <a href=""><button>Add Books</button></a>
-        </div>
-        <div class="card">
-         <a href=""> <button>Add Uniform</button></a>
-        </div>
-        <div class="card">
-         <a href=""> <button>Summary</button></a>
-        </div>
-      </div>
-      
+  <!-- Buttons for overlay -->
+  <div class="cards-container">
+    <div class="card">
+      <a><button>Add Vendor</button></a>
+    </div>
+    <div class="card">
+      <a href=""><button>Add Books</button></a>
+    </div>
+    <div class="card">
+      <a href=""> <button>Add Uniform</button></a>
+    </div>
+    <div class="card">
+      <a href=""> <button>Summary</button></a>
+    </div>
+  </div>
+
+  <!-- Overlay for Add Vendor -->
+  <div id="addVendorOverlay" class="overlay">
+    <div id="toast" class="toast"></div>
+    <div class="overlay-content">
+      <h2>Add Vendor</h2>
+      <!-- Close icon -->
+      <div class="close-icon" onclick="closeOverlay()">×</div>      
+      <form action="/inventory/purchase/add_vendor" method="post" id="vendorForm">
+        <label for="vendorName">Vendor Name:</label>
+        <input type="text" id="vendorName" name="vendorName" required><br>
+        <label for="amountPaid">Amount Paid:</label>
+        <input type="text" id="amountPaid" name="amountPaid" required><br>
+        <button type="submit" class="submit-btn">Submit</button>
+      </form>
+      <table>
+        <thead>
+          <tr>
+            <th>Vendor Name</th>
+            <th>Net Payable</th>
+            <th>Paid Till Now</th>
+            <th>Balance</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="vendorTableBody">
+          <!-- Table rows will be populated dynamically -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+<script src="/js/Inventory_js/Inventory.js"></script>
+<script src="/js/Inventory_js/All.js"></script>
 </body>
+
 </html>

@@ -1,24 +1,36 @@
-.cards-container {
-    display: flex;
-    justify-content: space-between; /* Adjust as needed */
-  }
-  
-  .card {
-    flex: 1;
-    margin-right: 10px; /* Adjust spacing between cards */
-  }
-  
-  button {
-    width: 100%;
-    padding: 10px 20px;
-    border: none;
-    background-color: #007bff; /* Change color as needed */
+/* Toast CSS */
+.toast {
+    width: 15rem;
+    position: fixed;
+    top: 20px;
+    right: -200px;
+    /* Initially off-screen to the right */
+    background-color: #4CAF50;
+    /* Green background */
     color: white;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3; /* Change color as needed */
-  }
-  
+    padding: 16px;
+    border-radius: 8px;
+    z-index: 9999;
+    display: none;
+    /* Changed from 'none' to 'block' */
+    animation: slideInRight 0.5s forwards;
+    /* Slide in animation */
+}
+
+@keyframes slideInRight {
+    from {
+        right: -200px;
+        /* Start off-screen to the right */
+    }
+
+    to {
+        right: 20px;
+        /* End at the desired position */
+    }
+}
+
+.toast.error {
+    background-color: #f44336;
+    color: white;
+    /* Red background for error */
+}

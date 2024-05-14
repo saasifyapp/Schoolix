@@ -332,6 +332,11 @@ app.use('/', main_dashboard_dataRouter);
 
 // scheduledTask();
 
+/////////////////////// ROUTES FOR INVENTORY MODULE ///////////////////////////////////////
+
+const addVendorDataRouter = require('./src/routes/Inventory_routes/add_vendor');
+// Mount the student details submission router to the root path
+app.use('/', addVendorDataRouter);
 
 // Start the server
 const PORT = process.env.PORT || 4000;
