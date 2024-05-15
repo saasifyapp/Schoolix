@@ -1,29 +1,4 @@
-// JavaScript for overlay functionality
-document.addEventListener("DOMContentLoaded", function () {
-    // Get all buttons in the cards container
-    var buttons = document.querySelectorAll('.cards-container .card button');
-
-    // Loop through each button and add click event listener
-    buttons.forEach(function (button) {
-        button.addEventListener('click', function () {
-            // Show the overlay
-            document.getElementById('addVendorOverlay').style.display = 'block';
-        });
-    });
-
-    // Close the overlay when clicking on the overlay content area
-    document.getElementById('addVendorOverlay').addEventListener('click', function (event) {
-        if (event.target === this) {
-            this.style.display = 'none';
-        }
-    });
-});
-
-// JavaScript function to close the overlay
-function closeOverlay() {
-    document.getElementById('addVendorOverlay').style.display = 'none';
-}
-
+//Submitting vendor data
 document.addEventListener("DOMContentLoaded", function () {
     // Get the form element
     const form = document.getElementById('vendorForm');
@@ -73,6 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+//refresh data
 function refreshData() {
     // showLoadingAnimation();
     fetch('/inventory/vendors')
@@ -122,8 +98,9 @@ function deleteVendor(vendorName) {
             }
         })
         .then(data => {
+            refreshData();
             showToast('Vendor deleted successfully.', false); // Show success toast
-            refreshData(); // Refresh data after deleting the vendor
+            // Refresh data after deleting the vendor
         })
         .catch(error => {
             console.error('Error deleting vendor:', error);

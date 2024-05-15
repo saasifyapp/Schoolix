@@ -1,3 +1,48 @@
+document.addEventListener("DOMContentLoaded", function () {
+    // Get all buttons in the cards container
+    var buttons = document.querySelectorAll('.cards-container .card button');
+
+    // Loop through each button and add click event listener
+    buttons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            // Get the parent card element
+            var parentCard = button.closest('.card');
+            
+            // Check the class of the parent card to determine which overlay to show
+            if (parentCard.classList.contains('add-vendor')) {
+                // Show the add vendor overlay
+                document.getElementById('addVendorOverlay').style.display = 'block';
+            } else if (parentCard.classList.contains('add-book')) {
+                // Show the add books overlay
+                document.getElementById('addBooksOverlay').style.display = 'block';
+            } else if (parentCard.classList.contains('add-uniform')) {
+                // Show the add uniform overlay
+                document.getElementById('addUniformOverlay').style.display = 'block';
+            } else if (parentCard.classList.contains('purchase-reports')) {
+                // Show the purchase reports overlay
+                document.getElementById('purchaseReportsOverlay').style.display = 'block';
+            }
+        });
+    });
+
+    // Close the overlay when clicking on the overlay content area
+    document.querySelectorAll('.overlay').forEach(function (overlay) {
+        overlay.addEventListener('click', function (event) {
+            if (event.target === this) {
+                this.style.display = 'none';
+            }
+        });
+    });
+});
+
+// JavaScript function to close the overlay
+function closeOverlay(event) {
+    var overlay = event.target.closest('.overlay');
+    if (overlay) {
+        overlay.style.display = 'none';
+    }
+}
+
 // Function to display toast message
 function showToast(message, isError) {
     const toast = document.getElementById('toast');

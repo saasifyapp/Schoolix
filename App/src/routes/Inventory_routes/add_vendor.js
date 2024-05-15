@@ -6,7 +6,7 @@ router.post('/inventory/purchase/add_vendor', (req, res) => {
     const { vendorName, amountPaid } = req.body;
     const netPayable = req.body.netPayable || 0;
     const balance = req.body.balance || 0;
-
+    console.log(req.body)
     const sql = 'INSERT INTO inventory_vendor_details (vendor_name, net_payable, paid_till_now, balance) VALUES (?, ?, ?, ?)';
     connection.query(sql, [vendorName, netPayable, amountPaid, balance], (err, result) => {
         if (err) {

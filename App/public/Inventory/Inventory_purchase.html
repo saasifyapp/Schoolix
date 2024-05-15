@@ -37,7 +37,7 @@
 
   <!-- Buttons for overlay -->
   <div class="cards-container">
-    <div class="card">
+    <div class="card add-vendor">
       <a>
         <button>
           <div class="dotlottie-container">
@@ -51,7 +51,7 @@
       </a>
     </div>
 
-    <div class="card">
+    <div class="card add-book">
       <a>
         <button>
           <div class="dotlottie-container">
@@ -65,7 +65,7 @@
         </button>
       </a>
     </div>
-    <div class="card">
+    <div class="card add-uniform">
       <a>
         <button>
           <div class="dotlottie-container">
@@ -78,7 +78,7 @@
         </button>
       </a>
     </div>
-    <div class="card">
+    <div class="card purchase-reports">
       <a>
         <button>
           <div class="dotlottie-container">
@@ -100,7 +100,7 @@
     <div class="overlay-content">
       <h2>Add Vendor</h2>
       <!-- Close icon -->
-      <div class="close-icon" onclick="closeOverlay()">×</div>
+      <div class="close-icon" onclick="closeOverlay(event)">×</div>
       <form action="/inventory/purchase/add_vendor" method="post" id="vendorForm">
         <label for="vendorName">Vendor Name:</label>
         <input type="text" id="vendorName" name="vendorName" required><br>
@@ -125,7 +125,61 @@
     </div>
   </div>
 
-  <script src="/js/Inventory_js/Inventory.js"></script>
+  <!-- Overlay for Add Books -->
+  <div id="addBooksOverlay" class="overlay" style="display: none;">
+    <div class="overlay-content">
+      <h2>Add Books</h2>
+      <!-- Close icon -->
+      <div class="close-icon" onclick="closeOverlay(event)">×</div>
+      <!-- Form for adding books -->
+      <form id="addBooksForm">
+        <label for="bookTitle">Book Title:</label>
+        <input type="text" id="bookTitle" name="bookTitle" required><br>
+        <label for="bookClass">Class:</label>
+        <select id="bookClass" name="bookClass" required>
+          <option value="Nursery">Nursery</option>
+          <option value="KG">KG</option>
+          <!-- Add more options for other classes -->
+        </select><br>
+        <label for="purchasePrice">Purchase Price:</label>
+        <input type="number" id="purchasePrice" name="purchasePrice" required><br>
+        <label for="sellingPrice">Selling Price:</label>
+        <input type="number" id="sellingPrice" name="sellingPrice" required><br>
+        <label for="vendor">Vendor:</label>
+        <select id="vendor" name="vendor">
+          <!-- Options will be populated dynamically -->
+        </select><br>
+        <label for="orderedQuantity">Ordered Quantity:</label>
+        <input type="number" id="orderedQuantity" name="orderedQuantity" required><br>
+        <label for="remainingQuantity">Remaining Quantity:</label>
+        <input type="number" id="remainingQuantity" name="remainingQuantity" required><br>
+        <button type="submit" class="sub-book-btn">Add Book</button>
+      </form>
+      <!-- Table for displaying books -->
+      <table id="booksTable">
+        <thead>
+          <tr>
+            <th>Book Title</th>
+            <th>Class</th>
+            <th>Purchase Price</th>
+            <th>Selling Price</th>
+            <th>Vendor</th>
+            <th>Ordered Quantity</th>
+            <th>Remaining Quantity</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Table rows will be populated dynamically -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+  <script src="/js/Inventory_js/Inventory_addVendor.js"></script>
+  <script src="/js/Inventory_js/Inventory_addBooks.js"></script>
   <script src="/js/Inventory_js/All.js"></script>
 </body>
 
