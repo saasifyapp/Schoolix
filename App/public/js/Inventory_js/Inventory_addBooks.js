@@ -14,7 +14,30 @@ document.addEventListener("DOMContentLoaded", function () {
             // Convert FormData to JSON
             const jsonData = {};
             formData.forEach((value, key) => {
-                jsonData[key] = value;
+                // Adjust keys to match server-side expectations
+                switch (key) {
+                    case 'bookTitle':
+                        jsonData['title'] = value;
+                        break;
+                    case 'bookClass':
+                        jsonData['class_of_title'] = value;
+                        break;
+                    case 'purchasePrice':
+                        jsonData['purchase_price'] = value;
+                        break;
+                    case 'sellingPrice':
+                        jsonData['selling_price'] = value;
+                        break;
+                    case 'orderedQuantity':
+                        jsonData['ordered_quantity'] = value;
+                        break;
+                    case 'remainingQuantity':
+                        jsonData['remaining_quantity'] = value;
+                        break;
+                    // Add cases for other keys as needed
+                    default:
+                        jsonData[key] = value;
+                }
             });
 
             // Make a POST request to the endpoint
@@ -115,19 +138,19 @@ function deleteBook(title) {
         fetch(`/inventory/books/${encodeURIComponent(title)}`, {
             method: 'DELETE'
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to delete book.');
-            }
-        })
-        .then(data => {
-            showToast('Book deleted successfully.', false); // Show success toast
-            refreshbooksData(); // Refresh data after deleting the book
-        })
-        .catch(error => {
-            console.error('Error deleting book:', error);
-            showToast('An error occurred while deleting the book.', true); // Show error toast
-        });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to delete book.');
+                }
+            })
+            .then(data => {
+                showToast('Book deleted successfully.', false); // Show success toast
+                refreshbooksData(); // Refresh data after deleting the book
+            })
+            .catch(error => {
+                console.error('Error deleting book:', error);
+                showToast('An error occurred while deleting the book.', true); // Show error toast
+            });
     }
 }
 

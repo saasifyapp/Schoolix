@@ -34,20 +34,19 @@ router.get('/inventory/books', (req, res) => {
 });
 
 // // Deleting book endpoint
-// router.delete('/inventory/books/:title', (req, res) => {
-//     const title = req.params.title;
-
-//     const sql = 'DELETE FROM inventory_book_details WHERE title = ?';
-//     connection.query(sql, [title], (err, result) => {
-//         if (err) {
-//             console.error('Error deleting book:', err);
-//             res.status(500).json({ error: 'Error deleting book' });
-//         } else {
-//             console.log('Book deleted successfully');
-//             res.status(200).json({ message: 'Book deleted successfully' });
-//         }
-//     });
-// });
+ router.delete('/inventory/books/:title', (req, res) => {
+     const title = req.params.title
+     const sql = 'DELETE FROM inventory_book_details WHERE title = ?';
+     connection.query(sql, [title], (err, result) => {
+         if (err) {
+             console.error('Error deleting book:', err);
+             res.status(500).json({ error: 'Error deleting book' });
+         } else {
+             console.log('Book deleted successfully');
+             res.status(200).json({ message: 'Book deleted successfully' });
+         }
+     });
+ });
 
 
 
