@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inventory Purchase</title>
+  <link rel="stylesheet" href="/css/Inventory_Css/All.css">
   <link rel="stylesheet" href="/css/Inventory_Css/Inventory.css">
 </head>
 
@@ -96,12 +97,12 @@
 
   <!-- Overlay for Add Vendor -->
   <div id="addVendorOverlay" class="overlay">
-    <div id="toast" class="toast"></div>
     <div class="overlay-content">
       <h2>Add Vendor</h2>
       <!-- Close icon -->
       <div class="close-icon" onclick="closeOverlay(event)">×</div>
       <form action="/inventory/purchase/add_vendor" method="post" id="vendorForm">
+        <div id="toast" class="toast"></div>
         <label for="vendorName">Vendor Name:</label>
         <input type="text" id="vendorName" name="vendorName" required><br>
         <label for="amountPaid">Amount Paid:</label>
@@ -133,6 +134,7 @@
       <div class="close-icon" onclick="closeOverlay(event)">×</div>
       <!-- Form for adding books -->
       <form id="addBooksForm">
+        <div id="toast" class="toast"></div>
         <label for="bookTitle">Book Title:</label>
         <input type="text" id="bookTitle" name="bookTitle" required><br>
         <label for="bookClass">Class:</label>
@@ -156,7 +158,7 @@
         <button type="submit" class="sub-book-btn">Add Book</button>
       </form>
       <!-- Table for displaying books -->
-      <table id="booksTable">
+      <table>
         <thead>
           <tr>
             <th>Book Title</th>
@@ -169,7 +171,7 @@
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="booksTable">
           <!-- Table rows will be populated dynamically -->
         </tbody>
       </table>

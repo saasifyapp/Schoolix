@@ -57,11 +57,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
                 .then(data => {
                     console.log('Book added successfully');
+                    showToast('Book added successfully');
                     refreshbooksData();
                     // You can update the UI or do something else here after successful submission
                 })
                 .catch(error => {
                     refreshbooksData();
+                    showToast('Book added failed');
                     console.error('Error adding book:', error);
                     // Handle errors here, like displaying an error message to the user
                 });
@@ -72,14 +74,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-// JavaScript for populating vendor dropdown
-document.addEventListener("DOMContentLoaded", function () {
+// Function to populate vendor dropdown
+function populateVendorDropdown() {
     // Fetch vendors from the server
     fetch('/inventory/vendors')
         .then(response => response.json())
         .then(data => {
             // Populate the vendor dropdown with fetched data
             const vendorDropdown = document.getElementById('vendor');
+            vendorDropdown.innerHTML = ''; // Clear existing options
             data.forEach(vendor => {
                 const option = document.createElement('option');
                 option.textContent = vendor.vendor_name; // Assuming vendor_name is the display value
@@ -90,7 +93,13 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error('Error fetching vendors:', error);
             // Optionally, you can display an error message to the user
         });
+}
+
+// Call populateVendorDropdown when the page initially loads
+document.addEventListener("DOMContentLoaded", function () {
+    populateVendorDropdown();
 });
+
 
 // Refresh data function for fetching and displaying books
 function refreshbooksData() {
@@ -106,7 +115,7 @@ function refreshbooksData() {
 // Function to display book data
 function displayBooks(data) {
     const bookTableBody = document.getElementById('booksTable');
-    // bookTableBody.innerHTML = ''; 
+    bookTableBody.innerHTML = ''; 
 
     try {
         data.forEach(book => {

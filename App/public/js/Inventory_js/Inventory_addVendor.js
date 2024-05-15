@@ -34,14 +34,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Clear input fields after successful submission
                 vendorNameInput.value = '';
                 amountPaidInput.value = '';
+                populateVendorDropdown();
             })
             .then(data => {
                 console.log('Vendor added successfully');
+                showToast('Vendor added successfully');
                 refreshData();
                 // You can update the UI or do something else here after successful submission
             })
             .catch(error => {
                 refreshData();
+                showToast('Error while submitting vendor');
                 console.error('Error adding vendor:', error);
                 // Handle errors here, like displaying an error message to the user
             });
