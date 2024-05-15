@@ -396,3 +396,54 @@ td {
 tr:hover {
     background-color: #f5f5f5;
 }
+
+
+.custom-prompt {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.prompt-content {
+    text-align: center;
+}
+
+.prompt-content label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.prompt-content input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.prompt-content button {
+    padding: 8px 20px;
+    margin-right: 10px;
+    border: none;
+    background-color: #4caf50;
+    color: white;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.prompt-content button:hover {
+    background-color: #45a049;
+}
+
+.prompt-content button:last-child {
+    background-color: #f44336;
+}
+
+.prompt-content button:last-child:hover {
+    background-color: #d32f2f;
+}

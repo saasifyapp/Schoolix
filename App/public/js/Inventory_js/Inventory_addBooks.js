@@ -129,6 +129,7 @@ function displayBooks(data) {
                 <td>${book.ordered_quantity}</td>
                 <td>${book.remaining_quantity}</td>
                 <td>
+                    <button onclick="updateBook('${book.title}')">Update</button>
                     <button onclick="deleteBook('${book.title}')">Delete</button>
                 </td>
             `;
@@ -162,6 +163,65 @@ function deleteBook(title) {
             });
     }
 }
+
+// Function to update ordered quantity of a book with custom prompt
+function updateBook(title) {
+    // Create custom prompt
+    const customPrompt = document.createElement('div');
+    customPrompt.classList.add('custom-prompt');
+    customPrompt.innerHTML = `
+        <div class="prompt-content">
+            <label for="newQuantityInput">Enter the new ordered quantity:</label>
+            <input type="number" id="newQuantityInput" min="0">
+            <button id="confirmButton">Confirm</button>
+            <button id="cancelButton">Cancel</button>
+        </div>
+    `;
+    document.body.appendChild(customPrompt);
+
+    // Get input elements
+    const newQuantityInput = document.getElementById('newQuantityInput');
+    const confirmButton = document.getElementById('confirmButton');
+    const cancelButton = document.getElementById('cancelButton');
+
+    // Event listeners for buttons
+    confirmButton.addEventListener('click', () => {
+        const newQuantity = newQuantityInput.value.trim();
+        if (newQuantity !== '') {
+            // Perform update
+            fetch(`/inventory/books/${encodeURIComponent(title)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ orderedQuantity: newQuantity })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to update ordered quantity.');
+                    }
+                })
+                .then(data => {
+                    showToast('Ordered quantity updated successfully.', false); // Show success toast
+                    refreshbooksData(); // Refresh data after updating the book
+                    customPrompt.remove(); // Remove custom prompt
+                })
+                .catch(error => {
+                    console.error('Error updating ordered quantity:', error);
+                    showToast('An error occurred while updating ordered quantity.', true); // Show error toast
+                    customPrompt.remove(); // Remove custom prompt
+                });
+        } else {
+            alert('Please enter a valid quantity.');
+        }
+    });
+
+    cancelButton.addEventListener('click', () => {
+        customPrompt.remove(); // Remove custom prompt
+    });
+}
+
+
 
 // Call refreshData initially to fetch and display book data when the page is loaded
 refreshbooksData();
