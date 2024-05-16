@@ -52,23 +52,35 @@ router.get('/inventory/books', (req, res) => {
 router.put('/inventory/books/:title', (req, res) => {
     const title = req.params.title;
     const { orderedQuantity } = req.body;
-    console.log(orderedQuantity)
-    const sql = 'UPDATE inventory_book_details SET ordered_quantity = ? WHERE title = ?';
-    connection.query(sql, [orderedQuantity, title], (err, result) => {
+
+    // Retrieve existing ordered quantity from the database
+    const sqlSelect = 'SELECT ordered_quantity FROM inventory_book_details WHERE title = ?';
+    connection.query(sqlSelect, [title], (err, rows) => {
         if (err) {
-            console.error('Error updating ordered quantity:', err);
-            res.status(500).json({ error: 'Error updating ordered quantity' });
-        } else {
-            console.log('Ordered quantity updated successfully');
-            res.status(200).json({ message: 'Ordered quantity updated successfully' });
+            console.error('Error retrieving existing ordered quantity:', err);
+            return res.status(500).json({ error: 'Error retrieving existing ordered quantity' });
         }
+
+        // Extract existing ordered quantity from the result
+        const existingOrderedQuantity = rows[0].ordered_quantity;
+        console.log(existingOrderedQuantity)
+
+        // Calculate the new ordered quantity
+        const newOrderedQuantity = existingOrderedQuantity + orderedQuantity;
+
+        // Update the ordered quantity in the database
+        const sqlUpdate = 'UPDATE inventory_book_details SET ordered_quantity = ? WHERE title = ?';
+        connection.query(sqlUpdate, [newOrderedQuantity, title], (err, result) => {
+            if (err) {
+                console.error('Error updating ordered quantity:', err);
+                res.status(500).json({ error: 'Error updating ordered quantity' });
+            } else {
+                console.log('Ordered quantity updated successfully');
+                res.status(200).json({ message: 'Ordered quantity updated successfully' });
+            }
+        });
     });
 });
-
-
-
-
-
 
 
 

@@ -3,6 +3,7 @@ const router = express.Router();
 
 
 router.post('/inventory/purchase/add_vendor', (req, res) => {
+    
     const { vendorName, amountPaid } = req.body;
     const netPayable = req.body.netPayable || 0;
     const balance = req.body.balance || 0;
