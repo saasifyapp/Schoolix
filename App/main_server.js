@@ -344,6 +344,11 @@ const addBookDataRouter = require('./src/routes/Inventory_routes/add_books');
 // Mount the student details submission router to the root path
 app.use('/', addBookDataRouter);
 
+//////ADD UNIFORM ROUTE
+const addUniformDataRouter = require('./src/routes/Inventory_routes/add_uniform');
+// Mount the student details submission router to the root path
+app.use('/', addUniformDataRouter);
+
  
 
 

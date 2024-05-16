@@ -74,26 +74,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-// Function to populate vendor dropdown
+// Function to populate vendor dropdowns
 function populateVendorDropdown() {
     // Fetch vendors from the server
     fetch('/inventory/vendors')
         .then(response => response.json())
         .then(data => {
-            // Populate the vendor dropdown with fetched data
-            const vendorDropdown = document.getElementById('vendor');
-            vendorDropdown.innerHTML = ''; // Clear existing options
-            data.forEach(vendor => {
-                const option = document.createElement('option');
-                option.textContent = vendor.vendor_name; // Assuming vendor_name is the display value
-                vendorDropdown.appendChild(option);
+            // Dropdowns to be populated
+            const vendorDropdowns = [
+                document.getElementById('vendor'),        // For add book
+                document.getElementById('univendor'),    // For add uniform
+                document.getElementById('editVendor')    // For edit uniform
+            ];
+            
+            // Populate each dropdown
+            vendorDropdowns.forEach(dropdown => {
+                if (dropdown) {
+                    dropdown.innerHTML = ''; // Clear existing options
+                    data.forEach(vendor => {
+                        const option = document.createElement('option');
+                        option.textContent = vendor.vendor_name;
+                        dropdown.appendChild(option);
+                    });
+                }
             });
         })
         .catch(error => {
             console.error('Error fetching vendors:', error);
-            // Optionally, you can display an error message to the user
         });
 }
+
 
 // Call populateVendorDropdown when the page initially loads
 document.addEventListener("DOMContentLoaded", function () {

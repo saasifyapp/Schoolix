@@ -178,10 +178,95 @@
     </div>
   </div>
 
+  <!-- Add Uniform Overlay -->
+  <div id="addUniformOverlay" class="overlay add-uniform">
+    <div class="overlay-content">
+      <div class="close-icon" onclick="closeOverlay(event)">×</div>
+      <form id="addUniformForm">
+        <div id="toast" class="toast"></div>
+        <label for="uniformItem">Uniform Item:</label>
+        <input type="text" id="uniformItem" name="uniform_item" required><br>
+
+        <label for="sizeOfItem">Size of Item:</label>
+        <input type="text" id="sizeOfItem" name="size_of_item" required><br>
+
+        <label for="purchasePrice">Purchase Price:</label>
+        <input type="number" id="purchasePrice" name="purchase_price" required><br>
+
+        <label for="sellingPrice">Selling Price:</label>
+        <input type="number" id="sellingPrice" name="selling_price" required><br>
+
+        <label for="vendor">Vendor:</label>
+        <select id="univendor" name="vendor" required></select><br>
+
+        <label for="orderedQuantity">Ordered Quantity:</label>
+        <input type="number" id="orderedQuantity" name="ordered_quantity" required><br>
+
+        <label for="remainingQuantity">Remaining Quantity:</label>
+        <input type="number" id="remainingQuantity" name="remaining_quantity" required><br>
+
+        <div class="actions">
+          <button type="submit">Add</button>
+        </div>
+      </form>
+      <!-- Uniform Table -->
+      <table>
+        <thead>
+          <tr>
+            <th>Uniform Item</th>
+            <th>Size</th>
+            <th>Purchase Price</th>
+            <th>Selling Price</th>
+            <th>Vendor</th>
+            <th>Ordered Quantity</th>
+            <th>Remaining Quantity</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="uniformTable">
+          <!-- Table rows will be populated dynamically -->
+        </tbody>
+    </div>
+  </div>
+
+  <!-- Edit Uniform Overlay -->
+  <div id="editUniformOverlay" class="overlay">
+    <div class="overlay-content">
+      <form id="editUniformForm">
+        <label for="editUniformItem">Uniform Item:</label>
+        <input type="text" id="editUniformItem" name="uniform_item" readonly><br>
+
+        <label for="editSizeOfItem">Size of Item:</label>
+        <input type="text" id="editSizeOfItem" name="size_of_item" required><br>
+
+        <label for="editPurchasePrice">Purchase Price:</label>
+        <input type="number" id="editPurchasePrice" name="purchase_price" required><br>
+
+        <label for="editSellingPrice">Selling Price:</label>
+        <input type="number" id="editSellingPrice" name="selling_price" required><br>
+
+        <label for="editVendor">Vendor:</label>
+        <select id="editVendor" name="vendor" required></select><br>
+
+        <label for="editOrderedQuantity">Ordered Quantity:</label>
+        <input type="number" id="editOrderedQuantity" name="ordered_quantity" required><br>
+
+        <label for="editRemainingQuantity">Remaining Quantity:</label>
+        <input type="number" id="editRemainingQuantity" name="remaining_quantity" required><br>
+
+        <div class="actions">
+          <button type="submit" onclick="submitEditUniformForm()">Update</button>
+          <button type="button" onclick="closeEditUniformOverlay()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
 
 
   <script src="/js/Inventory_js/Inventory_addVendor.js"></script>
   <script src="/js/Inventory_js/Inventory_addBooks.js"></script>
+  <script src="/js/Inventory_js/Inventory_addUniform.js"></script>
   <script src="/js/Inventory_js/All.js"></script>
 </body>
 
