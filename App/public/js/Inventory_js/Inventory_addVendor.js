@@ -103,6 +103,7 @@ function deleteVendor(vendorName) {
         .then(data => {
             refreshData();
             showToast('Vendor deleted successfully.', false); // Show success toast
+            populateVendorDropdown();
             // Refresh data after deleting the vendor
         })
         .catch(error => {
