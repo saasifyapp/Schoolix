@@ -164,64 +164,86 @@ function deleteBook(title) {
     }
 }
 
-// Function to update ordered quantity of a book with custom prompt
+
+// Function to update a book
 function updateBook(title) {
-    // Create custom prompt
-    const customPrompt = document.createElement('div');
-    customPrompt.classList.add('custom-prompt');
-    customPrompt.innerHTML = `
-        <div class="prompt-content">
-            <label for="newQuantityInput">Enter the new ordered quantity:</label>
-            <input type="number" id="newQuantityInput" min="0">
-            <button id="confirmButton">Confirm</button>
-            <button id="cancelButton">Cancel</button>
-        </div>
-    `;
-    document.body.appendChild(customPrompt);
+    fetch(`/inventory/books/${encodeURIComponent(title)}/ordered_quantity`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to retrieve ordered quantity.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const existingOrderedQuantity = data.ordered_quantity;
 
-    // Get input elements
-    const newQuantityInput = document.getElementById('newQuantityInput');
-    const confirmButton = document.getElementById('confirmButton');
-    const cancelButton = document.getElementById('cancelButton');
+            // Create custom prompt
+            const customPrompt = document.createElement('div');
+            customPrompt.classList.add('custom-prompt');
+            customPrompt.innerHTML = `
+                <div class="prompt-content">
+                    <p>Existing Ordered Quantity: ${existingOrderedQuantity}</p>
+                    <label for="newQuantityInput">Enter the new ordered quantity:</label>
+                    <input type="number" id="newQuantityInput" min="0">
+                    <button id="confirmButton">Confirm</button>
+                    <button id="cancelButton">Cancel</button>
+                </div>
+            `;
+            document.body.appendChild(customPrompt);
 
-    // Event listeners for buttons
-    confirmButton.addEventListener('click', () => {
-        const newQuantity = newQuantityInput.value.trim();
-        if (newQuantity !== '') {
-            // Perform update
-            fetch(`/inventory/books/${encodeURIComponent(title)}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ orderedQuantity: newQuantity })
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to update ordered quantity.');
-                    }
-                })
-                .then(data => {
-                    showToast('Ordered quantity updated successfully.', false); // Show success toast
-                    refreshbooksData(); // Refresh data after updating the book
-                    customPrompt.remove(); // Remove custom prompt
-                })
-                .catch(error => {
-                    console.error('Error updating ordered quantity:', error);
-                    showToast('An error occurred while updating ordered quantity.', true); // Show error toast
-                    customPrompt.remove(); // Remove custom prompt
-                });
-        } else {
-            alert('Please enter a valid quantity.');
-        }
-    });
+            // Add event listener to confirm button
+            const confirmButton = customPrompt.querySelector('#confirmButton');
+            confirmButton.addEventListener('click', () => {
+                const newQuantityInput = customPrompt.querySelector('#newQuantityInput');
+                const newOrderedQuantity = parseInt(newQuantityInput.value, 10);
+                if (!isNaN(newOrderedQuantity)) {
+                    // Update ordered quantity
+                    updateOrderedQuantity(title, newOrderedQuantity);
+                } else {
+                    console.error('Invalid input for ordered quantity.');
+                    // Handle invalid input
+                }
+                // Remove the prompt
+                customPrompt.remove();
+            });
 
-    cancelButton.addEventListener('click', () => {
-        customPrompt.remove(); // Remove custom prompt
-    });
+            // Add event listener to cancel button
+            const cancelButton = customPrompt.querySelector('#cancelButton');
+            cancelButton.addEventListener('click', () => {
+                // Remove the prompt
+                customPrompt.remove();
+            });
+        })
+        .catch(error => {
+            console.error('Error retrieving ordered quantity:', error);
+            // Handle error if needed
+        });
 }
 
 
+// Function to update ordered quantity on the server
+function updateOrderedQuantity(title, newOrderedQuantity) {
+    fetch(`/inventory/books/${encodeURIComponent(title)}/ordered_quantity`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ ordered_quantity: newOrderedQuantity })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to update ordered quantity.');
+        }
+        console.log('Ordered quantity updated successfully.');
+        refreshbooksData();
+
+        // You can perform further actions here, like refreshing the page or updating the UI
+    })
+    .catch(error => {
+        console.error('Error updating ordered quantity:', error);
+        // Handle error if needed
+    });
+}
 
 // Call refreshData initially to fetch and display book data when the page is loaded
 refreshbooksData();
