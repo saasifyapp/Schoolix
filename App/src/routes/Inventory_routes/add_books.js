@@ -5,8 +5,11 @@ const router = express.Router();
 // Endpoint to handle form submission and insert data into the database
 router.post('/inventory/purchase/add_books', (req, res) => {
     // Extract data from the request body
-    const { title, class_of_title, purchase_price, selling_price, vendor, ordered_quantity, remaining_quantity } = req.body;
-    console.log(req.body)
+    const { title, class_of_title, purchase_price, selling_price, vendor, ordered_quantity } = req.body;
+    
+    // Set ordered_quantity as remaining_quantity
+    const remaining_quantity = ordered_quantity;
+    
     // Insert data into the database
     const sql = 'INSERT INTO inventory_book_details (title, class_of_title, purchase_price, selling_price, vendor, ordered_quantity, remaining_quantity) VALUES (?, ?, ?, ?, ?, ?, ?)';
     connection.query(sql, [title, class_of_title, purchase_price, selling_price, vendor, ordered_quantity, remaining_quantity], (err, result) => {

@@ -31,9 +31,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     case 'orderedQuantity':
                         jsonData['ordered_quantity'] = value;
                         break;
-                    case 'remainingQuantity':
-                        jsonData['remaining_quantity'] = value;
-                        break;
                     // Add cases for other keys as needed
                     default:
                         jsonData[key] = value;
@@ -165,7 +162,7 @@ function deleteBook(title) {
 }
 
 
-// Function to update a book
+// Function to update a book 
 function updateBook(title) {
     fetch(`/inventory/books/${encodeURIComponent(title)}/ordered_quantity`)
         .then(response => {
@@ -175,36 +172,51 @@ function updateBook(title) {
             return response.json();
         })
         .then(data => {
-            const existingOrderedQuantity = data.ordered_quantity;
+            let existingOrderedQuantity = data.ordered_quantity;
+            let newOrderedQuantity = 0;
 
             // Create custom prompt
             const customPrompt = document.createElement('div');
             customPrompt.classList.add('custom-prompt');
-            customPrompt.innerHTML = `
-                <div class="prompt-content">
-                    <p>Existing Ordered Quantity: ${existingOrderedQuantity}</p>
-                    <label for="newQuantityInput">Enter the new ordered quantity:</label>
-                    <input type="number" id="newQuantityInput" min="0">
-                    <button id="confirmButton">Confirm</button>
-                    <button id="cancelButton">Cancel</button>
-                </div>
-            `;
+            const updatePromptContent = () => {
+                customPrompt.innerHTML = `
+                    <div class="prompt-content">
+                        <h2>Update ${title}</h2>
+                        <p>Previously Ordered : ${existingOrderedQuantity}</p>
+                        <p>Enter the new order quantity:</p>
+                        <input type="number" id="newQuantityInput" min="0">
+                        <p id="totalOrder">Total Order : ${existingOrderedQuantity}</p>
+                        <button id="confirmButton">Confirm</button>
+                        <button id="cancelButton">Cancel</button>
+                    </div>
+                `;
+            };
+            updatePromptContent();
             document.body.appendChild(customPrompt);
 
             // Add event listener to confirm button
             const confirmButton = customPrompt.querySelector('#confirmButton');
             confirmButton.addEventListener('click', () => {
-                const newQuantityInput = customPrompt.querySelector('#newQuantityInput');
-                const newOrderedQuantity = parseInt(newQuantityInput.value, 10);
-                if (!isNaN(newOrderedQuantity)) {
-                    // Update ordered quantity
-                    updateOrderedQuantity(title, newOrderedQuantity);
-                } else {
-                    console.error('Invalid input for ordered quantity.');
-                    // Handle invalid input
-                }
+                // Get the new ordered quantity from the input field
+                newOrderedQuantity = parseInt(customPrompt.querySelector('#newQuantityInput').value, 10) || 0;
+
+                // Calculate total order amount
+                const totalOrder = existingOrderedQuantity + newOrderedQuantity;
+
+                // Update the ordered quantity on the server
+                updateOrderedQuantity(title, totalOrder);
+                
                 // Remove the prompt
                 customPrompt.remove();
+            });
+
+            // Add event listener to input field for updating total order
+            const newQuantityInput = customPrompt.querySelector('#newQuantityInput');
+            newQuantityInput.addEventListener('input', () => {
+                newOrderedQuantity = parseInt(newQuantityInput.value, 10) || 0; // Ensure zero if input is not a number
+                const totalOrder = existingOrderedQuantity + newOrderedQuantity;
+                const totalOrderElement = customPrompt.querySelector('#totalOrder');
+                totalOrderElement.textContent = `Total Order : ${totalOrder}`;
             });
 
             // Add event listener to cancel button
@@ -220,15 +232,14 @@ function updateBook(title) {
         });
 }
 
-
 // Function to update ordered quantity on the server
-function updateOrderedQuantity(title, newOrderedQuantity) {
+function updateOrderedQuantity(title, totalOrder) {
     fetch(`/inventory/books/${encodeURIComponent(title)}/ordered_quantity`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ ordered_quantity: newOrderedQuantity })
+        body: JSON.stringify({ ordered_quantity: totalOrder })
     })
     .then(response => {
         if (!response.ok) {
@@ -244,6 +255,7 @@ function updateOrderedQuantity(title, newOrderedQuantity) {
         // Handle error if needed
     });
 }
+
 
 // Call refreshData initially to fetch and display book data when the page is loaded
 refreshbooksData();
