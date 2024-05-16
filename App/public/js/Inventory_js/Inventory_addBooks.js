@@ -174,15 +174,16 @@ function deleteBook(title) {
 
 // Function to update a book 
 function updateBook(title) {
-    fetch(`/inventory/books/${encodeURIComponent(title)}/ordered_quantity`)
+    fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`) // Assuming you have modified the endpoint to retrieve both ordered_quantity and remaining_quantity
         .then(response => {
             if (!response.ok) {
-                throw new Error('Failed to retrieve ordered quantity.');
+                throw new Error('Failed to retrieve quantity.');
             }
             return response.json();
         })
         .then(data => {
             let existingOrderedQuantity = data.ordered_quantity;
+            let remainingQuantity = data.remaining_quantity;
             let newOrderedQuantity = 0;
 
             // Create custom prompt
@@ -193,9 +194,11 @@ function updateBook(title) {
                     <div class="prompt-content">
                         <h2>Update ${title}</h2>
                         <p>Previously Ordered : ${existingOrderedQuantity}</p>
+                        <p>Remaining Quantity : ${remainingQuantity}</p>
                         <p>Enter the new order quantity:</p>
                         <input type="number" id="newQuantityInput" min="0">
                         <p id="totalOrder">Total Order : ${existingOrderedQuantity}</p>
+                        <p id="newRemainingQuantity">New Remaining Quantity : ${remainingQuantity}</p>
                         <button id="confirmButton">Confirm</button>
                         <button id="cancelButton">Cancel</button>
                     </div>
@@ -210,11 +213,12 @@ function updateBook(title) {
                 // Get the new ordered quantity from the input field
                 newOrderedQuantity = parseInt(customPrompt.querySelector('#newQuantityInput').value, 10) || 0;
 
-                // Calculate total order amount
+                // Calculate total order amount and new remaining quantity
                 const totalOrder = existingOrderedQuantity + newOrderedQuantity;
+                const newRemainingQuantity = remainingQuantity + newOrderedQuantity;
 
                 // Update the ordered quantity on the server
-                updateOrderedQuantity(title, totalOrder);
+                updateOrderedQuantity(title, totalOrder, newRemainingQuantity);
                 
                 // Remove the prompt
                 customPrompt.remove();
@@ -227,6 +231,11 @@ function updateBook(title) {
                 const totalOrder = existingOrderedQuantity + newOrderedQuantity;
                 const totalOrderElement = customPrompt.querySelector('#totalOrder');
                 totalOrderElement.textContent = `Total Order : ${totalOrder}`;
+                
+                // Calculate new remaining quantity and display it
+                const newRemainingQuantity = remainingQuantity + newOrderedQuantity;
+                const newRemainingQuantityElement = customPrompt.querySelector('#newRemainingQuantity');
+                newRemainingQuantityElement.textContent = `New Remaining Quantity : ${newRemainingQuantity}`;
             });
 
             // Add event listener to cancel button
@@ -237,34 +246,36 @@ function updateBook(title) {
             });
         })
         .catch(error => {
-            console.error('Error retrieving ordered quantity:', error);
+            console.error('Error retrieving quantity:', error);
             // Handle error if needed
         });
 }
 
+
 // Function to update ordered quantity on the server
-function updateOrderedQuantity(title, totalOrder) {
-    fetch(`/inventory/books/${encodeURIComponent(title)}/ordered_quantity`, {
+function updateOrderedQuantity(title, totalOrder, newRemainingQuantity) {
+    fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ ordered_quantity: totalOrder })
+        body: JSON.stringify({ total_order: totalOrder, remaining_quantity: newRemainingQuantity })
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Failed to update ordered quantity.');
+            throw new Error('Failed to update quantity.');
         }
-        console.log('Ordered quantity updated successfully.');
+        console.log('Quantity updated successfully.');
         refreshbooksData();
 
         // You can perform further actions here, like refreshing the page or updating the UI
     })
     .catch(error => {
-        console.error('Error updating ordered quantity:', error);
+        console.error('Error updating quantity:', error);
         // Handle error if needed
     });
 }
+
 
 
 // Call refreshData initially to fetch and display book data when the page is loaded
