@@ -237,6 +237,7 @@ body {
   align-items: center;
   overflow: hidden; /* Make overlay non-scrollable */
   z-index: 1000; /* Ensure overlay is above other elements */
+  display: none;
 }
 
 
