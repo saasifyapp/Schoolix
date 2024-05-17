@@ -57,7 +57,7 @@ router.get('/inventory/uniforms', (req, res) => {
 router.route('/inventory/uniforms/:uniformItem/quantity')
     .get((req, res) => {
         const uniformItem = req.params.uniformItem;
-        const sql = 'SELECT ordered_quantity, remaining_quantity FROM inventory_uniform_details WHERE uniform_item = ?';
+        const sql = 'SELECT ordered_quantity, remaining_quantity, size_of_item FROM inventory_uniform_details WHERE uniform_item = ?';
         connection.query(sql, [uniformItem], (err, result) => {
             if (err) {
                 console.error('Error fetching quantity:', err);
@@ -66,8 +66,8 @@ router.route('/inventory/uniforms/:uniformItem/quantity')
                 if (result.length === 0) {
                     res.status(404).json({ error: 'Uniform item not found' });
                 } else {
-                    const { ordered_quantity, remaining_quantity } = result[0]; // fetch remaining_quantity from result
-                    res.status(200).json({ ordered_quantity, remaining_quantity });
+                    const { ordered_quantity, remaining_quantity, size_of_item } = result[0]; // fetch remaining_quantity from result
+                    res.status(200).json({ ordered_quantity, remaining_quantity, size_of_item });
                     console.log(result)
                 }
             }

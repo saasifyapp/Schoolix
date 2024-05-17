@@ -56,7 +56,7 @@ router.get('/inventory/books', (req, res) => {
 router.route('/inventory/books/:title/quantity')
     .get((req, res) => {
         const title = req.params.title;
-        const sql = 'SELECT ordered_quantity, remaining_quantity FROM inventory_book_details WHERE title = ?';
+        const sql = 'SELECT ordered_quantity, remaining_quantity, class_of_title FROM inventory_book_details WHERE title = ?';
         connection.query(sql, [title], (err, result) => {
             if (err) {
                 console.error('Error fetching quantity:', err);
@@ -65,8 +65,8 @@ router.route('/inventory/books/:title/quantity')
                 if (result.length === 0) {
                     res.status(404).json({ error: 'Book not found' });
                 } else {
-                    const { ordered_quantity, remaining_quantity } = result[0];
-                    res.status(200).json({ ordered_quantity, remaining_quantity });
+                    const { ordered_quantity, remaining_quantity, class_of_title } = result[0];
+                    res.status(200).json({ ordered_quantity, remaining_quantity, class_of_title });
                 }
             }
         });
@@ -75,6 +75,8 @@ router.route('/inventory/books/:title/quantity')
         const title = req.params.title;
         const newOrderedQuantity = req.body.total_order; // Get the new ordered quantity from the request body
         const newRemainingQuantity = req.body.remaining_quantity; // Get the new remaining quantity from the request body
+
+        console.log(newOrderedQuantity, newRemainingQuantity )
         
         const sql = 'UPDATE inventory_book_details SET ordered_quantity = ?, remaining_quantity = ? WHERE title = ?';
         connection.query(sql, [newOrderedQuantity, newRemainingQuantity, title], (err, result) => {

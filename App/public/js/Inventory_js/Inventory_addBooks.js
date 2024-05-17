@@ -184,6 +184,7 @@ function updateBook(title) {
         .then(data => {
             let existingOrderedQuantity = data.ordered_quantity;
             let remainingQuantity = data.remaining_quantity;
+            let class_of_title = data.class_of_title;
             let newOrderedQuantity = 0;
 
             // Create custom prompt
@@ -192,7 +193,7 @@ function updateBook(title) {
             const updatePromptContent = () => {
                 customPrompt.innerHTML = `
                     <div class="prompt-content">
-                        <h2>Update ${title}</h2>
+                        <h2>${title} (${class_of_title})</h2>
                         <p>Previously Ordered : ${existingOrderedQuantity}</p>
                         <p>Remaining Quantity : ${remainingQuantity}</p>
                         <p>Enter the new order quantity:</p>
@@ -218,7 +219,7 @@ function updateBook(title) {
                 const newRemainingQuantity = remainingQuantity + newOrderedQuantity;
 
                 // Update the ordered quantity on the server
-                updateOrderedQuantity(title, totalOrder, newRemainingQuantity);
+                updateBookOrderedQuantity(title, totalOrder, newRemainingQuantity);
                 
                 // Remove the prompt
                 customPrompt.remove();
@@ -236,6 +237,7 @@ function updateBook(title) {
                 const newRemainingQuantity = remainingQuantity + newOrderedQuantity;
                 const newRemainingQuantityElement = customPrompt.querySelector('#newRemainingQuantity');
                 newRemainingQuantityElement.textContent = `New Remaining Quantity : ${newRemainingQuantity}`;
+
             });
 
             // Add event listener to cancel button
@@ -253,7 +255,8 @@ function updateBook(title) {
 
 
 // Function to update ordered quantity on the server
-function updateOrderedQuantity(title, totalOrder, newRemainingQuantity) {
+function updateBookOrderedQuantity(title, totalOrder, newRemainingQuantity) {
+
     fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`, {
         method: 'PUT',
         headers: {

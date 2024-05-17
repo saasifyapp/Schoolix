@@ -128,6 +128,7 @@ function updateUniformItem(uniformItem) {
         .then(data => {
             let existingOrderedQuantity = data.ordered_quantity; // changed from data.ordered_quantity
             let remainingQuantity = data.remaining_quantity;
+            let size_of_item = data.size_of_item;
             let newOrderedQuantity = 0;
 
             // Create custom prompt
@@ -136,7 +137,7 @@ function updateUniformItem(uniformItem) {
             const updatePromptContent = () => {
                 customPrompt.innerHTML = `
                     <div class="prompt-content">
-                        <h2>Update ${uniformItem}</h2>
+                        <h2>${uniformItem} (${size_of_item})</h2>
                         <p>Previously Ordered : ${existingOrderedQuantity}</p>
                         <p>Remaining Quantity : ${remainingQuantity}</p>
                         <p>Enter the new order quantity:</p>
@@ -162,7 +163,7 @@ function updateUniformItem(uniformItem) {
                 const newRemainingQuantity = remainingQuantity + newOrderedQuantity;
 
                 // Update the ordered quantity on the server
-                updateOrderedQuantity(uniformItem, totalOrder, newRemainingQuantity);
+                updateUniformOrderedQuantity(uniformItem, totalOrder, newRemainingQuantity);
                 
                 // Remove the prompt
                 customPrompt.remove();
@@ -197,7 +198,7 @@ function updateUniformItem(uniformItem) {
 
 
 // Function to update ordered quantity on the server
-function updateOrderedQuantity(uniformItem, totalOrder, newRemainingQuantity) {
+function updateUniformOrderedQuantity(uniformItem, totalOrder, newRemainingQuantity) {
     fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/quantity`, {
         method: 'PUT',
         headers: {
