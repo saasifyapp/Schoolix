@@ -72,20 +72,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 // Function to populate vendor dropdowns
-function populateVendorDropdown() {
+function populateBooksVendorDropdown() {
     // Fetch vendors from the server
-    fetch('/inventory/vendors')
+    fetch('/inventory/books_vendor')
         .then(response => response.json())
         .then(data => {
             // Dropdowns to be populated
-            const vendorDropdowns = [
-                document.getElementById('vendor'),        // For add book
-                document.getElementById('univendor'),    // For add uniform
-                document.getElementById('editVendor')    // For edit uniform
+            const bookvendorDropdowns = [
+                document.getElementById('bookvendor'),        // For add book
+                //document.getElementById('editVendor')    // For edit uniform
             ];
             
             // Populate each dropdown
-            vendorDropdowns.forEach(dropdown => {
+            bookvendorDropdowns.forEach(dropdown => {
                 if (dropdown) {
                     dropdown.innerHTML = ''; // Clear existing options
                     data.forEach(vendor => {
@@ -104,7 +103,7 @@ function populateVendorDropdown() {
 
 // Call populateVendorDropdown when the page initially loads
 document.addEventListener("DOMContentLoaded", function () {
-    populateVendorDropdown();
+    populateBooksVendorDropdown();
 });
 
 

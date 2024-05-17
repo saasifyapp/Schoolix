@@ -105,6 +105,12 @@
         <div id="toast" class="toast"></div>
         <label for="vendorName">Vendor Name:</label>
         <input type="text" id="vendorName" name="vendorName" required><br>
+        <label for="vendorFor">Vendor For:</label>
+        <select id="vendorFor" name="vendorFor" required>
+          <option value="">Select</option>
+          <option value="Books">Books</option>
+          <option value="Uniform">Uniform</option>
+        </select><br>
         <label for="amountPaid">Amount Paid:</label>
         <input type="text" id="amountPaid" name="amountPaid" required><br>
         <button type="submit" class="submit-btn">Submit</button>
@@ -113,6 +119,7 @@
         <thead>
           <tr>
             <th>Vendor Name</th>
+            <th>Venfor For</th>
             <th>Net Payable</th>
             <th>Paid Till Now</th>
             <th>Balance</th>
@@ -148,7 +155,7 @@
         <label for="sellingPrice">Selling Price:</label>
         <input type="number" id="sellingPrice" name="sellingPrice" required><br>
         <label for="vendor">Vendor:</label>
-        <select id="vendor" name="vendor">
+        <select id="bookvendor" name="vendor">
           <!-- Options will be populated dynamically -->
         </select><br>
         <label for="orderedQuantity">Ordered Quantity:</label>

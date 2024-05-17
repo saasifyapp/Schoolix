@@ -9,13 +9,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Get the vendor name and amount paid from the form
         const vendorNameInput = document.getElementById('vendorName');
+        const vendorFor = document.getElementById('vendorFor').value;
         const amountPaidInput = document.getElementById('amountPaid');
         const vendorName = vendorNameInput.value;
         const amountPaid = parseFloat(amountPaidInput.value);
 
+        console.log(vendorFor)
         // Prepare the data to send in the request body
         const data = {
             vendorName: vendorName,
+            vendorFor: vendorFor,
             amountPaid: amountPaid
         };
 
@@ -34,6 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Clear input fields after successful submission
                 vendorNameInput.value = '';
                 amountPaidInput.value = '';
+                vendorFor.value = 0;
                 populateVendorDropdown();
             })
             .then(data => {
@@ -73,6 +77,7 @@ function displayVendors(data) {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${vendor.vendor_name}</td>
+                <td>${vendor.vendorFor}</td>
                 <td>${vendor.net_payable}</td>
                 <td>${vendor.paid_till_now}</td>
                 <td>${vendor.balance}</td>

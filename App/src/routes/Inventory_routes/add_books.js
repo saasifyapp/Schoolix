@@ -1,6 +1,20 @@
 const express = require('express');
 const router = express.Router();
 
+// Fetching book data endpoint
+router.get('/inventory/books_vendor', (req, res) => {
+    const sql = 'SELECT vendor_name FROM inventory_vendor_details WHERE vendorFor = "Books"';
+    connection.query(sql, (err, result) => {
+        if (err) {
+            console.error('Error fetching books:', err);
+            res.status(500).json({ error: 'Error fetching books' });
+        } else {
+            res.status(200).json(result);
+            console.log(result)
+            
+        }
+    });
+});
 
 // Endpoint to handle form submission and insert data into the database
 router.post('/inventory/purchase/add_books', (req, res) => {

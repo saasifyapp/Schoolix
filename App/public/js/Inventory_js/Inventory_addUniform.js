@@ -37,27 +37,38 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-//    // Function to populate vendor dropdown
-//    document.addEventListener("DOMContentLoaded", function () {
-//     fetch('/inventory/vendors')
-//         .then(response => response.json())
-//         .then(data => {
-//             const vendorDropdowns = [document.getElementById('vendor'),document.getElementById('univendor'), document.getElementById('editVendor')];
-//             vendorDropdowns.forEach(dropdown => {
-//                 data.forEach(vendor => {
-//                     const option = document.createElement('option');
-//                     option.textContent = vendor.vendor_name;
-//                     dropdown.appendChild(option);
-//                 });
-//             });
-//         })
-//         .catch(error => {
-//             console.error('Error fetching vendors:', error);
-//         });
+// Function to populate vendor dropdowns
+function populateUniformVendorDropdown() {
+    // Fetch vendors from the server
+    fetch('/inventory/uniform_vendor')
+        .then(response => response.json())
+        .then(data => {
+            // Dropdowns to be populated
+            const vendorDropdowns = [
+                document.getElementById('univendor'),    // For add uniform
+            ];
+            
+            // Populate each dropdown
+            vendorDropdowns.forEach(dropdown => {
+                if (dropdown) {
+                    dropdown.innerHTML = ''; // Clear existing options
+                    data.forEach(vendor => {
+                        const option = document.createElement('option');
+                        option.textContent = vendor.vendor_name;
+                        dropdown.appendChild(option);
+                    });
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching vendors:', error);
+        });
+}
 
-//     // Initial call to fetch and display uniform data
-//     refreshUniformsData();
-// });
+// Call populateVendorDropdown when the page initially loads
+document.addEventListener("DOMContentLoaded", function () {
+    populateUniformVendorDropdown();
+});
 
 // Function to refresh and display uniform data
 function refreshUniformsData() {

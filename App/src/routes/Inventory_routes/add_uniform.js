@@ -1,6 +1,21 @@
 const express = require('express');
 const router = express.Router();
 
+
+// Fetching book data endpoint
+router.get('/inventory/uniform_vendor', (req, res) => {
+    const sql = 'SELECT vendor_name FROM inventory_vendor_details WHERE vendorFor = "Uniform"';
+    connection.query(sql, (err, result) => {
+        if (err) {
+            console.error('Error fetching books:', err);
+            res.status(500).json({ error: 'Error fetching books' });
+        } else {
+            res.status(200).json(result);
+            
+        }
+    });
+});
+
  
 // Endpoint to handle adding uniform items
 router.post('/inventory/purchase/add_uniforms', (req, res) => {
