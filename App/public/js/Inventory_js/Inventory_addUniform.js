@@ -94,8 +94,10 @@ function displayUniforms(data) {
             <td>${uniform.vendor}</td>
             <td>${uniform.ordered_quantity}</td>
             <td>${uniform.remaining_quantity}</td>
+            <td>${uniform.returned_quantity}</td>
             <td>
                 <button onclick="updateUniformItem('${uniform.uniform_item}')">Edit</button>
+                <button onclick="returnUniform('${uniform.uniform_item}')">Return</button>
                 <button onclick="deleteUniform('${uniform.uniform_item}')">Delete</button>
             </td>
         `;
@@ -234,6 +236,116 @@ function updateUniformOrderedQuantity(uniformItem, totalOrder, newRemainingQuant
         // Handle error if needed
     });
 }
+
+
+// Function to return a uniform
+function returnUniform(uniformItem) {
+    let newRemainingQuantity; // Declare newRemainingQuantity here
+
+    fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/quantity`) 
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to retrieve quantity.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            let remainingQuantity = data.remaining_quantity;
+            let size_of_item = data.size_of_item;
+            let returnedQuantity = data.returned_quantity; // Get old returned quantity
+
+            newRemainingQuantity = remainingQuantity; // Initialize newRemainingQuantity here
+
+            // Create custom prompt
+            const customPrompt = document.createElement('div');
+            customPrompt.classList.add('custom-prompt');
+            const returnPromptContent = () => {
+                customPrompt.innerHTML = `
+                    <div class="prompt-content">
+                        <h2>${uniformItem} (${size_of_item})</h2>
+                        <p>Remaining Quantity : ${remainingQuantity}</p>
+                        <p>Enter the return quantity:</p>
+                        <input type="number" id="returnQuantityInput" min="0">
+                        <p id="newRemainingQuantity">New Remaining Quantity : ${newRemainingQuantity}</p>
+                        <button id="confirmButton">Confirm</button>
+                        <button id="cancelButton">Cancel</button>
+                    </div>
+                `;
+            };
+            returnPromptContent();
+            document.body.appendChild(customPrompt);
+
+            // Add event listener to confirm button
+            const confirmButton = customPrompt.querySelector('#confirmButton');
+            confirmButton.addEventListener('click', () => {
+                // Get the return quantity from the input field
+                let userReturnedQuantity = parseInt(customPrompt.querySelector('#returnQuantityInput').value, 10) || 0;
+
+                // Add the user entered value to the old returned quantity
+                returnedQuantity += userReturnedQuantity;
+
+                // Calculate new remaining quantity
+                newRemainingQuantity = remainingQuantity - userReturnedQuantity;
+
+                // Update the remaining quantity and returned quantity on the server
+                returnUniformQuantity(uniformItem, returnedQuantity, newRemainingQuantity);
+                
+                // Remove the prompt
+                customPrompt.remove();
+            });
+
+            // Add event listener to input field for updating remaining quantity
+            const returnQuantityInput = customPrompt.querySelector('#returnQuantityInput');
+            returnQuantityInput.addEventListener('input', () => {
+                let userReturnedQuantity = parseInt(returnQuantityInput.value, 10) || 0; // Ensure zero if input is not a number
+                
+                // Calculate new remaining quantity and display it
+                newRemainingQuantity = remainingQuantity - userReturnedQuantity;
+                const newRemainingQuantityElement = customPrompt.querySelector('#newRemainingQuantity');
+                newRemainingQuantityElement.textContent = `New Remaining Quantity : ${newRemainingQuantity}`;
+            });
+
+            // Add event listener to cancel button
+            const cancelButton = customPrompt.querySelector('#cancelButton');
+            cancelButton.addEventListener('click', () => {
+                // Remove the prompt
+                customPrompt.remove();
+            });
+        })
+        .catch(error => {
+            console.error('Error retrieving quantity:', error);
+            // Handle error if needed
+        });
+}
+
+
+// Function to update ordered quantity on the server
+function returnUniformQuantity(uniformItem, returnedQuantity, newRemainingQuantity) {
+    console.log(uniformItem, returnedQuantity, newRemainingQuantity)
+
+    fetch(`/inventory/return_uniform/${encodeURIComponent(uniformItem)}/quantity`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ uniform_item: uniformItem, remainingQuantity: newRemainingQuantity, returnedQuantity: returnedQuantity })
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to update quantity.');
+            }
+            console.log('Quantity updated successfully.');
+            refreshUniformsData();
+            populateBooksVendorDropdown()
+
+            // You can perform further actions here, like refreshing the page or updating the UI
+        })
+        .catch(error => {
+            console.error('Error updating quantity:', error);
+            // Handle error if needed
+        });
+}
+
 
 /* Function to open the Edit Uniform Overlay
 function openEditUniformOverlay() {
