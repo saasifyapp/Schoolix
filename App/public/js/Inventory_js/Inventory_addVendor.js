@@ -63,7 +63,7 @@ function refreshData() {
             // hideLoadingAnimation();
         });
 }
-
+ 
 function displayVendors(data) {
     const vendorTableBody = document.getElementById('vendorTableBody');
     vendorTableBody.innerHTML = ''; // Clear previous data
@@ -83,6 +83,7 @@ function displayVendors(data) {
             `;
             vendorTableBody.appendChild(row);
         });
+        
     } catch (error) {
         console.error('Error displaying vendors:', error);
         // Handle error if needed

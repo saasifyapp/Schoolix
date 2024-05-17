@@ -84,7 +84,7 @@ function displayUniforms(data) {
             <td>${uniform.ordered_quantity}</td>
             <td>${uniform.remaining_quantity}</td>
             <td>
-                <button onclick="editUniform('${uniform.uniform_item}')">Edit</button>
+                <button onclick="updateUniformItem('${uniform.uniform_item}')">Edit</button>
                 <button onclick="deleteUniform('${uniform.uniform_item}')">Delete</button>
             </td>
         `;
@@ -94,7 +94,7 @@ function displayUniforms(data) {
 
 // Function to handle deleting a uniform
 function deleteUniform(uniformItem) {
-    const confirmation = confirm('Are you sure you want to delete the uniform "${uniformItem}"?');
+    const confirmation = confirm(`Are you sure you want to delete the book "${uniformItem}"?`);
     if (confirmation) {
         fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}`, {
             method: 'DELETE'
@@ -115,7 +115,113 @@ function deleteUniform(uniformItem) {
     }
 }
 
-// Function to open the Edit Uniform Overlay
+
+// Function to update a uniform item
+function updateUniformItem(uniformItem) {
+    fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/quantity`) 
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to retrieve quantity.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            let existingOrderedQuantity = data.ordered_quantity; // changed from data.ordered_quantity
+            let remainingQuantity = data.remaining_quantity;
+            let newOrderedQuantity = 0;
+
+            // Create custom prompt
+            const customPrompt = document.createElement('div');
+            customPrompt.classList.add('custom-prompt');
+            const updatePromptContent = () => {
+                customPrompt.innerHTML = `
+                    <div class="prompt-content">
+                        <h2>Update ${uniformItem}</h2>
+                        <p>Previously Ordered : ${existingOrderedQuantity}</p>
+                        <p>Remaining Quantity : ${remainingQuantity}</p>
+                        <p>Enter the new order quantity:</p>
+                        <input type="number" id="newQuantityInput" min="0">
+                        <p id="totalOrder">Total Order : ${existingOrderedQuantity}</p>
+                        <p id="newRemainingQuantity">New Remaining Quantity : ${remainingQuantity}</p>
+                        <button id="confirmButton">Confirm</button>
+                        <button id="cancelButton">Cancel</button>
+                    </div>
+                `;
+            };
+            updatePromptContent();
+            document.body.appendChild(customPrompt);
+
+            // Add event listener to confirm button
+            const confirmButton = customPrompt.querySelector('#confirmButton');
+            confirmButton.addEventListener('click', () => {
+                // Get the new ordered quantity from the input field
+                newOrderedQuantity = parseInt(customPrompt.querySelector('#newQuantityInput').value, 10) || 0;
+
+                // Calculate total order amount and new remaining quantity
+                const totalOrder = existingOrderedQuantity + newOrderedQuantity;
+                const newRemainingQuantity = remainingQuantity + newOrderedQuantity;
+
+                // Update the ordered quantity on the server
+                updateOrderedQuantity(uniformItem, totalOrder, newRemainingQuantity);
+                
+                // Remove the prompt
+                customPrompt.remove();
+            });
+
+            // Add event listener to input field for updating total order
+            const newQuantityInput = customPrompt.querySelector('#newQuantityInput');
+            newQuantityInput.addEventListener('input', () => {
+                newOrderedQuantity = parseInt(newQuantityInput.value, 10) || 0; // Ensure zero if input is not a number
+                const totalOrder = existingOrderedQuantity + newOrderedQuantity;
+                const totalOrderElement = customPrompt.querySelector('#totalOrder');
+                totalOrderElement.textContent = `Total Order : ${totalOrder}`;
+                
+                // Calculate new remaining quantity and display it
+                const newRemainingQuantity = remainingQuantity + newOrderedQuantity;
+                const newRemainingQuantityElement = customPrompt.querySelector('#newRemainingQuantity');
+                newRemainingQuantityElement.textContent = `New Remaining Quantity : ${newRemainingQuantity}`;
+            });
+
+            // Add event listener to cancel button
+            const cancelButton = customPrompt.querySelector('#cancelButton');
+            cancelButton.addEventListener('click', () => {
+                // Remove the prompt
+                customPrompt.remove();
+            });
+        })
+        .catch(error => {
+            console.error('Error retrieving quantity:', error);
+            // Handle error if needed
+        });
+}
+
+
+// Function to update ordered quantity on the server
+function updateOrderedQuantity(uniformItem, totalOrder, newRemainingQuantity) {
+    fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/quantity`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ total_order: totalOrder, remaining_quantity: newRemainingQuantity })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to update quantity.');
+        }
+        refreshUniformsData();
+        console.log('Quantity updated successfully.');
+        // refreshUniformData(); Uncomment this if you have a function to refresh the uniform data
+
+        // You can perform further actions here, like refreshing the page or updating the UI
+    })
+    .catch(error => {
+        console.error('Error updating quantity:', error);
+        // Handle error if needed
+    });
+}
+
+/* Function to open the Edit Uniform Overlay
 function openEditUniformOverlay() {
     document.getElementById('editUniformOverlay').style.display = 'flex';
 }
@@ -188,5 +294,6 @@ function submitEditUniformForm() {
             });
     });
 }
+*/
 
 refreshUniformsData();
