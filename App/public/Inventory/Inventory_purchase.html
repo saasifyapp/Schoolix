@@ -98,23 +98,34 @@
   <!-- Overlay for Add Vendor -->
   <div id="addVendorOverlay" class="overlay">
     <div class="overlay-content">
-      <h2>Add Vendor</h2>
+      <h2 class="overlay-head">Add Vendor</h2>
       <!-- Close icon -->
       <div class="close-icon" onclick="closeOverlay(event)">×</div>
-      <form action="/inventory/purchase/add_vendor" method="post" id="vendorForm">
-        <div id="toast" class="toast"></div>
-        <label for="vendorName">Vendor Name:</label>
-        <input type="text" id="vendorName" name="vendorName" required><br>
-        <label for="vendorFor">Vendor For:</label>
-        <select id="vendorFor" name="vendorFor" required>
-          <option value="">Select</option>
-          <option value="Books">Books</option>
-          <option value="Uniform">Uniform</option>
-        </select><br>
-        <label for="amountPaid">Amount Paid:</label>
-        <input type="text" id="amountPaid" name="amountPaid" required><br>
-        <button type="submit" class="submit-btn">Submit</button>
-      </form>
+      <div class="form-container">
+        <form action="/inventory/purchase/add_vendor" method="post" id="vendorForm">
+          <div id="toast" class="toast"></div>
+    
+          <div class="form-group">
+            <input type="text" class="form-control wide" id="vendorName" name="vendorName" placeholder=" " required style="width: 14rem;">
+            <span class="form-control-placeholder">Vendor Name</span>
+          </div>
+          
+          <div class="form-group">
+            <input type="text" class="form-control wide" id="amountPaid" name="amountPaid" placeholder=" " required>
+            <span class="form-control-placeholder">Amount Paid</span>
+          </div>
+          
+          <div class="form-group">
+            <select id="vendorFor" class="" name="vendorFor" required style="width: 9rem; font-size: 0.8rem;">
+              <option value="" disabled selected>Vendor For</option>
+              <option value="Books">Books</option>
+              <option value="Uniform">Uniform</option>
+            </select>            
+          </div>
+    
+          <button class="form-group" type="submit" style="border-style: none;"><img class="icon" src="/images/addVendor.gif" ></button>
+        </form>
+      </div>
       <table>
         <thead>
           <tr>
@@ -235,6 +246,7 @@
         </tbody>
     </div>
   </div>
+ 
 
   <!-- Edit Uniform Overlay 
   <div id="editUniformOverlay" class="overlay">
