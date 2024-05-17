@@ -35,16 +35,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     throw new Error('Network response was not ok');
                 }
                 // Clear input fields after successful submission
-                vendorNameInput.value = '';
-                amountPaidInput.value = '';
-                vendorFor.value = 0;
-                populateVendorDropdown();
+                form.reset();
+                
             })
             .then(data => {
                 console.log('Vendor added successfully');
                 showToast('Vendor added successfully');
                 refreshData();
                 // You can update the UI or do something else here after successful submission
+                populateBooksVendorDropdown();
+                populateUniformVendorDropdown();
             })
             .catch(error => {
                 refreshData();
@@ -109,7 +109,8 @@ function deleteVendor(vendorName) {
         .then(data => {
             refreshData();
             showToast('Vendor deleted successfully.', false); // Show success toast
-            populateVendorDropdown();
+            populateBooksVendorDropdown();
+            populateUniformVendorDropdown();
             // Refresh data after deleting the vendor
         })
         .catch(error => {

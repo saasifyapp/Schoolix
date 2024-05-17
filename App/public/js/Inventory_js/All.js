@@ -12,12 +12,15 @@ document.addEventListener("DOMContentLoaded", function () {
             if (parentCard.classList.contains('add-vendor')) {
                 // Show the add vendor overlay
                 document.getElementById('addVendorOverlay').style.display = 'block';
+                refreshData();
             } else if (parentCard.classList.contains('add-book')) {
                 // Show the add books overlay
                 document.getElementById('addBooksOverlay').style.display = 'block';
+                refreshbooksData();
             } else if (parentCard.classList.contains('add-uniform')) {
                 // Show the add uniform overlay
                 document.getElementById('addUniformOverlay').style.display = 'block';
+                refreshUniformsData();
             } else if (parentCard.classList.contains('purchase-reports')) {
                 // Show the purchase reports overlay
                 document.getElementById('purchaseReportsOverlay').style.display = 'block';
