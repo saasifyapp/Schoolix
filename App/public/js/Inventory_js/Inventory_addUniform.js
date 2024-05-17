@@ -119,6 +119,7 @@ function deleteUniform(uniformItem) {
             .then(data => {
                 console.log('Uniform deleted successfully');
                 refreshUniformsData(); // Refresh uniform data
+                populateUniformVendorDropdown()
             })
             .catch(error => {
                 console.error('Error deleting uniform:', error);
@@ -223,6 +224,7 @@ function updateUniformOrderedQuantity(uniformItem, totalOrder, newRemainingQuant
         }
         refreshUniformsData();
         console.log('Quantity updated successfully.');
+        populateUniformVendorDropdown();
         // refreshUniformData(); Uncomment this if you have a function to refresh the uniform data
 
         // You can perform further actions here, like refreshing the page or updating the UI

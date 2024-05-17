@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     console.log('Book added successfully');
                     showToast('Book added successfully');
                     refreshbooksData();
+                    populateBooksVendorDropdown() 
                     // You can update the UI or do something else here after successful submission
                 })
                 .catch(error => {
@@ -162,6 +163,7 @@ function deleteBook(title) {
             .then(data => {
                 showToast('Book deleted successfully.', false); // Show success toast
                 refreshbooksData(); // Refresh data after deleting the book
+                populateBooksVendorDropdown();
             })
             .catch(error => {
                 console.error('Error deleting book:', error);
@@ -269,6 +271,7 @@ function updateBookOrderedQuantity(title, totalOrder, newRemainingQuantity) {
         }
         console.log('Quantity updated successfully.');
         refreshbooksData();
+        populateBooksVendorDropdown() 
 
         // You can perform further actions here, like refreshing the page or updating the UI
     })
