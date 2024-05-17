@@ -238,6 +238,8 @@ body {
   overflow: hidden; /* Make overlay non-scrollable */
   z-index: 1000; /* Ensure overlay is above other elements */
   display: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  
 }
 
 
@@ -253,6 +255,7 @@ body {
     border-radius: 20px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     /* Add shadow for better visibility */
+   
 }
 
 .overlay-content h2 {
