@@ -39,6 +39,47 @@ router.delete('/inventory/vendors/:vendorName', (req, res) => {
         }
     });
 });
+
+
+// Endpoint to handle both GET and PUT requests for retrieving and updating Paid Amount of Vendor
+router.route('/inventory/vendors/:vendorName/paid_till_now')
+    .get((req, res) => {
+        const vendorName = req.params.vendorName;
+        const sql = 'SELECT vendor_name, paid_till_now FROM inventory_vendor_details WHERE vendor_name = ?';
+        connection.query(sql, [vendorName], (err, result) => {
+            if (err) {
+                console.error('Error fetching quantity:', err);
+                res.status(500).json({ error: 'Error fetching quantity' });
+            } else {
+                if (result.length === 0) {
+                    res.status(404).json({ error: 'Vendor not found' });
+                } else {
+                    const { vendor_name, paid_till_now } = result[0];
+                    res.status(200).json({ vendor_name, paid_till_now });
+                }
+            }
+        });
+    })
+    .put((req, res) => {
+        const vendorName = req.params.vendorName;
+        const totalPaid = req.body.paid_till_now; // Get the new total paid amount from the request body
+    
+        const sql = 'UPDATE inventory_vendor_details SET paid_till_now = ? WHERE vendor_name = ?';
+        connection.query(sql, [totalPaid, vendorName], (err, result) => {
+            if (err) {
+                console.error('Error updating vendor details:', err);
+                res.status(500).json({ error: 'Error updating vendor details' });
+            } else {
+                if (result.affectedRows === 0) {
+                    res.status(404).json({ error: 'Vendor not found' });
+                } else {
+                    res.status(200).json({ message: 'Vendor details updated successfully' });
+                }
+            }
+        });
+    });
+
+
  
 // Calculate net_payable and update it to vendor table //
 
