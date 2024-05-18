@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     showToast('Book added successfully');
                     refreshbooksData();
                     refreshData();
-                    populateBooksVendorDropdown() 
+                    populateBooksVendorDropdown()
                     // You can update the UI or do something else here after successful submission
                 })
                 .catch(error => {
@@ -112,6 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Refresh data function for fetching and displaying books
 function refreshbooksData() {
+    document.getElementById('bookssearchField').value = '';
     fetch('/inventory/books')
         .then(response => response.json())
         .then(data => displayBooks(data))
@@ -119,6 +120,7 @@ function refreshbooksData() {
             console.error('Error:', error);
             // Handle error if needed
         });
+        
 }
 
 // Function to display book data
@@ -270,14 +272,14 @@ function updateBookOrderedQuantity(title, totalOrder, newRemainingQuantity) {
         },
         body: JSON.stringify({ total_order: totalOrder, remaining_quantity: newRemainingQuantity })
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to update quantity.');
-        }
-        console.log('Quantity updated successfully.');
-        refreshbooksData();
-        refreshData();
-        populateBooksVendorDropdown() 
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to update quantity.');
+            }
+            console.log('Quantity updated successfully.');
+            refreshbooksData();
+            refreshData();
+            populateBooksVendorDropdown()
 
             // You can perform further actions here, like refreshing the page or updating the UI
         })
@@ -390,6 +392,110 @@ function returnBookQuantity(title, returnedQuantity, newRemainingQuantity) {
         .catch(error => {
             console.error('Error updating quantity:', error);
             // Handle error if needed
+        });
+}
+
+function searchBookDetails() {
+    // showLoadingAnimation(); 
+
+    const searchTerm = document.getElementById('bookssearchField').value.trim();
+
+    // Check if the search term is empty
+    if (searchTerm === '') {
+        showToast('Please enter a search term.', true); // Show error toast
+        refreshbooksData(); // Refresh data to show all books
+        // hideLoadingAnimation();
+        return;
+    }
+
+    // Fetch data from the server based on the search term
+    fetch(`/inventory/books/search?search=${encodeURIComponent(searchTerm)}`)
+        .then(response => response.json())
+        .then(data => {
+            const booksTableBody = document.getElementById('booksTable');
+            booksTableBody.innerHTML = ''; // Clear previous data
+
+            if (data.length === 0) {
+                // If no results found, display a message
+                const noResultsRow = document.createElement('tr');
+                noResultsRow.innerHTML = '<td colspan="9">No results found</td>';
+                booksTableBody.appendChild(noResultsRow);
+            } else {
+                // Append book data to the table
+                data.forEach(book => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${book.title}</td>
+                        <td>${book.class_of_title}</td>
+                        <td>${book.purchase_price}</td>
+                        <td>${book.selling_price}</td>
+                        <td>${book.vendor}</td>
+                        <td>${book.ordered_quantity}</td>
+                        <td>${book.remaining_quantity}</td>
+                        <td>${book.returned_quantity}</td>
+                        <td style="text-align: center;">
+                            <button style="background-color: transparent;
+                                            border: none;
+                                            color: white;
+                                            padding: 0;
+                                            text-align: center;
+                                            text-decoration: none;
+                                            display: inline-block;
+                                            font-size: 14px;
+                                            cursor: pointer;
+                                            max-height: 100%;
+                                            border-radius: 20px;
+                                            transition: transform 0.2s;"
+                                    onclick="updateBook('${book.title}')"
+                                    onmouseover="this.style.transform='scale(1.3)'"
+                                    onmouseout="this.style.transform='scale(1)'">
+                                <img src="/images/edit_book.png" alt="Update" style="width: 20px; height: 20px; border-radius: 20px; margin: 0;">
+                            </button>
+                            <button style="background-color: transparent;
+                                            border: none;
+                                            color: white;
+                                            padding: 0;
+                                            text-align: center;
+                                            text-decoration: none;
+                                            display: inline-block;
+                                            font-size: 14px;
+                                            cursor: pointer;
+                                            max-height: 100%;
+                                            border-radius: 20px;
+                                            transition: transform 0.2s;"
+                                    onclick="returnBook('${book.title}')"
+                                    onmouseover="this.style.transform='scale(1.3)'"
+                                    onmouseout="this.style.transform='scale(1)'">
+                                <img src="/images/return_book.png" alt="Return" style="width: 20px; height: 20px; border-radius: 20px; margin: 0;">
+                            </button>
+                            <button style="background-color: transparent;
+                                            border: none;
+                                            color: white;
+                                            padding: 0;
+                                            text-align: center;
+                                            text-decoration: none;
+                                            display: inline-block;
+                                            font-size: 14px;
+                                            cursor: pointer;
+                                            max-height: 100%;
+                                            border-radius: 20px;
+                                            transition: transform 0.2s;"
+                                    onclick="deleteBook('${book.title}')"
+                                    onmouseover="this.style.transform='scale(1.3)'"
+                                    onmouseout="this.style.transform='scale(1)'">
+                                <img src="/images/delete_book.png" alt="Delete" style="width: 20px; height: 20px; border-radius: 20px; margin: 0;">
+                            </button>
+                        </td>
+                    `;
+                    booksTableBody.appendChild(row);
+                });
+            }
+            // addFadeUpAnimation();
+            // hideLoadingAnimation(); 
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // hideLoadingAnimation(); 
         });
 }
 

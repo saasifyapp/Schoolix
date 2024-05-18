@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 // Clear input fields after successful submission
                 form.reset();
-                
+
             })
             .then(data => {
                 console.log('Vendor added successfully');
@@ -57,6 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //refresh data
 function refreshData() {
+    document.getElementById('searchField').value = '';
     // showLoadingAnimation();
     fetch('/inventory/vendors')
         .then(response => response.json())
@@ -67,7 +68,7 @@ function refreshData() {
             // hideLoadingAnimation();
         });
 }
- 
+
 function displayVendors(data) {
     const vendorTableBody = document.getElementById('vendorTableBody');
     vendorTableBody.innerHTML = ''; // Clear previous data
@@ -88,7 +89,7 @@ function displayVendors(data) {
             `;
             vendorTableBody.appendChild(row);
         });
-        
+
     } catch (error) {
         console.error('Error displaying vendors:', error);
         // Handle error if needed
@@ -101,23 +102,23 @@ function deleteVendor(vendorName) {
         fetch(`/inventory/vendors/${encodeURIComponent(vendorName)}`, {
             method: 'DELETE'
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to delete vendor.');
-            }
-        })
-        .then(data => {
-            refreshData();
-            showToast('Vendor deleted successfully.', false); // Show success toast
-            populateBooksVendorDropdown();
-            populateUniformVendorDropdown();
-            // Refresh data after deleting the vendor
-        })
-        .catch(error => {
-            console.error('Error deleting vendor:', error);
-            refreshData();
-            showToast('An error occurred while deleting the vendor.', true); // Show error toast
-        });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to delete vendor.');
+                }
+            })
+            .then(data => {
+                refreshData();
+                showToast('Vendor deleted successfully.', false); // Show success toast
+                populateBooksVendorDropdown();
+                populateUniformVendorDropdown();
+                // Refresh data after deleting the vendor
+            })
+            .catch(error => {
+                console.error('Error deleting vendor:', error);
+                refreshData();
+                showToast('An error occurred while deleting the vendor.', true); // Show error toast
+            });
     }
 }
 
@@ -172,7 +173,7 @@ function updateVendor(vendorName) {
             // Add event listener to input field for updating total paid amount
             const newPaidAmountInput = customPrompt.querySelector('#newPaidAmountInput');
             newPaidAmountInput.addEventListener('input', () => {
-                newPaidAmount = parseInt(newPaidAmountInput.value, 10) || 0; 
+                newPaidAmount = parseInt(newPaidAmountInput.value, 10) || 0;
                 const totalPaid = existingPaidAmount + newPaidAmount;
                 const totalPaidElement = customPrompt.querySelector('#totalPaid');
                 totalPaidElement.textContent = `Total Paid : ${totalPaid}`;
@@ -202,18 +203,104 @@ function updateVendorPaidAmount(vendorName, totalPaid) {
         },
         body: JSON.stringify({ paid_till_now: totalPaid })
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to update vendor details.');
-        }
-        refreshData();
-        console.log('Vendor details updated successfully.');
-        // You can perform further actions here, like refreshing the page or updating the UI
-    })
-    .catch(error => {
-        console.error('Error updating vendor details:', error);
-        // Handle error if needed
-    });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to update vendor details.');
+            }
+            refreshData();
+            console.log('Vendor details updated successfully.');
+            // You can perform further actions here, like refreshing the page or updating the UI
+        })
+        .catch(error => {
+            console.error('Error updating vendor details:', error);
+            // Handle error if needed
+        });
+}
+
+// Function to handle searching vendor details
+function searchVendorDetails() {
+    // showLoadingAnimation(); 
+
+    const searchTerm = document.getElementById('searchField').value.trim();
+
+    // Check if the search term is empty
+    if (searchTerm === '') {
+        showToast('Please enter a search term.', true); // Show error toast
+        refreshData(); // Refresh data to show all vendors
+        // hideLoadingAnimation();
+        return;
+    }
+
+    // Fetch data from the server based on the search term
+    fetch(`/inventory/vendors/search?search=${encodeURIComponent(searchTerm)}`)
+        .then(response => response.json())
+        .then(data => {
+            const vendorTableBody = document.getElementById('vendorTableBody');
+            vendorTableBody.innerHTML = ''; // Clear previous data
+
+            if (data.length === 0) {
+                // If no results found, display a message
+                const noResultsRow = document.createElement('tr');
+                noResultsRow.innerHTML = '<td colspan="6">No results found</td>';
+                vendorTableBody.appendChild(noResultsRow);
+            } else {
+                // Append vendor data to the table
+                data.forEach(vendor => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${vendor.vendor_name}</td>
+                        <td>${vendor.vendor_for}</td>
+                        <td>${vendor.net_payable}</td>
+                        <td>${vendor.paid_till_now}</td>
+                        <td>${vendor.balance}</td>
+                        <td style="text-align: center;">
+                        <button style="background-color: transparent;
+                        border: none;
+                        color: white;
+                        padding: 0;
+                        text-align: center;
+                        text-decoration: none;
+                        display: inline-block;
+                        font-size: 14px;
+                        cursor: pointer;
+                        max-height: 100%;
+                        border-radius: 20px;
+                        transition: transform 0.2s;"
+                onclick="updateVendor('${vendor.vendor_name}')"
+                onmouseover="this.style.transform='scale(1.3)'"
+                onmouseout="this.style.transform='scale(1)'">
+            <img src="" alt="Edit" style="width: 20px; height: 20px; border-radius: 20px; margin: 0;">
+        </button>
+        <button style="background-color: transparent;
+                        border: none;
+                        color: white;
+                        padding: 0;
+                        text-align: center;
+                        text-decoration: none;
+                        display: inline-block;
+                        font-size: 14px;
+                        cursor: pointer;
+                        max-height: 100%;
+                        border-radius: 20px;
+                        transition: transform 0.2s;"
+                onclick="deleteVendor('${vendor.vendor_name}')"
+                onmouseover="this.style.transform='scale(1.3)'"
+                onmouseout="this.style.transform='scale(1)'">
+            <img src="" alt="Delete" style="width: 20px; height: 20px; border-radius: 20px; margin: 0;">
+        </button>
+    </td>
+                        </td>
+                    `;
+                    vendorTableBody.appendChild(row);
+                });
+            }
+            // addFadeUpAnimation();
+            // hideLoadingAnimation(); 
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // hideLoadingAnimation(); 
+        });
 }
 
 refreshData();

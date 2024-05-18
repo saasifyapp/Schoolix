@@ -133,4 +133,25 @@ router.route('/inventory/return_books/:title/quantity')
         }
     });
 });
+
+// Add a new endpoint to handle search queries (Books)
+router.get("/inventory/books/search", (req, res) => {
+    const searchQuery = req.query.search.trim(); // Get the search query from request URL query parameters
+
+    // Construct the SQL query to filter based on the student name
+    let query = `SELECT * FROM inventory_book_details WHERE title LIKE ?`;
+
+    // Execute the SQL query
+    connection.query(query, [`%${searchQuery}%`], (err, rows) => {
+        if (err) {
+            console.error("Error fetching data: " + err.stack);
+            res.status(500).json({ error: "Error fetching data" });
+            return;
+        }
+        res.json(rows);
+    });
+
+
+});
+
 module.exports = router;

@@ -101,32 +101,40 @@
       <div class="icon-container">
         <i><img class="vendorIcon" src="/images/vendor.png" alt=""></i>
         <h2 class="overlay-head">Add Vendor</h2>
-    </div>
+      </div>
       <!-- Close icon -->
       <div class="close-icon" onclick="closeOverlay(event)">×</div>
+      <input type="text" id="searchField" placeholder="Enter Vendor Name...">
+      <button id="vendorsearchButton" class="search-button" onclick="searchVendorDetails()">
+        search
+      </button>
+      <button id="refreshvendorbutton" onclick="refreshData()">Refresh</button>
       <div class="form-container">
         <form action="/inventory/purchase/add_vendor" method="post" id="vendorForm">
           <div id="toast" class="toast"></div>
-    
+
           <div class="form-group">
-            <input type="text" class="form-control wide" id="vendorName" name="vendorName" placeholder=" " required style="width: 14rem;">
+            <input type="text" class="form-control wide" id="vendorName" name="vendorName" placeholder=" " required
+              style="width: 14rem;">
             <span class="form-control-placeholder">Vendor Name</span>
           </div>
-          
+
           <div class="form-group">
             <input type="text" class="form-control wide" id="amountPaid" name="amountPaid" placeholder=" " required>
             <span class="form-control-placeholder">Amount Paid</span>
           </div>
-          
+
           <div class="form-group">
-            <select style="border-style: none; width: 7rem;" id="vendorFor" class="" name="vendorFor" required style="width: 9rem; font-size: 0.8rem;">
+            <select style="border-style: none; width: 7rem;" id="vendorFor" class="" name="vendorFor" required
+              style="width: 9rem; font-size: 0.8rem;">
               <option value="" disabled selected>Vendor For</option>
               <option value="Books">Books</option>
               <option value="Uniform">Uniform</option>
-            </select>            
+            </select>
           </div>
-    
-          <button class="form-group" type="submit" style="border-style: none;"><img class="icon" src="/images/addVendor.gif" ></button>
+
+          <button class="form-group" type="submit" style="border-style: none;"><img class="icon"
+              src="/images/addVendor.gif"></button>
         </form>
       </div>
       <div class="table-container">
@@ -146,7 +154,7 @@
           </tbody>
         </table>
       </div>
-      
+
     </div>
   </div>
 
@@ -156,9 +164,14 @@
       <h2>Add Books</h2>
       <!-- Close icon -->
       <div class="close-icon" onclick="closeOverlay(event)">×</div>
+      <input type="text" id="bookssearchField" placeholder="Enter Vendor Name..." >
+      <button id="bookssearchButton" class="search-button" onclick="searchBookDetails()">
+        search
+      </button>
+      <button id="refreshvendorbutton" onclick="refreshbooksData()">Refresh</button>
       <!-- Form for adding books -->
       <form id="addBooksForm">
-        
+
         <label for="bookTitle">Book Title:</label>
         <input type="text" id="bookTitle" name="bookTitle" required><br>
         <label for="bookClass">Class:</label>
@@ -207,6 +220,11 @@
   <div id="addUniformOverlay" class="overlay add-uniform">
     <div class="overlay-content">
       <div class="close-icon" onclick="closeOverlay(event)">×</div>
+      <input type="text" id="uniformsearchField" placeholder="Enter Vendor Name..." >
+      <button id="uniformsearchButton" class="search-button" onclick="searchUniformDetails()">
+        search
+      </button>
+      <button id="refreshvendorbutton" onclick="refreshUniformsData()">Refresh</button>
       <form id="addUniformForm">
         <div id="toast" class="toast"></div>
         <label for="uniformItem">Uniform Item:</label>
@@ -254,7 +272,7 @@
         </tbody>
     </div>
   </div>
- 
+
 
   <!-- Edit Uniform Overlay 
   <div id="editUniformOverlay" class="overlay">

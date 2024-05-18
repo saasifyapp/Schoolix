@@ -74,6 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Function to refresh and display uniform data
 function refreshUniformsData() {
+    document.getElementById('uniformsearchField').value = '';
     fetch('/inventory/uniforms')
         .then(response => response.json())
         .then(data => displayUniforms(data))
@@ -425,5 +426,108 @@ function submitEditUniformForm() {
     });
 }
 */
+function searchUniformDetails() {
+    // showLoadingAnimation(); 
+
+    const searchTerm = document.getElementById('uniformsearchField').value.trim();
+
+    // Check if the search term is empty
+    if (searchTerm === '') {
+        showToast('Please enter a search term.', true); // Show error toast
+        refreshUniformData(); // Refresh data to show all uniform items
+        // hideLoadingAnimation();
+        return;
+    }
+
+    // Fetch data from the server based on the search term
+    fetch(`/inventory/uniforms/search?search=${encodeURIComponent(searchTerm)}`)
+        .then(response => response.json())
+        .then(data => {
+            const uniformTableBody = document.getElementById('uniformTable');
+            uniformTableBody.innerHTML = ''; // Clear previous data
+
+            if (data.length === 0) {
+                // If no results found, display a message
+                const noResultsRow = document.createElement('tr');
+                noResultsRow.innerHTML = '<td colspan="9">No results found</td>';
+                uniformTableBody.appendChild(noResultsRow);
+            } else {
+                // Append uniform data to the table
+                data.forEach(uniform => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${uniform.uniform_item}</td>
+                        <td>${uniform.size_of_item}</td>
+                        <td>${uniform.purchase_price}</td>
+                        <td>${uniform.selling_price}</td>
+                        <td>${uniform.vendor}</td>
+                        <td>${uniform.ordered_quantity}</td>
+                        <td>${uniform.remaining_quantity}</td>
+                        <td>${uniform.returned_quantity}</td>
+                        <td style="text-align: center;">
+                            <button style="background-color: transparent;
+                                            border: none;
+                                            color: white;
+                                            padding: 0;
+                                            text-align: center;
+                                            text-decoration: none;
+                                            display: inline-block;
+                                            font-size: 14px;
+                                            cursor: pointer;
+                                            max-height: 100%;
+                                            border-radius: 20px;
+                                            transition: transform 0.2s;"
+                                    onclick="updateUniformItem('${uniform.uniform_item}')"
+                                    onmouseover="this.style.transform='scale(1.3)'"
+                                    onmouseout="this.style.transform='scale(1)'">
+                                <img src="/images/edit_uniform.png" alt="Edit" style="width: 20px; height: 20px; border-radius: 20px; margin: 0;">
+                            </button>
+                            <button style="background-color: transparent;
+                                            border: none;
+                                            color: white;
+                                            padding: 0;
+                                            text-align: center;
+                                            text-decoration: none;
+                                            display: inline-block;
+                                            font-size: 14px;
+                                            cursor: pointer;
+                                            max-height: 100%;
+                                            border-radius: 20px;
+                                            transition: transform 0.2s;"
+                                    onclick="returnUniform('${uniform.uniform_item}')"
+                                    onmouseover="this.style.transform='scale(1.3)'"
+                                    onmouseout="this.style.transform='scale(1)'">
+                                <img src="/images/return_uniform.png" alt="Return" style="width: 20px; height: 20px; border-radius: 20px; margin: 0;">
+                            </button>
+                            <button style="background-color: transparent;
+                                            border: none;
+                                            color: white;
+                                            padding: 0;
+                                            text-align: center;
+                                            text-decoration: none;
+                                            display: inline-block;
+                                            font-size: 14px;
+                                            cursor: pointer;
+                                            max-height: 100%;
+                                            border-radius: 20px;
+                                            transition: transform 0.2s;"
+                                    onclick="deleteUniform('${uniform.uniform_item}')"
+                                    onmouseover="this.style.transform='scale(1.3)'"
+                                    onmouseout="this.style.transform='scale(1)'">
+                                <img src="/images/delete_uniform.png" alt="Delete" style="width: 20px; height: 20px; border-radius: 20px; margin: 0;">
+                            </button>
+                        </td>
+                    `;
+                    uniformTableBody.appendChild(row);
+                });
+            }
+            // addFadeUpAnimation();
+            // hideLoadingAnimation(); 
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // hideLoadingAnimation(); 
+        });
+}
 
 refreshUniformsData();

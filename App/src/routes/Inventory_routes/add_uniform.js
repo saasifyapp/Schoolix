@@ -174,6 +174,25 @@ router.put('/inventory/uniforms/edit', (req, res) => {
     });
 });
 */
+// Add a new endpoint to handle search queries (uniform)
+router.get("/inventory/uniforms/search", (req, res) => {
+    const searchQuery = req.query.search.trim(); // Get the search query from request URL query parameters
+
+    // Construct the SQL query to filter based on the student name
+    let query = `SELECT * FROM inventory_uniform_details WHERE uniform_item LIKE ?`;
+
+    // Execute the SQL query
+    connection.query(query, [`%${searchQuery}%`], (err, rows) => {
+        if (err) {
+            console.error("Error fetching data: " + err.stack);
+            res.status(500).json({ error: "Error fetching data" });
+            return;
+        }
+        res.json(rows);
+    });
+
+
+});
 
 
 

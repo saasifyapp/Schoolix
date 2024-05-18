@@ -82,7 +82,6 @@ router.route('/inventory/vendors/:vendorName/paid_till_now')
 
  
 // Calculate net_payable and update it to vendor table //
-
 router.get('/inventory/vendors', (req, res) => {
     const sqlQuery = `
         SELECT 
@@ -130,6 +129,26 @@ router.get('/inventory/vendors', (req, res) => {
             });
         }
     });
+});
+
+// Add a new endpoint to handle search queries (Vendors)
+router.get("/inventory/vendors/search", (req, res) => {
+    const searchQuery = req.query.search.trim(); // Get the search query from request URL query parameters
+
+    // Construct the SQL query to filter based on the student name
+    let query = `SELECT * FROM inventory_vendor_details WHERE vendor_name LIKE ?`;
+
+    // Execute the SQL query
+    connection.query(query, [`%${searchQuery}%`], (err, rows) => {
+        if (err) {
+            console.error("Error fetching data: " + err.stack);
+            res.status(500).json({ error: "Error fetching data" });
+            return;
+        }
+        res.json(rows);
+    });
+
+
 });
 
 module.exports = router;
