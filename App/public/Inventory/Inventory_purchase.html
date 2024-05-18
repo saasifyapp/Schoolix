@@ -98,7 +98,10 @@
   <!-- Overlay for Add Vendor -->
   <div id="addVendorOverlay" class="overlay">
     <div class="overlay-content">
-      <h2 class="overlay-head">Add Vendor</h2>
+      <div class="icon-container">
+        <i><img class="vendorIcon" src="/images/vendor.png" alt=""></i>
+        <h2 class="overlay-head">Add Vendor</h2>
+    </div>
       <!-- Close icon -->
       <div class="close-icon" onclick="closeOverlay(event)">×</div>
       <div class="form-container">
@@ -116,7 +119,7 @@
           </div>
           
           <div class="form-group">
-            <select id="vendorFor" class="" name="vendorFor" required style="width: 9rem; font-size: 0.8rem;">
+            <select style="border-style: none; width: 7rem;" id="vendorFor" class="" name="vendorFor" required style="width: 9rem; font-size: 0.8rem;">
               <option value="" disabled selected>Vendor For</option>
               <option value="Books">Books</option>
               <option value="Uniform">Uniform</option>
@@ -126,7 +129,7 @@
           <button class="form-group" type="submit" style="border-style: none;"><img class="icon" src="/images/addVendor.gif" ></button>
         </form>
       </div>
-      <table>
+      <table id="vendorTable">
         <thead>
           <tr>
             <th>Vendor Name</th>

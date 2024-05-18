@@ -215,7 +215,6 @@ h2 {
 
 #studentTable td {
     border: 1px solid #dddddd;
-
     text-align: center;
     height: 50px; /* Fixed height */
     overflow: hidden; /* Hide content that overflows */

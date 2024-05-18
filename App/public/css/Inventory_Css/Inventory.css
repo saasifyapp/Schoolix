@@ -210,6 +210,42 @@ body {
 
 }
 
+/* CSS for overlay styling */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    /* Make overlay non-scrollable */
+    z-index: 1000;
+    /* Ensure overlay is above other elements */
+    display: none;
+    transition: opacity 0.3s ease-in-out;
+    /* animation: slideInFromBottom 0.1s ease-in-out; */
+}
+
+.overlay-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50rem;
+    height: 40rem;
+    transform: translate(-50%, -50%);
+    background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    /* Add shadow for better visibility */
+    transition: transform 0.3s ease-in-out;
+}
+
 .overlay-head {
     position: absolute;
     top: 5%;
@@ -222,54 +258,19 @@ body {
 
 }
 
-
-
-/* CSS for overlay styling */
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;  
- backdrop-filter: blur(5px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden; /* Make overlay non-scrollable */
-  z-index: 1000; /* Ensure overlay is above other elements */
-  display: none;
-  transition: opacity 0.3s ease-in-out;
-  animation: slideInFromBottom 0.1s ease-in-out;
-}
-
-
-.overlay-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 50rem;
-    height: 40rem;
-    transform: translate(-50%, -50%);
-    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
-    padding: 20px;
-    border-radius: 20px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    /* Add shadow for better visibility */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease-in-out;
-}
-
 /* Slide-in from bottom animation */
 @keyframes slideInFromBottom {
     0% {
         opacity: 0;
         transform: translateY(5rem);
     }
+
     100% {
         opacity: 1;
         transform: translateY(0rem);
     }
 }
+
 .overlay.hide {
     opacity: 0;
     animation: slideOutToBottom 0.1s ease-out;
@@ -282,6 +283,7 @@ body {
         opacity: 1;
         transform: translateY(0rem);
     }
+
     100% {
         opacity: 0;
         transform: translateY(5rem);
@@ -321,124 +323,76 @@ body {
 }
 
 .form-container {
-    margin-top: 4rem;
+    margin-top: 1rem;
     display: flex;
     justify-content: center;
-  }
+}
 
-  .form-group {
+.form-group {
     position: relative;
     margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
-  }
+}
 
-  .form-control {
-    padding: 1rem 1rem; /* Adjusted padding to center placeholder vertically */
-    font-size: 1rem; /* Increased font size */
+.form-control {
+    padding: 1rem 1rem;
+    /* Adjusted padding to center placeholder vertically */
+    font-size: 1rem;
+    /* Increased font size */
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
     transition: border-color 0.3s ease;
     margin-right: 1rem;
-    flex: 1; /* Allow input fields to grow */
-    height: 3rem; /* Increased height for input fields */
-  }
+    flex: 1;
+    /* Allow input fields to grow */
+    height: 3rem;
+    /* Increased height for input fields */
+}
 
-  .form-control.wide {
-    flex: 2; /* Make first two fields wider */
-  }
+.form-control.wide {
+    flex: 2;
+    /* Make first two fields wider */
+}
 
-  .form-control:focus {
-    border-color: #7a56ff; /* Brighter border color */
-    box-shadow: 0 4px 8px rgba(103, 61, 230, 0.5); /* Shadow effect */
-    border: 2px solid #673de6; /* Border color */
+.form-control:focus {
+    box-shadow: 0 0 10px #5DADE2;
     outline: none;
-  }
+}
 
-  .form-control-placeholder {
+.form-control-placeholder {
     position: absolute;
     top: 40%;
     left: 0.75rem;
-    transform: translateY(-50%); /* Center placeholder vertically */
+    transform: translateY(-50%);
+    /* Center placeholder vertically */
     pointer-events: none;
     transition: top 0.2s, font-size 0.2s, transform 0.2s;
     font-size: 16px;
     color: #999;
-    
-  }
 
-  .form-control:focus + .form-control-placeholder,
-  .form-control:not(:placeholder-shown) + .form-control-placeholder {
-    top: -0.4rem; /* Adjusted position when focused */
-    font-size: 0.75rem; 
-    background-color: white;    
-    transform: translateY(0); /* Reset transform */
-    color: #673de6;
-  }
+}
 
-  
+.form-control:focus+.form-control-placeholder,
+.form-control:not(:placeholder-shown)+.form-control-placeholder {
+    top: -0.4rem;
+    /* Adjusted position when focused */
+    font-size: 0.75rem;
+    background-color: white;
+    transform: translateY(0);
+    /* Reset transform */
+    color: #5DADE2;
+}
 
-  form {
+
+
+form {
     display: flex;
     align-items: center;
-    gap: 1rem; /* Space between elements */
-  }
-
-.close-icon {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    font-size: 3rem;
-    color: #555;
+    gap: 1rem;
+    /* Space between elements */
 }
 
-.close-icon:hover {
-    color: #333;
-}
-
-#vendorTable {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-#vendorTable th,
-#vendorTable td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-#vendorTable th {
-    background-color: #f2f2f2;
-}
-
-
-.icon {
-    width: 50px; /* Adjust width */
-    height: 50px; /* Adjust height */
-    border-radius: 50%; /* Make it circular */   
-    vertical-align: middle; /* Align the icon vertically */
-    margin-top: 5px; /* Adjust margin to move it slightly down */
-    cursor: pointer; /* Change cursor to pointer on hover */    
-  }
-  
-
-/* Close Icon */
-.close-icon {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close-icon:hover,
-.close-icon:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
 
 /* Form Styles */
 form {
@@ -463,22 +417,100 @@ select {
 
 
 
+.close-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 3rem;   
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-icon:hover,
+.close-icon:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.icon {
+    width: 50px;    
+    height: 50px;    
+    border-radius: 50%;    
+    vertical-align: middle;   
+    margin-top: 5px;  
+    cursor: pointer;   
+}
+
+
+.icon-container {
+    display: flex;
+    align-items: center;
+}
+
+.icon-container .vendorIcon {
+    margin-right: 10px;   
+    width: 50px;   
+    height: 50px;   
+    vertical-align: middle;
+}
+
+.icon-container h2 {
+    margin: 0;    
+}
+
+
 /* Table Styles */
 table {
     border-collapse: collapse;
     width: 100%;
 }
 
-th,
-td {
-    padding: 8px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
+#vendorTable th,
+#vendor td {
+    border: 1px solid #ddd;    
+    text-align: left;     
 }
 
-tr:hover {
-    background-color: #f5f5f5;
+#vendorTable th {
+    background-color: #2C3E50;
+    color: white;    
+    text-align: center;      
+    
 }
+
+
+#vendorTableBody {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+
+#vendorTableBody th {
+    background-color: #f2f2f2;
+}
+
+#vendorTableBody td button {
+    max-height: 100%; /* Ensure buttons do not exceed cell height */
+}
+
+#vendorTableBody tr:hover {
+    background-color: #D6DBDF; /* Change the background color to a light gray */
+}
+
+#vendorTableBody tr td {
+    transition: font-weight 0.1s; /* Add a smooth transition */
+}
+
+#vendorTableBody tr:hover td {
+    font-weight: bold; /* Make the text bold on hover */
+}
+
+
 
 
 .custom-prompt {
@@ -530,4 +562,7 @@ tr:hover {
 .prompt-content button:last-child:hover {
     background-color: #d32f2f;
 }
+
+
+
 
