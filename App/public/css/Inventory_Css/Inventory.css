@@ -238,6 +238,8 @@ body {
   overflow: hidden; /* Make overlay non-scrollable */
   z-index: 1000; /* Ensure overlay is above other elements */
   display: none;
+  transition: opacity 0.3s ease-in-out;
+  animation: slideInFromBottom 0.1s ease-in-out;
 }
 
 
@@ -253,6 +255,37 @@ body {
     border-radius: 20px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     /* Add shadow for better visibility */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Slide-in from bottom animation */
+@keyframes slideInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(5rem);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0rem);
+    }
+}
+.overlay.hide {
+    opacity: 0;
+    animation: slideOutToBottom 0.1s ease-out;
+}
+
+
+/* Slide-out to bottom animation */
+@keyframes slideOutToBottom {
+    0% {
+        opacity: 1;
+        transform: translateY(0rem);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(5rem);
+    }
 }
 
 .overlay-content h2 {

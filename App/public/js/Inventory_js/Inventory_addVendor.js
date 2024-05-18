@@ -63,7 +63,7 @@ function refreshData() {
         .then(data => displayVendors(data))
         .catch(error => {
             console.error('Error:', error);
-            // showToast('Error fetching vendors. Please try again.', true);
+            showToast('Error fetching vendors. Please try again.', true);
             // hideLoadingAnimation();
         });
 }
@@ -115,6 +115,7 @@ function deleteVendor(vendorName) {
         })
         .catch(error => {
             console.error('Error deleting vendor:', error);
+            refreshData();
             showToast('An error occurred while deleting the vendor.', true); // Show error toast
         });
     }

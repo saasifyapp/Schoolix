@@ -27,11 +27,13 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(data => {
                 console.log('Uniform added successfully');
                 uniformForm.reset();
-                refreshUniformsData()
+                refreshUniformsData();
+                refreshData();
                 // Optionally, refresh data or update UI
             })
             .catch(error => {
-                refreshUniformsData()
+                refreshUniformsData();
+                refreshData();
                 console.error('Error adding uniform:', error);
             });
     });
@@ -119,6 +121,7 @@ function deleteUniform(uniformItem) {
             .then(data => {
                 console.log('Uniform deleted successfully');
                 refreshUniformsData(); // Refresh uniform data
+                refreshData();
                 populateUniformVendorDropdown()
             })
             .catch(error => {
@@ -223,6 +226,7 @@ function updateUniformOrderedQuantity(uniformItem, totalOrder, newRemainingQuant
             throw new Error('Failed to update quantity.');
         }
         refreshUniformsData();
+        refreshData();
         console.log('Quantity updated successfully.');
         populateUniformVendorDropdown();
         // refreshUniformData(); Uncomment this if you have a function to refresh the uniform data
