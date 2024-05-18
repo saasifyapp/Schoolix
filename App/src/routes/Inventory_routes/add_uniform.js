@@ -65,11 +65,11 @@ router.get('/inventory/uniforms', (req, res) => {
 });
 
 // Endpoint to delete a uniform item
- router.delete('/inventory/uniforms/:uniformItem', (req, res) => {
-    const { uniformItem } = req.params;
-    const sql = 'DELETE FROM inventory_uniform_details WHERE uniform_item = ?';
+router.delete('/inventory/uniforms/:uniformItem/:sizeOfItem', (req, res) => {
+    const { uniformItem, sizeOfItem } = req.params;
+    const sql = 'DELETE FROM inventory_uniform_details WHERE uniform_item = ? AND size_of_item = ?';
 
-    connection.query(sql, [uniformItem], (err, result) => {
+    connection.query(sql, [uniformItem, sizeOfItem], (err, result) => {
         if (err) {
             console.error('Error deleting uniform item:', err);
             res.status(500).json({ error: 'Error deleting uniform item' });
@@ -79,7 +79,6 @@ router.get('/inventory/uniforms', (req, res) => {
         }
     });
 });
-
 
 // Endpoint to handle both GET and PUT requests for retrieving and updating quantity of a uniform item
 router.route('/inventory/uniforms/:uniformItem/quantity')

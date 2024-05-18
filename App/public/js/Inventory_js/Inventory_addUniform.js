@@ -168,7 +168,7 @@ function displayUniforms(data) {
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
                 transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
                 margin-bottom: 10px;" /* Added margin bottom for spacing */
-        onclick="deleteUniform('${uniform.uniform_item}')"
+                onclick="deleteUniform('${uniform.uniform_item}', '${uniform.size_of_item}')"
         onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
     <img src="/images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
@@ -183,10 +183,10 @@ function displayUniforms(data) {
 }
 
 // Function to handle deleting a uniform
-function deleteUniform(uniformItem) {
-    const confirmation = confirm(`Are you sure you want to delete the book "${uniformItem}"?`);
+function deleteUniform(uniformItem, sizeOfItem) {
+    const confirmation = confirm(`Are you sure you want to delete the uniform "${uniformItem}" of size "${sizeOfItem}"?`);
     if (confirmation) {
-        fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}`, {
+        fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}`, {
             method: 'DELETE'
         })
             .then(response => {
@@ -206,7 +206,6 @@ function deleteUniform(uniformItem) {
             });
     }
 }
-
 
 // Function to update a uniform item
 function updateUniformItem(uniformItem) {
