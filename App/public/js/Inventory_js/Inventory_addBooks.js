@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
                 .then(data => {
                     console.log('Book added successfully');
-                    showToast('Book added successfully');
+                    showToast(`${jsonData.title} added successfully`);
                     refreshbooksData();
                     refreshData();
                     populateBooksVendorDropdown()

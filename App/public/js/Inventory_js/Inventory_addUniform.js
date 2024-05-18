@@ -1,4 +1,3 @@
-// Function to handle Add Uniform form submission
 document.addEventListener("DOMContentLoaded", function () {
     // Get the form element
     const uniformForm = document.getElementById('addUniformForm');
@@ -28,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .then(data => {
                 console.log('Uniform added successfully');
-                showToast('Uniform added successfully');
+                showToast(`${jsonData.uniform_item} of size ${jsonData.size_of_item} added successfully`);
                 refreshUniformsData();
                 refreshData();
                 // populateUniformsVendorDropdown() // Uncomment this if you have a function to populate uniform vendor dropdown
@@ -37,8 +36,8 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => {
                 refreshUniformsData();
                 refreshData();
-                if (error.message === 'Uniform item already exists') {
-                    showToast('Uniform item already exists', 'red');
+                if (error.message === 'Uniform item with this size already exists') {
+                    showToast(`${jsonData.uniform_item} of size ${jsonData.size_of_item} is already added`, 'red');
                 } else {
                     showToast('Uniform added failed', 'red');
                 }
@@ -46,8 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Handle errors here, like displaying an error message to the user
             });
     });
-});
-
+}); 
 // Function to populate vendor dropdowns
 function populateUniformVendorDropdown() {
     // Fetch vendors from the server

@@ -22,17 +22,17 @@ router.post('/inventory/purchase/add_uniforms', (req, res) => {
 
     const remaining_quantity = ordered_quantity;
     const returned_quantity = 0;
+ 
+    // Check if the uniform_item and size_of_item already exists
+    const checkSql = `SELECT * FROM inventory_uniform_details WHERE uniform_item = ? AND size_of_item = ?`;
 
-    // Check if the uniform_item already exists
-    const checkSql = `SELECT * FROM inventory_uniform_details WHERE uniform_item = ?`;
-
-    connection.query(checkSql, [uniform_item], (err, result) => {
+    connection.query(checkSql, [uniform_item, size_of_item], (err, result) => {
         if (err) {
             console.error('Error checking uniform item:', err);
             res.status(500).send('Error checking uniform item');
         } else {
             if (result.length > 0) {
-                res.status(400).send('Uniform item already exists');
+                res.status(400).send('Uniform item with this size already exists');
             } else {
                 const sql = `INSERT INTO inventory_uniform_details (uniform_item, size_of_item, purchase_price, selling_price, vendor, ordered_quantity, remaining_quantity,returned_quantity)
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
@@ -50,7 +50,6 @@ router.post('/inventory/purchase/add_uniforms', (req, res) => {
         }
     });
 });
-
 // Endpoint to fetch all uniform items
 router.get('/inventory/uniforms', (req, res) => {
     const sql = 'SELECT * FROM inventory_uniform_details';

@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .then(data => {
                 console.log('Vendor added successfully');
-                showToast('Vendor added successfully');
+                showToast(`${vendorName} added successfully`);
                 refreshData();
                 // You can update the UI or do something else here after successful submission
                 populateBooksVendorDropdown();
