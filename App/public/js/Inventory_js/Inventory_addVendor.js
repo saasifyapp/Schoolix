@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => {
                 refreshData();
                 if (error.message === 'Vendor name already exists') {
-                    showToast('Vendor name already exists', 'red');
+                    showToast(`${vendorName} is already added`, 'red');
                 } else {
                     showToast('Error while submitting vendor');
                 }

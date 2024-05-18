@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     refreshbooksData();
                     refreshData();
                     if (error.message === 'Book title already exists') {
-                        showToast('Book title already exists', 'red');
+                        showToast(`${jsonData.title} is already added`, 'red');
                     } else {
                         showToast('Book added failed', 'red');
                     }
