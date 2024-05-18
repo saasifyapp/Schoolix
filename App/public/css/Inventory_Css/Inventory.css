@@ -381,7 +381,7 @@ body {
     background-color: white;
     transform: translateY(0);
     /* Reset transform */
-    color: #5DADE2;
+    color: #000;
 }
 
 
@@ -464,34 +464,39 @@ select {
 
 
 /* Table Styles */
-table {
+.table-container {
+    max-height: 450px; /* Adjust the height as needed */
+    overflow-y: auto;
+    margin-top: -10px;
+}
+
+#vendorTable {
     border-collapse: collapse;
     width: 100%;
 }
 
 #vendorTable th,
-#vendor td {
-    border: 1px solid #ddd;    
-    text-align: left;     
+#vendorTable td {
+    border: 1px solid #ddd;
+    text-align: left;
+    padding: 8px; /* Ensure consistent padding */
 }
 
 #vendorTable th {
     background-color: #2C3E50;
-    color: white;    
-    text-align: center;      
-    
+    color: white;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    height: 20px; /* Set a fixed height for the header */
+    padding: 0px; /* Consistent padding for the header */
 }
-
 
 #vendorTableBody {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
-}
-
-
-#vendorTableBody th {
-    background-color: #f2f2f2;
+    margin-top: 100px;
 }
 
 #vendorTableBody td button {
@@ -503,11 +508,19 @@ table {
 }
 
 #vendorTableBody tr td {
-    transition: font-weight 0.1s; /* Add a smooth transition */
+    transition: background-color 0.1s; /* Only transition background color */
 }
 
 #vendorTableBody tr:hover td {
-    font-weight: bold; /* Make the text bold on hover */
+    font-weight: normal; /* Ensure font-weight remains normal on hover */
+}
+
+/* Ensure thead is not affected by tbody styles */
+#vendorTable thead th {
+    font-weight: normal; /* Keep header font-weight normal */
+    background: linear-gradient(109.6deg, rgba(0, 0, 0, 0.93) 11.2%, rgb(63, 61, 61) 78.9%);
+    color: white; /* Ensure header text color is consistent */
+    transition: none; /* Disable transitions for header */
 }
 
 
