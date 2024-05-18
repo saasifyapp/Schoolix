@@ -46,9 +46,9 @@ router.get('/inventory/vendors', (req, res) => {
     const sqlQuery = `
         SELECT 
             v.vendor_name,
-            COALESCE(SUM(b.purchase_price * b.ordered_quantity), 0) + COALESCE(SUM(u.purchase_price * u.ordered_quantity), 0) AS net_payable,
+            COALESCE(SUM(b.purchase_price * b.ordered_quantity) - SUM(b.purchase_price * b.returned_quantity), 0) + COALESCE(SUM(u.purchase_price * u.ordered_quantity) - SUM(u.purchase_price * u.returned_quantity), 0) AS net_payable,
             v.paid_till_now,
-            COALESCE(SUM(b.purchase_price * b.ordered_quantity), 0) + COALESCE(SUM(u.purchase_price * u.ordered_quantity), 0) - v.paid_till_now AS balance
+            COALESCE(SUM(b.purchase_price * b.ordered_quantity) - SUM(b.purchase_price * b.returned_quantity), 0) + COALESCE(SUM(u.purchase_price * u.ordered_quantity) - SUM(u.purchase_price * u.returned_quantity), 0) - v.paid_till_now AS balance
         FROM 
             inventory_vendor_details v
         LEFT JOIN
