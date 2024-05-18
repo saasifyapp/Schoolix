@@ -49,7 +49,7 @@ function populateUniformVendorDropdown() {
             const vendorDropdowns = [
                 document.getElementById('univendor'),    // For add uniform
             ];
-            
+
             // Populate each dropdown
             vendorDropdowns.forEach(dropdown => {
                 if (dropdown) {
@@ -99,9 +99,76 @@ function displayUniforms(data) {
             <td>${uniform.remaining_quantity}</td>
             <td>${uniform.returned_quantity}</td>
             <td>
-                <button onclick="updateUniformItem('${uniform.uniform_item}')">Edit</button>
-                <button onclick="returnUniform('${uniform.uniform_item}')">Return</button>
-                <button onclick="deleteUniform('${uniform.uniform_item}')">Delete</button>
+            <button style="background-color: transparent;
+                border: none;
+                color: black; /* Change text color to black */
+                padding: 0;
+                text-align: center;
+                text-decoration: none;
+                display: flex; /* Use flex for centering */
+                align-items: center; /* Center vertically */
+                justify-content: center; /* Center horizontally */
+                font-size: 14px;
+                cursor: pointer;
+                max-height: 100%;
+                border-radius: 20px; /* Round corners */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                margin-bottom: 10px;" /* Added margin bottom for spacing */
+        onclick="updateUniformItem('${uniform.uniform_item}')"
+        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+    <img src="/images/add_uniform.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+    <span style="margin-right: 10px;">Restock</span>
+</button>
+
+<button style="background-color: transparent;
+                border: none;
+                color: black; /* Change text color to black */
+                padding: 0;
+                text-align: center;
+                text-decoration: none;
+                display: flex; /* Use flex for centering */
+                align-items: center; /* Center vertically */
+                justify-content: center; /* Center horizontally */
+                font-size: 14px;
+                cursor: pointer;
+                max-height: 100%;
+                border-radius: 20px; /* Round corners */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                margin-bottom: 10px;" /* Added margin bottom for spacing */
+        onclick="returnUniform('${uniform.uniform_item}')"
+        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+    <img src="/images/return_book.png" alt="Return" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+    <span style="margin-right: 10px;">Return</span>
+</button>
+
+<button style="background-color: transparent;
+                border: none;
+                color: black; /* Change text color to black */
+                padding: 0;
+                text-align: center;
+                text-decoration: none;
+                display: flex; /* Use flex for centering */
+                align-items: center; /* Center vertically */
+                justify-content: center; /* Center horizontally */
+                font-size: 14px;
+                cursor: pointer;
+                max-height: 100%;
+                border-radius: 20px; /* Round corners */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                margin-bottom: 10px;" /* Added margin bottom for spacing */
+        onclick="deleteUniform('${uniform.uniform_item}')"
+        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+    <img src="/images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+    <span style="margin-right: 10px;">Delete</span>
+</button>
+
+
             </td>
         `;
         uniformTableBody.appendChild(row);
@@ -136,7 +203,7 @@ function deleteUniform(uniformItem) {
 
 // Function to update a uniform item
 function updateUniformItem(uniformItem) {
-    fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/quantity`) 
+    fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/quantity`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Failed to retrieve quantity.');
@@ -182,7 +249,7 @@ function updateUniformItem(uniformItem) {
 
                 // Update the ordered quantity on the server
                 updateUniformOrderedQuantity(uniformItem, totalOrder, newRemainingQuantity);
-                
+
                 // Remove the prompt
                 customPrompt.remove();
             });
@@ -194,7 +261,7 @@ function updateUniformItem(uniformItem) {
                 const totalOrder = existingOrderedQuantity + newOrderedQuantity;
                 const totalOrderElement = customPrompt.querySelector('#totalOrder');
                 totalOrderElement.textContent = `Total Order : ${totalOrder}`;
-                
+
                 // Calculate new remaining quantity and display it
                 const newRemainingQuantity = remainingQuantity + newOrderedQuantity;
                 const newRemainingQuantityElement = customPrompt.querySelector('#newRemainingQuantity');
@@ -224,22 +291,22 @@ function updateUniformOrderedQuantity(uniformItem, totalOrder, newRemainingQuant
         },
         body: JSON.stringify({ total_order: totalOrder, remaining_quantity: newRemainingQuantity })
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to update quantity.');
-        }
-        refreshUniformsData();
-        refreshData();
-        console.log('Quantity updated successfully.');
-        populateUniformVendorDropdown();
-        // refreshUniformData(); Uncomment this if you have a function to refresh the uniform data
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to update quantity.');
+            }
+            refreshUniformsData();
+            refreshData();
+            console.log('Quantity updated successfully.');
+            populateUniformVendorDropdown();
+            // refreshUniformData(); Uncomment this if you have a function to refresh the uniform data
 
-        // You can perform further actions here, like refreshing the page or updating the UI
-    })
-    .catch(error => {
-        console.error('Error updating quantity:', error);
-        // Handle error if needed
-    });
+            // You can perform further actions here, like refreshing the page or updating the UI
+        })
+        .catch(error => {
+            console.error('Error updating quantity:', error);
+            // Handle error if needed
+        });
 }
 
 
@@ -247,7 +314,7 @@ function updateUniformOrderedQuantity(uniformItem, totalOrder, newRemainingQuant
 function returnUniform(uniformItem) {
     let newRemainingQuantity; // Declare newRemainingQuantity here
 
-    fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/quantity`) 
+    fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/quantity`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Failed to retrieve quantity.');
@@ -294,7 +361,7 @@ function returnUniform(uniformItem) {
 
                 // Update the remaining quantity and returned quantity on the server
                 returnUniformQuantity(uniformItem, returnedQuantity, newRemainingQuantity);
-                
+
                 // Remove the prompt
                 customPrompt.remove();
             });
@@ -303,7 +370,7 @@ function returnUniform(uniformItem) {
             const returnQuantityInput = customPrompt.querySelector('#returnQuantityInput');
             returnQuantityInput.addEventListener('input', () => {
                 let userReturnedQuantity = parseInt(returnQuantityInput.value, 10) || 0; // Ensure zero if input is not a number
-                
+
                 // Calculate new remaining quantity and display it
                 newRemainingQuantity = remainingQuantity - userReturnedQuantity;
                 const newRemainingQuantityElement = customPrompt.querySelector('#newRemainingQuantity');
@@ -465,57 +532,74 @@ function searchUniformDetails() {
                         <td>${uniform.remaining_quantity}</td>
                         <td>${uniform.returned_quantity}</td>
                         <td style="text-align: center;">
-                            <button style="background-color: transparent;
-                                            border: none;
-                                            color: white;
-                                            padding: 0;
-                                            text-align: center;
-                                            text-decoration: none;
-                                            display: inline-block;
-                                            font-size: 14px;
-                                            cursor: pointer;
-                                            max-height: 100%;
-                                            border-radius: 20px;
-                                            transition: transform 0.2s;"
-                                    onclick="updateUniformItem('${uniform.uniform_item}')"
-                                    onmouseover="this.style.transform='scale(1.3)'"
-                                    onmouseout="this.style.transform='scale(1)'">
-                                <img src="/images/edit_uniform.png" alt="Edit" style="width: 20px; height: 20px; border-radius: 20px; margin: 0;">
-                            </button>
-                            <button style="background-color: transparent;
-                                            border: none;
-                                            color: white;
-                                            padding: 0;
-                                            text-align: center;
-                                            text-decoration: none;
-                                            display: inline-block;
-                                            font-size: 14px;
-                                            cursor: pointer;
-                                            max-height: 100%;
-                                            border-radius: 20px;
-                                            transition: transform 0.2s;"
-                                    onclick="returnUniform('${uniform.uniform_item}')"
-                                    onmouseover="this.style.transform='scale(1.3)'"
-                                    onmouseout="this.style.transform='scale(1)'">
-                                <img src="/images/return_uniform.png" alt="Return" style="width: 20px; height: 20px; border-radius: 20px; margin: 0;">
-                            </button>
-                            <button style="background-color: transparent;
-                                            border: none;
-                                            color: white;
-                                            padding: 0;
-                                            text-align: center;
-                                            text-decoration: none;
-                                            display: inline-block;
-                                            font-size: 14px;
-                                            cursor: pointer;
-                                            max-height: 100%;
-                                            border-radius: 20px;
-                                            transition: transform 0.2s;"
-                                    onclick="deleteUniform('${uniform.uniform_item}')"
-                                    onmouseover="this.style.transform='scale(1.3)'"
-                                    onmouseout="this.style.transform='scale(1)'">
-                                <img src="/images/delete_uniform.png" alt="Delete" style="width: 20px; height: 20px; border-radius: 20px; margin: 0;">
-                            </button>
+                        <button style="background-color: transparent;
+                        border: none;
+                        color: black; /* Change text color to black */
+                        padding: 0;
+                        text-align: center;
+                        text-decoration: none;
+                        display: flex; /* Use flex for centering */
+                        align-items: center; /* Center vertically */
+                        justify-content: center; /* Center horizontally */
+                        font-size: 14px;
+                        cursor: pointer;
+                        max-height: 100%;
+                        border-radius: 20px; /* Round corners */
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                        transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                        margin-bottom: 10px;" /* Added margin bottom for spacing */
+                onclick="updateUniformItem('${uniform.uniform_item}')"
+                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+            <img src="/images/add_uniform.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+            <span style="margin-right: 10px;">Restock</span>
+        </button>
+        
+        <button style="background-color: transparent;
+                        border: none;
+                        color: black; /* Change text color to black */
+                        padding: 0;
+                        text-align: center;
+                        text-decoration: none;
+                        display: flex; /* Use flex for centering */
+                        align-items: center; /* Center vertically */
+                        justify-content: center; /* Center horizontally */
+                        font-size: 14px;
+                        cursor: pointer;
+                        max-height: 100%;
+                        border-radius: 20px; /* Round corners */
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                        transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                        margin-bottom: 10px;" /* Added margin bottom for spacing */
+                onclick="returnUniform('${uniform.uniform_item}')"
+                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+            <img src="/images/return_book.png" alt="Return" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+            <span style="margin-right: 10px;">Return</span>
+        </button>
+        
+        <button style="background-color: transparent;
+                        border: none;
+                        color: black; /* Change text color to black */
+                        padding: 0;
+                        text-align: center;
+                        text-decoration: none;
+                        display: flex; /* Use flex for centering */
+                        align-items: center; /* Center vertically */
+                        justify-content: center; /* Center horizontally */
+                        font-size: 14px;
+                        cursor: pointer;
+                        max-height: 100%;
+                        border-radius: 20px; /* Round corners */
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                        transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                        margin-bottom: 10px;" /* Added margin bottom for spacing */
+                onclick="deleteUniform('${uniform.uniform_item}')"
+                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+            <img src="/images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+            <span style="margin-right: 10px;">Delete</span>
+        </button>
                         </td>
                     `;
                     uniformTableBody.appendChild(row);
