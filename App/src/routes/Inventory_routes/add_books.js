@@ -16,7 +16,6 @@ router.get('/inventory/books_vendor', (req, res) => {
     });
 });
 
-// Endpoint to handle form submission and insert data into the database
 router.post('/inventory/purchase/add_books', (req, res) => {
     // Extract data from the request body
     const { title, class_of_title, purchase_price, selling_price, vendor, ordered_quantity } = req.body;
@@ -24,9 +23,11 @@ router.post('/inventory/purchase/add_books', (req, res) => {
     // Set ordered_quantity as remaining_quantity
     const remaining_quantity = ordered_quantity;
 
+    const returned_quantity = 0;
+
     // Insert data into the database
-    const sql = 'INSERT INTO inventory_book_details (title, class_of_title, purchase_price, selling_price, vendor, ordered_quantity, remaining_quantity) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    connection.query(sql, [title, class_of_title, purchase_price, selling_price, vendor, ordered_quantity, remaining_quantity], (err, result) => {
+    const sql = 'INSERT INTO inventory_book_details (title, class_of_title, purchase_price, selling_price, vendor, ordered_quantity, remaining_quantity, returned_quantity) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    connection.query(sql, [title, class_of_title, purchase_price, selling_price, vendor, ordered_quantity, remaining_quantity, returned_quantity], (err, result) => {
         if (err) {
             console.error('Error adding books:', err);
             res.status(500).json({ error: 'Error adding books' });
@@ -70,7 +71,7 @@ router.get('/inventory/books', (req, res) => {
 router.route('/inventory/books/:title/quantity')
     .get((req, res) => {
         const title = req.params.title;
-        const sql = 'SELECT ordered_quantity, remaining_quantity, class_of_title FROM inventory_book_details WHERE title = ?';
+        const sql = 'SELECT ordered_quantity, remaining_quantity, class_of_title, returned_quantity FROM inventory_book_details WHERE title = ?';
         connection.query(sql, [title], (err, result) => {
             if (err) {
                 console.error('Error fetching quantity:', err);
@@ -79,8 +80,8 @@ router.route('/inventory/books/:title/quantity')
                 if (result.length === 0) {
                     res.status(404).json({ error: 'Book not found' });
                 } else {
-                    const { ordered_quantity, remaining_quantity, class_of_title } = result[0];
-                    res.status(200).json({ ordered_quantity, remaining_quantity, class_of_title });
+                    const { ordered_quantity, remaining_quantity, class_of_title, returned_quantity } = result[0];
+                    res.status(200).json({ ordered_quantity, remaining_quantity, class_of_title, returned_quantity });
                 }
             }
         });
@@ -106,4 +107,30 @@ router.route('/inventory/books/:title/quantity')
             }
         });
     });
+
+
+
+// Endpoint to handle PUT requests for updating returned and remaining quantities of a book
+router.route('/inventory/return_books/:title/quantity')
+.put((req, res) => {
+    const title = req.params.title;
+    const returnedQuantity = req.body.returnedQuantity; // Get the returned quantity from the request body
+    const remainingQuantity = req.body.remainingQuantity; // Get the new remaining quantity from the request body
+
+    console.log(returnedQuantity, remainingQuantity )
+    
+    const sql = 'UPDATE inventory_book_details SET returned_quantity = ?, remaining_quantity = ? WHERE title = ?';
+    connection.query(sql, [returnedQuantity, remainingQuantity, title], (err, result) => {
+        if (err) {
+            console.error('Error updating quantity:', err);
+            res.status(500).json({ error: 'Error updating quantity' });
+        } else {
+            if (result.affectedRows === 0) {
+                res.status(404).json({ error: 'Book not found' });
+            } else {
+                res.status(200).json({ message: 'Quantity updated successfully' });
+            }
+        }
+    });
+});
 module.exports = router;

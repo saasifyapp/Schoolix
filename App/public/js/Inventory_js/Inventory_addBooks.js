@@ -85,7 +85,7 @@ function populateBooksVendorDropdown() {
                 document.getElementById('bookvendor'),        // For add book
                 //document.getElementById('editVendor')    // For edit uniform
             ];
-            
+
             // Populate each dropdown
             bookvendorDropdowns.forEach(dropdown => {
                 if (dropdown) {
@@ -124,7 +124,7 @@ function refreshbooksData() {
 // Function to display book data
 function displayBooks(data) {
     const bookTableBody = document.getElementById('booksTable');
-    bookTableBody.innerHTML = ''; 
+    bookTableBody.innerHTML = '';
 
     try {
         data.forEach(book => {
@@ -137,8 +137,10 @@ function displayBooks(data) {
                 <td>${book.vendor}</td>
                 <td>${book.ordered_quantity}</td>
                 <td>${book.remaining_quantity}</td>
+                <td>${book.returned_quantity}</td>
                 <td>
                     <button onclick="updateBook('${book.title}')">Update</button>
+                    <button onclick="returnBook('${book.title}')">Return</button>
                     <button onclick="deleteBook('${book.title}')">Delete</button>
                 </td>
             `;
@@ -224,7 +226,7 @@ function updateBook(title) {
 
                 // Update the ordered quantity on the server
                 updateBookOrderedQuantity(title, totalOrder, newRemainingQuantity);
-                
+
                 // Remove the prompt
                 customPrompt.remove();
             });
@@ -236,7 +238,7 @@ function updateBook(title) {
                 const totalOrder = existingOrderedQuantity + newOrderedQuantity;
                 const totalOrderElement = customPrompt.querySelector('#totalOrder');
                 totalOrderElement.textContent = `Total Order : ${totalOrder}`;
-                
+
                 // Calculate new remaining quantity and display it
                 const newRemainingQuantity = remainingQuantity + newOrderedQuantity;
                 const newRemainingQuantityElement = customPrompt.querySelector('#newRemainingQuantity');
@@ -277,15 +279,119 @@ function updateBookOrderedQuantity(title, totalOrder, newRemainingQuantity) {
         refreshData();
         populateBooksVendorDropdown() 
 
-        // You can perform further actions here, like refreshing the page or updating the UI
-    })
-    .catch(error => {
-        console.error('Error updating quantity:', error);
-        // Handle error if needed
-    });
+            // You can perform further actions here, like refreshing the page or updating the UI
+        })
+        .catch(error => {
+            console.error('Error updating quantity:', error);
+            // Handle error if needed
+        });
 }
 
+// Function to return a book
+function returnBook(title) {
+    let newRemainingQuantity; // Declare newRemainingQuantity here
 
+    fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to retrieve quantity.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            let remainingQuantity = data.remaining_quantity;
+            let class_of_title = data.class_of_title;
+            let returnedQuantity = data.returned_quantity;
+
+            newRemainingQuantity = remainingQuantity; // Initialize newRemainingQuantity here
+
+            // Create custom prompt
+            const customPrompt = document.createElement('div');
+            customPrompt.classList.add('custom-prompt');
+            const returnPromptContent = () => {
+                customPrompt.innerHTML = `
+                    <div class="prompt-content">
+                        <h2>${title} (${class_of_title})</h2>
+                        <p>Remaining Quantity : ${remainingQuantity}</p>
+                        <p>Enter the return quantity:</p>
+                        <input type="number" id="returnQuantityInput" min="0">
+                        <p id="newRemainingQuantity">New Remaining Quantity : ${newRemainingQuantity}</p>
+                        <button id="confirmButton">Confirm</button>
+                        <button id="cancelButton">Cancel</button>
+                    </div>
+                `;
+            };
+            returnPromptContent();
+            document.body.appendChild(customPrompt);
+
+            // Add event listener to confirm button
+            const confirmButton = customPrompt.querySelector('#confirmButton');
+            confirmButton.addEventListener('click', () => {
+                // Get the return quantity from the input field
+                let userReturnedQuantity = parseInt(customPrompt.querySelector('#returnQuantityInput').value, 10) || 0;
+
+                // Add the user entered value to the old returned quantity
+                returnedQuantity += userReturnedQuantity;
+
+                // Calculate new remaining quantity
+                newRemainingQuantity = remainingQuantity - userReturnedQuantity;
+
+                // Update the remaining quantity and returned quantity on the server
+                returnBookQuantity(title, returnedQuantity, newRemainingQuantity);
+
+                // Remove the prompt
+                customPrompt.remove();
+            });
+
+            // Add event listener to input field for updating remaining quantity
+            const returnQuantityInput = customPrompt.querySelector('#returnQuantityInput');
+            returnQuantityInput.addEventListener('input', () => {
+                let userReturnedQuantity = parseInt(returnQuantityInput.value, 10) || 0; // Ensure zero if input is not a number
+
+                // Calculate new remaining quantity and display it
+                newRemainingQuantity = remainingQuantity - userReturnedQuantity;
+                const newRemainingQuantityElement = customPrompt.querySelector('#newRemainingQuantity');
+                newRemainingQuantityElement.textContent = `New Remaining Quantity : ${newRemainingQuantity}`;
+            });
+
+            // Add event listener to cancel button
+            const cancelButton = customPrompt.querySelector('#cancelButton');
+            cancelButton.addEventListener('click', () => {
+                // Remove the prompt
+                customPrompt.remove();
+            });
+        })
+        .catch(error => {
+            console.error('Error retrieving quantity:', error);
+            // Handle error if needed
+        });
+}
+
+// Function to update ordered quantity on the server
+function returnBookQuantity(title, returnedQuantity, newRemainingQuantity) {
+
+    fetch(`/inventory/return_books/${encodeURIComponent(title)}/quantity`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ title: title, remainingQuantity: newRemainingQuantity, returnedQuantity: returnedQuantity })
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to update quantity.');
+            }
+            console.log('Quantity updated successfully.');
+            refreshbooksData();
+            populateBooksVendorDropdown()
+
+            // You can perform further actions here, like refreshing the page or updating the UI
+        })
+        .catch(error => {
+            console.error('Error updating quantity:', error);
+            // Handle error if needed
+        });
+}
 
 // Call refreshData initially to fetch and display book data when the page is loaded
 refreshbooksData();
