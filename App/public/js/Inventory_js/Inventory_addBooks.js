@@ -47,7 +47,9 @@ document.addEventListener("DOMContentLoaded", function () {
             })
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Network response was not ok');
+                        return response.text().then(text => {
+                            throw new Error(text);
+                        });
                     }
                     // Clear input fields after successful submission
                     booksform.reset();
@@ -63,8 +65,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 .catch(error => {
                     refreshbooksData();
                     refreshData();
-                    showToast('Book added failed');
-                    console.error('Error adding book:', error);
+                    if (error.message === 'Book title already exists') {
+                        showToast('Book title already exists', 'red');
+                    } else {
+                        showToast('Book added failed', 'red');
+                    }
+                    console.error('Error:', error);
                     // Handle errors here, like displaying an error message to the user
                 });
         });
@@ -120,7 +126,7 @@ function refreshbooksData() {
             console.error('Error:', error);
             // Handle error if needed
         });
-        
+
 }
 
 // Function to display book data

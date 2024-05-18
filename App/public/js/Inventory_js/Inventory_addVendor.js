@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const vendorName = vendorNameInput.value;
         const amountPaid = parseFloat(amountPaidInput.value);
 
-        console.log(vendorFor)
         // Prepare the data to send in the request body
         const data = {
             vendorName: vendorName,
@@ -32,11 +31,12 @@ document.addEventListener("DOMContentLoaded", function () {
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    return response.text().then(text => {
+                        throw new Error(text);
+                    });
                 }
                 // Clear input fields after successful submission
                 form.reset();
-
             })
             .then(data => {
                 console.log('Vendor added successfully');
@@ -48,8 +48,12 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .catch(error => {
                 refreshData();
-                showToast('Error while submitting vendor');
-                console.error('Error adding vendor:', error);
+                if (error.message === 'Vendor name already exists') {
+                    showToast('Vendor name already exists', 'red');
+                } else {
+                    showToast('Error while submitting vendor');
+                }
+                console.error('Error:', error);
                 // Handle errors here, like displaying an error message to the user
             });
     });

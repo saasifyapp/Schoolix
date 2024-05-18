@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", function () {
         formData.forEach((value, key) => {
             jsonData[key] = value;
         });
-
         fetch('/inventory/purchase/add_uniforms', {
             method: 'POST',
             headers: {
@@ -20,21 +19,31 @@ document.addEventListener("DOMContentLoaded", function () {
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Failed to add uniform.');
+                    return response.text().then(text => {
+                        throw new Error(text);
+                    });
                 }
-                return response.json();
+                // Clear input fields after successful submission
+                uniformForm.reset();
             })
             .then(data => {
                 console.log('Uniform added successfully');
-                uniformForm.reset();
+                showToast('Uniform added successfully');
                 refreshUniformsData();
                 refreshData();
-                // Optionally, refresh data or update UI
+                // populateUniformsVendorDropdown() // Uncomment this if you have a function to populate uniform vendor dropdown
+                // You can update the UI or do something else here after successful submission
             })
             .catch(error => {
                 refreshUniformsData();
                 refreshData();
-                console.error('Error adding uniform:', error);
+                if (error.message === 'Uniform item already exists') {
+                    showToast('Uniform item already exists', 'red');
+                } else {
+                    showToast('Uniform added failed', 'red');
+                }
+                console.error('Error:', error);
+                // Handle errors here, like displaying an error message to the user
             });
     });
 });

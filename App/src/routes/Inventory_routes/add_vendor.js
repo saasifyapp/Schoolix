@@ -6,19 +6,33 @@ router.post('/inventory/purchase/add_vendor', (req, res) => {
     
     const { vendorName, amountPaid, vendorFor } = req.body;
 
-
     const netPayable = req.body.netPayable || 0;
     const balance = req.body.balance || 0;
     const vendorType = req.body.vendorFor;
 
-    const sql = 'INSERT INTO inventory_vendor_details (vendor_name ,net_payable, paid_till_now, balance, vendorFor) VALUES (?, ?, ?, ?, ?)';
-    connection.query(sql, [vendorName, netPayable, amountPaid, balance, vendorType], (err, result) => {
+    // Check if vendor name already exists
+    const checkSql = 'SELECT * FROM inventory_vendor_details WHERE vendor_name = ?';
+    connection.query(checkSql, [vendorName], (err, result) => {
         if (err) {
-            console.error('Error adding vendor:', err);
-            res.status(500).send("Error adding vendor");
+            console.error('Error checking vendor:', err);
+            res.status(500).send("Error checking vendor");
         } else {
-            console.log('Vendor added successfully');
-            res.status(200).send('Vendor added successfully');
+            // If vendor name already exists, return a message to the client
+            if (result.length > 0) {
+                res.status(400).send('Vendor name already exists');
+            } else {
+                // If vendor name does not exist, proceed with insertion
+                const sql = 'INSERT INTO inventory_vendor_details (vendor_name ,net_payable, paid_till_now, balance, vendorFor) VALUES (?, ?, ?, ?, ?)';
+                connection.query(sql, [vendorName, netPayable, amountPaid, balance, vendorType], (err, result) => {
+                    if (err) {
+                        console.error('Error adding vendor:', err);
+                        res.status(500).send("Error adding vendor");
+                    } else {
+                        console.log('Vendor added successfully');
+                        res.status(200).send('Vendor added successfully');
+                    }
+                });
+            }
         }
     });
 });

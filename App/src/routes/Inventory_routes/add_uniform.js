@@ -17,25 +17,36 @@ router.get('/inventory/uniform_vendor', (req, res) => {
 });
 
  
-// Endpoint to handle adding uniform items
 router.post('/inventory/purchase/add_uniforms', (req, res) => {
     const { uniform_item, size_of_item, purchase_price, selling_price, vendor, ordered_quantity } = req.body;
 
     const remaining_quantity = ordered_quantity;
-
     const returned_quantity = 0;
 
+    // Check if the uniform_item already exists
+    const checkSql = `SELECT * FROM inventory_uniform_details WHERE uniform_item = ?`;
 
-    const sql = `INSERT INTO inventory_uniform_details (uniform_item, size_of_item, purchase_price, selling_price, vendor, ordered_quantity, remaining_quantity,returned_quantity)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-
-    connection.query(sql, [uniform_item, size_of_item, purchase_price, selling_price, vendor, ordered_quantity, remaining_quantity, returned_quantity], (err, result) => {
+    connection.query(checkSql, [uniform_item], (err, result) => {
         if (err) {
-            console.error('Error adding uniform item:', err);
-            res.status(500).json({ error: 'Error adding uniform item' });
+            console.error('Error checking uniform item:', err);
+            res.status(500).send('Error checking uniform item');
         } else {
-            console.log('Uniform item added successfully');
-            res.status(200).json({ message: 'Uniform item added successfully' });
+            if (result.length > 0) {
+                res.status(400).send('Uniform item already exists');
+            } else {
+                const sql = `INSERT INTO inventory_uniform_details (uniform_item, size_of_item, purchase_price, selling_price, vendor, ordered_quantity, remaining_quantity,returned_quantity)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+
+                connection.query(sql, [uniform_item, size_of_item, purchase_price, selling_price, vendor, ordered_quantity, remaining_quantity, returned_quantity], (err, result) => {
+                    if (err) {
+                        console.error('Error adding uniform item:', err);
+                        res.status(500).send('Error adding uniform item');
+                    } else {
+                        console.log('Uniform item added successfully');
+                        res.status(200).send('Uniform item added successfully');
+                    }
+                });
+            }
         }
     });
 });
