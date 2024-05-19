@@ -349,6 +349,11 @@ const addUniformDataRouter = require('./src/routes/Inventory_routes/add_uniform'
 // Mount the student details submission router to the root path
 app.use('/', addUniformDataRouter);
 
+//////PURCHASE REPORT ROUTE
+const purchaseReportsRouter = require('./src/routes/Inventory_routes/purchase_reports');
+// Mount the student details submission router to the root path
+app.use('/', purchaseReportsRouter);
+
  
 
 
