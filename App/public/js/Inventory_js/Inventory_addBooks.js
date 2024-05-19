@@ -474,10 +474,12 @@ function searchBookDetails() {
     const searchTerm = document.getElementById('bookssearchField').value.trim();
 
     // Check if the search term is empty
-    if (searchTerm === '') {
-        showToast('Please enter a search term.', true); // Show error toast
-        refreshbooksData(); // Refresh data to show all books
-        // hideLoadingAnimation();
+    
+    if (!searchTerm) {
+        if (bookssearchField !== document.activeElement) {
+            showToast('Please enter a search term.', true);
+        }
+        refreshbooksData();
         return;
     }
 

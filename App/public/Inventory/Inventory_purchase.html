@@ -104,10 +104,10 @@
       </div>
       <!-- Close icon -->
       <div class="close-icon" onclick="closeOverlay(event)">×</div>
-      <input type="text" id="searchField" placeholder="Enter Vendor Name...">
-      <button id="vendorsearchButton" class="search-button" onclick="searchVendorDetails()">
+      <input type="text" id="searchField" placeholder="Enter Vendor Name..." oninput="searchVendorDetails()">
+      <!--<button id="vendorsearchButton" class="search-button" onclick="searchVendorDetails()">
         search
-      </button>
+      </button>-->
       <button id="refreshvendorbutton" onclick="refreshData()">Refresh</button>
       <div class="form-container">
         <form action="/inventory/purchase/add_vendor" method="post" id="vendorForm">
@@ -164,10 +164,10 @@
       <h2>Add Books</h2>
       <!-- Close icon -->
       <div class="close-icon" onclick="closeOverlay(event)">×</div>
-      <input type="text" id="bookssearchField" placeholder="Enter Title Name...">
-      <button id="bookssearchButton" class="search-button" onclick="searchBookDetails()">
+      <input type="text" id="bookssearchField" placeholder="Enter Title Name..." oninput="searchBookDetails()">
+      <!--<button id="bookssearchButton" class="search-button" onclick="searchBookDetails()">
         search
-      </button>
+      </button>-->
       <button id="refreshvendorbutton" onclick="refreshbooksData()">Refresh</button>
       <!-- Form for adding books -->
       <form id="addBooksForm">
@@ -221,10 +221,10 @@
     <div class="overlay-content">
       <h2>Add Uniform</h2>
       <div class="close-icon" onclick="closeOverlay(event)">×</div>
-      <input type="text" id="uniformsearchField" placeholder="Enter Uniform Item...">
-      <button id="uniformsearchButton" class="search-button" onclick="searchUniformDetails()">
+      <input type="text" id="uniformsearchField" placeholder="Enter Uniform Item..." oninput="searchUniformDetails()">
+      <!--<button id="uniformsearchButton" class="search-button" onclick="searchUniformDetails()">
         search
-      </button>
+      </button>-->
       <button id="refreshvendorbutton" onclick="refreshUniformsData()">Refresh</button>
       <form id="addUniformForm">
         <div id="toast" class="toast"></div>

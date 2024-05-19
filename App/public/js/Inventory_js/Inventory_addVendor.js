@@ -279,17 +279,16 @@ function updateVendorPaidAmount(vendorName, totalPaid) {
 
 // Function to handle searching vendor details
 function searchVendorDetails() {
-    // showLoadingAnimation(); 
-
     const searchTerm = document.getElementById('searchField').value.trim();
 
-    // Check if the search term is empty
-    if (searchTerm === '') {
-        showToast('Please enter a search term.', true); // Show error toast
-        refreshData(); // Refresh data to show all vendors
-        // hideLoadingAnimation();
+    if (!searchTerm) {
+        if (searchField !== document.activeElement) {
+            showToast('Please enter a search term.', true);
+        }
+        refreshData();
         return;
     }
+
 
     // Fetch data from the server based on the search term
     fetch(`/inventory/vendors/search?search=${encodeURIComponent(searchTerm)}`)
