@@ -29,13 +29,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log('Uniform added successfully');
                 showToast(`${jsonData.uniform_item} of size ${jsonData.size_of_item} added successfully`);
                 refreshUniformsData();
-                refreshData();
+            
                 // populateUniformsVendorDropdown() // Uncomment this if you have a function to populate uniform vendor dropdown
                 // You can update the UI or do something else here after successful submission
             })
             .catch(error => {
                 refreshUniformsData();
-                refreshData();
                 if (error.message === 'Uniform item with this size already exists') {
                     showToast(`${jsonData.uniform_item} of size ${jsonData.size_of_item} is already added`, 'red');
                 } else {
@@ -199,7 +198,7 @@ function deleteUniform(uniformItem, sizeOfItem) {
                 console.log('Uniform deleted successfully');
                 showToast(`${uniformItem} with size ${sizeOfItem} deleted successfully`); // Show success toast
                 refreshUniformsData(); // Refresh uniform data
-                refreshData();
+            
                 populateUniformVendorDropdown()
             })
             .catch(error => {
@@ -303,7 +302,7 @@ function updateUniformOrderedQuantity(uniformItem, sizeOfItem, totalOrder, newRe
                 throw new Error('Failed to update quantity.');
             }
             refreshUniformsData();
-            refreshData();
+        
             console.log('Quantity updated successfully.');
             showToast(`${uniformItem} with size ${sizeOfItem} restocked successfully`); // Show success toast
             populateUniformVendorDropdown();
@@ -509,10 +508,11 @@ function searchUniformDetails() {
     const searchTerm = document.getElementById('uniformsearchField').value.trim();
 
     // Check if the search term is empty
-    if (searchTerm === '') {
-        showToast('Please enter a search term.', true); // Show error toast
-        refreshUniformData(); // Refresh data to show all uniform items
-        // hideLoadingAnimation();
+    if (!searchTerm) {
+        if (uniformsearchField !== document.activeElement) {
+            showToast('Please enter a search term.', true);
+        }
+        refreshUniformsData();
         return;
     }
 
