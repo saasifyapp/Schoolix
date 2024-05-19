@@ -164,7 +164,7 @@
       <h2>Add Books</h2>
       <!-- Close icon -->
       <div class="close-icon" onclick="closeOverlay(event)">×</div>
-      <input type="text" id="bookssearchField" placeholder="Enter Title Name..." >
+      <input type="text" id="bookssearchField" placeholder="Enter Title Name...">
       <button id="bookssearchButton" class="search-button" onclick="searchBookDetails()">
         search
       </button>
@@ -221,7 +221,7 @@
     <div class="overlay-content">
       <h2>Add Uniform</h2>
       <div class="close-icon" onclick="closeOverlay(event)">×</div>
-      <input type="text" id="uniformsearchField" placeholder="Enter Uniform Item..." >
+      <input type="text" id="uniformsearchField" placeholder="Enter Uniform Item...">
       <button id="uniformsearchButton" class="search-button" onclick="searchUniformDetails()">
         search
       </button>
@@ -271,41 +271,19 @@
         <tbody id="uniformTable">
           <!-- Table rows will be populated dynamically -->
         </tbody>
+      </table>
     </div>
   </div>
 
 
-  <!-- Edit Uniform Overlay 
-  <div id="editUniformOverlay" class="overlay">
+  <!-- Purchase Report Overlay  -->
+  <div id="purchaseReportsOverlay" class="overlay purchase-reports">
     <div class="overlay-content">
-      <form id="editUniformForm">
-        <label for="editUniformItem">Uniform Item:</label>
-        <input type="text" id="editUniformItem" name="uniform_item" readonly><br>
+      <div class="close-icon" onclick="closeOverlay(event)">×</div>
+      <h2>Purchase Report</h2>
+    </div>
+    
 
-        <label for="editSizeOfItem">Size of Item:</label>
-        <input type="text" id="editSizeOfItem" name="size_of_item" required><br>
-
-        <label for="editPurchasePrice">Purchase Price:</label>
-        <input type="number" id="editPurchasePrice" name="purchase_price" required><br>
-
-        <label for="editSellingPrice">Selling Price:</label>
-        <input type="number" id="editSellingPrice" name="selling_price" required><br>
-
-        <label for="editVendor">Vendor:</label>
-        <select id="editVendor" name="vendor" required></select><br>
-
-        <label for="editOrderedQuantity">Ordered Quantity:</label>
-        <input type="number" id="editOrderedQuantity" name="ordered_quantity" required><br>
-
-        <label for="editRemainingQuantity">Remaining Quantity:</label>
-        <input type="number" id="editRemainingQuantity" name="remaining_quantity" required><br>
-
-        <div class="actions">
-          <button type="submit" onclick="submitEditUniformForm()">Update</button>
-          <button type="button" onclick="closeEditUniformOverlay()">Cancel</button>
-        </div>
-      </form>
-    </div> -->
   </div>
 
 
