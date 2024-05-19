@@ -311,9 +311,9 @@ function searchVendorDetails() {
                     row.innerHTML = `
                         <td>${vendor.vendor_name}</td>
                         <td>${vendor.vendorFor}</td>
-                        <td>${vendor.net_payable}</td>
+                        <!--<td>${vendor.net_payable}</td>-->
                         <td>${vendor.paid_till_now}</td>
-                        <td>${vendor.balance}</td>
+                        <!--<td>${vendor.balance}</td>-->
                         <td style="text-align: center;">
                         <button style="background-color: transparent;
                         border: none;
