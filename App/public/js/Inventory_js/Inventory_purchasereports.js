@@ -1,16 +1,16 @@
-document.addEventListener("DOMContentLoaded",function(){
-    document.getElementById("vendorSummary").addEventListener("click", function() {
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("vendorSummary").addEventListener("click", function () {
 
         // Create table and table body
         const table = document.createElement('table');
         const tbody = document.createElement('tbody');
-        tbody.id = 'vendorTableBody';
+        tbody.id = 'vendorTablesummaryBody';
         table.appendChild(tbody);
 
         // Create table headers
         const thead = document.createElement('thead');
         const headerRow = document.createElement('tr');
-        ['VendorName','Vendor For','Net Payable','Paid Till Now', 'Balance'].forEach(headerText => {
+        ['VendorName', 'Vendor For', 'Net Payable', 'Paid Till Now', 'Balance'].forEach(headerText => {
             const th = document.createElement('th');
             th.textContent = headerText;
             headerRow.appendChild(th);
@@ -19,9 +19,9 @@ document.addEventListener("DOMContentLoaded",function(){
         table.insertBefore(thead, tbody);
 
         // Append the table to the overlay-content div
-        const overlayContent = document.querySelector('.overlay-content');
-        overlayContent.innerHTML = ''; // Clear previous content
-        overlayContent.appendChild(table);
+        const tableContainer = document.getElementById('tableContainer');
+        tableContainer.innerHTML = ''; // Clear previous content
+        tableContainer.appendChild(table);
 
         // Fetch data from the server
         fetch('/inventory/vendors_summary')
@@ -41,11 +41,34 @@ document.addEventListener("DOMContentLoaded",function(){
     });
 });
 
+// Function to display vendor summary data
+function displayVendors(data) {
+    const vendorTableBody = document.getElementById('vendorTablesummaryBody');
+    vendorTableBody.innerHTML = ''; // Clear previous data
+
+    try {
+        data.forEach(detail => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+          <td>${detail.vendor_name}</td>
+          <td>${detail.vendorFor}</td>
+          <td>${detail.net_payable}</td>
+          <td>${detail.paid_till_now}</td>
+          <td>${detail.balance}</td>
+        `;
+            vendorTableBody.appendChild(row);
+        });
+    } catch (error) {
+        console.error('Error displaying vendor summary:', error);
+        // Handle error if needed
+    }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("vendorDetails").addEventListener("click", function () {
-
         // Create table and table body
         const table = document.createElement('table');
+        table.id = 'vendorDetailsTable';
         const tbody = document.createElement('tbody');
         tbody.id = 'vendorDetailsTableBody';
         table.appendChild(tbody);
@@ -61,10 +84,10 @@ document.addEventListener("DOMContentLoaded", function () {
         thead.appendChild(headerRow);
         table.insertBefore(thead, tbody);
 
-        // Append the table to the overlay-content div
-        const overlayContent = document.querySelector('.overlay-content');
-        overlayContent.innerHTML = ''; // Clear previous content
-        overlayContent.appendChild(table);
+        // Append the table to the tableContainer div
+        const tableContainer = document.getElementById('tableContainer');
+        tableContainer.innerHTML = ''; // Clear previous table content
+        tableContainer.appendChild(table);
 
         // Fetch data from the server
         fetch('/inventory/vendors_details')
@@ -134,9 +157,9 @@ document.addEventListener("DOMContentLoaded", function () {
         table.insertBefore(thead, tbody);
 
         // Append the table to the overlay-content div
-        const overlayContent = document.querySelector('.overlay-content');
-        overlayContent.innerHTML = ''; // Clear previous content
-        overlayContent.appendChild(table);
+        const tableContainer = document.getElementById('tableContainer');
+        tableContainer.innerHTML = ''; // Clear previous content
+        tableContainer.appendChild(table);
 
         // Fetch data from the server
         fetch('/inventory/profit_loss')

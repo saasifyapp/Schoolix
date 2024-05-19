@@ -579,3 +579,7 @@ select {
 
 
 
+#tableContainer{
+    height: 50rem;
+    width: 50rem;
+}
