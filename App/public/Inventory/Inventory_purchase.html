@@ -276,16 +276,20 @@
   </div>
 
 
-  <!-- Purchase Report Overlay  -->
-  <div id="purchaseReportsOverlay" class="overlay purchase-reports">
-    <div class="overlay-content">
-      <div class="close-icon" onclick="closeOverlay(event)">×</div>
-      <h2>Purchase Report</h2>
-      <button button id="vendorSummary" >Vendor Summary</button>
-      <button id="vendorDetails">Vendor Details</button>
-      <button id="profitLoss">Profit/Loss</button>
-      <div id="tableContainer"></div> <!-- Container to display the table -->
-    </div>
+<!-- Purchase Report Overlay  -->
+<div id="purchaseReportsOverlay" class="overlay purchase-reports">
+  <div class="overlay-content">
+    <div class="close-icon" onclick="closeOverlay(event)">×</div>
+    <h2>Purchase Report</h2>
+    <button button id="vendorSummary" >Vendor Summary</button>
+    <select id="vendorDetails">
+      <option value="">Vendor Details</option>
+        <!-- Vendor options will be populated here -->
+    </select>
+    <button id="profitLoss">Profit/Loss</button>
+    <div id="tableContainer"></div> <!-- Container to display the table -->
+  </div>
+</div>
     
     
 

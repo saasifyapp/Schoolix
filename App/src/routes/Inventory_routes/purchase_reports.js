@@ -1,6 +1,22 @@
 const express = require('express');
 const router = express.Router();
 
+// Fetching book data endpoint
+router.get('/inventory/all_vendor', (req, res) => {
+    const sql = 'SELECT vendor_name FROM inventory_vendor_details';
+    connection.query(sql, (err, result) => {
+        if (err) {
+            console.error('Error fetching books:', err);
+            res.status(500).json({ error: 'Error fetching books' });
+        } else {
+            console.log(result)
+            res.status(200).json(result);
+            
+        }
+    });
+});
+
+
 
 // Get data for vendor summary
 router.get('/inventory/vendors_summary', (req, res) => {
@@ -19,7 +35,10 @@ router.get('/inventory/vendors_summary', (req, res) => {
 
 
 // Get Data for vendor details
+// Get Data for vendor details
 router.get('/inventory/vendors_details', (req, res) => {
+    const vendorName = req.query.vendor;
+
     const sql = `SELECT
     V.vendor_name,
         CASE 
@@ -40,9 +59,9 @@ LEFT JOIN
 LEFT JOIN
     inventory_uniform_details U ON V.vendor_name = U.vendor
     WHERE
-    V.vendor_name = 'Uniform Wale'; `;
+    V.vendor_name = ?; `;
 
-    connection.query(sql, (err, result) => {
+    connection.query(sql, [vendorName], (err, result) => {
         if (err) {
             console.error('Error fetching vendor details:', err);
             res.status(500).send("Error fetching vendor details");

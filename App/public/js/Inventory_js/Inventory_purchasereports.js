@@ -4,11 +4,11 @@ document.addEventListener("DOMContentLoaded", function () {
         createAndFetchTable('/inventory/vendors_summary', 'vendorTablesummaryBody', displayVendors, ['VendorName', 'Vendor For', 'Net Payable', 'Paid Till Now', 'Balance']);
     });
 
-    // Vendor Details button click event
-    document.getElementById("vendorDetails").addEventListener("click", function () {
-        createAndFetchTable('/inventory/vendors_details', 'vendorDetailsTableBody', displayVendorDetails, ['Vendor Name', 'Item Ordered', 'Purchase Price', 'Ordered Quantity', 'Returned Quantity', 'Items in Stock', 'Ordered Price', 'Returned Price', 'Net Payable']);
+    // Vendor Details dropdown change event
+    document.getElementById("vendorDetails").addEventListener("change", function () {
+        const selectedVendor = this.value;
+        createAndFetchTable(`/inventory/vendors_details?vendor=${selectedVendor}`, 'vendorDetailsTableBody', displayVendorDetails, ['Vendor Name', 'Item Ordered', 'Purchase Price', 'Ordered Quantity', 'Returned Quantity', 'Items in Stock', 'Ordered Price', 'Returned Price', 'Net Payable']);
     });
-
     // Profit/Loss button click event
     document.getElementById("profitLoss").addEventListener("click", function () {
         createAndFetchTable('/inventory/profit_loss', 'profitLossTableBody', displayProfitLoss, ['Item Type', 'Total Purchase Price', 'Total Selling Price', 'Total Profit']);
@@ -144,6 +144,35 @@ document.addEventListener("DOMContentLoaded", function () {
             // Handle error if needed
         }
     }
+
+    // Fetching vendor data and populating the dropdown
+    fetch('/inventory/all_vendor')
+        .then(response => response.json())
+        .then(data => {
+            const vendorDetails = document.getElementById('vendorDetails');
+            data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.vendor_name;
+                option.text = item.vendor_name;
+                vendorDetails.appendChild(option);
+            });
+        });
+
+    // Vendor Details dropdown change event
+    document.getElementById("vendorDetails").addEventListener("change", function () {
+        const selectedVendor = this.value;
+        const tableContainer = document.getElementById('tableContainer');
+
+        // Remove existing table if any
+        while (tableContainer.firstChild) {
+            tableContainer.removeChild(tableContainer.firstChild);
+        }
+
+        // If a vendor is selected, create and fetch table
+        if (selectedVendor) {
+            createAndFetchTable(`/inventory/vendors_details?vendor=${selectedVendor}`, 'vendorDetailsTableBody', displayVendorDetails, ['Vendor Name', 'Item Ordered', 'Purchase Price', 'Ordered Quantity', 'Returned Quantity', 'Items in Stock', 'Ordered Price', 'Returned Price', 'Net Payable']);
+        }
+    });
 
     // Sample function to close the overlay
     function closeOverlay(event) {
