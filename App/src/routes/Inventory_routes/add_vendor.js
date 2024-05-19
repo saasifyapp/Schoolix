@@ -59,7 +59,7 @@ router.delete('/inventory/vendors/:vendorName', (req, res) => {
 router.route('/inventory/vendors/:vendorName/paid_till_now')
     .get((req, res) => {
         const vendorName = req.params.vendorName;
-        const sql = 'SELECT vendor_name, paid_till_now, net_payable FROM inventory_vendor_details WHERE vendor_name = ?';
+        const sql = 'SELECT vendor_name, paid_till_now, net_payable, balance FROM inventory_vendor_details WHERE vendor_name = ?';
         connection.query(sql, [vendorName], (err, result) => {
             if (err) {
                 console.error('Error fetching quantity:', err);
@@ -68,8 +68,8 @@ router.route('/inventory/vendors/:vendorName/paid_till_now')
                 if (result.length === 0) {
                     res.status(404).json({ error: 'Vendor not found' });
                 } else {
-                    const { vendor_name, paid_till_now, net_payable } = result[0];
-                    res.status(200).json({ vendor_name, paid_till_now, net_payable });
+                    const { vendor_name, paid_till_now, net_payable, balance } = result[0];
+                    res.status(200).json({ vendor_name, paid_till_now, net_payable,balance });
                 }
             }
         });

@@ -83,9 +83,9 @@ function displayVendors(data) {
             row.innerHTML = `
                 <td>${vendor.vendor_name}</td>
                 <td>${vendor.vendorFor}</td>
-                <td>${vendor.net_payable}</td>
+                <!--<td>${vendor.net_payable}</td>-->
                 <td>${vendor.paid_till_now}</td>
-                <td>${vendor.balance}</td>
+                <!--<td>${vendor.balance}</td>-->
                 <td>
                 <button style="background-color: transparent;
                 border: none;
@@ -168,7 +168,6 @@ function deleteVendor(vendorName) {
             });
     }
 }
-
 // Function to update a vendors paid amount
 function updateVendor(vendorName) {
     fetch(`/inventory/vendors/${encodeURIComponent(vendorName)}/paid_till_now`)
@@ -181,6 +180,7 @@ function updateVendor(vendorName) {
         .then(data => {
             let existingPaidAmount = data.paid_till_now;
             let net_payable = data.net_payable;
+            let initialBalance = data.balance;
             let newPaidAmount = 0;
 
             // Create custom prompt
@@ -195,6 +195,7 @@ function updateVendor(vendorName) {
                         <p>New Amount Paid:</p>
                         <input type="number" id="newPaidAmountInput" min="0">
                         <p id="totalPaid">Total Paid : ${existingPaidAmount}</p>
+                        <p id="balance">Balance : ${initialBalance}</p>
                         <button id="confirmButton">Confirm</button>
                         <button id="cancelButton">Cancel</button>
                     </div>
@@ -212,6 +213,9 @@ function updateVendor(vendorName) {
                 // Calculate total paid amount
                 const totalPaid = existingPaidAmount + newPaidAmount;
 
+                // Calculate new balance
+                let balance = initialBalance - newPaidAmount;
+
                 // Update the vendor details on the server
                 updateVendorPaidAmount(vendorName, totalPaid);
 
@@ -219,13 +223,18 @@ function updateVendor(vendorName) {
                 customPrompt.remove();
             });
 
-            // Add event listener to input field for updating total paid amount
+            // Add event listener to input field for updating total paid amount and balance
             const newPaidAmountInput = customPrompt.querySelector('#newPaidAmountInput');
             newPaidAmountInput.addEventListener('input', () => {
                 newPaidAmount = parseInt(newPaidAmountInput.value, 10) || 0;
                 const totalPaid = existingPaidAmount + newPaidAmount;
                 const totalPaidElement = customPrompt.querySelector('#totalPaid');
                 totalPaidElement.textContent = `Total Paid : ${totalPaid}`;
+
+                // Update balance
+                let balance = initialBalance - newPaidAmount;
+                const balanceElement = customPrompt.querySelector('#balance');
+                balanceElement.textContent = `Balance : ${balance}`;
             });
 
             // Add event listener to cancel button
