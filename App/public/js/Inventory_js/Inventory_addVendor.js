@@ -156,7 +156,7 @@ function deleteVendor(vendorName) {
             })
             .then(data => {
                 refreshData();
-                showToast('Vendor deleted successfully.', false); // Show success toast
+                showToast(`${vendorName} deleted successfully`,false); // Show success toast
                 populateBooksVendorDropdown();
                 populateUniformVendorDropdown();
                 // Refresh data after deleting the vendor
@@ -258,10 +258,12 @@ function updateVendorPaidAmount(vendorName, totalPaid) {
             }
             refreshData();
             console.log('Vendor details updated successfully.');
+            showToast(`${vendorName} updated successfully`);
             // You can perform further actions here, like refreshing the page or updating the UI
         })
         .catch(error => {
             console.error('Error updating vendor details:', error);
+            showToast(` Failed to update ${vendorName}`,'red');
             // Handle error if needed
         });
 }
@@ -284,6 +286,7 @@ function searchVendorDetails() {
     fetch(`/inventory/vendors/search?search=${encodeURIComponent(searchTerm)}`)
         .then(response => response.json())
         .then(data => {
+
             const vendorTableBody = document.getElementById('vendorTableBody');
             vendorTableBody.innerHTML = ''; // Clear previous data
 
@@ -298,7 +301,7 @@ function searchVendorDetails() {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${vendor.vendor_name}</td>
-                        <td>${vendor.vendor_for}</td>
+                        <td>${vendor.vendorFor}</td>
                         <td>${vendor.net_payable}</td>
                         <td>${vendor.paid_till_now}</td>
                         <td>${vendor.balance}</td>

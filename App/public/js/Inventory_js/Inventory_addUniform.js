@@ -122,7 +122,7 @@ function displayUniforms(data) {
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
                 transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
                 margin-bottom: 10px;" /* Added margin bottom for spacing */
-        onclick="updateUniformItem('${uniform.uniform_item}')"
+        onclick="updateUniformItem('${uniform.uniform_item}', '${uniform.size_of_item}')"
         onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
     <img src="/images/add_uniform.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
@@ -145,7 +145,7 @@ function displayUniforms(data) {
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
                 transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
                 margin-bottom: 10px;" /* Added margin bottom for spacing */
-        onclick="returnUniform('${uniform.uniform_item}')"
+        onclick="returnUniform('${uniform.uniform_item}', '${uniform.size_of_item}')"
         onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
     <img src="/images/return_book.png" alt="Return" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
@@ -181,7 +181,7 @@ function displayUniforms(data) {
         uniformTableBody.appendChild(row);
     });
 }
-
+ 
 // Function to handle deleting a uniform
 function deleteUniform(uniformItem, sizeOfItem) {
     const confirmation = confirm(`Are you sure you want to delete the uniform "${uniformItem}" of size "${sizeOfItem}"?`);
@@ -197,19 +197,22 @@ function deleteUniform(uniformItem, sizeOfItem) {
             })
             .then(data => {
                 console.log('Uniform deleted successfully');
+                showToast(`${uniformItem} with size ${sizeOfItem} deleted successfully`); // Show success toast
                 refreshUniformsData(); // Refresh uniform data
                 refreshData();
                 populateUniformVendorDropdown()
             })
             .catch(error => {
                 console.error('Error deleting uniform:', error);
+                showToast(`Failed to delete ${uniformItem} with size ${sizeOfItem}`, 'red'); // Show success toast
+
             });
     }
 }
 
 // Function to update a uniform item
-function updateUniformItem(uniformItem) {
-    fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/quantity`)
+function updateUniformItem(uniformItem, sizeOfItem) {
+    fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Failed to retrieve quantity.');
@@ -217,9 +220,8 @@ function updateUniformItem(uniformItem) {
             return response.json();
         })
         .then(data => {
-            let existingOrderedQuantity = data.ordered_quantity; // changed from data.ordered_quantity
+            let existingOrderedQuantity = data.ordered_quantity;
             let remainingQuantity = data.remaining_quantity;
-            let size_of_item = data.size_of_item;
             let newOrderedQuantity = 0;
 
             // Create custom prompt
@@ -228,7 +230,7 @@ function updateUniformItem(uniformItem) {
             const updatePromptContent = () => {
                 customPrompt.innerHTML = `
                     <div class="prompt-content">
-                        <h2>${uniformItem} (${size_of_item})</h2>
+                        <h2>${uniformItem} (${sizeOfItem})</h2>
                         <p>Previously Ordered : ${existingOrderedQuantity}</p>
                         <p>Remaining Quantity : ${remainingQuantity}</p>
                         <p>Enter the new order quantity:</p>
@@ -254,7 +256,7 @@ function updateUniformItem(uniformItem) {
                 const newRemainingQuantity = remainingQuantity + newOrderedQuantity;
 
                 // Update the ordered quantity on the server
-                updateUniformOrderedQuantity(uniformItem, totalOrder, newRemainingQuantity);
+                updateUniformOrderedQuantity(uniformItem, sizeOfItem, totalOrder, newRemainingQuantity);
 
                 // Remove the prompt
                 customPrompt.remove();
@@ -287,10 +289,9 @@ function updateUniformItem(uniformItem) {
         });
 }
 
-
 // Function to update ordered quantity on the server
-function updateUniformOrderedQuantity(uniformItem, totalOrder, newRemainingQuantity) {
-    fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/quantity`, {
+function updateUniformOrderedQuantity(uniformItem, sizeOfItem, totalOrder, newRemainingQuantity) {
+    fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -304,6 +305,7 @@ function updateUniformOrderedQuantity(uniformItem, totalOrder, newRemainingQuant
             refreshUniformsData();
             refreshData();
             console.log('Quantity updated successfully.');
+            showToast(`${uniformItem} with size ${sizeOfItem} restocked successfully`); // Show success toast
             populateUniformVendorDropdown();
             // refreshUniformData(); Uncomment this if you have a function to refresh the uniform data
 
@@ -311,16 +313,17 @@ function updateUniformOrderedQuantity(uniformItem, totalOrder, newRemainingQuant
         })
         .catch(error => {
             console.error('Error updating quantity:', error);
+            showToast(`Failed to restock ${uniformItem} with size ${sizeOfItem}`, 'red'); // Show success toast
             // Handle error if needed
         });
 }
 
 
 // Function to return a uniform
-function returnUniform(uniformItem) {
+function returnUniform(uniformItem, sizeOfItem) {
     let newRemainingQuantity; // Declare newRemainingQuantity here
 
-    fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/quantity`)
+    fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Failed to retrieve quantity.');
@@ -329,7 +332,6 @@ function returnUniform(uniformItem) {
         })
         .then(data => {
             let remainingQuantity = data.remaining_quantity;
-            let size_of_item = data.size_of_item;
             let returnedQuantity = data.returned_quantity; // Get old returned quantity
 
             newRemainingQuantity = remainingQuantity; // Initialize newRemainingQuantity here
@@ -340,7 +342,7 @@ function returnUniform(uniformItem) {
             const returnPromptContent = () => {
                 customPrompt.innerHTML = `
                     <div class="prompt-content">
-                        <h2>${uniformItem} (${size_of_item})</h2>
+                        <h2>${uniformItem} (${sizeOfItem})</h2>
                         <p>Remaining Quantity : ${remainingQuantity}</p>
                         <p>Enter the return quantity:</p>
                         <input type="number" id="returnQuantityInput" min="0">
@@ -366,7 +368,7 @@ function returnUniform(uniformItem) {
                 newRemainingQuantity = remainingQuantity - userReturnedQuantity;
 
                 // Update the remaining quantity and returned quantity on the server
-                returnUniformQuantity(uniformItem, returnedQuantity, newRemainingQuantity);
+                returnUniformQuantity(uniformItem, sizeOfItem, returnedQuantity, newRemainingQuantity);
 
                 // Remove the prompt
                 customPrompt.remove();
@@ -396,23 +398,23 @@ function returnUniform(uniformItem) {
         });
 }
 
-
 // Function to update ordered quantity on the server
-function returnUniformQuantity(uniformItem, returnedQuantity, newRemainingQuantity) {
-    console.log(uniformItem, returnedQuantity, newRemainingQuantity)
+function returnUniformQuantity(uniformItem, sizeOfItem, returnedQuantity, newRemainingQuantity) {
+    console.log(uniformItem, sizeOfItem, returnedQuantity, newRemainingQuantity)
 
-    fetch(`/inventory/return_uniform/${encodeURIComponent(uniformItem)}/quantity`, {
+    fetch(`/inventory/return_uniform/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ uniform_item: uniformItem, remainingQuantity: newRemainingQuantity, returnedQuantity: returnedQuantity })
+        body: JSON.stringify({ uniform_item: uniformItem, size_of_item: sizeOfItem, remainingQuantity: newRemainingQuantity, returnedQuantity: returnedQuantity })
     })
         .then(response => {
             if (!response.ok) {
                 throw new Error('Failed to update quantity.');
             }
             console.log('Quantity updated successfully.');
+            showToast(`${uniformItem} with size ${sizeOfItem} returned successfully`); // Show success toast
             refreshUniformsData();
             populateBooksVendorDropdown()
 
@@ -420,6 +422,8 @@ function returnUniformQuantity(uniformItem, returnedQuantity, newRemainingQuanti
         })
         .catch(error => {
             console.error('Error updating quantity:', error);
+            showToast(`Failed to return ${uniformItem} with size ${sizeOfItem}`, 'red'); // Show success toast
+
             // Handle error if needed
         });
 }
@@ -539,73 +543,73 @@ function searchUniformDetails() {
                         <td>${uniform.returned_quantity}</td>
                         <td style="text-align: center;">
                         <button style="background-color: transparent;
-                        border: none;
-                        color: black; /* Change text color to black */
-                        padding: 0;
-                        text-align: center;
-                        text-decoration: none;
-                        display: flex; /* Use flex for centering */
-                        align-items: center; /* Center vertically */
-                        justify-content: center; /* Center horizontally */
-                        font-size: 14px;
-                        cursor: pointer;
-                        max-height: 100%;
-                        border-radius: 20px; /* Round corners */
-                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-                        transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
-                        margin-bottom: 10px;" /* Added margin bottom for spacing */
-                onclick="updateUniformItem('${uniform.uniform_item}')"
-                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-            <img src="/images/add_uniform.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-            <span style="margin-right: 10px;">Restock</span>
-        </button>
-        
-        <button style="background-color: transparent;
-                        border: none;
-                        color: black; /* Change text color to black */
-                        padding: 0;
-                        text-align: center;
-                        text-decoration: none;
-                        display: flex; /* Use flex for centering */
-                        align-items: center; /* Center vertically */
-                        justify-content: center; /* Center horizontally */
-                        font-size: 14px;
-                        cursor: pointer;
-                        max-height: 100%;
-                        border-radius: 20px; /* Round corners */
-                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-                        transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
-                        margin-bottom: 10px;" /* Added margin bottom for spacing */
-                onclick="returnUniform('${uniform.uniform_item}')"
-                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-            <img src="/images/return_book.png" alt="Return" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-            <span style="margin-right: 10px;">Return</span>
-        </button>
-        
-        <button style="background-color: transparent;
-                        border: none;
-                        color: black; /* Change text color to black */
-                        padding: 0;
-                        text-align: center;
-                        text-decoration: none;
-                        display: flex; /* Use flex for centering */
-                        align-items: center; /* Center vertically */
-                        justify-content: center; /* Center horizontally */
-                        font-size: 14px;
-                        cursor: pointer;
-                        max-height: 100%;
-                        border-radius: 20px; /* Round corners */
-                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-                        transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
-                        margin-bottom: 10px;" /* Added margin bottom for spacing */
-                onclick="deleteUniform('${uniform.uniform_item}')"
-                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-            <img src="/images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-            <span style="margin-right: 10px;">Delete</span>
-        </button>
+                border: none;
+                color: black; /* Change text color to black */
+                padding: 0;
+                text-align: center;
+                text-decoration: none;
+                display: flex; /* Use flex for centering */
+                align-items: center; /* Center vertically */
+                justify-content: center; /* Center horizontally */
+                font-size: 14px;
+                cursor: pointer;
+                max-height: 100%;
+                border-radius: 20px; /* Round corners */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                margin-bottom: 10px;" /* Added margin bottom for spacing */
+        onclick="updateUniformItem('${uniform.uniform_item}', '${uniform.size_of_item}')"
+        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+    <img src="/images/add_uniform.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+    <span style="margin-right: 10px;">Restock</span>
+</button>
+
+<button style="background-color: transparent;
+                border: none;
+                color: black; /* Change text color to black */
+                padding: 0;
+                text-align: center;
+                text-decoration: none;
+                display: flex; /* Use flex for centering */
+                align-items: center; /* Center vertically */
+                justify-content: center; /* Center horizontally */
+                font-size: 14px;
+                cursor: pointer;
+                max-height: 100%;
+                border-radius: 20px; /* Round corners */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                margin-bottom: 10px;" /* Added margin bottom for spacing */
+        onclick="returnUniform('${uniform.uniform_item}', '${uniform.size_of_item}')"
+        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+    <img src="/images/return_book.png" alt="Return" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+    <span style="margin-right: 10px;">Return</span>
+</button>
+
+<button style="background-color: transparent;
+                border: none;
+                color: black; /* Change text color to black */
+                padding: 0;
+                text-align: center;
+                text-decoration: none;
+                display: flex; /* Use flex for centering */
+                align-items: center; /* Center vertically */
+                justify-content: center; /* Center horizontally */
+                font-size: 14px;
+                cursor: pointer;
+                max-height: 100%;
+                border-radius: 20px; /* Round corners */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                margin-bottom: 10px;" /* Added margin bottom for spacing */
+                onclick="deleteUniform('${uniform.uniform_item}', '${uniform.size_of_item}')"
+        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+    <img src="/images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+    <span style="margin-right: 10px;">Delete</span>
+</button>
                         </td>
                     `;
                     uniformTableBody.appendChild(row);

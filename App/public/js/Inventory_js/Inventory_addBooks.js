@@ -237,14 +237,14 @@ function deleteBook(title) {
                 }
             })
             .then(data => {
-                showToast('Book deleted successfully.', false); // Show success toast
+                showToast(`${title} deleted successfully`); // Show success toast
                 refreshbooksData(); // Refresh data after deleting the book
                 refreshData();
                 populateBooksVendorDropdown();
             })
             .catch(error => {
                 console.error('Error deleting book:', error);
-                showToast('An error occurred while deleting the book.', true); // Show error toast
+                showToast(` An error occured while deleting ${title}`, true); // Show error toast
             });
     }
 }
@@ -347,6 +347,7 @@ function updateBookOrderedQuantity(title, totalOrder, newRemainingQuantity) {
                 throw new Error('Failed to update quantity.');
             }
             console.log('Quantity updated successfully.');
+            showToast(`${title} restocked successfully`); // Show success toast
             refreshbooksData();
             refreshData();
             populateBooksVendorDropdown()
@@ -355,6 +356,7 @@ function updateBookOrderedQuantity(title, totalOrder, newRemainingQuantity) {
         })
         .catch(error => {
             console.error('Error updating quantity:', error);
+            showToast(`Failed to update ${title}`,'red'); 
             // Handle error if needed
         });
 }
@@ -454,6 +456,7 @@ function returnBookQuantity(title, returnedQuantity, newRemainingQuantity) {
                 throw new Error('Failed to update quantity.');
             }
             console.log('Quantity updated successfully.');
+            showToast(`${title} returned successfully`); // Show success toast
             refreshbooksData();
             populateBooksVendorDropdown()
 
