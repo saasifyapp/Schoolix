@@ -1,20 +1,30 @@
 document.addEventListener("DOMContentLoaded", function () {
+
+    var currentButtonName = '';
+
+    document.getElementById("exportButton").addEventListener("click", function() {
+        exportToExcel(currentButtonName);
+    });
+
     // Vendor Summary button click event
     document.getElementById("vendorSummary").addEventListener("click", function () {
+        currentButtonName = 'Inventory_Vendor_Summary';
         createAndFetchTable('/inventory/vendors_summary', 'vendorTablesummaryBody', displayVendors, ['VendorName', 'Vendor For', 'Net Payable', 'Paid Till Now', 'Balance']);
     });
 
     // Vendor Details dropdown change event
     document.getElementById("vendorDetails").addEventListener("change", function () {
         const selectedVendor = this.value;
+        currentButtonName = selectedVendor;
         createAndFetchTable(`/inventory/vendors_details?vendor=${selectedVendor}`, 'vendorDetailsTableBody', displayVendorDetails, ['Vendor Name', 'Item Ordered', 'Purchase Price', 'Ordered Quantity', 'Returned Quantity', 'Items in Stock', 'Ordered Price', 'Returned Price', 'Net Payable']);
     });
     // Profit/Loss button click event
     document.getElementById("profitLoss").addEventListener("click", function () {
+        currentButtonName = 'Inventory_Profit_Loss_Report';
         createAndFetchTable('/inventory/profit_loss', 'profitLossTableBody', displayProfitLoss, ['Item Type', 'Total Purchase Price', 'Total Selling Price', 'Total Profit']);
     });
 
-    function createAndFetchTable(url, tableBodyId, displayFunction, headers) {
+    function createAndFetchTable(url, tableBodyId, displayFunction, headers, currentButtonName) {
         // Create table and table body
         const table = document.createElement('table');
         const tbody = document.createElement('tbody');
@@ -52,6 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Show the overlay
         const overlay = document.getElementById('purchaseReportsOverlay');
         overlay.style.display = 'block';
+
     }
 
     // Function to display vendor summary data
@@ -179,4 +190,63 @@ document.addEventListener("DOMContentLoaded", function () {
         const overlay = document.getElementById('purchaseReportsOverlay');
         overlay.style.display = 'none';
     }
+
+    function exportToExcel(currentButtonName) {
+        // Get the current table in the overlay
+        var htmlTable = document.getElementById('tableContainer').getElementsByTagName('table')[0];
+    
+        // CSV representation of the HTML table
+        var csv = [];
+        var rows = htmlTable.rows;
+    
+        // Arrays to hold the sums of the last three columns
+        var sums = [0, 0, 0];
+    
+        for (var i = 0; i < rows.length; i++) {
+            var row = [], cols = rows[i].cells;
+            for (var j = 0; j < cols.length; j++) {
+                row.push(cols[j].innerText);
+    
+                // Sum the last three columns
+                if (j >= cols.length - 3) {
+                    sums[j - (cols.length - 3)] += Number(cols[j].innerText) || 0;
+                }
+            }
+            csv.push(row.join(","));
+        }
+    
+        // Add an empty line
+        csv.push("");
+    
+        // Create an array for the total row
+        var totalRow = Array(rows[0].cells.length).fill("");
+        totalRow[totalRow.length - 4] = "Total:";
+        totalRow[totalRow.length - 3] = sums[0];
+        totalRow[totalRow.length - 2] = sums[1];
+        totalRow[totalRow.length - 1] = sums[2];
+    
+        // Add the total row to the csv
+        csv.push(totalRow.join(","));
+    
+        // Convert to CSV string
+        var csvContent = csv.join("\n");
+    
+        // Generate a temporary download link
+        var downloadLink = document.createElement("a");
+        downloadLink.href = 'data:text/csv;charset=utf-8,' + encodeURI(csvContent);
+        downloadLink.download = currentButtonName + '.csv'; // Use the button name as the file name
+    
+        // Append the download link to the body (required for Firefox)
+        document.body.appendChild(downloadLink);
+    
+        // Trigger the download
+        downloadLink.click();
+    
+        // Remove the download link after triggering the download
+        document.body.removeChild(downloadLink);
+    }
 });
+
+
+
+
