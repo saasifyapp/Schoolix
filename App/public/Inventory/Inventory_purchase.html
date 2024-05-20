@@ -103,12 +103,20 @@
         <h2 class="overlay-head">Add Vendor</h2>
       </div>
       <!-- Close icon -->
-      <div class="close-icon" onclick="closeOverlay(event)">×</div>
-      <input type="text" id="searchField" placeholder="Enter Vendor Name..." oninput="searchVendorDetails()">
+      <div class="close-icon" onclick="closeOverlay(event)">×</div>      
+      <div class="form-Searchgroup">
+        <img class="vendorIcon" src="/images/SearchVendor.png" alt="Search Icon">
+        <input type="text" class="form-control" id="searchField" name="vendorSearch" oninput="searchVendorDetails()" placeholder=" " />
+        <span class="form-control-placeholder" style="margin-left: 3.5rem;">Search Vendor By Name...</span>
+        <button id="refreshvendorbutton" onclick="refreshData()">
+          <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px; margin-right: 2px;">
+          Refresh</button>
+     
+    </div>
       <!--<button id="vendorsearchButton" class="search-button" onclick="searchVendorDetails()">
         search
       </button>-->
-      <button id="refreshvendorbutton" onclick="refreshData()">Refresh</button>
+    
       <div class="form-container">
         <form action="/inventory/purchase/add_vendor" method="post" id="vendorForm">
           <div id="toast" class="toast"></div>
@@ -133,7 +141,7 @@
             </select>
           </div>
 
-          <button class="form-group" type="submit" style="border-style: none;"><img class="icon"
+          <button class="form-group" type="submit" style="border-style: none; background-color: transparent;"><img class="icon"
               src="/images/addVendor.gif"></button>
         </form>
       </div>
@@ -276,14 +284,14 @@
   </div>
 
 
-<!-- Purchase Report Overlay  -->
-<div id="purchaseReportsOverlay" class="overlay purchase-reports">
-  <div class="overlay-content">
-    <div class="close-icon" onclick="closeOverlay(event)">×</div>
-    <h2>Purchase Report</h2>
-    <button button id="vendorSummary" >Vendor Summary</button>
-    <select id="vendorDetails">
-      <option value="">Vendor Details</option>
+  <!-- Purchase Report Overlay  -->
+  <div id="purchaseReportsOverlay" class="overlay purchase-reports">
+    <div class="overlay-content">
+      <div class="close-icon" onclick="closeOverlay(event)">×</div>
+      <h2>Purchase Report</h2>
+      <button button id="vendorSummary">Vendor Summary</button>
+      <select id="vendorDetails">
+        <option value="">Vendor Details</option>
         <!-- Vendor options will be populated here -->
     </select>
     <button id="profitLoss">Profit/Loss</button>

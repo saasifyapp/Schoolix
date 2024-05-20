@@ -335,6 +335,51 @@ body {
     align-items: center;
 }
 
+.form-Searchgroup{
+    position: relative;
+    margin-bottom: rem;
+    display: flex;
+    align-items: center;
+    margin-left: 150px;
+    width: 500px;
+}
+.form-Searchgroup {
+    display: flex;
+    align-items: center;
+}
+.vendorIcon {
+    margin-right: 8px; /* Adjust the spacing between the icon and the input field as needed */
+    width: 40px; 
+    height: 40px;
+}
+
+#refreshvendorbutton {
+    margin-left: 5px; /* Space between the input and the button */
+    cursor: pointer;
+    background-color: transparent;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    color: black;
+    border: none;
+    border-radius: 20px;
+    height: 2.3rem;
+    width: 6rem;
+    font-size: 1rem; /* Reduce the font size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px; /* Add padding to fit content */
+    transition: all 0.3s; /* Add transition for smooth hover effect */
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+}
+#refreshvendorbutton:hover {
+    background-color: #76D7C4; /* Change background color on hover */
+    transform: scale(1.05); /* Increase size on hover */
+}
+.form-controlSearch {
+    flex: 1; /* This will make the input field take up the remaining space */
+}
 .form-control {
     padding: 1rem 1rem;
     /* Adjusted padding to center placeholder vertically */
@@ -465,9 +510,9 @@ select {
 
 /* Table Styles */
 .table-container {
-    max-height: 450px; /* Adjust the height as needed */
+    max-height: 420px; /* Adjust the height as needed */
     overflow-y: auto;
-    margin-top: -10px;
+    margin-top: -20px;
 }
 
 #vendorTable {
