@@ -235,8 +235,8 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 90rem;
-    height: 40rem;
+    width: 110rem;
+    height: 70rem;
     transform: translate(-50%, -50%);
     background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
     padding: 20px;
