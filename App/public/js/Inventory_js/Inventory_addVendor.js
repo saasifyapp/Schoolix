@@ -81,57 +81,58 @@ function displayVendors(data) {
         data.forEach(vendor => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${vendor.vendor_name}</td>
-                <td>${vendor.vendorFor}</td>
-                <!--<td>${vendor.net_payable}</td>-->
-                <td>${vendor.paid_till_now}</td>
-                <!--<td>${vendor.balance}</td>-->
-                <td>
-                <button style="background-color: transparent;
-                border: none;
-                color: black; /* Change text color to black */
-                padding: 0;
-                text-align: center;
-                text-decoration: none;
-                display: flex; /* Use flex for centering */
-                align-items: center; /* Center vertically */
-                justify-content: center; /* Center horizontally */
-                font-size: 14px;
-                cursor: pointer;
-                max-height: 100%;
-                border-radius: 20px; /* Round corners */
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-                transition: transform 0.2s, box-shadow 0.2s;
-                margin-bottom:10px"
-        onclick="updateVendor('${vendor.vendor_name}')"
-        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-    <img src="../images/update_vendor.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-    <span style="margin-right: 10px;">Pay Vendor</span>
-</button>
-<button style="background-color: transparent;
-                border: none;
-                color: black; /* Change text color to black */
-                padding: 0;
-                text-align: center;
-                text-decoration: none;
-                display: flex; /* Use flex for centering */
-                align-items: center; /* Center vertically */
-                justify-content: center; /* Center horizontally */
-                font-size: 14px;
-                cursor: pointer;
-                max-height: 100%;
-                border-radius: 20px; /* Round corners */
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-                transition: transform 0.2s, box-shadow 0.2s;
-                margin-bottom: 10px;" /* Added margin bottom for spacing */
-        onclick="deleteVendor('${vendor.vendor_name}')"
-        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-    <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-    <span style="margin-right: 10px;">Delete</span>
-</button>
-
+            <td>${vendor.vendor_name}</td>
+            <td>${vendor.vendorFor}</td>
+            <!--<td>${vendor.net_payable}</td>-->
+            <td>${vendor.paid_till_now}</td>
+            <!--<td>${vendor.balance}</td>-->
+            <td>
+                <div class="button-container">
+                    <button style="background-color: transparent;
+                    border: none;
+                    color: black; /* Change text color to black */
+                    padding: 0;
+                    text-align: center;
+                    text-decoration: none;
+                    display: flex; /* Use flex for centering */
+                    align-items: center; /* Center vertically */
+                    justify-content: center; /* Center horizontally */
+                    font-size: 14px;
+                    cursor: pointer;
+                    max-height: 100%;
+                    border-radius: 20px; /* Round corners */
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                    transition: transform 0.2s, box-shadow 0.2s;
+                    margin-bottom: 10px;"
+                    onclick="updateVendor('${vendor.vendor_name}')"
+                    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                        <img src="../images/update_vendor.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                        <span style="margin-right: 10px;">Pay Vendor</span>
+                    </button>
+                    <button style="background-color: transparent;
+                    border: none;
+                    color: black; /* Change text color to black */
+                    padding: 0;
+                    text-align: center;
+                    text-decoration: none;
+                    display: flex; /* Use flex for centering */
+                    align-items: center; /* Center vertically */
+                    justify-content: center; /* Center horizontally */
+                    font-size: 14px;
+                    cursor: pointer;
+                    max-height: 100%;
+                    border-radius: 20px; /* Round corners */
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                    transition: transform 0.2s, box-shadow 0.2s;
+                    margin-bottom: 10px;"
+                    onclick="deleteVendor('${vendor.vendor_name}')"
+                    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                        <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                        <span style="margin-right: 10px;">Delete</span>
+                    </button>
+                </div>
             </td>
             `;
             vendorTableBody.appendChild(row);
@@ -330,6 +331,7 @@ function searchVendorDetails() {
                         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
                         transition: transform 0.2s, box-shadow 0.2s;
                         margin-bottom:10px"
+                        gap:10px
                 onclick="updateVendor('${vendor.vendor_name}')"
                 onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
                 onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
@@ -375,3 +377,5 @@ function searchVendorDetails() {
 }
 
 refreshData();
+
+

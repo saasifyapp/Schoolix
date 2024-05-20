@@ -235,7 +235,7 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 50rem;
+    width: 90rem;
     height: 40rem;
     transform: translate(-50%, -50%);
     background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
@@ -342,11 +342,10 @@ body {
 }
 
 .form-Searchgroup{
-    position: relative;
-    margin-bottom: rem;
+    position: relative;  
     display: flex;
     align-items: center;
-    margin-left: 150px;
+    margin-left: 34%;
     width: 500px;
 }
 .form-Searchgroup {
@@ -414,11 +413,10 @@ body {
     /* Space between elements */
 }
 
-.addBookForm {
+/* .addBookForm {
     display: flex;
     flex-direction: column;
     gap: 1rem; /* Space between rows */   
-}
 
 /* Form Styles */
 form {
@@ -641,3 +639,5 @@ select {
     height: 50rem;
     width: 50rem;
 }
+
+
