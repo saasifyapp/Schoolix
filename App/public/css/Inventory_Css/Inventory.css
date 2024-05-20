@@ -248,7 +248,7 @@ body {
 
 .overlay-head {
     position: absolute;
-    top: 5%;
+    top: 3%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
@@ -361,7 +361,7 @@ body {
     font-size: 1rem;
     /* Increased font size */
     border: 1px solid #ced4da;
-    border-radius: 0.25rem;
+    border-radius: 10px;
     transition: border-color 0.3s ease;
     margin-right: 1rem;
     flex: 1;
@@ -377,7 +377,7 @@ body {
 
 .form-control:focus {
     box-shadow: 0 0 10px #5DADE2;
-    outline: none;
+    outline: 1px solid #85C1E9; /* Add a solid outline */
 }
 
 .form-control-placeholder {
@@ -395,9 +395,10 @@ body {
 
 .form-control:focus+.form-control-placeholder,
 .form-control:not(:placeholder-shown)+.form-control-placeholder {
-    top: -0.4rem;
+    top: -0.2rem;
     /* Adjusted position when focused */
-    font-size: 0.75rem;
+    font-size: 0.80rem;
+    font-weight: 400;
     background-color: white;
     transform: translateY(0);
     /* Reset transform */
@@ -533,7 +534,7 @@ select {
 
 #vendorTable {
     border-collapse: collapse;
-    width: 100%;
+    width: 60%;
 }
 
 #vendorTable th,
