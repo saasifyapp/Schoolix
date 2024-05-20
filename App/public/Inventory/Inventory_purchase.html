@@ -277,9 +277,9 @@
         <!--<label for="remainingQuantity">Remaining Quantity:</label>
         <input type="number" id="remainingQuantity" name="remaining_quantity" required><br> -->
 
-        <div class="actions">
-          <button type="submit">Add</button>
-        </div>
+        <button class="form-group" type="submit" style="border-style: none; background-color: transparent;">
+          <img class="icon" src="/images/addUniform.gif">
+      </button>
       </form>
       <!-- Uniform Table -->
       <table>
@@ -309,13 +309,19 @@
     <div class="overlay-content">
       <div class="close-icon" onclick="closeOverlay(event)">×</div>
       <h2>Purchase Report</h2>
-      <button button id="vendorSummary">Vendor Summary</button>
+      <button id="vendorSummary" class="form-group" type="submit" style="border-style: none; background-color: transparent;">
+        <img class="icon" src="/images/vendorSummary.gif">Vendor Summary
+    </button>
       <select id="vendorDetails">
         <option value="">Vendor Details</option>
         <!-- Vendor options will be populated here -->
     </select>
-    <button id="profitLoss">Profit/Loss</button>
-    <button id="exportButton">Export</button>
+    <button id="profitLoss" class="form-group" type="submit" style="border-style: none; background-color: transparent;">
+      <img class="icon" src="/images/profitLoss.gif">Profit/Loss
+  </button>
+    <button id="exportButton" class="form-group" type="submit" style="border-style: none; background-color: transparent;">
+      <img class="icon" src="/images/exportButton.gif">Export Table
+  </button>
     <div id="tableContainer"></div> <!-- Container to display the table -->
   </div>
 </div>

@@ -495,7 +495,7 @@ select {
 }
 
 #refreshvendorbutton {
-    margin-left: 5px; /* Space between the input and the button */
+    margin-bottom: 15px; /* Add margin between the buttons */
     cursor: pointer;
     background-color: transparent;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -514,9 +514,14 @@ select {
     font-size: 14px;
     font-weight: bold;
 }
+#refreshvendorbutton img{
+    height: 80%; /* Set image height to fit button */
+    margin-right: 5px; /* Add a 5px margin to the right of the image */
+}
+
 #refreshvendorbutton:hover {
     background-color: #76D7C4; /* Change background color on hover */
-    transform: scale(1.05); /* Increase size on hover */
+    transform: scale(1.09); /* Increase size on hover */
 }
 
 /* Table Styles */
