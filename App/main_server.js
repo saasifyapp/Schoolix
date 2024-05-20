@@ -50,6 +50,7 @@ const JWT_SECRET = 'this_is_my_secret_key_which_is_highly_confidential';
 //     connection_auth.release(); // Release the connection as it's just for testing the connection
 // });
 
+let globalConnection = null;
 app.post('/login', (req, res) => {
 
     const { username, password } = req.body;
@@ -271,6 +272,7 @@ app.get('/logout', (req, res) => {
             } else {
                 console.log('School database disconnected on signout.');
             }
+            globalConnection = null;
         });
     }
 
