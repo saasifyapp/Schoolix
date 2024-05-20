@@ -138,12 +138,14 @@ app.post('/login', (req, res) => {
                     const { serverName, databaseUser, databasePassword, databaseName, schoolName, LoginName } = user;
 
                     // Create a connection using user's database credentials
+                    if (!global.connection) {
                     global.connection = mysql.createPool({
                         host: serverName,
                         user: databaseUser,
                         password: databasePassword,
                         database: databaseName
                     });
+                }
 
                     // Generate JWT token
                     const token = jwt.sign({ userId: user.userId }, JWT_SECRET, { expiresIn: '2h' });
