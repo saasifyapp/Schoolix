@@ -110,15 +110,10 @@
         <span class="form-control-placeholder" style="margin-left: 3.5rem;">Search Vendor By Name...</span>
         <button id="refreshvendorbutton" onclick="refreshData()">
           <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px; margin-right: 2px;">
-          Refresh</button>
-     
-    </div>
-      <!--<button id="vendorsearchButton" class="search-button" onclick="searchVendorDetails()">
-        search
-      </button>-->
-    
+          Refresh</button>     
+    </div>         
       <div class="form-container">
-        <form action="/inventory/purchase/add_vendor" method="post" id="vendorForm">
+        <form action="/inventory/purchase/add_vendor" method="post" id="vendorForm" class="addVendorForm">
           <div id="toast" class="toast"></div>
 
           <div class="form-group">
@@ -169,39 +164,64 @@
   <!-- Overlay for Add Books -->
   <div id="addBooksOverlay" class="overlay" style="display: none;">
     <div class="overlay-content">
-      <h2>Add Books</h2>
+      <div class="icon-container">
+        <i><img class="vendorIcon" src="/images/addbooks.png" alt=""></i>
+        <h2 class="overlay-head">Add Books</h2>
+      </div>
       <!-- Close icon -->
       <div class="close-icon" onclick="closeOverlay(event)">×</div>
-      <input type="text" id="bookssearchField" placeholder="Enter Title Name..." oninput="searchBookDetails()">
-      <!--<button id="bookssearchButton" class="search-button" onclick="searchBookDetails()">
-        search
-      </button>-->
-      <button id="refreshvendorbutton" onclick="refreshbooksData()">Refresh</button>
-      <!-- Form for adding books -->
-      <form id="addBooksForm">
 
-        <label for="bookTitle">Book Title:</label>
-        <input type="text" id="bookTitle" name="bookTitle" required><br>
-        <label for="bookClass">Class:</label>
-        <select id="bookClass" name="bookClass" required>
-          <option value="Nursery">Nursery</option>
-          <option value="KG">KG</option>
-          <!-- Add more options for other classes -->
-        </select><br>
-        <label for="purchasePrice">Purchase Price:</label>
-        <input type="number" id="purchasePrice" name="purchasePrice" required><br>
-        <label for="sellingPrice">Selling Price:</label>
-        <input type="number" id="sellingPrice" name="sellingPrice" required><br>
-        <label for="vendor">Vendor:</label>
-        <select id="bookvendor" name="vendor">
-          <!-- Options will be populated dynamically -->
-        </select><br>
-        <label for="orderedQuantity">Ordered Quantity:</label>
-        <input type="number" id="orderedQuantity" name="orderedQuantity" required><br>
-        <!--<label for="remainingQuantity">Remaining Quantity:</label>
-        <input type="number" id="remainingQuantity" name="remainingQuantity" required><br>-->
-        <button type="submit" class="sub-book-btn">Add Book</button>
+      <div class="form-Searchgroup">
+        <img class="vendorIcon" src="/images/searchBook.png" alt="Search Icon">
+        <input type="text" class="form-control" id="bookssearchField" name="bookSearch" oninput="searchBookDetails()" placeholder=" " />
+        <span class="form-control-placeholder" style="margin-left: 3.5rem;">Search Book By Name...</span>
+        <button id="refreshvendorbutton" onclick="refreshbooksData()">
+          <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px; margin-right: 2px;">
+          Refresh</button>     
+    </div>    
+      
+    <div class="form-container">
+      <form id="addBooksForm" class="addBookForm">
+          <div class="form-row">
+              <div class="form-group">
+                  <input type="text" class="form-control" id="bookTitle" name="bookTitle" placeholder=" " required>
+                  <span class="form-control-placeholder">Book Title</span>
+              </div>
+              <div class="form-group">
+                  <select id="bookClass" name="bookClass" class="" required>
+                      <option value="" disabled selected>Class</option>
+                      <option value="Nursery">Nursery</option>
+                      <option value="KG">KG</option>
+                      <!-- Add more options for other classes -->
+                  </select>                
+              </div>
+              <div class="form-group">
+                  <input type="number" class="form-control" id="purchasePrice" name="purchasePrice" placeholder=" " required>
+                  <span class="form-control-placeholder">Purchase Price</span>
+              </div>
+          </div>
+          <div class="form-row">
+              <div class="form-group">
+                  <input type="number" class="form-control" id="sellingPrice" name="sellingPrice" placeholder=" " required>
+                  <span class="form-control-placeholder">Selling Price</span>
+              </div>
+              <div class="form-group">
+                  <select id="bookvendor" name="vendor" class="" required>
+                      <!-- Options will be populated dynamically -->
+                      <option value="" disabled selected>Vendor</option>
+                  </select>                  
+              </div>
+              <div class="form-group">
+                  <input type="number" class="form-control" id="orderedQuantity" name="orderedQuantity" placeholder=" " required>
+                  <span class="form-control-placeholder">Ordered Quantity</span>
+              </div>
+          </div>
+          <button class="form-group" type="submit" style="border-style: none; background-color: transparent;">
+              <img class="icon" src="/images/addBook.gif">
+          </button>
       </form>
+  </div>
+  
       <!-- Table for displaying books -->
       <table>
         <thead>
