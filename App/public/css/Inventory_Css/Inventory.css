@@ -236,10 +236,10 @@ body {
     left: 2rem;
     right: 2rem;
     bottom: 2rem;
-    padding: 20px;
+    padding: 1rem;
     background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
-    border-radius: 20px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    border-radius: 1rem;
+    box-shadow: 0 0 1.2rem rgba(0, 0, 0, 0.2);
     /* Add shadow for better visibility */
     transition: transform 0.3s ease-in-out;
 }
@@ -294,13 +294,13 @@ body {
 }
 
 .overlay-content form {
-    margin-bottom: 20px;
+    margin-bottom: 1.2rem;
 }
 
 .overlay-content input {
     width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
+    padding: 0.5rem;
+    margin-bottom: 0.6rem;
     box-sizing: border-box;
 }
 
@@ -310,16 +310,7 @@ body {
     border-collapse: collapse;
 }
 
-.overlay-content th,
-.overlay-content td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
 
-.overlay-content th {
-    background-color: #f2f2f2;
-}
 
 .form-container {
     margin-top: 2rem;
@@ -335,13 +326,13 @@ body {
     align-items: center;
 }
 
-.form-Searchgroup{
+.form-Searchgroup {
     position: relative;  
     display: flex;
     align-items: center;
-    margin-left: 34%;
-    width: 500px;
-}
+    margin: 0 auto; /* Center the element horizontally */
+    width: 30rem; /* 500px converted to rem (assuming 1rem = 16px)
+
 .form-Searchgroup {
     display: flex;
     align-items: center;
@@ -529,26 +520,27 @@ select {
 
 /* Table styling */
 .table-container {
-    max-height: 420px; /* Adjust the height as needed */
+    max-height: 26.25rem; /* Adjust the height as needed */
     overflow-y: auto;
-    margin-top: 10px; /* Adjust the margin as needed */
+    margin-top: 0.625rem; /* Adjust the margin as needed */
 }
 
 #vendorTable, #booksTable {
     width: 95%;
     border-collapse: separate; /* Change this to separate */
     border-spacing: 0; /* Add this */
-    border-radius: 15px;   
+    border-radius: 1rem;   
     box-shadow: 0 0 0 1px #dddddd;
     margin: auto; /* Center the table */
-    overflow: hidden; /* Add this to handle child's overflow */
+    /* Add this to handle child's overflow */
+    /* overflow: hidden; */
 }
 
 #vendorTable th, #booksTable th,
 #vendorTable td, #booksTable td {
     border: 1px solid #dddddd;
     text-align: center;
-    padding: 8px;
+    padding: 0.5rem;
 }
 
 #vendorTable th, #booksTable th {
@@ -562,9 +554,10 @@ select {
 #vendorTable td, #booksTable td {
     border: 1px solid #dddddd;
     text-align: center;
-    height: 50px; /* Fixed height */
+    height: 3.125rem; /* 50px converted to rem */
     overflow: hidden; /* Hide content that overflows */
 }
+
 
 #vendorTable td button, #booksTable td button {
     max-height: 100%; /* Ensure buttons do not exceed cell height */
@@ -584,8 +577,9 @@ select {
 
 .tableFixHead {
     overflow-y: auto; /* Make the table scrollable if height is more than 200px */
-    height: 700px; /* Gives an initial height of 200px to the table */
+    height: 43rem; /* 700px converted to rem */
 }
+
 .tableFixHead thead th {
     position: sticky; /* Make the table heads sticky */
     top: 0px; /* Table head will be placed from the top of the table and sticks to it */       
@@ -596,8 +590,9 @@ table {
     width: 100%;
 }
 .tableFixHead tbody {
-    min-height: 600px; /* Adjust this value based on your needs */
+    min-height: 37.5rem; /* 600px converted to rem */
 }
+
 
 /* Assign fixed width to the columns of vendorTable */
 #vendorTable td:nth-child(1), 
@@ -645,23 +640,23 @@ table {
 
 .prompt-content label {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 0.6rem;
 }
 
 .prompt-content input {
     width: 100%;
     padding: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 0.6rem;
     box-sizing: border-box;
 }
 
 .prompt-content button {
-    padding: 8px 20px;
-    margin-right: 10px;
+    padding: 0.5rem 1.25rem; /* 8px and 20px converted to rem */
+    margin-right: 0.625rem; /* 10px converted to rem */
     border: none;
     background-color: #4caf50;
     color: white;
-    border-radius: 3px;
+    border-radius: 0.1875rem; /* 3px converted to rem */
     cursor: pointer;
 }
 
@@ -683,24 +678,25 @@ table {
 
 
 .custom-dropdown {
-    height: 45px;
+    height: 2.8125rem; /* Adjust the height as needed */
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     background-image: url('../../images/down-arrow.png'); /* Set your PNG image */
-    background-size: 25px 25px; /* Set the size of your image */
+    background-size: 1.5625rem 1.5625rem; /* Adjust the size of your image */
     background-repeat: no-repeat; /* Prevent the image from repeating */
-    padding-right: 20px; /* Add more padding on the right for the image */
-    background-position: calc(100% - 8px) center; /* Position the image to the extreme right */
+    padding-right: 1.25rem; /* Add more padding on the right for the image */
+    background-position: calc(100% - 0.5rem) center; /* Position the image to the extreme right */
     /* Adjust the value based on the size of your image and padding */
-    padding: 8px 24px; /* Adjust padding as needed */
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    font-size: 16px;
+    padding: 0.5rem 1.5rem; /* Adjust padding as needed */
+    border: 0.0625rem solid #ccc; /* Adjust border as needed */
+    border-radius: 0.625rem; /* Adjust border-radius as needed */
+    font-size: 1rem; /* Adjust font size as needed */
     cursor: pointer;
     position: relative; /* Add position relative to allow absolute positioning */
     transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Add transition for smooth effect */
 }
+
 
 .custom-dropdown:hover,
 .custom-dropdown:focus {
@@ -716,6 +712,6 @@ table {
     content: '\25BC'; /* Unicode character for down arrow */
     position: absolute;
     top: 50%;
-    right: 8px;
+    right: 0.5rem;
     transform: translateY(-50%);
 }
