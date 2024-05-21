@@ -523,12 +523,12 @@ select {
 
 /* Table styling */
 .table-container {
-    max-height: 26.25rem; /* Adjust the height as needed */
+    max-height: 28rem; /* Adjust the height as needed */
     overflow-y: auto;
     margin-top: 0.625rem; /* Adjust the margin as needed */
 }
 
-#vendorTable, #booksTable {
+#vendorTable, #booksTable, #uniformTable {
     width: 95%;
     border-collapse: separate; /* Change this to separate */
     border-spacing: 0; /* Add this */
@@ -539,14 +539,14 @@ select {
     /* overflow: hidden; */
 }
 
-#vendorTable th, #booksTable th,
-#vendorTable td, #booksTable td {
+#vendorTable th, #booksTable th,#uniformTable th
+#vendorTable td, #booksTable td, #uniformTable td {
     border: 1px solid #dddddd;
     text-align: center;
     padding: 0.5rem;
 }
 
-#vendorTable th, #booksTable th {
+#vendorTable th, #booksTable th ,#uniformTable th{
     background-color: #2C3E50;
     color: white;
     position: sticky;
@@ -554,7 +554,7 @@ select {
     z-index: 1;
 }
 
-#vendorTable td, #booksTable td {
+#vendorTable td, #booksTable td, #uniformTable td {
     border: 1px solid #dddddd;
     text-align: center;
     height: 3.125rem; /* 50px converted to rem */
@@ -562,19 +562,19 @@ select {
 }
 
 
-#vendorTable td button, #booksTable td button {
+#vendorTable td button, #booksTable td button ,#uniformTable td button{
     max-height: 100%; /* Ensure buttons do not exceed cell height */
 }
 
-#vendorTable tr:hover, #booksTable tr:hover {
+#vendorTable tr:hover, #booksTable tr:hover #uniformTable tr:hover {
     background-color: #D6DBDF; /* Change the background color to a light gray */
 }
 
-#vendorTable tr td, #booksTable tr td {
+#vendorTable tr td, #booksTable tr td ,#uniformTable tr td {
     transition: font-weight 0.1s; /* Add a smooth transition */
 }
 
-#vendorTable tr:hover td, #booksTable tr:hover td {
+#vendorTable tr:hover td, #booksTable tr:hover td ,#uniformTable tr:hover td {
     font-weight: bold; /* Make the text bold on hover */
 }
 
@@ -621,6 +621,11 @@ table {
 /* Assign fixed width to the columns of booksTable */
 #booksTable td:nth-child(n), 
 #booksTable th:nth-child(n) {
+    width: 11.11%;
+}
+
+#uniformTable td:nth-child(n), 
+#uniformTable th:nth-child(n) {
     width: 11.11%;
 }
 

@@ -109,7 +109,7 @@ function refreshUniformsData() {
 
 // Function to display uniforms in the table
 function displayUniforms(data) {
-    const uniformTableBody = document.getElementById('uniformTable');
+    const uniformTableBody = document.getElementById('uniformTableBody');
     uniformTableBody.innerHTML = ''; // Clear existing rows
     data.forEach(uniform => {
         const row = document.createElement('tr');
