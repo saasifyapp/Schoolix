@@ -96,6 +96,16 @@ function populateBooksVendorDropdown() {
             bookvendorDropdowns.forEach(dropdown => {
                 if (dropdown) {
                     dropdown.innerHTML = ''; // Clear existing options
+
+                    // Create and append the default option
+                    const defaultOption = document.createElement('option');
+                    defaultOption.textContent = 'Select Vendor';
+                    defaultOption.value = '';
+                    defaultOption.selected = true;
+                    defaultOption.disabled = true;
+                    dropdown.appendChild(defaultOption);
+
+                    // Append options fetched from the server
                     data.forEach(vendor => {
                         const option = document.createElement('option');
                         option.textContent = vendor.vendor_name;
@@ -108,7 +118,6 @@ function populateBooksVendorDropdown() {
             console.error('Error fetching vendors:', error);
         });
 }
-
 
 // Call populateVendorDropdown when the page initially loads
 document.addEventListener("DOMContentLoaded", function () {

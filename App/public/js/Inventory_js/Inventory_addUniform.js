@@ -45,6 +45,8 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     });
 }); 
+
+
 // Function to populate vendor dropdowns
 function populateUniformVendorDropdown() {
     // Fetch vendors from the server
@@ -60,6 +62,16 @@ function populateUniformVendorDropdown() {
             vendorDropdowns.forEach(dropdown => {
                 if (dropdown) {
                     dropdown.innerHTML = ''; // Clear existing options
+
+                    // Create and append the default option
+                    const defaultOption = document.createElement('option');
+                    defaultOption.textContent = 'Select Vendor';
+                    defaultOption.value = '';
+                    defaultOption.selected = true;
+                    defaultOption.disabled = true;
+                    dropdown.appendChild(defaultOption);
+
+                    // Append options fetched from the server
                     data.forEach(vendor => {
                         const option = document.createElement('option');
                         option.textContent = vendor.vendor_name;

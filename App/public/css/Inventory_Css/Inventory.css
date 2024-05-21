@@ -647,3 +647,15 @@ select {
 }
 
 
+
+.custom-dropdown {
+    width: auto; /* Modify as needed */
+    height: 45px; /* Modify as needed */
+    border-radius: 10px; /* Modify as needed */
+    font-size: 16px; /* Modify as needed */
+    outline: none;
+}
+
+.custom-dropdown:focus {
+    outline: auto; /* Show outline on focus */
+}
