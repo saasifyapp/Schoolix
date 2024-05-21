@@ -478,10 +478,12 @@ select {
 }
 
 
-
 .vendorIcon {
-    margin-right: 8px; /* Adjust the spacing between the icon and the input field as needed */
-    width: 40px; 
+    position: absolute;
+    top: 42%;
+    right: 120px; /* Adjust as needed */
+    transform: translateY(-50%); /* This centers the icon vertically */
+    width: 40px;
     height: 40px;
 }
 
@@ -519,15 +521,17 @@ select {
 .table-container {
     max-height: 420px; /* Adjust the height as needed */
     overflow-y: auto;
-    margin-top: 0px; /* Adjust the margin as needed */
+    margin-top: 10px; /* Adjust the margin as needed */
 }
 
 #vendorTable, #booksTable {
-    width: 100%;
-    border-collapse: collapse;
-    border-radius: 12px;   
+    width: 95%;
+    border-collapse: separate; /* Change this to separate */
+    border-spacing: 0; /* Add this */
+    border-radius: 15px;   
     box-shadow: 0 0 0 1px #dddddd;
-    margin-top: 1rem;
+    margin: auto; /* Center the table */
+    overflow: hidden; /* Add this to handle child's overflow */
 }
 
 #vendorTable th, #booksTable th,
