@@ -230,21 +230,20 @@ body {
     transition: opacity 0.3s ease-in-out;
     /* animation: slideInFromBottom 0.1s ease-in-out; */
 }
-
 .overlay-content {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 110rem;
-    height: 70rem;
-    transform: translate(-50%, -50%);
-    background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
+    top: 2rem;
+    left: 2rem;
+    right: 2rem;
+    bottom: 2rem;
     padding: 20px;
+    background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
     border-radius: 20px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     /* Add shadow for better visibility */
     transition: transform 0.3s ease-in-out;
 }
+
 
 .overlay-head {
     position: absolute;
@@ -530,11 +529,15 @@ select {
     max-height: 420px; /* Adjust the height as needed */
     overflow-y: auto;
     margin-top: -20px;
+    display: flex;
+    justify-content: center; /* Center the table container horizontally */
+    align-items: center; /* Center the table container vertically */
 }
 
 #vendorTable {
     border-collapse: collapse;
     width: 60%;
+    margin: auto; /* Center the table within its container */
 }
 
 #vendorTable th,
@@ -584,9 +587,6 @@ select {
     color: white; /* Ensure header text color is consistent */
     transition: none; /* Disable transitions for header */
 }
-
-
-
 
 .custom-prompt {
     position: fixed;
