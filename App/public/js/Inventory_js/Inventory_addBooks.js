@@ -140,7 +140,7 @@ function refreshbooksData() {
 
 // Function to display book data
 function displayBooks(data) {
-    const bookTableBody = document.getElementById('booksTable');
+    const bookTableBody = document.getElementById('booksTableBody');
     bookTableBody.innerHTML = '';
 
     try {

@@ -385,6 +385,9 @@ body {
     font-size: 0.80rem;
     font-weight: 400;
     background-color: white;
+    border-radius: 5px;
+    border-color: #85C1E9;   
+    border-top: 1px solid #85C1E9; /* Adding border top */
     transform: translateY(0);
     /* Reset transform */
     color: #000;
