@@ -9,7 +9,6 @@ router.get('/inventory/all_vendor', (req, res) => {
             console.error('Error fetching books:', err);
             res.status(500).json({ error: 'Error fetching books' });
         } else {
-            console.log(result)
             res.status(200).json(result);
             
         }
@@ -27,7 +26,6 @@ router.get('/inventory/vendors_summary', (req, res) => {
             console.error('Error fetching vendor summary:', err);
             res.status(500).send("Error fetching vendor summary");
         } else {
-            console.log(result);
             res.status(200).json(result); // Send the result back to the client
         }
     });
@@ -66,7 +64,6 @@ LEFT JOIN
             console.error('Error fetching vendor details:', err);
             res.status(500).send("Error fetching vendor details");
         } else {
-            console.log(result);
             res.status(200).json(result); // Send the result back to the client
         }
     });
@@ -93,7 +90,6 @@ router.get('/inventory/profit_loss', (req, res) => {
                         books: resultBooks[0],
                         uniforms: resultUniforms[0]
                     };
-                    console.log(combinedResult);
                     res.status(200).json(combinedResult); // Send the combined result back to the client
                 }
             });

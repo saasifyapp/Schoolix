@@ -95,7 +95,6 @@ router.route('/inventory/uniforms/:uniformItem/:sizeOfItem/quantity')
                 } else {
                     const { ordered_quantity, remaining_quantity, returned_quantity } = result[0]; // fetch remaining_quantity from result
                     res.status(200).json({ ordered_quantity, remaining_quantity, returned_quantity });
-                    console.log(result)
                 }
             }
         });
@@ -127,7 +126,6 @@ router.route('/inventory/return_uniform/:uniform_item/:size_of_item/quantity')
     const returnedQuantity = req.body.returnedQuantity; // Get the returned quantity from the request body
     const remainingQuantity = req.body.remainingQuantity; // Get the new remaining quantity from the request body
 
-    console.log(returnedQuantity, remainingQuantity, uniform_item, size_of_item )
     
     const sql = 'UPDATE inventory_uniform_details SET returned_quantity = ?, remaining_quantity = ? WHERE uniform_item = ? AND size_of_item = ?';
     connection.query(sql, [ returnedQuantity, remainingQuantity, uniform_item, size_of_item], (err, result) => {
