@@ -320,9 +320,9 @@ body {
 .overlay-content th {
     background-color: #f2f2f2;
 }
-
+    
 .form-container {
-    margin-top: rem;
+    margin-top: 2rem;
     display: flex;
     justify-content: center;
 }
