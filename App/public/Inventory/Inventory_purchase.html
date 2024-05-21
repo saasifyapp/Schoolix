@@ -129,9 +129,8 @@
           </div>
 
           <div class="form-group">
-            <select style="border-style: none; width: 7rem;" id="vendorFor" class="" name="vendorFor" required
-              style="width: 9rem; font-size: 0.8rem;">
-              <option value="" disabled selected>Vendor For</option>
+            <select id="vendorFor" class="custom-dropdown" name="vendorFor" required>
+              <option value="" disabled selected> Vendor For </option>
               <option value="Books">Books</option>
               <option value="Uniform">Uniform</option>
             </select>
@@ -272,7 +271,7 @@
         <input type="number" id="sellingPrice" name="selling_price" required><br>
 
         <label for="vendor">Vendor:</label>
-        <select id="univendor" name="vendor" required></select><br>
+        <select id="univendor" class="custom-dropdown" name="vendor" required></select><br>
 
         <label for="orderedQuantity">Ordered Quantity:</label>
         <input type="number" id="orderedQuantity" name="ordered_quantity" required><br>
@@ -315,8 +314,8 @@
       <button id="vendorSummary" class="form-group" type="submit"
         style="border-style: none; background-color: transparent;">
         <img class="icon" src="/images/vendorSummary.gif">Vendor Summary
-      </button>
-      <select id="vendorDetails">
+    </button>
+      <select id="vendorDetails" class="custom-dropdown">
         <option value="">Vendor Details</option>
         <!-- Vendor options will be populated here -->
       </select>
