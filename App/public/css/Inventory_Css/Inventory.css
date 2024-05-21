@@ -437,10 +437,6 @@ select {
     margin-bottom: 10px;
 }
 
-
-
-
-
 .close-icon {
     position: absolute;
     top: 10px;
@@ -524,69 +520,64 @@ select {
     transform: scale(1.09); /* Increase size on hover */
 }
 
-/* Table Styles */
+
+/* Table styling */
 .table-container {
     max-height: 420px; /* Adjust the height as needed */
     overflow-y: auto;
-    margin-top: -20px;
-    display: flex;
-    justify-content: center; /* Center the table container horizontally */
-    align-items: center; /* Center the table container vertically */
+    margin-top: 20px; /* Adjust the margin as needed */
 }
 
-#vendorTable {
+#vendorTable, #booksTable {
     border-collapse: collapse;
-    width: 60%;
-    margin: auto; /* Center the table within its container */
+    width: 100%;
+    margin-top: 0; /* Center the table within its container */
 }
 
-#vendorTable th,
-#vendorTable td {
+#vendorTable th, #booksTable th,
+#vendorTable td, #booksTable td {
     border: 1px solid #ddd;
     text-align: left;
     padding: 8px; /* Ensure consistent padding */
 }
 
-#vendorTable th {
+#vendorTable th, #booksTable th {
     background-color: #2C3E50;
     color: white;
     text-align: center;
     position: sticky;
     top: 0;
     z-index: 1;
-    height: 20px; /* Set a fixed height for the header */
-    padding: 0px; /* Consistent padding for the header */
+    padding: 10px; /* Consistent padding for the header */
 }
 
-#vendorTableBody {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 100px;
-}
-
-#vendorTableBody td button {
+#vendorTableBody td button, #booksTable td button {
     max-height: 100%; /* Ensure buttons do not exceed cell height */
 }
 
-#vendorTableBody tr:hover {
+#vendorTableBody tr:hover, #booksTable tr:hover {
     background-color: #D6DBDF; /* Change the background color to a light gray */
 }
 
-#vendorTableBody tr td {
+#vendorTableBody tr td, #booksTable tr td {
     transition: background-color 0.1s; /* Only transition background color */
+    padding: 8px; /* Add padding for better spacing */
+    border-bottom: 1px solid #ddd; /* Add bottom border to separate rows */
 }
 
-#vendorTableBody tr:hover td {
+#vendorTableBody tr:hover td, #booksTable tr:hover td {
     font-weight: normal; /* Ensure font-weight remains normal on hover */
 }
 
 /* Ensure thead is not affected by tbody styles */
-#vendorTable thead th {
-    font-weight: normal; /* Keep header font-weight normal */
-    background: linear-gradient(109.6deg, rgba(0, 0, 0, 0.93) 11.2%, rgb(63, 61, 61) 78.9%);
+#vendorTable thead th, #booksTable thead th {
+    font-weight: bold; /* Keep header font-weight bold */
+    background: #2C3E50;
     color: white; /* Ensure header text color is consistent */
     transition: none; /* Disable transitions for header */
 }
+
+
 
 .custom-prompt {
     position: fixed;
@@ -640,11 +631,6 @@ select {
 
 
 
-
-#tableContainer{
-    height: 50rem;
-    width: 50rem;
-}
 
 
 

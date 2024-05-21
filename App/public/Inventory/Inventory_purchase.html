@@ -103,15 +103,16 @@
         <h2 class="overlay-head">Add Vendor</h2>
       </div>
       <!-- Close icon -->
-      <div class="close-icon" onclick="closeOverlay(event)">×</div>      
+      <div class="close-icon" onclick="closeOverlay(event)">×</div>
       <div class="form-Searchgroup">
         <img class="vendorIcon" src="/images/SearchVendor.png" alt="Search Icon">
-        <input type="text" class="form-control" id="searchField" name="vendorSearch" oninput="searchVendorDetails()" placeholder=" " />
+        <input type="text" class="form-control" id="searchField" name="vendorSearch" oninput="searchVendorDetails()"
+          placeholder=" " />
         <span class="form-control-placeholder" style="margin-left: 3.5rem;">Search Vendor By Name...</span>
         <button id="refreshvendorbutton" onclick="refreshData()">
           <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px; margin-right: 2px;">
-          Refresh</button>     
-    </div>         
+          Refresh</button>
+      </div>
       <div class="form-container">
         <form action="/inventory/purchase/add_vendor" method="post" id="vendorForm" class="addVendorForm">
           <div id="toast" class="toast"></div>
@@ -135,27 +136,27 @@
             </select>
           </div>
 
-          <button class="form-group" type="submit" style="border-style: none; background-color: transparent;"><img class="icon"
-              src="/images/addVendor.gif"></button>
+          <button class="form-group" type="submit" style="border-style: none; background-color: transparent;"><img
+              class="icon" src="/images/addVendor.gif"></button>
         </form>
       </div>
       <div class="table-container">
         <table id="vendorTable">
-          <thead>
-            <tr>
-              <th>Vendor Name</th>
-              <th>Vendor For</th>
-              <!--<th>Net Payable</th>-->
-              <th>Paid Till Now</th>
-              <!--<th>Balance</th> -->
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="vendorTableBody">
-            <!-- Table rows will be populated dynamically -->
-          </tbody>
+            <thead>
+                <tr>
+                    <th>Vendor Name</th>
+                    <th>Vendor For</th>
+                    <!--<th>Net Payable</th>-->
+                    <th>Paid Till Now</th>
+                    <!--<th>Balance</th>-->
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="vendorTableBody">
+                <!-- Table rows will be populated dynamically -->
+            </tbody>
         </table>
-      </div>
+    </div>
 
     </div>
   </div>
@@ -172,74 +173,76 @@
 
       <div class="form-Searchgroup">
         <img class="vendorIcon" src="/images/searchBook.png" alt="Search Icon">
-        <input type="text" class="form-control" id="bookssearchField" name="bookSearch" oninput="searchBookDetails()" placeholder=" " />
+        <input type="text" class="form-control" id="bookssearchField" name="bookSearch" oninput="searchBookDetails()"
+          placeholder=" " />
         <span class="form-control-placeholder" style="margin-left: 3.5rem;">Search Book By Name...</span>
         <button id="refreshvendorbutton" onclick="refreshbooksData()">
           <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px; margin-right: 2px;">
-          Refresh</button>     
-    </div>    
-      
-    <div class="form-container">
-      <form id="addBooksForm" class="addBookForm">
-          <div class="form-row">
-              <div class="form-group">
-                  <input type="text" class="form-control" id="bookTitle" name="bookTitle" placeholder=" " required>
-                  <span class="form-control-placeholder">Book Title</span>
-              </div>
-              <div class="form-group">
-                  <select id="bookClass" name="bookClass" class="custom-dropdown" required>
-                      <option value="" disabled selected>Class</option>
-                      <option value="Nursery">Nursery</option>
-                      <option value="KG">KG</option>
-                      <!-- Add more options for other classes -->
-                  </select>                
-              </div>
-              <div class="form-group">
-                  <input type="number" class="form-control" id="purchasePrice" name="purchasePrice" placeholder=" " required>
-                  <span class="form-control-placeholder">Purchase Price</span>
-              </div>
-          </div>
-          <div class="form-row">
-              <div class="form-group">
-                  <input type="number" class="form-control" id="sellingPrice" name="sellingPrice" placeholder=" " required>
-                  <span class="form-control-placeholder">Selling Price</span>
-              </div>
-              <div class="form-group">
-                  <select id="bookvendor" name="vendor" class="custom-dropdown" required>
-                      <!-- Options will be populated dynamically -->
+          Refresh</button>
+      </div>
 
-                  </select>                  
-              </div>
-              <div class="form-group">
-                  <input type="number" class="form-control" id="orderedQuantity" name="orderedQuantity" placeholder=" " required>
-                  <span class="form-control-placeholder">Ordered Quantity</span>
-              </div>
-          </div>
-          <button class="form-group" type="submit" style="border-style: none; background-color: transparent;">
-              <img class="icon" src="/images/addBook.gif">
-          </button>
-      </form>
-  </div>
-  
+      <div class="form-container" style="display: flex; justify-content: center; align-items: center;">
+        <form id="addBooksForm" class="addBookForm" style="display: flex; flex-wrap: wrap; gap: 10px; width: 100%;">
+            <div class="form-group" style="flex: 1.6;">
+                <input type="text" class="form-control" id="bookTitle" name="bookTitle" placeholder=" " required style="width: 100%;">
+                <span class="form-control-placeholder">Book Title</span>
+            </div>
+            <div class="form-group" style="flex: 0.5;">
+                <select id="bookClass" name="bookClass" class="" required style="width: 100%; border-style: none;">
+                    <option value="" disabled selected>Class</option>
+                    <option value="Nursery">Nursery</option>
+                    <option value="KG">KG</option>
+                    <!-- Add more options for other classes -->
+                </select>
+            </div>
+            <div class="form-group" style="flex: 1;">
+                <input type="number" class="form-control" id="purchasePrice" name="purchasePrice" placeholder=" " required style="width: 100%;">
+                <span class="form-control-placeholder">Purchase Price</span>
+            </div>
+            <div class="form-group" style="flex: 1;">
+                <input type="number" class="form-control" id="sellingPrice" name="sellingPrice" placeholder=" " required style="width: 100%;">
+                <span class="form-control-placeholder">Selling Price</span>
+            </div>
+            <div class="form-group" style="flex: 0.6;">
+                <select id="bookvendor" name="vendor" class="" required style="width: 100%; border-style: none;">
+                    <!-- Options will be populated dynamically -->
+                    <option value="" disabled selected>Vendor</option>
+                </select>
+            </div>
+            <div class="form-group" style="flex: 1;">
+                <input type="number" class="form-control" id="orderedQuantity" name="orderedQuantity" placeholder=" " required style="width: 100%;">
+                <span class="form-control-placeholder">Ordered Quantity</span>
+            </div>
+            <button class="form-group" type="submit" style="border-style: none; background-color: transparent; align-self: center;">
+                <img class="icon" src="/images/addBook.gif">
+            </button>
+        </form>
+    </div>  
+
+
+
       <!-- Table for displaying books -->
-      <table  class="table-container">
-        <thead>
-          <tr>
-            <th>Book Title</th>
-            <th>Class</th>
-            <th>Purchase Price</th>
-            <th>Selling Price</th>
-            <th>Vendor</th>
-            <th>Ordered Quantity</th>
-            <th>Remaining Quantity</th>
-            <th>Returned Quantity</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="booksTable">
-          <!-- Table rows will be populated dynamically -->
-        </tbody>
-      </table>
+      <div class="table-container">
+        <table id="booksTable">
+            <thead>
+                <tr>
+                    <th>Book Title</th>
+                    <th>Class</th>
+                    <th>Purchase Price</th>
+                    <th>Selling Price</th>
+                    <th>Vendor</th>
+                    <th>Ordered Quantity</th>
+                    <th>Remaining Quantity</th>
+                    <th>Returned Quantity</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="booksTableBody">
+                <!-- Table rows will be populated dynamically -->
+            </tbody>
+        </table>
+    </div>
+      
     </div>
   </div>
 
@@ -278,7 +281,7 @@
 
         <button class="form-group" type="submit" style="border-style: none; background-color: transparent;">
           <img class="icon" src="/images/addUniform.gif">
-      </button>
+        </button>
       </form>
       <!-- Uniform Table -->
       <table>
@@ -308,24 +311,27 @@
     <div class="overlay-content">
       <div class="close-icon" onclick="closeOverlay(event)">×</div>
       <h2>Purchase Report</h2>
-      <button id="vendorSummary" class="form-group" type="submit" style="border-style: none; background-color: transparent;">
+      <button id="vendorSummary" class="form-group" type="submit"
+        style="border-style: none; background-color: transparent;">
         <img class="icon" src="/images/vendorSummary.gif">Vendor Summary
     </button>
       <select id="vendorDetails" class="custom-dropdown">
         <option value="">Vendor Details</option>
         <!-- Vendor options will be populated here -->
-    </select>
-    <button id="profitLoss" class="form-group" type="submit" style="border-style: none; background-color: transparent;">
-      <img class="icon" src="/images/profitLoss.gif">Profit/Loss
-  </button>
-    <button id="exportButton" class="form-group" type="submit" style="border-style: none; background-color: transparent;">
-      <img class="icon" src="/images/exportButton.gif">Export Table
-  </button>
-    <div id="tableContainer"></div> <!-- Container to display the table -->
+      </select>
+      <button id="profitLoss" class="form-group" type="submit"
+        style="border-style: none; background-color: transparent;">
+        <img class="icon" src="/images/profitLoss.gif">Profit/Loss
+      </button>
+      <button id="exportButton" class="form-group" type="submit"
+        style="border-style: none; background-color: transparent;">
+        <img class="icon" src="/images/exportButton.gif">Export Table
+      </button>
+      <div id="tableContainer"></div> <!-- Container to display the table -->
+    </div>
   </div>
-</div>
-    
-    
+
+
 
 
   </div>

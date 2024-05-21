@@ -156,6 +156,7 @@ function displayBooks(data) {
                 <td>${book.remaining_quantity}</td>
                 <td>${book.returned_quantity}</td>
                 <td>
+                <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
                 <button style="background-color: transparent;
                         border: none;
                         color: black; /* Change text color to black */
@@ -222,6 +223,7 @@ function displayBooks(data) {
             <img src="/images/delete_vendor.png" alt="Update" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
             <span style="margin-right: 10px;">Delete</span>
         </button>
+       </div> 
         
                 </td>
             `;
