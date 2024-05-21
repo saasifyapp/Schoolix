@@ -174,17 +174,9 @@
       <!-- Close icon -->
       <div class="close-icon" onclick="closeOverlay(event)">×</div>
 
-      <div class="form-Searchgroup">
-        <img class="vendorIcon" src="/images/searchBook.png" alt="Search Icon">
-        <input type="text" class="form-control" id="bookssearchField" name="bookSearch" oninput="searchBookDetails()"
-          placeholder=" " />
-        <span class="form-control-placeholder" style="margin-left: 3.5rem;">Search Book By Name...</span>
-        <button id="refreshvendorbutton" onclick="refreshbooksData()">
-          <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px; margin-right: 2px;">
-          Refresh</button>
-      </div>
+      
 
-      <div class="form-container" style="display: flex; justify-content: center; align-items: center;">
+      <div class="form-container" style="display: flex; justify-content: center; align-items: center;margin-top: 1rem;">
         <form id="addBooksForm" class="addBookForm" style="display: flex; flex-wrap: wrap; gap: 10px; width: 100%;">
             <div class="form-group" style="flex: 1.6;">
                 <input type="text" class="form-control" id="bookTitle" name="bookTitle" placeholder=" " required style="width: 100%;">
@@ -206,7 +198,7 @@
                 <input type="number" class="form-control" id="sellingPrice" name="sellingPrice" placeholder=" " required style="width: 100%;">
                 <span class="form-control-placeholder">Selling Price</span>
             </div>
-            <div class="form-group" style="flex: 0.6;">
+            <div class="form-group" style="flex: 0.8;">
                 <select id="bookvendor" name="vendor" class="custom-dropdown" required style="width: 100%; border-style: none;">
                     <!-- Options will be populated dynamically -->
                     <option value="" disabled selected>Vendor</option>
@@ -221,6 +213,16 @@
             </button>
         </form>
     </div>  
+
+    <div class="form-Searchgroup">
+      <img class="vendorIcon" src="/images/searchBook.png" alt="Search Icon">
+      <input type="text" class="form-control" id="bookssearchField" name="bookSearch" oninput="searchBookDetails()"
+        placeholder=" " />
+      <span class="form-control-placeholder" style="margin-left: 3.5rem;">Search Book By Name...</span>
+      <button id="refreshvendorbutton" onclick="refreshbooksData()">
+        <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px; margin-right: 2px;">
+        Refresh</button>
+    </div>
 
 
 

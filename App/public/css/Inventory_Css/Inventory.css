@@ -322,20 +322,15 @@ body {
 }
 
 .form-container {
-    margin-top: 1rem;
+    margin-top: rem;
     display: flex;
     justify-content: center;
 }
 
-.form-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem; /* Space between elements */
-}
 
 .form-group {
     position: relative;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     display: flex;
     align-items: center;
 }
@@ -420,7 +415,7 @@ body {
 
 /* Form Styles */
 form {
-    margin-bottom: 20px;
+    margin-bottom: 0px;
 }
 
 label {
@@ -522,9 +517,9 @@ select {
 
 /* Table styling */
 .table-container {
-    max-height: 600px; /* Adjust the height as needed */
+    max-height: 420px; /* Adjust the height as needed */
     overflow-y: auto;
-    margin-top: 20px; /* Adjust the margin as needed */
+    margin-top: 0px; /* Adjust the margin as needed */
 }
 
 #vendorTable, #booksTable {
