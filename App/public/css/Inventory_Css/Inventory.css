@@ -217,6 +217,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
+    max-width: 110rem; /* Adjust as necessary */
     backdrop-filter: blur(5px);
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
@@ -521,9 +522,35 @@ select {
     transform: scale(1.09); /* Increase size on hover */
 }
 
+
+.submit-icon{
+    width: 50px;    
+    height: 50px;    
+    
+    vertical-align: middle;   
+    margin-top: 5px;  
+    cursor: pointer;  
+    transition: all 0.3s; /* Add transition for smooth hover effect */
+    margin-bottom: 15px; /* Add margin between the buttons */
+    background-color: transparent;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    color: black;
+    border: none;    
+    border-radius: 20px;   
+    display: flex;
+    align-items: center;
+    justify-content: center;   
+
+}
+
+.submit-icon:hover {
+    box-shadow:   box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);;
+    transform: scale(1.09); /* Increase size on hover */
+}
+
 /* Table styling */
 .table-container {
-    max-height: 28rem; /* Adjust the height as needed */
+    max-height: calc(100% - 6rem); /* Adjust based on other element heights */
     overflow-y: auto;
     margin-top: 0.625rem; /* Adjust the margin as needed */
 }
