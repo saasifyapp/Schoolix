@@ -320,7 +320,7 @@ body {
 .overlay-content th {
     background-color: #f2f2f2;
 }
-    
+
 .form-container {
     margin-top: 2rem;
     display: flex;
@@ -458,6 +458,16 @@ select {
     vertical-align: middle;   
     margin-top: 5px;  
     cursor: pointer;   
+}
+
+.topicon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px;      /* Optional: Adds some padding to the icon */
+    color: white;       /* Optional: Sets the color of the icon */
+    width: 50px;    
+    height: 50px;   
 }
 
 
