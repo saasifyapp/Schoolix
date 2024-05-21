@@ -520,63 +520,102 @@ select {
     transform: scale(1.09); /* Increase size on hover */
 }
 
-
 /* Table styling */
 .table-container {
-    max-height: 420px; /* Adjust the height as needed */
+    max-height: 600px; /* Adjust the height as needed */
     overflow-y: auto;
     margin-top: 20px; /* Adjust the margin as needed */
 }
 
 #vendorTable, #booksTable {
-    border-collapse: collapse;
     width: 100%;
-    margin-top: 0; /* Center the table within its container */
+    border-collapse: collapse;
+    border-radius: 12px;   
+    box-shadow: 0 0 0 1px #dddddd;
+    margin-top: 1rem;
 }
 
 #vendorTable th, #booksTable th,
 #vendorTable td, #booksTable td {
-    border: 1px solid #ddd;
-    text-align: left;
-    padding: 8px; /* Ensure consistent padding */
+    border: 1px solid #dddddd;
+    text-align: center;
+    padding: 8px;
 }
 
 #vendorTable th, #booksTable th {
     background-color: #2C3E50;
     color: white;
-    text-align: center;
     position: sticky;
     top: 0;
     z-index: 1;
-    padding: 10px; /* Consistent padding for the header */
 }
 
-#vendorTableBody td button, #booksTable td button {
+#vendorTable td, #booksTable td {
+    border: 1px solid #dddddd;
+    text-align: center;
+    height: 50px; /* Fixed height */
+    overflow: hidden; /* Hide content that overflows */
+}
+
+#vendorTable td button, #booksTable td button {
     max-height: 100%; /* Ensure buttons do not exceed cell height */
 }
 
-#vendorTableBody tr:hover, #booksTable tr:hover {
+#vendorTable tr:hover, #booksTable tr:hover {
     background-color: #D6DBDF; /* Change the background color to a light gray */
 }
 
-#vendorTableBody tr td, #booksTable tr td {
-    transition: background-color 0.1s; /* Only transition background color */
-    padding: 8px; /* Add padding for better spacing */
-    border-bottom: 1px solid #ddd; /* Add bottom border to separate rows */
+#vendorTable tr td, #booksTable tr td {
+    transition: font-weight 0.1s; /* Add a smooth transition */
 }
 
-#vendorTableBody tr:hover td, #booksTable tr:hover td {
-    font-weight: normal; /* Ensure font-weight remains normal on hover */
+#vendorTable tr:hover td, #booksTable tr:hover td {
+    font-weight: bold; /* Make the text bold on hover */
 }
 
-/* Ensure thead is not affected by tbody styles */
-#vendorTable thead th, #booksTable thead th {
-    font-weight: bold; /* Keep header font-weight bold */
-    background: #2C3E50;
-    color: white; /* Ensure header text color is consistent */
-    transition: none; /* Disable transitions for header */
+.tableFixHead {
+    overflow-y: auto; /* Make the table scrollable if height is more than 200px */
+    height: 700px; /* Gives an initial height of 200px to the table */
+}
+.tableFixHead thead th {
+    position: sticky; /* Make the table heads sticky */
+    top: 0px; /* Table head will be placed from the top of the table and sticks to it */       
+    z-index: 1;
+}
+table {
+    border-collapse: collapse; /* Make the table borders collapse to each other */
+    width: 100%;
+}
+.tableFixHead tbody {
+    min-height: 600px; /* Adjust this value based on your needs */
 }
 
+/* Assign fixed width to the columns of vendorTable */
+#vendorTable td:nth-child(1), 
+#vendorTable th:nth-child(1) {
+    width: 25%;
+}
+
+#vendorTable td:nth-child(2), 
+#vendorTable th:nth-child(2) {
+    width: 25%;
+}
+
+#vendorTable td:nth-child(3), 
+#vendorTable th:nth-child(3) {
+    width: 25%;
+}
+
+#vendorTable td:nth-child(4), 
+#vendorTable th:nth-child(4) {
+    width: 25%;
+}
+
+/* Assign fixed width to the columns of booksTable */
+#booksTable td:nth-child(n), 
+#booksTable th:nth-child(n) {
+    width: 11.11%;
+}
 
 
 .custom-prompt {
