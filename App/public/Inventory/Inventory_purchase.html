@@ -104,15 +104,7 @@
       </div>
       <!-- Close icon -->
       <div class="close-icon" onclick="closeOverlay(event)">×</div>
-      <div class="form-Searchgroup">
-        <img class="vendorIcon" src="/images/SearchVendor.png" alt="Search Icon">
-        <input type="text" class="form-control" id="searchField" name="vendorSearch" oninput="searchVendorDetails()"
-          placeholder=" " />
-        <span class="form-control-placeholder" style="margin-left: 3.5rem;">Search Vendor By Name...</span>
-        <button id="refreshvendorbutton" onclick="refreshData()">
-          <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px; margin-right: 2px;">
-          Refresh</button>
-      </div>
+
       <div class="form-container">
         <form action="/inventory/purchase/add_vendor" method="post" id="vendorForm" class="addVendorForm">
           <div id="toast" class="toast"></div>
@@ -140,6 +132,17 @@
               class="icon" src="/images/addVendor.gif"></button>
         </form>
       </div>
+
+      <div class="form-Searchgroup">
+        <img class="vendorIcon" src="/images/SearchVendor.png" alt="Search Icon">
+        <input type="text" class="form-control" id="searchField" name="vendorSearch" oninput="searchVendorDetails()"
+          placeholder=" " />
+        <span class="form-control-placeholder" style="margin-left: 3.5rem;">Search Vendor By Name...</span>
+        <button id="refreshvendorbutton" onclick="refreshData()">
+          <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px; margin-right: 2px;">
+          Refresh</button>
+      </div>
+      
       <div class="table-container">
         <table id="vendorTable">
             <thead>
