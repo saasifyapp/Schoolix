@@ -274,7 +274,10 @@
         <input type="number" id="sellingPrice" name="selling_price" required><br>
 
         <label for="vendor">Vendor:</label>
-        <select id="univendor" class="custom-dropdown" name="vendor" required></select><br>
+        <select id="univendor" class="custom-dropdown" name="vendor" required>
+          <option value="" disabled selected>Vendor</option>
+        </select>
+        <br>
 
         <label for="orderedQuantity">Ordered Quantity:</label>
         <input type="number" id="orderedQuantity" name="ordered_quantity" required><br>

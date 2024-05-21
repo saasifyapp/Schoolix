@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Get the form element
     const uniformForm = document.getElementById('addUniformForm');
+    const univendorSelect = document.getElementById("univendor");
     uniformForm.addEventListener('submit', function (event) {
         event.preventDefault();
 
@@ -24,6 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 // Clear input fields after successful submission
                 uniformForm.reset();
+                univendorSelect.selectedIndex = 0;
             })
             .then(data => {
                 console.log('Uniform added successfully');
@@ -43,6 +45,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.error('Error:', error);
                 // Handle errors here, like displaying an error message to the user
             });
+    });
+    uniformForm.addEventListener('reset', function () {
+        const univendorSelect = document.getElementById("univendor");
+        univendorSelect.selectedIndex = 0; // Assuming the placeholder is the first option
     });
 }); 
 
