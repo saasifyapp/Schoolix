@@ -649,13 +649,39 @@ select {
 
 
 .custom-dropdown {
-    width: auto; /* Modify as needed */
-    height: 45px; /* Modify as needed */
-    border-radius: 10px; /* Modify as needed */
-    font-size: 16px; /* Modify as needed */
+    height: 45px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('../../images/down-arrow.png'); /* Set your PNG image */
+    background-size: 25px 25px; /* Set the size of your image */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    padding-right: 20px; /* Add more padding on the right for the image */
+    background-position: calc(100% - 8px) center; /* Position the image to the extreme right */
+    /* Adjust the value based on the size of your image and padding */
+    padding: 8px 24px; /* Adjust padding as needed */
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    position: relative; /* Add position relative to allow absolute positioning */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Add transition for smooth effect */
+}
+
+.custom-dropdown:hover,
+.custom-dropdown:focus {
+    box-shadow: 0 0 10px #5DADE2; /* Add shadow on hover and focus */
+    border: 1px solid #85C1E9;
     outline: none;
 }
 
-.custom-dropdown:focus {
-    outline: auto; /* Show outline on focus */
+
+
+/* Style the dropdown arrow (if necessary) */
+.custom-dropdown::after {
+    content: '\25BC'; /* Unicode character for down arrow */
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
 }
