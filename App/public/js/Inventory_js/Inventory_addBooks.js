@@ -289,8 +289,50 @@ function updateBook(title) {
                         <input type="number" id="newQuantityInput" min="0">
                         <p id="totalOrder">Total Order : ${existingOrderedQuantity}</p>
                         <p id="newRemainingQuantity">New Remaining Quantity : ${remainingQuantity}</p>
-                        <button id="confirmButton">Confirm</button>
-                        <button id="cancelButton">Cancel</button>
+                        <button id="confirmButton" style="background-color: transparent;
+                        border: none;
+                        color: black; /* Change text color to black */
+                        padding: 0;
+                        text-align: center;
+                        text-decoration: none;
+                        display: inline-flex; /* Use flex for centering */
+                        align-items: center; /* Center vertically */
+                        justify-content: center; /* Center horizontally */
+                        font-size: 14px;
+                        cursor: pointer;
+                        max-height: 100%;
+                        border-radius: 20px; /* Round corners */
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                        transition: transform 0.2s, box-shadow 0.2s;
+                        margin-bottom: 10px;"                           
+                        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                            <img src="../images/conform.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                            <span style="margin-right: 10px;">Confirm</span>
+                        </button>
+
+                        <button id="cancelButton" style="background-color: transparent;
+                        border: none;
+                        color: black; /* Change text color to black */
+                        padding: 0;
+                        text-align: center;
+                        text-decoration: none;
+                        display: inline-flex; /* Use flex for centering */
+                        align-items: center; /* Center vertically */
+                        justify-content: center; /* Center horizontally */
+                        font-size: 14px;
+                        cursor: pointer;
+                        max-height: 100%;
+                        border-radius: 20px; /* Round corners */
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                        transition: transform 0.2s, box-shadow 0.2s;
+                        margin-bottom: 10px;"                           
+                        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                            <img src="../images/cancel.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                            <span style="margin-right: 10px;">Cancel</span>
+                        </button>                      
+                    
                     </div>
                 `;
             };
@@ -401,8 +443,50 @@ function returnBook(title) {
                         <p>Enter the return quantity:</p>
                         <input type="number" id="returnQuantityInput" min="0">
                         <p id="newRemainingQuantity">New Remaining Quantity : ${newRemainingQuantity}</p>
-                        <button id="confirmButton">Confirm</button>
-                        <button id="cancelButton">Cancel</button>
+                        <button id="confirmButton" style="background-color: transparent;
+                            border: none;
+                            color: black; /* Change text color to black */
+                            padding: 0;
+                            text-align: center;
+                            text-decoration: none;
+                            display: inline-flex; /* Use flex for centering */
+                            align-items: center; /* Center vertically */
+                            justify-content: center; /* Center horizontally */
+                            font-size: 14px;
+                            cursor: pointer;
+                            max-height: 100%;
+                            border-radius: 20px; /* Round corners */
+                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                            transition: transform 0.2s, box-shadow 0.2s;
+                            margin-bottom: 10px;"                           
+                            onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                                <img src="../images/conform.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                                <span style="margin-right: 10px;">Confirm</span>
+                            </button>
+
+                            <button id="cancelButton" style="background-color: transparent;
+                            border: none;
+                            color: black; /* Change text color to black */
+                            padding: 0;
+                            text-align: center;
+                            text-decoration: none;
+                            display: inline-flex; /* Use flex for centering */
+                            align-items: center; /* Center vertically */
+                            justify-content: center; /* Center horizontally */
+                            font-size: 14px;
+                            cursor: pointer;
+                            max-height: 100%;
+                            border-radius: 20px; /* Round corners */
+                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                            transition: transform 0.2s, box-shadow 0.2s;
+                            margin-bottom: 10px;"                           
+                            onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                                <img src="../images/cancel.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                                <span style="margin-right: 10px;">Cancel</span>
+                            </button>                      
+                        
                     </div>
                 `;
             };

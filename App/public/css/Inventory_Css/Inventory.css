@@ -719,15 +719,21 @@ table {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     z-index: 1000;
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+   
 }
 
 .prompt-content {
     text-align: center;
+    animation: fadeUp 0.3s ease-in-out;
 }
 
 .prompt-content label {
     display: block;
     margin-bottom: 0.6rem;
+}
+.prompt-content h2{
+    color: var(--grey-color);
 }
 
 .prompt-content input {
