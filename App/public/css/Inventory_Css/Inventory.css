@@ -601,13 +601,14 @@ select {
 }
 
 /* Table styling */
-.table-container {
+.table-container, #tableContainer{
     max-height: calc(100% - 6rem); /* Adjust based on other element heights */
     overflow-y: auto;
     margin-top: 0.625rem; /* Adjust the margin as needed */
+    border-radius: 10px;
 }
 
-#vendorTable, #booksTable, #uniformTable {
+#vendorTable, #booksTable, #uniformTable  {
     width: 95%;
     border-collapse: separate; /* Change this to separate */
     border-spacing: 0; /* Add this */
@@ -616,6 +617,7 @@ select {
     margin: auto; /* Center the table */
     /* Add this to handle child's overflow */
     /* overflow: hidden; */
+   
 }
 
 #vendorTable th, #booksTable th,#uniformTable th
@@ -623,6 +625,7 @@ select {
     border: 1px solid #dddddd;
     text-align: center;
     padding: 0.5rem;
+   
 }
 
 #vendorTable th, #booksTable th ,#uniformTable th{
@@ -631,6 +634,7 @@ select {
     position: sticky;
     top: 0;
     z-index: 1;
+    
 }
 
 #vendorTable td, #booksTable td, #uniformTable td {
@@ -808,3 +812,49 @@ table {
     right: 0.5rem;
     transform: translateY(-50%);
 }
+
+
+
+.horizontal-container {
+    display: flex;
+    align-items: center; /* Align items vertically in the center */
+    gap: 5rem; /* Space between items */
+    margin-top: 50px; /* Adjust this value to position the container vertically */
+    margin-left: 15%;
+  }
+  
+  .horizontal-container h3{
+    margin-left: 5px;
+    margin-bottom: 5px;
+    color: #2C3E50;
+  }
+  .form-group {
+    display: flex;
+    align-items: center; /* Ensure the content inside buttons are centered */
+  }
+  
+  .custom-dropdown {
+    margin: 0 10px; /* Optional: to add space around the dropdown */
+  }
+
+
+
+  #tableContainer {
+    position: relative;
+    min-height: 300px; /* Minimum height for the container */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .empty-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    color: gray;
+    font-size: 18px;
+    padding: 20px;
+  }

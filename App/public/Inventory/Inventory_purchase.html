@@ -327,7 +327,7 @@
           Refresh</button>
       </div>
 
-       <!-- Uniform Table -->
+      <!-- Uniform Table -->
       <div class="table-container" style=" max-height: 27rem;">
         <table id="uniformTable">
           <thead>
@@ -351,7 +351,7 @@
 
 
 
-      
+
 
     </div>
   </div>
@@ -365,24 +365,40 @@
         <h2 class="overlay-head">Purchase Report</h2>
       </div>
       <div class="close-icon" onclick="closeOverlay(event)">×</div>
-     
-      <button id="vendorSummary" class="form-group" type="submit"
-        style="border-style: none; background-color: transparent;">
-        <img class="icon" src="/images/vendorSummary.gif">Vendor Summary
-      </button>
-      <select id="vendorDetails" class="custom-dropdown">
-        <option value="">Vendor Details</option>
-        <!-- Vendor options will be populated here -->
-      </select>
-      <button id="profitLoss" class="form-group" type="submit"
-        style="border-style: none; background-color: transparent;">
-        <img class="icon" src="/images/profitLoss.gif">Profit/Loss
-      </button>
-      <button id="exportButton" class="form-group" type="submit"
-        style="border-style: none; background-color: transparent;">
-        <img class="icon" src="/images/exportButton.gif">Export Table
-      </button>
-      <div id="tableContainer"></div> <!-- Container to display the table -->
+
+      <div class="horizontal-container">
+        <button id="vendorSummary" class="form-group" type="submit"
+          style="border-style: none; background-color: transparent;">
+          <img class="icon" src="/images/vendorSummary.gif">
+          <h3>Vendor Summary</h3>
+        </button>
+        <select id="vendorDetails" class="custom-dropdown">
+          <option value="">
+            <h3 style="font-weight: bold;">Vendor Details</h3>
+          </option>
+          <!-- Vendor options will be populated here -->
+        </select>
+        <button id="profitLoss" class="form-group" type="submit"
+          style="border-style: none; background-color: transparent;">
+          <img class="icon" src="/images/profitLoss.gif">
+          <h3>Profit/Loss</h3>
+        </button>
+        <button id="exportButton" class="form-group" type="submit"
+          style="border-style: none; background-color: transparent;">
+          <img class="icon" src="/images/exportButton.gif">
+          <h3>Export Table</h3>
+        </button>
+      </div>
+
+      <div id="tableContainer">
+        <div id="emptyMessage" class="empty-message">
+          <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+            type="module"></script>
+
+          <dotlottie-player src="https://lottie.host/5d6fe6dc-d344-4b95-a6b4-17a5e01b88c8/2DhrGZVFGN.json"
+            background="transparent" speed="1" style="width: 600px; height: 450px;" loop autoplay></dotlottie-player>            
+        </div>
+      </div> <!-- Container to display the table -->
     </div>
   </div>
 
