@@ -210,6 +210,18 @@ body {
 
 }
 
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
 /* CSS for overlay styling */
 .overlay {
     position: fixed;
@@ -230,7 +242,10 @@ body {
     display: none;
     transition: opacity 0.3s ease-in-out;
     /* animation: slideInFromBottom 0.1s ease-in-out; */
+    animation: fadeUp 0.3s ease-in-out;
 }
+
+
 .overlay-content {
     position: absolute;
     top: 2rem;
@@ -245,6 +260,17 @@ body {
     transition: transform 0.3s ease-in-out;
 }
 
+@keyframes slideInFromUp {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -100%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
 
 .overlay-head {
     position: absolute;
@@ -255,6 +281,7 @@ body {
     box-sizing: border-box;
     font-size: 30px;
     color: var(--grey-color);
+    animation: slideInFromUp 0.3s ease-in-out;
 
 }
 
@@ -319,12 +346,36 @@ body {
     justify-content: center;
 }
 
+@keyframes slideInFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+
 
 .form-group {
     position: relative;
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
+    animation: slideInFromLeft 0.5s ease-in-out; /* Adjust timing as needed */
+}
+
+@keyframes slideInFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .form-Searchgroup {
@@ -332,7 +383,8 @@ body {
     display: flex;
     align-items: center;
     margin: 0 auto; /* Center the element horizontally */
-    width: 30rem; /* 500px converted to rem (assuming 1rem = 16px)
+    width: 30rem; /* 500px converted to rem (assuming 1rem = 16px)*/
+    animation: slideInFromRight 0.5s ease-in-out; /* Adjust timing as needed 
 
 .form-Searchgroup {
     display: flex;
