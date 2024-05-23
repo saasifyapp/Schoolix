@@ -751,9 +751,10 @@ table {
 .horizontal-container {
     display: flex;
     align-items: center; /* Align items vertically in the center */
+    justify-content: center;
     gap: 5rem; /* Space between items */
     margin-top: 50px; /* Adjust this value to position the container vertically */
-    margin-left: 15%;
+   
   }
   
   .horizontal-container h3{
