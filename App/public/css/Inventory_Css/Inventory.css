@@ -301,6 +301,12 @@ body {
     flex: 1; /* This will make the input field take up the remaining space */
 }
 
+#bookssearchField:hover,#searchField:hover,#searchField:focus,
+#bookssearchField:focus {
+    box-shadow: 0 0 10px #5DADE2; /* Add shadow on hover and focus */
+}
+
+
 
 .form-control {
     padding: 1rem 1rem;
@@ -325,6 +331,10 @@ body {
 .form-control:focus {
     box-shadow: 0 0 10px #5DADE2;
     outline: 1px solid #85C1E9; /* Add a solid outline */
+}
+.form-control:hover {
+    box-shadow: 0 0 10px #5DADE2;
+
 }
 
 .form-control-placeholder {
@@ -513,7 +523,7 @@ select {
 
 .table-container,
 #tableContainer {
-    max-height: calc(100% - 6rem); /* Set maximum height for the table container */
+    max-height: calc(100% - 15rem); /* Set maximum height for the table container */
     overflow-y: auto;
     margin-top: 0.625rem; /* Set margin between the table container and overlay content */
     border-radius: 10px;
@@ -601,7 +611,7 @@ select {
 #vendorTable tr:hover td,
 #booksTable tr:hover td,
 #uniformTable tr:hover td {
-    font-weight: bold;
+    font-weight: bold;    
 }
 
 .tableFixHead {
