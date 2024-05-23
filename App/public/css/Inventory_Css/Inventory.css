@@ -401,12 +401,12 @@ select {
 .close-icon {
     position: absolute;
     top: 10px;
-    right: 10px;
+    right: 30px;
     cursor: pointer;
-    font-size: 3rem;   
+    font-size: 5rem;   
     color: #aaa;
     float: right;
-    font-size: 28px;
+    font-size: 40px;
     font-weight: bold;
 }
 
@@ -542,7 +542,7 @@ select {
     width: 100%; /* Set table width to 100% */
     border-collapse: collapse;
     border-spacing: 0;
-    border-radius: 1rem;
+    border-radius: 2rem;
     box-shadow: 0 0 0 1px #dddddd;
     margin: auto;
     animation: fadeUp 0.5s ease-in-out;
