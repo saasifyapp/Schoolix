@@ -509,13 +509,21 @@ select {
     transform: scale(1.09); /* Increase size on hover */
 }
 
+
+
 .table-container,
 #tableContainer {
-    max-height: calc(100% - 6rem);
+    max-height: calc(100% - 6rem); /* Set maximum height for the table container */
     overflow-y: auto;
-    margin-top: 0.625rem;
+    margin-top: 0.625rem; /* Set margin between the table container and overlay content */
     border-radius: 10px;
 }
+
+/* Adjust height of table body to fit between overlay content and bottom margin */
+.tableFixBody {
+    height: calc(100% - 3.125rem - 6rem - 1rem); /* Calculate height for table body */
+}
+
 
 .styled-table,
 #vendorTable,
@@ -645,10 +653,10 @@ table {
     background-color: white;
     padding: 20px;
     border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    outline: 2px solid rgba(0, 0, 0, 0.2); /* Add outline */  
     z-index: 1000;
     background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
-   
 }
 
 .prompt-content {
