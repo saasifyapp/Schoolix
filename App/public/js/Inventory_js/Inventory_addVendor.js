@@ -359,7 +359,7 @@ function searchVendorDetails() {
                         <td>${vendor.paid_till_now}</td>
                         <!--<td>${vendor.balance}</td>-->
                         <td>
-    <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+    <div class="button-container"style="display: flex; justify-content: center; gap: 20px;">
         <button style="background-color: transparent;
         border: none;
         color: black; /* Change text color to black */

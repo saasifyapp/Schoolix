@@ -624,7 +624,7 @@ function searchUniformDetails() {
     fetch(`/inventory/uniforms/search?search=${encodeURIComponent(searchTerm)}`)
         .then(response => response.json())
         .then(data => {
-            const uniformTableBody = document.getElementById('uniformTable');
+            const uniformTableBody = document.getElementById('uniformTableBody');
             uniformTableBody.innerHTML = ''; // Clear previous data
 
             if (data.length === 0) {
