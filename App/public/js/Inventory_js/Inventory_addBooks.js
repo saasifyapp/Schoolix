@@ -582,7 +582,7 @@ function searchBookDetails() {
     fetch(`/inventory/books/search?search=${encodeURIComponent(searchTerm)}`)
         .then(response => response.json())
         .then(data => {
-            const booksTableBody = document.getElementById('booksTable');
+            const booksTableBody = document.getElementById('booksTableBody');
             booksTableBody.innerHTML = ''; // Clear previous data
 
             if (data.length === 0) {
@@ -610,9 +610,9 @@ function searchBookDetails() {
                         padding: 0;
                         text-align: center;
                         text-decoration: none;
-                        display: flex; /* Use flex for centering */
-                        align-items: center; /* Center vertically */
-                        justify-content: center; /* Center horizontally */
+                        display: flex; 
+                        align-items: center; 
+                        justify-content: center; 
                         font-size: 14px;
                         cursor: pointer;
                         max-height: 100%;
