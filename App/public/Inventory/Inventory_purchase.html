@@ -137,7 +137,7 @@
         <img class="vendorIcon" src="/images/search.gif" alt="Search Icon">
         <input type="text" class="form-control" id="searchField" name="vendorSearch" oninput="searchVendorDetails()"
           placeholder=" " />
-        <span class="form-control-placeholder" style="margin-left: 3.5rem;">Search Vendor By Name...</span>
+        <span class="form-control-placeholder" >Search Vendor By Name...</span>
         <button id="refreshvendorbutton" onclick="refreshData()">
           <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px; margin-right: 2px;">
           Refresh</button>
@@ -239,7 +239,7 @@
         <img class="vendorIcon" src="/images/search.gif" alt="Search Icon">
         <input type="text" class="form-control" id="bookssearchField" name="bookSearch" oninput="searchBookDetails()"
           placeholder=" " />
-        <span class="form-control-placeholder" style="margin-left: 3.5rem;">Search Book By Name...</span>
+        <span class="form-control-placeholder">Search Book By Name...</span>
         <button id="refreshvendorbutton" onclick="refreshbooksData()">
           <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px; margin-right: 2px;">
           Refresh</button>
@@ -248,7 +248,7 @@
 
 
       <!-- Table for displaying books -->
-      <div class="table-container" style=" max-height: 27rem;">
+      <div class="table-container">
         <table id="booksTable">
           <thead>
             <tr>
@@ -336,14 +336,14 @@
         <img class="vendorIcon" src="/images/search.gif" alt="Search Icon">
         <input type="text" class="form-control" id="uniformsearchField" name="bookSearch"
           oninput="searchUniformDetails()" placeholder=" " />
-        <span class="form-control-placeholder" style="margin-left: 3.5rem;">Enter Uniform Item...</span>
+        <span class="form-control-placeholder">Enter Uniform Item...</span>
         <button id="refreshvendorbutton" onclick="refreshUniformsData()">
           <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px; margin-right: 2px;">
           Refresh</button>
       </div>
 
       <!-- Uniform Table -->
-      <div class="table-container" style=" max-height: 27rem;">
+      <div class="table-container">
         <table id="uniformTable">
           <thead>
             <tr>
@@ -403,6 +403,9 @@
           <img class="icon" src="/images/exportButton.gif">
           <h3>Export Table</h3>
         </button>
+        <button id="refreshvendorbutton"  class="form-group" onclick="refreshAllTables()">
+          <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px; margin-right: 2px;">
+          Refresh</button>
       </div>
 
       <div id="table-container">

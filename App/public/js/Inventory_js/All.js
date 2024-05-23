@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
         button.addEventListener('click', function () {
             // Get the parent card element
             var parentCard = button.closest('.card');
-            
+
             // Check the class of the parent card to determine which overlay to show
             if (parentCard.classList.contains('add-vendor')) {
                 // Show the add vendor overlay
@@ -29,17 +29,18 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Close the overlay when clicking on the overlay content area
-    document.querySelectorAll('.overlay').forEach(function (overlay) {
-        overlay.addEventListener('click', function (event) {
-            if (event.target === this) {
-                this.style.display = 'none';
+    // Close the overlay when clicking the close button
+    document.querySelectorAll('.overlay .close-button').forEach(function (closeButton) {
+        closeButton.addEventListener('click', function () {
+            var overlay = closeButton.closest('.overlay');
+            if (overlay) {
+                overlay.style.display = 'none';
             }
         });
     });
 });
 
-// JavaScript function to close the overlay
+// JavaScript function to close the overlay (if you need it for other uses)
 function closeOverlay(event) {
     var overlay = event.target.closest('.overlay');
     if (overlay) {
@@ -70,20 +71,20 @@ function showToast(message, isError) {
 
 document.getElementById('logoutButton').addEventListener('click', function () {
     // Make an AJAX request to logout route
-    const confirmation = confirm(`Are you sure you want to logout ?`);
+    const confirmation = confirm('Are you sure you want to logout?');
     if (confirmation) {
         fetch('/logout', {
             method: 'GET',
             credentials: 'same-origin' // Send cookies with the request
         })
-            .then(response => {
-                if (response.ok) {
-                    // Redirect to homepage or login page
-                    window.location.href = '/';
-                } else {
-                    console.error('Logout failed');
-                }
-            })
-            .catch(error => console.error('Error during logout:', error));
-    };
-})
+        .then(response => {
+            if (response.ok) {
+                // Redirect to homepage or login page
+                window.location.href = '/';
+            } else {
+                console.error('Logout failed');
+            }
+        })
+        .catch(error => console.error('Error during logout:', error));
+    }
+});
