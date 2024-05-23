@@ -281,9 +281,8 @@ body {
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
-    animation: slideInFromUp 0.7s ease-in-out; /* Adjust timing as needed */
+    animation: slideDownFromUp 0.7s ease-in-out; /* Adjust timing as needed */
 }
-
 
 
 .form-Searchgroup {
@@ -909,6 +908,17 @@ table {
     to {
         opacity: 1;
         transform: translateX(0);
+    }
+}
+
+@keyframes slideDownFromUp {
+    from {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
