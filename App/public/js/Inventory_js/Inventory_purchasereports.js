@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("vendorSummary").addEventListener("click", function () {
         currentButtonName = 'Inventory_Vendor_Summary';
         createAndFetchTable('/inventory/vendors_summary', 'vendorTablesummaryBody', displayVendors, ['VendorName', 'Vendor For', 'Net Payable', 'Paid Till Now', 'Balance']);
+        refreshAllTables();
     });
 
     // Vendor Details dropdown change event
@@ -17,12 +18,15 @@ document.addEventListener("DOMContentLoaded", function () {
         const selectedVendor = this.value;
         currentButtonName = selectedVendor;
         createAndFetchTable(`/inventory/vendors_details?vendor=${selectedVendor}`, 'vendorDetailsTableBody', displayVendorDetails, ['Vendor Name', 'Item Ordered', 'Purchase Price', 'Ordered Quantity', 'Returned Quantity', 'Items in Stock', 'Ordered Price', 'Returned Price', 'Net Payable']);
+        refreshAllTables();
     });
     // Profit/Loss button click event
     document.getElementById("profitLoss").addEventListener("click", function () {
         currentButtonName = 'Inventory_Profit_Loss_Report';
         createAndFetchTable('/inventory/profit_loss', 'profitLossTableBody', displayProfitLoss, ['Item Type', 'Total Purchase Price', 'Total Selling Price', 'Total Profit']);
+        refreshAllTables();
     });
+
 
     function createAndFetchTable(url, tableBodyId, displayFunction, headers) {
         // Create table and table body
@@ -247,6 +251,15 @@ document.addEventListener("DOMContentLoaded", function () {
         document.body.removeChild(downloadLink);
     }
 });
+
+function refreshAllTables() {
+    document.getElementById("vendorSummary").click();
+    document.getElementById("profitLoss").click();
+    const vendorDetails = document.getElementById("vendorDetails");
+    if (vendorDetails.value) {
+        createAndFetchTable(`/inventory/vendors_details?vendor=${vendorDetails.value}`, 'vendorDetailsTableBody', displayVendorDetails, ['Vendor Name', 'Item Ordered', 'Purchase Price', 'Ordered Quantity', 'Returned Quantity', 'Items in Stock', 'Ordered Price', 'Returned Price', 'Net Payable']);
+    }
+}
 
 
 

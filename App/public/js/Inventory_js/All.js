@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
             } else if (parentCard.classList.contains('purchase-reports')) {
                 // Show the purchase reports overlay
                 document.getElementById('purchaseReportsOverlay').style.display = 'block';
+                refreshAllTables();
             }
         });
     });
