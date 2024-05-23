@@ -122,17 +122,6 @@ body {
     /* Apply animation to slide in */
 }
 
-@keyframes slide-in {
-    0% {
-        transform: translateX(100%);
-    }
-
-    100% {
-        transform: translateX(0);
-    }
-}
-
-
 
 .dropdown-button:hover {
     transform: scale(1.1);
@@ -204,7 +193,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    max-width: 110rem; /* Adjust as necessary */
+    max-width: 100%; /* Adjust as necessary */
     backdrop-filter: blur(5px);
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
@@ -235,17 +224,6 @@ body {
     transition: transform 0.3s ease-in-out;
 }
 
-@keyframes slideInFromUp {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -100%);
-    }
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%);
-    }
-}
-
 
 .overlay-head {
     position: absolute;
@@ -260,18 +238,7 @@ body {
 
 }
 
-/* Slide-in from bottom animation */
-@keyframes slideInFromBottom {
-    0% {
-        opacity: 0;
-        transform: translateY(5rem);
-    }
 
-    100% {
-        opacity: 1;
-        transform: translateY(0rem);
-    }
-}
 
 .overlay.hide {
     opacity: 0;
@@ -308,19 +275,6 @@ body {
     display: flex;
     justify-content: center;
 }
-
-@keyframes slideInFromLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-100%);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-
 
 .form-group {
     position: relative;
@@ -556,7 +510,6 @@ select {
     transform: scale(1.09); /* Increase size on hover */
 }
 
-/* Table styling */
 .table-container,
 #tableContainer {
     max-height: calc(100% - 6rem);
@@ -569,8 +522,8 @@ select {
 #vendorTable,
 #booksTable,
 #uniformTable {
-    width: 95%;
-    border-collapse: separate;
+    width: 100%; /* Set table width to 100% */
+    border-collapse: collapse;
     border-spacing: 0;
     border-radius: 1rem;
     box-shadow: 0 0 0 1px #dddddd;
@@ -593,6 +546,8 @@ select {
     padding: 0.5rem;
     box-sizing: border-box;
     white-space: nowrap;
+    /* Add overflow wrap for long content */
+    overflow-wrap: break-word;
 }
 
 .styled-table th,
@@ -662,21 +617,13 @@ table {
     height: calc(100% - 3.125rem);
 }
 
+/* Adjust widths for responsive behavior */
 #vendorTable td:nth-child(1),
-#vendorTable th:nth-child(1) {
-    width: 25%;
-}
-
+#vendorTable th:nth-child(1),
 #vendorTable td:nth-child(2),
-#vendorTable th:nth-child(2) {
-    width: 25%;
-}
-
+#vendorTable th:nth-child(2),
 #vendorTable td:nth-child(3),
-#vendorTable th:nth-child(3) {
-    width: 25%;
-}
-
+#vendorTable th:nth-child(3),
 #vendorTable td:nth-child(4),
 #vendorTable th:nth-child(4) {
     width: 25%;
@@ -688,6 +635,7 @@ table {
 #uniformTable th:nth-child(n) {
     width: 11.11%;
 }
+
 
 
 .custom-prompt {
@@ -916,4 +864,52 @@ table {
         opacity: 1;
     }
 }
+
+
+@keyframes slide-in {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+
+@keyframes slideInFromUp {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -100%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* Slide-in from bottom animation */
+@keyframes slideInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(5rem);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0rem);
+    }
+}
+
+@keyframes slideInFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
 
