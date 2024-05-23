@@ -103,21 +103,6 @@ body {
     /* Apply specified properties */
 }
 
-/* Animation */
-@keyframes slideIn {
-    0% {
-        transform: translateY(100%) scale(0.9);
-        opacity: 0;
-    }
-
-    100% {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-    }
-}
-
-
-
 .dropdown {
     position: fixed;
     top: 20px;
@@ -210,16 +195,6 @@ body {
 
 }
 
-@keyframes fadeUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
 
 /* CSS for overlay styling */
@@ -304,18 +279,6 @@ body {
 }
 
 
-/* Slide-out to bottom animation */
-@keyframes slideOutToBottom {
-    0% {
-        opacity: 1;
-        transform: translateY(0rem);
-    }
-
-    100% {
-        opacity: 0;
-        transform: translateY(5rem);
-    }
-}
 
 .overlay-content h2 {
     margin-top: 0;
@@ -364,19 +327,10 @@ body {
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
-    animation: slideInFromLeft 0.5s ease-in-out; /* Adjust timing as needed */
+    animation: slideInFromUp 0.7s ease-in-out; /* Adjust timing as needed */
 }
 
-@keyframes slideInFromRight {
-    from {
-        opacity: 0;
-        transform: translateX(100%);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
+
 
 .form-Searchgroup {
     position: relative;  
@@ -384,7 +338,7 @@ body {
     align-items: center;
     margin: 0 auto; /* Center the element horizontally */
     width: 30rem; /* 500px converted to rem (assuming 1rem = 16px)*/
-    animation: slideInFromRight 0.5s ease-in-out; /* Adjust timing as needed 
+    animation: slideInFromDown 0.8s ease-in-out; /* Adjust timing as needed     
 
 .form-Searchgroup {
     display: flex;
@@ -393,6 +347,8 @@ body {
 .form-controlSearch {
     flex: 1; /* This will make the input field take up the remaining space */
 }
+
+
 .form-control {
     padding: 1rem 1rem;
     /* Adjusted padding to center placeholder vertically */
@@ -601,113 +557,134 @@ select {
 }
 
 /* Table styling */
-.table-container, #tableContainer{
-    max-height: calc(100% - 6rem); /* Adjust based on other element heights */
+.table-container,
+#tableContainer {
+    max-height: calc(100% - 6rem);
     overflow-y: auto;
-    margin-top: 0.625rem; /* Adjust the margin as needed */
+    margin-top: 0.625rem;
     border-radius: 10px;
 }
 
-#vendorTable, #booksTable, #uniformTable  {
+.styled-table,
+#vendorTable,
+#booksTable,
+#uniformTable {
     width: 95%;
-    border-collapse: separate; /* Change this to separate */
-    border-spacing: 0; /* Add this */
-    border-radius: 1rem;   
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 1rem;
     box-shadow: 0 0 0 1px #dddddd;
-    margin: auto; /* Center the table */
-    /* Add this to handle child's overflow */
-    /* overflow: hidden; */
-   
+    margin: auto;
+    animation: fadeUp 0.5s ease-in-out;
+    animation-delay: 0.4s; /* Delay to start after overlay animation */
+    animation-fill-mode: backwards;
 }
 
-#vendorTable th, #booksTable th,#uniformTable th
-#vendorTable td, #booksTable td, #uniformTable td {
+.styled-table th,
+#vendorTable th,
+#booksTable th,
+#uniformTable th,
+.styled-table td,
+#vendorTable td,
+#booksTable td,
+#uniformTable td {
     border: 1px solid #dddddd;
     text-align: center;
     padding: 0.5rem;
-   
+    box-sizing: border-box;
+    white-space: nowrap;
 }
 
-#vendorTable th, #booksTable th ,#uniformTable th{
+.styled-table th,
+#vendorTable th,
+#booksTable th,
+#uniformTable th {
     background-color: #2C3E50;
     color: white;
     position: sticky;
     top: 0;
     z-index: 1;
-    
 }
 
-#vendorTable td, #booksTable td, #uniformTable td {
-    border: 1px solid #dddddd;
-    text-align: center;
-    height: 3.125rem; /* 50px converted to rem */
-    overflow: hidden; /* Hide content that overflows */
+.styled-table td,
+#vendorTable td,
+#booksTable td,
+#uniformTable td {
+    height: 3.125rem;
+    overflow: hidden;
 }
 
-
-#vendorTable td button, #booksTable td button ,#uniformTable td button{
-    max-height: 100%; /* Ensure buttons do not exceed cell height */
+.styled-table td button,
+#vendorTable td button,
+#booksTable td button,
+#uniformTable td button {
+    max-height: 100%;
 }
 
-#vendorTable tr:hover, #booksTable tr:hover #uniformTable tr:hover {
-    background-color: #D6DBDF; /* Change the background color to a light gray */
+.styled-table tr:hover,
+#vendorTable tr:hover,
+#booksTable tr:hover,
+#uniformTable tr:hover {
+    background-color: #D6DBDF;
 }
 
-#vendorTable tr td, #booksTable tr td ,#uniformTable tr td {
-    transition: font-weight 0.1s; /* Add a smooth transition */
+.styled-table tr td,
+#vendorTable tr td,
+#booksTable tr td,
+#uniformTable tr td {
+    transition: background-color 0.3s ease;
 }
 
-#vendorTable tr:hover td, #booksTable tr:hover td ,#uniformTable tr:hover td {
-    font-weight: bold; /* Make the text bold on hover */
+.styled-table tr:hover td,
+#vendorTable tr:hover td,
+#booksTable tr:hover td,
+#uniformTable tr:hover td {
+    font-weight: bold;
 }
 
 .tableFixHead {
-    overflow-y: auto; /* Make the table scrollable if height is more than 200px */
-    height: 43rem; /* 700px converted to rem */
+    overflow-y: auto;
+    height: 100%;
 }
 
 .tableFixHead thead th {
-    position: sticky; /* Make the table heads sticky */
-    top: 0px; /* Table head will be placed from the top of the table and sticks to it */       
+    position: sticky;
+    top: 0;
     z-index: 1;
 }
+
 table {
-    border-collapse: collapse; /* Make the table borders collapse to each other */
+    border-collapse: collapse;
     width: 100%;
 }
+
 .tableFixHead tbody {
-    min-height: 37.5rem; /* 600px converted to rem */
+    height: calc(100% - 3.125rem);
 }
 
-
-/* Assign fixed width to the columns of vendorTable */
-#vendorTable td:nth-child(1), 
+#vendorTable td:nth-child(1),
 #vendorTable th:nth-child(1) {
     width: 25%;
 }
 
-#vendorTable td:nth-child(2), 
+#vendorTable td:nth-child(2),
 #vendorTable th:nth-child(2) {
     width: 25%;
 }
 
-#vendorTable td:nth-child(3), 
+#vendorTable td:nth-child(3),
 #vendorTable th:nth-child(3) {
     width: 25%;
 }
 
-#vendorTable td:nth-child(4), 
+#vendorTable td:nth-child(4),
 #vendorTable th:nth-child(4) {
     width: 25%;
 }
 
-/* Assign fixed width to the columns of booksTable */
-#booksTable td:nth-child(n), 
-#booksTable th:nth-child(n) {
-    width: 11.11%;
-}
-
-#uniformTable td:nth-child(n), 
+#booksTable td:nth-child(n),
+#booksTable th:nth-child(n),
+#uniformTable td:nth-child(n),
 #uniformTable th:nth-child(n) {
     width: 11.11%;
 }
@@ -792,6 +769,7 @@ table {
     cursor: pointer;
     position: relative; /* Add position relative to allow absolute positioning */
     transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Add transition for smooth effect */
+   
 }
 
 
@@ -858,3 +836,84 @@ table {
     font-size: 18px;
     padding: 20px;
   }
+
+
+
+
+
+
+
+
+
+
+  /* //////////////////////////////////Animations//////////////////////////// */
+
+  @keyframes slideInFromDown {
+    from {
+        opacity: 0;
+        transform: translateY(50%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInFromUp {
+    from {
+        opacity: 0;
+        transform: translateY(-50%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Slide-out to bottom animation */
+@keyframes slideOutToBottom {
+    0% {
+        opacity: 1;
+        transform: translateY(0rem);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(5rem);
+    }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        transform: translateY(100%) scale(0.9);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+

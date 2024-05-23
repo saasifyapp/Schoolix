@@ -646,6 +646,7 @@ function searchUniformDetails() {
                         <td>${uniform.remaining_quantity}</td>
                         <td>${uniform.returned_quantity}</td>
                         <td style="text-align: center;">
+                        <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
                         <button style="background-color: transparent;
                 border: none;
                 color: black; /* Change text color to black */
@@ -714,6 +715,7 @@ function searchUniformDetails() {
     <img src="/images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
     <span style="margin-right: 10px;">Delete</span>
 </button>
+</div>
                         </td>
                     `;
                     uniformTableBody.appendChild(row);

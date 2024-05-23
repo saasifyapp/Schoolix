@@ -24,9 +24,10 @@ document.addEventListener("DOMContentLoaded", function () {
         createAndFetchTable('/inventory/profit_loss', 'profitLossTableBody', displayProfitLoss, ['Item Type', 'Total Purchase Price', 'Total Selling Price', 'Total Profit']);
     });
 
-    function createAndFetchTable(url, tableBodyId, displayFunction, headers, currentButtonName) {
+    function createAndFetchTable(url, tableBodyId, displayFunction, headers) {
         // Create table and table body
         const table = document.createElement('table');
+        table.classList.add('styled-table'); // Add the class to the table
         const tbody = document.createElement('tbody');
         tbody.id = tableBodyId;
         table.appendChild(tbody);
@@ -43,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
         table.insertBefore(thead, tbody);
 
         // Append the table to the tableContainer div
-        const tableContainer = document.getElementById('tableContainer');
+        const tableContainer = document.getElementById('table-container');
         tableContainer.innerHTML = ''; // Clear previous content
         tableContainer.appendChild(table);
 
