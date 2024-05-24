@@ -4,8 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory Billing</title>
+    <link rel="stylesheet" href="/css/Inventory_Css/InventoryAll.css">
+    <link rel="stylesheet" href="/css/Inventory_Css/Billing.css">
 </head>
+<style>
+    @keyframes slide-in {
+        from {
+            transform: translateY(-50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .corner-button {
+        position: absolute;
+        top: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: transparent;
+        color: black;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        animation: slide-in 0.7s ease forwards;
+    }
+
+    .corner-button:hover {
+        transform: scale(1.1);            
+    }
+
+    .left-button {
+        left: 10px;
+    }
+
+    .right-button {
+        right: 10px;
+    }
+
+    .corner-button img {
+        width: 35px;
+        height: 30px;
+    }
+
+    .corner-button span {
+        display: block;
+        margin-top: 5px;
+        /* Adjust the spacing between the icon and text */
+    }
+
+</style>
 <body>
-    <p>hii this is billing</p>
+
+    <button class="corner-button left-button" onclick="window.location.href='/dashboard'" style="animation: slide-in 0.7s ease forwards;">
+        <img src="/images/homeicon.png" alt="Dashboard Icon">
+        <span>Home</span>
+      </button>
+      <button class="corner-button right-button signout-button" id="logoutButton" style="animation: slide-in 0.7s ease forwards;">
+        <img src="/images/logout.png" alt="Signout Icon">
+        <span>Signout</span>
+      </button>
+
+      <div class="adm-head">
+        <div class="button-container">
+         
+        </div>
+      </div>
+
+
+      <div class="cards-container">
+        <div class="card add-vendor">
+          <a>
+            <button>
+              
+              
+            </button>
+          </a>
+        </div>
+    
+        <div class="card add-book">
+          <a>
+            <button>
+              
+              
+            </button>
+          </a>
+        </div>
+        <div class="card add-uniform">
+          <a>
+            <button>
+              
+              
+            </button>
+          </a>
+        </div>
+    
+    
 </body>
 </html>
