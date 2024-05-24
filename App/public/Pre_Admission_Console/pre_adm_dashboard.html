@@ -8,31 +8,71 @@
     <link rel="stylesheet" href="/css/Pre_Admission_Console_Css/All.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-
-
-
     <title>Pre-Admission Console</title>
+    <style>
+        @keyframes slide-in {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .corner-button {
+            position: absolute;
+            top: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: transparent;
+            color: black;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            animation: slide-in 0.7s ease forwards;
+        }
+
+        .corner-button:hover {
+            transform: scale(1.1);            
+        }
+
+        .left-button {
+            left: 10px;
+        }
+
+        .right-button {
+            right: 10px;
+        }
+
+        .corner-button img {
+            width: 35px;
+            height: 30px;
+        }
+
+        .corner-button span {
+            display: block;
+            margin-top: 5px;
+            /* Adjust the spacing between the icon and text */
+        }
+
+</style>
 </head>
 
 <body>
 
-    <div class="dropdown" style="float: right; margin-right: 20px;">
-        <button class="dropdown-button">
-            <img src="/images/main-menu.png" alt="Dropdown Icon"
-                style="background-color: transparent; width: 35px; height: 30px;">
-        </button>
-        <div class="dropdown-content">
-            <button onclick="window.location.href='/dashboard'">
-                <img src="/images/homeicon.png" alt="Dashboard Icon"
-                    style="background-color: transparent; width: 20px; height: 20px;"> Home
-            </button>
-            <button class="signout-button" id="logoutButton">
-                <img src="/images/logout.png" alt="Signout Icon"
-                    style="background-color: transparent; width: 20px; height: 20px;"> Signout
-            </button>
-        </div>
-    </div>
+    <button class="corner-button left-button" onclick="window.location.href='/dashboard'" style="animation: slide-in 0.7s ease forwards;">
+        <img src="/images/homeicon.png" alt="Dashboard Icon">
+        <span>Home</span>
+      </button>
+      <button class="corner-button right-button signout-button" id="logoutButton" style="animation: slide-in 0.7s ease forwards;">
+        <img src="/images/logout.png" alt="Signout Icon">
+        <span>Signout</span>
+      </button>
 
     <div class="overlay"></div> <!-- Overlay element -->
 

@@ -8,25 +8,69 @@
   <link rel="stylesheet" href="/css/Inventory_Css/InventoryAll.css">
   <link rel="stylesheet" href="/css/Inventory_Css/Inventory.css">
 </head>
+<style>
+        @keyframes slide-in {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
 
-<body>  
+        .corner-button {
+            position: absolute;
+            top: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: transparent;
+            color: black;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            animation: slide-in 0.7s ease forwards;
+        }
 
-  <div class="dropdown" style="float: right; margin-right: 20px;">
-    <button class="dropdown-button">
-      <img src="/images/main-menu.png" alt="Dropdown Icon"
-        style="background-color: transparent; width: 35px; height: 30px;">
-    </button>
-    <div class="dropdown-content">
-      <button onclick="window.location.href='/dashboard'">
-        <img src="/images/homeicon.png" alt="Dashboard Icon"
-          style="background-color: transparent; width: 20px; height: 20px;"> Home
-      </button>
-      <button class="signout-button" id="logoutButton">
-        <img src="/images/logout.png" alt="Signout Icon"
-          style="background-color: transparent; width: 20px; height: 20px;"> Signout
-      </button>
-    </div>
-  </div>
+        .corner-button:hover {
+            transform: scale(1.1);            
+        }
+
+        .left-button {
+            left: 10px;
+        }
+
+        .right-button {
+            right: 10px;
+        }
+
+        .corner-button img {
+            width: 35px;
+            height: 30px;
+        }
+
+        .corner-button span {
+            display: block;
+            margin-top: 5px;
+            /* Adjust the spacing between the icon and text */
+        }
+
+</style>
+
+<body>
+
+  <button class="corner-button left-button" onclick="window.location.href='/dashboard'" style="animation: slide-in 0.7s ease forwards;">
+    <img src="/images/homeicon.png" alt="Dashboard Icon">
+    <span>Home</span>
+  </button>
+  <button class="corner-button right-button signout-button" id="logoutButton" style="animation: slide-in 0.7s ease forwards;">
+    <img src="/images/logout.png" alt="Signout Icon">
+    <span>Signout</span>
+  </button>
 
 
   <div class="adm-head">
@@ -137,13 +181,13 @@
         <img class="vendorIcon" src="/images/search.gif" alt="Search Icon">
         <input type="text" class="form-control" id="searchField" name="vendorSearch" oninput="searchVendorDetails()"
           placeholder=" " />
-        <span class="form-control-placeholder" >Search Vendor By Name...</span>
+        <span class="form-control-placeholder">Search Vendor By Name...</span>
         <button id="refreshvendorbutton" onclick="refreshData()">
           <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px; margin-right: 2px;">
           Refresh</button>
       </div>
 
-      <div class="table-container" >
+      <div class="table-container">
         <table id="vendorTable">
           <thead>
             <tr>
@@ -398,7 +442,7 @@
           <img class="icon" src="/images/exportButton.gif">
           <h3>Export Table</h3>
         </button>
-        <button id="refreshvendorbutton"  class="form-group" onclick="refreshAllTables()">
+        <button id="refreshvendorbutton" class="form-group" onclick="refreshAllTables()">
           <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px; margin-right: 2px;">
           Refresh</button>
       </div>
