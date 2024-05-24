@@ -1,3 +1,14 @@
+////Loading Animation
+function showVendorLoadingAnimation () {
+    console.log("show")
+    document.getElementById('loadingOverlayVendor').style.display = 'flex';
+}
+
+function hideVendorLoadingAnimation() {
+    console.log("hide")
+    document.getElementById('loadingOverlayVendor').style.display = 'none';
+}
+
 //Submitting vendor data
 document.addEventListener("DOMContentLoaded", function () {
     // Get the form element
@@ -6,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add submit event listener to the form
     form.addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent the default form submission
-
+        showVendorLoadingAnimation (); 
         // Get the vendor name and amount paid from the form
         const vendorNameInput = document.getElementById('vendorName');
         const vendorFor = document.getElementById('vendorFor').value;
@@ -35,10 +46,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         throw new Error(text);
                     });
                 }
+                hideVendorLoadingAnimation();
                 // Clear input fields after successful submission
                 form.reset();
             })
             .then(data => {
+                hideVendorLoadingAnimation();
                 console.log('Vendor added successfully');
                 showToast(`${vendorName} added successfully`);
                 refreshData();
@@ -49,8 +62,10 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => {
                 refreshData();
                 if (error.message === 'Vendor name already exists') {
+                    hideVendorLoadingAnimation();
                     showToast(`${vendorName} is already added`, 'red');
                 } else {
+                    hideVendorLoadingAnimation();
                     showToast('Error while submitting vendor');
                 }
                 console.error('Error:', error);
@@ -61,15 +76,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //refresh data
 function refreshData() {
+    showVendorLoadingAnimation ();
     document.getElementById('searchField').value = '';
-    // showLoadingAnimation();
     fetch('/inventory/vendors')
         .then(response => response.json())
         .then(data => displayVendors(data))
         .catch(error => {
             console.error('Error:', error);
             showToast('Error fetching vendors. Please try again.', true);
-            // hideLoadingAnimation();
+            hideVendorLoadingAnimation(); 
         });
 }
 
@@ -135,10 +150,13 @@ function displayVendors(data) {
     </div>
 </td>
             `;
+            
             vendorTableBody.appendChild(row);
         });
+        hideVendorLoadingAnimation();
 
     } catch (error) {
+        hideVendorLoadingAnimation();
         console.error('Error displaying vendors:', error);
         // Handle error if needed
     }
@@ -147,6 +165,7 @@ function displayVendors(data) {
 function deleteVendor(vendorName) {
     const confirmation = confirm(`Are you sure you want to delete the vendor "${vendorName}"?`);
     if (confirmation) {
+        showVendorLoadingAnimation ();
         fetch(`/inventory/vendors/${encodeURIComponent(vendorName)}`, {
             method: 'DELETE'
         })
@@ -154,8 +173,10 @@ function deleteVendor(vendorName) {
                 if (!response.ok) {
                     throw new Error('Failed to delete vendor.');
                 }
+                hideVendorLoadingAnimation();
             })
             .then(data => {
+                hideVendorLoadingAnimation();
                 refreshData();
                 showToast(`${vendorName} deleted successfully`,false); // Show success toast
                 populateBooksVendorDropdown();
@@ -163,6 +184,7 @@ function deleteVendor(vendorName) {
                 // Refresh data after deleting the vendor
             })
             .catch(error => {
+                hideVendorLoadingAnimation();
                 console.error('Error deleting vendor:', error);
                 refreshData();
                 showToast('An error occurred while deleting the vendor.', true); // Show error toast
@@ -297,6 +319,7 @@ function updateVendor(vendorName) {
 
 // Function to update vendor details on the server
 function updateVendorPaidAmount(vendorName, totalPaid) {
+    showVendorLoadingAnimation ();
     console.log(vendorName, totalPaid)
 
     fetch(`/inventory/vendors/${encodeURIComponent(vendorName)}/paid_till_now`, {
@@ -310,12 +333,14 @@ function updateVendorPaidAmount(vendorName, totalPaid) {
             if (!response.ok) {
                 throw new Error('Failed to update vendor details.');
             }
+            hideVendorLoadingAnimation();
             refreshData();
             console.log('Vendor details updated successfully.');
             showToast(`${vendorName} updated successfully`);
             // You can perform further actions here, like refreshing the page or updating the UI
         })
         .catch(error => {
+            hideVendorLoadingAnimation();
             console.error('Error updating vendor details:', error);
             showToast(` Failed to update ${vendorName}`,'red');
             // Handle error if needed
@@ -411,11 +436,11 @@ function searchVendorDetails() {
                 });
             }
             // addFadeUpAnimation();
-            // hideLoadingAnimation(); 
+            // hideVendorLoadingAnimation(); 
         })
         .catch(error => {
             console.error('Error:', error);
-            // hideLoadingAnimation(); 
+            // hideVendorLoadingAnimation(); 
         });
 }
 

@@ -1,3 +1,13 @@
+////Loading Animation
+function showBooksLoadingAnimation() {
+    console.log("show")
+    document.getElementById('loadingOverlaybooks').style.display = 'flex';
+}
+
+function hideBooksLoadingAnimation() {
+    console.log("hide")
+    document.getElementById('loadingOverlaybooks').style.display = 'none';
+}
 document.addEventListener("DOMContentLoaded", function () {
     // Get the form element
     const booksform = document.getElementById('addBooksForm');
@@ -6,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (booksform) {
         // Add submit event listener to the form
         booksform.addEventListener('submit', function (event) {
+            showBooksLoadingAnimation();
             event.preventDefault(); // Prevent the default form submission
 
             // Get the form data using FormData
@@ -51,10 +62,12 @@ document.addEventListener("DOMContentLoaded", function () {
                             throw new Error(text);
                         });
                     }
+                    hideBooksLoadingAnimation();
                     // Clear input fields after successful submission
                     booksform.reset();
                 })
                 .then(data => {
+                    hideBooksLoadingAnimation();
                     console.log('Book added successfully');
                     showToast(`${jsonData.title} added successfully`);
                     refreshbooksData();
@@ -63,6 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     // You can update the UI or do something else here after successful submission
                 })
                 .catch(error => {
+                    hideBooksLoadingAnimation();
                     refreshbooksData();
                     refreshData();
                     if (error.message === 'Book title already exists') {
@@ -127,6 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Refresh data function for fetching and displaying books
 function refreshbooksData() {
+    showBooksLoadingAnimation();
     document.getElementById('bookssearchField').value = '';
     fetch('/inventory/books')
         .then(response => response.json())
@@ -134,6 +149,7 @@ function refreshbooksData() {
         .catch(error => {
             console.error('Error:', error);
             // Handle error if needed
+            hideBooksLoadingAnimation();
         });
 
 }
@@ -229,9 +245,11 @@ function displayBooks(data) {
             `;
             bookTableBody.appendChild(row);
         });
+        hideBooksLoadingAnimation();
     } catch (error) {
         console.error('Error displaying books:', error);
         // Handle error if needed
+        hideBooksLoadingAnimation();
     }
 }
 
@@ -239,6 +257,7 @@ function displayBooks(data) {
 function deleteBook(title) {
     const confirmation = confirm(`Are you sure you want to delete the book "${title}"?`);
     if (confirmation) {
+        showBooksLoadingAnimation();
         fetch(`/inventory/books/${encodeURIComponent(title)}`, {
             method: 'DELETE'
         })
@@ -246,14 +265,17 @@ function deleteBook(title) {
                 if (!response.ok) {
                     throw new Error('Failed to delete book.');
                 }
+                hideBooksLoadingAnimation();
             })
             .then(data => {
+                hideBooksLoadingAnimation();
                 showToast(`${title} deleted successfully`); // Show success toast
                 refreshbooksData(); // Refresh data after deleting the book
                 refreshData();
                 populateBooksVendorDropdown();
             })
             .catch(error => {
+                hideBooksLoadingAnimation();
                 console.error('Error deleting book:', error);
                 showToast(` An error occured while deleting ${title}`, true); // Show error toast
             });
@@ -387,7 +409,7 @@ function updateBook(title) {
 
 // Function to update ordered quantity on the server
 function updateBookOrderedQuantity(title, totalOrder, newRemainingQuantity) {
-
+showBooksLoadingAnimation();
     fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`, {
         method: 'PUT',
         headers: {
@@ -399,6 +421,7 @@ function updateBookOrderedQuantity(title, totalOrder, newRemainingQuantity) {
             if (!response.ok) {
                 throw new Error('Failed to update quantity.');
             }
+            hideBooksLoadingAnimation();
             console.log('Quantity updated successfully.');
             showToast(`${title} restocked successfully`); // Show success toast
             refreshbooksData();
@@ -408,6 +431,7 @@ function updateBookOrderedQuantity(title, totalOrder, newRemainingQuantity) {
             // You can perform further actions here, like refreshing the page or updating the UI
         })
         .catch(error => {
+            hideBooksLoadingAnimation();
             console.error('Error updating quantity:', error);
             showToast(`Failed to update ${title}`,'red'); 
             // Handle error if needed
@@ -538,7 +562,7 @@ function returnBook(title) {
 
 // Function to update ordered quantity on the server
 function returnBookQuantity(title, returnedQuantity, newRemainingQuantity) {
-
+    showBooksLoadingAnimation();
     fetch(`/inventory/return_books/${encodeURIComponent(title)}/quantity`, {
         method: 'PUT',
         headers: {
@@ -550,6 +574,7 @@ function returnBookQuantity(title, returnedQuantity, newRemainingQuantity) {
             if (!response.ok) {
                 throw new Error('Failed to update quantity.');
             }
+            hideBooksLoadingAnimation();
             console.log('Quantity updated successfully.');
             showToast(`${title} returned successfully`); // Show success toast
             refreshbooksData();
@@ -560,11 +585,12 @@ function returnBookQuantity(title, returnedQuantity, newRemainingQuantity) {
         .catch(error => {
             console.error('Error updating quantity:', error);
             // Handle error if needed
+            hideBooksLoadingAnimation();
         });
 }
 
 function searchBookDetails() {
-    // showLoadingAnimation(); 
+    // showBooksLoadingAnimation(); 
 
     const searchTerm = document.getElementById('bookssearchField').value.trim();
 
@@ -679,11 +705,11 @@ function searchBookDetails() {
                 });
             }
             // addFadeUpAnimation();
-            // hideLoadingAnimation(); 
+            // hideBooksLoadingAnimation(); 
         })
         .catch(error => {
             console.error('Error:', error);
-            // hideLoadingAnimation(); 
+            // hideBooksLoadingAnimation(); 
         });
 }
 

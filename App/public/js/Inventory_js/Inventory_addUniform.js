@@ -1,10 +1,23 @@
+////Loading Animation
+function showUniformLoadingAnimation() {
+    console.log("show")
+    document.getElementById('loadingOverlayuniform').style.display = 'flex';
+}
+
+function hideUniformLoadingAnimation() {
+    console.log("hide")
+    document.getElementById('loadingOverlayuniform').style.display = 'none';
+}
+
+
 document.addEventListener("DOMContentLoaded", function () {
+
     // Get the form element
     const uniformForm = document.getElementById('addUniformForm');
     const univendorSelect = document.getElementById("univendor");
     uniformForm.addEventListener('submit', function (event) {
         event.preventDefault();
-
+        showUniformLoadingAnimation();
         const formData = new FormData(event.target);
         const jsonData = {};
         formData.forEach((value, key) => {
@@ -23,11 +36,13 @@ document.addEventListener("DOMContentLoaded", function () {
                         throw new Error(text);
                     });
                 }
+                hideUniformLoadingAnimation();
                 // Clear input fields after successful submission
                 uniformForm.reset();
                 univendorSelect.selectedIndex = 0;
             })
             .then(data => {
+                hideUniformLoadingAnimation();
                 console.log('Uniform added successfully');
                 showToast(`${jsonData.uniform_item} of size ${jsonData.size_of_item} added successfully`);
                 refreshUniformsData();
@@ -36,10 +51,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 // You can update the UI or do something else here after successful submission
             })
             .catch(error => {
+                hideUniformLoadingAnimation();
                 refreshUniformsData();
                 if (error.message === 'Uniform item with this size already exists') {
+                    hideUniformLoadingAnimation();
                     showToast(`${jsonData.uniform_item} of size ${jsonData.size_of_item} is already added`, 'red');
                 } else {
+                    hideUniformLoadingAnimation();
                     showToast('Uniform added failed', 'red');
                 }
                 console.error('Error:', error);
@@ -98,12 +116,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Function to refresh and display uniform data
 function refreshUniformsData() {
+    showUniformLoadingAnimation();
     document.getElementById('uniformsearchField').value = '';
     fetch('/inventory/uniforms')
         .then(response => response.json())
         .then(data => displayUniforms(data))
         .catch(error => {
             console.error('Error fetching uniforms:', error);
+            hideUniformLoadingAnimation();
         });
 }
 
@@ -199,12 +219,14 @@ function displayUniforms(data) {
         `;
         uniformTableBody.appendChild(row);
     });
+    hideUniformLoadingAnimation();
 }
  
 // Function to handle deleting a uniform
 function deleteUniform(uniformItem, sizeOfItem) {
     const confirmation = confirm(`Are you sure you want to delete the uniform "${uniformItem}" of size "${sizeOfItem}"?`);
     if (confirmation) {
+        showUniformLoadingAnimation();
         fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}`, {
             method: 'DELETE'
         })
@@ -212,9 +234,11 @@ function deleteUniform(uniformItem, sizeOfItem) {
                 if (!response.ok) {
                     throw new Error('Failed to delete uniform.');
                 }
+                hideUniformLoadingAnimation();
                 return response.json();
             })
             .then(data => {
+                hideUniformLoadingAnimation();
                 console.log('Uniform deleted successfully');
                 showToast(`${uniformItem} with size ${sizeOfItem} deleted successfully`); // Show success toast
                 refreshUniformsData(); // Refresh uniform data
@@ -222,6 +246,7 @@ function deleteUniform(uniformItem, sizeOfItem) {
                 populateUniformVendorDropdown()
             })
             .catch(error => {
+                hideUniformLoadingAnimation();
                 console.error('Error deleting uniform:', error);
                 showToast(`Failed to delete ${uniformItem} with size ${sizeOfItem}`, 'red'); // Show success toast
 
@@ -352,6 +377,7 @@ function updateUniformItem(uniformItem, sizeOfItem) {
 
 // Function to update ordered quantity on the server
 function updateUniformOrderedQuantity(uniformItem, sizeOfItem, totalOrder, newRemainingQuantity) {
+    showUniformLoadingAnimation();
     fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`, {
         method: 'PUT',
         headers: {
@@ -363,6 +389,7 @@ function updateUniformOrderedQuantity(uniformItem, sizeOfItem, totalOrder, newRe
             if (!response.ok) {
                 throw new Error('Failed to update quantity.');
             }
+            hideUniformLoadingAnimation();
             refreshUniformsData();
         
             console.log('Quantity updated successfully.');
@@ -373,6 +400,7 @@ function updateUniformOrderedQuantity(uniformItem, sizeOfItem, totalOrder, newRe
             // You can perform further actions here, like refreshing the page or updating the UI
         })
         .catch(error => {
+            hideUniformLoadingAnimation();
             console.error('Error updating quantity:', error);
             showToast(`Failed to restock ${uniformItem} with size ${sizeOfItem}`, 'red'); // Show success toast
             // Handle error if needed
@@ -504,7 +532,7 @@ function returnUniform(uniformItem, sizeOfItem) {
 // Function to update ordered quantity on the server
 function returnUniformQuantity(uniformItem, sizeOfItem, returnedQuantity, newRemainingQuantity) {
     console.log(uniformItem, sizeOfItem, returnedQuantity, newRemainingQuantity)
-
+    showUniformLoadingAnimation();
     fetch(`/inventory/return_uniform/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`, {
         method: 'PUT',
         headers: {
@@ -516,6 +544,7 @@ function returnUniformQuantity(uniformItem, sizeOfItem, returnedQuantity, newRem
             if (!response.ok) {
                 throw new Error('Failed to update quantity.');
             }
+            hideUniformLoadingAnimation();
             console.log('Quantity updated successfully.');
             showToast(`${uniformItem} with size ${sizeOfItem} returned successfully`); // Show success toast
             refreshUniformsData();
@@ -524,6 +553,7 @@ function returnUniformQuantity(uniformItem, sizeOfItem, returnedQuantity, newRem
             // You can perform further actions here, like refreshing the page or updating the UI
         })
         .catch(error => {
+            hideUniformLoadingAnimation();
             console.error('Error updating quantity:', error);
             showToast(`Failed to return ${uniformItem} with size ${sizeOfItem}`, 'red'); // Show success toast
 
