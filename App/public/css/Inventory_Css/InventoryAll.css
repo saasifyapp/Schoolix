@@ -40,5 +40,143 @@ body {
 }
 
 
-  
-        
+/* loading aniamtion */
+/* HTML: <div class="loader"></div> */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    /* Semi-transparent white background */
+    backdrop-filter: blur(5px);
+    /* Adjust blur as needed */
+    z-index: 9999;
+    /* Ensure the overlay appears on top of other content */
+    display: none;
+}
+
+/* .loader {
+    width: 60px;
+    aspect-ratio: 1;
+    display: grid;
+    grid: 50%/50%;
+    color: #25b09b;
+    --_g: no-repeat linear-gradient(currentColor 0 0);
+    background: var(--_g), var(--_g), var(--_g);
+    background-size: 50.1% 50.1%;
+    animation:
+        l6-0 1.5s infinite steps(1) alternate,
+        l6-0-0 3s infinite steps(1);
+}
+
+.loader::before {
+    content: "";
+    background: currentColor;
+    transform: perspective(150px) rotateY(0deg) rotateX(0deg);
+    transform-origin: bottom right;
+    animation: l6-1 1.5s infinite linear alternate;
+}
+
+
+@keyframes l6-0 {
+    0% {
+        background-position: 0 100%, 100% 100%, 100% 0
+    }
+
+    33% {
+        background-position: 100% 100%, 100% 100%, 100% 0
+    }
+
+    66% {
+        background-position: 100% 0, 100% 0, 100% 0
+    }
+}
+
+@keyframes l6-0-0 {
+    0% {
+        transform: scaleX(1) rotate(0deg)
+    }
+
+    50% {
+        transform: scaleX(-1) rotate(-90deg)
+    }
+}
+
+@keyframes l6-1 {
+    16.5% {
+        transform: perspective(150px) rotateX(-90deg) rotateY(0deg) rotateX(0deg);
+        filter: grayscale(0.8)
+    }
+
+    33% {
+        transform: perspective(150px) rotateX(-180deg) rotateY(0deg) rotateX(0deg)
+    }
+
+    66% {
+        transform: perspective(150px) rotateX(-180deg) rotateY(-180deg) rotateX(0deg)
+    }
+
+    100% {
+        transform: perspective(150px) rotateX(-180deg) rotateY(-180deg) rotateX(-180deg);
+        filter: grayscale(0.8)
+    }
+} */
+
+/* Define thin and curved scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    /* Set the width of the scrollbar */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    /* Color of the scrollbar track */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    /* Color of the scrollbar handle */
+    border-radius: 10px;
+    /* Make the scrollbar handle curved */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+    /* Color of the scrollbar handle on hover */
+}
+
+
+/* Upward loading */
+.loading-overlay-inventory {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0.3rem; /* Adjust height as needed */
+    background-color: transparent; /* Initially transparent */
+    z-index: 9999;
+}
+
+.loader2 {
+    width: 100%;
+    height: 100%;
+    background-color: #25b09b; /* Green color */
+    animation: slide 2s linear infinite; /* Adjust animation duration as needed */
+}
+
+@keyframes slide {
+    0% { width: 0%; }
+    100% { width: 100%; }
+}
+
+.blur {
+    backdrop-filter: blur(10px); /* Adjust blur radius as needed */
+}

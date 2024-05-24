@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
             } else if (parentCard.classList.contains('purchase-reports')) {
                 // Show the purchase reports overlay
                 document.getElementById('purchaseReportsOverlay').style.display = 'block';
-                refreshAllTables();
+                // refreshAllTables();
             }else if (parentCard.classList.contains('generate-invoice')) {
                 // Show the purchase reports overlay
                 document.getElementById('generateinvoiceOverlay').style.display = 'block';
@@ -90,3 +90,27 @@ document.getElementById('logoutButton').addEventListener('click', function () {
             .catch(error => console.error('Error during logout:', error));
     };
 })
+
+// Function to show the loading animation
+function showLoadingAnimation() {
+    var loadingOverlay = document.getElementById('loadingOverlayinventory');
+    loadingOverlay.style.backgroundColor = '#25b09b'; // Change background color to green
+    document.body.classList.add('blur');
+}
+
+// Function to hide the loading animation
+function hideLoadingAnimation() {
+    var loadingOverlay = document.getElementById('loadingOverlayinventory');
+    loadingOverlay.style.display = 'none'; // Hide the loading overlay
+    document.body.classList.remove('blur');
+}
+
+// Show loading animation when the window starts loading
+window.addEventListener('load', function() {
+    hideLoadingAnimation(); // Hide loading animation when page is fully loaded
+});
+
+// Hide loading animation when the DOM content is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    showLoadingAnimation(); // Show loading animation when page starts loading
+});

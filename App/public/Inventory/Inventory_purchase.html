@@ -9,65 +9,69 @@
   <link rel="stylesheet" href="/css/Inventory_Css/Inventory.css">
 </head>
 <style>
-        @keyframes slide-in {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
+  @keyframes slide-in {
+    from {
+      transform: translateY(-50px);
+      opacity: 0;
+    }
 
-        .corner-button {
-            position: absolute;
-            top: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: transparent;
-            color: black;
-            padding: 10px 20px;
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s;
-            animation: slide-in 0.7s ease forwards;
-        }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
 
-        .corner-button:hover {
-            transform: scale(1.1);            
-        }
+  .corner-button {
+    position: absolute;
+    top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: transparent;
+    color: black;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    animation: slide-in 0.7s ease forwards;
+  }
 
-        .left-button {
-            left: 10px;
-        }
+  .corner-button:hover {
+    transform: scale(1.1);
+  }
 
-        .right-button {
-            right: 10px;
-        }
+  .left-button {
+    left: 10px;
+  }
 
-        .corner-button img {
-            width: 35px;
-            height: 30px;
-        }
+  .right-button {
+    right: 10px;
+  }
 
-        .corner-button span {
-            display: block;
-            margin-top: 5px;
-            /* Adjust the spacing between the icon and text */
-        }
+  .corner-button img {
+    width: 35px;
+    height: 30px;
+  }
 
+  .corner-button span {
+    display: block;
+    margin-top: 5px;
+    /* Adjust the spacing between the icon and text */
+  }
 </style>
 
 <body>
-
-  <button class="corner-button left-button" onclick="window.location.href='/dashboard'" style="animation: slide-in 0.7s ease forwards;">
+  <div id="loadingOverlayinventory" class="loading-overlay-inventory">
+    <div class="loader2"></div>
+</div> 
+  <button class="corner-button left-button" onclick="window.location.href='/dashboard'"
+    style="animation: slide-in 0.7s ease forwards;">
     <img src="/images/homeicon.png" alt="Dashboard Icon">
     <span>Home</span>
   </button>
-  <button class="corner-button right-button signout-button" id="logoutButton" style="animation: slide-in 0.7s ease forwards;">
+  <button class="corner-button right-button signout-button" id="logoutButton"
+    style="animation: slide-in 0.7s ease forwards;">
     <img src="/images/logout.png" alt="Signout Icon">
     <span>Signout</span>
   </button>
@@ -142,6 +146,13 @@
   <!-- Overlay for Add Vendor -->
   <div id="addVendorOverlay" class="overlay">
     <div class="overlay-content">
+      <div id="loadingOverlayVendor" class="loading-overlay">
+        <div>
+          <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> 
+
+    <dotlottie-player src="https://lottie.host/7319098f-7e9e-40eb-8ffe-6c22f55e9d70/qNoQ09vbMn.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+        </div>
+      </div>
       <div class="icon-container">
         <i><img class="topicon" src="/images/vendor.png" alt=""></i>
         <h2 class="overlay-head">Add Vendor</h2>
@@ -150,7 +161,9 @@
       <div class="close-icon" onclick="closeOverlay(event)">×</div>
 
       <div class="form-container">
+
         <form action="/inventory/purchase/add_vendor" method="post" id="vendorForm" class="addVendorForm">
+
           <div id="toast" class="toast"></div>
 
           <div class="form-group">
@@ -211,6 +224,13 @@
   <!-- Overlay for Add Books -->
   <div id="addBooksOverlay" class="overlay" style="display: none;">
     <div class="overlay-content">
+      <div id="loadingOverlaybooks" class="loading-overlay">
+        <div>
+          <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> 
+
+    <dotlottie-player src="https://lottie.host/7319098f-7e9e-40eb-8ffe-6c22f55e9d70/qNoQ09vbMn.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+        </div>
+      </div>
       <div class="icon-container">
         <i><img class="topicon" src="/images/addbooks.png" alt=""></i>
         <h2 class="overlay-head">Add Books</h2>
@@ -319,6 +339,13 @@
   <!-- Add Uniform Overlay -->
   <div id="addUniformOverlay" class="overlay add-uniform">
     <div class="overlay-content">
+      <div id="loadingOverlayuniform" class="loading-overlay">
+        <div>
+          <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> 
+
+    <dotlottie-player src="https://lottie.host/7319098f-7e9e-40eb-8ffe-6c22f55e9d70/qNoQ09vbMn.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+        </div>
+      </div>
       <div class="icon-container">
         <i><img class="topicon" src="/images/uniform.png" alt=""></i>
         <h2 class="overlay-head">Add Uniform</h2>
@@ -448,6 +475,13 @@
       </div>
 
       <div id="table-container">
+        <div id="loadingOverlayReport" class="loading-overlay">
+          <div>
+            <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> 
+
+    <dotlottie-player src="https://lottie.host/7319098f-7e9e-40eb-8ffe-6c22f55e9d70/qNoQ09vbMn.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+          </div>
+        </div>
         <div id="emptyMessage" class="empty-message">
           <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
             type="module"></script>
