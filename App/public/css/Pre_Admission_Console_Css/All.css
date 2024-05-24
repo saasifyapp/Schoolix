@@ -457,6 +457,115 @@ nav {
     animation: l6-1 1.5s infinite linear alternate;
 }
 
+
+#output {
+    margin-left: 1rem;
+  }
+
+
+
+  #output {
+    width: 100%;
+    max-height: calc(88vh - 1rem); /* Set maximum height for the table container */
+    overflow-y: auto;
+    margin-top: 0.625rem; /* Set margin between the table container and overlay content */
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+
+/* Adjust height of table body to fit between overlay content and bottom margin */
+
+
+#studentTable,
+#teacherTable {
+    width: 100%; /* Set table width to 100% */
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-radius: 2rem;
+    box-shadow: 0 0 0 1px #dddddd;
+    margin: auto;
+    animation: fadeUp 0.5s ease-in-out;
+    animation-delay: 0.4s; /* Delay to start after overlay animation */
+    animation-fill-mode: backwards;
+}
+
+
+#studentTable th,
+#teacherTable th,
+#studentTable td,
+#teacherTable td {
+    border: 1px solid #dddddd;
+    text-align: center;
+    padding: 0.5rem;
+    box-sizing: border-box;
+    width: calc(100% / 7); /* Set the width for each column */
+}
+
+
+#studentTable th,
+#teacherTable th {
+    background-color: #2C3E50;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+
+#studentTable td,
+#teacherTable td {
+    border: 1px solid #dddddd;
+    padding: 0px;
+    text-align: center;
+    height: 50px; /* Fixed height */
+    overflow: hidden; /* Hide content that overflows */
+}
+
+
+#studentTable td button,
+#teacherTable td button {
+    max-height: 100%;
+}
+
+#studentTable tr:hover,
+#teacherTable tr:hover {
+    background-color: #D6DBDF;
+}
+
+
+#studentTable tr td,
+#teacherTable tr td {
+    transition: background-color 0.3s ease;
+}
+
+
+#studentTable tr:hover td,
+#teacherTable tr:hover td {
+    font-weight: bold;    
+}
+
+.tableFixHead {
+    overflow-y: auto;
+    height: 100%;
+}
+
+.tableFixHead thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.tableFixHead tbody {
+    height: calc(100% - 3.125rem);
+}
+
+
 @keyframes l6-0 {
     0% {
         background-position: 0 100%, 100% 100%, 100% 0

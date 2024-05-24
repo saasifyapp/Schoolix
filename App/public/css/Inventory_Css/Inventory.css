@@ -535,7 +535,18 @@ select {
 }
 
 
-.styled-table,
+.styled-table {
+    border-radius: 1rem;
+    border-collapse: collapse; /* Ensure that the border radius is applied properly */
+    overflow: hidden; /* Prevent content overflow from breaking the border radius */
+    width: 100%;
+    box-shadow: 0 0 0 1px #dddddd;
+    margin: auto;
+    animation: fadeUp 0.5s ease-in-out;
+    animation-delay: 0.4s; /* Delay to start after overlay animation */
+    animation-fill-mode: backwards;
+}
+
 #vendorTable,
 #booksTable,
 #uniformTable {
@@ -562,9 +573,7 @@ select {
     text-align: center;
     padding: 0.5rem;
     box-sizing: border-box;
-    white-space: nowrap;
-    /* Add overflow wrap for long content */
-    overflow-wrap: break-word;
+    width: calc(100% / 7); /* Set the width for each column */
 }
 
 .styled-table th,
@@ -582,8 +591,11 @@ select {
 #vendorTable td,
 #booksTable td,
 #uniformTable td {
-    height: 3.125rem;
-    overflow: hidden;
+    border: 1px solid #dddddd;
+    padding: 0px;
+    text-align: center;
+    height: 50px; /* Fixed height */
+    overflow: hidden; /* Hide content that overflows */
 }
 
 .styled-table td button,
