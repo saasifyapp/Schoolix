@@ -25,6 +25,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Show the purchase reports overlay
                 document.getElementById('purchaseReportsOverlay').style.display = 'block';
                 refreshAllTables();
+            }else if (parentCard.classList.contains('generate-invoice')) {
+                // Show the purchase reports overlay
+                document.getElementById('generateinvoiceOverlay').style.display = 'block';
             }
         });
     });
