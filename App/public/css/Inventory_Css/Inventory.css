@@ -748,6 +748,27 @@ table {
     padding: 20px;
   }
 
+  .horizontal-container .form-group {
+    border-style: none;
+    background-color: transparent;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    transition: box-shadow 0.3s ease-in-out;
+    border-radius: 1rem;
+  }
+
+  .horizontal-container .form-group:hover {
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .horizontal-container select.custom-dropdown {
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    transition: box-shadow 0.3s ease-in-out;
+  }
+
+  .horizontal-container select.custom-dropdown:hover {
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+  }
+
 
 
 
