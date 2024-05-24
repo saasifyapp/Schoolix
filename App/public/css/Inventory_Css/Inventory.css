@@ -267,6 +267,7 @@ body {
 }
 .form-control:hover {
     box-shadow: 0 0 10px #5DADE2;
+    transition: 0.3s;
 
 }
 
@@ -751,32 +752,26 @@ table {
   .horizontal-container .form-group {
     border-style: none;
     background-color: transparent;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
     transition: box-shadow 0.3s ease-in-out;
     border-radius: 1rem;
+    transition: all 0.3s; /* Add transition for smooth hover effect */
   }
 
   .horizontal-container .form-group:hover {
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px #5DADE2; /* Add shadow on hover and focus */   
+    transform: scale(1.09); /* Increase size on hover */
   }
 
-  .horizontal-container select.custom-dropdown {
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-    transition: box-shadow 0.3s ease-in-out;
+  .horizontal-container select.custom-dropdown {   
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s; /* Add transition for smooth hover effect */
   }
 
   .horizontal-container select.custom-dropdown:hover {
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px #5DADE2; /* Add shadow on hover and focus */
+    transform: scale(1.09); /* Increase size on hover */
   }
-
-
-
-
-
-
-
-
-
 
   /* //////////////////////////////////Animations//////////////////////////// */
 
