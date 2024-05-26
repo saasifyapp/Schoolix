@@ -4,20 +4,43 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var currentButtonName = '';
 
+    // Function to set active button
+    function setActiveButton(buttonId) {
+        // Remove active class from all buttons
+        document.querySelectorAll('.horizontal-container .form-group').forEach(function (button) {
+            button.classList.remove('active');
+        });
+
+        // If a valid button ID is provided, add the active class
+        if (buttonId) {
+            const button = document.getElementById(buttonId);
+            if (button) {
+                button.classList.add('active');
+            }
+        }
+    }
     // Event listeners for buttons and dropdown
     document.getElementById("exportButton").addEventListener("click", function () {
         exportToExcel(currentButtonName);
+        setActiveButton('exportButton');
+    
+        // Simulate download completion (replace this with actual callback if available)
+        setTimeout(function() {
+            setActiveButton(null); // Reset the active state
+        }, 1000); // Adjust timeout duration as needed
     });
 
     document.getElementById("vendorSummary").addEventListener("click", function () {
         currentButtonName = 'Inventory_Vendor_Summary';
         createAndFetchTable('/inventory/vendors_summary', 'vendorTablesummaryBody', displayVendors, ['VendorName', 'Vendor For', 'Net Payable', 'Paid Till Now', 'Balance']);
+        setActiveButton('vendorSummary');
     });
+
 
     document.getElementById("vendorDetails").addEventListener("change", function () {
         const selectedVendor = this.value;
         currentButtonName = selectedVendor;
-    
+
         // Check if the selected index is 0 (default option)
         if (this.selectedIndex === 0) {
             // Clear the table
@@ -25,24 +48,17 @@ document.addEventListener("DOMContentLoaded", function () {
             tableContainer.innerHTML = '';
             currentButtonName = '';
             displayAnimation();
-            }
-         else {
+        } else {
             // Fetch and display data for the selected vendor
             createAndFetchTable(`/inventory/vendors_details?vendor=${selectedVendor}`, 'vendorDetailsTableBody', displayVendorDetails, ['Vendor Name', 'Item Ordered', 'Purchase Price', 'Ordered Quantity', 'Returned Quantity', 'Items in Stock', 'Ordered Price', 'Returned Price', 'Net Payable']);
-        }
-    });
-
-    document.getElementById("vendorDetails").addEventListener("blur", function () {
-        // Check if the dropdown is not focused and its value is not selected
-        if (!this.value) {
-            // Set the dropdown to index 0 (default option)
-            this.selectedIndex = 0;
+            setActiveButton('vendorDetails');
         }
     });
 
     document.getElementById("profitLoss").addEventListener("click", function () {
         currentButtonName = 'Inventory_Profit_Loss_Report';
         createAndFetchTable('/inventory/profit_loss', 'profitLossTableBody', displayProfitLoss, ['Item Type', 'Total Purchase Price', 'Total Selling Price', 'Total Profit']);
+        setActiveButton('profitLoss');
     });
 
     function createAndFetchTable(url, tableBodyId, displayFunction, headers) {
@@ -251,6 +267,11 @@ document.addEventListener("DOMContentLoaded", function () {
         if (vendorDetailsDropdown) {
             vendorDetailsDropdown.selectedIndex = 0; // Reset dropdown to index 0
         }
+
+        // Remove active class from all buttons
+        document.querySelectorAll('.horizontal-container .form-group').forEach(function (button) {
+            button.classList.remove('active');
+        });
     }
 
     // Function to recreate Lottie Animation on overlay reset //
@@ -288,7 +309,7 @@ document.addEventListener("DOMContentLoaded", function () {
         dotlottiePlayer2.setAttribute('src', 'https://lottie.host/5d6fe6dc-d344-4b95-a6b4-17a5e01b88c8/2DhrGZVFGN.json');
         dotlottiePlayer2.setAttribute('background', 'transparent');
         dotlottiePlayer2.setAttribute('speed', '1');
-        dotlottiePlayer2.setAttribute('style', 'width: 600px; height: 450px;');
+        dotlottiePlayer2.setAttribute('style', 'width: 900px; height: 850px;');
         dotlottiePlayer2.setAttribute('autoplay', 'true');
         dotlottiePlayer2.setAttribute('loop', 'true'); // Set loop manually
 
@@ -345,6 +366,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
+
     }
 
 
