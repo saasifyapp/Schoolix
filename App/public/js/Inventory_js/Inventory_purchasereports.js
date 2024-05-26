@@ -320,7 +320,7 @@ document.addEventListener("DOMContentLoaded", function () {
         var rows = htmlTable.rows;
 
         var sums = [0, 0, 0];
-        for (var i = 0; i < rows.length; i++) {
+        for (var i = 0; i < rows.length - 1; i++) {
             var row = [], cols = rows[i].cells;
             for (var j = 0; j < cols.length; j++) {
                 row.push(cols[j].innerText);
