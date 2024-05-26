@@ -111,6 +111,102 @@ body.dark {
     }
 }
 
+/* password prompt */
+
+.password-prompt-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Ensure it's on top of other content */
+    display: none; /* Initially hidden */
+}
+
+/* Styles for the password prompt modal */
+.password-prompt {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 0.9rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    position: relative; /* Ensure relative positioning for icon */
+}
+
+.password-prompt h3 {
+    margin-bottom: 1rem;
+}
+
+/* Input field styles */
+.password-prompt input {
+    width: 80%;
+    padding: 1rem; /* Adjusted padding to center placeholder vertically */
+    font-size: 1rem; /* Increased font size */
+    border: 1px solid #ced4da;
+    border-radius: 10px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
+    margin-bottom: 1rem; /* Margin below the input */
+    margin-top: 1rem;
+    height: 3rem; /* Increased height for input fields */
+}
+
+/* Hover and focus effects for the input field */
+.password-prompt input:focus,
+.password-prompt input:hover {
+    box-shadow: 0 0 8px #5DADE2; /* Add shadow on hover and focus */
+    border-color: #85C1E9; /* Border color on focus */
+    outline: none; /* Remove default outline */
+}
+
+/* Styles for buttons container */
+.password-prompt-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem; /* Space between buttons */
+}
+
+/* Styles for OK button */
+#passwordPromptOk {
+    background-color: #58D68D;
+}
+
+/* Styles for Cancel button */
+#passwordPromptCancel {
+    background-color: #34495E;
+}
+
+/* General button styles */
+.password-prompt button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.8rem;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Added transform transition */
+    margin: 0.5rem 0; /* Margin above and below the buttons */
+    height: 3rem; /* Match the input field height */
+    width: 5rem; /* Set a fixed width for both buttons */
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3); /* Add shadow to buttons */
+}
+
+/* Hover effects for both buttons */
+#passwordPromptOk:hover,
+#passwordPromptCancel:hover {
+    transform: scale(1.05); /* Slightly increase size on hover */
+}
+
+#passwordPromptOk:hover {
+    background-color: #2ECC71;
+}
+
+#passwordPromptCancel:hover {
+    background-color: #2C3E50;
+}
+
 /* sidebar */
 .sidebar {
     background-color: var(--white-color);
