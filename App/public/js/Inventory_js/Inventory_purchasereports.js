@@ -1,8 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
+
+    populateVendorDetailsDropdown();
+
     var currentButtonName = '';
 
     // Event listeners for buttons and dropdown
-    document.getElementById("exportButton").addEventListener("click", function() {
+    document.getElementById("exportButton").addEventListener("click", function () {
         exportToExcel(currentButtonName);
     });
 
@@ -14,7 +17,27 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("vendorDetails").addEventListener("change", function () {
         const selectedVendor = this.value;
         currentButtonName = selectedVendor;
-        createAndFetchTable(`/inventory/vendors_details?vendor=${selectedVendor}`, 'vendorDetailsTableBody', displayVendorDetails, ['Vendor Name', 'Item Ordered', 'Purchase Price', 'Ordered Quantity', 'Returned Quantity', 'Items in Stock', 'Ordered Price', 'Returned Price', 'Net Payable']);
+    
+        // Check if the selected index is 0 (default option)
+        if (this.selectedIndex === 0) {
+            // Clear the table
+            const tableContainer = document.getElementById('table-container');
+            tableContainer.innerHTML = '';
+            currentButtonName = '';
+            displayAnimation();
+            }
+         else {
+            // Fetch and display data for the selected vendor
+            createAndFetchTable(`/inventory/vendors_details?vendor=${selectedVendor}`, 'vendorDetailsTableBody', displayVendorDetails, ['Vendor Name', 'Item Ordered', 'Purchase Price', 'Ordered Quantity', 'Returned Quantity', 'Items in Stock', 'Ordered Price', 'Returned Price', 'Net Payable']);
+        }
+    });
+
+    document.getElementById("vendorDetails").addEventListener("blur", function () {
+        // Check if the dropdown is not focused and its value is not selected
+        if (!this.value) {
+            // Set the dropdown to index 0 (default option)
+            this.selectedIndex = 0;
+        }
     });
 
     document.getElementById("profitLoss").addEventListener("click", function () {
@@ -23,13 +46,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     function createAndFetchTable(url, tableBodyId, displayFunction, headers) {
-    
+
         const table = document.createElement('table');
         table.classList.add('styled-table');
         const tbody = document.createElement('tbody');
         tbody.id = tableBodyId;
         table.appendChild(tbody);
-    
+
         const thead = document.createElement('thead');
         const headerRow = document.createElement('tr');
         headers.forEach(headerText => {
@@ -39,42 +62,69 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         thead.appendChild(headerRow);
         table.insertBefore(thead, tbody);
-    
+
         const tableContainer = document.getElementById('table-container');
         tableContainer.innerHTML = '';
         tableContainer.appendChild(table);
-    
+
         fetch(url)
             .then(response => response.json())
             .then(data => displayFunction(data))
             .catch(error => console.error('Error:', error));
-    
+
         const overlay = document.getElementById('purchaseReportsOverlay');
         overlay.style.display = 'block';
     }
 
+    // Function to Display Vendor Summary Table //
+
     function displayVendors(data) {
         const vendorTableBody = document.getElementById('vendorTablesummaryBody');
         if (!vendorTableBody) return console.error('Error: vendorTablesummaryBody not found');
+
+        let totalNetPayable = 0;
+        let totalPaidTillNow = 0;
+        let totalBalance = 0;
+
         vendorTableBody.innerHTML = '';
 
         data.forEach(detail => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${detail.vendor_name}</td>
-                <td>${detail.vendorFor}</td>
-                <td>${detail.net_payable}</td>
-                <td>${detail.paid_till_now}</td>
-                <td>${detail.balance}</td>
-            `;
+                    <td>${detail.vendor_name}</td>
+                    <td>${detail.vendorFor}</td>
+                    <td>${detail.net_payable}</td>
+                    <td>${detail.paid_till_now}</td>
+                    <td>${detail.balance}</td>
+                `;
             vendorTableBody.appendChild(row);
+
+            totalNetPayable += parseFloat(detail.net_payable) || 0;
+            totalPaidTillNow += parseFloat(detail.paid_till_now) || 0;
+            totalBalance += parseFloat(detail.balance) || 0;
         });
+
+        const totalRow = document.createElement('tr');
+        totalRow.innerHTML = `
+                <td></td>
+                <td style="border-left: 4px solid #2C3E50; border-top: 4px solid #2C3E50; border-bottom: 4px solid #2C3E50;"><strong>Total:</strong></td>
+                <td style="border-right: none; border-top: 4px solid #2C3E50; border-bottom: 4px solid #2C3E50;"><strong>${totalNetPayable}</strong></td>
+                <td style="border-right: none; border-top: 4px solid #2C3E50; border-bottom: 4px solid #2C3E50;"><strong>${totalPaidTillNow}</strong></td>
+                <td style="border-right: 4px solid #2C3E50; border-top: 4px solid #2C3E50; border-bottom: 4px solid #2C3E50;"><strong>${totalBalance}</strong></td>
+            `;
+        vendorTableBody.appendChild(totalRow);
     }
+
+    // Function to Display Vendor Details Table //
 
     function displayVendorDetails(data) {
         const vendorDetailsTableBody = document.getElementById('vendorDetailsTableBody');
         if (!vendorDetailsTableBody) return console.error('Error: vendorDetailsTableBody not found');
         vendorDetailsTableBody.innerHTML = '';
+
+        let totalOrderedPrice = 0;
+        let totalReturnedPrice = 0;
+        let totalNetPayable = 0;
 
         data.forEach(detail => {
             const row = document.createElement('tr');
@@ -90,13 +140,34 @@ document.addEventListener("DOMContentLoaded", function () {
                 <td>${detail.net_payable}</td>
             `;
             vendorDetailsTableBody.appendChild(row);
+
+            totalOrderedPrice += parseFloat(detail.ordered_price) || 0;
+            totalReturnedPrice += parseFloat(detail.returned_price) || 0;
+            totalNetPayable += parseFloat(detail.net_payable) || 0;
         });
+
+        const totalRow = document.createElement('tr');
+        totalRow.innerHTML = `
+            <td colspan="5"></td>
+            <td colspan="1" style="text-align: center; border-right: none; border-left: 4px solid #2C3E50; border-top: 4px solid #2C3E50; border-bottom: 4px solid #2C3E50;"><strong>Total :</strong></td>
+            <td style="border-right: none; border-top: 4px solid #2C3E50; border-bottom: 4px solid #2C3E50;"><strong>${totalOrderedPrice}</strong></td>
+            <td style="border-right: none; border-top: 4px solid #2C3E50; border-bottom: 4px solid #2C3E50;"><strong>${totalReturnedPrice}</strong></td>
+            <td style="border-right: 4px solid #2C3E50; border-top: 4px solid #2C3E50; border-bottom: 4px solid #2C3E50;"><strong>${totalNetPayable}</strong></td>
+        `;
+        vendorDetailsTableBody.appendChild(totalRow);
     }
 
+
+    // Function to Profit Loss Table //
     function displayProfitLoss(data) {
         const profitLossTableBody = document.getElementById('profitLossTableBody');
         if (!profitLossTableBody) return console.error('Error: profitLossTableBody not found');
-        profitLossTableBody.innerHTML = '';
+
+        let totalPurchasePrice = 0;
+        let totalSellingPrice = 0;
+        let totalProfit = 0;
+
+        profitLossTableBody.innerHTML = ''; // Clear the existing table body
 
         const rows = [
             { type: 'Books', details: data.books },
@@ -112,10 +183,25 @@ document.addEventListener("DOMContentLoaded", function () {
                 <td>${rowData.details.total_profit}</td>
             `;
             profitLossTableBody.appendChild(row);
+
+            totalPurchasePrice += parseFloat(rowData.details.total_purchase_price) || 0;
+            totalSellingPrice += parseFloat(rowData.details.total_selling_price) || 0;
+            totalProfit += parseFloat(rowData.details.total_profit) || 0;
         });
+
+        const totalRow = document.createElement('tr');
+        totalRow.innerHTML = `
+            <td style= "border: 4px solid #2C3E50; border-right: none;"><strong>Total:</strong></td>
+            <td style="border-right: none; border-top: 4px solid #2C3E50; border-bottom: 4px solid #2C3E50;"><strong>${totalPurchasePrice}</strong></td>
+            <td style="border-right: none; border-top: 4px solid #2C3E50; border-bottom: 4px solid #2C3E50;"><strong>${totalSellingPrice}</strong></td>
+            <td style="border-right: 4px solid #2C3E50; border-top: 4px solid #2C3E50; border-bottom: 4px solid #2C3E50;"><strong>${totalProfit}</strong></td>
+        `;
+        profitLossTableBody.appendChild(totalRow);
     }
 
-    fetch('/inventory/all_vendor')
+    // Populate Vendor Details Dropdown  //
+
+    /*fetch('/inventory/all_vendor')
         .then(response => response.json())
         .then(data => {
             const vendorDetails = document.getElementById('vendorDetails');
@@ -125,7 +211,24 @@ document.addEventListener("DOMContentLoaded", function () {
                 option.text = item.vendor_name;
                 vendorDetails.appendChild(option);
             });
-        });
+        });*/
+
+    function populateVendorDetailsDropdown() {
+        fetch('/inventory/all_vendor')
+            .then(response => response.json())
+            .then(data => {
+                const vendorDetails = document.getElementById('vendorDetails');
+                data.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.vendor_name;
+                    option.text = item.vendor_name;
+                    vendorDetails.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+
 
     document.getElementById('closeOverlayButton').addEventListener('click', closeOverlay);
 
@@ -137,27 +240,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
+    // Function to RESET Overlay //
+
     function resetOverlay() {
         const tableContainer = document.getElementById('table-container');
         tableContainer.innerHTML = '';
         currentButtonName = '';
-    
+
         const vendorDetailsDropdown = document.getElementById('vendorDetails');
         if (vendorDetailsDropdown) {
             vendorDetailsDropdown.selectedIndex = 0; // Reset dropdown to index 0
         }
     }
 
+    // Function to recreate Lottie Animation on overlay reset //
     function displayAnimation() {
         const loadingOverlay = document.createElement('div');
         loadingOverlay.id = 'loadingOverlayReport';
         loadingOverlay.classList.add('loading-overlay');
-    
+
         const animationContainer = document.createElement('div');
         const script1 = document.createElement('script');
         script1.src = 'https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs';
         script1.type = 'module';
-    
+
         const dotlottiePlayer1 = document.createElement('dotlottie-player');
         dotlottiePlayer1.setAttribute('src', 'https://lottie.host/7319098f-7e9e-40eb-8ffe-6c22f55e9d70/qNoQ09vbMn.json');
         dotlottiePlayer1.setAttribute('background', 'transparent');
@@ -165,19 +271,19 @@ document.addEventListener("DOMContentLoaded", function () {
         dotlottiePlayer1.setAttribute('style', 'width: 300px; height: 300px;');
         dotlottiePlayer1.setAttribute('autoplay', 'true');
         dotlottiePlayer1.setAttribute('loop', 'true'); // Set loop manually
-    
+
         animationContainer.appendChild(script1);
         animationContainer.appendChild(dotlottiePlayer1);
         loadingOverlay.appendChild(animationContainer);
-    
+
         const emptyMessage = document.createElement('div');
         emptyMessage.id = 'emptyMessage';
         emptyMessage.classList.add('empty-message');
-    
+
         const script2 = document.createElement('script');
         script2.src = 'https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs';
         script2.type = 'module';
-    
+
         const dotlottiePlayer2 = document.createElement('dotlottie-player');
         dotlottiePlayer2.setAttribute('src', 'https://lottie.host/5d6fe6dc-d344-4b95-a6b4-17a5e01b88c8/2DhrGZVFGN.json');
         dotlottiePlayer2.setAttribute('background', 'transparent');
@@ -185,17 +291,30 @@ document.addEventListener("DOMContentLoaded", function () {
         dotlottiePlayer2.setAttribute('style', 'width: 600px; height: 450px;');
         dotlottiePlayer2.setAttribute('autoplay', 'true');
         dotlottiePlayer2.setAttribute('loop', 'true'); // Set loop manually
-    
+
         emptyMessage.appendChild(script2);
         emptyMessage.appendChild(dotlottiePlayer2);
-    
+
         const tableContainer = document.getElementById('table-container');
         tableContainer.innerHTML = '';
         tableContainer.appendChild(loadingOverlay);
         tableContainer.appendChild(emptyMessage);
     }
 
+    // Function to EXPORT TABLE //
+
     function exportToExcel(currentButtonName) {
+
+        // Check table presence on screen
+
+        const tableContainer = document.getElementById('table-container');
+        if (!tableContainer || !tableContainer.getElementsByTagName('table')[0]) {
+            showToast("Please select a table to export", "red");
+            return; // Exit function
+        }
+
+
+
         var htmlTable = document.getElementById('table-container').getElementsByTagName('table')[0];
         var csv = [];
         var rows = htmlTable.rows;
@@ -227,6 +346,8 @@ document.addEventListener("DOMContentLoaded", function () {
         downloadLink.click();
         document.body.removeChild(downloadLink);
     }
+
+
 });
 
 
