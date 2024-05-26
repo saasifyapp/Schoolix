@@ -295,3 +295,24 @@ document.addEventListener('visibilitychange', () => {
         updateCountWithAnimation('admittedTeachersCount', /* valueCallback */);
     }
 });
+
+// Function to handle purchase link click
+function handlePurchaseClick(event) {
+    event.preventDefault(); // Prevent default link behavior
+
+    // Prompt for password
+    const password = prompt("Enter password:");
+
+    // Check if password is correct
+    if (password === "admin@inv") { // Replace "your_password_here" with the actual password
+        // Redirect to the purchase route
+        window.location.href = "/inventory/purchase";
+    } else {
+        // Show an error message or handle incorrect password
+        alert("Incorrect password!");
+    }
+}
+
+// Add event listener to the Purchase link
+const purchaseLink = document.getElementById("purchaseLink");
+purchaseLink.addEventListener("click", handlePurchaseClick);
