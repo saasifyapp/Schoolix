@@ -7,60 +7,8 @@
   <title>Inventory Purchase</title>
   <link rel="stylesheet" href="/css/Inventory_Css/InventoryAll.css">
   <link rel="stylesheet" href="/css/Inventory_Css/Inventory.css">
+  <link rel="stylesheet" href="/css/NavButtons.css">
 </head>
-<style>
-  @keyframes slide-in {
-    from {
-      transform: translateY(-50px);
-      opacity: 0;
-    }
-
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-
-  .corner-button {
-    position: absolute;
-    top: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: transparent;
-    color: black;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s;
-    animation: slide-in 0.7s ease forwards;
-  }
-
-  .corner-button:hover {
-    transform: scale(1.1);
-  }
-
-  .left-button {
-    left: 10px;
-  }
-
-  .right-button {
-    right: 10px;
-  }
-
-  .corner-button img {
-    width: 35px;
-    height: 30px;
-  }
-
-  .corner-button span {
-    display: block;
-    margin-top: 5px;
-    /* Adjust the spacing between the icon and text */
-  }
-</style>
-
 <body>
   <div id="loadingOverlayinventory" class="loading-overlay-inventory">
     <div class="loader2"></div>
@@ -114,6 +62,7 @@
         </button>
       </a>
     </div>
+
     <div class="card add-uniform">
       <a>
         <button>
@@ -127,6 +76,7 @@
         </button>
       </a>
     </div>
+    
     <div class="card purchase-reports">
       <a>
         <button>

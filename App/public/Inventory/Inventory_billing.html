@@ -7,59 +7,8 @@
   <title>Inventory Billing</title>
   <link rel="stylesheet" href="/css/Inventory_Css/InventoryAll.css">
   <link rel="stylesheet" href="/css/Inventory_Css/Billing.css">
+  <link rel="stylesheet" href="/css/NavButtons.css">
 </head>
-<style>
-  @keyframes slide-in {
-    from {
-      transform: translateY(-50px);
-      opacity: 0;
-    }
-
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-
-  .corner-button {
-    position: absolute;
-    top: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: transparent;
-    color: black;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s;
-    animation: slide-in 0.7s ease forwards;
-  }
-
-  .corner-button:hover {
-    transform: scale(1.1);
-  }
-
-  .left-button {
-    left: 10px;
-  }
-
-  .right-button {
-    right: 10px;
-  }
-
-  .corner-button img {
-    width: 35px;
-    height: 30px;
-  }
-
-  .corner-button span {
-    display: block;
-    margin-top: 5px;
-    /* Adjust the spacing between the icon and text */
-  }
-</style>
 
 <body>
 
@@ -76,69 +25,88 @@
 
   <div class="adm-head">
     <div class="button-container">
-
+      <h2>Billing Console</h2>
     </div>
   </div>
-
 
   <div class="cards-container">
     <div class="card generate-invoice">
       <a>
         <button>
-
-
-        </button>
-      </a>
-    </div>
-
-    <div class="card add-book">
-      <a>
-        <button>
-
-
-        </button>
-      </a>
-    </div>
-    <div class="card add-uniform">
-      <a>
-        <button>
-
-
-        </button>
-      </a>
-    </div>
-
-
-    <!-- Overlay for Generate Invoice(select class) -->
-    <div id="generateinvoiceOverlay" class="overlay">
-      <div class="overlay-content">
-        <h2>Generate Invoice</h2>
-        <form id="invoiceForm">
-          <div class="form-group">
-            <label for="classSelect" class="select-label">Select Class:</label>
-            <select id="classSelect" name="classSelect" class="class-select">
-              <option value="nursery">Nursery</option>
-              <option value="kg1">KG1</option>
-              <option value="kg2">KG2</option>
-              <option value="1">1st</option>
-              <option value="2">2nd</option>
-              <option value="3">3rd</option>
-              <option value="4">4th</option>
-              <option value="5">5th</option>
-              <option value="6">6th</option>
-              <option value="7">7th</option>
-              <option value="8">8th</option>
-              <option value="9">9th</option>
-              <option value="10">10th</option>
-            </select>
+          <div class="dotlottie-container">
+            <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+              type="module"></script>
+            <dotlottie-player src="https://lottie.host/4342486d-c9d4-45aa-9cd1-fde8212d5e05/nosJHRZ2p6.json"
+              background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
           </div>
-          <button type="submit" class="submit-button">Generate Invoice</button>
-        </form>
-      </div>
+          <h3>Generate Invoice</h3>
+        </button>
+      </a>
     </div>
 
-    <script src="/js/Inventory_js/All.js"></script>
-    <script src="/js/Inventory_js/billing.js"></script>
+    <div class="card">
+      <a>
+        <button>
+          <div class="dotlottie-container">
+
+            <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+              type="module"></script>
+            <dotlottie-player src="https://lottie.host/f24f31a7-512c-448c-b16e-d8a6a1f3b21e/dg4vDNXwmA.json"
+              background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+          </div>
+          <h3>Search Invoice</h3>
+        </button>
+      </a>
+    </div>
+
+    <div class="card">
+      <a>
+        <button>
+          <div class="dotlottie-container">           
+
+            <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+              type="module"></script>
+            <dotlottie-player src="https://lottie.host/ae190a8d-7475-44dc-8b07-7ddc085017b6/PyRN4HmxXr.json"
+              background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+          </div>
+          <h3>Invoice Report</h3>
+        </button>
+      </a>
+    </div>
+
+  </div>
+
+
+  <!-- Overlay for Generate Invoice(select class) -->
+  <div id="generateinvoiceOverlay" class="overlay">
+    <div class="overlay-content">
+      <h2 class="overlay-head">Generate Invoice</h2>
+      <form id="invoiceForm">
+        <div class="form-group">
+          <label for="classSelect" class="select-label">Select Class:</label>
+          <select id="classSelect" name="classSelect" class="class-select">
+            <option value="nursery">Nursery</option>
+            <option value="kg1">KG1</option>
+            <option value="kg2">KG2</option>
+            <option value="1">1st</option>
+            <option value="2">2nd</option>
+            <option value="3">3rd</option>
+            <option value="4">4th</option>
+            <option value="5">5th</option>
+            <option value="6">6th</option>
+            <option value="7">7th</option>
+            <option value="8">8th</option>
+            <option value="9">9th</option>
+            <option value="10">10th</option>
+          </select>
+        </div>
+        <button type="submit" class="submit-button">Generate Invoice</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/Inventory_js/All.js"></script>
+  <script src="/js/Inventory_js/billing.js"></script>
 
 </body>
 

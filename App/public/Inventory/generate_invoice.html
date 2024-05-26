@@ -7,13 +7,25 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/Inventory_Css/InventoryAll.css">
     <link rel="stylesheet" href="/css/Inventory_Css/GenerateInvoice.css">
-    <style>
-      
-    </style>
+    <link rel="stylesheet" href="/css/NavButtons.css">   
 </head>
 <body>
+
+    
+
     <div class="container-fluid">
-        <div class="row">
+        <button class="corner-button left-button" onclick="window.location.href='/dashboard'"
+    style="animation: slide-in 0.7s ease forwards;">
+    <img src="/images/homeicon.png" alt="Dashboard Icon">
+    <span>Home</span>
+  </button>
+  <button class="corner-button right-button signout-button" id="logoutButton"
+    style="animation: slide-in 0.7s ease forwards;">
+    <img src="/images/logout.png" alt="Signout Icon">
+    <span>Signout</span>
+  </button>
+
+        <div class="row" style="margin-top: 5rem;">
             <!-- Buyer Details -->
             <div class="col-md-6">
                 <div class="section buyer-details">

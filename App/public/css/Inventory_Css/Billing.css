@@ -22,158 +22,106 @@ body {
     /* Prevent scrolling */
 }
 
-.cards-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    /* Center vertically */
-}
 
-.card {
-    background-color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 0px 25px;
-    font-size: 0.8rem;
-    animation: slideIn 0.8s forwards;
-    transition: all 0.5s ease;
-    cursor: pointer;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    width: 250px;
-    height: 300px;
-    /* Adjust height as needed */
-    outline: none;
-    margin: 0 15px;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 12px;
-}
-
-.card a {
-    text-decoration: none;
-    color: inherit;
-}
-
-.card button {
-    width: 100%;
-    height: 100%;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    outline: none;
-}
-
-.card:hover {
-    background-color: #FFDEE9;
-    background-image: linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 100%);
-    box-shadow: 0 0 8px #023047;
-    outline: none;
-}
-
-
-
-.button {
-    position: relative;
-    /* Set button position to relative */
-}
-
-.dotlottie-container {
-    position: absolute;
-    bottom: 2rem;
-    /* Adjust the value to move it slightly up */
-    left: 0;
-    right: 0;
-    margin: auto;
-    /* Center horizontally */
-}
-
-
-.card h3 {
-    position: absolute;
-    bottom: 10px;
-    /* Adjust as needed */
-    left: 0;
-    right: 0;
-    text-align: center;
-    font-size: 1rem;
-    /* Adjust font size as needed */
-    color: var(--grey-color);
-    /* Apply color as needed */
-    transition: transform 0.5s ease, font-size 0.5s ease;
-    /* Apply specified properties */
-}
-
-
-
-.adm-head {
-    position: absolute;
-    top: 18%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    box-sizing: border-box;
-    font-size: 20px;
-    color: var(--grey-color);
-
-}
-
-/* select class overlay css */
-#generateinvoiceOverlay {
-    display: none;
+/* Overlay styling */
+.overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999;
+    background: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
 }
 
+/* Overlay content styling */
 .overlay-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
+    background: #fff;
     padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
-.overlay-content h2 {
-    margin-top: 0;
+/* Heading styling */
+.overlay-head {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
 }
 
+/* Form group styling */
 .form-group {
     margin-bottom: 20px;
+    text-align: left;
 }
 
+/* Label styling */
 .select-label {
     display: block;
-    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: #333;
 }
 
+/* Select dropdown styling */
 .class-select {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box;
+    transition: border-color 0.3s;
 }
 
+.class-select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Button styling */
 .submit-button {
-    display: block;
     width: 100%;
-    padding: 10px 0;
-    background-color: #4CAF50;
-    color: white;
+    padding: 12px 20px;
     font-size: 16px;
+    color: #fff;
+    background: #007bff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    transition: background 0.3s;
 }
 
 .submit-button:hover {
-    background-color: #45a049;
+    background: #0056b3;
+}
+
+
+
+@keyframes slideIn {
+    0% {
+        transform: translateY(100%) scale(0.9);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+
+@keyframes slide-in {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
 }

@@ -1,6 +1,125 @@
-body {
-    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+* {
+
+    font-family: "Poppins", sans-serif;
 }
+
+:root {
+    --white-color: #fff;
+    --blue-color: #4070f4;
+    --grey-color: #707070;
+    --grey-color-light: #aaa;
+}
+
+body {
+    font-family: american typewriter, sans-serif;
+    text-align: center;
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    /* Prevent scrolling */
+}
+
+
+
+.cards-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* Center vertically */
+}
+
+.card {
+    background-color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 0px 25px;
+    font-size: 0.8rem;
+    animation: slideIn 0.8s forwards;
+    transition: all 0.5s ease;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    width: 250px;
+    height: 300px;
+    /* Adjust height as needed */
+    outline: none;
+    margin: 0 15px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+}
+
+.card a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.card button {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    outline: none;
+}
+
+.card:hover {
+    background-color: #FFDEE9;
+    background-image: linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 100%);
+    box-shadow: 0 0 8px #023047;
+    outline: none;
+}
+
+
+
+.button {
+    position: relative;
+    /* Set button position to relative */
+}
+
+.dotlottie-container {
+    position: absolute;
+    bottom: 2rem;
+    /* Adjust the value to move it slightly up */
+    left: 0;
+    right: 0;
+    margin: auto;
+    /* Center horizontally */
+}
+
+
+.card h3 {
+    position: absolute;
+    bottom: 10px;
+    /* Adjust as needed */
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 1rem;
+    /* Adjust font size as needed */
+    color: var(--grey-color);
+    /* Apply color as needed */
+    transition: transform 0.5s ease, font-size 0.5s ease;
+    /* Apply specified properties */
+}
+
+
+
+.adm-head {
+    position: absolute;
+    top: 18%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 20px;
+    color: var(--grey-color);
+
+}
+
+
 
 /* Toast CSS */
 .toast {
@@ -179,4 +298,134 @@ body {
 
 .blur {
     backdrop-filter: blur(10px); /* Adjust blur radius as needed */
+}
+
+
+ /* //////////////////////////////////Animations//////////////////////////// */
+
+ @keyframes slideInFromDown {
+    from {
+        opacity: 0;
+        transform: translateY(50%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInFromUp {
+    from {
+        opacity: 0;
+        transform: translateY(-50%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Slide-out to bottom animation */
+@keyframes slideOutToBottom {
+    0% {
+        opacity: 1;
+        transform: translateY(0rem);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(5rem);
+    }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        transform: translateY(100%) scale(0.9);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+
+@keyframes slide-in {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+
+@keyframes slideInFromUp {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -100%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* Slide-in from bottom animation */
+@keyframes slideInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(5rem);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0rem);
+    }
+}
+
+@keyframes slideInFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideDownFromUp {
+    from {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
