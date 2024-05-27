@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Function to set active button
     function setActiveButton(buttonId) {
         // Remove active class from all buttons
-        document.querySelectorAll('.horizontal-container .form-group').forEach(function (button) {
+        document.querySelectorAll('.horizontal-container .horizontal-form-group').forEach(function (button) {
             button.classList.remove('active');
         });
 
@@ -269,7 +269,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // Remove active class from all buttons
-        document.querySelectorAll('.horizontal-container .form-group').forEach(function (button) {
+        document.querySelectorAll('.horizontal-container .horizontal-form-group').forEach(function (button) {
             button.classList.remove('active');
         });
     }
