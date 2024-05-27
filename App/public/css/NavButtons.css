@@ -1,0 +1,96 @@
+@keyframes slide-in {
+    from {
+      transform: translateY(-50px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .corner-button {
+    position: absolute;
+    top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: transparent;
+    color: black;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    animation: slide-in 0.7s ease forwards;
+  }
+
+  .corner-button:hover {
+    transform: scale(1.1);
+  }
+
+  .left-button {
+    left: 10px;
+  }
+
+  .right-button {
+    right: 10px;
+  }
+
+  .corner-button img {
+    width: 35px;
+    height: 30px;
+  }
+
+  .corner-button span {
+    display: block;
+    margin-top: 5px;
+    /* Adjust the spacing between the icon and text */
+  }
+
+  #exportButton {
+    margin-bottom: 15px; /* Add margin between the buttons */
+    cursor: pointer;
+    background-color: transparent;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    color: black;
+    border: none;
+    border-radius: 20px;
+    height: 2.3rem;
+    width: 6rem;
+    font-size: 1rem; /* Reduce the font size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px; /* Add padding to fit content */
+    transition: all 0.3s; /* Add transition for smooth hover effect */
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    
+    /* Position the button absolutely within the overlay */
+    position: absolute;
+    top: 1rem; /* Adjust top position as needed */
+    right: 7rem; /* Adjust right position as needed */
+  }
+
+#exportButton img {
+    height: 80%; /* Set image height to fit button */
+    margin-right: 5px; /* Add a 5px margin to the right of the image */
+}
+
+#exportButton:hover {
+    background-color: #27AE60; /* Change background color on hover */
+    transform: scale(1.05); /* Increase size on hover */
+}
+
+#exportButton:hover {
+    background-color: #76D7C4; /* Change background color on hover */
+    transform: scale(1.05); /* Increase size on hover */
+}
+
+#exportButton img {
+    height: 80%; /* Set image height to fit button */
+    margin-right: 5px; /* Add a 5px margin to the right of the image */
+}

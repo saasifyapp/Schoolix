@@ -25,23 +25,6 @@ body {
 
 
 
-.dropdown {
-    position: fixed;
-    top: 20px;
-    right: 5px;
-    z-index: 1;
-}
-
-.dropdown-button {
-    background-color: transparent;
-    color: black;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s;
-    animation: slide-in 0.7s ease forwards; /* Apply animation to slide in */
-}
 
 @keyframes slide-in {
     0% {
@@ -54,61 +37,6 @@ body {
 
 
 
-.dropdown-button:hover {
-    transform: scale(1.1);
-}
-
-.dropdown-content {
-    background-color:transparent;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: white;
-    width: 11rem;
-    align-items: center;
-    transition: transform 0.3s ease-out; /* Add transition for smooth appearance */
-    transform: translateX(120%);
-    border: 5px solid transparent;
-    border-radius: 12px;
-}
-
-.dropdown-content button {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 0.5rem;
-    /* display: block; */
-    width: 100%;
-    padding: 10px 20px;
-    text-align: left;
-    border: none;
-    background-color: inherit;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 600;
-    transition: all 0.2s ease-in-out;
-    border-radius: 0.8rem;
-}
-
-.dropdown-button:hover + .dropdown-content,
-.dropdown-content:hover {
-    /* display: block; Display dropdown content when dropdown button is hovered or when dropdown content is hovered */
-    transform: translateX(0); /* Move to left when displayed */
-}
-
-.dropdown-content button:hover {
-    background-color: #AED6F1;
-    
-}   
-/* .dropdown:hover .dropdown-content button {
-    visibility: visible;
-    transform: translateX(0);
-}
-
-.dropdown-content button:hover {
-    background-color: #AED6F1;
-    border-radius: 12px;
-} */
 
 
 

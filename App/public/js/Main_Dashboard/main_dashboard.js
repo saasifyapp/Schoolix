@@ -295,3 +295,42 @@ document.addEventListener('visibilitychange', () => {
         updateCountWithAnimation('admittedTeachersCount', /* valueCallback */);
     }
 });
+
+// Function to handle password for PURCHASE console
+
+function handlePurchaseClick(event) {
+    event.preventDefault(); // Prevent default link behavior
+
+    // Show custom prompt
+    const overlay = document.getElementById('passwordPromptOverlay');
+    overlay.style.display = 'flex';
+
+    // Handle OK button click
+    document.getElementById('passwordPromptOk').onclick = function() {
+        const password = document.getElementById('passwordPromptInput').value;
+
+        // Check if password is correct
+        if (password === 'admin@inv') {
+            // Redirect to the purchase route
+            window.location.href = '/inventory/purchase';
+        } else {
+            // Show an error message or handle incorrect password
+            alert('Incorrect password!');
+        }
+
+        // Hide custom prompt
+        overlay.style.display = 'none';
+        document.getElementById('passwordPromptInput').value = ''; // Clear the input
+    };
+
+    // Handle Cancel button click
+    document.getElementById('passwordPromptCancel').onclick = function() {
+        // Hide custom prompt
+        overlay.style.display = 'none';
+        document.getElementById('passwordPromptInput').value = ''; // Clear the input
+    };
+}
+
+// Add event listener to the Purchase link
+const purchaseLink = document.getElementById('purchaseLink');
+purchaseLink.addEventListener('click', handlePurchaseClick);

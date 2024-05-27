@@ -50,6 +50,7 @@ const JWT_SECRET = 'this_is_my_secret_key_which_is_highly_confidential';
 //     connection_auth.release(); // Release the connection as it's just for testing the connection
 // });
 
+let globalConnection = null;
 app.post('/login', (req, res) => {
 
     const { username, password } = req.body;
@@ -138,12 +139,14 @@ app.post('/login', (req, res) => {
                     const { serverName, databaseUser, databasePassword, databaseName, schoolName, LoginName } = user;
 
                     // Create a connection using user's database credentials
+                
                     global.connection = mysql.createPool({
                         host: serverName,
                         user: databaseUser,
                         password: databasePassword,
                         database: databaseName
                     });
+                
 
                     // Generate JWT token
                     const token = jwt.sign({ userId: user.userId }, JWT_SECRET, { expiresIn: '2h' });
@@ -205,7 +208,24 @@ app.get('/pre_adm/admitted_student', authenticateToken, (req, res) => {
 app.get('/pre_adm/admitted_teacher', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Pre_Admission_Console', 'admitted_teacher.html'));
 });
+//Serve HTML form
+app.get('/inventory/purchase', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_purchase.html'));
+});
+/*Serve HTML form
+app.get('/inventory/billing', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_billingConsole.html'));
+});*/
 
+app.get('/inventory/generateInvoice', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_generateInvoice.html'));
+});
+
+/*Serve HTML form
+app.get('/inventory/reports', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_reports.html'));
+});
+*/
 
 // Middleware to authenticate JWT
 function authenticateToken(req, res, next) {
@@ -257,6 +277,7 @@ app.get('/logout', (req, res) => {
             } else {
                 console.log('School database disconnected on signout.');
             }
+            globalConnection = null;
         });
     }
 
@@ -276,35 +297,34 @@ app.get('/logout', (req, res) => {
 
 //////////////////////// STUDENT CONSOLE////////////////////////////////
 // Import the router for handling student details submission
-const submitStudentRouter = require('./src/routes/student_details');
-// Mount the student details submission router to the root path
+const submitStudentRouter = require('./src/routes/pre_admission_console_routes/student_details');
 app.use('/', submitStudentRouter);
 
 // Import the router for displaying student data
-const displayStudentRouter = require('./src/routes/display_students');
+const displayStudentRouter = require('./src/routes/pre_admission_console_routes/display_students');
 // Mount the student display router to the root path
 app.use('/', displayStudentRouter);
 
 ////////// ADMITTED STUDENTS
 // Import the router for displaying admitted students
-const displayadmStudentRouter = require('./src/routes/admitted_student');
+const displayadmStudentRouter = require('./src/routes/pre_admission_console_routes/admitted_student');
 // Mount the admitted student display router to the root path
 app.use('/', displayadmStudentRouter);
 
 //////////////////////// TEACHER CONSOLE////////////////////////////////
 // Import the router for handling teacher details submission
-const submitTeacherRouter = require('./src/routes/teacher_details');
+const submitTeacherRouter = require('./src/routes/pre_admission_console_routes/teacher_details');
 // Mount the teacher details submission router to the root path
 app.use('/', submitTeacherRouter);
 
 // Import the router for displaying teacher data
-const displayTeacherRouter = require('./src/routes/display_teacher');
+const displayTeacherRouter = require('./src/routes/pre_admission_console_routes/display_teacher');
 // Mount the teacher display router to the root path
 app.use('/', displayTeacherRouter);
 
 ////////// ADMITTED TEACHERS
 // Import the router for displaying admitted teachers
-const displayadmTeacherRouter = require('./src/routes/admitted_teacher');
+const displayadmTeacherRouter = require('./src/routes/pre_admission_console_routes/admitted_teacher');
 // Mount the admitted teacher display router to the root path
 app.use('/', displayadmTeacherRouter);
 
@@ -312,13 +332,37 @@ app.use('/', displayadmTeacherRouter);
 /////////////////////// ROUTES FOR MAIN DASHBOARD COMPONENTS ///////////////////////////////////////
 
 const main_dashboard_dataRouter = require('./src/routes/main_dashboard_data');
-// Mount the student details submission router to the root path
 app.use('/', main_dashboard_dataRouter);
-
+ 
 
 /////////////////////// Call a Scheduled Task to send a ping to own server every 25 mins ///////////////////////////////////////
 
 // scheduledTask();
+
+/////////////////////// ROUTES FOR INVENTORY MODULE ///////////////////////////////////////
+
+///ADD VENDOR ROUTE
+const addVendorDataRouter = require('./src/routes/Inventory_routes/add_vendor');
+app.use('/', addVendorDataRouter);
+
+
+//////ADD BOOK ROUTE
+const addBookDataRouter = require('./src/routes/Inventory_routes/add_books');
+app.use('/', addBookDataRouter);
+
+//////ADD UNIFORM ROUTE
+const addUniformDataRouter = require('./src/routes/Inventory_routes/add_uniform');
+app.use('/', addUniformDataRouter);
+
+//////PURCHASE REPORT ROUTE
+const purchaseReportsRouter = require('./src/routes/Inventory_routes/purchase_reports');
+app.use('/', purchaseReportsRouter);
+
+
+//////GENERATE INVOICE ROUTE
+const generateInvoiceRouter = require('./src/routes/Inventory_routes/generate_invoice');
+app.use('/', generateInvoiceRouter);
+ 
 
 
 // Start the server

@@ -12,14 +12,14 @@ router.get('/main_dashboard_data', (req, res) => {
         standard varchar(8) DEFAULT NULL
     )
 `;
-connection.query(createTableQuery, (err, result) => {
-    if (err) {
-        console.error('Error creating table: ' + err.stack);
-        return;
-    }
-});
+    connection.query(createTableQuery, (err, result) => {
+        if (err) {
+            console.error('Error creating table: ' + err.stack);
+            return;
+        }
+    });
 
-const createTableQuery2 = `
+    const createTableQuery2 = `
     CREATE TABLE IF NOT EXISTS pre_adm_admitted_students (
         student_name varchar(25) NOT NULL,
         mobile_no varchar(10) NOT NULL,
@@ -28,14 +28,14 @@ const createTableQuery2 = `
         standard varchar(8) DEFAULT NULL
     )
 `;
-connection.query(createTableQuery2, (err, result) => {
-    if (err) {
-        console.error('Error creating table: ' + err.stack);
-        return;
-    }
-});
+    connection.query(createTableQuery2, (err, result) => {
+        if (err) {
+            console.error('Error creating table: ' + err.stack);
+            return;
+        }
+    });
 
-const createTableQuery3 = `
+    const createTableQuery3 = `
 CREATE TABLE IF NOT EXISTS pre_adm_registered_teachers (
     teacher_name varchar(25) NOT NULL,
     mobile_no varchar(10) NOT NULL,
@@ -46,14 +46,14 @@ CREATE TABLE IF NOT EXISTS pre_adm_registered_teachers (
     
 )
 `;
-connection.query(createTableQuery3, (err, result) => {
-    if (err) {
-        console.error('Error creating table: ' + err.stack);
-        return;
-    }
-});
+    connection.query(createTableQuery3, (err, result) => {
+        if (err) {
+            console.error('Error creating table: ' + err.stack);
+            return;
+        }
+    });
 
-const createTableQuery4 = `
+    const createTableQuery4 = `
 CREATE TABLE IF NOT EXISTS pre_adm_admitted_teachers (
     teacher_name varchar(25) NOT NULL,
     mobile_no varchar(10) NOT NULL,
@@ -65,11 +65,71 @@ CREATE TABLE IF NOT EXISTS pre_adm_admitted_teachers (
 )
 `;
 
-connection.query(createTableQuery4, (err, result) => {
+    connection.query(createTableQuery4, (err, result) => {
+        if (err) {
+            console.error('Error creating table: ' + err.stack);
+            return;
+        }
+    });
+
+    const createTableQuery5 = `
+CREATE TABLE IF NOT EXISTS inventory_book_details (
+    title varchar(30) DEFAULT NULL,
+    class_of_title varchar(10) DEFAULT NULL,
+    purchase_price int(11) DEFAULT NULL,
+    selling_price int(11) DEFAULT NULL,
+    vendor varchar(30) DEFAULT NULL,
+    ordered_quantity int(11) DEFAULT NULL,
+    remaining_quantity int(11) DEFAULT NULL,
+    returned_quantity int(11) DEFAULT NULL
+)
+`;
+
+connection.query(createTableQuery5, (err, result) => {
     if (err) {
         console.error('Error creating table: ' + err.stack);
         return;
     }
+    //console.log('Table inventory_book_details created successfully');
+});
+
+const createTableQuery6 = `
+CREATE TABLE IF NOT EXISTS inventory_uniform_details (
+    uniform_item varchar(30) DEFAULT NULL,
+    size_of_item varchar(10) DEFAULT NULL,
+    purchase_price int(11) DEFAULT NULL,
+    selling_price int(11) DEFAULT NULL,
+    vendor varchar(30) DEFAULT NULL,
+    ordered_quantity int(11) DEFAULT NULL,
+    remaining_quantity int(11) DEFAULT NULL,
+    returned_quantity int(11) DEFAULT NULL
+)
+`;
+
+connection.query(createTableQuery6, (err, result) => {
+    if (err) {
+        console.error('Error creating table: ' + err.stack);
+        return;
+    }
+   // console.log('Table inventory_uniform_details created successfully');
+});
+
+const createTableQuery7 = `
+CREATE TABLE IF NOT EXISTS inventory_vendor_details (
+    vendor_name varchar(30) DEFAULT NULL,
+    net_payable int(11) DEFAULT NULL,
+    paid_till_now int(11) DEFAULT NULL,
+    balance int(11) DEFAULT NULL,
+    vendorFor varchar(20) DEFAULT NULL
+)
+`;
+
+connection.query(createTableQuery7, (err, result) => {
+    if (err) {
+        console.error('Error creating table: ' + err.stack);
+        return;
+    }
+    //console.log('Table inventory_vendor_details created successfully');
 });
     // Define an object to store counts for each table
     const counts = {};

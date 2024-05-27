@@ -10,10 +10,27 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="/css/Main_Dashboard/main_dashboard.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 
 </head>
 
 <body>
+
+  <div id="passwordPromptOverlay" class="password-prompt-overlay">
+    <div class="password-prompt">
+        <h3>System Administrator Login</h3>
+        <p>This action requires administrator privileges.</p> 
+        <div class="password-input-container">
+            <input type="password" id="passwordPromptInput" class="form-control form-controlSearch" placeholder="Password...">
+        </div>
+        <div class="password-prompt-buttons">
+            <button id="passwordPromptOk" class="form-control">OK</button>
+            <button id="passwordPromptCancel" class="form-control">Cancel</button>
+        </div>
+    </div>
+</div>
+
     <!-- navbar -->
     <nav class="navbar">
         <div class="logo_item">
@@ -103,19 +120,19 @@
                 </div>
 
                 <ul class="menu_items submenu">
-                    <a href="" class="nav_link sublink">
+                    <a href="/inventory/purchase" id="purchaseLink" class="nav_link sublink">
                         <span class="navlink_icon">
-                            <img src="/images/billing_icon.png" alt="Billing Icon" class="custom_icon">
+                            <img src="/images/purchase.png" alt="Billing Icon" class="custom_icon">
+                        </span>
+                        Purchase
+                    </a>
+                    <a href="/inventory/billing" class="nav_link sublink">
+                        <span class="navlink_icon">
+                            <img src="/images/invoice.png" alt="Store Icon" class="custom_icon">
                         </span>
                         Billing
                     </a>
-                    <a href="" class="nav_link sublink">
-                        <span class="navlink_icon">
-                            <img src="/images/store_icon.png" alt="Store Icon" class="custom_icon">
-                        </span>
-                        Store
-                    </a>
-                    <a href="" class="nav_link sublink">
+                    <a href="/inventory/reports" class="nav_link sublink">
                         <span class="navlink_icon">
                             <img src="/images/reports_icon.png" alt="Reports Icon" class="custom_icon">
                         </span>
@@ -201,6 +218,8 @@
             </div>
             </div>
     </nav>
+
+    
 
     <div class="main_container">
         <div class="sub_container">

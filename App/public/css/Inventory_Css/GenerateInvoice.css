@@ -1,0 +1,44 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+
+.container-fluid {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+.row {
+    flex: 1;
+    margin-bottom: 20px;
+}
+.section {
+    border: 1px solid red;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+    background-color: white;
+}
+.buyer-details, .invoice-details, .summary, .control-panel {
+    height: 120px;
+    padding-top: 10px;
+}
+.books, .uniform {
+    height: 100%;
+    width: 500px;
+}
+
+.bill {
+    height: 200%;
+    padding-top: 10px;
+}
+.control-panel button {
+    width: 120px;
+}
+.table-container {
+    height: 100%;
+    overflow-y: auto;
+}

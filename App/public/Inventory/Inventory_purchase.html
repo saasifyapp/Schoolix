@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventory Purchase</title>
+  <link rel="stylesheet" href="/css/Inventory_Css/InventoryAll.css">
+  <link rel="stylesheet" href="/css/Inventory_Css/Inventory.css">
+  <link rel="stylesheet" href="/css/NavButtons.css">
+</head>
+
+<body>
+  <div id="loadingOverlayinventory" class="loading-overlay-inventory">
+    <div class="loader2"></div>
+  </div>
+  <button class="corner-button left-button" onclick="window.location.href='/dashboard'"
+    style="animation: slide-in 0.7s ease forwards;">
+    <img src="/images/homeicon.png" alt="Dashboard Icon">
+    <span>Home</span>
+  </button>
+  <button class="corner-button right-button signout-button" id="logoutButton"
+    style="animation: slide-in 0.7s ease forwards;">
+    <img src="/images/logout.png" alt="Signout Icon">
+    <span>Signout</span>
+  </button>
+
+
+  <div class="adm-head">
+    <div class="button-container">
+      <h2>Purchase Console</h2>
+    </div>
+  </div>
+
+
+  <!-- Buttons for overlay -->
+  <div class="cards-container">
+    <div class="card add-vendor">
+      <a>
+        <button>
+          <div class="dotlottie-container">
+            <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+              type="module"></script>
+            <dotlottie-player src="https://lottie.host/a2c9be57-829c-4a5f-b68e-a0c20d1bf05e/bUQIIe5xqz.json"
+              background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+          </div>
+          <h3>Vendor Details</h3>
+        </button>
+      </a>
+    </div>
+
+    <div class="card add-book">
+      <a>
+        <button>
+          <div class="dotlottie-container">
+            <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+              type="module"></script>
+            <dotlottie-player src="https://lottie.host/751e9208-858f-4336-bf76-92b62c3aced4/H57DKXfEaG.json"
+              background="transparent" speed="1" style="width: 300px; height: 200px; margin-bottom: 2rem;" loop
+              autoplay></dotlottie-player>
+          </div>
+          <h3>Books Processing</h3>
+        </button>
+      </a>
+    </div>
+
+    <div class="card add-uniform">
+      <a>
+        <button>
+          <div class="dotlottie-container">
+            <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+              type="module"></script>
+            <dotlottie-player src="https://lottie.host/95385bc4-4150-4e73-ac75-b0566da374ee/HzZJOD1n6u.json"
+              background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+          </div>
+          <h3>Uniform Processing</h3>
+        </button>
+      </a>
+    </div>
+
+    <div class="card purchase-reports">
+      <a>
+        <button>
+          <div class="dotlottie-container">
+            <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+              type="module"></script>
+            <dotlottie-player src="https://lottie.host/5375d8da-3d9e-48aa-9e53-1fa2ade22cf2/snraffQX19.json"
+              background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+          </div>
+          <h3>Purchase Reports</h3>
+        </button>
+      </a>
+    </div>
+  </div>
+  <div id="toast" class="toast"></div>
+
+  <!-- Overlay for Add Vendor -->
+  <div id="addVendorOverlay" class="overlay">
+    <div class="overlay-content">
+      <div id="loadingOverlayVendor" class="loading-overlay">
+        <div>
+          <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+            type="module"></script>
+
+          <dotlottie-player src="https://lottie.host/7319098f-7e9e-40eb-8ffe-6c22f55e9d70/qNoQ09vbMn.json"
+            background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+        </div>
+      </div>
+      <div class="icon-container">
+        <i><img class="topicon" src="/images/vendor.png" alt=""></i>
+        <h2 class="overlay-head">Add Vendor</h2>
+      </div>
+      <!-- Close icon -->
+      <div class="close-icon" onclick="closeOverlay(event)">×</div>
+
+      <div class="form-container">
+
+        <form action="/inventory/purchase/add_vendor" method="post" id="vendorForm" class="addVendorForm">
+
+          <div id="toast" class="toast"></div>
+
+          <div class="form-group">
+            <input type="text" class="form-control wide" id="vendorName" name="vendorName" placeholder=" " required
+              style="width: 14rem;">
+            <span class="form-control-placeholder">Vendor Name</span>
+          </div>
+
+          <div class="form-group">
+            <input type="text" class="form-control wide" id="amountPaid" name="amountPaid" placeholder=" " required>
+            <span class="form-control-placeholder">Amount Paid</span>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1.8rem;">
+            <select id="vendorFor" class="custom-dropdown" name="vendorFor" required>
+              <option value="" disabled selected> Vendor For </option>
+              <option value="Books">Books</option>
+              <option value="Uniform">Uniform</option>
+            </select>
+          </div>
+
+          <button class="form-group" type="submit" style="border-style: none; background-color: transparent;"><img
+              class="submit-icon" src="/images/addVendor.gif"></button>
+        </form>
+      </div>
+
+      <div class="form-Searchgroup">
+        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon">
+        <input type="text" class="form-control" id="searchField" name="vendorSearch" oninput="searchVendorDetails()"
+          placeholder=" " />
+        <span class="form-control-placeholder">Search Vendor By Name...</span>
+        <button id="refreshvendorbutton" onclick="refreshData()">
+          <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px; margin-right: 2px;">
+          Refresh</button>
+      </div>
+
+      <div class="table-container">
+        <table id="vendorTable">
+          <thead>
+            <tr>
+              <th>Vendor Name</th>
+              <th>Vendor For</th>
+              <!--<th>Net Payable</th>-->
+              <th>Paid Till Now</th>
+              <!--<th>Balance</th>-->
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="vendorTableBody">
+            <!-- Table rows will be populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Overlay for Add Books -->
+  <div id="addBooksOverlay" class="overlay" style="display: none;">
+    <div class="overlay-content">
+      <div id="loadingOverlaybooks" class="loading-overlay">
+        <div>
+          <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+            type="module"></script>
+
+          <dotlottie-player src="https://lottie.host/7319098f-7e9e-40eb-8ffe-6c22f55e9d70/qNoQ09vbMn.json"
+            background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+        </div>
+      </div>
+      <div class="icon-container">
+        <i><img class="topicon" src="/images/addbooks.png" alt=""></i>
+        <h2 class="overlay-head">Add Books</h2>
+      </div>
+      <!-- Close icon -->
+      <div class="close-icon" onclick="closeOverlay(event)">×</div>
+
+      <div class="form-container"
+        style="display: flex; justify-content: center; align-items: center; margin-top: 3.5rem;">
+        <form id="addBooksForm" class="addBookForm" style="display: flex; flex-wrap: wrap; gap: 0.6rem; width: 100%;">
+          <div id="toast" class="toast"></div>
+          <div class="form-group" style="flex: 1.6;">
+            <input type="text" class="form-control" id="bookTitle" name="bookTitle" placeholder=" " required
+              style="width: 100%;">
+            <span class="form-control-placeholder">Book Title</span>
+          </div>
+          <div class="form-group" style="flex: 0.7;">
+            <select id="bookClass" name="bookClass" class="custom-dropdown" required
+              style="width: 100%; border-style: none; margin-bottom: 0.8rem;">
+              <option value="" disabled selected>Class</option>
+              <option value="AllClass">All Class</option>
+              <option value="Nursery" class="Nursery">Nursery</option>
+              <option value="KG1" class="KG1">KG1</option>
+              <option value="KG2" class="KG2">KG2</option>
+              <option value="1st" class="1st">1st</option>
+              <option value="2nd" class="2nd">2nd</option>
+              <option value="3rd" class="3rd">3rd</option>
+              <option value="4th" class="4th">4th</option>
+              <option value="5th" class="5th">5th</option>
+              <option value="6th" class="6th">6th</option>
+              <option value="7th" class="7th">7th</option>
+              <option value="8th" class="8th">8th</option>
+              <option value="9th" class="9th">9th</option>
+              <option value="10th" class="10th">10th</option>
+
+              <!-- Add more options for other classes -->
+            </select>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <input type="number" class="form-control" id="purchasePrice" name="purchasePrice" placeholder=" " required
+              style="width: 100%;">
+            <span class="form-control-placeholder">Purchase Price</span>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <input type="number" class="form-control" id="sellingPrice" name="sellingPrice" placeholder=" " required
+              style="width: 100%;">
+            <span class="form-control-placeholder">Selling Price</span>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <select id="bookvendor" name="vendor" class="custom-dropdown" required
+              style="width: 100%; border-style: none; margin-bottom: 0.8rem;">
+              <!-- Options will be populated dynamically -->
+              <option value="" disabled selected>Vendor</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <input type="number" class="form-control" id="orderedQuantity" name="orderedQuantity" placeholder=" "
+              required style="width: 100%;">
+            <span class="form-control-placeholder">Ordered Quantity</span>
+          </div>
+          <button class="form-group" type="submit"
+            style="border-style: none; background-color: transparent; align-self: center;">
+            <img class="submit-icon" src="/images/addBook.gif">
+          </button>
+        </form>
+      </div>
+
+      <div class="form-Searchgroup">
+        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon">
+        <input type="text" class="form-control" id="bookssearchField" name="bookSearch" oninput="searchBookDetails()"
+          placeholder=" " />
+        <span class="form-control-placeholder">Search Book By Name...</span>
+        <button id="refreshvendorbutton" onclick="refreshbooksData()">
+          <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px; margin-right: 2px;">
+          Refresh</button>
+      </div>
+
+
+
+      <!-- Table for displaying books -->
+      <div class="table-container">
+        <table id="booksTable">
+          <thead>
+            <tr>
+              <th>Book Title</th>
+              <th>Class</th>
+              <th>Purchase Price</th>
+              <th>Selling Price</th>
+              <th>Vendor</th>
+              <th>Ordered Quantity</th>
+              <th>Remaining Quantity</th>
+              <th>Returned Quantity</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="booksTableBody">
+            <!-- Table rows will be populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Add Uniform Overlay -->
+  <div id="addUniformOverlay" class="overlay add-uniform">
+    <div class="overlay-content">
+      <div id="loadingOverlayuniform" class="loading-overlay">
+        <div>
+          <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+            type="module"></script>
+
+          <dotlottie-player src="https://lottie.host/7319098f-7e9e-40eb-8ffe-6c22f55e9d70/qNoQ09vbMn.json"
+            background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+        </div>
+      </div>
+      <div class="icon-container">
+        <i><img class="topicon" src="/images/uniform.png" alt=""></i>
+        <h2 class="overlay-head">Add Uniform</h2>
+      </div>
+
+
+      <div class="close-icon" onclick="closeOverlay(event)">×</div>
+
+
+
+      <div class="form-container"
+        style="display: flex; justify-content: center; align-items: center; margin-top: 3.5rem;">
+        <form id="addUniformForm" class="addBookForm" style="display: flex; flex-wrap: wrap; gap: 0.6rem; width: 100%;">
+          <div id="toast" class="toast"></div>
+          <div class="form-group" style="flex: 1;">
+            <input type="text" class="form-control" id="uniformItem" name="uniform_item" placeholder=" " required
+              style="width: 100%;">
+            <span class="form-control-placeholder">Uniform Item</span>
+          </div>
+
+          <div class="form-group" style="flex: 1;">
+            <input type="text" class="form-control" id="sizeOfItem" name="size_of_item" placeholder=" " required
+              style="width: 100%;">
+            <span class="form-control-placeholder">Size of Item</span>
+          </div>
+
+          <div class="form-group" style="flex: 1;">
+            <input type="number" class="form-control" id="purchasePrice" name="purchase_price" placeholder=" " required
+              style="width: 100%;">
+            <span class="form-control-placeholder">Purchase Price</span>
+          </div>
+
+          <div class="form-group" style="flex: 1;">
+            <input type="number" class="form-control" id="sellingPrice" name="selling_price" placeholder=" " required
+              style="width: 100%;">
+            <span class="form-control-placeholder">Selling Price</span>
+          </div>
+
+          <div class="form-group" style="flex: 1;">
+            <select id="univendor" class="custom-dropdown form-control" name="vendor" required
+              style="width: 100%;  margin-bottom: 0.8rem;">
+              <option value="" disabled selected>Vendor</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="flex: 1;">
+            <input type="number" class="form-control" id="orderedQuantity" name="ordered_quantity" placeholder=" "
+              required style="width: 100%;">
+            <span class="form-control-placeholder">Ordered Quantity</span>
+          </div>
+
+          <button class="form-group" type="submit" style="border-style: none; background-color: transparent;">
+            <img class="submit-icon" src="/images/addUniform.gif">
+          </button>
+        </form>
+      </div>
+
+      <div class="form-Searchgroup">
+        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon">
+        <input type="text" class="form-control" id="uniformsearchField" name="bookSearch"
+          oninput="searchUniformDetails()" placeholder=" " />
+        <span class="form-control-placeholder">Enter Uniform Item...</span>
+        <button id="refreshvendorbutton" onclick="refreshUniformsData()">
+          <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px; margin-right: 2px;">
+          Refresh</button>
+      </div>
+
+      <!-- Uniform Table -->
+      <div class="table-container">
+        <table id="uniformTable">
+          <thead>
+            <tr>
+              <th>Uniform Item</th>
+              <th>Size</th>
+              <th>Purchase Price</th>
+              <th>Selling Price</th>
+              <th>Vendor</th>
+              <th>Ordered Quantity</th>
+              <th>Remaining Quantity</th>
+              <th>Returned Quantity</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="uniformTableBody">
+            <!-- Table rows will be populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Purchase Report Overlay  -->
+  <div id="purchaseReportsOverlay" class="overlay purchase-reports">
+    <div class="overlay-content">
+      <div class="icon-container">
+        <i><img class="topicon" src="/images/PurchaseReport.png" alt=""></i>
+        <h2 class="overlay-head">Purchase Report</h2>
+      </div>
+      <div class="close-icon" id="closeOverlayButton" onclick="closeOverlay(event)">×</div>
+
+      <div class="horizontal-container">
+        <button id="vendorSummary" class="horizontal-form-group" type="submit"
+          style="border-style: none; background-color: transparent;">
+          <img class="icon" src="/images/vendorSummary.gif">
+          <h3>Vendor Summary</h3>
+        </button>
+        <div class="form-group ">
+          <select id="vendorDetails" class="custom-dropdown horizontal-dropdown " style="margin-top: 1rem;">
+            <option value="">
+              <h3 style="font-weight: bold;">Vendor Details</h3>
+            </option>
+            <!-- Vendor options will be populated here -->
+          </select>
+        </div>
+        <button id="profitLoss" class="horizontal-form-group" type="submit"
+          style="border-style: none; background-color: transparent;">
+          <img class="icon" src="/images/profitLoss.gif">
+          <h3>Profit/Loss</h3>
+        </button>
+        <button id="exportButton">
+          <img src="/images/export.png" alt="Export Icon" style="width: 25px; height: 25px;"> Export
+        </button>
+        <!-- <button id="exportButton" class="form-group" type="submit"
+          style="border-style: none; background-color: transparent;">
+          <img class="icon" src="/images/exportButton.gif">
+          <h3>Export Table</h3>
+        </button> -->
+        <!--<button id="refreshvendorbutton" class="form-group" onclick="refreshAllTables()">
+          <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px; margin-right: 2px;">
+          Refresh</button>>-->
+      </div>
+
+      <div id="table-container">
+        <div id="loadingOverlayReport" class="loading-overlay">
+          <div>
+            <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+              type="module"></script>
+
+            <dotlottie-player src="https://lottie.host/7319098f-7e9e-40eb-8ffe-6c22f55e9d70/qNoQ09vbMn.json"
+              background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+          </div>
+        </div>
+        <div id="emptyMessage" class="empty-message ">
+          <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+            type="module"></script>
+          <dotlottie-player src="https://lottie.host/5d6fe6dc-d344-4b95-a6b4-17a5e01b88c8/2DhrGZVFGN.json"
+            background="transparent" speed="1" style="width: 600px; height: 450px;" loop autoplay></dotlottie-player>
+        </div>
+      </div> <!-- Container to display the table -->
+    </div>
+  </div>
+
+
+
+
+  </div>
+
+  <script src="/js/Inventory_js/Inventory_addVendor.js"></script>
+  <script src="/js/Inventory_js/Inventory_addBooks.js"></script>
+  <script src="/js/Inventory_js/Inventory_addUniform.js"></script>
+  <script src="/js/Inventory_js/Inventory_purchasereports.js"></script>
+  <script src="/js/Inventory_js/All.js"></script>
+</body>
+
+</html>
