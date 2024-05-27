@@ -212,20 +212,20 @@ app.get('/pre_adm/admitted_teacher', authenticateToken, (req, res) => {
 app.get('/inventory/purchase', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_purchase.html'));
 });
-//Serve HTML form
+/*Serve HTML form
 app.get('/inventory/billing', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_billingConsole.html'));
-});
+});*/
 
 app.get('/inventory/generateInvoice', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_generateInvoice.html'));
 });
 
-//Serve HTML form
+/*Serve HTML form
 app.get('/inventory/reports', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_reports.html'));
 });
-
+*/
 
 // Middleware to authenticate JWT
 function authenticateToken(req, res, next) {
