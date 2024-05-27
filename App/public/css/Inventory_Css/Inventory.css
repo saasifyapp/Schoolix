@@ -364,6 +364,8 @@ select {
 
 
 
+
+
 .table-container,
 #tableContainer {
     max-height: calc(100% - 15rem); /* Set maximum height for the table container */
@@ -674,10 +676,13 @@ table {
     cursor: pointer;
   }
 
-  .horizontal-container select.custom-dropdown {   
+  /* .horizontal-container select.custom-dropdown {   
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
     transition: all 0.3s; /* Add transition for smooth hover effect */
-  }
+    .horizontal-dropdown:hover{
+        box-shadow: 0 0 10px #1f9cf0; /* Persistent shadow for active state */
+        transition: box-shadow 0.3s ease-in-out;
+    }
 
 
 
@@ -686,6 +691,8 @@ table {
     transform: scale(1.09); /* Persistent scale for active state */
   }
 
+
+  
   /* //////////////////////////////////Animations//////////////////////////// */
 
   @keyframes slideInFromDown {
