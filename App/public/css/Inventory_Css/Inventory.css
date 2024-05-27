@@ -158,6 +158,7 @@ body {
     /* Allow input fields to grow */
     height: 3rem;
     /* Increased height for input fields */
+    transition: transform 0.3s ease-in-out;
 }
 
 .form-control.wide {
@@ -202,6 +203,10 @@ body {
     /* Reset transform */
     color: #000;
 }
+
+    .form-control {
+        transition: box-shadow 0.3s ease, transform 0.3s ease-in-out;
+    }
 
 
 
@@ -622,7 +627,7 @@ table {
     margin-bottom: 5px;
     color: #2C3E50;
   }
-  .form-group {
+  .horizontal-form-group {
     display: flex;
     align-items: center; /* Ensure the content inside buttons are centered */
   }
@@ -653,16 +658,17 @@ table {
     padding: 20px;
   }
 
-  .horizontal-container .form-group {
+  .horizontal-container .horizontal-form-group {
     border-style: none;
     background-color: transparent;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
     transition: box-shadow 0.3s ease-in-out;
     border-radius: 1rem;
     transition: all 0.3s; /* Add transition for smooth hover effect */
+    animation: slideDownFromUp 0.7s ease-in-out; /* Adjust timing as needed */
   }
 
-  .horizontal-container .form-group:hover {
+  .horizontal-container .horizontal-form-group:hover {
     box-shadow: 0 0 10px #5DADE2; /* Add shadow on hover and focus */   
     transform: scale(1.09); /* Increase size on hover */
     cursor: pointer;
@@ -675,7 +681,7 @@ table {
 
 
 
-  .horizontal-container .form-group.active {
+  .horizontal-container .horizontal-form-group.active {
     box-shadow: 0 0 10px #1f9cf0; /* Persistent shadow for active state */
     transform: scale(1.09); /* Persistent scale for active state */
   }

@@ -9,10 +9,11 @@
   <link rel="stylesheet" href="/css/Inventory_Css/Inventory.css">
   <link rel="stylesheet" href="/css/NavButtons.css">
 </head>
+
 <body>
   <div id="loadingOverlayinventory" class="loading-overlay-inventory">
     <div class="loader2"></div>
-</div> 
+  </div>
   <button class="corner-button left-button" onclick="window.location.href='/dashboard'"
     style="animation: slide-in 0.7s ease forwards;">
     <img src="/images/homeicon.png" alt="Dashboard Icon">
@@ -76,7 +77,7 @@
         </button>
       </a>
     </div>
-    
+
     <div class="card purchase-reports">
       <a>
         <button>
@@ -98,9 +99,11 @@
     <div class="overlay-content">
       <div id="loadingOverlayVendor" class="loading-overlay">
         <div>
-          <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> 
+          <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+            type="module"></script>
 
-    <dotlottie-player src="https://lottie.host/7319098f-7e9e-40eb-8ffe-6c22f55e9d70/qNoQ09vbMn.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+          <dotlottie-player src="https://lottie.host/7319098f-7e9e-40eb-8ffe-6c22f55e9d70/qNoQ09vbMn.json"
+            background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
         </div>
       </div>
       <div class="icon-container">
@@ -176,9 +179,11 @@
     <div class="overlay-content">
       <div id="loadingOverlaybooks" class="loading-overlay">
         <div>
-          <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> 
+          <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+            type="module"></script>
 
-    <dotlottie-player src="https://lottie.host/7319098f-7e9e-40eb-8ffe-6c22f55e9d70/qNoQ09vbMn.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+          <dotlottie-player src="https://lottie.host/7319098f-7e9e-40eb-8ffe-6c22f55e9d70/qNoQ09vbMn.json"
+            background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
         </div>
       </div>
       <div class="icon-container">
@@ -291,9 +296,11 @@
     <div class="overlay-content">
       <div id="loadingOverlayuniform" class="loading-overlay">
         <div>
-          <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> 
+          <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+            type="module"></script>
 
-    <dotlottie-player src="https://lottie.host/7319098f-7e9e-40eb-8ffe-6c22f55e9d70/qNoQ09vbMn.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+          <dotlottie-player src="https://lottie.host/7319098f-7e9e-40eb-8ffe-6c22f55e9d70/qNoQ09vbMn.json"
+            background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
         </div>
       </div>
       <div class="icon-container">
@@ -398,25 +405,27 @@
       <div class="close-icon" id="closeOverlayButton" onclick="closeOverlay(event)">×</div>
 
       <div class="horizontal-container">
-        <button id="vendorSummary" class="form-group" type="submit"
+        <button id="vendorSummary" class="horizontal-form-group" type="submit"
           style="border-style: none; background-color: transparent;">
           <img class="icon" src="/images/vendorSummary.gif">
           <h3>Vendor Summary</h3>
         </button>
-        <select id="vendorDetails" class="custom-dropdown" style="margin-bottom: 10px; :hover{ box-shadow: 0 0 20px #5DADE2;} "> 
-          <option value="">
-            <h3 style="font-weight: bold;">Vendor Details</h3>
-          </option>
-          <!-- Vendor options will be populated here -->
-        </select>
-        <button id="profitLoss" class="form-group" type="submit"
+        <div class="form-group">
+          <select id="vendorDetails" class="custom-dropdown" style="margin-top: 1rem; ">
+            <option value="">
+              <h3 style="font-weight: bold;">Vendor Details</h3>
+            </option>
+            <!-- Vendor options will be populated here -->
+          </select>
+        </div>
+        <button id="profitLoss" class="horizontal-form-group" type="submit"
           style="border-style: none; background-color: transparent;">
           <img class="icon" src="/images/profitLoss.gif">
           <h3>Profit/Loss</h3>
         </button>
         <button id="exportButton">
           <img src="/images/export.png" alt="Export Icon" style="width: 25px; height: 25px;"> Export
-      </button>
+        </button>
         <!-- <button id="exportButton" class="form-group" type="submit"
           style="border-style: none; background-color: transparent;">
           <img class="icon" src="/images/exportButton.gif">
@@ -430,9 +439,11 @@
       <div id="table-container">
         <div id="loadingOverlayReport" class="loading-overlay">
           <div>
-            <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> 
+            <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+              type="module"></script>
 
-    <dotlottie-player src="https://lottie.host/7319098f-7e9e-40eb-8ffe-6c22f55e9d70/qNoQ09vbMn.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+            <dotlottie-player src="https://lottie.host/7319098f-7e9e-40eb-8ffe-6c22f55e9d70/qNoQ09vbMn.json"
+              background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
           </div>
         </div>
         <div id="emptyMessage" class="empty-message">
