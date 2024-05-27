@@ -90,7 +90,7 @@ connection.query(createTableQuery5, (err, result) => {
         console.error('Error creating table: ' + err.stack);
         return;
     }
-    console.log('Table inventory_book_details created successfully');
+    //console.log('Table inventory_book_details created successfully');
 });
 
 const createTableQuery6 = `
@@ -111,7 +111,7 @@ connection.query(createTableQuery6, (err, result) => {
         console.error('Error creating table: ' + err.stack);
         return;
     }
-    console.log('Table inventory_uniform_details created successfully');
+   // console.log('Table inventory_uniform_details created successfully');
 });
 
 const createTableQuery7 = `
@@ -129,7 +129,7 @@ connection.query(createTableQuery7, (err, result) => {
         console.error('Error creating table: ' + err.stack);
         return;
     }
-    console.log('Table inventory_vendor_details created successfully');
+    //console.log('Table inventory_vendor_details created successfully');
 });
     // Define an object to store counts for each table
     const counts = {};
