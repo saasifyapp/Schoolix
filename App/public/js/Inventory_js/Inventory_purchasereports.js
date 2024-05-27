@@ -309,7 +309,7 @@ document.addEventListener("DOMContentLoaded", function () {
         dotlottiePlayer2.setAttribute('src', 'https://lottie.host/5d6fe6dc-d344-4b95-a6b4-17a5e01b88c8/2DhrGZVFGN.json');
         dotlottiePlayer2.setAttribute('background', 'transparent');
         dotlottiePlayer2.setAttribute('speed', '1'); 
-        dotlottiePlayer2.setAttribute('style', 'width: 600px; height: 550px;');
+        dotlottiePlayer2.setAttribute('style', 'width: 600px; height: 450px;');
         dotlottiePlayer2.setAttribute('autoplay', 'true');
         dotlottiePlayer2.setAttribute('loop', 'true'); // Set loop manually
 
