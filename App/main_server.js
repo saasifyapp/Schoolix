@@ -214,8 +214,13 @@ app.get('/inventory/purchase', authenticateToken, (req, res) => {
 });
 //Serve HTML form
 app.get('/inventory/billing', authenticateToken, (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_billing.html'));
+    res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_billingConsole.html'));
 });
+
+app.get('/inventory/generateInvoice', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_generateInvoice.html'));
+});
+
 //Serve HTML form
 app.get('/inventory/reports', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_reports.html'));
@@ -293,7 +298,6 @@ app.get('/logout', (req, res) => {
 //////////////////////// STUDENT CONSOLE////////////////////////////////
 // Import the router for handling student details submission
 const submitStudentRouter = require('./src/routes/pre_admission_console_routes/student_details');
-// Mount the student details submission router to the root path
 app.use('/', submitStudentRouter);
 
 // Import the router for displaying student data
@@ -328,7 +332,6 @@ app.use('/', displayadmTeacherRouter);
 /////////////////////// ROUTES FOR MAIN DASHBOARD COMPONENTS ///////////////////////////////////////
 
 const main_dashboard_dataRouter = require('./src/routes/main_dashboard_data');
-// Mount the student details submission router to the root path
 app.use('/', main_dashboard_dataRouter);
  
 
@@ -337,27 +340,28 @@ app.use('/', main_dashboard_dataRouter);
 // scheduledTask();
 
 /////////////////////// ROUTES FOR INVENTORY MODULE ///////////////////////////////////////
+
 ///ADD VENDOR ROUTE
 const addVendorDataRouter = require('./src/routes/Inventory_routes/add_vendor');
-// Mount the student details submission router to the root path
 app.use('/', addVendorDataRouter);
 
 
 //////ADD BOOK ROUTE
 const addBookDataRouter = require('./src/routes/Inventory_routes/add_books');
-// Mount the student details submission router to the root path
 app.use('/', addBookDataRouter);
 
 //////ADD UNIFORM ROUTE
 const addUniformDataRouter = require('./src/routes/Inventory_routes/add_uniform');
-// Mount the student details submission router to the root path
 app.use('/', addUniformDataRouter);
 
 //////PURCHASE REPORT ROUTE
 const purchaseReportsRouter = require('./src/routes/Inventory_routes/purchase_reports');
-// Mount the student details submission router to the root path
 app.use('/', purchaseReportsRouter);
 
+
+//////GENERATE INVOICE ROUTE
+const generateInvoiceRouter = require('./src/routes/Inventory_routes/generate_invoice');
+app.use('/', generateInvoiceRouter);
  
 
 
