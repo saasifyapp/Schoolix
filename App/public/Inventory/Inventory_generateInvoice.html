@@ -42,7 +42,7 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="buyerClass">Class</label>
-                                <input type="text" class="form-control" id="buyerClass" placeholder="Class">
+                                <input type="text" class="form-control" id="buyerClass" placeholder="Class" readonly>
                             </div>
                         </div>
                     </form>
@@ -59,7 +59,7 @@
                         </div>
                         <div class="form-group">
                             <label for="invoiceDate">Date</label>
-                            <input type="date" class="form-control" id="invoiceDate">
+                            <input type="text" class="form-control" id="invoiceDate">
                         </div>
                     </form>
                 </div>
@@ -88,7 +88,7 @@
                                     <th>Price (Selling Price)</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="booksTableBody">
                                 <!-- Book entries go here -->
                             </tbody>
                         </table>
@@ -109,9 +109,10 @@
                                     <th>Price</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <!-- Uniform entries go here -->
-                            </tbody>
+                        </thead>
+                        <tbody id="uniformsTableBody">
+                            <!-- Book entries go here -->
+                        </tbody>
                         </table>
                     </div>
                 </div>
