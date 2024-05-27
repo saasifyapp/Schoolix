@@ -403,7 +403,7 @@
           <img class="icon" src="/images/vendorSummary.gif">
           <h3>Vendor Summary</h3>
         </button>
-        <select id="vendorDetails" class="custom-dropdown form-group">
+        <select id="vendorDetails" class="custom-dropdown" style="margin-bottom: 10px; :hover{ box-shadow: 0 0 20px #5DADE2;} "> 
           <option value="">
             <h3 style="font-weight: bold;">Vendor Details</h3>
           </option>
@@ -414,11 +414,14 @@
           <img class="icon" src="/images/profitLoss.gif">
           <h3>Profit/Loss</h3>
         </button>
-        <button id="exportButton" class="form-group" type="submit"
+        <button id="exportButton">
+          <img src="/images/export.png" alt="Export Icon" style="width: 25px; height: 25px;"> Export
+      </button>
+        <!-- <button id="exportButton" class="form-group" type="submit"
           style="border-style: none; background-color: transparent;">
           <img class="icon" src="/images/exportButton.gif">
           <h3>Export Table</h3>
-        </button>
+        </button> -->
         <!--<button id="refreshvendorbutton" class="form-group" onclick="refreshAllTables()">
           <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px; margin-right: 2px;">
           Refresh</button>>-->

@@ -590,7 +590,7 @@ table {
 
 .custom-dropdown:hover,
 .custom-dropdown:focus {
-    box-shadow: 0 0 10px #5DADE2; /* Add shadow on hover and focus */
+    box-shadow: 0 0 10px #5DADE2; /* Add shadow on hover and focus */   
     border: 1px solid #85C1E9;
     outline: none;
 }
@@ -673,10 +673,7 @@ table {
     transition: all 0.3s; /* Add transition for smooth hover effect */
   }
 
-  .horizontal-container select.custom-dropdown:hover {
-    box-shadow: 0 0 10px #5DADE2; /* Add shadow on hover and focus */
-    transform: scale(1.09); /* Increase size on hover */
-  }
+
 
   .horizontal-container .form-group.active {
     box-shadow: 0 0 10px #1f9cf0; /* Persistent shadow for active state */
