@@ -4,41 +4,111 @@ html, body {
     padding: 0;
 }
 
-
 .container-fluid {
     height: 100%;
     display: flex;
     flex-direction: column;
     padding: 20px;
 }
+
 .row {
-    flex: 1;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    background-color: transparent;
 }
+
 .section {
-    border: 1px solid red;
+    border: 1px solid rgb(92, 84, 84);
     padding: 10px;
-    box-sizing: border-box;
-    overflow: hidden;
+    box-sizing: border-box;        
     background-color: white;
+    position: relative;
 }
-.buyer-details, .invoice-details, .summary, .control-panel {
-    height: 120px;
+
+.section h5 {
+    position: absolute;
+    top: -10px; /* Adjust as needed */
+    left: 10px; /* Adjust as needed */
+    background-color: white;
+    padding: 0 5px;
+}
+
+.buyer-details,
+.invoice-details,
+.summary,
+.control-panel {
+    height: 100px;
     padding-top: 10px;
 }
-.books, .uniform {
-    height: 100%;
-    width: 500px;
+
+.books,
+.uniform {
+    height: 180%;          
 }
 
 .bill {
-    height: 200%;
+    height: 142%;
     padding-top: 10px;
 }
+
 .control-panel button {
     width: 120px;
 }
+
 .table-container {
-    height: 100%;
-    overflow-y: auto;
+height: 100%; /* Set the desired fixed height for the table container */
+overflow: hidden; /* Hide any overflow */
+position: relative;
+display: flex;
+flex-direction: column;
+}
+
+.table {
+width: 100%;
+border-collapse: collapse;
+display: flex;
+flex-direction: column;
+height: 150px;
+}
+
+.table thead {
+display: table;
+width: 100%;
+table-layout: fixed;
+background-color: white;
+flex: 0 0 auto; /* Prevents shrinking or growing */
+}
+
+.table tbody {
+display: block;
+overflow-y: auto; /* Enable vertical scrolling */
+width: 100%;
+height: 100%;
+flex: 1 1 auto; /* Allows the tbody to grow and fill the remaining space */
+}
+
+/* Ensure the columns in the header and body are aligned */
+.table th,
+.table td {
+width: 33.33%; /* Adjust the width percentage based on the number of columns */
+box-sizing: border-box;
+}
+
+/* Uniform table column width adjustments */
+.uniform-item {
+width: 40%;
+}
+
+.uniform-size {
+width: 15%;
+white-space: nowrap; /* Prevents wrapping of size values */
+}
+
+.uniform-quantity {
+width: 15%;
+text-align: right; /* Aligns the text to the right */
+}
+
+.uniform-price {
+width: 30%;
+text-align: right; /* Aligns the text to the right */
 }

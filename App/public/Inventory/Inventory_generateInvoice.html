@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,64 +8,118 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/Inventory_Css/InventoryAll.css">
     <link rel="stylesheet" href="/css/Inventory_Css/GenerateInvoice.css">
-    <link rel="stylesheet" href="/css/NavButtons.css">   
+    <link rel="stylesheet" href="/css/NavButtons.css">
 </head>
 <body>
-
-    
-
     <div class="container-fluid">
         <button class="corner-button left-button" onclick="window.location.href='/dashboard'"
-    style="animation: slide-in 0.7s ease forwards;">
-    <img src="/images/homeicon.png" alt="Dashboard Icon">
-    <span>Home</span>
-  </button>
-  <button class="corner-button right-button signout-button" id="logoutButton"
-    style="animation: slide-in 0.7s ease forwards;">
-    <img src="/images/logout.png" alt="Signout Icon">
-    <span>Signout</span>
-  </button>
+            style="animation: slide-in 0.7s ease forwards;">
+            <img src="/images/homeicon.png" alt="Dashboard Icon">
+            <span>Home</span>
+        </button>
+        <button class="corner-button right-button signout-button" id="logoutButton"
+            style="animation: slide-in 0.7s ease forwards;">
+            <img src="/images/logout.png" alt="Signout Icon">
+            <span>Signout</span>
+        </button>
 
         <div class="row" style="margin-top: 5rem;">
-            <!-- Buyer Details -->
-            <div class="col-md-6">
-                <div class="section buyer-details">
-                    <h5>Buyer Details</h5>
-                    <form>
-                        <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label for="buyerName">Name</label>
-                                <input type="text" class="form-control" id="buyerName" placeholder="Name">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="buyerMobile">Mobile</label>
-                                <input type="text" class="form-control" id="buyerMobile" placeholder="Mobile">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="buyerClass">Class</label>
-                                <input type="text" class="form-control" id="buyerClass" placeholder="Class" readonly>
+            <!-- First Container -->
+            <div class="col-md-7">
+                <div class="section" style="border-style: none;">
+                    <div class="row">
+                        <!-- Buyer Details -->
+                        <div class="col-md-8">
+                            <div class="section buyer-details">
+                                <h5>Buyer Details</h5>
+                                <form>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="buyerName">Name</label>
+                                            <input type="text" class="form-control" id="buyerName" placeholder="Name">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="buyerMobile">Mobile</label>
+                                            <input type="text" class="form-control" id="buyerMobile" placeholder="Mobile">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="buyerClass">Class</label>
+                                            <input type="text" class="form-control" id="buyerClass" placeholder="Class" readonly>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                    </form>
+                        <!-- Invoice No and Date -->
+                        <div class="col-md-4">
+                            <div class="section invoice-details">
+                                <h5>Invoice Details</h5>
+                                <form>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="invoiceNo">Invoice No</label>
+                                            <input type="text" class="form-control" id="invoiceNo" placeholder="Invoice No">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="invoiceDate">Date</label>
+                                            <input type="text" class="form-control" id="invoiceDate">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- Display Books -->
+                        <div class="col-md-6">
+                            <div class="section books">
+                                <h5>Display Books</h5>
+                                <div class="table-container">
+                                    <table class="table table-bordered" id="booksTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Title</th>
+                                                <th>Quantity</th>
+                                                <th>Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="booksTableBody">
+                                            <!-- Book entries go here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Display Uniform -->
+                        <div class="col-md-6">
+                            <div class="section uniform">
+                                <h5>Display Uniform</h5>
+                                <div class="table-container">
+                                    <table class="table table-bordered" id="uniformsTable">
+                                        <thead>
+                                            <tr>
+                                                <th class="uniform-item">Item</th>
+                                                <th class="uniform-size">Size</th>
+                                                <th class="uniform-quantity">Quantity</th>
+                                                <th class="uniform-price">Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="uniformsTableBody">
+                                            <!-- Uniform entries go here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                     
+                    
+                    
                 </div>
             </div>
-            <!-- Invoice No and Date -->
-            <div class="col-md-3">
-                <div class="section invoice-details" style="height: 200px;">
-                    <h5>Invoice Details</h5>
-                    <form>
-                        <div class="form-group">
-                            <label for="invoiceNo">Invoice No</label>
-                            <input type="text" class="form-control" id="invoiceNo" placeholder="Invoice No">
-                        </div>
-                        <div class="form-group">
-                            <label for="invoiceDate">Date</label>
-                            <input type="text" class="form-control" id="invoiceDate">
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="col-md-3">
+            <!-- Second Container -->
+            <div class="col-md-5">
                 <div class="section bill">
                     <h5>Display Bill</h5>
                     <div class="full-width table-container">
@@ -73,81 +128,43 @@
                 </div>
             </div>
         </div>
-        
-        <div class="row">
-            <!-- Display Books -->
-            <div class="col-md-4">
-                <div class="section books">
-                    <h5>Display Books</h5>
-                    <div class="table-container">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Quantity</th>
-                                    <th>Price (Selling Price)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="booksTableBody">
-                                <!-- Book entries go here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <!-- Display Uniform -->
-            <div class="col-md-6">
-                <div class="section uniform">
-                    <h5>Display Uniform</h5>
-                    <div class="table-container">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Size</th>
-                                    <th>Quantity</th>
-                                    <th>Price</th>
-                                </tr>
-                            </thead>
-                        </thead>
-                        <tbody id="uniformsTableBody">
-                            <!-- Book entries go here -->
-                        </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="row">
-            <!-- Invoice Summary -->
-            <div class="col-md-">
-                <div class="section summary">
-                    <h5>Invoice Summary</h5>
-                    <div class="form-row">
-                        <div class="form-group col-md-4">
-                            <label for="totalAmount">Total Amount</label>
-                            <input type="text" class="form-control" id="totalAmount" placeholder="Total Amount">
+
+        <!-- Third Container -->
+        <div class="row" style="margin-top: 9rem;">
+            <div class="col-md-12">
+                <div class="section" style="border-style: none;">
+                    <div class="row">
+                        <!-- Invoice Summary -->
+                        <div class="col-md-6">
+                            <div class="section summary">
+                                <h5>Invoice Summary</h5>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="totalAmount">Total Amount</label>
+                                        <input type="text" class="form-control" id="totalAmount" placeholder="Total Amount">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="amountPaid">Paid</label>
+                                        <input type="text" class="form-control" id="amountPaid" placeholder="Paid">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="balanceAmount">Balance</label>
+                                        <input type="text" class="form-control" id="balanceAmount" placeholder="Balance">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group col-md-4">
-                            <label for="amountPaid">Paid</label>
-                            <input type="text" class="form-control" id="amountPaid" placeholder="Paid">
+                        <!-- Control Panel -->
+                        <div class="col-md-6">
+                            <div class="section control-panel">
+                                <h5>Control Panel</h5>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-primary">Generate Bill</button>
+                                    <button type="button" class="btn btn-secondary">Print Bill</button>
+                                    <button type="button" class="btn btn-danger">Reset</button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group col-md-4">
-                            <label for="balanceAmount">Balance</label>
-                            <input type="text" class="form-control" id="balanceAmount" placeholder="Balance">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Control Panel -->
-            <div class="col-md-6">
-                <div class="section control-panel">
-                    <h5>Control Panel</h5>
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-primary">Generate Bill</button>
-                        <button type="button" class="btn btn-secondary">Print Bill</button>
-                        <button type="button" class="btn btn-danger">Reset</button>
                     </div>
                 </div>
             </div>
@@ -159,4 +176,5 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>
