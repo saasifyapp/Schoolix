@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-
     // Populate date dynamically in Date Field //
 
     // Get today's date
@@ -17,14 +16,10 @@ document.addEventListener("DOMContentLoaded", function () {
     dateInput.value = `${formattedDate} (${dayOfWeek})`;
     dateInput.setAttribute("readonly", true);
 
-
-    // Populate Class Field Dynamically based on dropdown value from previous page //
-
-    // Retrieve the selected class from local storage
+    // Populate Class Field Dynamically based on dropdown value from previous page
     const selectedClass = localStorage.getItem("selectedClass");
 
     if (selectedClass) {
-
         // Set the value of the "Class" input field 
         const classInput = document.getElementById("buyerClass");
         classInput.value = selectedClass;
@@ -44,9 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
         // Use Promise.all to wait for both requests to complete
         Promise.all([fetchBooks, fetchUniforms])
             .then(([booksData, uniformsData]) => {
-                //console.log("Books Data:", booksData);
-                //console.log("Uniforms Data:", uniformsData);
-
                 // Populate the books table
                 const booksTableBody = document.getElementById("booksTableBody");
                 booksData.forEach(book => {
@@ -59,10 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     booksTableBody.appendChild(row);
                 });
 
-
                 // Populate the uniforms table
-
-                // Group uniform items by their name
                 const groupedUniforms = {};
                 uniformsData.forEach(uniform => {
                     if (!groupedUniforms[uniform.uniform_item]) {
@@ -70,9 +59,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                     groupedUniforms[uniform.uniform_item].push({ size: uniform.size_of_item, price: uniform.selling_price });
                 });
-                
-                const uniformsTableBody = document.getElementById("uniformsTableBody");
 
+                const uniformsTableBody = document.getElementById("uniformsTableBody");
                 Object.keys(groupedUniforms).forEach(uniformName => {
                     const row = document.createElement("tr");
                     let sizeOptions = "";
@@ -80,17 +68,20 @@ document.addEventListener("DOMContentLoaded", function () {
                         sizeOptions += `<option value="${uniform.size}">${uniform.size}</option>`;
                     });
                     row.innerHTML = `
-        <td>${uniformName}</td>
-        <td>
-            <select class="form-control" onchange="updatePrice(this)">
-                ${sizeOptions}
-            </select>
-        </td>
-        <td><input type="number" class="form-control" value="1" min="1"></td>
-        <td class="price">${groupedUniforms[uniformName][0].price}</td>
-    `;
+                        <td>${uniformName}</td>
+                        <td>
+                            <select class="form-control" onchange="updatePrice(this)">
+                                ${sizeOptions}
+                            </select>
+                        </td>
+                        <td><input type="number" class="form-control" value="1" min="1"></td>
+                        <td class="price">${groupedUniforms[uniformName][0].price}</td>
+                    `;
                     uniformsTableBody.appendChild(row);
                 });
+
+                // Update summary once tables are populated
+                updateSummary();
             })
             .catch(error => {
                 console.error("Error fetching data:", error);
@@ -99,6 +90,47 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
         console.log("No selected class available.");
     }
+
+    // Function to update the total amount and balance
+    function updateSummary() {
+        let totalAmount = 0;
+
+        // Calculate total for books
+        const booksTableBody = document.getElementById("booksTableBody");
+        booksTableBody.querySelectorAll("tr").forEach(row => {
+            const quantity = parseInt(row.querySelector("input[type='number']").value);
+            const price = parseFloat(row.cells[2].textContent);
+            totalAmount += quantity * price;
+        });
+
+        // Calculate total for uniforms
+        const uniformsTableBody = document.getElementById("uniformsTableBody");
+        uniformsTableBody.querySelectorAll("tr").forEach(row => {
+            const quantity = parseInt(row.querySelector("input[type='number']").value);
+            const price = parseFloat(row.querySelector(".price").textContent);
+            totalAmount += quantity * price;
+        });
+
+        document.getElementById("totalAmount").value = totalAmount.toFixed(2);
+
+        // Update balance based on amount paid
+        const amountPaid = parseFloat(document.getElementById("amountPaid").value) || 0;
+        const balanceAmount = totalAmount - amountPaid;
+        document.getElementById("balanceAmount").value = balanceAmount.toFixed(2);
+    }
+
+    // Event listener for amount paid input
+    document.getElementById("amountPaid").addEventListener("input", updateSummary);
+
+    // Event listeners for quantity inputs
+    document.addEventListener("input", function (event) {
+        if (event.target.matches("input[type='number']")) {
+            updateSummary();
+        }
+    });
+
+    // Ensure that the updateSummary function runs after the initial DOM update
+    setTimeout(updateSummary, 100); // Add a slight delay to ensure the DOM is fully updated
 });
 
 // Function to update the price when size is selected
@@ -119,6 +151,7 @@ function updatePrice(selectElement) {
     .then(data => {
         // Update the price column with the fetched price
         row.querySelector('.price').textContent = data.price;
+        updateSummary(); // Update summary when price changes
     })
     .catch(error => {
         console.error("Error fetching price:", error);
