@@ -98,6 +98,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     // Function to update the total amount and balance
     function updateSummary() {
