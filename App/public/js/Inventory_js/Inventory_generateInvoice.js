@@ -69,17 +69,20 @@ document.addEventListener("DOMContentLoaded", function () {
                         sizeOptions += `<option value="${uniform.size}">${uniform.size}</option>`;
                     });
                     row.innerHTML = `
-                        <td>${uniformName}</td>
-                        <td>
-                            <select class="form-control" onchange="updatePrice(this)">
-                                ${sizeOptions}
-                            </select>
-                        </td>
-                        <td><input type="number" class="form-control" value="1" min="1"></td>
-                        <td class="price">${groupedUniforms[uniformName][0].price}</td>
-                        <td class="total-price">${groupedUniforms[uniformName][0].price}</td>
-                    `;
+        <td>${uniformName}</td>
+        <td>
+            <select class="form-control" onchange="updatePrice(this)">
+                ${sizeOptions}
+            </select>
+        </td>
+        <td><input type="number" class="form-control" value="1" min="1"></td>
+        <td class="price">${groupedUniforms[uniformName][0].price}</td>
+        <td class="total-price">${groupedUniforms[uniformName][0].price}</td>
+    `;
                     uniformsTableBody.appendChild(row);
+                    row.querySelector('select').addEventListener('change', function () {
+                        updatePrice(this);
+                    });
                 });
 
                 // Update summary once tables are populated
@@ -92,6 +95,9 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
         console.log("No selected class available.");
     }
+
+});
+
 
     // Function to update the total amount and balance
     function updateSummary() {
@@ -139,7 +145,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Ensure that the updateSummary function runs after the initial DOM update
     setTimeout(updateSummary, 100); // Add a slight delay to ensure the DOM is fully updated
-});
 
 // Function to update the price when size is selected
 function updatePrice(selectElement) {
@@ -155,14 +160,14 @@ function updatePrice(selectElement) {
         },
         body: JSON.stringify({ uniformName: uniformName, size: selectedSize })
     })
-    .then(response => response.json())
-    .then(data => {
-        // Update the price column with the fetched price
-        row.querySelector('.price').textContent = data.price;
-        row.querySelector('.total-price').textContent = (data.price * parseInt(row.querySelector("input[type='number']").value) || 0).toFixed(2);
-        updateSummary(); // Update summary when price changes
-    })
-    .catch(error => {
-        console.error("Error fetching price:", error);
-    });
+        .then(response => response.json())
+        .then(data => {
+            // Update the price column with the fetched price
+            row.querySelector('.price').textContent = data.price;
+            row.querySelector('.total-price').textContent = (data.price * parseInt(row.querySelector("input[type='number']").value) || 0).toFixed(2);
+            updateSummary(); // Update summary when price changes
+        })
+        .catch(error => {
+            console.error("Error fetching price:", error);
+        });
 }
