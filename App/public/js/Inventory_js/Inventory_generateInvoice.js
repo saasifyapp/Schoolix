@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const price = parseFloat(row.cells[2].textContent);
             const totalPriceCell = row.querySelector(".total-price");
             const totalPrice = quantity * price;
-            totalPriceCell.textContent = totalPrice.toFixed(2); // Update total price for each book
+            totalPriceCell.textContent = totalPrice; // Update total price for each book
             totalAmount += totalPrice;
         });
 
@@ -121,16 +121,16 @@ document.addEventListener("DOMContentLoaded", function () {
             const price = parseFloat(row.querySelector(".price").textContent);
             const totalPriceCell = row.querySelector(".total-price");
             const totalPrice = quantity * price;
-            totalPriceCell.textContent = totalPrice.toFixed(2); // Update total price for each uniform
+            totalPriceCell.textContent = totalPrice; // Update total price for each uniform
             totalAmount += totalPrice;
         });
 
-        document.getElementById("totalAmount").value = totalAmount.toFixed(2);
+        document.getElementById("totalAmount").value = totalAmount;
 
         // Update balance based on amount paid
         const amountPaid = parseFloat(document.getElementById("amountPaid").value) || 0;
         const balanceAmount = totalAmount - amountPaid;
-        document.getElementById("balanceAmount").value = balanceAmount.toFixed(2);
+        document.getElementById("balanceAmount").value = balanceAmount;
     }
 
     // Event listener for amount paid input
@@ -164,7 +164,7 @@ function updatePrice(selectElement) {
         .then(data => {
             // Update the price column with the fetched price
             row.querySelector('.price').textContent = data.price;
-            row.querySelector('.total-price').textContent = (data.price * parseInt(row.querySelector("input[type='number']").value) || 0).toFixed(2);
+            row.querySelector('.total-price').textContent = (data.price * parseInt(row.querySelector("input[type='number']").value) || 0);
             updateSummary(); // Update summary when price changes
         })
         .catch(error => {
