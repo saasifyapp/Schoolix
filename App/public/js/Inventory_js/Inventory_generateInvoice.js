@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         <td>${book.title}</td>
                         <td><input type="number" class="form-control" value="1" min="1"></td>
                         <td>${book.selling_price}</td>
+                        <td class="total-price">${book.selling_price}</td>
                     `;
                     booksTableBody.appendChild(row);
                 });
@@ -76,6 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         </td>
                         <td><input type="number" class="form-control" value="1" min="1"></td>
                         <td class="price">${groupedUniforms[uniformName][0].price}</td>
+                        <td class="total-price">${groupedUniforms[uniformName][0].price}</td>
                     `;
                     uniformsTableBody.appendChild(row);
                 });
@@ -98,17 +100,23 @@ document.addEventListener("DOMContentLoaded", function () {
         // Calculate total for books
         const booksTableBody = document.getElementById("booksTableBody");
         booksTableBody.querySelectorAll("tr").forEach(row => {
-            const quantity = parseInt(row.querySelector("input[type='number']").value);
+            const quantity = parseInt(row.querySelector("input[type='number']").value) || 0;
             const price = parseFloat(row.cells[2].textContent);
-            totalAmount += quantity * price;
+            const totalPriceCell = row.querySelector(".total-price");
+            const totalPrice = quantity * price;
+            totalPriceCell.textContent = totalPrice.toFixed(2); // Update total price for each book
+            totalAmount += totalPrice;
         });
 
         // Calculate total for uniforms
         const uniformsTableBody = document.getElementById("uniformsTableBody");
         uniformsTableBody.querySelectorAll("tr").forEach(row => {
-            const quantity = parseInt(row.querySelector("input[type='number']").value);
+            const quantity = parseInt(row.querySelector("input[type='number']").value) || 0;
             const price = parseFloat(row.querySelector(".price").textContent);
-            totalAmount += quantity * price;
+            const totalPriceCell = row.querySelector(".total-price");
+            const totalPrice = quantity * price;
+            totalPriceCell.textContent = totalPrice.toFixed(2); // Update total price for each uniform
+            totalAmount += totalPrice;
         });
 
         document.getElementById("totalAmount").value = totalAmount.toFixed(2);
@@ -151,6 +159,7 @@ function updatePrice(selectElement) {
     .then(data => {
         // Update the price column with the fetched price
         row.querySelector('.price').textContent = data.price;
+        row.querySelector('.total-price').textContent = (data.price * parseInt(row.querySelector("input[type='number']").value) || 0).toFixed(2);
         updateSummary(); // Update summary when price changes
     })
     .catch(error => {
