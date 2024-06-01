@@ -125,7 +125,7 @@
                 </div>
             </div>
             <!-- Second Container -->
-            <div class="col-md-5" style="height: 400px">
+            <div class="col-md-5" style="height: 400px" id="printableContainer">
                 <div class="section bill">
                     <h5>Display Bill</h5>
                     <div class="full-width table-container" style="overflow-y: auto; /* Enable vertical scrolling */">
@@ -138,34 +138,35 @@
                                         <i class="fa fa-angle-double-right text-80"></i>
                                         _____
                                     </small>
-                                </h1>                               
+                                </h1>
                             </div>
 
                             <div class="container px-0">
                                 <div class="row mt-4">
                                     <div class="col-12 col-lg-12">
-                                        
+
                                         <!-- .row -->
 
-                                        
+
 
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <div>
                                                     <span class="text-sm text-grey-m2 align-middle">To:</span>
                                                     <span class="text-600 text-110 text-blue align-middle">
-                                                        </span>
+                                                    </span>
                                                 </div>
                                                 <div class="text-grey-m2">
                                                     <div class="my-1">
-                                                        
+
                                                     </div>
                                                     <div class="my-1">
-                                                       
+
                                                     </div>
                                                     <div class="my-1"><i
                                                             class="fa fa-phone fa-flip-horizontal text-secondary"></i>
-                                                        <b class="text-600"></b></div>
+                                                        <b class="text-600"></b>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <!-- /.col -->
@@ -184,7 +185,7 @@
 
                                                     <div class="my-2"><i
                                                             class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span
-                                                            class="text-600 text-90">Issue Date:</span> 
+                                                            class="text-600 text-90">Issue Date:</span>
                                                     </div>
 
                                                     <div class="my-2"><i
@@ -258,7 +259,7 @@
                                                     </thead>
 
                                                     <tbody class="text-95 text-secondary-d3">
-                                                        <tr></tr>                                                       
+                                                        <tr></tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -294,8 +295,7 @@
                                                             Total Amount
                                                         </div>
                                                         <div class="col-5">
-                                                            <span
-                                                                class="text-150 text-success-d3 opacity-2"></span>
+                                                            <span class="text-150 text-success-d3 opacity-2"></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -355,8 +355,9 @@
                                     <div class="btn-group" role="group">
                                         <button type="button" class="btn btn-primary" id="generateButton">Generate
                                             Bill</button>
-                                        <button type="button" class="btn btn-secondary" id="printButton">Print
-                                            Bill</button>
+                                        <button type="button" class="btn btn-secondary" id="printButton"
+                                            onclick="printContainer()">Print Bill</button>
+
                                         <button type="button" class="btn btn-danger" id="resetButton">Reset</button>
                                     </div>
                                 </div>
