@@ -63,6 +63,10 @@ flex-direction: column;
 padding: 0.3rem;
 }
 
+.table-container {
+    overflow: hidden;
+}
+
 .table {
 width: 100%;
 border-collapse: collapse;
@@ -90,7 +94,7 @@ flex: 1 1 auto; /* Allows the tbody to grow and fill the remaining space */
 /* Ensure the columns in the header and body are aligned */
 .table th,
 .table td {
-width: 33.33%; /* Adjust the width percentage based on the number of columns */
+width: 18.33%; /* Adjust the width percentage based on the number of columns */
 box-sizing: border-box;
 }
 
@@ -232,3 +236,4 @@ hr {
 .align-bottom {
     vertical-align: bottom!important;
 }
+
