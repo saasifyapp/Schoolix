@@ -247,7 +247,143 @@ document.getElementById("generateButton").addEventListener("click", function () 
 function generateBill() {
     showToast('Invoice Generated Successfully.');
 
-    // Logic to Displa the bill goes here //
+    // Retrieve buyer details
+    const buyerName = document.getElementById("buyerName").value;
+    const buyerMobile = document.getElementById("buyerMobile").value;
+    const buyerClass = document.getElementById("buyerClass").value;
+
+    // Retrieve invoice details
+    const invoiceNo = document.getElementById("invoiceNo").value;
+    const invoiceDate = new Date().toISOString().split('T')[0];
+
+    // Retrieve invoice summary
+    const totalAmount = document.getElementById("totalAmount").value;
+    const amountPaid = document.getElementById("amountPaid").value;
+    const balanceAmount = document.getElementById("balanceAmount").value;
+
+    // Retrieve book details
+    const bookRows = document.querySelectorAll("#booksTableBody tr");
+    const bookDetails = [];
+    bookRows.forEach((row, index) => {
+        const title = row.cells[0].innerText;
+        const quantity = row.cells[1].querySelector('input').value;
+        const unitPrice = row.cells[2].innerText;
+        const price = row.cells[3].innerText;
+
+        if (parseInt(quantity) > 0) {
+            bookDetails.push({ title, quantity, unitPrice, price });
+        }
+    });
+
+    // Retrieve uniform details
+    const uniformRows = document.querySelectorAll("#uniformsTableBody tr");
+    const uniformDetails = [];
+    uniformRows.forEach((row, index) => {
+        const item = row.cells[0].innerText;
+        const size = row.cells[1].querySelector('select').value;
+        const quantity = row.cells[2].querySelector('input').value;
+        const unitPrice = row.cells[3].innerText;
+        const price = row.cells[4].innerText;
+
+        if (parseInt(quantity) > 0) {
+            uniformDetails.push({ item, size, quantity, unitPrice, price });
+        }
+    });
+
+    // Construct the bill HTML
+    const billHtml = `
+    <div class="page-header text-blue-d2">
+        <h1 class="page-title text-secondary-d1">Invoice <small class="page-info"><i class="fa fa-angle-double-right text-80"></i> ID: #${invoiceNo}</small></h1>
+    </div>
+    <div class="container px-0">
+        <div class="row mt-4">
+            <div class="col-12 col-lg-12">                
+                <hr class="row brc-default-l1 mx-n1 mb-4" />
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div>
+                            <span class="text-sm text-grey-m2 align-middle">To:</span>
+                            <span class="text-600 text-110 text-blue align-middle">${buyerName}</span>
+                        </div>
+                        <div class="text-grey-m2">
+                            <div class="my-1">Class: ${buyerClass}</div>
+                            <div class="my-1"><i class="fa fa-phone fa-flip-horizontal text-secondary"></i> <b class="text-600">${buyerMobile}</b></div>
+                        </div>
+                    </div>
+                    <div class="text-95 col-sm-6 align-self-start d-sm-flex justify-content-end">
+                        <div class="text-grey-m2">
+                            <div class="mt-1 mb-2 text-secondary-m1 text-600 text-125">Invoice</div>
+                            <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">ID:</span> #${invoiceNo}</div>
+                            <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">Issue Date:</span> ${invoiceDate}</div>
+                            <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">Status:</span> <span class="badge badge-warning badge-pill px-25">Unpaid</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-container"  >
+                    <table class="table table-striped table-borderless border-0 border-b-2 brc-default-l1" style="height:100%">
+                        <thead class="bg-none bgc-default-tp1">
+                            <tr class="text-white">
+                                <th class="opacity-2">#</th>
+                                <th>Title</th>
+                                <th>Qty</th>
+                                <th>Unit Price</th>
+                                <th width="140">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-95 text-secondary-d3" style="overflow: auto; ">
+                            ${bookDetails.map((book, index) => `
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>${book.title}</td>
+                                    <td>${book.quantity}</td>
+                                    <td>${book.unitPrice}</td>
+                                    <td>${book.price}</td>
+                                </tr>
+                            `).join('')}
+                            ${uniformDetails.map((uniform, index) => `
+                                <tr>
+                                    <td>${index + bookDetails.length + 1}</td>
+                                    <td>${uniform.item} (Size: ${uniform.size})</td>
+                                    <td>${uniform.quantity}</td>
+                                    <td>${uniform.unitPrice}</td>
+                                    <td>${uniform.price}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12 col-sm-7 text-grey-d2 text-95 mt-2 mt-lg-0">
+                        
+                    </div>
+                    <div class="col-12 col-sm-5 text-grey text-90 order-first order-sm-last">
+                        <div class="row my-2">
+                            <div class="col-7 text-right">SubTotal</div>
+                            <div class="col-5"><span class="text-120 text-secondary-d1">${totalAmount}</span></div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-7 text-right">Paid Amount</div>
+                            <div class="col-5"><span class="text-110 text-secondary-d1">${amountPaid}</span></div>
+                        </div>
+                        <div class="row my-2 align-items-center bgc-primary-l3 p-2">
+                            <div class="col-7 text-right">Balance Amount</div>
+                            <div class="col-5"><span class="text-150 text-success-d3 opacity-2">${balanceAmount}</span></div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div>
+                    <span class="text-secondary-d1 text-105">Thank you for your business</span>
+                    <a href="#" class="btn btn-info btn-bold px-4 float-right mt-3 mt-lg-0">Pay Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+`;
+
+
+    // Insert the bill HTML into the display container
+    document.querySelector(".section.bill .table-container .page-content").innerHTML = billHtml;
 }
 
 
