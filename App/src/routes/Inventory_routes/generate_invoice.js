@@ -117,10 +117,9 @@ router.post("/inventory/generate_invoice/check_buyer", (req, res) => {
 
 /************************************** PRINT BUTTON FUNCTIONALITY    **************** */
 
-// Endpoint to insert invoice_details into the table - inventory_invoice_details
+// Endpoint to insert invoice details into the table - inventory_invoice_details
 router.post("/inventory/generate_invoice/invoice_details", (req, res) => {
     const { invoiceNo, invoiceDate, buyerName, buyerMobile, buyerClass, totalAmount, amountPaid, balanceAmount } = req.body;
-    //console.log(invoiceNo, invoiceDate, buyerName, buyerMobile, buyerClass, totalAmount, amountPaid, balanceAmount)
 
     // Query to insert invoice details into the database
     let query_insertInvoiceDetails = `INSERT INTO inventory_invoice_details (invoiceNo, billDate, buyerName, buyerPhone, class_of_buyer, total_payable, paid_amount, balance_amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
@@ -134,6 +133,47 @@ router.post("/inventory/generate_invoice/invoice_details", (req, res) => {
 
         // Send success response if insertion is successful
         res.json({ message: "Invoice details inserted successfully" });
+    });
+});
+
+// Endpoint to insert invoice items into the table - inventory_invoice_items
+router.post("/inventory/generate_invoice/invoice_items", (req, res) => {
+    const { invoiceNo, bookDetails, uniformDetails } = req.body;
+
+    // Combine book and uniform details into a single array for easier processing
+    const allDetails = [
+        ...bookDetails.map(book => ({ type: 'book', ...book })),
+        ...uniformDetails.map(uniform => ({ type: 'uniform', ...uniform }))
+    ];
+
+    let operationsCount = allDetails.length;
+    if (operationsCount === 0) {
+        return res.json({ message: "No items to insert" });
+    }
+
+    allDetails.forEach(detail => {
+        let query, values;
+        if (detail.type === 'book') {
+            query = `INSERT INTO inventory_invoice_items (invoiceNo, item_name, class_size, quantity) VALUES (?, ?, ?, ?)`;
+            values = [invoiceNo, detail.title, detail.class, detail.quantity];
+        } else {
+            query = `INSERT INTO inventory_invoice_items (invoiceNo, item_name, class_size, quantity) VALUES (?, ?, ?, ?)`;
+            values = [invoiceNo, detail.item, detail.size, detail.quantity];
+        }
+
+        connection.query(query, values, (err, result) => {
+            operationsCount--;
+            if (err) {
+                console.error(`Error inserting ${detail.type} details: ` + err.stack);
+                if (operationsCount === 0) {
+                    return res.status(500).json({ error: `Error inserting ${detail.type} details` });
+                }
+            } else {
+                if (operationsCount === 0) {
+                    res.json({ message: "Invoice items inserted successfully" });
+                }
+            }
+        });
     });
 });
 

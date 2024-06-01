@@ -221,27 +221,27 @@ document.getElementById("generateButton").addEventListener("click", function () 
         },
         body: JSON.stringify({ buyerName: buyerName, buyerClass: buyerClass })
     })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        }
-        throw new Error("Error checking buyer");
-    })
-    .then(data => {
-        if (data.exists) {
-            // Buyer exists for the given class
-            // Show a toast message indicating that the buyer already exists
-            showToast("Invoice for this name already exists", 'red');
-        } else {
-            // Buyer does not exist for the given class
-            // Proceed with generating the bill
-            generateBill();
-        }
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        showToast("An error occurred while checking the buyer.", true);
-    });
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error("Error checking buyer");
+        })
+        .then(data => {
+            if (data.exists) {
+                // Buyer exists for the given class
+                // Show a toast message indicating that the buyer already exists
+                showToast("Invoice for this name already exists", 'red');
+            } else {
+                // Buyer does not exist for the given class
+                // Proceed with generating the bill
+                generateBill();
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            showToast("An error occurred while checking the buyer.", true);
+        });
 });
 
 function generateBill() {
@@ -392,9 +392,8 @@ function generateBill() {
 /*****************************         PRINT BUTTON FUNCTIONALITY       ************************/
 
 document.getElementById("printButton").addEventListener("click", function () {
-
-
-    // Aaa validation to execute this only when bill is generated i.e. displayed on front-end
+    
+    // Add validation to execute this only when the bill is generated i.e. displayed on the front-end
 
     // Get buyer details
     var buyerName = document.getElementById("buyerName").value;
@@ -425,16 +424,12 @@ document.getElementById("printButton").addEventListener("click", function () {
     bookRows.forEach(row => {
         var title = row.cells[0].innerText;
         var quantity = row.cells[1].querySelector('input').value; // Get input value instead of cell text
-        var unitPrice = row.cells[2].innerText;
-        var price = row.cells[3].innerText;
-
-        // Debugging: Log each cell value
-        //console.log(`Book Title: ${title}, Quantity: ${quantity}, Unit Price: ${unitPrice}, Price: ${price}`);
 
         if (parseInt(quantity) > 0) {
-            bookDetails.push({ title, quantity, unitPrice, price });
+            bookDetails.push({ title, class: buyerClass, quantity });
         }
     });
+
     // Get uniform details, filtering out items with quantity 0 or null
     var uniformRows = document.querySelectorAll("#uniformsTableBody tr");
     var uniformDetails = [];
@@ -442,14 +437,9 @@ document.getElementById("printButton").addEventListener("click", function () {
         var item = row.cells[0].innerText;
         var size = row.cells[1].querySelector('select').value; // Get select value instead of cell text
         var quantity = row.cells[2].querySelector('input').value; // Get input value instead of cell text
-        var unitPrice = row.cells[3].innerText;
-        var price = row.cells[4].innerText;
-
-        // Debugging: Log each cell value
-        // console.log(`Uniform Item: ${item}, Size: ${size}, Quantity: ${quantity}, Unit Price: ${unitPrice}, Price: ${price}`);
 
         if (parseInt(quantity) > 0) {
-            uniformDetails.push({ item, size, quantity, unitPrice, price });
+            uniformDetails.push({ item, size, quantity });
         }
     });
 
@@ -467,8 +457,7 @@ document.getElementById("printButton").addEventListener("click", function () {
         uniformDetails: uniformDetails
     });
 
-
-    // Send the data to the server
+    // Send the data to the server for invoice details
     fetch("/inventory/generate_invoice/invoice_details", {
         method: "POST",
         headers: {
@@ -476,30 +465,50 @@ document.getElementById("printButton").addEventListener("click", function () {
         },
         body: requestBody
     })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error("Error inserting invoice details");
+    })
+    .then(data => {
+        showToast("Invoice saved successfully");
+
+        // Send the data to the server for invoice items
+        fetch("/inventory/generate_invoice/invoice_items", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: requestBody
+        })
         .then(response => {
             if (response.ok) {
                 return response.json();
             }
-            throw new Error("Error inserting invoice details");
+            throw new Error("Error inserting invoice items");
         })
         .then(data => {
-            //console.log("Invoice details inserted successfully:", data);
-            // Handle success (if needed)
-            showToast("Invoice saved successfully");
+            showToast("Stock updated successfully.");
             setTimeout(function () {
                 window.location.reload(); // Reload the page after showing the toast message
             }, 1000); // Match the duration of the toast message
         })
         .catch(error => {
             console.error("Error:", error);
-            if (error.message.includes("Error inserting invoice details: Error: Duplicate entry")) {
-                showToast("Error: Duplicate entry found. Please try again.");
-            } else {
-                showToast("Error: An error occurred while inserting invoice details.");
-            }
-            // Handle other errors (if needed)
+            showToast("Error: An error occurred while inserting invoice items.");
         });
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        if (error.message.includes("Error inserting invoice details: Error: Duplicate entry")) {
+            showToast("Error: Duplicate entry found. Please try again.");
+        } else {
+            showToast("Error: An error occurred while inserting invoice details.");
+        }
+    });
 });
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
