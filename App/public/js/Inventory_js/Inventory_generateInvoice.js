@@ -194,26 +194,24 @@ function updatePrice(selectElement) {
 
 /*****************************        GENERATE BUTTON FUNCTIONALITY     *********************** */
 
-// Function to handle the click event on the "Generate Bill" button
 document.getElementById("generateButton").addEventListener("click", function () {
-
-    
     // Get buyer details from input fields
     var buyerName = document.getElementById("buyerName").value;
     var buyerMobile = document.getElementById("buyerMobile").value;
     var amountPaid = document.getElementById("amountPaid").value;
     var buyerClass = document.getElementById("buyerClass").value;
 
-
     // Validate required fields
     if (!buyerName || !buyerMobile || !amountPaid) {
-        showToast("Name or Mobile or Paid amount must not be empty.", true);
+        showToast("Name, Mobile, or Paid amount must not be empty.", true);
         return; // Stop execution if validation fails
     }
 
-
-
-    //console.log(buyerName, buyerClass)
+    // Validate mobile number length
+    if (buyerMobile.length !== 10) {
+        showToast("Mobile number must be 10 digits long.", true);
+        return; // Stop execution if validation fails
+    }
 
     // Send a request to the server to check if the buyer exists for the given class
     fetch("/inventory/generate_invoice/check_buyer", {
@@ -223,24 +221,34 @@ document.getElementById("generateButton").addEventListener("click", function () 
         },
         body: JSON.stringify({ buyerName: buyerName, buyerClass: buyerClass })
     })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            }
-            throw new Error("Error checking buyer");
-        })
-        .then(data => {
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error("Error checking buyer");
+    })
+    .then(data => {
+        if (data.exists) {
             // Buyer exists for the given class
             // Show a toast message indicating that the buyer already exists
-            showToast("Invoice for this name already exist", 'red');
-
-        })
-        .catch(error => {
+            showToast("Invoice for this name already exists", 'red');
+        } else {
             // Buyer does not exist for the given class
             // Proceed with generating the bill
-            //generateBill();
-        });
+            generateBill();
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        showToast("An error occurred while checking the buyer.", true);
+    });
 });
+
+function generateBill() {
+    showToast('Invoice Generated Successfully.');
+
+    // Logic to Displa the bill goes here //
+}
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -90,11 +90,11 @@ router.post("/inventory/generate_invoice/get_uniform_price", (req, res) => {
 // Endpoint to check if the buyer exists for the given class
 router.post("/inventory/generate_invoice/check_buyer", (req, res) => {
     const { buyerName, buyerClass } = req.body;
-    //console.log(buyerName,buyerClass)
+    //console.log(buyerName, buyerClass);
 
     // Query to check if the buyer exists for the given class
     let query_checkBuyer = "SELECT * FROM inventory_invoice_details WHERE buyerName = ? AND class_of_buyer = ?";
-    
+
     // Execute the SQL query
     connection.query(query_checkBuyer, [buyerName, buyerClass], (err, result) => {
         if (err) {
@@ -106,10 +106,10 @@ router.post("/inventory/generate_invoice/check_buyer", (req, res) => {
         if (result.length > 0) {
             // Buyer exists
             res.json({ exists: true });
-            //console.log(result)
+            //console.log(result);
         } else {
             // Buyer does not exist
-            //res.json({ exists: false });
+            res.json({ exists: false });
         }
     });
 });
