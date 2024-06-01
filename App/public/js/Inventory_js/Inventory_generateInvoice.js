@@ -298,7 +298,7 @@ function generateBill() {
     <div class="container px-0">
         <div class="row mt-4">
             <div class="col-12 col-lg-12">                
-                <hr class="row brc-default-l1 mx-n1 mb-4" />
+                
                 <div class="row">
                     <div class="col-sm-6">
                         <div>
@@ -558,4 +558,26 @@ function showToast(message) {
     setTimeout(function () {
         toast.classList.remove("show");
     }, 4000);
+}
+
+
+function printContainer() {
+    var printContents = document.getElementById("printableContainer").innerHTML;
+    var originalContents = document.body.innerHTML;
+
+    // Create a new window to hold the content for printing
+    var printWindow = window.open('', '', 'height=500, width=800');
+
+    // Write the container content to the new window
+    printWindow.document.write('<html><head><title>Print Invoice</title>');
+    printWindow.document.write('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">');
+    printWindow.document.write('</head><body>');
+    printWindow.document.write(printContents);
+    printWindow.document.write('</body></html>');
+
+    printWindow.document.close(); // Close the document to trigger the onload event
+    printWindow.print(); // Print the content
+
+    // Close the print window
+    printWindow.close();
 }
