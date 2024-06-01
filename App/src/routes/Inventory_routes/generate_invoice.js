@@ -90,7 +90,7 @@ router.post("/inventory/generate_invoice/get_uniform_price", (req, res) => {
 // Endpoint to check if the buyer exists for the given class
 router.post("/inventory/generate_invoice/check_buyer", (req, res) => {
     const { buyerName, buyerClass } = req.body;
-    console.log(buyerName,buyerClass)
+    //console.log(buyerName,buyerClass)
 
     // Query to check if the buyer exists for the given class
     let query_checkBuyer = "SELECT * FROM inventory_invoice_details WHERE buyerName = ? AND class_of_buyer = ?";
@@ -106,9 +106,10 @@ router.post("/inventory/generate_invoice/check_buyer", (req, res) => {
         if (result.length > 0) {
             // Buyer exists
             res.json({ exists: true });
+            //console.log(result)
         } else {
             // Buyer does not exist
-            res.json({ exists: false });
+            //res.json({ exists: false });
         }
     });
 });
@@ -119,7 +120,7 @@ router.post("/inventory/generate_invoice/check_buyer", (req, res) => {
 // Endpoint to insert invoice_details into the table - inventory_invoice_details
 router.post("/inventory/generate_invoice/invoice_details", (req, res) => {
     const { invoiceNo, invoiceDate, buyerName, buyerMobile, buyerClass, totalAmount, amountPaid, balanceAmount } = req.body;
-    console.log(invoiceNo, invoiceDate, buyerName, buyerMobile, buyerClass, totalAmount, amountPaid, balanceAmount)
+    //console.log(invoiceNo, invoiceDate, buyerName, buyerMobile, buyerClass, totalAmount, amountPaid, balanceAmount)
 
     // Query to insert invoice details into the database
     let query_insertInvoiceDetails = `INSERT INTO inventory_invoice_details (invoiceNo, billDate, buyerName, buyerPhone, class_of_buyer, total_payable, paid_amount, balance_amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;

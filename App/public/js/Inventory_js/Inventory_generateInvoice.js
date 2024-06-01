@@ -97,8 +97,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-        // Fetch and display the last invoice number
-        fetch("/inventory/generate_invoice/getLast_invoice_number")
+    // Fetch and display the last invoice number
+    fetch("/inventory/generate_invoice/getLast_invoice_number")
         .then(response => response.json())
         .then(data => {
             // Display the last invoice number received from the server
@@ -195,12 +195,25 @@ function updatePrice(selectElement) {
 /*****************************        GENERATE BUTTON FUNCTIONALITY     *********************** */
 
 // Function to handle the click event on the "Generate Bill" button
-document.getElementById("generateButton").addEventListener("click", function() {
+document.getElementById("generateButton").addEventListener("click", function () {
+
+    
     // Get buyer details from input fields
     var buyerName = document.getElementById("buyerName").value;
+    var buyerMobile = document.getElementById("buyerMobile").value;
+    var amountPaid = document.getElementById("amountPaid").value;
     var buyerClass = document.getElementById("buyerClass").value;
 
-    console.log(buyerName, buyerClass)
+
+    // Validate required fields
+    if (!buyerName || !buyerMobile || !amountPaid) {
+        showToast("Name or Mobile or Paid amount must not be empty.", true);
+        return; // Stop execution if validation fails
+    }
+
+
+
+    //console.log(buyerName, buyerClass)
 
     // Send a request to the server to check if the buyer exists for the given class
     fetch("/inventory/generate_invoice/check_buyer", {
@@ -210,30 +223,35 @@ document.getElementById("generateButton").addEventListener("click", function() {
         },
         body: JSON.stringify({ buyerName: buyerName, buyerClass: buyerClass })
     })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        }
-        throw new Error("Error checking buyer");
-    })
-    .then(data => {
-        // Buyer exists for the given class
-        // Show a toast message indicating that the buyer already exists
-        showToast("Buyer already exists for this class");
-        console.log("eixst")
-    })
-    .catch(error => {
-        // Buyer does not exist for the given class
-        // Proceed with generating the bill
-        //generateBill();
-    });
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error("Error checking buyer");
+        })
+        .then(data => {
+            // Buyer exists for the given class
+            // Show a toast message indicating that the buyer already exists
+            showToast("Invoice for this name already exist", 'red');
+
+        })
+        .catch(error => {
+            // Buyer does not exist for the given class
+            // Proceed with generating the bill
+            //generateBill();
+        });
 });
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*****************************         PRINT BUTTON FUNCTIONALITY       ************************/
 
 document.getElementById("printButton").addEventListener("click", function () {
+
+
+    // Aaa validation to execute this only when bill is generated i.e. displayed on front-end
+
     // Get buyer details
     var buyerName = document.getElementById("buyerName").value;
     var buyerMobile = document.getElementById("buyerMobile").value;
@@ -242,14 +260,20 @@ document.getElementById("printButton").addEventListener("click", function () {
     // Get invoice details
     var invoiceNo = document.getElementById("invoiceNo").value;
 
-     // Get current date
-     var currentDate = new Date();
-     var invoiceDate = currentDate.toISOString().split('T')[0];
+    // Get current date
+    var currentDate = new Date();
+    var invoiceDate = currentDate.toISOString().split('T')[0];
 
     // Get invoice summary
     var totalAmount = document.getElementById("totalAmount").value;
     var amountPaid = document.getElementById("amountPaid").value;
     var balanceAmount = document.getElementById("balanceAmount").value;
+
+    // Validate required fields
+    if (!buyerName || !buyerMobile || !amountPaid) {
+        showToast("Name or Mobile or Paid amount must not be empty.", true);
+        return; // Stop execution if validation fails
+    }
 
     // Get book details, filtering out items with quantity 0 or null
     var bookRows = document.querySelectorAll("#booksTableBody tr");
@@ -278,7 +302,7 @@ document.getElementById("printButton").addEventListener("click", function () {
         var price = row.cells[4].innerText;
 
         // Debugging: Log each cell value
-       // console.log(`Uniform Item: ${item}, Size: ${size}, Quantity: ${quantity}, Unit Price: ${unitPrice}, Price: ${price}`);
+        // console.log(`Uniform Item: ${item}, Size: ${size}, Quantity: ${quantity}, Unit Price: ${unitPrice}, Price: ${price}`);
 
         if (parseInt(quantity) > 0) {
             uniformDetails.push({ item, size, quantity, unitPrice, price });
@@ -298,34 +322,60 @@ document.getElementById("printButton").addEventListener("click", function () {
         bookDetails: bookDetails,
         uniformDetails: uniformDetails
     });
-    
 
-// Send the data to the server
-fetch("/inventory/generate_invoice/invoice_details", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: requestBody
-})
-.then(response => {
-    if (response.ok) {
-        return response.json();
-    }
-    throw new Error("Error inserting invoice details");
-})
-.then(data => {
-    console.log("Invoice details inserted successfully:", data);
-    // Handle success (if needed)
-})
-.catch(error => {
-    console.error("Error:", error);
-    if (error.message.includes("Duplicate entry")) {
-        showToast("Error: Duplicate entry found. Please try again.");
-    } else {
-        showToast("Error: An error occurred while inserting invoice details.");
-    }
-    // Handle other errors (if needed)
-});
+
+    // Send the data to the server
+    fetch("/inventory/generate_invoice/invoice_details", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: requestBody
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error("Error inserting invoice details");
+        })
+        .then(data => {
+            //console.log("Invoice details inserted successfully:", data);
+            // Handle success (if needed)
+            showToast("Invoice saved successfully");
+            setTimeout(function () {
+                window.location.reload(); // Reload the page after showing the toast message
+            }, 1000); // Match the duration of the toast message
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            if (error.message.includes("Error inserting invoice details: Error: Duplicate entry")) {
+                showToast("Error: Duplicate entry found. Please try again.");
+            } else {
+                showToast("Error: An error occurred while inserting invoice details.");
+            }
+            // Handle other errors (if needed)
+        });
 });
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*****************************         RESET BUTTON FUNCTIONALITY       ************************/
+
+
+document.getElementById("resetButton").addEventListener("click", function () {
+    // Ask for confirmation before reloading the page
+    if (confirm("Are you sure you want to reset the form?")) {
+        window.location.reload(); // Reload the page after user confirmation
+    }
+});
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function showToast(message) {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.classList.add("show");
+    setTimeout(function () {
+        toast.classList.remove("show");
+    }, 4000);
+}
