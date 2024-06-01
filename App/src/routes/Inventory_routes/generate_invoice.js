@@ -1,6 +1,26 @@
 const express = require('express');
 const router = express.Router();
 
+// Endpoint to retrieve the last invoice number from the table
+router.get("/inventory/generate_invoice/getLast_invoice_number", (req, res) => {
+    // Query to fetch the last invoice number from the table
+    let query_lastInvoiceNumber = "SELECT MAX(invoiceNo) AS lastInvoiceNumber FROM inventory_invoice_details";
+
+    // Execute the SQL query
+    connection.query(query_lastInvoiceNumber, (err, result) => {
+        if (err) {
+            console.error("Error fetching last invoice number: " + err.stack);
+            return res.status(500).json({ error: "Error fetching last invoice number" });
+        }
+
+        // Extract the last invoice number from the result
+        const lastInvoiceNumber = result[0].lastInvoiceNumber || 0;
+
+        // Send the last invoice number as JSON response
+        res.json({ lastInvoiceNumber });
+    });
+});
+
 // Endpoint to get books based on the selected class
 router.post("/inventory/generate_invoice/get_books", (req, res) => {
     const selectedClass = req.body.class; // Retrieve the selected class from the request body
@@ -59,6 +79,60 @@ router.post("/inventory/generate_invoice/get_uniform_price", (req, res) => {
         } else {
             res.status(404).json({ error: "Price not found for the selected size" });
         }
+    });
+});
+ 
+
+////////////////////////////////////////////// SEND/RECEIVE DATA TO/FROM DATABASE /////////////////////////////////
+
+/************************************** GENERATE BUTTON FUNCTIONALITY    **************** */
+
+// Endpoint to check if the buyer exists for the given class
+router.post("/inventory/generate_invoice/check_buyer", (req, res) => {
+    const { buyerName, buyerClass } = req.body;
+    console.log(buyerName,buyerClass)
+
+    // Query to check if the buyer exists for the given class
+    let query_checkBuyer = "SELECT * FROM inventory_invoice_details WHERE buyerName = ? AND class_of_buyer = ?";
+    
+    // Execute the SQL query
+    connection.query(query_checkBuyer, [buyerName, buyerClass], (err, result) => {
+        if (err) {
+            console.error("Error checking buyer:", err);
+            return res.status(500).json({ error: "Error checking buyer" });
+        }
+
+        // Check if the buyer exists for the given class
+        if (result.length > 0) {
+            // Buyer exists
+            res.json({ exists: true });
+        } else {
+            // Buyer does not exist
+            res.json({ exists: false });
+        }
+    });
+});
+
+
+/************************************** PRINT BUTTON FUNCTIONALITY    **************** */
+
+// Endpoint to insert invoice_details into the table - inventory_invoice_details
+router.post("/inventory/generate_invoice/invoice_details", (req, res) => {
+    const { invoiceNo, invoiceDate, buyerName, buyerMobile, buyerClass, totalAmount, amountPaid, balanceAmount } = req.body;
+    console.log(invoiceNo, invoiceDate, buyerName, buyerMobile, buyerClass, totalAmount, amountPaid, balanceAmount)
+
+    // Query to insert invoice details into the database
+    let query_insertInvoiceDetails = `INSERT INTO inventory_invoice_details (invoiceNo, billDate, buyerName, buyerPhone, class_of_buyer, total_payable, paid_amount, balance_amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    // Execute the SQL query
+    connection.query(query_insertInvoiceDetails, [invoiceNo, invoiceDate, buyerName, buyerMobile, buyerClass, totalAmount, amountPaid, balanceAmount], (err, result) => {
+        if (err) {
+            console.error("Error inserting invoice details: " + err.stack);
+            return res.status(500).json({ error: "Error inserting invoice details" });
+        }
+
+        // Send success response if insertion is successful
+        res.json({ message: "Invoice details inserted successfully" });
     });
 });
 
