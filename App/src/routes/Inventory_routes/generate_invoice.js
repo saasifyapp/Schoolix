@@ -136,7 +136,6 @@ router.post("/inventory/generate_invoice/invoice_details", (req, res) => {
     });
 });
 
-// Endpoint to insert invoice items into the table - inventory_invoice_items
 router.post("/inventory/generate_invoice/invoice_items", (req, res) => {
     const { invoiceNo, bookDetails, uniformDetails } = req.body;
 
@@ -151,29 +150,111 @@ router.post("/inventory/generate_invoice/invoice_items", (req, res) => {
         return res.json({ message: "No items to insert" });
     }
 
+    let errorOccurred = false;
+
     allDetails.forEach(detail => {
         let query, values;
         if (detail.type === 'book') {
-            query = `INSERT INTO inventory_invoice_items (invoiceNo, item_name, class_size, quantity) VALUES (?, ?, ?, ?)`;
-            values = [invoiceNo, detail.title, detail.class, detail.quantity];
+            query = `INSERT INTO inventory_invoice_items (invoiceNo, item_name, class_size, quantity, type) VALUES (?, ?, ?, ?, ?)`;
+            values = [invoiceNo, detail.title, detail.class, detail.quantity, detail.book_type];
         } else {
-            query = `INSERT INTO inventory_invoice_items (invoiceNo, item_name, class_size, quantity) VALUES (?, ?, ?, ?)`;
-            values = [invoiceNo, detail.item, detail.size, detail.quantity];
+            query = `INSERT INTO inventory_invoice_items (invoiceNo, item_name, class_size, quantity, type) VALUES (?, ?, ?, ?, ?)`;
+            values = [invoiceNo, detail.item, detail.size, detail.quantity, detail.uniform_type];
         }
 
         connection.query(query, values, (err, result) => {
             operationsCount--;
             if (err) {
                 console.error(`Error inserting ${detail.type} details: ` + err.stack);
-                if (operationsCount === 0) {
-                    return res.status(500).json({ error: `Error inserting ${detail.type} details` });
-                }
-            } else {
-                if (operationsCount === 0) {
+                errorOccurred = true;
+            }
+
+            if (operationsCount === 0) {
+                if (errorOccurred) {
+                    return res.status(500).json({ error: "Error inserting invoice items" });
+                } else {
                     res.json({ message: "Invoice items inserted successfully" });
                 }
             }
         });
+    });
+});
+
+
+// Endpoint to reduce the remaining quantity of purchased items for both books and uniforms
+router.post("/inventory/reduce_quantity", (req, res) => {
+    const { invoiceNo } = req.body;
+
+    // Query to get purchased items from inventory_invoice_items
+    let query_getPurchasedItems = `SELECT item_name, class_size, quantity, type FROM inventory_invoice_items WHERE invoiceNo = ?`;
+
+    connection.query(query_getPurchasedItems, [invoiceNo], (err, results) => {
+        if (err) {
+            console.error("Error fetching purchased items: " + err.stack);
+            return res.status(500).json({ error: "Error fetching purchased items" });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: "No purchased items found for this invoice" });
+        }
+
+        // Separate purchased items into books and uniforms
+        let books = results.filter(item => item.type === 'Book');
+        let uniforms = results.filter(item => item.type === 'Uniform');
+
+        // Update remaining quantities for books
+        if (books.length > 0) {
+            let bookUpdatePromises = books.map(book => {
+                return new Promise((resolve, reject) => {
+                    let { item_name, class_size, quantity } = book;
+                    let query_updateBookQuantity = `UPDATE inventory_book_details SET remaining_quantity = remaining_quantity - ? WHERE title = ? AND class_of_title = ?`;
+
+                    connection.query(query_updateBookQuantity, [quantity, item_name, class_size], (err, result) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+                });
+            });
+
+            Promise.all(bookUpdatePromises)
+                .then(() => {
+                    console.log("Remaining quantities for books updated successfully");
+                })
+                .catch(err => {
+                    console.error("Error updating remaining quantities for books: " + err.stack);
+                });
+        }
+
+        // Update remaining quantities for uniforms
+        if (uniforms.length > 0) {
+            let uniformUpdatePromises = uniforms.map(uniform => {
+                return new Promise((resolve, reject) => {
+                    let { item_name, class_size, quantity } = uniform;
+                    let query_updateUniformQuantity = `UPDATE inventory_uniform_details SET remaining_quantity = remaining_quantity - ? WHERE uniform_item = ? AND size_of_item = ?`;
+
+                    connection.query(query_updateUniformQuantity, [quantity, item_name, class_size], (err, result) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+                });
+            });
+
+            Promise.all(uniformUpdatePromises)
+                .then(() => {
+                    console.log("Remaining quantities for uniforms updated successfully");
+                })
+                .catch(err => {
+                    console.error("Error updating remaining quantities for uniforms: " + err.stack);
+                });
+        }
+
+        res.json({ message: "Remaining quantities updated successfully" });
     });
 });
 

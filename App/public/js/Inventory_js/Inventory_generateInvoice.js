@@ -392,7 +392,7 @@ function generateBill() {
 /*****************************         PRINT BUTTON FUNCTIONALITY       ************************/
 
 document.getElementById("printButton").addEventListener("click", function () {
-    
+
     // Add validation to execute this only when the bill is generated i.e. displayed on the front-end
 
     // Get buyer details
@@ -424,9 +424,10 @@ document.getElementById("printButton").addEventListener("click", function () {
     bookRows.forEach(row => {
         var title = row.cells[0].innerText;
         var quantity = row.cells[1].querySelector('input').value; // Get input value instead of cell text
+        var book_type = 'Book'; // Set type as 'Book' for book items
 
         if (parseInt(quantity) > 0) {
-            bookDetails.push({ title, class: buyerClass, quantity });
+            bookDetails.push({ title, class: buyerClass, quantity, book_type: book_type }); // Modify 'book_type' to 'type'
         }
     });
 
@@ -437,9 +438,10 @@ document.getElementById("printButton").addEventListener("click", function () {
         var item = row.cells[0].innerText;
         var size = row.cells[1].querySelector('select').value; // Get select value instead of cell text
         var quantity = row.cells[2].querySelector('input').value; // Get input value instead of cell text
+        var uniform_type = 'Uniform'; // Set type as 'Uniform' for uniform items
 
         if (parseInt(quantity) > 0) {
-            uniformDetails.push({ item, size, quantity });
+            uniformDetails.push({ item, size, quantity, uniform_type: uniform_type }); // Modify 'uniform_type' to 'type'
         }
     });
 
@@ -465,49 +467,74 @@ document.getElementById("printButton").addEventListener("click", function () {
         },
         body: requestBody
     })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        }
-        throw new Error("Error inserting invoice details");
-    })
-    .then(data => {
-        showToast("Invoice saved successfully");
-
-        // Send the data to the server for invoice items
-        fetch("/inventory/generate_invoice/invoice_items", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: requestBody
-        })
         .then(response => {
             if (response.ok) {
                 return response.json();
             }
-            throw new Error("Error inserting invoice items");
+            throw new Error("Error inserting invoice details");
         })
         .then(data => {
-            showToast("Stock updated successfully.");
+            showToast("Invoice saved successfully");
+
+            // Send the data to the server for invoice items
+            fetch("/inventory/generate_invoice/invoice_items", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: requestBody
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error("Error inserting invoice items");
+                })
+                .then(data => {
+                    // After successfully inserting invoice items, update the remaining quantities
+                    updateRemainingQuantities(invoiceNo);
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    showToast("Error: An error occurred while inserting invoice items.");
+                });
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            if (error.message.includes("Error inserting invoice details: Error: Duplicate entry")) {
+                showToast("Error: Duplicate entry found. Please try again.");
+            } else {
+                showToast("Error: An error occurred while inserting invoice details.");
+            }
+        });
+});
+
+function updateRemainingQuantities(invoiceNo) {
+    // Send the invoice number to the server to reduce the remaining quantities
+    fetch("/inventory/reduce_quantity", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ invoiceNo: invoiceNo })
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error("Error updating remaining quantities");
+        })
+        .then(data => {
+            showToast("Stock updated successfully");
             setTimeout(function () {
                 window.location.reload(); // Reload the page after showing the toast message
             }, 1000); // Match the duration of the toast message
         })
         .catch(error => {
             console.error("Error:", error);
-            showToast("Error: An error occurred while inserting invoice items.");
+            showToast("Error: An error occurred while updating remaining quantities.");
         });
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        if (error.message.includes("Error inserting invoice details: Error: Duplicate entry")) {
-            showToast("Error: Duplicate entry found. Please try again.");
-        } else {
-            showToast("Error: An error occurred while inserting invoice details.");
-        }
-    });
-});
+}
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
