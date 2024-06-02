@@ -1,3 +1,15 @@
+// Function to show the loading animation
+function showInventoryLoadingAnimation() {
+    var loadingOverlay = document.getElementById("loadingOverlayInventory");
+    loadingOverlay.style.display = "flex"; // Hide the loading overlay
+}
+
+// Function to hide the loading animation
+function hideInventoryLoadingAnimation() {
+    var loadingOverlay = document.getElementById("loadingOverlayInventory");
+    loadingOverlay.style.display = "none"; // Hide the loading overlay
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     // Populate date dynamically in Date Field //
 
@@ -23,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Set the value of the "Class" input field 
         const classInput = document.getElementById("buyerClass");
         classInput.value = selectedClass;
-
+        showInventoryLoadingAnimation();
         // Fetch books based on the selected class
         const fetchBooks = fetch("/inventory/generate_invoice/get_books", {
             method: "POST",
@@ -87,13 +99,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // Update summary once tables are populated
                 updateSummary();
+                   
             })
             .catch(error => {
                 console.error("Error fetching data:", error);
+                hideInventoryLoadingAnimation(); 
             });
 
     } else {
         console.log("No selected class available.");
+        hideInventoryLoadingAnimation(); 
     }
 
 
@@ -105,8 +120,10 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("invoiceNo").value = data.lastInvoiceNumber + 1;
             // Set invoiceNo field as readonly
             document.getElementById("invoiceNo").setAttribute("readonly", true);
+            hideInventoryLoadingAnimation(); 
         })
         .catch(error => {
+            hideInventoryLoadingAnimation(); 
             console.error("Error fetching last invoice number:", error);
         });
 });
@@ -195,6 +212,7 @@ function updatePrice(selectElement) {
 /*****************************        GENERATE BUTTON FUNCTIONALITY     *********************** */
 
 document.getElementById("generateButton").addEventListener("click", function () {
+    showInventoryLoadingAnimation();
     // Get buyer details from input fields
     var buyerName = document.getElementById("buyerName").value;
     var buyerMobile = document.getElementById("buyerMobile").value;
@@ -203,12 +221,14 @@ document.getElementById("generateButton").addEventListener("click", function () 
 
     // Validate required fields
     if (!buyerName || !buyerMobile || !amountPaid) {
+        hideInventoryLoadingAnimation(); 
         showToast("Name, Mobile, or Paid amount must not be empty.", true);
         return; // Stop execution if validation fails
     }
 
     // Validate mobile number length
     if (buyerMobile.length !== 10) {
+        hideInventoryLoadingAnimation(); 
         showToast("Mobile number must be 10 digits long.", true);
         return; // Stop execution if validation fails
     }
@@ -229,16 +249,19 @@ document.getElementById("generateButton").addEventListener("click", function () 
         })
         .then(data => {
             if (data.exists) {
+                hideInventoryLoadingAnimation(); 
                 // Buyer exists for the given class
                 // Show a toast message indicating that the buyer already exists
                 showToast("Invoice for this name already exists", 'red');
             } else {
+                hideInventoryLoadingAnimation(); 
                 // Buyer does not exist for the given class
                 // Proceed with generating the bill
                 generateBill();
             }
         })
         .catch(error => {
+            hideInventoryLoadingAnimation(); 
             console.error("Error:", error);
             showToast("An error occurred while checking the buyer.", true);
         });
@@ -392,7 +415,6 @@ function generateBill() {
 /*****************************         PRINT BUTTON FUNCTIONALITY       ************************/
 
 document.getElementById("printButton").addEventListener("click", function () {
-
     // Add validation to execute this only when the bill is generated i.e. displayed on the front-end
 
     // Get buyer details
@@ -467,47 +489,59 @@ document.getElementById("printButton").addEventListener("click", function () {
         },
         body: requestBody
     })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error("Error inserting invoice details");
+    })
+    .then(data => {
+        showToast("Invoice saved successfully");
+
+        // Send the data to the server for invoice items
+        fetch("/inventory/generate_invoice/invoice_items", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: requestBody
+        })
         .then(response => {
             if (response.ok) {
                 return response.json();
             }
-            throw new Error("Error inserting invoice details");
+            throw new Error("Error inserting invoice items");
         })
         .then(data => {
-            showToast("Invoice saved successfully");
+            // After successfully inserting invoice items, update the remaining quantities
+            updateRemainingQuantities(invoiceNo);
 
-            // Send the data to the server for invoice items
-            fetch("/inventory/generate_invoice/invoice_items", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: requestBody
-            })
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    }
-                    throw new Error("Error inserting invoice items");
-                })
-                .then(data => {
-                    // After successfully inserting invoice items, update the remaining quantities
-                    updateRemainingQuantities(invoiceNo);
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    showToast("Error: An error occurred while inserting invoice items.");
-                });
+            // Generate the invoice for printing
+            var printContent = document.querySelector(".print-section").innerHTML;
+            var printWindow = window.open('', '_blank');
+            printWindow.document.write('<html><head><title>Invoice</title>');
+            printWindow.document.write('<link rel="stylesheet" href="path/to/your/css/file.css" type="text/css" />'); // Ensure your CSS file path is correct
+            printWindow.document.write('</head><body>');
+            printWindow.document.write(printContent);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
         })
         .catch(error => {
             console.error("Error:", error);
-            if (error.message.includes("Error inserting invoice details: Error: Duplicate entry")) {
-                showToast("Error: Duplicate entry found. Please try again.");
-            } else {
-                showToast("Error: An error occurred while inserting invoice details.");
-            }
+            showToast("Error: An error occurred while inserting invoice items.");
         });
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        if (error.message.includes("Error inserting invoice details: Error: Duplicate entry")) {
+            showToast("Error: Duplicate entry found. Please try again.");
+        } else {
+            showToast("Error: An error occurred while inserting invoice details.");
+        }
+    });
 });
+
 
 function updateRemainingQuantities(invoiceNo) {
     // Send the invoice number to the server to reduce the remaining quantities
@@ -551,10 +585,17 @@ document.getElementById("resetButton").addEventListener("click", function () {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function showToast(message) {
+function showToast(message, isError) {
     const toast = document.getElementById("toast");
     toast.textContent = message;
     toast.classList.add("show");
+    // Set class based on isError flag
+    if (isError) {
+        toast.classList.add("error");
+    } else {
+        toast.classList.remove("error");
+    }
+
     setTimeout(function () {
         toast.classList.remove("show");
     }, 4000);
@@ -563,7 +604,6 @@ function showToast(message) {
 
 function printContainer() {
     var printContents = document.getElementById("printableContainer").innerHTML;
-    var originalContents = document.body.innerHTML;
 
     // Create a new window to hold the content for printing
     var printWindow = window.open('', '', 'height=500, width=800');
@@ -571,13 +611,23 @@ function printContainer() {
     // Write the container content to the new window
     printWindow.document.write('<html><head><title>Print Invoice</title>');
     printWindow.document.write('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">');
+
+    // Include any custom CSS files here
+    // Example: printWindow.document.write('<link rel="stylesheet" href="path/to/your/custom.css">');
+
     printWindow.document.write('</head><body>');
     printWindow.document.write(printContents);
     printWindow.document.write('</body></html>');
 
-    printWindow.document.close(); // Close the document to trigger the onload event
-    printWindow.print(); // Print the content
+    // Close the document to trigger the onload event
+    printWindow.document.close();
 
-    // Close the print window
-    printWindow.close();
+    // Add a delay to ensure the window content is fully loaded before printing
+    printWindow.onload = function() {
+        printWindow.print();
+    };
+
+    // Instead of closing the print window immediately, let the user close it after printing
+    // printWindow.close(); // Do not close the print window immediately
 }
+
