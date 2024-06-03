@@ -198,9 +198,10 @@ router.post("/inventory/reduce_quantity", (req, res) => {
             return res.status(404).json({ message: "No purchased items found for this invoice" });
         }
 
-        // Separate purchased items into books and uniforms
-        let books = results.filter(item => item.type === 'Book');
+        // Separate purchased items into books, uniforms, and notebooks
+        let books = results.filter(item => item.type === 'Book' && item.item_name.toLowerCase() !== 'notebook');
         let uniforms = results.filter(item => item.type === 'Uniform');
+        let notebooks = results.filter(item => item.item_name.toLowerCase() === 'notebook');
 
         // Update remaining quantities for books
         if (books.length > 0) {
@@ -254,9 +255,34 @@ router.post("/inventory/reduce_quantity", (req, res) => {
                 });
         }
 
+        // Update remaining quantities for notebooks
+        if (notebooks.length > 0) {
+            let notebookUpdatePromises = notebooks.map(notebook => {
+                return new Promise((resolve, reject) => {
+                    let { item_name, quantity } = notebook;
+                    let query_updateNotebookQuantity = `UPDATE inventory_book_details SET remaining_quantity = remaining_quantity - ? WHERE title = 'Notebook'`;
+
+                    connection.query(query_updateNotebookQuantity, [quantity], (err, result) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+                });
+            });
+
+            Promise.all(notebookUpdatePromises)
+                .then(() => {
+                    console.log("Remaining quantities for notebooks updated successfully");
+                })
+                .catch(err => {
+                    console.error("Error updating remaining quantities for notebooks: " + err.stack);
+                });
+        }
+
         res.json({ message: "Remaining quantities updated successfully" });
     });
 });
-
 
 module.exports = router;
