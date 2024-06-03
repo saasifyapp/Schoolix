@@ -122,7 +122,7 @@ router.post("/inventory/generate_invoice/invoice_details", (req, res) => {
     const { invoiceNo, invoiceDate, buyerName, buyerMobile, buyerClass, totalAmount, amountPaid, balanceAmount, paymentMethod } = req.body;
 
     // Query to insert invoice details into the database
-    let query_insertInvoiceDetails = `INSERT INTO inventory_invoice_details (invoiceNo, billDate, buyerName, buyerPhone, class_of_buyer, total_payable, paid_amount, balance_amount, mode_of_payment) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    let query_insertInvoiceDetails = `INSERT INTO inventory_invoice_details (invoiceNo, billDate, buyerName, buyerPhone, class_of_buyer, total_payable, paid_amount, balance_amount, mode_of_payment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     // Execute the SQL query
     connection.query(query_insertInvoiceDetails, [invoiceNo, invoiceDate, buyerName, buyerMobile, buyerClass, totalAmount, amountPaid, balanceAmount, paymentMethod], (err, result) => {

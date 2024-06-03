@@ -213,6 +213,10 @@ function updatePrice(selectElement) {
 
 document.getElementById("generateButton").addEventListener("click", function () {
     showInventoryLoadingAnimation();
+    // Retrieve payment method
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
+
+
     // Get buyer details from input fields
     var buyerName = document.getElementById("buyerName").value;
     var buyerMobile = document.getElementById("buyerMobile").value;
@@ -232,6 +236,8 @@ document.getElementById("generateButton").addEventListener("click", function () 
         showToast("Mobile number must be 10 digits long.", true);
         return; // Stop execution if validation fails
     }
+
+
 
     // Send a request to the server to check if the buyer exists for the given class
     fetch("/inventory/generate_invoice/check_buyer", {
@@ -255,9 +261,15 @@ document.getElementById("generateButton").addEventListener("click", function () 
                 showToast("Invoice for this name already exists", 'red');
             } else {
                 hideInventoryLoadingAnimation();
-                // Buyer does not exist for the given class
-                // Proceed with generating the bill
-                generateBill();
+                // Check if the payment method is selected
+                if (!paymentMethod) {
+                    showToast("Please select a payment method", true);
+                    return;
+                }else{
+                    // Buyer does not exist for the given class
+                    // Proceed with generating the bill
+                    generateBill();
+                }
             }
         })
         .catch(error => {
@@ -267,19 +279,13 @@ document.getElementById("generateButton").addEventListener("click", function () 
         });
 });
 
-    // Determine payment status
-    let paymentStatus = '';
-    let badgeClass = '';
+// Determine payment status
+let paymentStatus = '';
+let badgeClass = '';
 function generateBill() {
     showToast('Invoice Generated Successfully.');
     // Retrieve payment method
     const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
-
-    // Check if the payment method is selected
-    if (!paymentMethod) {
-        showToast("Please select a payment method", true);
-        return;
-    }
     // Retrieve buyer details
     const buyerName = document.getElementById("buyerName").value;
     const buyerMobile = document.getElementById("buyerMobile").value;
