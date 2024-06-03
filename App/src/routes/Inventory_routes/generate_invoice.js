@@ -28,7 +28,7 @@ router.post("/inventory/generate_invoice/get_books", (req, res) => {
     //console.log("Received class for books:", selectedClass); // Debugging line to check received class
 
     // SQL query to get books based on the selected class
-    let query_getBooks = `SELECT title, selling_price FROM inventory_book_details WHERE class_of_title = ?`;
+    let query_getBooks = `SELECT title, selling_price FROM inventory_book_details WHERE class_of_title = ? OR class_of_title = 'AllClass'`;
 
     // Execute the SQL query
     connection.query(query_getBooks, [selectedClass], (err, rows) => {

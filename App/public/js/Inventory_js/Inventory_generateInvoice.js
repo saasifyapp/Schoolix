@@ -99,16 +99,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // Update summary once tables are populated
                 updateSummary();
-                   
+
             })
             .catch(error => {
                 console.error("Error fetching data:", error);
-                hideInventoryLoadingAnimation(); 
+                hideInventoryLoadingAnimation();
             });
 
     } else {
         console.log("No selected class available.");
-        hideInventoryLoadingAnimation(); 
+        hideInventoryLoadingAnimation();
     }
 
 
@@ -120,10 +120,10 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("invoiceNo").value = data.lastInvoiceNumber + 1;
             // Set invoiceNo field as readonly
             document.getElementById("invoiceNo").setAttribute("readonly", true);
-            hideInventoryLoadingAnimation(); 
+            hideInventoryLoadingAnimation();
         })
         .catch(error => {
-            hideInventoryLoadingAnimation(); 
+            hideInventoryLoadingAnimation();
             console.error("Error fetching last invoice number:", error);
         });
 });
@@ -221,14 +221,14 @@ document.getElementById("generateButton").addEventListener("click", function () 
 
     // Validate required fields
     if (!buyerName || !buyerMobile || !amountPaid) {
-        hideInventoryLoadingAnimation(); 
+        hideInventoryLoadingAnimation();
         showToast("Name, Mobile, or Paid amount must not be empty.", true);
         return; // Stop execution if validation fails
     }
 
     // Validate mobile number length
     if (buyerMobile.length !== 10) {
-        hideInventoryLoadingAnimation(); 
+        hideInventoryLoadingAnimation();
         showToast("Mobile number must be 10 digits long.", true);
         return; // Stop execution if validation fails
     }
@@ -249,19 +249,19 @@ document.getElementById("generateButton").addEventListener("click", function () 
         })
         .then(data => {
             if (data.exists) {
-                hideInventoryLoadingAnimation(); 
+                hideInventoryLoadingAnimation();
                 // Buyer exists for the given class
                 // Show a toast message indicating that the buyer already exists
                 showToast("Invoice for this name already exists", 'red');
             } else {
-                hideInventoryLoadingAnimation(); 
+                hideInventoryLoadingAnimation();
                 // Buyer does not exist for the given class
                 // Proceed with generating the bill
                 generateBill();
             }
         })
         .catch(error => {
-            hideInventoryLoadingAnimation(); 
+            hideInventoryLoadingAnimation();
             console.error("Error:", error);
             showToast("An error occurred while checking the buyer.", true);
         });
@@ -283,6 +283,21 @@ function generateBill() {
     const totalAmount = document.getElementById("totalAmount").value;
     const amountPaid = document.getElementById("amountPaid").value;
     const balanceAmount = document.getElementById("balanceAmount").value;
+
+    // Determine payment status
+    let paymentStatus = '';
+    let badgeClass = '';
+
+    if (balanceAmount == 0) {
+        paymentStatus = 'Paid';
+        badgeClass = 'badge-success';
+    } else if (amountPaid == 0) {
+        paymentStatus = 'Unpaid';
+        badgeClass = 'badge-warning';
+    } else {
+        paymentStatus = 'Balance';
+        badgeClass = 'badge-info';
+    }
 
     // Retrieve book details
     const bookRows = document.querySelectorAll("#booksTableBody tr");
@@ -338,7 +353,7 @@ function generateBill() {
                             <div class="mt-1 mb-2 text-secondary-m1 text-600 text-125">Invoice</div>
                             <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">ID:</span> #${invoiceNo}</div>
                             <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">Issue Date:</span> ${invoiceDate}</div>
-                            <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">Status:</span> <span class="badge badge-warning badge-pill px-25">Unpaid</span></div>
+                            <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">Status:</span> <span class="badge badge-warning badge-pill px-25">${paymentStatus}</span></div>
                         </div>
                     </div>
                 </div>
@@ -489,57 +504,57 @@ document.getElementById("printButton").addEventListener("click", function () {
         },
         body: requestBody
     })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        }
-        throw new Error("Error inserting invoice details");
-    })
-    .then(data => {
-        showToast("Invoice saved successfully");
-
-        // Send the data to the server for invoice items
-        fetch("/inventory/generate_invoice/invoice_items", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: requestBody
-        })
         .then(response => {
             if (response.ok) {
                 return response.json();
             }
-            throw new Error("Error inserting invoice items");
+            throw new Error("Error inserting invoice details");
         })
         .then(data => {
-            // After successfully inserting invoice items, update the remaining quantities
-            updateRemainingQuantities(invoiceNo);
+            showToast("Invoice saved successfully");
 
-            // Generate the invoice for printing
-            var printContent = document.querySelector(".print-section").innerHTML;
-            var printWindow = window.open('', '_blank');
-            printWindow.document.write('<html><head><title>Invoice</title>');
-            printWindow.document.write('<link rel="stylesheet" href="path/to/your/css/file.css" type="text/css" />'); // Ensure your CSS file path is correct
-            printWindow.document.write('</head><body>');
-            printWindow.document.write(printContent);
-            printWindow.document.write('</body></html>');
-            printWindow.document.close();
-            printWindow.print();
+            // Send the data to the server for invoice items
+            fetch("/inventory/generate_invoice/invoice_items", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: requestBody
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error("Error inserting invoice items");
+                })
+                .then(data => {
+                    // After successfully inserting invoice items, update the remaining quantities
+                    updateRemainingQuantities(invoiceNo);
+
+                    // Generate the invoice for printing
+                    var printContent = document.querySelector(".print-section").innerHTML;
+                    var printWindow = window.open('', '_blank');
+                    printWindow.document.write('<html><head><title>Invoice</title>');
+                    printWindow.document.write('<link rel="stylesheet" href="path/to/your/css/file.css" type="text/css" />'); // Ensure your CSS file path is correct
+                    printWindow.document.write('</head><body>');
+                    printWindow.document.write(printContent);
+                    printWindow.document.write('</body></html>');
+                    printWindow.document.close();
+                    printWindow.print();
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    showToast("Error: An error occurred while inserting invoice items.");
+                });
         })
         .catch(error => {
             console.error("Error:", error);
-            showToast("Error: An error occurred while inserting invoice items.");
+            if (error.message.includes("Error inserting invoice details: Error: Duplicate entry")) {
+                showToast("Error: Duplicate entry found. Please try again.");
+            } else {
+                showToast("Error: An error occurred while inserting invoice details.");
+            }
         });
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        if (error.message.includes("Error inserting invoice details: Error: Duplicate entry")) {
-            showToast("Error: Duplicate entry found. Please try again.");
-        } else {
-            showToast("Error: An error occurred while inserting invoice details.");
-        }
-    });
 });
 
 
@@ -623,7 +638,7 @@ function printContainer() {
     printWindow.document.close();
 
     // Add a delay to ensure the window content is fully loaded before printing
-    printWindow.onload = function() {
+    printWindow.onload = function () {
         printWindow.print();
     };
 
