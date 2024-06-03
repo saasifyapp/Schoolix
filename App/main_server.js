@@ -226,6 +226,11 @@ app.get('/inventory/reports', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_reports.html'));
 });
 
+//Serve HTML form
+app.get('/inventory/searchInvoice', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_searchInvoice.html'));
+});
+
 
 // Middleware to authenticate JWT
 function authenticateToken(req, res, next) {
@@ -362,6 +367,10 @@ app.use('/', purchaseReportsRouter);
 //////GENERATE INVOICE ROUTE
 const generateInvoiceRouter = require('./src/routes/Inventory_routes/generate_invoice');
 app.use('/', generateInvoiceRouter);
+
+//////SEARCH INVOICE ROUTE
+const searchInvoiceRouter = require('./src/routes/Inventory_routes/search_invoice');
+app.use('/', searchInvoiceRouter);
  
 
 

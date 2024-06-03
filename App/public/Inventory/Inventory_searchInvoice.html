@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/Inventory_Css/searchInvoice.css">
+    <title>Search Invoice</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Search Invoice</h1>
+        <div class="search-container">
+            <input type="text" id="searchBar" placeholder="Search for an invoice...">
+            <button id="refreshButton" onclick="refreshInvoiceData()">Refresh</button>
+        </div>
+        <table id="invoiceTable">
+            <thead>
+                <tr>
+                    <th>Invoice Number</th>
+                    <th>Date</th>
+                    <th>Student Name</th>
+                    <th>Phone</th>
+                    <th>Total Amount</th>
+                    <th>Paid Amount</th>
+                    <th>Balance</th>
+                    <th>Mode of Payment</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dynamic content will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="/js/Inventory_js/Inventory_searchInvoice.js"></script>
+</body>
+</html>
