@@ -267,6 +267,9 @@ document.getElementById("generateButton").addEventListener("click", function () 
         });
 });
 
+    // Determine payment status
+    let paymentStatus = '';
+    let badgeClass = '';
 function generateBill() {
     showToast('Invoice Generated Successfully.');
 
@@ -284,9 +287,6 @@ function generateBill() {
     const amountPaid = document.getElementById("amountPaid").value;
     const balanceAmount = document.getElementById("balanceAmount").value;
 
-    // Determine payment status
-    let paymentStatus = '';
-    let badgeClass = '';
 
     if (balanceAmount == 0) {
         paymentStatus = 'Paid';
@@ -431,7 +431,11 @@ function generateBill() {
 
 document.getElementById("printButton").addEventListener("click", function () {
     // Add validation to execute this only when the bill is generated i.e. displayed on the front-end
-
+    if(paymentStatus === ''){
+        showToast("Please genreate the bill first", true);
+    }
+    else{
+    showInventoryLoadingAnimation();
     // Get buyer details
     var buyerName = document.getElementById("buyerName").value;
     var buyerMobile = document.getElementById("buyerMobile").value;
@@ -541,8 +545,10 @@ document.getElementById("printButton").addEventListener("click", function () {
                     printWindow.document.write('</body></html>');
                     printWindow.document.close();
                     printWindow.print();
+                    hideInventoryLoadingAnimation();
                 })
                 .catch(error => {
+                    hideInventoryLoadingAnimation();
                     console.error("Error:", error);
                     showToast("Error: An error occurred while inserting invoice items.");
                 });
@@ -550,11 +556,14 @@ document.getElementById("printButton").addEventListener("click", function () {
         .catch(error => {
             console.error("Error:", error);
             if (error.message.includes("Error inserting invoice details: Error: Duplicate entry")) {
+                hideInventoryLoadingAnimation();
                 showToast("Error: Duplicate entry found. Please try again.");
             } else {
+                hideInventoryLoadingAnimation();
                 showToast("Error: An error occurred while inserting invoice details.");
             }
         });
+    }
 });
 
 
@@ -574,12 +583,14 @@ function updateRemainingQuantities(invoiceNo) {
             throw new Error("Error updating remaining quantities");
         })
         .then(data => {
-            showToast("Stock updated successfully");
+            // showToast("Stock updated successfully");
+            printContainer()
             setTimeout(function () {
                 window.location.reload(); // Reload the page after showing the toast message
             }, 1000); // Match the duration of the toast message
         })
         .catch(error => {
+            hideInventoryLoadingAnimation();
             console.error("Error:", error);
             showToast("Error: An error occurred while updating remaining quantities.");
         });
