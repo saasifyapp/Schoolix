@@ -487,7 +487,7 @@ document.getElementById("printButton").addEventListener("click", async function 
             const title = row.cells[0].innerText;
             const quantity = row.cells[1].querySelector('input').value; // Get input value instead of cell text
             const book_type = 'Book'; // Set type as 'Book' for book items
-            const notebook_type = title.toLowerCase() === 'notebook' ? 'Notebook' : 'Book'; // Check if the title is Notebook
+            const notebook_type = title.toLowerCase().includes('notebook') ? 'Notebook' : 'Book'; // Check if the title contains the keyword Notebook
         
             return (parseInt(quantity) > 0) ? { title, class: buyerClass, quantity, book_type, notebook_type } : null;
         }).filter(item => item);
