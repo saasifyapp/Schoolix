@@ -6,28 +6,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/Pre_Admission_Console_Css/dashboard.css">
     <link rel="stylesheet" href="/css/Pre_Admission_Console_Css/All.css">
+    <link rel="stylesheet" href="/css/NavButtons.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="/css/NavButtons.css">
-    <title>Pre-Admission Console</title>   
+    <!-- Boxicons CSS -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Pre-Admission Console</title>
 </head>
 
 <body>
 
-    <button class="corner-button left-button" onclick="window.location.href='/dashboard'" style="animation: slide-in 0.7s ease forwards;">
-        <img src="/images/homeicon.png" alt="Dashboard Icon">
-        <span>Home</span>
-      </button>
-      <button class="corner-button right-button signout-button" id="logoutButton" style="animation: slide-in 0.7s ease forwards;">
-        <img src="/images/logout.png" alt="Signout Icon">
-        <span>Signout</span>
-      </button>
+    <nav class="navbar">
+        <div class="logo_item">
+            <!-- <i class="bx bx-menu" id="sidebarOpen"></i> -->
+            <img id="logo" src="" alt="Logo">
+            <!-- <div class="user_name" id="user_name"></div> -->
+        </div>
+
+        <div class="navbar_center">
+            <button> <i class='bx' id="backButton"> <img src="/images/back.png" alt="Previous Icon"></i></button>
+            <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img
+                        src="/images/homeicon.png" alt="Dashboard Icon"></i></button>
+            <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
+                        alt="Signout Icon"></i></button>
+        </div>
+
+        <div class="navbar_content">
+            <!-- <i class="bi bi-grid"></i>
+          <i class='bx bx-bell'></i> -->
+        </div>
+    </nav>
 
     <div class="overlay"></div> <!-- Overlay element -->
 
     <div id="loadingOverlay2" class="loading-overlay2">
         <div class="loader2"></div>
-    </div> 
+    </div>
 
     <div class="adm-head">
         <div class="button-container">

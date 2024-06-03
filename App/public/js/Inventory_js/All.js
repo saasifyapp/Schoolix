@@ -110,3 +110,55 @@ window.addEventListener("load", function () {
 document.addEventListener("DOMContentLoaded", function () {
   showLoadingAnimation(); // Show loading animation when page starts loading
 });
+
+
+////// FUNCTION TO DISPLAY DYNAMIC USERNAME ON DASHBOARD //////////
+
+function decodeURIComponentSafe(encodedURIComponent) {
+  try {
+      return decodeURIComponent(encodedURIComponent);
+  } catch (e) {
+      // If decoding fails, return the original string
+      return encodedURIComponent;
+  }
+}
+
+
+// Function to display dynamic username and logo on dashboard
+function displayUserInfo(cookieName, usernameElementId, logoElementId) {
+  const cookies = document.cookie.split(';');
+  let username;
+  for (let cookie of cookies) {
+      const [name, value] = cookie.trim().split('=');
+      if (name === cookieName) {
+          username = decodeURIComponentSafe(value);
+          break;
+      }
+  }
+  if (username) {
+      const usernameElement = document.getElementById(usernameElementId);
+      if (usernameElement) {
+          usernameElement.textContent = username;
+      } else {
+          console.error(`Element with id '${usernameElementId}' not found`);
+      }
+
+      // Set the logo image dynamically
+      const logoElement = document.getElementById(logoElementId);
+      if (logoElement) {
+          // Assuming the logo filename is the same as the user ID
+          const userId = username.toLowerCase().replace(/\s+/g, '_'); // Convert username to lowercase and replace spaces with underscores
+          const logoSrc = `../images/logo/${userId}.png`; // Adjust the path if necessary
+          logoElement.src = logoSrc;
+          logoElement.alt = username; // Set alt text to username
+      } else {
+          console.error(`Element with id '${logoElementId}' not found`);
+      }
+  } else {
+      console.log(`Cookie '${cookieName}' not found`);
+  }
+}
+
+// Call the function to display the dynamic username and logo
+displayUserInfo('schoolName', 'user_name', 'logo');
+
