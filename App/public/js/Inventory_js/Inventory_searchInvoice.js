@@ -17,10 +17,18 @@ function displayInvoices(data) {
 
     try {
         data.forEach(invoice => {
+
+            // Format the date
+            const billDate = new Date(invoice.billDate).toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+
             const row = document.createElement('tr');
             row.innerHTML = `
             <td>${invoice.invoiceNo}</td>
-            <td>${invoice.billDate}</td>
+            <td>${billDate}</td>
             <td>${invoice.buyerName}</td>
             <td>${invoice.buyerPhone}</td>
             <td>${invoice.total_payable}</td>
