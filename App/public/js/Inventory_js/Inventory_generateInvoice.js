@@ -455,6 +455,8 @@ document.getElementById("printButton").addEventListener("click", async function 
     showInventoryLoadingAnimation();
 
     try {
+        // Retrieve payment method
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
         // Get buyer details
         const buyerName = document.getElementById("buyerName").value;
         const buyerMobile = document.getElementById("buyerMobile").value;
@@ -511,7 +513,8 @@ document.getElementById("printButton").addEventListener("click", async function 
             amountPaid,
             balanceAmount,
             bookDetails,
-            uniformDetails
+            uniformDetails,
+            paymentMethod
         });
 
         // Send the data to the server for invoice details
