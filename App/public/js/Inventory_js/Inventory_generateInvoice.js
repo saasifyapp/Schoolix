@@ -213,6 +213,10 @@ function updatePrice(selectElement) {
 
 document.getElementById("generateButton").addEventListener("click", function () {
     showInventoryLoadingAnimation();
+    // Retrieve payment method
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
+
+
     // Get buyer details from input fields
     var buyerName = document.getElementById("buyerName").value;
     var buyerMobile = document.getElementById("buyerMobile").value;
@@ -232,6 +236,8 @@ document.getElementById("generateButton").addEventListener("click", function () 
         showToast("Mobile number must be 10 digits long.", true);
         return; // Stop execution if validation fails
     }
+
+
 
     // Send a request to the server to check if the buyer exists for the given class
     fetch("/inventory/generate_invoice/check_buyer", {
@@ -255,9 +261,15 @@ document.getElementById("generateButton").addEventListener("click", function () 
                 showToast("Invoice for this name already exists", 'red');
             } else {
                 hideInventoryLoadingAnimation();
-                // Buyer does not exist for the given class
-                // Proceed with generating the bill
-                generateBill();
+                // Check if the payment method is selected
+                if (!paymentMethod) {
+                    showToast("Please select a payment method", true);
+                    return;
+                }else{
+                    // Buyer does not exist for the given class
+                    // Proceed with generating the bill
+                    generateBill();
+                }
             }
         })
         .catch(error => {
@@ -267,12 +279,13 @@ document.getElementById("generateButton").addEventListener("click", function () 
         });
 });
 
-    // Determine payment status
-    let paymentStatus = '';
-    let badgeClass = '';
+// Determine payment status
+let paymentStatus = '';
+let badgeClass = '';
 function generateBill() {
     showToast('Invoice Generated Successfully.');
-
+    // Retrieve payment method
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
     // Retrieve buyer details
     const buyerName = document.getElementById("buyerName").value;
     const buyerMobile = document.getElementById("buyerMobile").value;
@@ -407,12 +420,15 @@ function generateBill() {
                             <div class="col-7 text-right">Balance Amount</div>
                             <div class="col-5"><span class="text-150 text-success-d3 opacity-2">${balanceAmount}</span></div>
                         </div>
+                        <div class="row my-2 align-items-center bgc-primary-l3 p-2">
+                            <div class="col-7 text-right">Mode of Payment</div>
+                            <div class="col-5"><span class="text-150 text-success-d3 opacity-2">${paymentMethod}</span></div>
+                        </div>
                     </div>
                 </div>
                 <hr />
                 <div>
                     <span class="text-secondary-d1 text-105">Thank you for your business</span>
-                    <a href="#" class="btn btn-info btn-bold px-4 float-right mt-3 mt-lg-0">Pay Now</a>
                 </div>
             </div>
         </div>
@@ -439,6 +455,8 @@ document.getElementById("printButton").addEventListener("click", async function 
     showInventoryLoadingAnimation();
 
     try {
+        // Retrieve payment method
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
         // Get buyer details
         const buyerName = document.getElementById("buyerName").value;
         const buyerMobile = document.getElementById("buyerMobile").value;
@@ -495,7 +513,8 @@ document.getElementById("printButton").addEventListener("click", async function 
             amountPaid,
             balanceAmount,
             bookDetails,
-            uniformDetails
+            uniformDetails,
+            paymentMethod
         });
 
         // Send the data to the server for invoice details
@@ -573,18 +592,28 @@ document.getElementById("resetButton").addEventListener("click", function () {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function showToast(message, isError) {
-    const toast = document.getElementById("toast");
-    toast.textContent = message;
-    toast.classList.add("show");
-    // Set class based on isError flag
+    const toastContainer = document.getElementById("toast-container");
+
+    // Create a new toast element
+    const toast = document.createElement("div");
+    toast.classList.add("toast");
     if (isError) {
         toast.classList.add("error");
-    } else {
-        toast.classList.remove("error");
     }
+    toast.textContent = message;
 
+    // Append the toast to the container
+    toastContainer.appendChild(toast);
+
+    // Show the toast
+    toast.style.display = 'block';
+
+    // Remove the toast after 4 seconds
     setTimeout(function () {
-        toast.classList.remove("show");
+        toast.style.animation = 'slideOutRight 0.5s forwards';
+        toast.addEventListener('animationend', function () {
+            toast.remove();
+        });
     }, 4000);
 }
 

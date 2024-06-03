@@ -121,42 +121,52 @@ body {
 
 
 
+/* Toast container to hold multiple toasts */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
 /* Toast CSS */
 .toast {
     width: 15rem;
-    position: fixed;
-    top: 20px;
-    right: -200px;
-    /* Initially off-screen to the right */
-    background-color: #4CAF50;
-    /* Green background */
+    margin-bottom: 10px;
+    background-color: #4CAF50; /* Green background */
     color: white;
     padding: 16px;
     border-radius: 8px;
-    z-index: 9999;
-    display: none;
-    /* Changed from 'none' to 'block' */
-    animation: slideInRight 0.5s forwards;
-    /* Slide in animation */
+    display: none; /* Initially hidden */
+    animation: slideInRight 0.5s forwards; /* Slide in animation */
 }
 
 @keyframes slideInRight {
     from {
-        right: -200px;
-        /* Start off-screen to the right */
+        opacity: 0;
+        transform: translateX(100%);
     }
-
     to {
-        right: 20px;
-        /* End at the desired position */
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100%);
     }
 }
 
 .toast.error {
-    background-color: #f44336;
-    color: white;
-    /* Red background for error */
+    background-color: #f44336; /* Red background for error */
 }
+
 
 
 /* loading aniamtion */

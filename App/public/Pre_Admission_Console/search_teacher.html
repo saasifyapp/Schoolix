@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"> 
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -16,13 +16,16 @@
 </head>
 
 <body>
-    
-    <div id="toast" class="toast"></div>
+
+    <div id="toast-container" class="toast-container">
+        <div id="toast" class="toast"></div>
+    </div>
 
     <div class="container-fluid">
         <div class="row flex-nowrap ">
             <div class="col-md-3 col-xl-2 px-sm-2 px-0 menu overflow-x-hidden fixed-top" style="height: 100vh;">
-                <div class="d-flex flex-column align-items-center align-items-sm-start px-1 pt-1 text-black" style="height: 100%;">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-1 pt-1 text-black"
+                    style="height: 100%;">
                     <a href="/pre_adm_dashboard"
                         class="d-flex align-items-center pb-1 py-0 mb-md-1 me-md-auto text-black text-decoration-none">
                         <span class="fs-4 d-none d-sm-inline  rounded-pill fw-500 text-decoration-none text-black p-2">
@@ -68,25 +71,27 @@
                                 <i class="fs-4 bi text-black"><img class="icon" src="/images/admitteacher.gif"></i>
                                 <span class="ms-1 d-none d-sm-inline  text-black">Admitted Teachers</span> </a>
                         </li>
-                      
+
                     </ul>
                     <hr>
-                    
+
                     <div class="pb-1 d-flex justify-content-between align-items-center w-100 mb-4">
                         <a onclick="logout()" class="d-flex flex-column align-items-center text-black nav-link1">
                             <i class=" fs-1 bi nav-item"><img class="" style="transform: rotate(180deg) ;background-color: transparent; 
-                            width: 30px; height: 30px;margin-top: 3px; "src="/images/logout.png"></i>
+                            width: 30px; height: 30px;margin-top: 3px; " src="/images/logout.png"></i>
                             <span class="ms-1 d-none d-sm-inline text-black mt-1">Signout</span>
                         </a>
                         <a href="/dashboard" class="d-flex flex-column align-items-center text-black nav-link1">
-                            <i class=" fs-1 bi nav-item "><img class=""   style="background-color: transparent; width: 30px; height: 29px;" src="/images/homeicon.png"></i>
+                            <i class=" fs-1 bi nav-item "><img class=""
+                                    style="background-color: transparent; width: 30px; height: 29px;"
+                                    src="/images/homeicon.png"></i>
                             <span class="ms-1 d-none d-sm-inline text-black ">Home</span>
                         </a>
                     </div>
-                            
-                    
+
+
                 </div>
-             
+
             </div>
             <div class="col-md-9 col-xl-10 offset-md-3 offset-xl-2 px-0">
                 <!-- Content area... -->
@@ -94,23 +99,26 @@
                 <div id="overlay" class="overlay"></div> <!-- Add overlay element -->
 
                 <div id="customAlert" class="custom-alert">
-                    <div id="toast" class="toast"></div>
+                    <div id="toast-container" class="toast-container">
+                        <div id="toast" class="toast"></div>
+                    </div>
                     <div class="left-container">
                         <style>
                         </style>
                         <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
                             type="module"></script>
                         <dotlottie-player class="dotlottie-container"
-                            src="https://lottie.host/9edc4e5b-7742-4c6a-a71f-a28f5b8945e7/2BPrQ2yDeu.json" background="transparent"
-                            speed="1" style="width: 100%; height: 100%;" loop autoplay></dotlottie-player>
+                            src="https://lottie.host/9edc4e5b-7742-4c6a-a71f-a28f5b8945e7/2BPrQ2yDeu.json"
+                            background="transparent" speed="1" style="width: 100%; height: 100%;" loop
+                            autoplay></dotlottie-player>
                     </div>
                     <div class="right-container">
                         <h2>Age Calculator</h2>
-            
+
                         <input type="date" id="birthdate" class="date-input">
                         <button type="button" id="calculateButton" class="calculate-button">Calculate Age</button>
                         <div id="output"></div> <!-- Placeholder for the output -->
-            
+
                         <div class="button-container-age">
                             <button class="clear_btn age-btn" id="clear_btn" onclick="clearPrompt()">
                                 <img src="/images/reset.png" alt="Clear Icon" width="25px" height="25px"
@@ -123,107 +131,107 @@
                                 Close
                             </button>
                         </div>
-            
+
                     </div>
-                </div> 
-            
-               
-    <div class="main">
-
-        <h2>Registered Teacher Details</h2>
-
-        <div class="top-right-buttons">
-            <button id="refreshButton" onclick="refreshData()">
-                <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px;">
-                Refresh
-            </button>
-
-            <button id="export_registered_teacher" onclick="exportToExcel()">
-                <img src="/images/export.png" alt="Export Icon" style="width: 25px; height: 25px;"> Export
-            </button>
-        </div>
-
-        <div class="search_item">
-            <div style="position: relative; display: inline-block;">
-                <input type="text" id="searchField" placeholder="Enter Teacher Name...">
-                <button id="searchButton" class="search-button" onclick="searchDetails()">
-                    <img src="../images/search.gif" alt="Search Icon" style="height: 100%;">
-                </button>
-            </div>
-        </div>
-            
-        
-        <div id="output">
-            <table id="teacherTable">
-                <thead>
-                    <tr>
-                        <th>Teacher Name</th>
-                        <th>Mobile No</th>
-                        <th>Address</th>
-                        <th>Date of Birth</th>
-                        <th>Qualification</th>
-                        <th>Experience</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="teacherData"></tbody>
-            </table>
-        </div>
-
-        <div id="loadingOverlay" class="loading-overlay">
-            <div class="pyramid-loader">
-                <div class="wrapper">
-                  <span class="side side1"></span>
-                  <span class="side side2"></span>
-                  <span class="side side3"></span>
-                  <span class="side side4"></span>
-                  <span class="shadow"></span>
                 </div>
-              </div>
-              
-        </div>
-        
 
-    </div>
 
-  
-    <!-- <div id="output" class="teacher-details"></div> -->
+                <div class="main">
 
-    <script>
+                    <h2>Registered Teacher Details</h2>
 
-        function showLoadingAnimation() {
-            document.getElementById('loadingOverlay').style.display = 'flex';
-        }
+                    <div class="top-right-buttons">
+                        <button id="refreshButton" onclick="refreshData()">
+                            <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px;">
+                            Refresh
+                        </button>
 
-        function hideLoadingAnimation() {
-            document.getElementById('loadingOverlay').style.display = 'none';
-        }
+                        <button id="export_registered_teacher" onclick="exportToExcel()">
+                            <img src="/images/export.png" alt="Export Icon" style="width: 25px; height: 25px;"> Export
+                        </button>
+                    </div>
 
-        // Function to add fade-up animation to table rows
-        function addFadeUpAnimation() {
-            const rows = document.querySelectorAll('#teacherData tr');
-            rows.forEach((row, index) => {
-                row.classList.add('fade-up');
-            });
-        }
+                    <div class="search_item">
+                        <div style="position: relative; display: inline-block;">
+                            <input type="text" id="searchField" placeholder="Enter Teacher Name...">
+                            <button id="searchButton" class="search-button" onclick="searchDetails()">
+                                <img src="../images/search.gif" alt="Search Icon" style="height: 100%;">
+                            </button>
+                        </div>
+                    </div>
 
-        function refreshData() {
-            showLoadingAnimation();
-            document.getElementById('searchField').value = '';
-            fetch('/teachers')
-                .then(response => response.json())
-                .then(data => displayTeachers(data))
-                .catch(error => console.error('Error:', error));
-        }
 
-        function displayTeachers(data) {
-            const teacherTableBody = document.getElementById('teacherData');
-            teacherTableBody.innerHTML = ''; // Clear previous data
+                    <div id="output">
+                        <table id="teacherTable">
+                            <thead>
+                                <tr>
+                                    <th>Teacher Name</th>
+                                    <th>Mobile No</th>
+                                    <th>Address</th>
+                                    <th>Date of Birth</th>
+                                    <th>Qualification</th>
+                                    <th>Experience</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="teacherData"></tbody>
+                        </table>
+                    </div>
 
-            try{
-            data.forEach(teacher => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
+                    <div id="loadingOverlay" class="loading-overlay">
+                        <div class="pyramid-loader">
+                            <div class="wrapper">
+                                <span class="side side1"></span>
+                                <span class="side side2"></span>
+                                <span class="side side3"></span>
+                                <span class="side side4"></span>
+                                <span class="shadow"></span>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- <div id="output" class="teacher-details"></div> -->
+
+                <script>
+
+                    function showLoadingAnimation() {
+                        document.getElementById('loadingOverlay').style.display = 'flex';
+                    }
+
+                    function hideLoadingAnimation() {
+                        document.getElementById('loadingOverlay').style.display = 'none';
+                    }
+
+                    // Function to add fade-up animation to table rows
+                    function addFadeUpAnimation() {
+                        const rows = document.querySelectorAll('#teacherData tr');
+                        rows.forEach((row, index) => {
+                            row.classList.add('fade-up');
+                        });
+                    }
+
+                    function refreshData() {
+                        showLoadingAnimation();
+                        document.getElementById('searchField').value = '';
+                        fetch('/teachers')
+                            .then(response => response.json())
+                            .then(data => displayTeachers(data))
+                            .catch(error => console.error('Error:', error));
+                    }
+
+                    function displayTeachers(data) {
+                        const teacherTableBody = document.getElementById('teacherData');
+                        teacherTableBody.innerHTML = ''; // Clear previous data
+
+                        try {
+                            data.forEach(teacher => {
+                                const row = document.createElement('tr');
+                                row.innerHTML = `
             <td>${teacher.teacher_name}</td>
             <td>${teacher.mobile_no}</td>
             <td>${teacher.res_address}</td>
@@ -271,57 +279,57 @@
     </button>
 </td>
         `;
-                teacherTableBody.appendChild(row);
-            });
-            addFadeUpAnimation();
-            hideLoadingAnimation();
-        } catch (error) {
-        console.error('Error displaying students:', error);
-        showToast('Error displaying students. Please try again.', true);
-        hideLoadingAnimation();
-        }
-        }
+                                teacherTableBody.appendChild(row);
+                            });
+                            addFadeUpAnimation();
+                            hideLoadingAnimation();
+                        } catch (error) {
+                            console.error('Error displaying students:', error);
+                            showToast('Error displaying students. Please try again.', true);
+                            hideLoadingAnimation();
+                        }
+                    }
 
 
 
 
-        function searchDetails() {
-            showLoadingAnimation();
+                    function searchDetails() {
+                        showLoadingAnimation();
 
-            const searchTerm = document.getElementById('searchField').value.trim();
+                        const searchTerm = document.getElementById('searchField').value.trim();
 
-            // Check if the search term is empty
-            if (searchTerm === '') {
-                // alert('Please enter a search term.');
-                showToast('Please enter a search term.', true); // Show error toast
-                refreshData();
-                hideLoadingAnimation();
-                return;
-            }
+                        // Check if the search term is empty
+                        if (searchTerm === '') {
+                            // alert('Please enter a search term.');
+                            showToast('Please enter a search term.', true); // Show error toast
+                            refreshData();
+                            hideLoadingAnimation();
+                            return;
+                        }
 
-            // If search term is empty, refresh data to show all teachers
-            if (!searchTerm) {
-                refreshData();
-                return;
-            }
+                        // If search term is empty, refresh data to show all teachers
+                        if (!searchTerm) {
+                            refreshData();
+                            return;
+                        }
 
-            // Fetch data from the server based on the search term
-            fetch(`/teachers/search?search=${encodeURIComponent(searchTerm)}`)
-                .then(response => response.json())
-                .then(data => {
-                    const teacherTable = document.getElementById('teacherData');
-                    teacherTable.innerHTML = ''; // Clear previous data
+                        // Fetch data from the server based on the search term
+                        fetch(`/teachers/search?search=${encodeURIComponent(searchTerm)}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                const teacherTable = document.getElementById('teacherData');
+                                teacherTable.innerHTML = ''; // Clear previous data
 
-                    if (data.length === 0) {
-                        // If no results found, display a message
-                        const noResultsRow = document.createElement('tr');
-                        noResultsRow.innerHTML = '<td colspan="7">No results found</td>';
-                        teacherTable.appendChild(noResultsRow);
-                    } else {
-                        // Append teacher data to the table
-                        data.forEach(teacher => {
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
+                                if (data.length === 0) {
+                                    // If no results found, display a message
+                                    const noResultsRow = document.createElement('tr');
+                                    noResultsRow.innerHTML = '<td colspan="7">No results found</td>';
+                                    teacherTable.appendChild(noResultsRow);
+                                } else {
+                                    // Append teacher data to the table
+                                    data.forEach(teacher => {
+                                        const row = document.createElement('tr');
+                                        row.innerHTML = `
                         <td>${teacher.teacher_name}</td>
                         <td>${teacher.mobile_no}</td>
                         <td>${teacher.res_address}</td>
@@ -369,123 +377,129 @@
     </button>
 </td>
                     `;
-                            teacherTable.appendChild(row);
-                        });
+                                        teacherTable.appendChild(row);
+                                    });
+                                }
+                                addFadeUpAnimation();
+                                hideLoadingAnimation();
+                            })
+                            .catch(error => console.error('Error:', error));
                     }
-                    addFadeUpAnimation();
-                    hideLoadingAnimation();
-                })
-                .catch(error => console.error('Error:', error));
-        }
 
 
 
-        function moveToAdmitted(teacherName, mobileNo, address, dob, qualification, experience) {
-            const confirmation = confirm(`Are you sure you want to admit the teacher "${teacherName}"?`);
-            if (confirmation) {
-                showLoadingAnimation();
-                fetch(`/move-to-admitted-teacher?name=${encodeURIComponent(teacherName)}&mobile=${encodeURIComponent(mobileNo)}&address=${encodeURIComponent(address)}&dob=${encodeURIComponent(dob)}&qualification=${encodeURIComponent(qualification)}&experience=${encodeURIComponent(experience)}`, {
-                    method: 'POST'
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Failed to admit teacher.');
+                    function moveToAdmitted(teacherName, mobileNo, address, dob, qualification, experience) {
+                        const confirmation = confirm(`Are you sure you want to admit the teacher "${teacherName}"?`);
+                        if (confirmation) {
+                            showLoadingAnimation();
+                            fetch(`/move-to-admitted-teacher?name=${encodeURIComponent(teacherName)}&mobile=${encodeURIComponent(mobileNo)}&address=${encodeURIComponent(address)}&dob=${encodeURIComponent(dob)}&qualification=${encodeURIComponent(qualification)}&experience=${encodeURIComponent(experience)}`, {
+                                method: 'POST'
+                            })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Failed to admit teacher.');
+                                    }
+                                    hideLoadingAnimation();
+                                    showToast('Teacher admitted successfully.', false); // Show error toast
+                                    // alert('Teacher admitted successfully.'); // Log success message
+                                    refreshData();
+                                })
+                                .catch(error => {
+                                    console.error('Error admitting teacher:', error);
+                                    hideLoadingAnimation();
+                                    // alert('An error occurred while admitting the teacher.');
+                                    showToast('An error occurred while admitting the teacher.', true); // Show error toast
+                                });
+                        } else {
+                            console.log('Admission canceled.'); // Log cancellation message
                         }
-                        hideLoadingAnimation();
-                        showToast('Teacher admitted successfully.', false); // Show error toast
-                        // alert('Teacher admitted successfully.'); // Log success message
-                        refreshData();
-                    })
-                    .catch(error => {
-                        console.error('Error admitting teacher:', error);
-                        hideLoadingAnimation();
-                        // alert('An error occurred while admitting the teacher.');
-                        showToast('An error occurred while admitting the teacher.', true); // Show error toast
-                    });
-            } else {
-                console.log('Admission canceled.'); // Log cancellation message
-            }
-        }
+                    }
 
-        function removeTeacher(teacherName, mobileNo) {
-            const confirmation = confirm(`Are you sure you want to remove the teacher "${teacherName}"?`);
-            if (confirmation) {
-                showLoadingAnimation();
-                fetch(`/remove-teacher?name=${encodeURIComponent(teacherName)}&mobile=${encodeURIComponent(mobileNo)}`, {
-                    method: 'DELETE'
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Failed to remove teacher.');
+                    function removeTeacher(teacherName, mobileNo) {
+                        const confirmation = confirm(`Are you sure you want to remove the teacher "${teacherName}"?`);
+                        if (confirmation) {
+                            showLoadingAnimation();
+                            fetch(`/remove-teacher?name=${encodeURIComponent(teacherName)}&mobile=${encodeURIComponent(mobileNo)}`, {
+                                method: 'DELETE'
+                            })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Failed to remove teacher.');
+                                    }
+                                    hideLoadingAnimation();
+                                    showToast('Teacher deleted successfully.', false); // Show error toast
+                                    // alert('Teacher removed successfully.'); // Log success message
+                                    refreshData(); // Refresh data after removing the teacher
+                                })
+                                .catch(error => {
+                                    console.error('Error removing teacher:', error);
+                                    hideLoadingAnimation();
+                                    showToast('An error occurred while removing the teacher.', true); // Show error toast
+                                    // alert('An error occurred while removing the teacher.');
+                                });
                         }
-                        hideLoadingAnimation();
-                        showToast('Teacher deleted successfully.', false); // Show error toast
-                        // alert('Teacher removed successfully.'); // Log success message
-                        refreshData(); // Refresh data after removing the teacher
-                    })
-                    .catch(error => {
-                        console.error('Error removing teacher:', error);
-                        hideLoadingAnimation();
-                        showToast('An error occurred while removing the teacher.', true); // Show error toast
-                        // alert('An error occurred while removing the teacher.');
-                    });
-            }
-        }
+                    }
 
-        function exportToExcel() {
-            var htmlTable = document.getElementById('teacherTable');
-            var html = htmlTable.outerHTML;
+                    function exportToExcel() {
+                        var htmlTable = document.getElementById('teacherTable');
+                        var html = htmlTable.outerHTML;
 
-            // Generate a temporary download link
-            var downloadLink = document.createElement("a");
-            document.body.appendChild(downloadLink);
+                        // Generate a temporary download link
+                        var downloadLink = document.createElement("a");
+                        document.body.appendChild(downloadLink);
 
-            // CSV representation of the HTML table
-            var csv = [];
-            var rows = htmlTable.rows;
-            for (var i = 0; i < rows.length; i++) {
-                var row = [], cols = rows[i].cells;
-                for (var j = 0; j < cols.length - 1; j++)
-                    row.push(cols[j].innerText);
-                csv.push(row.join(","));
-            }
+                        // CSV representation of the HTML table
+                        var csv = [];
+                        var rows = htmlTable.rows;
+                        for (var i = 0; i < rows.length; i++) {
+                            var row = [], cols = rows[i].cells;
+                            for (var j = 0; j < cols.length - 1; j++)
+                                row.push(cols[j].innerText);
+                            csv.push(row.join(","));
+                        }
 
-            // Convert to CSV string
-            var csvContent = csv.join("\n");
+                        // Convert to CSV string
+                        var csvContent = csv.join("\n");
 
-            // Set CSV as href and download attributes
-            downloadLink.href = 'data:text/csv;charset=utf-8,' + encodeURI(csvContent);
-            downloadLink.download = 'Registered_Teachers.csv';
+                        // Set CSV as href and download attributes
+                        downloadLink.href = 'data:text/csv;charset=utf-8,' + encodeURI(csvContent);
+                        downloadLink.download = 'Registered_Teachers.csv';
 
-            // Trigger the download
-            downloadLink.click();
-        }
+                        // Trigger the download
+                        downloadLink.click();
+                    }
 
-        function showToast(message, isError) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
+                    function showToast(message, isError) {
+                        const toastContainer = document.getElementById("toast-container");
 
-            // Set class based on isError flag
-            if (isError) {
-                toast.classList.add('error');
-            } else {
-                toast.classList.remove('error');
-            }
+                        // Create a new toast element
+                        const toast = document.createElement("div");
+                        toast.classList.add("toast");
+                        if (isError) {
+                            toast.classList.add("error");
+                        }
+                        toast.textContent = message;
 
-            // Show the toast
-            toast.style.display = 'block';
+                        // Append the toast to the container
+                        toastContainer.appendChild(toast);
 
-            // Hide the toast after 3 seconds
-            setTimeout(function () {
-                toast.style.display = 'none';
-            }, 3000);
-        }
+                        // Show the toast
+                        toast.style.display = 'block';
+
+                        // Remove the toast after 4 seconds
+                        setTimeout(function () {
+                            toast.style.animation = 'slideOutRight 0.5s forwards';
+                            toast.addEventListener('animationend', function () {
+                                toast.remove();
+                            });
+                        }, 4000);
+                    }
 
 
-        refreshData();
-    </script>
+                    refreshData();
+                </script>
 
-    <script src="/js/Pre_Admission_Console_js/handle_session.js"></script>
-    <script src="/js/Pre_Admission_Console_js/age_calculator.js"></script>
+                <script src="/js/Pre_Admission_Console_js/handle_session.js"></script>
+                <script src="/js/Pre_Admission_Console_js/age_calculator.js"></script>
 
 </body>

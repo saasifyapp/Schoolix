@@ -376,6 +376,13 @@ nav {
     margin-right: 5px;
     /* Adjust the margin as needed */
 }
+/* Toast container to hold multiple toasts */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
 
 .toast {
     width: 15rem;

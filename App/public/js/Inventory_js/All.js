@@ -48,23 +48,29 @@ function closeOverlay(event) {
 
 // Function to display toast message
 function showToast(message, isError) {
-  const toast = document.getElementById("toast");
+  const toastContainer = document.getElementById("toast-container");
+
+  // Create a new toast element
+  const toast = document.createElement("div");
+  toast.classList.add("toast");
+  if (isError) {
+      toast.classList.add("error");
+  }
   toast.textContent = message;
 
-  // Set class based on isError flag
-  if (isError) {
-    toast.classList.add("error");
-  } else {
-    toast.classList.remove("error");
-  }
+  // Append the toast to the container
+  toastContainer.appendChild(toast);
 
   // Show the toast
-  toast.style.display = "block";
+  toast.style.display = 'block';
 
-  // Hide the toast after 3 seconds
+  // Remove the toast after 4 seconds
   setTimeout(function () {
-    toast.style.display = "none";
-  }, 3000);
+      toast.style.animation = 'slideOutRight 0.5s forwards';
+      toast.addEventListener('animationend', function () {
+          toast.remove();
+      });
+  }, 4000);
 }
 
 document.getElementById("logoutButton").addEventListener("click", function () {

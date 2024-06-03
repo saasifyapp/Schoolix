@@ -12,21 +12,24 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <title>Register Student</title>   
+    <title>Register Student</title>
 </head>
+
 <body>
-    <div id="toast" class="toast"></div>
+    <div id="toast-container" class="toast-container">
+        <div id="toast" class="toast"></div>
+    </div>
 
     <div id="loadingOverlay" class="loading-overlay">
         <div class="pyramid-loader">
             <div class="wrapper">
-              <span class="side side1"></span>
-              <span class="side side2"></span>
-              <span class="side side3"></span>
-              <span class="side side4"></span>
-              <span class="shadow"></span>
+                <span class="side side1"></span>
+                <span class="side side2"></span>
+                <span class="side side3"></span>
+                <span class="side side4"></span>
+                <span class="shadow"></span>
             </div>
-          </div>          
+        </div>
     </div>
     <div class="container-fluid">
         <div class="row  ">
@@ -106,7 +109,9 @@
                 <div id="overlay" class="overlay"></div> <!-- Add overlay element -->
 
                 <div id="customAlert" class="custom-alert">
-                    <div id="toast" class="toast"></div>
+                    <div id="toast-container" class="toast-container">
+                        <div id="toast" class="toast"></div>
+                    </div>
                     <div class="left-container">
                         <style>
                         </style>
@@ -514,23 +519,29 @@
         }
 
         function showToast(message, isError) {
-            const toast = document.getElementById('toast');
+            const toastContainer = document.getElementById("toast-container");
+
+            // Create a new toast element
+            const toast = document.createElement("div");
+            toast.classList.add("toast");
+            if (isError) {
+                toast.classList.add("error");
+            }
             toast.textContent = message;
 
-            // Set class based on isError flag
-            if (isError) {
-                toast.classList.add('error');
-            } else {
-                toast.classList.remove('error');
-            }
+            // Append the toast to the container
+            toastContainer.appendChild(toast);
 
             // Show the toast
             toast.style.display = 'block';
 
-            // Hide the toast after 3 seconds
+            // Remove the toast after 4 seconds
             setTimeout(function () {
-                toast.style.display = 'none';
-            }, 3000);
+                toast.style.animation = 'slideOutRight 0.5s forwards';
+                toast.addEventListener('animationend', function () {
+                    toast.remove();
+                });
+            }, 4000);
         }
 
 

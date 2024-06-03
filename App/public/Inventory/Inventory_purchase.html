@@ -108,7 +108,9 @@
       </a>
     </div>
   </div>
-  <div id="toast" class="toast"></div>
+  <div id="toast-container" class="toast-container">
+    <div id="toast" class="toast"></div>
+  </div>
 
   <!-- Overlay for Add Vendor -->
   <div id="addVendorOverlay" class="overlay">
@@ -133,7 +135,9 @@
 
         <form action="/inventory/purchase/add_vendor" method="post" id="vendorForm" class="addVendorForm">
 
-          <div id="toast" class="toast"></div>
+          <div id="toast-container" class="toast-container">
+            <div id="toast" class="toast"></div>
+          </div>
 
           <div class="form-group">
             <input type="text" class="form-control wide" id="vendorName" name="vendorName" placeholder=" " required
@@ -212,7 +216,9 @@
       <div class="form-container"
         style="display: flex; justify-content: center; align-items: center; margin-top: 3.5rem;">
         <form id="addBooksForm" class="addBookForm" style="display: flex; flex-wrap: wrap; gap: 0.6rem; width: 100%;">
-          <div id="toast" class="toast"></div>
+          <div id="toast-container" class="toast-container">
+            <div id="toast" class="toast"></div>
+          </div>
           <div class="form-group" style="flex: 1.6;">
             <input type="text" class="form-control" id="bookTitle" name="bookTitle" placeholder=" " required
               style="width: 100%;">
@@ -331,7 +337,9 @@
       <div class="form-container"
         style="display: flex; justify-content: center; align-items: center; margin-top: 3.5rem;">
         <form id="addUniformForm" class="addBookForm" style="display: flex; flex-wrap: wrap; gap: 0.6rem; width: 100%;">
-          <div id="toast" class="toast"></div>
+          <div id="toast-container" class="toast-container">
+            <div id="toast" class="toast"></div>
+          </div>
           <div class="form-group" style="flex: 1;">
             <input type="text" class="form-control" id="uniformItem" name="uniform_item" placeholder=" " required
               style="width: 100%;">
