@@ -267,6 +267,9 @@ document.getElementById("generateButton").addEventListener("click", function () 
         });
 });
 
+    // Determine payment status
+    let paymentStatus = '';
+    let badgeClass = '';
 function generateBill() {
     showToast('Invoice Generated Successfully.');
 
@@ -284,9 +287,6 @@ function generateBill() {
     const amountPaid = document.getElementById("amountPaid").value;
     const balanceAmount = document.getElementById("balanceAmount").value;
 
-    // Determine payment status
-    let paymentStatus = '';
-    let badgeClass = '';
 
     if (balanceAmount == 0) {
         paymentStatus = 'Paid';
@@ -429,161 +429,133 @@ function generateBill() {
 
 /*****************************         PRINT BUTTON FUNCTIONALITY       ************************/
 
-document.getElementById("printButton").addEventListener("click", function () {
+document.getElementById("printButton").addEventListener("click", async function () {
     // Add validation to execute this only when the bill is generated i.e. displayed on the front-end
-
-    // Get buyer details
-    var buyerName = document.getElementById("buyerName").value;
-    var buyerMobile = document.getElementById("buyerMobile").value;
-    var buyerClass = document.getElementById("buyerClass").value;
-
-    // Get invoice details
-    var invoiceNo = document.getElementById("invoiceNo").value;
-
-    // Get current date
-    var currentDate = new Date();
-    var invoiceDate = currentDate.toISOString().split('T')[0];
-
-    // Get invoice summary
-    var totalAmount = document.getElementById("totalAmount").value;
-    var amountPaid = document.getElementById("amountPaid").value;
-    var balanceAmount = document.getElementById("balanceAmount").value;
-
-    // Validate required fields
-    if (!buyerName || !buyerMobile || !amountPaid) {
-        showToast("Name or Mobile or Paid amount must not be empty.", true);
-        return; // Stop execution if validation fails
+    if (paymentStatus === '') {
+        showToast("Please generate the bill first", true);
+        return;
     }
 
-    // Get book details, filtering out items with quantity 0 or null
-    var bookRows = document.querySelectorAll("#booksTableBody tr");
-    var bookDetails = [];
-    bookRows.forEach(row => {
-        var title = row.cells[0].innerText;
-        var quantity = row.cells[1].querySelector('input').value; // Get input value instead of cell text
-        var book_type = 'Book'; // Set type as 'Book' for book items
+    showInventoryLoadingAnimation();
 
-        if (parseInt(quantity) > 0) {
-            bookDetails.push({ title, class: buyerClass, quantity, book_type: book_type }); // Modify 'book_type' to 'type'
+    try {
+        // Get buyer details
+        const buyerName = document.getElementById("buyerName").value;
+        const buyerMobile = document.getElementById("buyerMobile").value;
+        const buyerClass = document.getElementById("buyerClass").value;
+
+        // Get invoice details
+        const invoiceNo = document.getElementById("invoiceNo").value;
+
+        // Get current date
+        const currentDate = new Date();
+        const invoiceDate = currentDate.toISOString().split('T')[0];
+
+        // Get invoice summary
+        const totalAmount = document.getElementById("totalAmount").value;
+        const amountPaid = document.getElementById("amountPaid").value;
+        const balanceAmount = document.getElementById("balanceAmount").value;
+
+        // Validate required fields
+        if (!buyerName || !buyerMobile || !amountPaid) {
+            showToast("Name, Mobile, or Paid amount must not be empty.", true);
+            hideInventoryLoadingAnimation();
+            return;
         }
-    });
 
-    // Get uniform details, filtering out items with quantity 0 or null
-    var uniformRows = document.querySelectorAll("#uniformsTableBody tr");
-    var uniformDetails = [];
-    uniformRows.forEach(row => {
-        var item = row.cells[0].innerText;
-        var size = row.cells[1].querySelector('select').value; // Get select value instead of cell text
-        var quantity = row.cells[2].querySelector('input').value; // Get input value instead of cell text
-        var uniform_type = 'Uniform'; // Set type as 'Uniform' for uniform items
+        // Get book details, filtering out items with quantity 0 or null
+        const bookRows = document.querySelectorAll("#booksTableBody tr");
+        const bookDetails = Array.from(bookRows).map(row => {
+            const title = row.cells[0].innerText;
+            const quantity = row.cells[1].querySelector('input').value; // Get input value instead of cell text
+            const book_type = 'Book'; // Set type as 'Book' for book items
 
-        if (parseInt(quantity) > 0) {
-            uniformDetails.push({ item, size, quantity, uniform_type: uniform_type }); // Modify 'uniform_type' to 'type'
-        }
-    });
+            return (parseInt(quantity) > 0) ? { title, class: buyerClass, quantity, book_type } : null;
+        }).filter(item => item);
 
-    // Create the request body
-    var requestBody = JSON.stringify({
-        buyerName: buyerName,
-        buyerMobile: buyerMobile,
-        buyerClass: buyerClass,
-        invoiceNo: invoiceNo,
-        invoiceDate: invoiceDate,
-        totalAmount: totalAmount,
-        amountPaid: amountPaid,
-        balanceAmount: balanceAmount,
-        bookDetails: bookDetails,
-        uniformDetails: uniformDetails
-    });
+        // Get uniform details, filtering out items with quantity 0 or null
+        const uniformRows = document.querySelectorAll("#uniformsTableBody tr");
+        const uniformDetails = Array.from(uniformRows).map(row => {
+            const item = row.cells[0].innerText;
+            const size = row.cells[1].querySelector('select').value; // Get select value instead of cell text
+            const quantity = row.cells[2].querySelector('input').value; // Get input value instead of cell text
+            const uniform_type = 'Uniform'; // Set type as 'Uniform' for uniform items
 
-    // Send the data to the server for invoice details
-    fetch("/inventory/generate_invoice/invoice_details", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: requestBody
-    })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            }
+            return (parseInt(quantity) > 0) ? { item, size, quantity, uniform_type } : null;
+        }).filter(item => item);
+
+        // Create the request body
+        const requestBody = JSON.stringify({
+            buyerName,
+            buyerMobile,
+            buyerClass,
+            invoiceNo,
+            invoiceDate,
+            totalAmount,
+            amountPaid,
+            balanceAmount,
+            bookDetails,
+            uniformDetails
+        });
+
+        // Send the data to the server for invoice details
+        const invoiceDetailsResponse = await fetch("/inventory/generate_invoice/invoice_details", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: requestBody
+        });
+
+        if (!invoiceDetailsResponse.ok) {
             throw new Error("Error inserting invoice details");
-        })
-        .then(data => {
-            showToast("Invoice saved successfully");
+        }
+        showToast("Invoice details saved successfully");
 
-            // Send the data to the server for invoice items
-            fetch("/inventory/generate_invoice/invoice_items", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: requestBody
-            })
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    }
-                    throw new Error("Error inserting invoice items");
-                })
-                .then(data => {
-                    // After successfully inserting invoice items, update the remaining quantities
-                    updateRemainingQuantities(invoiceNo);
-
-                    // Generate the invoice for printing
-                    var printContent = document.querySelector(".print-section").innerHTML;
-                    var printWindow = window.open('', '_blank');
-                    printWindow.document.write('<html><head><title>Invoice</title>');
-                    printWindow.document.write('<link rel="stylesheet" href="path/to/your/css/file.css" type="text/css" />'); // Ensure your CSS file path is correct
-                    printWindow.document.write('</head><body>');
-                    printWindow.document.write(printContent);
-                    printWindow.document.write('</body></html>');
-                    printWindow.document.close();
-                    printWindow.print();
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    showToast("Error: An error occurred while inserting invoice items.");
-                });
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            if (error.message.includes("Error inserting invoice details: Error: Duplicate entry")) {
-                showToast("Error: Duplicate entry found. Please try again.");
-            } else {
-                showToast("Error: An error occurred while inserting invoice details.");
-            }
+        // Send the data to the server for invoice items
+        const invoiceItemsResponse = await fetch("/inventory/generate_invoice/invoice_items", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: requestBody
         });
-});
 
+        if (!invoiceItemsResponse.ok) {
+            throw new Error("Error inserting invoice items");
+        }
+        showToast("Invoice items saved successfully");
 
-function updateRemainingQuantities(invoiceNo) {
-    // Send the invoice number to the server to reduce the remaining quantities
-    fetch("/inventory/reduce_quantity", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ invoiceNo: invoiceNo })
-    })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            }
+        // After successfully inserting invoice items, update the remaining quantities
+        const updateQuantitiesResponse = await fetch("/inventory/reduce_quantity", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ invoiceNo })
+        });
+
+        if (!updateQuantitiesResponse.ok) {
             throw new Error("Error updating remaining quantities");
-        })
-        .then(data => {
-            showToast("Stock updated successfully");
-            setTimeout(function () {
-                window.location.reload(); // Reload the page after showing the toast message
-            }, 1000); // Match the duration of the toast message
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            showToast("Error: An error occurred while updating remaining quantities.");
-        });
-}
+        }
+        showToast("Stock updated successfully");
+
+        // Reload the page after showing the toast message
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000); // Match the duration of the toast message
+
+
+        printBill(); // PRINT THE BILL WHEN ALL OPERATIONS ARE SUCCESSFULLY COMPLETED //
+
+
+    } catch (error) {
+        console.error("Error:", error);
+        showToast(`Error: ${error.message.includes("Duplicate entry") ? "Duplicate entry found. Please try again." : "An error occurred."}`, true);
+    } finally {
+        hideInventoryLoadingAnimation();
+    }
+});
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -617,32 +589,36 @@ function showToast(message, isError) {
 }
 
 
-function printContainer() {
-    var printContents = document.getElementById("printableContainer").innerHTML;
+function printBill() {
+    // Create an iframe for printing
+    var printFrame = document.createElement('iframe');
+    printFrame.style.position = 'absolute';
+    printFrame.style.width = '0px';
+    printFrame.style.height = '0px';
+    printFrame.style.border = 'none';
+    document.body.appendChild(printFrame);
 
-    // Create a new window to hold the content for printing
-    var printWindow = window.open('', '', 'height=500, width=800');
+    // Get the content of the printable container
+    var printContents = document.getElementById('printableContainer').innerHTML;
 
-    // Write the container content to the new window
-    printWindow.document.write('<html><head><title>Print Invoice</title>');
-    printWindow.document.write('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">');
+    // Write the content to the iframe
+    var doc = printFrame.contentWindow.document;
+    doc.open();
+    doc.write('<html><head><title>Print Invoice</title>');
+    doc.write('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">');
+    doc.write('<link rel="stylesheet" href="/css/Inventory_Css/InventoryAll.css">');
+    doc.write('<link rel="stylesheet" href="/css/Inventory_Css/GenerateInvoice.css">');
+    doc.write('<link rel="stylesheet" href="/css/NavButtons.css">');
+    doc.write('<style>@media print { body * { visibility: hidden; } #printableContainer, #printableContainer * { visibility: visible; } #printableContainer { position: absolute; left: 0; top: 0; width: 100%; } }</style>');
+    doc.write('</head><body>');
+    doc.write('<div id="printableContainer">' + printContents + '</div>');
+    doc.write('</body></html>');
+    doc.close();
 
-    // Include any custom CSS files here
-    // Example: printWindow.document.write('<link rel="stylesheet" href="path/to/your/custom.css">');
+    // Print the iframe content
+    printFrame.contentWindow.focus();
+    printFrame.contentWindow.print();
 
-    printWindow.document.write('</head><body>');
-    printWindow.document.write(printContents);
-    printWindow.document.write('</body></html>');
-
-    // Close the document to trigger the onload event
-    printWindow.document.close();
-
-    // Add a delay to ensure the window content is fully loaded before printing
-    printWindow.onload = function () {
-        printWindow.print();
-    };
-
-    // Instead of closing the print window immediately, let the user close it after printing
-    // printWindow.close(); // Do not close the print window immediately
+    // Remove the iframe after printing
+    document.body.removeChild(printFrame);
 }
-
