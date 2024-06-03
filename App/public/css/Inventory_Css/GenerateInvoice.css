@@ -46,8 +46,9 @@ html, body {
 }
 
 .bill {
-    height: 530px;
+    height: 670px;
     padding-top: 10px;
+    z-index: 1;
 }
 
 .control-panel button {
@@ -236,6 +237,106 @@ hr {
 .align-bottom {
     vertical-align: bottom!important;
 }
+
+
+
+.form-container {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  animation: slideDownFromUp 0.7s ease-in-out; /* Adjust timing as needed */
+}
+
+
+.form-control {
+  padding: 1rem 1rem;
+  /* Adjusted padding to center placeholder vertically */
+  font-size: 1rem;
+  /* Increased font size */
+  border: 1px solid #ced4da;
+  border-radius: 10px;
+  transition: border-color 0.3s ease;
+  margin-right: 1rem;
+  flex: 1;
+  /* Allow input fields to grow */
+  height: 3rem;
+  /* Increased height for input fields */
+  transition: transform 0.3s ease-in-out;
+}
+
+.form-control.wide {
+  flex: 2;
+  /* Make first two fields wider */
+}
+
+.form-control:focus {
+  box-shadow: 0 0 10px #5DADE2;
+  outline: 1px solid #85C1E9; /* Add a solid outline */
+}
+.form-control:hover {
+  box-shadow: 0 0 10px #5DADE2;
+  transition: 0.3s;
+
+}
+
+.form-control-placeholder {
+  position: absolute;
+  top: 40%;
+  left: 0.75rem;
+  transform: translateY(-50%);
+  /* Center placeholder vertically */
+  pointer-events: none;
+  transition: top 0.2s, font-size 0.2s, transform 0.2s;
+  font-size: 16px;
+  color: #999;
+
+}
+
+.form-control:focus+.form-control-placeholder,
+.form-control:not(:placeholder-shown)+.form-control-placeholder {
+  top: -0.2rem;
+  /* Adjusted position when focused */
+  font-size: 0.80rem;
+  font-weight: 400;
+  background-color: white;
+  border-radius: 5px;
+  border-color: #85C1E9;   
+  border-top: 1px solid #85C1E9; /* Adding border top */
+  transform: translateY(0);
+  /* Reset transform */
+  color: #000;
+}
+
+  .form-control {
+      transition: box-shadow 0.3s ease, transform 0.3s ease-in-out;
+  }
+
+
+  .custom-btn {
+    font-size: 0.85rem; /* Further decrease the size */
+    padding: 0.25rem 0.75rem; /* Adjust padding for smaller size */
+    border-radius: 0.5rem; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow */
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+    margin: 0.25rem; /* Add margin between buttons */
+}
+
+.custom-btn i {
+    margin-right: 0.5rem; /* Add space between icon and text */
+}
+
+.custom-btn:hover {
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
 
 /* loading aniamtion */
 /* HTML: <div class="loader"></div> */

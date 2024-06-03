@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="/css/Inventory_Css/InventoryAll.css">
     <link rel="stylesheet" href="/css/Inventory_Css/GenerateInvoice.css">
     <link rel="stylesheet" href="/css/NavButtons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
 
 <body>
@@ -18,78 +20,83 @@
                 <div class="slide"><i></i></div>
                 <div class="paper"></div>
                 <div class="keyboard"></div>
-              </div>
-        </div>
-        
-    <nav class="navbar">
-        <div class="logo_item">
-            <!-- <i class="bx bx-menu" id="sidebarOpen"></i> -->
-            <img id="logo" src="" alt="Logo">
-            <!-- <div class="user_name" id="user_name"></div> -->
+            </div>
         </div>
 
-        <div class="navbar_center">
-            <button> <i class='bx' id="backButton"> <img src="/images/back.png" alt="Previous Icon"></i></button>
-            <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img
-                        src="/images/homeicon.png" alt="Dashboard Icon"></i></button>
-            <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
-                        alt="Signout Icon"></i></button>
-        </div>
+        <nav class="navbar">
+            <div class="logo_item">
+                <!-- <i class="bx bx-menu" id="sidebarOpen"></i> -->
+                <img id="logo" src="" alt="Logo">
+                <!-- <div class="user_name" id="user_name"></div> -->
+            </div>
 
-        <div class="navbar_content">
-            <!-- <i class="bi bi-grid"></i>
+            <div class="navbar_center">
+                <button> <i class='bx' id="backButton"> <img src="/images/back.png" alt="Previous Icon"></i></button>
+                <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img
+                            src="/images/homeicon.png" alt="Dashboard Icon"></i></button>
+                <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
+                            alt="Signout Icon"></i></button>
+            </div>
+
+            <div class="navbar_content">
+                <!-- <i class="bi bi-grid"></i>
           <i class='bx bx-bell'></i> -->
-        </div>
-    </nav>
+            </div>
+        </nav>
 
-        <div class="row" style="margin-top: 5rem;">
+        <div class="row" style="margin-top:3rem;">
             <!-- First Container -->
             <div class="col-md-7">
                 <div class="section" style="border-style: none;">
                     <div class="row">
                         <!-- Buyer Details -->
-                        <div class="col-md-8">
+                        <div class="col-md-7">
                             <div class="section buyer-details">
                                 <h5>Buyer Details</h5>
-                                <form>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="buyerName">Name</label>
-                                            <input type="text" class="form-control" id="buyerName" placeholder="Name">
+                                <div class="form-container">
+                                    <form>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-5">
+                                                <input type="text" class="form-control " id="buyerName" name="buyerName"
+                                                    placeholder=" " required>
+                                                <span class="form-control-placeholder">Name</span>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <input type="" class="form-control" id="buyerMobile"
+                                                    placeholder="" maxlength="10"><span
+                                                    class="form-control-placeholder">Mobile</span>
+
+                                            </div>
+                                            <div class="form-group col-md-3">                                                
+                                                <input type="text" class="form-control" id="buyerClass"
+                                                    placeholder="Class" readonly>
+                                                    <span class="form-control-placeholder">Class</span>
+                                            </div>
                                         </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="buyerMobile">Mobile</label>
-                                            <input type="number" class="form-control" id="buyerMobile"
-                                                placeholder="Mobile" maxlength="10">
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label for="buyerClass">Class</label>
-                                            <input type="text" class="form-control" id="buyerClass" placeholder="Class"
-                                                readonly>
-                                        </div>
-                                    </div>
-                                </form>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                         <!-- Invoice No and Date -->
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                             <div class="section invoice-details">
                                 <h5>Invoice Details</h5>
                                 <form>
                                     <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="invoiceNo">Invoice No</label>
-                                            <input type="text" class="form-control" id="invoiceNo"
-                                                placeholder="Invoice No">
+                                        <div class="form-group col-md-12">
+                                            <label for="invoiceNo" style="margin-top: 3px;">Invoice No &#8594;</label>
+                                            <input id="invoiceNo" style="border: none; width: 5rem; margin-left: 1rem;">  <!-- arrow character -->
                                         </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="invoiceDate">Date</label>
-                                            <input type="text" class="form-control" id="invoiceDate">
+                                        <div class="form-group col-md-12">
+                                            <label for="invoiceDate">Date  &#8594; </label>
+                                            <input id="invoiceDate"  style="border: none; width: 12rem; margin-left: 1rem;">
                                         </div>
                                     </div>
                                 </form>
                             </div>
                         </div>
+                        
                     </div>
                     <div class="row">
                         <!-- Display Books -->
@@ -153,9 +160,10 @@
                                 <h1 class="page-title text-secondary-d1">
                                     Invoice
                                     <small class="page-info">
-                                        <i class="fa fa-angle-double-right text-80"></i>
-                                        _____
+                                        <i class="fa fa-angle-double-right text-80"></i>                                       
+                                           
                                     </small>
+                                    
                                 </h1>
                             </div>
 
@@ -209,7 +217,8 @@
                                                     <div class="my-2"><i
                                                             class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span
                                                             class="text-600 text-90">Status:</span> <span
-                                                            class="badge badge-warning badge-pill px-25" id="payment-status">Unpaid</span>
+                                                            class="badge badge-warning badge-pill px-25"
+                                                            id="payment-status">Unpaid</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -217,47 +226,7 @@
                                         </div>
 
                                         <div class="mt-4">
-                                            <!-- <div class="row text-600 text-white bgc-default-tp1 py-25">
-                                                <div class="d-none d-sm-block col-1">#</div>
-                                                <div class="col-9 col-sm-5">Description</div>
-                                                <div class="d-none d-sm-block col-4 col-sm-2">Qty</div>
-                                                <div class="d-none d-sm-block col-sm-2">Unit Price</div>
-                                                <div class="col-2">Amount</div>
-                                            </div>
-                        
-                                            <div class="text-95 text-secondary-d3">
-                                                <div class="row mb-2 mb-sm-0 py-25">
-                                                    <div class="d-none d-sm-block col-1">1</div>
-                                                    <div class="col-9 col-sm-5">Domain registration</div>
-                                                    <div class="d-none d-sm-block col-2">2</div>
-                                                    <div class="d-none d-sm-block col-2 text-95">$10</div>
-                                                    <div class="col-2 text-secondary-d2">$20</div>
-                                                </div>
-                        
-                                                <div class="row mb-2 mb-sm-0 py-25 bgc-default-l4">
-                                                    <div class="d-none d-sm-block col-1">2</div>
-                                                    <div class="col-9 col-sm-5">Web hosting</div>
-                                                    <div class="d-none d-sm-block col-2">1</div>
-                                                    <div class="d-none d-sm-block col-2 text-95">$15</div>
-                                                    <div class="col-2 text-secondary-d2">$15</div>
-                                                </div>
-                        
-                                                <div class="row mb-2 mb-sm-0 py-25">
-                                                    <div class="d-none d-sm-block col-1">3</div>
-                                                    <div class="col-9 col-sm-5">Software development</div>
-                                                    <div class="d-none d-sm-block col-2">--</div>
-                                                    <div class="d-none d-sm-block col-2 text-95">$1,000</div>
-                                                    <div class="col-2 text-secondary-d2">$1,000</div>
-                                                </div>
-                        
-                                                <div class="row mb-2 mb-sm-0 py-25 bgc-default-l4">
-                                                    <div class="d-none d-sm-block col-1">4</div>
-                                                    <div class="col-9 col-sm-5">Consulting</div>
-                                                    <div class="d-none d-sm-block col-2">1 Year</div>
-                                                    <div class="d-none d-sm-block col-2 text-95">$500</div>
-                                                    <div class="col-2 text-secondary-d2">$500</div>
-                                                </div>
-                                            </div> -->
+                                           
 
                                             <div class="row border-b-2 brc-default-l2"></div>
 
@@ -344,56 +313,69 @@
                     <div class="section" style="border-style: none;">
                         <div class="row">
                             <!-- Invoice Summary -->
-                            <div class="col-md-8">
+                            <div class="col-md-7">
                                 <div class="section summary">
                                     <h5>Invoice Summary</h5>
+                                   <div class="form-container">
                                     <div class="form-row">
-                                        <div class="form-group col-md-3">
-                                            <label for="totalAmount">Total Amount</label>
-                                            <input type="text" class="form-control" id="totalAmount" placeholder="Total Amount" readonly>
+                                        <div class="form-group col-md-2">                                          
+                                            <input type="text" class="form-control" id="totalAmount"
+                                                placeholder="" readonly>
+                                                <span class="form-control-placeholder">Total</span>
                                         </div>
-                                        <div class="form-group col-md-3">
-                                            <label for="amountPaid">Paid</label>
-                                            <input type="number" class="form-control" id="amountPaid" placeholder="Paid">
+                                        <div class="form-group col-md-3">                                            
+                                            <input type="number" class="form-control" id="amountPaid"
+                                                placeholder="">
+                                                <span class="form-control-placeholder">Paid</span>
                                         </div>
-                                        <div class="form-group col-md-3">
-                                            <label for="balanceAmount">Balance</label>
-                                            <input type="text" class="form-control" id="balanceAmount" placeholder="Balance" readonly>
+                                        <div class="form-group col-md-2">                                           
+                                            <input type="text" class="form-control" id="balanceAmount"
+                                                placeholder="" readonly>
+                                                <span class="form-control-placeholder">Balance</span>
                                         </div>
-                                        <div class="form-group col-md-3">
+                                        <div class="col-md-4" style="margin-bottom: 1rem;">
                                             <label>Payment Method:</label><br>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="paymentMethod" id="cashPayment" value="cash">
+                                                <input class="form-check-input" type="radio" name="paymentMethod"
+                                                    id="cashPayment" value="cash">
                                                 <label class="form-check-label" for="cashPayment">Cash</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="paymentMethod" id="upiPayment" value="upi">
+                                                <input class="form-check-input" type="radio" name="paymentMethod"
+                                                    id="upiPayment" value="upi">
                                                 <label class="form-check-label" for="upiPayment">UPI</label>
                                             </div>
                                         </div>
                                     </div>
+                                   </div>
                                 </div>
                             </div>
-            
+
                             <!-- Control Panel -->
                             <div class="col-md-4">
                                 <div class="section control-panel">
                                     <h5>Control Panel</h5>
                                     <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-primary" id="generateButton">Generate
-                                            Bill</button>
-                                        <button type="button" class="btn btn-secondary" id="printButton"
-                                            >Print Bill</button>
-            
-                                        <button type="button" class="btn btn-danger" id="resetButton">Reset</button>
+                                        <button type="button" class="btn btn-primary custom-btn" id="generateButton">
+                                            <i class="fas fa-file-invoice"></i> Generate Bill
+                                        </button>
+                                        <button type="button" class="btn btn-secondary custom-btn" id="printButton">
+                                            <i class="fas fa-print"></i> Print Bill
+                                        </button>
+                                       
                                     </div>
+                                    <button type="button" class="btn btn-danger custom-btn" id="resetButton">
+                                        <i class="fas fa-redo"></i> Reset
+                                    </button>       
                                 </div>
                             </div>
+                            
+                            
                         </div>
                     </div>
                 </div>
             </div>
-            
+
 
             <div id="toast" class="toast"></div>
 
