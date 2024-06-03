@@ -31,7 +31,7 @@
             </div>
 
             <div class="navbar_center">
-                <button> <i class='bx' id="backButton"> <img src="/images/back.png" alt="Previous Icon"></i></button>
+                <button onclick="window.location.href='/inventory/billing'"> <i class='bx' id="backButton"> <img src="/images/back.png" alt="Previous Icon"></i></button>
                 <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img
                             src="/images/homeicon.png" alt="Dashboard Icon"></i></button>
                 <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
@@ -298,8 +298,6 @@
                                             <label>Payment Method:</label><br>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="paymentMethod" id="cashPayment" value="CASH">
-                                                <input class="form-check-input" type="radio" name="paymentMethod"
-                                                    id="cashPayment" value="cash">
                                                 <label class="form-check-label" for="cashPayment">Cash</label>
                                             </div>
                                             <div class="form-check form-check-inline">
