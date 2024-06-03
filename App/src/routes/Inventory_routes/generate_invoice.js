@@ -119,13 +119,13 @@ router.post("/inventory/generate_invoice/check_buyer", (req, res) => {
 
 // Endpoint to insert invoice details into the table - inventory_invoice_details
 router.post("/inventory/generate_invoice/invoice_details", (req, res) => {
-    const { invoiceNo, invoiceDate, buyerName, buyerMobile, buyerClass, totalAmount, amountPaid, balanceAmount } = req.body;
+    const { invoiceNo, invoiceDate, buyerName, buyerMobile, buyerClass, totalAmount, amountPaid, balanceAmount, paymentMethod } = req.body;
 
     // Query to insert invoice details into the database
-    let query_insertInvoiceDetails = `INSERT INTO inventory_invoice_details (invoiceNo, billDate, buyerName, buyerPhone, class_of_buyer, total_payable, paid_amount, balance_amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    let query_insertInvoiceDetails = `INSERT INTO inventory_invoice_details (invoiceNo, billDate, buyerName, buyerPhone, class_of_buyer, total_payable, paid_amount, balance_amount, mode_of_payment) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
     // Execute the SQL query
-    connection.query(query_insertInvoiceDetails, [invoiceNo, invoiceDate, buyerName, buyerMobile, buyerClass, totalAmount, amountPaid, balanceAmount], (err, result) => {
+    connection.query(query_insertInvoiceDetails, [invoiceNo, invoiceDate, buyerName, buyerMobile, buyerClass, totalAmount, amountPaid, balanceAmount, paymentMethod], (err, result) => {
         if (err) {
             console.error("Error inserting invoice details: " + err.stack);
             return res.status(500).json({ error: "Error inserting invoice details" });

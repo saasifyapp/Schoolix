@@ -272,7 +272,14 @@ document.getElementById("generateButton").addEventListener("click", function () 
     let badgeClass = '';
 function generateBill() {
     showToast('Invoice Generated Successfully.');
+    // Retrieve payment method
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
 
+    // Check if the payment method is selected
+    if (!paymentMethod) {
+        showToast("Please select a payment method", true);
+        return;
+    }
     // Retrieve buyer details
     const buyerName = document.getElementById("buyerName").value;
     const buyerMobile = document.getElementById("buyerMobile").value;
@@ -407,12 +414,15 @@ function generateBill() {
                             <div class="col-7 text-right">Balance Amount</div>
                             <div class="col-5"><span class="text-150 text-success-d3 opacity-2">${balanceAmount}</span></div>
                         </div>
+                        <div class="row my-2 align-items-center bgc-primary-l3 p-2">
+                            <div class="col-7 text-right">Mode of Payment</div>
+                            <div class="col-5"><span class="text-150 text-success-d3 opacity-2">${paymentMethod}</span></div>
+                        </div>
                     </div>
                 </div>
                 <hr />
                 <div>
                     <span class="text-secondary-d1 text-105">Thank you for your business</span>
-                    <a href="#" class="btn btn-info btn-bold px-4 float-right mt-3 mt-lg-0">Pay Now</a>
                 </div>
             </div>
         </div>
