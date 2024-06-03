@@ -340,42 +340,51 @@
 
             <!-- Third Container -->
             <div class="row" style="margin-top: 9rem;">
-                <div class="col-md-12">
+                <div class="col-md-9">
                     <div class="section" style="border-style: none;">
                         <div class="row">
                             <!-- Invoice Summary -->
-                            <div class="col-md-6">
+                            <div class="col-md-8">
                                 <div class="section summary">
                                     <h5>Invoice Summary</h5>
                                     <div class="form-row">
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-3">
                                             <label for="totalAmount">Total Amount</label>
-                                            <input type="text" class="form-control" id="totalAmount"
-                                                placeholder="Total Amount" readonly>
+                                            <input type="text" class="form-control" id="totalAmount" placeholder="Total Amount" readonly>
                                         </div>
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-3">
                                             <label for="amountPaid">Paid</label>
-                                            <input type="number" class="form-control" id="amountPaid"
-                                                placeholder="Paid">
+                                            <input type="number" class="form-control" id="amountPaid" placeholder="Paid">
                                         </div>
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-3">
                                             <label for="balanceAmount">Balance</label>
-                                            <input type="text" class="form-control" id="balanceAmount"
-                                                placeholder="Balance" readonly>
+                                            <input type="text" class="form-control" id="balanceAmount" placeholder="Balance" readonly>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label>Payment Method:</label><br>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="paymentMethod" id="cashPayment" value="cash">
+                                                <label class="form-check-label" for="cashPayment">Cash</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="paymentMethod" id="upiPayment" value="upi">
+                                                <label class="form-check-label" for="upiPayment">UPI</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+            
                             <!-- Control Panel -->
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="section control-panel">
                                     <h5>Control Panel</h5>
                                     <div class="btn-group" role="group">
                                         <button type="button" class="btn btn-primary" id="generateButton">Generate
                                             Bill</button>
                                         <button type="button" class="btn btn-secondary" id="printButton"
-                                            ">Print Bill</button>
-
+                                            >Print Bill</button>
+            
                                         <button type="button" class="btn btn-danger" id="resetButton">Reset</button>
                                     </div>
                                 </div>
@@ -384,6 +393,7 @@
                     </div>
                 </div>
             </div>
+            
 
             <div id="toast" class="toast"></div>
 
