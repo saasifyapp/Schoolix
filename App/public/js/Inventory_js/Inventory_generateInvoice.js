@@ -583,18 +583,28 @@ document.getElementById("resetButton").addEventListener("click", function () {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function showToast(message, isError) {
-    const toast = document.getElementById("toast");
-    toast.textContent = message;
-    toast.classList.add("show");
-    // Set class based on isError flag
+    const toastContainer = document.getElementById("toast-container");
+
+    // Create a new toast element
+    const toast = document.createElement("div");
+    toast.classList.add("toast");
     if (isError) {
         toast.classList.add("error");
-    } else {
-        toast.classList.remove("error");
     }
+    toast.textContent = message;
 
+    // Append the toast to the container
+    toastContainer.appendChild(toast);
+
+    // Show the toast
+    toast.style.display = 'block';
+
+    // Remove the toast after 4 seconds
     setTimeout(function () {
-        toast.classList.remove("show");
+        toast.style.animation = 'slideOutRight 0.5s forwards';
+        toast.addEventListener('animationend', function () {
+            toast.remove();
+        });
     }, 4000);
 }
 
