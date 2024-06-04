@@ -8,7 +8,7 @@ html, body {
     height: 100%;
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    padding: 20px;   
 }
 
 .row {
@@ -46,7 +46,7 @@ html, body {
 }
 
 .bill {
-    height: 670px;
+    height: 630px;
     padding-top: 10px;
     z-index: 1;
 }
@@ -54,6 +54,7 @@ html, body {
 .control-panel button {
     width: 120px;
 }
+
 
 .table-container {
 height: 100%; /* Set the desired fixed height for the table container */
@@ -99,6 +100,12 @@ width: 18.33%; /* Adjust the width percentage based on the number of columns */
 box-sizing: border-box;
 }
 
+
+
+.table th:first-child {
+  width: 18.33%; /* Ensure the width matches the other headers */
+}
+
 /* Uniform table column width adjustments */
 .uniform-item {
 width: 40%;
@@ -118,6 +125,22 @@ text-align: right; /* Aligns the text to the right */
 width: 30%;
 text-align: right; /* Aligns the text to the right */
 }
+
+.form-control-table{
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 10px;
+  transition: border-color 0.3s ease;
+  height: 2rem;
+}
+
+
+.form-control-table:hover {
+  box-shadow: 0 0 10px #5DADE2;
+  transition: 0.3s;
+
+}
+
 
 
 body{
@@ -271,6 +294,8 @@ hr {
   transition: transform 0.3s ease-in-out;
 }
 
+
+
 .form-control.wide {
   flex: 2;
   /* Make first two fields wider */
@@ -288,7 +313,7 @@ hr {
 
 .form-control-placeholder {
   position: absolute;
-  top: 40%;
+  top: 50%;
   left: 0.75rem;
   transform: translateY(-50%);
   /* Center placeholder vertically */

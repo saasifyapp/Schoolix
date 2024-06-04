@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     const row = document.createElement("tr");
                     row.innerHTML = `
                         <td>${book.title}</td>
-                        <td><input type="number" class="form-control" value="1" min="1"></td>
+                        <td><input type="number" class="form-control-table" value="1" min="1"  style="width: 3rem"></td>
                         <td>${book.selling_price}</td>
                         <td class="total-price">${book.selling_price}</td>
                     `;
@@ -83,11 +83,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     row.innerHTML = `
         <td>${uniformName}</td>
         <td>
-            <select class="form-control" onchange="updatePrice(this)">
+            <select class="form-control-table" onchange="updatePrice(this)">
                 ${sizeOptions}
             </select>
         </td>
-        <td><input type="number" class="form-control" value="1" min="1"></td>
+        <td><input type="number" class="form-control-table" value="1" min="1" style="width: 3rem"></td>
         <td class="price">${groupedUniforms[uniformName][0].price}</td>
         <td class="total-price">${groupedUniforms[uniformName][0].price}</td>
     `;
