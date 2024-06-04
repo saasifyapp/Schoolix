@@ -212,9 +212,8 @@ function closeModal() {
 }
 
 // Initial data load
-document.addEventListener('DOMContentLoaded', (event) => {
-    refreshInvoiceData();
-});
+refreshInvoiceData();
+
 
 // Close modal when clicking outside of it
 window.onclick = function(event) {
