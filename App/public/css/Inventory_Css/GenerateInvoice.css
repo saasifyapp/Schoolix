@@ -22,6 +22,7 @@ html, body {
     box-sizing: border-box;        
     background-color: white;
     position: relative;
+    border-radius: 10px;
 }
 
 .section h5 {
@@ -132,6 +133,7 @@ text-align: right; /* Aligns the text to the right */
   border-radius: 10px;
   transition: border-color 0.3s ease;
   height: 2rem;
+  text-align: center;
 }
 
 
@@ -139,6 +141,11 @@ text-align: right; /* Aligns the text to the right */
   box-shadow: 0 0 10px #5DADE2;
   transition: 0.3s;
 
+}
+
+.form-check-input:hover{
+  box-shadow: 0 0 10px #5DADE2;
+  transition: 0.3s;
 }
 
 
@@ -344,25 +351,57 @@ hr {
   }
 
 
-  .custom-btn {
-    font-size: 0.85rem; /* Further decrease the size */
-    padding: 0.25rem 0.75rem; /* Adjust padding for smaller size */
-    border-radius: 0.5rem; /* Rounded corners */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow */
-    transition: all 0.3s ease; /* Smooth transition for hover effects */
-    margin: 0.25rem; /* Add margin between buttons */
+  
+  .control-button-container {
+    display: flex;
+    justify-content: space-between; /* Distributes space between buttons evenly */
+    align-items: center; /* Vertically centers the buttons */
+    gap: 15px; /* Adds some space between buttons */
+    flex-wrap: nowrap; /* Prevents wrapping to a new line */
+    margin-top: 1rem;
+  }
+  
+  .control-button {
+    margin-bottom: 15px; /* Add margin between the buttons */
+    cursor: pointer;
+    background-color: transparent;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    color: black;
+    border: 1px solid black;
+    border-radius: 20px;
+    height: 2.3rem;
+    width: 6rem;
+    font-size: 1rem; /* Reduce the font size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px; /* Add padding to fit content */
+    transition: all 0.3s; /* Add transition for smooth hover effect */
+    font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
+    position: relative; /* Change position to relative */
+  }
+  
+  .control-button img {
+    height: 80%; /* Set image height to fit button */
+    margin-right: 5px;
+  }
+  
+  .control-button:hover {
+    background-color: #27AE60; /* Change background color on hover */
+    transform: scale(1.05);
+  }
+
+  #resetButton:hover {
+    background-color: #76D7C4; /* Change background color on hover */
+    transform: scale(1.05); /* Increase size on hover */
 }
 
-.custom-btn i {
-    margin-right: 0.5rem; /* Add space between icon and text */
+#printButton:hover {
+  background-color: #B0B0B0; /* Change background color on hover */
+  transform: scale(1.05); /* Increase size on hover */
 }
-
-.custom-btn:hover {
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
-    transform: translateY(-2px); /* Slight lift effect */
-}
-
-
+  
 /* loading aniamtion */
 /* HTML: <div class="loader"></div> */
 .loading-overlay {

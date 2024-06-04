@@ -47,7 +47,7 @@
 
         <div class="row" style="margin-top:3rem;">
             <!-- First Container -->
-            <div class="col-md-7">
+            <div class="col-md-8">
                 <div class="section" style="border-style: none;">
                     <div class="row">
                         <!-- Buyer Details -->
@@ -152,7 +152,7 @@
                 </div>
             </div>
             <!-- Second Container -->
-            <div class="col-md-5" style="height: 400px" id="printableContainer">
+            <div class="col-md-4" style="height: 400px;" id="printableContainer">
                 <div class="section bill">
                     <h5>Display Bill</h5>
                     <div class="full-width table-container" style="overflow-y: auto; /* Enable vertical scrolling */">
@@ -227,16 +227,13 @@
                                             <!-- /.col -->
                                         </div>
 
-                                        <div class="mt-4">
-
-
-                                            <div class="row border-b-2 brc-default-l2"></div>
+                                        <div class="mt-2">
 
                                             <!-- or use a table instead -->
 
                                             <div class="table-responsive">
-                                                <table
-                                                    class="table table-striped table-borderless border-0 border-b-2 brc-default-l1">
+                                                <table class="table table-striped table-borderless "
+                                                    style="height: 200px;">
                                                     <thead class="bg-none bgc-default-tp1">
                                                         <tr class="text-white">
                                                             <th class="opacity-2">#</th>
@@ -247,14 +244,11 @@
                                                         </tr>
                                                     </thead>
 
-                                                    <tbody class="text-95 text-secondary-d3">
-                                                        <tr></tr>
-                                                    </tbody>
                                                 </table>
                                             </div>
 
 
-                                            <hr />
+
 
                                             <div>
                                                 <span class="text-secondary-d1 text-105">Thank you for your
@@ -273,7 +267,7 @@
             <!-- Third Container -->
             <div class="row" style="margin-top: 9rem;">
                 <div class="col-md-9">
-                    <div class="section" style="border-style: none;">
+                    <div class="section" style="border-style: none; left: 1rem;">
                         <div class="row">
                             <!-- Invoice Summary -->
                             <div class="col-md-7">
@@ -315,66 +309,65 @@
                             </div>
 
                             <!-- Control Panel -->
-                            <div class="col-md-4">
+                            <div class="col-md-5">
                                 <div class="section control-panel">
                                     <h5>Control Panel</h5>
-                                    <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-primary custom-btn" id="generateButton">
-                                            <i class="fas fa-file-invoice"></i> Generate Bill
+                                    <div class="control-button-container">
+                                        <button id="generateButton" class="control-button">
+                                            <img src="/images/generateinvoice.png" alt="Refresh Icon" style="width: 25px; height: 25px;">
+                                            Generate
                                         </button>
-                                        <button type="button" class="btn btn-secondary custom-btn" id="printButton">
-                                            <i class="fas fa-print"></i> Print Bill
+                                        <button id="printButton" class="control-button">
+                                            <img src="/images/print.png" alt="Refresh Icon" style="width: 25px; height: 25px;">
+                                            Print
                                         </button>
-
+                                        <button id="resetButton" class="control-button">
+                                            <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px;">
+                                            Reset
+                                        </button>
                                     </div>
-                                    <button type="button" class="btn btn-danger custom-btn" id="resetButton">
-                                        <i class="fas fa-redo"></i> Reset
-                                    </button>
                                 </div>
                             </div>
-
-
+                            
                         </div>
                     </div>
+
+                    <div id="toast-container" class="toast-container">
+                        <div id="toast" class="toast"></div>
+                    </div>
+
+
+
+
+                    <div id="toast" class="toast"></div>
+
+                    <!-- Custom Low Stock Alert Modal -->
+                    <div id="lowStockAlert" class="modal">
+                        <div class="modal-content">
+                            <h2>Low Stock Alert</h2>
+                            <div class="stock-container">
+                                <div id="bookStock" class="stock-column">
+                                    <h3>Books</h3>
+                                    <p id="lowStockMessagesBooks"></p>
+                                </div>
+                                <div id="uniformStock" class="stock-column">
+                                    <h3>Uniforms</h3>
+                                    <p id="lowStockMessagesUniforms"></p>
+                                </div>
+                            </div>
+                            <div class="button-container">
+                                <button id="proceedBtn" class="modal-btn">Proceed</button>
+                                <button id="closeBtn" class="modal-btn">Close</button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-            </div>
-
-            <div id="toast-container" class="toast-container">
-                <div id="toast" class="toast"></div>
-            </div>
-
-
-
-
-            <div id="toast" class="toast"></div>
-
-            <!-- Custom Low Stock Alert Modal -->
-            <div id="lowStockAlert" class="modal">
-                <div class="modal-content">
-                    <h2>Low Stock Alert</h2>
-                    <div class="stock-container">
-                        <div id="bookStock" class="stock-column">
-                            <h3>Books</h3>
-                            <p id="lowStockMessagesBooks"></p>
-                        </div>
-                        <div id="uniformStock" class="stock-column">
-                            <h3>Uniforms</h3>
-                            <p id="lowStockMessagesUniforms"></p>
-                        </div>
-                    </div>
-                    <div class="button-container">
-                        <button id="proceedBtn" class="modal-btn">Proceed</button>
-                        <button id="closeBtn" class="modal-btn">Close</button>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        <script src="/js/Inventory_js/All.js"></script>
-        <script src="/js/Inventory_js/Inventory_generateInvoice.js"></script>
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                <script src="/js/Inventory_js/All.js"></script>
+                <script src="/js/Inventory_js/Inventory_generateInvoice.js"></script>
+                <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>
