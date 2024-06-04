@@ -308,53 +308,62 @@ async function lowStockCheck() {
         }
     });
 
+    // If both Books and Uniforms arrays are empty, show a toast and return
+    if (Books.length === 0 && Uniforms.length === 0) {
+        showToast('No items to check in inventory!', 'red');
+        return;
+    }
+
     let lowStockMessagesBooks = [];
     let lowStockMessagesUniforms = [];
     let zeroQuantity = false; // Flag to check if any quantity is zero
 
     // Fetch remaining quantities for books
     try {
-        const responseBooks = await fetch("/inventory/generate_invoice/get_book_quantities", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ bookTitles: Books.map(book => book.title) })
-        });
+        if (Books.length > 0) {
+            const responseBooks = await fetch("/inventory/generate_invoice/get_book_quantities", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ bookTitles: Books.map(book => book.title) })
+            });
 
-        const dataBooks = await responseBooks.json();
-        // Check if any book quantity is below 10
-        dataBooks.forEach((book, index) => {
-            if (book.remaining_quantity < 10) {
-                lowStockMessagesBooks.push(`${book.title}: ${book.remaining_quantity} remaining`);
-            }
-            if (book.remaining_quantity === 0 || book.remaining_quantity < Books[index].quantity) {
-                zeroQuantity = true;
-                showToast('Insufficient items in inventory!','red')
-            }
-        });
+            const dataBooks = await responseBooks.json();
+            // Check if any book quantity is below 10
+            dataBooks.forEach((book, index) => {
+                if (book.remaining_quantity < 10) {
+                    lowStockMessagesBooks.push(`${book.title}: ${book.remaining_quantity} remaining`);
+                }
+                if (book.remaining_quantity === 0 || book.remaining_quantity < Books[index].quantity) {
+                    zeroQuantity = true;
+                    showToast('Insufficient items in inventory!', 'red');
+                }
+            });
+        }
 
-        // After checking books, check uniforms
-        const responseUniforms = await fetch("/inventory/generate_invoice/get_uniform_quantities", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ uniformItems: Uniforms })
-        });
+        // Fetch remaining quantities for uniforms
+        if (Uniforms.length > 0) {
+            const responseUniforms = await fetch("/inventory/generate_invoice/get_uniform_quantities", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ uniformItems: Uniforms })
+            });
 
-        const dataUniforms = await responseUniforms.json();
-        // Check if any uniform quantity is below 10
-        dataUniforms.forEach((uniform, index) => {
-            if (uniform.remaining_quantity < 10) {
-                lowStockMessagesUniforms.push(`${uniform.uniform_item} (${uniform.size_of_item}): ${uniform.remaining_quantity} remaining`);
-            }
-            if (uniform.remaining_quantity === 0 || uniform.remaining_quantity < Uniforms[index].quantity) {
-                zeroQuantity = true;
-                showToast('Insufficient items in inventory!','red')
-
-            }
-        });
+            const dataUniforms = await responseUniforms.json();
+            // Check if any uniform quantity is below 10
+            dataUniforms.forEach((uniform, index) => {
+                if (uniform.remaining_quantity < 10) {
+                    lowStockMessagesUniforms.push(`${uniform.uniform_item} (${uniform.size_of_item}): ${uniform.remaining_quantity} remaining`);
+                }
+                if (uniform.remaining_quantity === 0 || uniform.remaining_quantity < Uniforms[index].quantity) {
+                    zeroQuantity = true;
+                    showToast('Insufficient items in inventory!', 'red');
+                }
+            });
+        }
 
         // Show a single alert with all low-stock messages
         if (lowStockMessagesBooks.length > 0 || lowStockMessagesUniforms.length > 0) {
