@@ -10,10 +10,10 @@
     <div class="container">
         <h1>Search Invoice</h1>
         <div class="search-container">
-            <input type="text" id="searchBar" placeholder="Search for an invoice...">
+            <input type="text" id="searchBar" placeholder="Search for an invoice..." oninput="searchInvoiceDetails()">
             <button id="refreshButton" onclick="refreshInvoiceData()">Refresh</button>
         </div>
-        <table id="invoiceTable">
+        <table>
             <thead>
                 <tr>
                     <th>Invoice Number</th>
@@ -27,7 +27,7 @@
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="invoiceTable">
                 <!-- Dynamic content will be inserted here -->
             </tbody>
         </table>
