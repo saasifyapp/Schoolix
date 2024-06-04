@@ -324,12 +324,13 @@ async function lowStockCheck() {
 
         const dataBooks = await responseBooks.json();
         // Check if any book quantity is below 10
-        dataBooks.forEach(book => {
+        dataBooks.forEach((book, index) => {
             if (book.remaining_quantity < 10) {
                 lowStockMessagesBooks.push(`${book.title}: ${book.remaining_quantity} remaining`);
             }
-            if (book.remaining_quantity === 0) {
+            if (book.remaining_quantity === 0 || book.remaining_quantity < Books[index].quantity) {
                 zeroQuantity = true;
+                showToast('Insufficient items in inventory!','red')
             }
         });
 
@@ -344,12 +345,14 @@ async function lowStockCheck() {
 
         const dataUniforms = await responseUniforms.json();
         // Check if any uniform quantity is below 10
-        dataUniforms.forEach(uniform => {
+        dataUniforms.forEach((uniform, index) => {
             if (uniform.remaining_quantity < 10) {
                 lowStockMessagesUniforms.push(`${uniform.uniform_item} (${uniform.size_of_item}): ${uniform.remaining_quantity} remaining`);
             }
-            if (uniform.remaining_quantity === 0) {
+            if (uniform.remaining_quantity === 0 || uniform.remaining_quantity < Uniforms[index].quantity) {
                 zeroQuantity = true;
+                showToast('Insufficient items in inventory!','red')
+
             }
         });
 
