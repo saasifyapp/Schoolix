@@ -27,18 +27,21 @@ body {
 .overlay {
     position: fixed;
     top: 0;
+    display: flex;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+    background: rgba(0, 0, 0, 0.8); 
     display: none;
     align-items: center;
     justify-content: center;
     z-index: 1000;
+    
 }
 
 /* Overlay content styling */
 .overlay-content {
+    position: relative;
     background: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -46,6 +49,7 @@ body {
     max-width: 500px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
+    animation: slideIn 0.3s ease-in-out;
 }
 
 /* Heading styling */
@@ -67,6 +71,12 @@ body {
     margin-bottom: 8px;
     font-size: 16px;
     color: #333;
+    transition: border-color 0.3s ease;
+}
+
+.class-select:hover{
+    box-shadow: 0 0 10px #5DADE2;
+    transition: 0.3s;
 }
 
 /* Select dropdown styling */
@@ -99,6 +109,39 @@ body {
 
 .submit-button:hover {
     background: #0056b3;
+}
+
+.icon-container {
+    position: absolute; /* Position icon container absolutely */
+    top: 10px; /* Set top position from edge */
+    left: 10px; /* Set left position from edge */
+  }
+  
+  /* Style the invoice icon within the container */
+  .topicon {
+    display: block; /* Ensure icon displays on its own line */
+    width: 40px; /* Adjust width as needed */
+    height: 40px; /* Adjust height as needed */
+  }
+  
+  /* Style the close icon */
+  .close-icon {
+    position: absolute; /* Position close icon absolutely */
+    top: 0px; /* Set top position from edge */
+    right: 10px; /* Set right position from edge */
+    font-size: 40px; /* Adjust font size as needed */
+    cursor: pointer; /* Indicate clickable behavior */
+    font-size: 2rem;   
+    color: #aaa;
+    float: right;    
+    font-weight: bold;
+  }
+
+.close-icon:hover,
+.close-icon:focus {
+    color: black;    
+    text-decoration: none;
+    cursor: pointer;
 }
 
 

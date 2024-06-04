@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
       } else if (parentCard.classList.contains("generate-invoice")) {
         // Show the purchase reports overlay
         document.getElementById("generateinvoiceOverlay").style.display =
-          "block";
+          "flex";
       }
     });
   });
