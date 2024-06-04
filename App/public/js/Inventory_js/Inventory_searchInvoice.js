@@ -1,3 +1,5 @@
+let currentInvoice = null;
+
 function refreshInvoiceData() {
     document.getElementById('searchBar').value = '';
     fetch('/inventory/invoices')
@@ -7,7 +9,7 @@ function refreshInvoiceData() {
         })
         .catch(error => {
             console.error('Error:', error);
-            showToast('Error fetching invoices. Please try again.', true);
+            // showToast('Error fetching invoices. Please try again.', true);
         });
 }
 
@@ -36,7 +38,7 @@ function displayInvoices(data) {
             <td>${invoice.balance_amount}</td>
             <td>${invoice.mode_of_payment}</td>
             <td>
-                <button onclick="updateInvoice(${invoice.invoiceNo})">Update</button>
+                <button onclick="showUpdateModal('${invoice.invoiceNo}', '${invoice.total_payable}', '${invoice.paid_amount}', '${invoice.balance_amount}')">Update</button>
                 <button onclick="printInvoice(${invoice.invoiceNo})">Print</button>
                 <button onclick="deleteInvoice(${invoice.invoiceNo})">Delete</button>
             </td>
@@ -79,7 +81,6 @@ function searchInvoiceDetails() {
     fetch(searchUrl)
       .then(response => response.json())
       .then(data => {
-        console.log(data)
         const invoiceTable = document.getElementById('invoiceTable');
         invoiceTable.innerHTML = ''; // Clear previous data
   
@@ -108,7 +109,7 @@ function searchInvoiceDetails() {
               <td>${invoice.balance_amount}</td>
               <td>${invoice.mode_of_payment}</td>
               <td>
-                <button onclick="updateInvoice(${invoice.invoiceNo})">Update</button>
+                <button onclick="showUpdateModal('${invoice.invoiceNo}', '${invoice.total_payable}', '${invoice.paid_amount}', '${invoice.balance_amount}')">Update</button>
                 <button onclick="printInvoice(${invoice.invoiceNo})">Print</button>
                 <button onclick="deleteInvoice(${invoice.invoiceNo})">Delete</button>
               </td>
@@ -122,34 +123,110 @@ function searchInvoiceDetails() {
       .catch(error => console.error('Error:', error));
   }
   
-  function deleteInvoice(InvoiceNo) {
-    const confirmation = confirm(`Are you sure you want to delete the Invoice No: "${InvoiceNo}"?`);
+  function deleteInvoice(invoiceNo) {
+    const confirmation = confirm(`Are you sure you want to delete the Invoice No: "${invoiceNo}"?`);
     if (confirmation) {
         // showLoadingAnimation();
-        fetch(`/inventory/deleteInvoice?name=${encodeURIComponent(InvoiceNo)}`, {
+        fetch(`/inventory/deleteInvoice?name=${encodeURIComponent(invoiceNo)}`, {
             method: 'DELETE'
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to delete invoice.');
-                }
-                // hideLoadingAnimation();
-                // showToast('Student deleted successfully.', false); // Show error toast
-                // alert('Student removed successfully.'); // Log success message
-                refreshInvoiceData(); // Refresh data after removing the teacher
-            })
-            .catch(error => {
-                console.error('Error deleting invoice:', error);
-                // hideLoadingAnimation();
-                // showToast('An error occurred while removing the student.', true); // Show error toast
-                // alert('An error occurred while removing the student.');
-            });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to delete invoice.');
+            }
+            // hideLoadingAnimation();
+            console.log('Invoice deleted successfully.');
+            refreshInvoiceData(); // Refresh data after removing the invoice
+        })
+        .catch(error => {
+            console.error('Error deleting invoice:', error);
+            // hideLoadingAnimation();
+            // showToast('An error occurred while deleting the invoice.', true); 
+        });
     }
 }
 
+
+
+function showUpdateModal(invoiceNo, totalAmount, paidAmount, balanceAmount) {
+    currentInvoice = { invoiceNo, totalAmount: parseFloat(totalAmount), paidAmount: parseFloat(paidAmount), balanceAmount: parseFloat(balanceAmount) };
+
+    document.getElementById('modalTotalAmount').value = totalAmount;
+    document.getElementById('modalPaidAmount').value = paidAmount;
+    document.getElementById('modalNewPaidAmount').value = '';
+    document.getElementById('modalBalanceAmount').value = balanceAmount;
+
+    const modal = document.getElementById('updateModal');
+    modal.style.display = "block";
+}
+
+function calculateBalance() {
+    const newPaidAmount = parseFloat(document.getElementById('modalNewPaidAmount').value);
+    if (isNaN(newPaidAmount)) {
+        document.getElementById('modalBalanceAmount').value = currentInvoice.balanceAmount;
+        return;
+    }
+
+    const updatedBalance = currentInvoice.balanceAmount - newPaidAmount;
+    document.getElementById('modalBalanceAmount').value = updatedBalance;
+}
+
+function submitUpdatedAmount() {
+    const newPaidAmount = parseFloat(document.getElementById('modalNewPaidAmount').value);
+    if (isNaN(newPaidAmount)) {
+        alert('Please enter a valid paid amount.');
+        return;
+    }
+
+    const newTotalPaidAmount = currentInvoice.paidAmount + newPaidAmount;
+    const newBalanceAmount = currentInvoice.totalAmount - newTotalPaidAmount;
+
+    fetch('/inventory/updatePaidAmount', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+            invoiceNo: currentInvoice.invoiceNo, 
+            paidAmount: newTotalPaidAmount, 
+            balanceAmount: newBalanceAmount 
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to update paid amount.');
+        }
+        console.log('Paid amount updated successfully.');
+        refreshInvoiceData();
+        closeModal();
+    })
+    .catch(error => {
+        console.error('Error updating paid amount:', error);
+        showToast('An error occurred while updating the paid amount.', true);
+    });
+}
+
+function closeModal() {
+    const modal = document.getElementById('updateModal');
+    modal.style.display = "none";
+}
 
 // Initial data load
 document.addEventListener('DOMContentLoaded', (event) => {
     refreshInvoiceData();
 });
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+    const modal = document.getElementById('updateModal');
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+// Close modal when clicking on the close button
+document.querySelector('.close').onclick = function() {
+    closeModal();
+}
+
 
