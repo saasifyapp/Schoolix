@@ -1,16 +1,15 @@
 let currentInvoice = null;
 
-function refreshInvoiceData() {
+async function refreshInvoiceData() {
     document.getElementById('searchBar').value = '';
-    fetch('/inventory/invoices')
-        .then(response => response.json())
-        .then(data => {
-            displayInvoices(data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            // showToast('Error fetching invoices. Please try again.', true);
-        });
+    try {
+        const response = await fetch('/inventory/invoices');
+        const data = await response.json();
+        displayInvoices(data);
+    } catch (error) {
+        console.error('Error:', error);
+        // showToast('Error fetching invoices. Please try again.', true);
+    }
 }
 
 function displayInvoices(data) {
@@ -53,102 +52,101 @@ function displayInvoices(data) {
     }
 }
 
-function searchInvoiceDetails() {
+async function searchInvoiceDetails() {
     // showLoadingAnimation();
-  console.log("search")
+    console.log("search")
     const searchTerm = document.getElementById('searchBar').value.trim();
-  
+
     // Check if the search term is empty
     if (searchTerm === '') {
-      // alert('Please enter a search term.');
-      // showToast('Please enter a search term.', true);
-      refreshInvoiceData();
-      // hideLoadingAnimation();
-      return;
+        // alert('Please enter a search term.');
+        // showToast('Please enter a search term.', true);
+        refreshInvoiceData();
+        // hideLoadingAnimation();
+        return;
     }
-  
+
     // Build the search URL based on data type
     let searchUrl = `/inventory/searchinvoices?`;
     if (isNaN(searchTerm)) {
-      // Search by string (invoice number or buyer name)
-      searchUrl += `search=${encodeURIComponent(searchTerm)}`;
+        // Search by string (invoice number or buyer name)
+        searchUrl += `search=${encodeURIComponent(searchTerm)}`;
     } else {
-      // Search by number (invoice number)
-      searchUrl += `invoiceNo=${searchTerm}`;
+        // Search by number (invoice number)
+        searchUrl += `invoiceNo=${searchTerm}`;
     }
-  
-    // Fetch data from the server based on the search term
-    fetch(searchUrl)
-      .then(response => response.json())
-      .then(data => {
+
+    try {
+        const response = await fetch(searchUrl);
+        const data = await response.json();
+
         const invoiceTable = document.getElementById('invoiceTable');
         invoiceTable.innerHTML = ''; // Clear previous data
-  
+
         if (data.length === 0) {
-          // If no results found, display a message
-          const noResultsRow = document.createElement('tr');
-          noResultsRow.innerHTML = '<td colspan="6">No results found</td>';
-          invoiceTable.appendChild(noResultsRow);
+            // If no results found, display a message
+            const noResultsRow = document.createElement('tr');
+            noResultsRow.innerHTML = '<td colspan="6">No results found</td>';
+            invoiceTable.appendChild(noResultsRow);
         } else {
-          // Append invoice data to the table
-          data.forEach(invoice => {
-            const billDate = new Date(invoice.billDate).toLocaleDateString('en-GB', {
-              day: '2-digit',
-              month: '2-digit',
-              year: 'numeric'
+            // Append invoice data to the table
+            data.forEach(invoice => {
+                const billDate = new Date(invoice.billDate).toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                  <td>${invoice.invoiceNo}</td>
+                  <td>${billDate}</td>
+                  <td>${invoice.buyerName}</td>
+                  <td>${invoice.buyerPhone}</td>
+                  <td>${invoice.total_payable}</td>
+                  <td>${invoice.paid_amount}</td>
+                  <td>${invoice.balance_amount}</td>
+                  <td>${invoice.mode_of_payment}</td>
+                  <td>
+                    <button onclick="showUpdateModal('${invoice.invoiceNo}', '${invoice.total_payable}', '${invoice.paid_amount}', '${invoice.balance_amount}')">Update</button>
+                    <button onclick="printInvoice(${invoice.invoiceNo})">Print</button>
+                    <button onclick="deleteInvoice(${invoice.invoiceNo})">Delete</button>
+                  </td>
+                `;
+                invoiceTable.appendChild(row);
             });
-  
-            const row = document.createElement('tr');
-            row.innerHTML = `
-              <td>${invoice.invoiceNo}</td>
-              <td>${billDate}</td>
-              <td>${invoice.buyerName}</td>
-              <td>${invoice.buyerPhone}</td>
-              <td>${invoice.total_payable}</td>
-              <td>${invoice.paid_amount}</td>
-              <td>${invoice.balance_amount}</td>
-              <td>${invoice.mode_of_payment}</td>
-              <td>
-                <button onclick="showUpdateModal('${invoice.invoiceNo}', '${invoice.total_payable}', '${invoice.paid_amount}', '${invoice.balance_amount}')">Update</button>
-                <button onclick="printInvoice(${invoice.invoiceNo})">Print</button>
-                <button onclick="deleteInvoice(${invoice.invoiceNo})">Delete</button>
-              </td>
-            `;
-            invoiceTable.appendChild(row);
-          });
         }
         // addFadeUpAnimation();
         // hideLoadingAnimation();
-      })
-      .catch(error => console.error('Error:', error));
-  }
-  
-  function deleteInvoice(invoiceNo) {
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function deleteInvoice(invoiceNo) {
     const confirmation = confirm(`Are you sure you want to delete the Invoice No: "${invoiceNo}"?`);
     if (confirmation) {
-        // showLoadingAnimation();
-        fetch(`/inventory/deleteInvoice?name=${encodeURIComponent(invoiceNo)}`, {
-            method: 'DELETE'
-        })
-        .then(response => {
+        try {
+            const response = await fetch(`/inventory/deleteInvoice?name=${encodeURIComponent(invoiceNo)}`, {
+                method: 'DELETE'
+            });
             if (!response.ok) {
                 throw new Error('Failed to delete invoice.');
             }
             // hideLoadingAnimation();
             console.log('Invoice deleted successfully.');
             refreshInvoiceData(); // Refresh data after removing the invoice
-        })
-        .catch(error => {
+        } catch (error) {
             console.error('Error deleting invoice:', error);
             // hideLoadingAnimation();
             // showToast('An error occurred while deleting the invoice.', true); 
-        });
+        }
     }
 }
 
 
 
-function showUpdateModal(invoiceNo, totalAmount, paidAmount, balanceAmount) {
+async function showUpdateModal(invoiceNo, totalAmount, paidAmount, balanceAmount) {
     currentInvoice = { invoiceNo, totalAmount: parseFloat(totalAmount), paidAmount: parseFloat(paidAmount), balanceAmount: parseFloat(balanceAmount) };
 
     document.getElementById('modalTotalAmount').value = totalAmount;
@@ -171,7 +169,7 @@ function calculateBalance() {
     document.getElementById('modalBalanceAmount').value = updatedBalance;
 }
 
-function submitUpdatedAmount() {
+async function submitUpdatedAmount() {
     const newPaidAmount = parseFloat(document.getElementById('modalNewPaidAmount').value);
     if (isNaN(newPaidAmount)) {
         alert('Please enter a valid paid amount.');
@@ -181,29 +179,29 @@ function submitUpdatedAmount() {
     const newTotalPaidAmount = currentInvoice.paidAmount + newPaidAmount;
     const newBalanceAmount = currentInvoice.totalAmount - newTotalPaidAmount;
 
-    fetch('/inventory/updatePaidAmount', {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ 
-            invoiceNo: currentInvoice.invoiceNo, 
-            paidAmount: newTotalPaidAmount, 
-            balanceAmount: newBalanceAmount 
-        })
-    })
-    .then(response => {
+    try {
+        const response = await fetch('/inventory/updatePaidAmount', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                invoiceNo: currentInvoice.invoiceNo,
+                paidAmount: newTotalPaidAmount,
+                balanceAmount: newBalanceAmount
+            })
+        });
+
         if (!response.ok) {
             throw new Error('Failed to update paid amount.');
         }
         console.log('Paid amount updated successfully.');
         refreshInvoiceData();
         closeModal();
-    })
-    .catch(error => {
+    } catch (error) {
         console.error('Error updating paid amount:', error);
         showToast('An error occurred while updating the paid amount.', true);
-    });
+    }
 }
 
 function closeModal() {
@@ -216,7 +214,7 @@ refreshInvoiceData();
 
 
 // Close modal when clicking outside of it
-window.onclick = function(event) {
+window.onclick = function (event) {
     const modal = document.getElementById('updateModal');
     if (event.target == modal) {
         modal.style.display = "none";
@@ -224,8 +222,47 @@ window.onclick = function(event) {
 }
 
 // Close modal when clicking on the close button
-document.querySelector('.close').onclick = function() {
+document.querySelector('.close').onclick = function () {
     closeModal();
 }
 
+// Print Invoice
+async function printInvoice(invoiceNo) {
+    try {
+        const response = await fetch(`/print-invoice/${invoiceNo}`);
+        const invoiceData = await response.json();
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`<html><head><title>Invoice #${invoiceNo}</title><style>${getInvoiceStyles()}</style></head><body>${constructInvoiceHTML(invoiceData)}</body></html>`);
+        printWindow.document.close();
+        printWindow.print();
+    } catch (error) {
+        console.error('Error printing invoice:', error);
+    }
+}
 
+function getInvoiceStyles() {
+    // Define your CSS styles for the invoice here
+    return `
+        /* Example styles */
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background-color: #f2f2f2; }
+        .text-center { text-align: center; }
+    `;
+}
+
+function constructInvoiceHTML(invoiceData) {
+    // Construct HTML for displaying invoice data
+    let html = `
+        <div class="page-header text-blue-d2">
+            <h1 class="page-title text-secondary-d1">Invoice <small class="page-info"><i class="fa fa-angle-double-right text-80"></i> ID: #${invoiceData.invoiceNo}</small></h1>
+        </div>
+        <div class="container px-0">
+            <!-- Invoice data here -->
+        </div>
+    `;
+
+    // Add more HTML content using invoiceData
+    return html;
+}
