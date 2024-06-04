@@ -31,7 +31,8 @@
             </div>
 
             <div class="navbar_center">
-                <button onclick="window.location.href='/inventory/billing'"> <i class='bx' id="backButton"> <img src="/images/back.png" alt="Previous Icon"></i></button>
+                <button onclick="window.location.href='/inventory/billing'"> <i class='bx' id="backButton"> <img
+                            src="/images/back.png" alt="Previous Icon"></i></button>
                 <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img
                             src="/images/homeicon.png" alt="Dashboard Icon"></i></button>
                 <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
@@ -63,15 +64,14 @@
                                             </div>
 
                                             <div class="form-group col-md-4">
-                                                <input type="" class="form-control" id="buyerMobile"
-                                                    placeholder="" maxlength="10"><span
-                                                    class="form-control-placeholder">Mobile</span>
+                                                <input type="" class="form-control" id="buyerMobile" placeholder=""
+                                                    maxlength="10"><span class="form-control-placeholder">Mobile</span>
 
                                             </div>
-                                            <div class="form-group col-md-3">                                                
+                                            <div class="form-group col-md-3">
                                                 <input type="text" class="form-control" id="buyerClass"
                                                     placeholder="Class" readonly>
-                                                    <span class="form-control-placeholder">Class</span>
+                                                <span class="form-control-placeholder">Class</span>
                                             </div>
                                         </div>
                                     </form>
@@ -86,17 +86,19 @@
                                     <div class="form-row">
                                         <div class="form-group col-md-12">
                                             <label for="invoiceNo" style="margin-top: 3px;">Invoice No &#8594;</label>
-                                            <input id="invoiceNo" style="border: none; width: 5rem; margin-left: 1rem;">  <!-- arrow character -->
+                                            <input id="invoiceNo" style="border: none; width: 5rem; margin-left: 1rem;">
+                                            <!-- arrow character -->
                                         </div>
                                         <div class="form-group col-md-12">
-                                            <label for="invoiceDate">Date  &#8594; </label>
-                                            <input id="invoiceDate"  style="border: none; width: 12rem; margin-left: 1rem;">
+                                            <label for="invoiceDate">Date &#8594; </label>
+                                            <input id="invoiceDate"
+                                                style="border: none; width: 12rem; margin-left: 1rem;">
                                         </div>
                                     </div>
                                 </form>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="row">
                         <!-- Display Books -->
@@ -160,10 +162,10 @@
                                 <h1 class="page-title text-secondary-d1">
                                     Invoice
                                     <small class="page-info">
-                                        <i class="fa fa-angle-double-right text-80"></i>                                       
-                                           
+                                        <i class="fa fa-angle-double-right text-80"></i>
+
                                     </small>
-                                    
+
                                 </h1>
                             </div>
 
@@ -226,7 +228,7 @@
                                         </div>
 
                                         <div class="mt-4">
-                                           
+
 
                                             <div class="row border-b-2 brc-default-l2"></div>
 
@@ -277,37 +279,38 @@
                             <div class="col-md-7">
                                 <div class="section summary">
                                     <h5>Invoice Summary</h5>
-                                   <div class="form-container">
-                                    <div class="form-row">
-                                        <div class="form-group col-md-2">                                          
-                                            <input type="text" class="form-control" id="totalAmount"
-                                                placeholder="" readonly>
+                                    <div class="form-container">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-2">
+                                                <input type="text" class="form-control" id="totalAmount" placeholder=""
+                                                    readonly>
                                                 <span class="form-control-placeholder">Total</span>
-                                        </div>
-                                        <div class="form-group col-md-3">                                            
-                                            <input type="number" class="form-control" id="amountPaid"
-                                                placeholder="">
-                                                <span class="form-control-placeholder">Paid</span>
-                                        </div>
-                                        <div class="form-group col-md-2">                                           
-                                            <input type="text" class="form-control" id="balanceAmount"
-                                                placeholder="" readonly>
-                                                <span class="form-control-placeholder">Balance</span>
-                                        </div>
-                                        <div class="col-md-4" style="margin-bottom: 1rem;">
-                                            <label>Payment Method:</label><br>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="paymentMethod" id="cashPayment" value="CASH">
-                                                <label class="form-check-label" for="cashPayment">Cash</label>
                                             </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="paymentMethod"
-                                                    id="upiPayment" value="upi">
-                                                <label class="form-check-label" for="upiPayment">UPI</label>
+                                            <div class="form-group col-md-3">
+                                                <input type="number" class="form-control" id="amountPaid"
+                                                    placeholder="">
+                                                <span class="form-control-placeholder">Paid</span>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <input type="text" class="form-control" id="balanceAmount"
+                                                    placeholder="" readonly>
+                                                <span class="form-control-placeholder">Balance</span>
+                                            </div>
+                                            <div class="col-md-4" style="margin-bottom: 1rem;">
+                                                <label>Payment Method:</label><br>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="paymentMethod"
+                                                        id="cashPayment" value="CASH">
+                                                    <label class="form-check-label" for="cashPayment">Cash</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="paymentMethod"
+                                                        id="upiPayment" value="upi">
+                                                    <label class="form-check-label" for="upiPayment">UPI</label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                   </div>
                                 </div>
                             </div>
 
@@ -322,28 +325,49 @@
                                         <button type="button" class="btn btn-secondary custom-btn" id="printButton">
                                             <i class="fas fa-print"></i> Print Bill
                                         </button>
-                                       
+
                                     </div>
                                     <button type="button" class="btn btn-danger custom-btn" id="resetButton">
                                         <i class="fas fa-redo"></i> Reset
-                                    </button>       
+                                    </button>
                                 </div>
                             </div>
-                            
-                            
+
+
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             <div id="toast-container" class="toast-container">
                 <div id="toast" class="toast"></div>
             </div>
 
-            
+
 
 
             <div id="toast" class="toast"></div>
+
+            <!-- Custom Low Stock Alert Modal -->
+            <div id="lowStockAlert" class="modal">
+                <div class="modal-content">
+                    <h2>Low Stock Alert</h2>
+                    <div class="stock-container">
+                        <div id="bookStock" class="stock-column">
+                            <h3>Books</h3>
+                            <p id="lowStockMessagesBooks"></p>
+                        </div>
+                        <div id="uniformStock" class="stock-column">
+                            <h3>Uniforms</h3>
+                            <p id="lowStockMessagesUniforms"></p>
+                        </div>
+                    </div>
+                    <div class="button-container">
+                        <button id="proceedBtn" class="modal-btn">Proceed</button>
+                        <button id="closeBtn" class="modal-btn">Close</button>
+                    </div>
+                </div>
+            </div>
 
         </div>
         <script src="/js/Inventory_js/All.js"></script>

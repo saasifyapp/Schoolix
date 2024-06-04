@@ -211,11 +211,10 @@ function updatePrice(selectElement) {
 
 /*****************************        GENERATE BUTTON FUNCTIONALITY     *********************** */
 
-document.getElementById("generateButton").addEventListener("click", function () {
+document.getElementById("generateButton").addEventListener("click", async function () {
     showInventoryLoadingAnimation();
     // Retrieve payment method
     const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
-
 
     // Get buyer details from input fields
     var buyerName = document.getElementById("buyerName").value;
@@ -237,23 +236,18 @@ document.getElementById("generateButton").addEventListener("click", function () 
         return; // Stop execution if validation fails
     }
 
-
-
     // Send a request to the server to check if the buyer exists for the given class
-    fetch("/inventory/generate_invoice/check_buyer", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ buyerName: buyerName, buyerClass: buyerClass })
-    })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            }
-            throw new Error("Error checking buyer");
-        })
-        .then(data => {
+    try {
+        const response = await fetch("/inventory/generate_invoice/check_buyer", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ buyerName: buyerName, buyerClass: buyerClass })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
             if (data.exists) {
                 hideInventoryLoadingAnimation();
                 // Buyer exists for the given class
@@ -268,20 +262,153 @@ document.getElementById("generateButton").addEventListener("click", function () 
                 }else{
                     // Buyer does not exist for the given class
                     // Proceed with generating the bill
-                    generateBill();
+                    lowStockCheck();
+                    
                 }
             }
-        })
-        .catch(error => {
-            hideInventoryLoadingAnimation();
-            console.error("Error:", error);
-            showToast("An error occurred while checking the buyer.", true);
-        });
+        } else {
+            throw new Error("Error checking buyer");
+        }
+    } catch (error) {
+        hideInventoryLoadingAnimation();
+        console.error("Error:", error);
+        showToast("An error occurred while checking the buyer.", true);
+    }
 });
 
 // Determine payment status
 let paymentStatus = '';
 let badgeClass = '';
+
+async function lowStockCheck() {
+    // Initialize objects for books and uniforms
+    let Books = [];
+    let Uniforms = [];
+
+    // Check book details
+    const bookRows = document.querySelectorAll("#booksTableBody tr");
+    bookRows.forEach((row, index) => {
+        const title = row.cells[0].innerText;
+        const quantity = row.cells[1].querySelector('input').value;
+
+        if (parseInt(quantity) > 0) {
+            Books.push({ title, quantity });  // Add the non-zero quantity items to Books object
+        }
+    });
+
+    // Check uniform details
+    const uniformRows = document.querySelectorAll("#uniformsTableBody tr");
+    uniformRows.forEach((row, index) => {
+        const item = row.cells[0].innerText;
+        const size = row.cells[1].querySelector('select').value;
+        const quantity = row.cells[2].querySelector('input').value;
+
+        if (parseInt(quantity) > 0) {
+            Uniforms.push({ item, size, quantity });  // Add the non-zero quantity items to Uniforms object
+        }
+    });
+
+    let lowStockMessagesBooks = [];
+    let lowStockMessagesUniforms = [];
+    let zeroQuantity = false; // Flag to check if any quantity is zero
+
+    // Fetch remaining quantities for books
+    try {
+        const responseBooks = await fetch("/inventory/generate_invoice/get_book_quantities", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ bookTitles: Books.map(book => book.title) })
+        });
+
+        const dataBooks = await responseBooks.json();
+        // Check if any book quantity is below 10
+        dataBooks.forEach(book => {
+            if (book.remaining_quantity < 10) {
+                lowStockMessagesBooks.push(`${book.title}: ${book.remaining_quantity} remaining`);
+            }
+            if (book.remaining_quantity === 0) {
+                zeroQuantity = true;
+            }
+        });
+
+        // After checking books, check uniforms
+        const responseUniforms = await fetch("/inventory/generate_invoice/get_uniform_quantities", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ uniformItems: Uniforms })
+        });
+
+        const dataUniforms = await responseUniforms.json();
+        // Check if any uniform quantity is below 10
+        dataUniforms.forEach(uniform => {
+            if (uniform.remaining_quantity < 10) {
+                lowStockMessagesUniforms.push(`${uniform.uniform_item} (${uniform.size_of_item}): ${uniform.remaining_quantity} remaining`);
+            }
+            if (uniform.remaining_quantity === 0) {
+                zeroQuantity = true;
+            }
+        });
+
+        // Show a single alert with all low-stock messages
+        if (lowStockMessagesBooks.length > 0 || lowStockMessagesUniforms.length > 0) {
+            showLowStockAlert(lowStockMessagesBooks.join('<br>'), lowStockMessagesUniforms.join('<br>'), zeroQuantity);
+        } else {
+            // If there are no low stock items, call generateBill()
+            generateBill();
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        showToast("An error occurred while checking the stock.", true);
+    }
+}
+
+function showLowStockAlert(bookMessage, uniformMessage, zeroQuantity) {
+    const modal = document.getElementById('lowStockAlert');
+    const proceedBtn = document.getElementById('proceedBtn');
+    const closeBtn = document.getElementById('closeBtn');
+    const messageContainerBooks = document.getElementById('lowStockMessagesBooks');
+    const messageContainerUniforms = document.getElementById('lowStockMessagesUniforms');
+
+    messageContainerBooks.innerHTML = bookMessage || "No low stock items for books.";
+    messageContainerUniforms.innerHTML = uniformMessage || "No low stock items for uniforms.";
+    modal.style.display = 'block';
+
+    if (zeroQuantity) {
+        proceedBtn.disabled = true;
+        proceedBtn.style.backgroundColor = '#ccc';
+        proceedBtn.style.cursor = 'not-allowed';
+        showToast('Certain items are out of stock. Please Restock!','red')
+    } else {
+        proceedBtn.disabled = false;
+        proceedBtn.style.backgroundColor = '#4CAF50';
+        proceedBtn.style.cursor = 'pointer';
+    }
+
+    closeBtn.onclick = function() {
+        modal.style.display = 'none';
+    }
+
+    proceedBtn.onclick = function() {
+        if (!zeroQuantity) {
+            modal.style.display = 'none';
+            generateBill();  // Call generateBill() when Proceed is clicked
+        }
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+}
+// Call the function
+
+// FUNCTION TO GENERATE BILL //
+
 function generateBill() {
     showToast('Invoice Generated Successfully.');
     // Retrieve payment method

@@ -87,6 +87,46 @@ router.post("/inventory/generate_invoice/get_uniform_price", (req, res) => {
 
 /************************************** GENERATE BUTTON FUNCTIONALITY    **************** */
 
+router.post("/inventory/generate_invoice/get_book_quantities", (req, res) => {
+    // List of book titles from the request body
+    const { bookTitles } = req.body;
+
+    // SQL query to get remaining quantities of specific books
+    let query_getBookQuantities = `SELECT title, remaining_quantity FROM inventory_book_details WHERE title IN (?)`;
+
+    // Execute the SQL query
+    connection.query(query_getBookQuantities, [bookTitles], (err, rows) => {
+        if (err) {
+            console.error("Error fetching book quantities: " + err.stack);
+            return res.status(500).json({ error: "Error fetching book quantities" });
+        }
+
+        res.json(rows);
+    });
+});
+
+router.post("/inventory/generate_invoice/get_uniform_quantities", (req, res) => {
+    // List of uniform items from the request body
+    const { uniformItems } = req.body;
+
+    // SQL query to get remaining quantities of specific uniforms
+    let query_getUniformQuantities = `SELECT uniform_item, size_of_item, remaining_quantity FROM inventory_uniform_details WHERE (uniform_item, size_of_item) IN (?)`;
+
+    // Prepare uniform items for the SQL query
+    const uniformItemsForQuery = uniformItems.map(item => [item.item, item.size]);
+
+    // Execute the SQL query
+    connection.query(query_getUniformQuantities, [uniformItemsForQuery], (err, rows) => {
+        if (err) {
+            console.error("Error fetching uniform quantities: " + err.stack);
+            return res.status(500).json({ error: "Error fetching uniform quantities" });
+        }
+
+        res.json(rows);
+    });
+});
+
+
 // Endpoint to check if the buyer exists for the given class
 router.post("/inventory/generate_invoice/check_buyer", (req, res) => {
     const { buyerName, buyerClass } = req.body;
