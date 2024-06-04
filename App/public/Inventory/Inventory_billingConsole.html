@@ -91,7 +91,12 @@
   <!-- Overlay for Generate Invoice(select class) -->
   <div id="generateinvoiceOverlay" class="overlay">
     <div class="overlay-content">
-      <h2 class="overlay-head">Generate Invoice</h2>
+      
+       <div class="icon-container">
+        <i><img class="topicon" src="/images/invoiceicon.png" alt=""></i>     
+       </div>
+       <div class="close-icon" onclick="closeOverlay(event)">×</div>      
+      <h2 class="overlay-head">Generate Invoice</h2>          
       <form id="invoiceForm">
         <div class="form-group">
           <label for="classSelect" class="select-label">Select Class:</label>
