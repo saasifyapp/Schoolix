@@ -259,11 +259,10 @@ document.getElementById("generateButton").addEventListener("click", async functi
                 if (!paymentMethod) {
                     showToast("Please select a payment method", true);
                     return;
-                }else{
+                } else {
                     // Buyer does not exist for the given class
                     // Proceed with generating the bill
                     lowStockCheck();
-                    
                 }
             }
         } else {
@@ -292,7 +291,7 @@ async function lowStockCheck() {
         const quantity = row.cells[1].querySelector('input').value;
 
         if (parseInt(quantity) > 0) {
-            Books.push({ title, quantity });  // Add the non-zero quantity items to Books object
+            Books.push({ title, quantity: parseInt(quantity) });  // Add the non-zero quantity items to Books object
         }
     });
 
@@ -304,7 +303,7 @@ async function lowStockCheck() {
         const quantity = row.cells[2].querySelector('input').value;
 
         if (parseInt(quantity) > 0) {
-            Uniforms.push({ item, size, quantity });  // Add the non-zero quantity items to Uniforms object
+            Uniforms.push({ item, size, quantity: parseInt(quantity) });  // Add the non-zero quantity items to Uniforms object
         }
     });
 
@@ -316,6 +315,8 @@ async function lowStockCheck() {
 
     let lowStockMessagesBooks = [];
     let lowStockMessagesUniforms = [];
+    let insufficientItemsBooks = [];
+    let insufficientItemsUniforms = [];
     let zeroQuantity = false; // Flag to check if any quantity is zero
 
     // Fetch remaining quantities for books
@@ -332,12 +333,13 @@ async function lowStockCheck() {
             const dataBooks = await responseBooks.json();
             // Check if any book quantity is below 10
             dataBooks.forEach((book, index) => {
+                const enteredQuantity = Books[index].quantity;
                 if (book.remaining_quantity < 10) {
                     lowStockMessagesBooks.push(`${book.title}: ${book.remaining_quantity} remaining`);
                 }
-                if (book.remaining_quantity === 0 || book.remaining_quantity < Books[index].quantity) {
+                if (book.remaining_quantity === 0 || book.remaining_quantity < enteredQuantity) {
                     zeroQuantity = true;
-                    showToast('Insufficient items in inventory!', 'red');
+                    insufficientItemsBooks.push(`${book.title}: Entered ${enteredQuantity}, Available ${book.remaining_quantity}`);
                 }
             });
         }
@@ -355,21 +357,28 @@ async function lowStockCheck() {
             const dataUniforms = await responseUniforms.json();
             // Check if any uniform quantity is below 10
             dataUniforms.forEach((uniform, index) => {
+                const enteredQuantity = Uniforms[index].quantity;
                 if (uniform.remaining_quantity < 10) {
                     lowStockMessagesUniforms.push(`${uniform.uniform_item} (${uniform.size_of_item}): ${uniform.remaining_quantity} remaining`);
                 }
-                if (uniform.remaining_quantity === 0 || uniform.remaining_quantity < Uniforms[index].quantity) {
+                if (uniform.remaining_quantity === 0 || uniform.remaining_quantity < enteredQuantity) {
                     zeroQuantity = true;
-                    showToast('Insufficient items in inventory!', 'red');
+                    insufficientItemsUniforms.push(`${uniform.uniform_item} (${uniform.size_of_item}): Entered ${enteredQuantity}, Available ${uniform.remaining_quantity}`);
                 }
             });
         }
 
-        // Show a single alert with all low-stock messages
-        if (lowStockMessagesBooks.length > 0 || lowStockMessagesUniforms.length > 0) {
-            showLowStockAlert(lowStockMessagesBooks.join('<br>'), lowStockMessagesUniforms.join('<br>'), zeroQuantity);
+        // Show a single alert with all low-stock messages and insufficient items
+        if (lowStockMessagesBooks.length > 0 || lowStockMessagesUniforms.length > 0 || insufficientItemsBooks.length > 0 || insufficientItemsUniforms.length > 0) {
+            showLowStockAlert(
+                lowStockMessagesBooks.join('<br>'), 
+                lowStockMessagesUniforms.join('<br>'), 
+                insufficientItemsBooks.join('<br>'), 
+                insufficientItemsUniforms.join('<br>'), 
+                zeroQuantity
+            );
         } else {
-            // If there are no low stock items, call generateBill()
+            // If there are no low stock items and no insufficient items, call generateBill()
             generateBill();
         }
     } catch (error) {
@@ -378,45 +387,58 @@ async function lowStockCheck() {
     }
 }
 
-function showLowStockAlert(bookMessage, uniformMessage, zeroQuantity) {
+function showLowStockAlert(bookMessage, uniformMessage, insufficientBooksMessage, insufficientUniformsMessage, zeroQuantity) {
     const modal = document.getElementById('lowStockAlert');
     const proceedBtn = document.getElementById('proceedBtn');
     const closeBtn = document.getElementById('closeBtn');
     const messageContainerBooks = document.getElementById('lowStockMessagesBooks');
     const messageContainerUniforms = document.getElementById('lowStockMessagesUniforms');
+    const insufficientBooksContainer = document.getElementById('insufficientBooksMessages');
+    const insufficientUniformsContainer = document.getElementById('insufficientUniformsMessages');
 
-    messageContainerBooks.innerHTML = bookMessage || "No low stock items for books.";
-    messageContainerUniforms.innerHTML = uniformMessage || "No low stock items for uniforms.";
+    if (messageContainerBooks) {
+        messageContainerBooks.innerHTML = bookMessage || "No low stock items for books.";
+    }
+    if (messageContainerUniforms) {
+        messageContainerUniforms.innerHTML = uniformMessage || "No low stock items for uniforms.";
+    }
+    if (insufficientBooksContainer) {
+        insufficientBooksContainer.innerHTML = insufficientBooksMessage || "";
+    }
+    if (insufficientUniformsContainer) {
+        insufficientUniformsContainer.innerHTML = insufficientUniformsMessage || "";
+    }
     modal.style.display = 'block';
 
     if (zeroQuantity) {
         proceedBtn.disabled = true;
         proceedBtn.style.backgroundColor = '#ccc';
         proceedBtn.style.cursor = 'not-allowed';
-        showToast('Certain items are out of stock. Please Restock!','red')
+        showToast('Certain items are out of stock. Please Restock!', 'red');
     } else {
         proceedBtn.disabled = false;
         proceedBtn.style.backgroundColor = '#4CAF50';
         proceedBtn.style.cursor = 'pointer';
     }
 
-    closeBtn.onclick = function() {
+    closeBtn.onclick = function () {
         modal.style.display = 'none';
     }
 
-    proceedBtn.onclick = function() {
+    proceedBtn.onclick = function () {
         if (!zeroQuantity) {
             modal.style.display = 'none';
             generateBill();  // Call generateBill() when Proceed is clicked
         }
     }
 
-    window.onclick = function(event) {
+    window.onclick = function (event) {
         if (event.target == modal) {
             modal.style.display = 'none';
         }
     }
 }
+
 // Call the function
 
 // FUNCTION TO GENERATE BILL //
