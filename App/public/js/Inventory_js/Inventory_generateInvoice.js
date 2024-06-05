@@ -396,18 +396,30 @@ function showLowStockAlert(bookMessage, uniformMessage, insufficientBooksMessage
     const insufficientBooksContainer = document.getElementById('insufficientBooksMessages');
     const insufficientUniformsContainer = document.getElementById('insufficientUniformsMessages');
 
+    // Display low stock messages if available
     if (messageContainerBooks) {
-        messageContainerBooks.innerHTML = bookMessage || "No low stock items for books.";
+        messageContainerBooks.innerHTML = bookMessage ? bookMessage : "";
     }
     if (messageContainerUniforms) {
-        messageContainerUniforms.innerHTML = uniformMessage || "No low stock items for uniforms.";
+        messageContainerUniforms.innerHTML = uniformMessage ? uniformMessage : "";
     }
+
+    // Display insufficient stock messages if available
     if (insufficientBooksContainer) {
-        insufficientBooksContainer.innerHTML = insufficientBooksMessage || "";
+        insufficientBooksContainer.innerHTML = insufficientBooksMessage ? insufficientBooksMessage : "";
     }
     if (insufficientUniformsContainer) {
-        insufficientUniformsContainer.innerHTML = insufficientUniformsMessage || "";
+        insufficientUniformsContainer.innerHTML = insufficientUniformsMessage ? insufficientUniformsMessage : "";
     }
+
+    // Check if there are any messages, if not, show default messages
+    if (!bookMessage && !insufficientBooksMessage) {
+        messageContainerBooks.innerHTML = "No low stock items for books.";
+    }
+    if (!uniformMessage && !insufficientUniformsMessage) {
+        messageContainerUniforms.innerHTML = "No low stock items for uniforms.";
+    }
+
     modal.style.display = 'block';
 
     if (zeroQuantity) {
@@ -438,7 +450,6 @@ function showLowStockAlert(bookMessage, uniformMessage, insufficientBooksMessage
         }
     }
 }
-
 // Call the function
 
 // FUNCTION TO GENERATE BILL //
