@@ -18,8 +18,6 @@ function displayInvoices(data) {
 
     try {
         data.forEach(invoice => {
-
-            // Format the date
             const billDate = new Date(invoice.billDate).toLocaleDateString('en-GB', {
                 day: '2-digit',
                 month: '2-digit',
@@ -28,51 +26,40 @@ function displayInvoices(data) {
 
             const row = document.createElement('tr');
             row.innerHTML = `
-            <td>${invoice.invoiceNo}</td>
-            <td>${billDate}</td>
-            <td>${invoice.buyerName}</td>
-            <td>${invoice.buyerPhone}</td>
-            <td>${invoice.total_payable}</td>
-            <td>${invoice.paid_amount}</td>
-            <td>${invoice.balance_amount}</td>
-            <td>${invoice.mode_of_payment}</td>
-            <td>
-                <button onclick="showUpdateModal('${invoice.invoiceNo}', '${invoice.total_payable}', '${invoice.paid_amount}', '${invoice.balance_amount}')">Update</button>
-                <button onclick="printInvoice(${invoice.invoiceNo})">Print</button>
-                <button onclick="deleteInvoice(${invoice.invoiceNo})">Delete</button>
-            </td>
+                <td>${invoice.invoiceNo}</td>
+                <td>${billDate}</td>
+                <td>${invoice.buyerName}</td>
+                <td>${invoice.buyerPhone}</td>
+                <td>${invoice.total_payable}</td>
+                <td>${invoice.paid_amount}</td>
+                <td>${invoice.balance_amount}</td>
+                <td>${invoice.mode_of_payment}</td>
+                <td>
+                    <button onclick="showUpdateModal('${invoice.invoiceNo}', '${invoice.total_payable}', '${invoice.paid_amount}', '${invoice.balance_amount}', '${invoice.buyerName}')">Update</button>
+                    <button onclick="printInvoice(${invoice.invoiceNo})">Print</button>
+                    <button onclick="deleteInvoice(${invoice.invoiceNo})">Delete</button>
+                </td>
             `;
             invoiceTable.appendChild(row);
         });
-        // hideLoadingAnimation();
     } catch (error) {
         console.error('Error displaying invoices:', error);
         showToast('Error displaying invoices. Please try again.', true);
-        // hideLoadingAnimation();
     }
 }
 
 async function searchInvoiceDetails() {
-    // showLoadingAnimation();
-    console.log("search")
     const searchTerm = document.getElementById('searchBar').value.trim();
 
-    // Check if the search term is empty
     if (searchTerm === '') {
-        // alert('Please enter a search term.');
-        // showToast('Please enter a search term.', true);
         refreshInvoiceData();
-        // hideLoadingAnimation();
         return;
     }
 
-    // Build the search URL based on data type
     let searchUrl = `/inventory/searchinvoices?`;
     if (isNaN(searchTerm)) {
-        // Search by string (invoice number or buyer name)
         searchUrl += `search=${encodeURIComponent(searchTerm)}`;
     } else {
-        // Search by number (invoice number)
         searchUrl += `invoiceNo=${searchTerm}`;
     }
 
@@ -81,15 +68,13 @@ async function searchInvoiceDetails() {
         const data = await response.json();
 
         const invoiceTable = document.getElementById('invoiceTable');
-        invoiceTable.innerHTML = ''; // Clear previous data
+        invoiceTable.innerHTML = '';
 
         if (data.length === 0) {
-            // If no results found, display a message
             const noResultsRow = document.createElement('tr');
             noResultsRow.innerHTML = '<td colspan="6">No results found</td>';
             invoiceTable.appendChild(noResultsRow);
         } else {
-            // Append invoice data to the table
             data.forEach(invoice => {
                 const billDate = new Date(invoice.billDate).toLocaleDateString('en-GB', {
                     day: '2-digit',
@@ -99,25 +84,23 @@ async function searchInvoiceDetails() {
 
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                  <td>${invoice.invoiceNo}</td>
-                  <td>${billDate}</td>
-                  <td>${invoice.buyerName}</td>
-                  <td>${invoice.buyerPhone}</td>
-                  <td>${invoice.total_payable}</td>
-                  <td>${invoice.paid_amount}</td>
-                  <td>${invoice.balance_amount}</td>
-                  <td>${invoice.mode_of_payment}</td>
-                  <td>
-                    <button onclick="showUpdateModal('${invoice.invoiceNo}', '${invoice.total_payable}', '${invoice.paid_amount}', '${invoice.balance_amount}')">Update</button>
-                    <button onclick="printInvoice(${invoice.invoiceNo})">Print</button>
-                    <button onclick="deleteInvoice(${invoice.invoiceNo})">Delete</button>
-                  </td>
+                    <td>${invoice.invoiceNo}</td>
+                    <td>${billDate}</td>
+                    <td>${invoice.buyerName}</td>
+                    <td>${invoice.buyerPhone}</td>
+                    <td>${invoice.total_payable}</td>
+                    <td>${invoice.paid_amount}</td>
+                    <td>${invoice.balance_amount}</td>
+                    <td>${invoice.mode_of_payment}</td>
+                    <td>
+                        <button onclick="showUpdateModal('${invoice.invoiceNo}', '${invoice.total_payable}', '${invoice.paid_amount}', '${invoice.balance_amount}', '${invoice.buyerName}')">Update</button>
+                        <button onclick="printInvoice(${invoice.invoiceNo})">Print</button>
+                        <button onclick="deleteInvoice(${invoice.invoiceNo})">Delete</button>
+                    </td>
                 `;
                 invoiceTable.appendChild(row);
             });
         }
-        // addFadeUpAnimation();
-        // hideLoadingAnimation();
     } catch (error) {
         console.error('Error:', error);
     }
@@ -146,8 +129,12 @@ async function deleteInvoice(invoiceNo) {
 
 
 
-async function showUpdateModal(invoiceNo, totalAmount, paidAmount, balanceAmount) {
+async function showUpdateModal(invoiceNo, totalAmount, paidAmount, balanceAmount, buyerName) {
     currentInvoice = { invoiceNo, totalAmount: parseFloat(totalAmount), paidAmount: parseFloat(paidAmount), balanceAmount: parseFloat(balanceAmount) };
+
+    // Update modal heading
+    const modalHeading = document.getElementById('modalHeading');
+    modalHeading.textContent = `Invoice No: ${invoiceNo}, Buyer: ${buyerName}`;
 
     document.getElementById('modalTotalAmount').value = totalAmount;
     document.getElementById('modalPaidAmount').value = paidAmount;
@@ -165,7 +152,7 @@ function calculateBalance() {
         return;
     }
 
-    const updatedBalance = currentInvoice.balanceAmount - newPaidAmount;
+    const updatedBalance = currentInvoice.totalAmount - currentInvoice.paidAmount - newPaidAmount;
     document.getElementById('modalBalanceAmount').value = updatedBalance;
 }
 
@@ -178,7 +165,7 @@ async function submitUpdatedAmount() {
 
     const newTotalPaidAmount = currentInvoice.paidAmount + newPaidAmount;
     const newBalanceAmount = currentInvoice.totalAmount - newTotalPaidAmount;
-
+ 
     try {
         const response = await fetch('/inventory/updatePaidAmount', {
             method: 'PUT',

@@ -39,13 +39,14 @@
     <div id="updateModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Update Paid Amount</h2>
+            <h2>Update Invoice</h2>
+            <h3 id="modalHeading"></h3>
             <div>
-                <label for="modalTotalAmount">Total Amount:</label>
+                <label for="modalTotalAmount">Net Payable:</label>
                 <input type="number" id="modalTotalAmount" readonly>
             </div>
             <div>
-                <label for="modalPaidAmount">Current Paid Amount:</label>
+                <label for="modalPaidAmount">Paid Till Now:</label>
                 <input type="number" id="modalPaidAmount" readonly>
             </div>
             <div>
@@ -53,13 +54,13 @@
                 <input type="number" id="modalNewPaidAmount" oninput="calculateBalance()">
             </div>
             <div>
-                <label for="modalBalanceAmount">Updated Balance:</label>
+                <label for="modalBalanceAmount">Balance:</label>
                 <input type="number" id="modalBalanceAmount" readonly>
             </div>
             <button onclick="submitUpdatedAmount()">Update</button>
         </div>
     </div>
-
+    
     <script src="/js/Inventory_js/Inventory_searchInvoice.js"></script>
 </body>
 
