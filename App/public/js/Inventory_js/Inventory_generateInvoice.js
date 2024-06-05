@@ -595,7 +595,7 @@ document.getElementById("printButton").addEventListener("click", async function 
 
     try {
         // Retrieve payment method
-    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
+        const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
         // Get buyer details
         const buyerName = document.getElementById("buyerName").value;
         const buyerMobile = document.getElementById("buyerMobile").value;
@@ -627,8 +627,9 @@ document.getElementById("printButton").addEventListener("click", async function 
             const quantity = row.cells[1].querySelector('input').value; // Get input value instead of cell text
             const book_type = 'Book'; // Set type as 'Book' for book items
             const notebook_type = title.toLowerCase().includes('notebook') ? 'Notebook' : 'Book'; // Check if the title contains the keyword Notebook
-        
-            return (parseInt(quantity) > 0) ? { title, class: buyerClass, quantity, book_type, notebook_type } : null;
+            const itemClass = notebook_type === 'Notebook' ? 'AllClass' : buyerClass;
+
+            return (parseInt(quantity) > 0) ? { title, class: itemClass, quantity, book_type, notebook_type } : null;
         }).filter(item => item);
 
         // Get uniform details, filtering out items with quantity 0 or null
@@ -704,9 +705,7 @@ document.getElementById("printButton").addEventListener("click", async function 
             window.location.reload();
         }, 1000); // Match the duration of the toast message
 
-
         printBill(); // PRINT THE BILL WHEN ALL OPERATIONS ARE SUCCESSFULLY COMPLETED //
-
 
     } catch (error) {
         console.error("Error:", error);
@@ -717,6 +716,7 @@ document.getElementById("printButton").addEventListener("click", async function 
 });
 
 
+ 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*****************************         RESET BUTTON FUNCTIONALITY       ************************/

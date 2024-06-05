@@ -1,4 +1,4 @@
-let currentInvoice = null;
+let currentInvoice = null; 
 
 async function refreshInvoiceData() {
     document.getElementById('searchBar').value = '';
