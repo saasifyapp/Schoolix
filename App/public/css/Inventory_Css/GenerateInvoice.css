@@ -396,6 +396,8 @@ hr {
     font-family: 'Open Sans', sans-serif;
     font-weight: bold;
     position: relative; /* Change position to relative */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+   transition: transform 0.2s, box-shadow 0.2s;
   }
   
   .control-button img {
@@ -404,18 +406,21 @@ hr {
   }
   
   .control-button:hover {
-    background-color: #27AE60; /* Change background color on hover */
-    transform: scale(1.05);
+    background-color: #27AE60; /* Change background color on hover */    
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   }
 
   #resetButton:hover {
-    background-color: #76D7C4; /* Change background color on hover */
-    transform: scale(1.05); /* Increase size on hover */
+    background-color: #76D7C4; /* Change background color on hover */ 
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 #printButton:hover {
-  background-color: #B0B0B0; /* Change background color on hover */
-  transform: scale(1.05); /* Increase size on hover */
+  background-color: #B0B0B0; /* Change background color on hover */ 
+  transform: scale(1.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
   
 /* loading aniamtion */
@@ -758,13 +763,15 @@ hr {
 }
 
 .modal-content {
-  background-color: #fefefe;
+  background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
   margin: 15% auto; /* 15% from the top and centered */
   padding: 20px;
   border: 1px solid #888;
   width: 50%; /* Could be more or less, depending on screen size */
   text-align: center;
   border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);  
+  
 }
 
 .stock-container {
@@ -773,30 +780,60 @@ hr {
   align-items: flex-start; /* Align items at the start of the flex container */
   text-align: left;
   margin-top: 20px;
+  animation: fadeUp 0.3s ease-in-out;
+  
 }
 
 .stock-column {
   margin: 0 20px;
   width: 40%;
+  animation: fadeUp 0.3s ease-in-out;
 }
 
 .button-container {
   display: flex;
   justify-content: center;
   margin-top: 20px;
+  animation: fadeUp 0.3s ease-in-out;
+  gap: 1rem;
 }
 
 .modal-btn {
-  margin: 10px;
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
+  background-color: transparent;
   border: none;
+  color: black; /* Change text color to black */
+  padding: 0;
+  text-align: center;
+  text-decoration: none;
+  display: inline-flex; /* Use flex for centering */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+  font-size: 14px;
   cursor: pointer;
-  border-radius: 5px;
-  font-size: 16px;
+  max-height: 100%;
+  border-radius: 20px; /* Round corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-bottom: 10px;
+}
+
+.modal-btn img {
+  width: 25px;
+  height: 25px;
+  border-radius: 0;
+  margin: 5px;
+}
+
+.modal-btn span {
+  margin-right: 10px;
 }
 
 .modal-btn:hover {
-  background-color: #45a049;
+  transform: scale(1.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.modal-btn:mouseout {
+  transform: scale(1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
