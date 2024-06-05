@@ -45,9 +45,9 @@
             </div>
         </nav>
 
-        <div class="row" style="margin-top:3rem;">
+        <div class="" style="margin-top:3rem; display: flex; height: 80%;">
             <!-- First Container -->
-            <div class="col-md-8">
+            <div class="first">
                 <div class="section" style="border-style: none;">
                     <div class="row">
                         <!-- Buyer Details -->
@@ -79,20 +79,20 @@
                             </div>
                         </div>
                         <!-- Invoice No and Date -->
-                        <div class="col-md-5">
+                        <div class="" style="width: 40%;">
                             <div class="section invoice-details">
                                 <h5>Invoice Details</h5>
                                 <form>
                                     <div class="form-row">
-                                        <div class="form-group col-md-12">
+                                        <div class="form-group ">
                                             <label for="invoiceNo" style="margin-top: 3px;">Invoice No &#8594;</label>
                                             <input id="invoiceNo" style="border: none; width: 5rem; margin-left: 1rem;">
                                             <!-- arrow character -->
                                         </div>
-                                        <div class="form-group col-md-12">
+                                        <div class="form-group ">
                                             <label for="invoiceDate">Date &#8594; </label>
                                             <input id="invoiceDate"
-                                                style="border: none; width: 12rem; margin-left: 1rem;">
+                                                style="border: none; width: 14rem; margin-left: 1rem;">
                                         </div>
                                     </div>
                                 </form>
@@ -102,7 +102,7 @@
                     </div>
                     <div class="row">
                         <!-- Display Books -->
-                        <div class="col-md-6" style="height: 240px;">
+                        <div class="" style="width: 45%; margin-left: 1rem;">
                             <div class="section books">
                                 <h5>Display Books</h5>
                                 <div class="table-container">
@@ -123,7 +123,7 @@
                             </div>
                         </div>
                         <!-- Display Uniform -->
-                        <div class="col-md-6" style="height: 240px;">
+                        <div class="" style="width: 50%; margin-left: 1rem;">
                             <div class="section uniform">
                                 <h5>Display Uniform</h5>
                                 <div class="table-container">
@@ -146,13 +146,86 @@
                         </div>
                     </div>
 
+                    <div class="bottom-container" >
+                   
+                        <div class="row">
+                            <!-- Invoice Summary -->
+                            
+                                <div class="section " style="width: 58%; "> 
+                                    <h5>Invoice Summary</h5>
+                                    <div class="form-container">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-3">
+                                                <input type="text" class="form-control" id="totalAmount" placeholder=""
+                                                    readonly>
+                                                <span class="form-control-placeholder">Total</span>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <input type="number" class="form-control" id="amountPaid"
+                                                    placeholder="">
+                                                <span class="form-control-placeholder">Paid</span>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <input type="text" class="form-control" id="balanceAmount"
+                                                    placeholder="" readonly>
+                                                <span class="form-control-placeholder">Balance</span>
+                                            </div>
+                                            <div class="col-md-4" style="margin-bottom: 1rem;">
+                                                <label>Payment Method:</label><br>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="paymentMethod"
+                                                        id="cashPayment" value="CASH">
+                                                    <label class="form-check-label" for="cashPayment">Cash</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="paymentMethod"
+                                                        id="upiPayment" value="upi">
+                                                    <label class="form-check-label" for="upiPayment">UPI</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            
 
+                            <!-- Control Panel -->
+                            
+                                <div class="section control-panel" style="margin-left: 0.8rem; ">
+                                    <h5>Control Panel</h5>
+                                    <div class="control-button-container">
+                                        <button id="generateButton" class="control-button">
+                                            <img src="/images/generateinvoice.png" alt="Refresh Icon"
+                                                style="width: 25px; height: 25px;">
+                                            Generate
+                                        </button>
+                                        <button id="printButton" class="control-button">
+                                            <img src="/images/print.png" alt="Refresh Icon"
+                                                style="width: 25px; height: 25px;">
+                                            Print
+                                        </button>
+                                        <button id="resetButton" class="control-button">
+                                            <img src="/images/refresh.png" alt="Refresh Icon"
+                                                style="width: 25px; height: 25px;">
+                                            Reset
+                                        </button>
+                                    </div>
+                                </div>
+                            
+
+                        </div>
+                    
+                </div>
 
 
                 </div>
+
+
+               
             </div>
+
+
             <!-- Second Container -->
-            <div class="col-md-4" style="height: 400px;" id="printableContainer">
+            <div class="bill-container" style="height: 100%;" id="printableContainer">
                 <div class="section bill">
                     <h5>Display Bill</h5>
                     <div class="full-width table-container" style="overflow-y: auto; /* Enable vertical scrolling */">
@@ -266,108 +339,45 @@
 
             <!-- Third Container -->
             <div class="row" style="margin-top: 9rem;">
-                <div class="col-md-9">
-                    <div class="section" style="border-style: none; left: 1rem;">
-                        <div class="row">
-                            <!-- Invoice Summary -->
-                            <div class="col-md-7">
-                                <div class="section summary">
-                                    <h5>Invoice Summary</h5>
-                                    <div class="form-container">
-                                        <div class="form-row">
-                                            <div class="form-group col-md-2">
-                                                <input type="text" class="form-control" id="totalAmount" placeholder=""
-                                                    readonly>
-                                                <span class="form-control-placeholder">Total</span>
-                                            </div>
-                                            <div class="form-group col-md-3">
-                                                <input type="number" class="form-control" id="amountPaid"
-                                                    placeholder="">
-                                                <span class="form-control-placeholder">Paid</span>
-                                            </div>
-                                            <div class="form-group col-md-2">
-                                                <input type="text" class="form-control" id="balanceAmount"
-                                                    placeholder="" readonly>
-                                                <span class="form-control-placeholder">Balance</span>
-                                            </div>
-                                            <div class="col-md-4" style="margin-bottom: 1rem;">
-                                                <label>Payment Method:</label><br>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="paymentMethod"
-                                                        id="cashPayment" value="CASH">
-                                                    <label class="form-check-label" for="cashPayment">Cash</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="paymentMethod"
-                                                        id="upiPayment" value="upi">
-                                                    <label class="form-check-label" for="upiPayment">UPI</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <!-- Control Panel -->
-                            <div class="col-md-5">
-                                <div class="section control-panel">
-                                    <h5>Control Panel</h5>
-                                    <div class="control-button-container">
-                                        <button id="generateButton" class="control-button">
-                                            <img src="/images/generateinvoice.png" alt="Refresh Icon" style="width: 25px; height: 25px;">
-                                            Generate
-                                        </button>
-                                        <button id="printButton" class="control-button">
-                                            <img src="/images/print.png" alt="Refresh Icon" style="width: 25px; height: 25px;">
-                                            Print
-                                        </button>
-                                        <button id="resetButton" class="control-button">
-                                            <img src="/images/refresh.png" alt="Refresh Icon" style="width: 25px; height: 25px;">
-                                            Reset
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            
+            </div>
+
+            <div id="toast-container" class="toast-container">
+                <div id="toast" class="toast"></div>
+            </div>
+
+
+
+
+            <div id="toast" class="toast"></div>
+
+            <!-- Custom Low Stock Alert Modal -->
+            <div id="lowStockAlert" class="modal">
+                <div class="modal-content">
+                    <h2>Low Stock Alert</h2>
+                    <div class="stock-container">
+                        <div id="bookStock" class="stock-column">
+                            <h3>Books</h3>
+                            <p id="lowStockMessagesBooks"></p>
+                        </div>
+                        <div id="uniformStock" class="stock-column">
+                            <h3>Uniforms</h3>
+                            <p id="lowStockMessagesUniforms"></p>
                         </div>
                     </div>
-
-                    <div id="toast-container" class="toast-container">
-                        <div id="toast" class="toast"></div>
+                    <div class="button-container">
+                        <button id="proceedBtn" class="modal-btn">Proceed</button>
+                        <button id="closeBtn" class="modal-btn">Close</button>
                     </div>
-
-
-
-
-                    <div id="toast" class="toast"></div>
-
-                    <!-- Custom Low Stock Alert Modal -->
-                    <div id="lowStockAlert" class="modal">
-                        <div class="modal-content">
-                            <h2>Low Stock Alert</h2>
-                            <div class="stock-container">
-                                <div id="bookStock" class="stock-column">
-                                    <h3>Books</h3>
-                                    <p id="lowStockMessagesBooks"></p>
-                                </div>
-                                <div id="uniformStock" class="stock-column">
-                                    <h3>Uniforms</h3>
-                                    <p id="lowStockMessagesUniforms"></p>
-                                </div>
-                            </div>
-                            <div class="button-container">
-                                <button id="proceedBtn" class="modal-btn">Proceed</button>
-                                <button id="closeBtn" class="modal-btn">Close</button>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
-                <script src="/js/Inventory_js/All.js"></script>
-                <script src="/js/Inventory_js/Inventory_generateInvoice.js"></script>
-                <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-                <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            </div>
+
+        </div>
+        <script src="/js/Inventory_js/All.js"></script>
+        <script src="/js/Inventory_js/Inventory_generateInvoice.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>

@@ -8,12 +8,27 @@ html, body {
     height: 100%;
     display: flex;
     flex-direction: column;
-    padding: 20px;   
+   
 }
 
 .row {
     margin-bottom: 10px;
     background-color: transparent;
+}
+
+.first{
+  width: 70%;
+  height: 100% !important;
+}
+
+.bill-container{
+  margin-top: 0.5rem;
+  width: 30%;
+  height: 100%;
+}
+
+.bottom-container{  
+  margin-left: 1rem;
 }
 
 .section {
@@ -23,6 +38,7 @@ html, body {
     background-color: white;
     position: relative;
     border-radius: 10px;
+    height: 100%;
 }
 
 .section h5 {
@@ -43,11 +59,11 @@ html, body {
 
 .books,
 .uniform {
-    height: 170%;          
+    height: 100%;          
 }
 
 .bill {
-    height: 630px;
+    height: 100%;
     padding-top: 10px;
     z-index: 1;
 }
