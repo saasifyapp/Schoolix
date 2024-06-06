@@ -35,6 +35,22 @@
         </div>
     </nav>
 
+    <div id="loadingOverlaySearchinventory" class="loading-overlay">
+        <div class="pyramid-loader">
+            <div class="wrapper">
+                <span class="side side1"></span>
+                <span class="side side2"></span>
+                <span class="side side3"></span>
+                <span class="side side4"></span>
+                <span class="shadow"></span>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container">
+        <div id="toast" class="toast"></div>
+    </div>
+
     <div class="container">
         <div class="head">
             <h1>Search Invoice</h1>
@@ -48,7 +64,7 @@
                 <input type="text" class="form-control" id="searchBar" name="bookSearch"
                     oninput="searchInvoiceDetails()" placeholder=" "  style="height: 3rem;"/>
                 <span class="form-control-placeholder">Search for an invoice....</span>
-                <button id="refreshButton" onclick="refreshUniformsData()">
+                <button id="refreshButton" onclick="refreshInvoiceData()">
                     <img src="/images/refresh.png" alt="Refresh Icon"
                         style="width: 25px; height: 25px; margin-right: 2px;">
                     Refresh</button>

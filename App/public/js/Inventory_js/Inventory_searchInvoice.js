@@ -1,6 +1,18 @@
 let currentInvoice = null; 
 
+// Function to show the loading animation
+function showSearchInventoryLoadingAnimation() {
+    var loadingOverlay = document.getElementById("loadingOverlaySearchinventory");
+    loadingOverlay.style.display = "flex"; // Hide the loading overlay
+}
+
+// Function to hide the loading animation
+function hideSearchInventoryLoadingAnimation() {
+    var loadingOverlay = document.getElementById("loadingOverlaySearchinventory");
+    loadingOverlay.style.display = "none"; // Hide the loading overlay
+}
 async function refreshInvoiceData() {
+    showSearchInventoryLoadingAnimation();
     document.getElementById('searchBar').value = '';
     try {
         const response = await fetch('/inventory/invoices');
@@ -109,8 +121,10 @@ function displayInvoices(data) {
                 </td>
             `;
             invoiceTable.appendChild(row);
+            hideSearchInventoryLoadingAnimation();
         });
     } catch (error) {
+        hideSearchInventoryLoadingAnimation();
         console.error('Error displaying invoices:', error);
         showToast('Error displaying invoices. Please try again.', true);
     }
@@ -120,6 +134,7 @@ async function searchInvoiceDetails() {
     const searchTerm = document.getElementById('searchBar').value.trim();
 
     if (searchTerm === '') {
+        showToast("Please enter a search term", true)
         refreshInvoiceData();
         return;
     }
@@ -171,25 +186,30 @@ async function searchInvoiceDetails() {
         }
     } catch (error) {
         console.error('Error:', error);
+        showToast('An error occurred while searching for invoices. Please try again.', true);
     }
 }
 
 async function deleteInvoice(invoiceNo) {
     const confirmation = confirm(`Are you sure you want to delete the Invoice No: "${invoiceNo}"?`);
     if (confirmation) {
+        showSearchInventoryLoadingAnimation();
         try {
             const response = await fetch(`/inventory/deleteInvoice?name=${encodeURIComponent(invoiceNo)}`, {
                 method: 'DELETE'
             });
             if (!response.ok) {
                 throw new Error('Failed to delete invoice.');
+                hideSearchInventoryLoadingAnimation();
             }
-            // hideLoadingAnimation();
+            hideSearchInventoryLoadingAnimation();
             console.log('Invoice deleted successfully.');
+            showToast('Invoice deleted successfully.', false);
             refreshInvoiceData(); // Refresh data after removing the invoice
         } catch (error) {
             console.error('Error deleting invoice:', error);
-            // hideLoadingAnimation();
+            showToast('An error occurred while deleting the invoice.', true);
+            hideSearchInventoryLoadingAnimation();
             // showToast('An error occurred while deleting the invoice.', true); 
         }
     }
@@ -228,7 +248,8 @@ function calculateBalance() {
 async function submitUpdatedAmount() {
     const newPaidAmount = parseFloat(document.getElementById('modalNewPaidAmount').value);
     if (isNaN(newPaidAmount)) {
-        alert('Please enter a valid paid amount.');
+        // alert('Please enter a valid paid amount.');
+        showToast('Please enter a valid paid amount.', true);
         return;
     }
 
@@ -236,6 +257,7 @@ async function submitUpdatedAmount() {
     const newBalanceAmount = currentInvoice.totalAmount - newTotalPaidAmount;
  
     try {
+        showSearchInventoryLoadingAnimation();
         const response = await fetch('/inventory/updatePaidAmount', {
             method: 'PUT',
             headers: {
@@ -251,10 +273,13 @@ async function submitUpdatedAmount() {
         if (!response.ok) {
             throw new Error('Failed to update paid amount.');
         }
+        hideSearchInventoryLoadingAnimation();
         console.log('Paid amount updated successfully.');
+        showToast('Paid amount updated successfully.', false);
         refreshInvoiceData();
         closeModal();
     } catch (error) {
+        hideSearchInventoryLoadingAnimation();
         console.error('Error updating paid amount:', error);
         showToast('An error occurred while updating the paid amount.', true);
     }
@@ -321,4 +346,30 @@ function constructInvoiceHTML(invoiceData) {
 
     // Add more HTML content using invoiceData
     return html;
+}
+
+function showToast(message, isError) {
+    const toastContainer = document.getElementById("toast-container");
+
+    // Create a new toast element
+    const toast = document.createElement("div");
+    toast.classList.add("toast");
+    if (isError) {
+        toast.classList.add("error");
+    }
+    toast.textContent = message;
+
+    // Append the toast to the container
+    toastContainer.appendChild(toast);
+
+    // Show the toast
+    toast.style.display = 'block';
+
+    // Remove the toast after 4 seconds
+    setTimeout(function () {
+        toast.style.animation = 'slideOutRight 0.5s forwards';
+        toast.addEventListener('animationend', function () {
+            toast.remove();
+        });
+    }, 4000);
 }

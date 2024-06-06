@@ -279,3 +279,272 @@ h2, h3 {
     margin-right: 5px; /* Adjusted margin for better spacing */
 }
      
+/* loading aniamtion */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    /* Semi-transparent white background */
+    backdrop-filter: blur(5px);
+    /* Adjust blur as needed */
+    z-index: 9999;
+    /* Ensure the overlay appears on top of other content */
+    display: none;
+}
+
+/* HTML: <div class="loader"></div> */
+.pyramid-loader {
+    position: relative;
+    width: 300px;
+    height: 150px;
+    display: block;
+    transform-style: preserve-3d;
+    transform: rotateX(-20deg);
+  }
+  
+  .wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    animation: spin 4s linear infinite;
+  }
+  
+  @keyframes spin {
+    100% {
+      transform: rotateY(360deg);
+    }
+  }
+  
+  .pyramid-loader .wrapper .side {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(to bottom right, #FFA500, #FF4500);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    transform-origin: center top;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  }
+  
+  .pyramid-loader .wrapper .side1 {
+    transform: rotateZ(-30deg) rotateY(90deg);
+    background: linear-gradient(to bottom right, #FF4500, #FFA500);
+  }
+  
+  .pyramid-loader .wrapper .side2 {
+    transform: rotateZ(30deg) rotateY(90deg);
+    background: linear-gradient(to bottom right, #FFA500, #FF4500);
+  }
+  
+  .pyramid-loader .wrapper .side3 {
+    transform: rotateX(30deg);
+    background: linear-gradient(to bottom right, #FFA500, #FF4500);
+  }
+  
+  .pyramid-loader .wrapper .side4 {
+    transform: rotateX(-30deg);
+    background: linear-gradient(to bottom right, #FF4500, #FFA500);
+  }
+  
+  .pyramid-loader .wrapper .shadow {
+    width: 60px;
+    height: 60px;
+    background: #FF8C00;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    transform: rotateX(90deg) translateZ(-40px);
+    filter: blur(12px);
+  }
+
+
+#output {
+    margin-left: 1rem;
+  }
+
+
+
+  #output {
+    width: 100%;
+    max-height: calc(88vh - 1rem); /* Set maximum height for the table container */
+    overflow-y: auto;
+    margin-top: 0.625rem; /* Set margin between the table container and overlay content */
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+
+/* Adjust height of table body to fit between overlay content and bottom margin */
+
+
+#studentTable,
+#teacherTable {
+    width: 100%; /* Set table width to 100% */
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-radius: 2rem;
+    box-shadow: 0 0 0 1px #dddddd;
+    margin: auto;
+    animation: fadeUp 0.5s ease-in-out;
+    animation-delay: 0.4s; /* Delay to start after overlay animation */
+    animation-fill-mode: backwards;
+}
+
+
+#studentTable th,
+#teacherTable th,
+#studentTable td,
+#teacherTable td {
+    border: 1px solid #dddddd;
+    text-align: center;
+    padding: 0.5rem;
+    box-sizing: border-box;
+    width: calc(100% / 7); /* Set the width for each column */
+}
+
+
+#studentTable th,
+#teacherTable th {
+    background-color: #2C3E50;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+
+#studentTable td,
+#teacherTable td {
+    border: 1px solid #dddddd;
+    padding: 0px;
+    text-align: center;
+    height: 50px; /* Fixed height */
+    overflow: hidden; /* Hide content that overflows */
+}
+
+
+#studentTable td button,
+#teacherTable td button {
+    max-height: 100%;
+}
+
+#studentTable tr:hover,
+#teacherTable tr:hover {
+    background-color: #D6DBDF;
+}
+
+
+#studentTable tr td,
+#teacherTable tr td {
+    transition: background-color 0.3s ease;
+}
+
+
+#studentTable tr:hover td,
+#teacherTable tr:hover td {
+    font-weight: bold;    
+}
+
+.tableFixHead {
+    overflow-y: auto;
+    height: 100%;
+}
+
+.tableFixHead thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.tableFixHead tbody {
+    height: calc(100% - 3.125rem);
+}
+
+
+@keyframes l6-0 {
+    0% {
+        background-position: 0 100%, 100% 100%, 100% 0
+    }
+
+    33% {
+        background-position: 100% 100%, 100% 100%, 100% 0
+    }
+
+    66% {
+        background-position: 100% 0, 100% 0, 100% 0
+    }
+}
+
+@keyframes l6-0-0 {
+    0% {
+        transform: scaleX(1) rotate(0deg)
+    }
+
+    50% {
+        transform: scaleX(-1) rotate(-90deg)
+    }
+}
+
+@keyframes l6-1 {
+    16.5% {
+        transform: perspective(150px) rotateX(-90deg) rotateY(0deg) rotateX(0deg);
+        filter: grayscale(0.8)
+    }
+
+    33% {
+        transform: perspective(150px) rotateX(-180deg) rotateY(0deg) rotateX(0deg)
+    }
+
+    66% {
+        transform: perspective(150px) rotateX(-180deg) rotateY(-180deg) rotateX(0deg)
+    }
+
+    100% {
+        transform: perspective(150px) rotateX(-180deg) rotateY(-180deg) rotateX(-180deg);
+        filter: grayscale(0.8)
+    }
+}
+
+/* Define thin and curved scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    /* Set the width of the scrollbar */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    /* Color of the scrollbar track */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    /* Color of the scrollbar handle */
+    border-radius: 10px;
+    /* Make the scrollbar handle curved */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+    /* Color of the scrollbar handle on hover */
+}
