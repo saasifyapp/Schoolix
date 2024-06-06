@@ -231,6 +231,11 @@ app.get('/inventory/searchInvoice', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_searchInvoice.html'));
 });
 
+//Serve HTML form
+app.get('/inventory/invoiceReports', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_invoiceReports.html'));
+});
+
 
 // Middleware to authenticate JWT
 function authenticateToken(req, res, next) {
