@@ -78,7 +78,7 @@ function displayInvoices(data) {
                     onclick="printInvoice(${invoice.invoiceNo})"
                     onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
                     onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                    <img src="/images/print.png" alt="Print" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                    <img src="/images/printer.gif" alt="Print" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
                     <span style="margin-right: 10px;">Print</span>
                 </button>
             
