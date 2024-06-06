@@ -306,7 +306,7 @@ select {
     height: 40px;
 }
 
-#refreshvendorbutton {
+#refreshvendorbutton ,#refreshButton {
     margin-bottom: 15px; /* Add margin between the buttons */
     cursor: pointer;
     background-color: transparent;
@@ -326,12 +326,12 @@ select {
     font-size: 14px;
     font-weight: bold;
 }
-#refreshvendorbutton img{
+#refreshvendorbutton img ,#refreshButton img{
     height: 80%; /* Set image height to fit button */
     margin-right: 5px; /* Add a 5px margin to the right of the image */
 }
 
-#refreshvendorbutton:hover {
+#refreshvendorbutton:hover ,#refreshButton:hover {
     background-color: #76D7C4; /* Change background color on hover */
     transform: scale(1.09); /* Increase size on hover */
 }

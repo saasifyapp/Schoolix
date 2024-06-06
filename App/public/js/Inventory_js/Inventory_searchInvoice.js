@@ -35,9 +35,77 @@ function displayInvoices(data) {
                 <td>${invoice.balance_amount}</td>
                 <td>${invoice.mode_of_payment}</td>
                 <td>
-                    <button onclick="showUpdateModal('${invoice.invoiceNo}', '${invoice.total_payable}', '${invoice.paid_amount}', '${invoice.balance_amount}', '${invoice.buyerName}')">Update</button>
-                    <button onclick="printInvoice(${invoice.invoiceNo})">Print</button>
-                    <button onclick="deleteInvoice(${invoice.invoiceNo})">Delete</button>
+                <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+                <button style="background-color: transparent;
+                            border: none;
+                            color: black; /* Change text color to black */
+                            padding: 0;
+                            text-align: center;
+                            text-decoration: none;
+                            display: flex; /* Use flex for centering */
+                            align-items: center; /* Center vertically */
+                            justify-content: center; /* Center horizontally */
+                            font-size: 14px;
+                            cursor: pointer;
+                            max-height: 100%;
+                            border-radius: 20px; /* Round corners */
+                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                            transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                            margin-bottom: 10px;" /* Added margin bottom for spacing */
+                    onclick="showUpdateModal('${invoice.invoiceNo}', '${invoice.total_payable}', '${invoice.paid_amount}', '${invoice.balance_amount}', '${invoice.buyerName}')"
+                    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                    <img src="/images/update.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                    <span style="margin-right: 10px;">Update</span>
+                </button>
+            
+                <button style="background-color: transparent;
+                            border: none;
+                            color: black; /* Change text color to black */
+                            padding: 0;
+                            text-align: center;
+                            text-decoration: none;
+                            display: flex; /* Use flex for centering */
+                            align-items: center; /* Center vertically */
+                            justify-content: center; /* Center horizontally */
+                            font-size: 14px;
+                            cursor: pointer;
+                            max-height: 100%;
+                            border-radius: 20px; /* Round corners */
+                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                            transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                            margin-bottom: 10px;" /* Added margin bottom for spacing */
+                    onclick="printInvoice(${invoice.invoiceNo})"
+                    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                    <img src="/images/print.png" alt="Print" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                    <span style="margin-right: 10px;">Print</span>
+                </button>
+            
+                <button style="background-color: transparent;
+                            border: none;
+                            color: black; /* Change text color to black */
+                            padding: 0;
+                            text-align: center;
+                            text-decoration: none;
+                            display: flex; /* Use flex for centering */
+                            align-items: center; /* Center vertically */
+                            justify-content: center; /* Center horizontally */
+                            font-size: 14px;
+                            cursor: pointer;
+                            max-height: 100%;
+                            border-radius: 20px; /* Round corners */
+                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                            transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                            margin-bottom: 10px;" /* Added margin bottom for spacing */
+                    onclick="deleteInvoice(${invoice.invoiceNo})"
+                    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                    <img src="/images/deletebill.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                    <span style="margin-right: 10px;">Delete</span>
+                </button>
+            </div>
+            
                 </td>
             `;
             invoiceTable.appendChild(row);
