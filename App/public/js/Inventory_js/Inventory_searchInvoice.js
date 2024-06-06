@@ -202,7 +202,8 @@ async function showUpdateModal(invoiceNo, totalAmount, paidAmount, balanceAmount
 
     // Update modal heading
     const modalHeading = document.getElementById('modalHeading');
-    modalHeading.textContent = `Invoice No: ${invoiceNo}, Buyer: ${buyerName}`;
+    modalHeading.innerHTML = `Invoice No: ${invoiceNo}&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;  Buyer: ${buyerName}`;
+
 
     document.getElementById('modalTotalAmount').value = totalAmount;
     document.getElementById('modalPaidAmount').value = paidAmount;

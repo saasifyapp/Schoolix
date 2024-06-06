@@ -46,7 +46,7 @@
             <div class="form-Searchgroup">
                 <img class="vendorIcon" src="/images/search.gif" alt="Search Icon">
                 <input type="text" class="form-control" id="searchBar" name="bookSearch"
-                    oninput="searchInvoiceDetails()" placeholder=" " />
+                    oninput="searchInvoiceDetails()" placeholder=" "  style="height: 3rem;"/>
                 <span class="form-control-placeholder">Search for an invoice....</span>
                 <button id="refreshButton" onclick="refreshUniformsData()">
                     <img src="/images/refresh.png" alt="Refresh Icon"
@@ -83,23 +83,28 @@
             <span class="close">&times;</span>
             <h2>Update Invoice</h2>
             <h3 id="modalHeading"></h3>
-            <div>
-                <label for="modalTotalAmount">Net Payable:</label>
-                <input type="number" id="modalTotalAmount" readonly>
+            <div class="form-group" style="width: 20rem; " >
+                <input type="number" class="form-control" id="modalTotalAmount" name="total_amount" placeholder=" " readonly style="width: 100%;">
+                <span class="form-control-placeholder">Net Payable</span>
             </div>
-            <div>
-                <label for="modalPaidAmount">Paid Till Now:</label>
-                <input type="number" id="modalPaidAmount" readonly>
+            <div class="form-group">
+                <input type="number" class="form-control" id="modalPaidAmount" name="paid_amount" placeholder=" " readonly style="width: 100%;">
+                <span class="form-control-placeholder">Paid Till Now</span>
             </div>
-            <div>
-                <label for="modalNewPaidAmount">New Paid Amount:</label>
-                <input type="number" id="modalNewPaidAmount" oninput="calculateBalance()">
+            <div class="form-group">
+                <input type="number" class="form-control" id="modalNewPaidAmount" name="new_paid_amount" placeholder=" " oninput="calculateBalance()" style="width: 100%;">
+                <span class="form-control-placeholder">New Paid Amount</span>
             </div>
-            <div>
-                <label for="modalBalanceAmount">Balance:</label>
-                <input type="number" id="modalBalanceAmount" readonly>
+            <div class="form-group">
+                <input type="number" class="form-control" id="modalBalanceAmount" name="balance_amount" placeholder=" " readonly style="width: 100%;">
+                <span class="form-control-placeholder">Balance</span>
             </div>
-            <button onclick="submitUpdatedAmount()">Update</button>
+            <!-- <button onclick="submitUpdatedAmount()">Update</button> -->
+            <button id="" class="styled-button" onclick="submitUpdatedAmount()">
+                <img src="/images/update.png" alt="Refresh Icon" style="width: 25px; height: 25px; margin-right: 2px;">
+                Update
+            </button>
+            
         </div>
     </div>
 
