@@ -9,6 +9,24 @@ function hideUniformLoadingAnimation() {
     document.getElementById('loadingOverlayuniform').style.display = 'none';
 }
 
+function calculateUniformPurchasePrice() {
+    const sellingPrice = parseFloat(document.getElementById('uniform_sellingPrice').value);
+    const marginPercentage = parseFloat(document.getElementById('uniform_margin').value);
+
+    if (!isNaN(sellingPrice) && !isNaN(marginPercentage) && document.getElementById('uniform_sellingPrice').value !== '' && document.getElementById('uniform_margin').value !== '') {
+        const marginAmount = (marginPercentage / 100) * sellingPrice;
+        const purchasePrice = sellingPrice - marginAmount;
+
+        document.getElementById('uniform_purchasePrice').value = purchasePrice.toFixed(2);
+    } else {
+        document.getElementById('uniform_purchasePrice').value = '';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('uniform_sellingPrice').addEventListener('input', calculateUniformPurchasePrice);
+    document.getElementById('uniform_margin').addEventListener('input', calculateUniformPurchasePrice);
+});
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -21,7 +39,17 @@ document.addEventListener("DOMContentLoaded", function () {
         const formData = new FormData(event.target);
         const jsonData = {};
         formData.forEach((value, key) => {
-            jsonData[key] = value;
+            switch (key) {
+                case 'uniform_sellingPrice':
+                    jsonData['selling_price'] = value;
+                    break;
+                case 'uniform_purchasePrice':
+                    jsonData['purchase_price'] = value;
+                    break;
+                // Add cases for other keys as needed
+                default:
+                    jsonData[key] = value;
+            }
         });
         fetch('/inventory/purchase/add_uniforms', {
             method: 'POST',

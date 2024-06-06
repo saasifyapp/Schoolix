@@ -8,6 +8,26 @@ function hideBooksLoadingAnimation() {
     console.log("hide")
     document.getElementById('loadingOverlaybooks').style.display = 'none';
 }
+
+function calculateBookPurchasePrice() {
+    const sellingPrice = parseFloat(document.getElementById('book_sellingPrice').value);
+    const marginPercentage = parseFloat(document.getElementById('book_margin').value);
+
+    if (!isNaN(sellingPrice) && !isNaN(marginPercentage) && document.getElementById('book_sellingPrice').value !== '' && document.getElementById('book_margin').value !== '') {
+        const marginAmount = (marginPercentage / 100) * sellingPrice;
+        const purchasePrice = sellingPrice - marginAmount;
+
+        document.getElementById('book_purchasePrice').value = purchasePrice.toFixed(2);
+    } else {
+        document.getElementById('book_purchasePrice').value = '';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('book_sellingPrice').addEventListener('input', calculateBookPurchasePrice);
+    document.getElementById('book_margin').addEventListener('input', calculateBookPurchasePrice);
+});
+
 document.addEventListener("DOMContentLoaded", function () {
     // Get the form element
     const booksform = document.getElementById('addBooksForm');
@@ -33,10 +53,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     case 'bookClass':
                         jsonData['class_of_title'] = value;
                         break;
-                    case 'purchasePrice':
+                    case 'book_purchasePrice':
                         jsonData['purchase_price'] = value;
                         break;
-                    case 'sellingPrice':
+                    case 'book_sellingPrice':
                         jsonData['selling_price'] = value;
                         break;
                     case 'orderedQuantity':
