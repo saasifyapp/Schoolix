@@ -90,12 +90,15 @@ h1 {
 
 .invoice-table-container {
     display: block;
-    max-height: 500px; /* Set the desired height */
+    height: 550px; /* Adjust the 20px to the height of other elements above/below the table */
     overflow-y: auto;
     border: 1px solid #ddd; /* Optional: Add a border around the scrollable area */
     animation: fadeUp 0.5s ease-out; /* Apply the fade-up animation */
     border-radius: 10px;
+    box-sizing: border-box; /* Ensure padding and border are included in the height */
+    margin-right: 2rem;
 }
+
 
 table {
     width: 100%;
