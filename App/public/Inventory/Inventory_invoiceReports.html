@@ -3,9 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice Reports</title>
-</head>
+    <title>Invoice Report</title>
+    <link rel="stylesheet" href="/css/Inventory_Css/invoiceReport.css">
+    <link rel="stylesheet" href="/css/NavButtons.css">
+  </head>
 <body>
-    <h2>This is Invoice Reports</h2>
+
+    <nav class="navbar">
+        <div class="logo_item">
+            <!-- <i class="bx bx-menu" id="sidebarOpen"></i> -->
+            <img id="logo" src="" alt="Logo">
+            <!-- <div class="user_name" id="user_name"></div> -->
+        </div>
+
+        <div class="navbar_center">
+            <button onclick="window.location.href='/inventory/billing'"> <i class='bx' id="backButton"> <img
+                        src="/images/back.png" alt="Previous Icon"></i></button>
+            <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img
+                        src="/images/homeicon.png" alt="Dashboard Icon"></i></button>
+            <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
+                        alt="Signout Icon"></i></button>
+        </div>
+
+        <div class="navbar_content">
+            <!-- <i class="bi bi-grid"></i>
+      <i class='bx bx-bell'></i> -->
+        </div>
+    </nav>
+
+
+    <div class="main">
+        <h2>Invoice Report</h2>
+    <div class="filter-container">
+        <div class="dropdown">
+            <label for="filter-date">Filter by Date:</label>
+            <select id="filter-date">
+                <option value="all">All Dates</option>
+                <option value="last-month">Last Month</option>
+                <option value="last-week">Last Week</option>
+                <option value="today">Today</option>
+            </select>
+        </div>
+        <div class="dropdown">
+            <label for="filter-class">Filter by Class:</label>
+            <select id="filter-class">
+                <option value="all">All Classes</option>
+                <option value="class-a">Class A</option>
+                <option value="class-b">Class B</option>
+                <option value="class-c">Class C</option>
+            </select>
+        </div>
+        <div class="dropdown">
+            <label for="defaulter-list">Defaulter List:</label>
+            <select id="defaulter-list">
+                <option value="all">All</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+        </div>
+    </div>
+    <div class="section">
+        <div class="left-section">
+            <div class="container">
+                <h3>Data - Section 1</h3>
+                <div class="box"> CASH</div>
+                <div class="box">UPI</div>
+                <div class="box">TOTAL</div>
+            </div>
+            <div class="container">
+                <h3>Data - Section 2</h3>
+                <div class="box">Total Bills</div>
+                <div class="box">Total Sell</div>
+                <div class="box">Total Outstanding</div>
+            </div>
+        </div>
+        <div class="right-section">
+            <h3>Table Section</h3>            
+        </div>
+    </div>
+    </div>
 </body>
+
+<script src="/js/Inventory_js/All.js"></script>
 </html>
