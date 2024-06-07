@@ -7,9 +7,11 @@
     <title>Invoice Report</title>
     <link rel="stylesheet" href="/css/Inventory_Css/invoiceReport.css">
     <link rel="stylesheet" href="/css/NavButtons.css">
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+     <!-- Include jQuery and jQuery UI -->
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 
 </head>
 
@@ -77,16 +79,19 @@
         <div class="section">
             <div class="left-section">
                 <div class="container">
-                    <h3>Data - Section 1</h3>
-                    <div class="box"> CASH</div>
+                    <h3>Collection Summary</h3>
+                    <p id="collection-date"></p> <!-- Date for Collection Summary -->
+                    <div class="box">CASH</div>
                     <div class="box">UPI</div>
                     <div class="box">TOTAL</div>
                 </div>
                 <div class="container">
-                    <h3>Data - Section 2</h3>
+                    <h3>Invoice Summary</h3>
+                    <p id="invoice-date"></p> <!-- Date for Invoice Summary -->
                     <div class="box">Total Bills</div>
-                    <div class="box">Total Sell</div>
-                    <div class="box">Total Outstanding</div>
+                    <div class="box">Net Sell</div>
+                    <div class="box">Received</div>
+                    <div class="box">Outstanding</div>
                 </div>
             </div>
             <div class="right-section">
