@@ -305,8 +305,8 @@ function handlePurchaseClick(event) {
     const overlay = document.getElementById('passwordPromptOverlay');
     overlay.style.display = 'flex';
 
-    // Handle OK button click
-    document.getElementById('passwordPromptOk').onclick = function() {
+    // Function to handle password verification
+    function verifyPassword() {
         const password = document.getElementById('passwordPromptInput').value;
 
         // Check if password is correct
@@ -318,16 +318,26 @@ function handlePurchaseClick(event) {
             alert('Incorrect password!');
         }
 
-        // Hide custom prompt
+        // Hide custom prompt and clear the input
         overlay.style.display = 'none';
-        document.getElementById('passwordPromptInput').value = ''; // Clear the input
+        document.getElementById('passwordPromptInput').value = '';
+    }
+
+    // Handle OK button click
+    document.getElementById('passwordPromptOk').onclick = verifyPassword;
+
+    // Handle Enter key press in the password input field
+    document.getElementById('passwordPromptInput').onkeypress = function(event) {
+        if (event.key === 'Enter') {
+            verifyPassword();
+        }
     };
 
     // Handle Cancel button click
     document.getElementById('passwordPromptCancel').onclick = function() {
-        // Hide custom prompt
+        // Hide custom prompt and clear the input
         overlay.style.display = 'none';
-        document.getElementById('passwordPromptInput').value = ''; // Clear the input
+        document.getElementById('passwordPromptInput').value = '';
     };
 }
 
