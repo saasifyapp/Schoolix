@@ -516,6 +516,8 @@ table {
     position: fixed;
     top: 50%;
     left: 50%;
+    height: 22rem;
+    width: 18rem;
     transform: translate(-50%, -50%);
     background-color: white;
     padding: 20px;
@@ -524,6 +526,10 @@ table {
     outline: 2px solid rgba(0, 0, 0, 0.2); /* Add outline */  
     z-index: 1000;
     background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+}
+
+.custom-prompt-return{
+    height: 18rem;
 }
 
 
@@ -540,7 +546,7 @@ table {
 
 
 .prompt-content h2{
-    font-size: 2rem;   
+    font-size: 1.5rem;   
     font-weight: 700;
     line-height: 1.2;
     text-align: center;
@@ -549,8 +555,8 @@ table {
 }
 
 .prompt-content p{
-    font-size: 1.5rem;   
-    font-weight: 600;
+    font-size: 1rem;   
+    font-weight: 500;
     line-height: 1.2;
     text-align: center;
     pointer-events: auto;
