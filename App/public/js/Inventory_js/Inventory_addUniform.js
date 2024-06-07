@@ -73,6 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 hideUniformLoadingAnimation();
                 console.log('Uniform added successfully');
                 showToast(`${jsonData.uniform_item} of size ${jsonData.size_of_item} added successfully`);
+                refreshData();
                 refreshUniformsData();
             
                 // populateUniformsVendorDropdown() // Uncomment this if you have a function to populate uniform vendor dropdown

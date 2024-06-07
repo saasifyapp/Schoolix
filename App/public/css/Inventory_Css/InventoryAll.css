@@ -124,7 +124,7 @@ body {
 /* Toast container to hold multiple toasts */
 .toast-container {
     position: fixed;
-    top: 20px;
+    top: 100px;
     right: 20px;
     z-index: 9999;
 }
@@ -137,7 +137,7 @@ body {
     color: white;
     padding: 16px;
     border-radius: 8px;
-    display: none; /* Initially hidden */
+    display: none; 
     animation: slideInRight 0.5s forwards; /* Slide in animation */
 }
 

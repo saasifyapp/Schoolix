@@ -153,11 +153,11 @@
                     <div class="search_item">
 
                         <div style="position: relative; display: inline-block; margin-right: 10px;">
-                            <input type="text" id="searchField" placeholder="Enter Student Name...">
+                            <input type="text" id="searchField" placeholder="Enter Student Name..." oninput="searchDetails()">
 
-                            <button id="searchButton" class="search-button" onclick="searchDetails()">
+                            <!-- <button id="searchButton" class="search-button" onclick="searchDetails()">
                                 <img src="../images/search.gif" alt="Search Icon" style="height: 100%;">
-                            </button>
+                            </button> -->
                         </div>
 
 
@@ -575,16 +575,16 @@
 
         function searchDetails() {
             document.getElementById('classFilter').value = '';
-            showLoadingAnimation();
+            // showLoadingAnimation();
 
             const searchTerm = document.getElementById('searchField').value.trim();
 
             // Check if the search term is empty
             if (searchTerm === '') {
                 // alert('Please enter a search term.');
-                showToast('Please enter a search term.', true); // Show error toast
+                // showToast('Please enter a search term.', true); 
                 refreshData();
-                hideLoadingAnimation();
+                // hideLoadingAnimation();
                 return;
             }
 
@@ -661,7 +661,7 @@
                         });
                     }
                     addFadeUpAnimation();
-                    hideLoadingAnimation();
+                    // hideLoadingAnimation();
                 })
                 .catch(error => console.error('Error:', error));
         }

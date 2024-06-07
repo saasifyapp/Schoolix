@@ -167,10 +167,10 @@
 
                     <div class="search_item">
                         <div style="position: relative; display: inline-block;">
-                            <input type="text" id="searchField" placeholder="Enter Teacher Name...">
-                            <button id="searchButton" class="search-button" onclick="searchDetails()">
+                            <input type="text" id="searchField" placeholder="Enter Teacher Name..." oninput="searchDetails()">
+                            <!-- <button id="searchButton" class="search-button" onclick="searchDetails()">
                                 <img src="../images/search.gif" alt="Search Icon" style="height: 100%;">
-                            </button>
+                            </button> -->
                         </div>
                     </div>
 
@@ -278,9 +278,9 @@
                         // Check if the search term is empty
                         if (searchTerm === '') {
                             // alert('Please enter a search term.');
-                            showToast('Please enter a search term.', true); // Show error toast
+                            // showToast('Please enter a search term.', true); 
                             refreshData();
-                            hideLoadingAnimation();
+                            // hideLoadingAnimation();
                             return;
                         }
 
@@ -291,7 +291,7 @@
                         }
 
                         // Fetch data from the server based on the search term
-                        showLoadingAnimation();
+                        // showLoadingAnimation();
                         fetch(`/admitted_teachers/search?search=${encodeURIComponent(searchTerm)}`)
                             .then(response => response.json())
                             .then(data => {
@@ -339,7 +339,7 @@
                                     });
                                 }
                                 addFadeUpAnimation();
-                                hideLoadingAnimation();
+                                // hideLoadingAnimation();
                             })
                             .catch(error => console.error('Error:', error));
                     }
