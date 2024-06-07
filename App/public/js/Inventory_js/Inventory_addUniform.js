@@ -305,8 +305,11 @@ function updateUniformItem(uniformItem, sizeOfItem) {
                         <h2>${uniformItem} (${sizeOfItem})</h2>
                         <p>Previously Ordered : ${existingOrderedQuantity}</p>
                         <p>Remaining Quantity : ${remainingQuantity}</p>
-                        <p>Enter the new order quantity:</p>
-                        <input type="number" id="newQuantityInput" min="0">
+                        <p>Enter the new order quantity:</p>                       
+                         <div class="form-group">
+        <input type="number" class="form-control" id="newQuantityInput" min="0" placeholder=" " required style="width:6rem;">
+        <span class="form-control-placeholder">New Order Quantity</span>
+    </div>
                         <p id="totalOrder">Total Order : ${existingOrderedQuantity}</p>
                         <p id="newRemainingQuantity">New Remaining Quantity : ${remainingQuantity}</p>
                         <button id="confirmButton" style="background-color: transparent;
@@ -461,8 +464,11 @@ function returnUniform(uniformItem, sizeOfItem) {
                     <div class="prompt-content">
                         <h2>${uniformItem} (${sizeOfItem})</h2>
                         <p>Remaining Quantity : ${remainingQuantity}</p>
-                        <p>Enter the return quantity:</p>
-                        <input type="number" id="returnQuantityInput" min="0">
+                        <p>Enter the return quantity:</p>                       
+                         <div class="form-group">
+                        <input type="number" class="form-control wide" id="returnQuantityInput" min="0" placeholder=" " required>
+                        <span class="form-control-placeholder">Return Quantity</span>
+                        </div>
                         <p id="newRemainingQuantity">New Remaining Quantity : ${newRemainingQuantity}</p>
                         <button id="confirmButton" style="background-color: transparent;
                             border: none;

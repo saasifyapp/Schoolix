@@ -526,6 +526,8 @@ table {
     background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
 }
 
+
+
 .prompt-content {
     text-align: center;
     animation: fadeUp 0.3s ease-in-out;
@@ -535,9 +537,27 @@ table {
     display: block;
     margin-bottom: 0.6rem;
 }
+
+
 .prompt-content h2{
-    color: var(--grey-color);
+    font-size: 2rem;   
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    pointer-events: auto;
+    color: #484b51;
 }
+
+.prompt-content p{
+    font-size: 1.5rem;   
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+    pointer-events: auto;
+    color: #484b51;   
+    
+}
+
 
 .prompt-content input {
     width: 100%;
