@@ -21,11 +21,6 @@ document.addEventListener("DOMContentLoaded", function () {
         // Show the add uniform overlay
         document.getElementById("addUniformOverlay").style.display = "block";
         refreshUniformsData();
-      } else if (parentCard.classList.contains("purchase-reports")) {
-        // Show the purchase reports overlay
-        document.getElementById("purchaseReportsOverlay").style.display =
-          "block";
-        // refreshAllTables();
       } else if (parentCard.classList.contains("generate-invoice")) {
         // Show the purchase reports overlay
         document.getElementById("generateinvoiceOverlay").style.display =
