@@ -128,8 +128,9 @@ body {
     align-items: center;
     margin: 0 auto; /* Center the element horizontally */
     width: 30rem; /* 500px converted to rem (assuming 1rem = 16px)*/
-    animation: slideInFromDown 0.8s ease-in-out; /* Adjust timing as needed     
-
+    animation: slideInFromDown 0.8s ease-in-out;  
+     
+}
 .form-Searchgroup {
     display: flex;
     align-items: center;
@@ -140,8 +141,9 @@ body {
 
 #bookssearchField:hover,#searchField:hover,#searchField:focus,
 #bookssearchField:focus {
-    box-shadow: 0 0 10px #5DADE2; /* Add shadow on hover and focus */
+    box-shadow: 0 0 10px #5DADE2; /* Add shadow on hover and focus */   
 }
+
 
 
 
@@ -151,7 +153,7 @@ body {
     font-size: 1rem;
     /* Increased font size */
     border: 1px solid #ced4da;
-    border-radius: 10px;
+    border-radius: 20px;
     transition: border-color 0.3s ease;
     margin-right: 1rem;
     flex: 1;
@@ -159,6 +161,7 @@ body {
     height: 3rem;
     /* Increased height for input fields */
     transition: transform 0.3s ease-in-out;
+    
 }
 
 .form-control.wide {
