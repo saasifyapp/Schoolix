@@ -460,9 +460,10 @@ function returnUniform(uniformItem, sizeOfItem) {
             // Create custom prompt
             const customPrompt = document.createElement('div');
             customPrompt.classList.add('custom-prompt');
+            customPrompt.classList.add('custom-prompt-return');
             const returnPromptContent = () => {
                 customPrompt.innerHTML = `
-                    <div class="prompt-content">
+                    <div class="prompt-content" ">
                         <h2>${uniformItem} (${sizeOfItem})</h2>
                         <p>Remaining Quantity : ${remainingQuantity}</p>
                         <p>Enter the return quantity:</p>                       

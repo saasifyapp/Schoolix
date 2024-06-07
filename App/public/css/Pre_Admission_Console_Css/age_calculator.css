@@ -99,23 +99,7 @@
 }
 
 
-.age-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px; /* Add some margin at the top */
-    color: black; /* Set text color to black */
-    border-radius: 20px !important; /* Rounded corners */
-}
 
-.age-table td, .age-table th {
-    padding: 8px;
-    border: 1px solid #dddddd;
-    text-align: left;
-}
-
-.age-table th {
-    background-color: #f2f2f2;
-}
 
 .button-container {
     display: flex;

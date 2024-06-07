@@ -5,6 +5,7 @@ body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    overflow: hidden;
 }
 
 .navbar {
@@ -234,7 +235,7 @@ nav {
 
 
 .age-table {
-    width: 100%;
+    width: 80%;
     height: 10rem;
     border-collapse: collapse;
     margin-top: 20px;
@@ -262,8 +263,8 @@ nav {
 
 .age-table tr:hover {
     background-color: #ddd;
-    transform: scale(1.03); /* Scale the row on hover */
-    font-weight: bold; /* Set font weight to bold on hover */
+    transform: scale(1); /* Scale the row on hover */
+    font-weight: bold ; /* Set font weight to bold on hover */
 }
 
 .button-container-age {
@@ -520,7 +521,7 @@ nav {
 
 
   #output {
-    width: 100%;
+    width: 90%;
     max-height: calc(88vh - 1rem); /* Set maximum height for the table container */
     overflow-y: auto;
     margin-top: 0.625rem; /* Set margin between the table container and overlay content */
