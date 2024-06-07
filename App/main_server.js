@@ -70,6 +70,7 @@ app.post('/login', (req, res) => {
             user: process.env.DB_USER,
             password: process.env.DB_PASS,
             database: process.env.DB_NAME,
+            timezone: 'Asia/Kolkata' // Set the timezone explicitly to IST
         });
 
 
@@ -377,6 +378,10 @@ app.use('/', generateInvoiceRouter);
 const searchInvoiceRouter = require('./src/routes/Inventory_routes/search_invoice');
 app.use('/', searchInvoiceRouter);
  
+
+////// INVOICE REPORT ROUTE
+const invoiceReportRouter = require('./src/routes/Inventory_routes/invoice_reports');
+app.use('/', invoiceReportRouter);
 
 
 // Start the server
