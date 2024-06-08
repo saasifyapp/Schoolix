@@ -42,6 +42,7 @@ function displayInvoices(data) {
                 <td>${billDate}</td>
                 <td>${invoice.buyerName}</td>
                 <td>${invoice.buyerPhone}</td>
+                <td>${invoice.class_of_buyer}</td>
                 <td>${invoice.total_payable}</td>
                 <td>${invoice.paid_amount}</td>
                 <td>${invoice.balance_amount}</td>
@@ -171,6 +172,7 @@ async function searchInvoiceDetails() {
                     <td>${billDate}</td>
                     <td>${invoice.buyerName}</td>
                     <td>${invoice.buyerPhone}</td>
+                    <td>${invoice.class_of_buyer}</td>
                     <td>${invoice.total_payable}</td>
                     <td>${invoice.paid_amount}</td>
                     <td>${invoice.balance_amount}</td>

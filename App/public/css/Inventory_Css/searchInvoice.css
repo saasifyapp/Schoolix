@@ -141,7 +141,7 @@ tr:hover td {
     
 
  /* Modal styles */
- .modal {
+.modal {
     display: none;
     align-items: center;
     justify-content: center;
@@ -161,7 +161,7 @@ tr:hover td {
     margin: auto;
     padding: 1rem;
     border: 1px solid #888;
-    width: 22rem; /* Slightly larger to accommodate padding and borders */
+    width: 22rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -171,30 +171,14 @@ tr:hover td {
     animation: fadeUp 0.3s ease-in-out;
 }
 
-.close {
-    position: absolute;
-    right: 1rem;
-    top: 1rem;
-    color: #aaa;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-}
-
 h2, h3 {
     text-align: center;
 }
 
 .form-group {
     position: relative;
-    width: 100%; /* Ensure the form group takes up the full width of the container */
-    max-width: 20rem; /* Set the maximum width for the form group */
+    width: 100%;
+    max-width: 20rem;
     margin-bottom: 1.5rem;    
 }
 
@@ -204,7 +188,7 @@ h2, h3 {
     border: 1px solid #ccc;
     border-radius: 0.25rem;
     width: 100%;
-    box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+    box-sizing: border-box;
     text-align: center;
 }
 
@@ -234,47 +218,28 @@ h2, h3 {
     outline: none;
 }
 
-
-
-  .modal-btn span {
-    margin-right: 10px;
-  }
-
-  .modal-content h2{
-    font-size: 2rem;   
-    font-weight: 700;
-    line-height: 1.2;
-    text-align: center;
-    pointer-events: auto;
-    color: #484b51;
-}
-
-.modal-content h3{
-    font-size: 1.5rem;   
-    font-weight: 600;
-    line-height: 1.2;
-    text-align: center;
-    pointer-events: auto;
-    color: #484b51;   
-    
+.button-group {
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
 
 .styled-button {
     background-color: transparent;
     border: none;
-    color: black; /* Change text color to black */
-    padding: 10px 20px; /* Add some padding */
+    color: black;
+    padding: 10px 20px;
     text-align: center;
     text-decoration: none;
-    display: flex; /* Use flex for centering */
-    align-items: center; /* Center vertically */
-    justify-content: center; /* Center horizontally */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 14px;
     cursor: pointer;
-    border-radius: 20px; /* Round corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-    transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
-    margin-bottom: 10px; /* Added margin bottom for spacing */
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin: 0 5px;
 }
 
 .styled-button:hover {
@@ -286,8 +251,25 @@ h2, h3 {
 .styled-button img {
     width: 25px; 
     height: 25px; 
-    margin-right: 5px; /* Adjusted margin for better spacing */
+    margin-right: 5px;
 }
+
+.styled-button.cancel-button:hover {
+    background-color: #f44336;
+}
+
+/* Additional styles for better UX */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
      
 /* loading aniamtion */
 .loading-overlay {
