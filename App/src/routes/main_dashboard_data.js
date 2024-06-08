@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS pre_adm_admitted_teachers (
 CREATE TABLE IF NOT EXISTS inventory_book_details (
     title varchar(30) DEFAULT NULL,
     class_of_title varchar(10) DEFAULT NULL,
-    purchase_price int(11) DEFAULT NULL,
+    purchase_price decimal(10,2) DEFAULT NULL,
     selling_price int(11) DEFAULT NULL,
     vendor varchar(30) DEFAULT NULL,
     ordered_quantity int(11) DEFAULT NULL,
@@ -97,7 +97,7 @@ const createTableQuery6 = `
 CREATE TABLE IF NOT EXISTS inventory_uniform_details (
     uniform_item varchar(30) DEFAULT NULL,
     size_of_item varchar(10) DEFAULT NULL,
-    purchase_price int(11) DEFAULT NULL,
+    purchase_price decimal(10,2) DEFAULT NULL,
     selling_price int(11) DEFAULT NULL,
     vendor varchar(30) DEFAULT NULL,
     ordered_quantity int(11) DEFAULT NULL,
@@ -117,9 +117,9 @@ connection.query(createTableQuery6, (err, result) => {
 const createTableQuery7 = `
 CREATE TABLE IF NOT EXISTS inventory_vendor_details (
     vendor_name varchar(30) DEFAULT NULL,
-    net_payable int(11) DEFAULT NULL,
-    paid_till_now int(11) DEFAULT NULL,
-    balance int(11) DEFAULT NULL,
+    net_payable decimal(10,2) DEFAULT NULL,
+    paid_till_now decimal(10,2) DEFAULT NULL,
+    balance decimal(10,2) DEFAULT NULL,
     vendorFor varchar(20) DEFAULT NULL
 )
 `;

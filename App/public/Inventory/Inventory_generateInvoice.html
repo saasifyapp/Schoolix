@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,156 +8,384 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/Inventory_Css/InventoryAll.css">
     <link rel="stylesheet" href="/css/Inventory_Css/GenerateInvoice.css">
-    <link rel="stylesheet" href="/css/NavButtons.css">   
+    <link rel="stylesheet" href="/css/NavButtons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
+
 <body>
-
-    
-
     <div class="container-fluid">
-        <button class="corner-button left-button" onclick="window.location.href='/dashboard'"
-    style="animation: slide-in 0.7s ease forwards;">
-    <img src="/images/homeicon.png" alt="Dashboard Icon">
-    <span>Home</span>
-  </button>
-  <button class="corner-button right-button signout-button" id="logoutButton"
-    style="animation: slide-in 0.7s ease forwards;">
-    <img src="/images/logout.png" alt="Signout Icon">
-    <span>Signout</span>
-  </button>
+        <div id="loadingOverlayInventory" class="loading-overlay">
+            <div class="typewriter">
+                <div class="slide"><i></i></div>
+                <div class="paper"></div>
+                <div class="keyboard"></div>
+            </div>
+        </div>
 
-        <div class="row" style="margin-top: 5rem;">
-            <!-- Buyer Details -->
-            <div class="col-md-6">
-                <div class="section buyer-details">
-                    <h5>Buyer Details</h5>
-                    <form>
-                        <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label for="buyerName">Name</label>
-                                <input type="text" class="form-control" id="buyerName" placeholder="Name">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="buyerMobile">Mobile</label>
-                                <input type="text" class="form-control" id="buyerMobile" placeholder="Mobile">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="buyerClass">Class</label>
-                                <input type="text" class="form-control" id="buyerClass" placeholder="Class" readonly>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+        <nav class="navbar">
+            <div class="logo_item">
+                <!-- <i class="bx bx-menu" id="sidebarOpen"></i> -->
+                <img id="logo" src="" alt="Logo">
+                <!-- <div class="user_name" id="user_name"></div> -->
             </div>
-            <!-- Invoice No and Date -->
-            <div class="col-md-3">
-                <div class="section invoice-details" style="height: 200px;">
-                    <h5>Invoice Details</h5>
-                    <form>
-                        <div class="form-group">
-                            <label for="invoiceNo">Invoice No</label>
-                            <input type="text" class="form-control" id="invoiceNo" placeholder="Invoice No">
-                        </div>
-                        <div class="form-group">
-                            <label for="invoiceDate">Date</label>
-                            <input type="text" class="form-control" id="invoiceDate">
-                        </div>
-                    </form>
-                </div>
+
+            <div class="navbar_center" style="margin-left: 5.5rem;">
+                <button onclick="window.location.href='/inventory/billing'"> <i class='bx' id="backButton"> <img
+                            src="/images/back.png" alt="Previous Icon"></i></button>
+                <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img
+                            src="/images/homeicon.png" alt="Dashboard Icon"></i></button>
+                <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
+                            alt="Signout Icon"></i></button>
             </div>
-            <div class="col-md-3">
+
+            <div class="navbar_content">
+                <!-- <i class="bi bi-grid"></i>
+          <i class='bx bx-bell'></i> -->
+            </div>
+        </nav>
+
+        <div class="" style="margin-top:3rem; display: flex; height: 80%;">
+            <!-- First Container -->
+            <div class="first">
+                <div class="section" style="border-style: none;">
+                    <div class="row">
+                        <!-- Buyer Details -->
+                        <div class="col-md-7">
+                            <div class="section buyer-details">
+                                <h5>Buyer Details</h5>
+                                <div class="form-container">
+                                    <form>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-5">
+                                                <input type="text" class="form-control " id="buyerName" name="buyerName"
+                                                    placeholder=" " required>
+                                                <span class="form-control-placeholder">Name</span>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <input type="" class="form-control" id="buyerMobile" placeholder=""
+                                                    maxlength="10"><span class="form-control-placeholder">Mobile</span>
+
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <input type="text" class="form-control" id="buyerClass"
+                                                    placeholder="Class" readonly>
+                                                <span class="form-control-placeholder">Class</span>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Invoice No and Date -->
+                        <div class="" style="width: 40%;">
+                            <div class="section invoice-details">
+                                <h5>Invoice Details</h5>
+                                <form>
+                                    <div class="form-row">
+                                        <div class="form-group ">
+                                            <label for="invoiceNo" style="margin-top: 3px;">Invoice No &#8594;</label>
+                                            <input id="invoiceNo" style="border: none; width: 5rem; margin-left: 1rem;">
+                                            <!-- arrow character -->
+                                        </div>
+                                        <div class="form-group ">
+                                            <label for="invoiceDate">Date &#8594; </label>
+                                            <input id="invoiceDate"
+                                                style="border: none; width: 14rem; margin-left: 1rem;">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <!-- Display Books -->
+                        <div class="" style="width: 45%; margin-left: 1rem;">
+                            <div class="section books">
+                                <h5>Display Books</h5>
+                                <div class="table-container">
+                                    <table class="table table-bordered" id="booksTable">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 29%;">Title</th>
+                                                <th>Quantity</th>
+                                                <th>Unit Price</th>
+                                                <th>Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="booksTableBody">
+                                            <!-- Book entries go here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Display Uniform -->
+                        <div class="" style="width: 50%; margin-left: 1rem;">
+                            <div class="section uniform">
+                                <h5>Display Uniform</h5>
+                                <div class="table-container">
+                                    <table class="table table-bordered" id="uniformsTable">
+                                        <thead>
+                                            <tr>
+                                                <th class="uniform-item">Item</th>
+                                                <th class="uniform-size">Size</th>
+                                                <th class="uniform-quantity">Quantity</th>
+                                                <th class="uniform-price">Unit Price</th>
+                                                <th class="uniform-price">Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="uniformsTableBody">
+                                            <!-- Uniform entries go here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bottom-container">
+
+                        <div class="row">
+                            <!-- Invoice Summary -->
+
+                            <div class="section " style="width: 58%; ">
+                                <h5>Invoice Summary</h5>
+                                <div class="form-container">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-3">
+                                            <input type="text" class="form-control" id="totalAmount" placeholder=""
+                                                readonly>
+                                            <span class="form-control-placeholder">Total</span>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <input type="number" class="form-control" id="amountPaid" placeholder="">
+                                            <span class="form-control-placeholder">Paid</span>
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <input type="text" class="form-control" id="balanceAmount" placeholder=""
+                                                readonly>
+                                            <span class="form-control-placeholder">Balance</span>
+                                        </div>
+                                        <div class="col-md-4" style="margin-bottom: 1rem;">
+                                            <label>Payment Method:</label><br>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="paymentMethod"
+                                                    id="cashPayment" value="CASH">
+                                                <label class="form-check-label" for="cashPayment">Cash</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="paymentMethod"
+                                                    id="upiPayment" value="UPI">
+                                                <label class="form-check-label" for="upiPayment">UPI</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- Control Panel -->
+
+                            <div class="section control-panel" style="margin-left: 0.8rem; ">
+                                <h5>Control Panel</h5>
+                                <div class="control-button-container">
+                                    <button id="generateButton" class="control-button">
+                                        <img src="/images/generateinvoice.png" alt="Refresh Icon"
+                                            style="width: 25px; height: 25px;">
+                                        Generate
+                                    </button>
+                                    <button id="printButton" class="control-button">
+                                        <img src="/images/printer.gif" alt="Refresh Icon"
+                                            style="width: 25px; height: 25px;">
+                                        Print
+                                    </button>
+                                    <button id="resetButton" class="control-button">
+                                        <img src="/images/reload.gif" alt="Refresh Icon"
+                                            style="width: 25px; height: 25px;">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+
+            </div>
+
+
+            <!-- Second Container -->
+            <div class="bill-container" style="height: 100%;" id="printableContainer">
                 <div class="section bill">
                     <h5>Display Bill</h5>
-                    <div class="full-width table-container">
+                    <div class="full-width table-container" style="overflow-y: auto; /* Enable vertical scrolling */">
                         <!-- Bill details go here -->
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="row">
-            <!-- Display Books -->
-            <div class="col-md-4">
-                <div class="section books">
-                    <h5>Display Books</h5>
-                    <div class="table-container">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Quantity</th>
-                                    <th>Price (Selling Price)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="booksTableBody">
-                                <!-- Book entries go here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <!-- Display Uniform -->
-            <div class="col-md-6">
-                <div class="section uniform">
-                    <h5>Display Uniform</h5>
-                    <div class="table-container">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Size</th>
-                                    <th>Quantity</th>
-                                    <th>Price</th>
-                                </tr>
-                            </thead>
-                        </thead>
-                        <tbody id="uniformsTableBody">
-                            <!-- Book entries go here -->
-                        </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="row">
-            <!-- Invoice Summary -->
-            <div class="col-md-">
-                <div class="section summary">
-                    <h5>Invoice Summary</h5>
-                    <div class="form-row">
-                        <div class="form-group col-md-4">
-                            <label for="totalAmount">Total Amount</label>
-                            <input type="text" class="form-control" id="totalAmount" placeholder="Total Amount">
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="amountPaid">Paid</label>
-                            <input type="text" class="form-control" id="amountPaid" placeholder="Paid">
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="balanceAmount">Balance</label>
-                            <input type="text" class="form-control" id="balanceAmount" placeholder="Balance">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Control Panel -->
-            <div class="col-md-6">
-                <div class="section control-panel">
-                    <h5>Control Panel</h5>
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-primary">Generate Bill</button>
-                        <button type="button" class="btn btn-secondary">Print Bill</button>
-                        <button type="button" class="btn btn-danger">Reset</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                        <div class="page-content container">
+                            <div class="page-header text-blue-d2">
+                                <h1 class="page-title text-secondary-d1">
+                                    Invoice
+                                    <small class="page-info">
+                                        <i class="fa fa-angle-double-right text-80"></i>
 
-    <script src="/js/Inventory_js/Inventory_generateInvoice.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                                    </small>
+
+                                </h1>
+                            </div>
+
+                            <div class="container px-0">
+                                <div class="row mt-4">
+                                    <div class="col-12 col-lg-12">
+
+                                        <!-- .row -->
+
+
+
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div>
+                                                    <span class="text-sm text-grey-m2 align-middle">To:</span>
+                                                    <span class="text-600 text-110 text-blue align-middle">
+                                                    </span>
+                                                </div>
+                                                <div class="text-grey-m2">
+                                                    <div class="my-1">
+
+                                                    </div>
+                                                    <div class="my-1">
+
+                                                    </div>
+                                                    <div class="my-1"><i
+                                                            class="fa fa-phone fa-flip-horizontal text-secondary"></i>
+                                                        <b class="text-600"></b>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- /.col -->
+
+                                            <div
+                                                class="text-95 col-sm-6 align-self-start d-sm-flex justify-content-end">
+                                                <hr class="d-sm-none" />
+                                                <div class="text-grey-m2">
+                                                    <div class="mt-1 mb-2 text-secondary-m1 text-600 text-125">
+                                                        Invoice
+                                                    </div>
+
+                                                    <div class="my-2"><i
+                                                            class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span
+                                                            class="text-600 text-90">ID:</span></div>
+
+                                                    <div class="my-2"><i
+                                                            class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span
+                                                            class="text-600 text-90">Issue Date:</span>
+                                                    </div>
+
+                                                    <div class="my-2"><i
+                                                            class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span
+                                                            class="text-600 text-90">Status:</span> <span
+                                                            class="badge badge-warning badge-pill px-25"
+                                                            id="payment-status">Unpaid</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- /.col -->
+                                        </div>
+
+                                        <div class="mt-2">
+
+                                            <!-- or use a table instead -->
+
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-borderless "
+                                                    style="height: 200px;">
+                                                    <thead class="bg-none bgc-default-tp1">
+                                                        <tr class="text-white">
+                                                            <th class="opacity-2">#</th>
+                                                            <th>Title</th>
+                                                            <th>Qty</th>
+                                                            <th>Unit Price</th>
+                                                            <th width="140">Amount</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                </table>
+                                            </div>
+
+
+
+
+                                            <div>
+                                                <span class="text-secondary-d1 text-105">Thank you for your
+                                                    business</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Third Container -->
+            <div class="row" style="margin-top: 9rem;">
+
+            </div>
+
+            <div id="toast-container" class="toast-container">
+                <div id="toast" class="toast"></div>
+            </div>
+
+
+
+
+            <!-- <div id="toast" class="toast"></div> -->
+
+            <!-- Custom Low Stock Alert Modal -->
+            <div id="lowStockAlert" class="modal">
+                <div class="modal-content">
+                    <h2>Low Stock Alert</h2>
+                    <div class="stock-container">
+                        <div id="bookStock" class="stock-column">
+                            <h3>Books</h3>
+                            <p id="lowStockMessagesBooks"></p>
+                            <p id="insufficientBooksMessages" class="insufficient"></p>
+                        </div>
+                        <div id="uniformStock" class="stock-column">
+                            <h3>Uniforms</h3>
+                            <p id="lowStockMessagesUniforms"></p>
+                            <p id="insufficientUniformsMessages" class="insufficient"></p>
+                        </div>
+                    </div>
+                    <div class="button-container">
+                        <button id="proceedBtn" class="modal-btn">
+                            <img src="/images/conform.png" alt="Proceed">
+                            <span>Proceed</span>
+                        </button>
+                    
+                        <button id="closeBtn" class="modal-btn">
+                            <img src="/images/close.png" alt="Close">
+                            <span>Close</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <script src="/js/Inventory_js/All.js"></script>
+        <script src="/js/Inventory_js/Inventory_generateInvoice.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

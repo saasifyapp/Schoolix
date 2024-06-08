@@ -212,20 +212,30 @@ app.get('/pre_adm/admitted_teacher', authenticateToken, (req, res) => {
 app.get('/inventory/purchase', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_purchase.html'));
 });
-/*Serve HTML form
+//Serve HTML form
 app.get('/inventory/billing', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_billingConsole.html'));
-});*/
+});
 
 app.get('/inventory/generateInvoice', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_generateInvoice.html'));
 });
 
-/*Serve HTML form
+//Serve HTML form
 app.get('/inventory/reports', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_reports.html'));
 });
-*/
+
+//Serve HTML form
+app.get('/inventory/searchInvoice', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_searchInvoice.html'));
+});
+
+//Serve HTML form
+app.get('/inventory/invoiceReports', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_invoiceReports.html'));
+});
+
 
 // Middleware to authenticate JWT
 function authenticateToken(req, res, next) {
@@ -362,7 +372,15 @@ app.use('/', purchaseReportsRouter);
 //////GENERATE INVOICE ROUTE
 const generateInvoiceRouter = require('./src/routes/Inventory_routes/generate_invoice');
 app.use('/', generateInvoiceRouter);
+
+//////SEARCH INVOICE ROUTE
+const searchInvoiceRouter = require('./src/routes/Inventory_routes/search_invoice');
+app.use('/', searchInvoiceRouter);
  
+
+////// INVOICE REPORT ROUTE
+const invoiceReportRouter = require('./src/routes/Inventory_routes/invoice_reports');
+app.use('/', invoiceReportRouter);
 
 
 // Start the server

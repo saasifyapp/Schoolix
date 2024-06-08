@@ -19,16 +19,27 @@
 
 <body>
 
-    <div id="toast" class="toast"></div>
+    <div id="toast-container" class="toast-container">
+        <div id="toast" class="toast"></div>
+    </div>
     <div id="loadingOverlay" class="loading-overlay">
-        <div class="loader"></div>
+        <div class="pyramid-loader">
+            <div class="wrapper">
+                <span class="side side1"></span>
+                <span class="side side2"></span>
+                <span class="side side3"></span>
+                <span class="side side4"></span>
+                <span class="shadow"></span>
+            </div>
+        </div>
     </div>
 
 
     <div class="container-fluid">
         <div class="row flex-nowrap ">
             <div class="col-md-3 col-xl-2 px-sm-2 px-0 menu overflow-x-hidden fixed-top" style="height: 100vh;">
-                <div class="d-flex flex-column align-items-center align-items-sm-start px-1 pt-1 text-black "style="height: 100%;">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-1 pt-1 text-black "
+                    style="height: 100%;">
                     <a href="/pre_adm_dashboard"
                         class="d-flex align-items-center pb-1 py-0 mb-md-1 me-md-auto text-black text-decoration-none">
                         <span class="fs-4 d-none d-sm-inline  rounded-pill fw-500 text-decoration-none text-black p-2">
@@ -74,24 +85,26 @@
                                 <i class="fs-4 bi text-black"><img class="icon" src="/images/admitteacher.gif"></i>
                                 <span class="ms-1 d-none d-sm-inline  text-black">Admitted Teachers</span> </a>
                         </li>
-                      
+
                     </ul>
                     <hr>
                     <div class="pb-1 d-flex justify-content-between align-items-center w-100 mb-4">
                         <a onclick="logout()" class="d-flex flex-column align-items-center text-black nav-link1">
                             <i class=" fs-1 bi nav-item"><img class="" style="transform: rotate(180deg) ;background-color: transparent; 
-                            width: 30px; height: 30px;margin-top: 3px; "src="/images/logout.png"></i>
+                            width: 30px; height: 30px;margin-top: 3px; " src="/images/logout.png"></i>
                             <span class="ms-1 d-none d-sm-inline text-black mt-1">Signout</span>
                         </a>
                         <a href="/dashboard" class="d-flex flex-column align-items-center text-black nav-link1">
-                            <i class=" fs-1 bi nav-item "><img class=""   style="background-color: transparent; width: 30px; height: 29px;" src="/images/homeicon.png"></i>
+                            <i class=" fs-1 bi nav-item "><img class=""
+                                    style="background-color: transparent; width: 30px; height: 29px;"
+                                    src="/images/homeicon.png"></i>
                             <span class="ms-1 d-none d-sm-inline text-black ">Home</span>
                         </a>
                     </div>
-                            
-                    
+
+
                 </div>
-             
+
             </div>
             <div class="col-md-9 col-xl-10 offset-md-3 offset-xl-2 px-0">
                 <!-- Content area... -->
@@ -99,7 +112,9 @@
                 <div id="overlay" class="overlay"></div> <!-- Add overlay element -->
 
                 <div id="customAlert" class="custom-alert">
-                    <div id="toast" class="toast"></div>
+                    <div id="toast-container" class="toast-container">
+                        <div id="toast" class="toast"></div>
+                    </div>
                     <div class="left-container">
                         <style>
                         </style>
@@ -152,11 +167,11 @@
                     <div class="search_item">
 
                         <div style="position: relative; display: inline-block; margin-right: 10px;">
-                            <input type="text" id="searchField" placeholder="Enter Student Name...">
+                            <input type="text" id="searchField" placeholder="Enter Student Name..." oninput="searchDetails()">
 
-                            <button id="searchButton" class="search-button" onclick="searchDetails()">
+                            <!-- <button id="searchButton" class="search-button" onclick="searchDetails()">
                                 <img src="../images/search.gif" alt="Search Icon" style="height: 100%;">
-                            </button>
+                            </button> -->
                         </div>
 
 
@@ -180,32 +195,32 @@
                     </div>
                 </div>
 
-                    <div id="output">
-                        <table id="studentTable">
-                            <thead>
-                                <tr>
-                                    <th>Student Name</th>
-                                    <th>Mobile No</th>
-                                    <th>Address</th>
-                                    <th>Date of Birth</th>
-                                    <th>Standard</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="studentData"></tbody>
-                        </table>
-                    </div>
-
-
+                <div id="output">
+                    <table id="studentTable">
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th>Mobile No</th>
+                                <th>Address</th>
+                                <th>Date of Birth</th>
+                                <th>Standard</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentData"></tbody>
+                    </table>
                 </div>
 
 
             </div>
+
+
         </div>
+    </div>
 
-       
 
-        
+
+
     </div>
 
 
@@ -246,10 +261,10 @@
             const studentTable = document.getElementById('studentData');
             studentTable.innerHTML = ''; // Clear previous data
 
-            try{
-            data.forEach(student => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
+            try {
+                data.forEach(student => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
     <td>${student.student_name}</td>
     <td>${student.mobile_no}</td>
     <td>${student.res_address}</td>
@@ -276,15 +291,15 @@
         </button>
     </td>
 `;
-                studentTable.appendChild(row);
-            });
-            addFadeUpAnimation();
-            hideLoadingAnimation();
-        } catch (error) {
-        console.error('Error displaying students:', error);
-        showToast('Error displaying students. Please try again.',true);
-        hideLoadingAnimation();
-        }
+                    studentTable.appendChild(row);
+                });
+                addFadeUpAnimation();
+                hideLoadingAnimation();
+            } catch (error) {
+                console.error('Error displaying students:', error);
+                showToast('Error displaying students. Please try again.', true);
+                hideLoadingAnimation();
+            }
         }
 
 
@@ -357,8 +372,8 @@
                     } else {
                         // Append student data to the table
                         data.forEach(student => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
     <td>${student.student_name}</td>
     <td>${student.mobile_no}</td>
     <td>${student.res_address}</td>
@@ -446,17 +461,17 @@
         // }
 
         function searchDetails() {
-            document.getElementById('classFilter').value = '';
-            showLoadingAnimation();
+            // document.getElementById('classFilter').value = '';
+            // showLoadingAnimation();
 
             const searchTerm = document.getElementById('searchField').value.trim();
 
             // Check if the search term is empty
             if (searchTerm === '') {
                 // alert('Please enter a search term.');
-                showToast('Please enter a search term.', true); // Show error toast
+                // showToast('Please enter a search term.', true); 
                 refreshData();
-                hideLoadingAnimation();
+                // hideLoadingAnimation();
                 return;
             }
 
@@ -481,8 +496,8 @@
                     } else {
                         // Append student data to the table
                         data.forEach(student => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
     <td>${student.student_name}</td>
     <td>${student.mobile_no}</td>
     <td>${student.res_address}</td>
@@ -513,7 +528,7 @@
                         });
                     }
                     addFadeUpAnimation();
-                    hideLoadingAnimation();
+                    // hideLoadingAnimation();
                 })
                 .catch(error => console.error('Error:', error));
         }
@@ -537,7 +552,7 @@
                     })
                     .catch(error => {
                         console.error('Error removing student:', error);
-                        hideLoadingAnimation() ;
+                        hideLoadingAnimation();
                         showToast('An error occurred while removing the student.', true); // Show error toast
                         // alert('An error occurred while removing the student.');
                     });
@@ -586,23 +601,29 @@
         }
 
         function showToast(message, isError) {
-            const toast = document.getElementById('toast');
+            const toastContainer = document.getElementById("toast-container");
+
+            // Create a new toast element
+            const toast = document.createElement("div");
+            toast.classList.add("toast");
+            if (isError) {
+                toast.classList.add("error");
+            }
             toast.textContent = message;
 
-            // Set class based on isError flag
-            if (isError) {
-                toast.classList.add('error');
-            } else {
-                toast.classList.remove('error');
-            }
+            // Append the toast to the container
+            toastContainer.appendChild(toast);
 
             // Show the toast
             toast.style.display = 'block';
 
-            // Hide the toast after 3 seconds
+            // Remove the toast after 4 seconds
             setTimeout(function () {
-                toast.style.display = 'none';
-            }, 3000);
+                toast.style.animation = 'slideOutRight 0.5s forwards';
+                toast.addEventListener('animationend', function () {
+                    toast.remove();
+                });
+            }, 4000);
         }
         refreshData();
     </script>

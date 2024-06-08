@@ -191,161 +191,118 @@ function deleteVendor(vendorName) {
             });
     }
 }
-// Function to update a vendors paid amount
-function updateVendor(vendorName) {
-    fetch(`/inventory/vendors/${encodeURIComponent(vendorName)}/paid_till_now`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to retrieve vendor details.');
-            }
-            return response.json();
-        })
-        .then(data => {
-            let existingPaidAmount = data.paid_till_now;
-            let net_payable = data.net_payable;
-            let initialBalance = data.balance;
-            let newPaidAmount = 0;
+async function updateVendor(vendorName) {
+    try {
+        const response = await fetch(`/inventory/vendors/${encodeURIComponent(vendorName)}/paid_till_now`);
+        if (!response.ok) {
+            throw new Error('Failed to retrieve vendor details.');
+        }
+        
+        const data = await response.json();
+        let existingPaidAmount = parseFloat(data.paid_till_now) || 0;
+        let net_payable = parseFloat(data.net_payable) || 0;
+        let initialBalance = parseFloat(data.balance) || 0;
+        let newPaidAmount = 0;
 
-            // Create custom prompt
-            const customPrompt = document.createElement('div');
-            customPrompt.classList.add('custom-prompt');
-            const updatePromptContent = () => {
-                customPrompt.innerHTML = `
-                    <div class="prompt-content">
-                        <h2>${vendorName}</h2>
-                        <p>Net Payable : ${net_payable}</p>
-                        <p>Paid Till Now : ${existingPaidAmount}</p>
-                        <p>New Amount Paid:</p>
-                        <input type="number" id="newPaidAmountInput" min="0">
-                        <p id="totalPaid">Total Paid : ${existingPaidAmount}</p>
-                        <p id="balance">Balance : ${initialBalance}</p>                      
-                       
-                        
-                        <button id="confirmButton" style="background-color: transparent;
-                            border: none;
-                            color: black; /* Change text color to black */
-                            padding: 0;
-                            text-align: center;
-                            text-decoration: none;
-                            display: inline-flex; /* Use flex for centering */
-                            align-items: center; /* Center vertically */
-                            justify-content: center; /* Center horizontally */
-                            font-size: 14px;
-                            cursor: pointer;
-                            max-height: 100%;
-                            border-radius: 20px; /* Round corners */
-                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-                            transition: transform 0.2s, box-shadow 0.2s;
-                            margin-bottom: 10px;"                           
-                            onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                                <img src="../images/conform.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-                                <span style="margin-right: 10px;">Confirm</span>
-                            </button>
+        // Create custom prompt
+        const customPrompt = document.createElement('div');
+        customPrompt.classList.add('custom-prompt');
+        
+        const updatePromptContent = () => {
+            customPrompt.innerHTML = `
+                <div class="prompt-content">
+                    <h2>${vendorName}</h2>
+                    <p>Net Payable: ${net_payable.toFixed(2)}</p>
+                    <p>Paid Till Now: ${existingPaidAmount.toFixed(2)}</p>
+                    <p>New Amount Paid:</p>
+                    <input type="number" step="0.01" id="newPaidAmountInput" min="0">
+                    <p id="totalPaid">Total Paid: ${existingPaidAmount.toFixed(2)}</p>
+                    <p id="balance">Balance: ${initialBalance.toFixed(2)}</p>
+                    <button id="confirmButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;" onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                        <img src="../images/conform.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                        <span style="margin-right: 10px;">Confirm</span>
+                    </button>
+                    <button id="cancelButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;" onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                        <img src="../images/cancel.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                        <span style="margin-right: 10px;">Cancel</span>
+                    </button>
+                </div>
+            `;
+        };
+        
+        updatePromptContent();
+        document.body.appendChild(customPrompt);
 
-                            <button id="cancelButton" style="background-color: transparent;
-                            border: none;
-                            color: black; /* Change text color to black */
-                            padding: 0;
-                            text-align: center;
-                            text-decoration: none;
-                            display: inline-flex; /* Use flex for centering */
-                            align-items: center; /* Center vertically */
-                            justify-content: center; /* Center horizontally */
-                            font-size: 14px;
-                            cursor: pointer;
-                            max-height: 100%;
-                            border-radius: 20px; /* Round corners */
-                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-                            transition: transform 0.2s, box-shadow 0.2s;
-                            margin-bottom: 10px;"                           
-                            onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                                <img src="../images/cancel.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-                                <span style="margin-right: 10px;">Cancel</span>
-                            </button>                      
-                        
-                    </div>
-                `;
-            };
-            updatePromptContent();
-            document.body.appendChild(customPrompt);
+        // Add event listener to confirm button
+        const confirmButton = customPrompt.querySelector('#confirmButton');
+        confirmButton.addEventListener('click', () => {
+            // Get the new paid amount from the input field
+            newPaidAmount = parseFloat(customPrompt.querySelector('#newPaidAmountInput').value) || 0;
 
-            // Add event listener to confirm button
-            const confirmButton = customPrompt.querySelector('#confirmButton');
-            confirmButton.addEventListener('click', () => {
-                // Get the new paid amount from the input field
-                newPaidAmount = parseInt(customPrompt.querySelector('#newPaidAmountInput').value, 10) || 0;
+            // Calculate total paid amount
+            const totalPaid = existingPaidAmount + newPaidAmount;
 
-                // Calculate total paid amount
-                const totalPaid = existingPaidAmount + newPaidAmount;
+            // Calculate new balance
+            let balance = net_payable - totalPaid;
 
-                // Calculate new balance
-                let balance = initialBalance - newPaidAmount;
+            // Update the vendor details on the server
+            updateVendorPaidAmount(vendorName, totalPaid, balance);
 
-                // Update the vendor details on the server
-                updateVendorPaidAmount(vendorName, totalPaid);
-
-                // Remove the prompt
-                customPrompt.remove();
-            });
-
-            // Add event listener to input field for updating total paid amount and balance
-            const newPaidAmountInput = customPrompt.querySelector('#newPaidAmountInput');
-            newPaidAmountInput.addEventListener('input', () => {
-                newPaidAmount = parseInt(newPaidAmountInput.value, 10) || 0;
-                const totalPaid = existingPaidAmount + newPaidAmount;
-                const totalPaidElement = customPrompt.querySelector('#totalPaid');
-                totalPaidElement.textContent = `Total Paid : ${totalPaid}`;
-
-                // Update balance
-                let balance = initialBalance - newPaidAmount;
-                const balanceElement = customPrompt.querySelector('#balance');
-                balanceElement.textContent = `Balance : ${balance}`;
-            });
-
-            // Add event listener to cancel button
-            const cancelButton = customPrompt.querySelector('#cancelButton');
-            cancelButton.addEventListener('click', () => {
-                // Remove the prompt
-                customPrompt.remove();
-            });
-        })
-        .catch(error => {
-            console.error('Error retrieving vendor details:', error);
-            // Handle error if needed
+            // Remove the prompt
+            customPrompt.remove();
         });
+
+        // Add event listener to input field for updating total paid amount and balance
+        const newPaidAmountInput = customPrompt.querySelector('#newPaidAmountInput');
+        newPaidAmountInput.addEventListener('input', () => {
+            newPaidAmount = parseFloat(newPaidAmountInput.value) || 0;
+            const totalPaid = existingPaidAmount + newPaidAmount;
+            const totalPaidElement = customPrompt.querySelector('#totalPaid');
+            totalPaidElement.textContent = `Total Paid: ${totalPaid.toFixed(2)}`;
+
+            // Update balance
+            let balance = net_payable - totalPaid;
+            const balanceElement = customPrompt.querySelector('#balance');
+            balanceElement.textContent = `Balance: ${balance.toFixed(2)}`;
+        });
+
+        // Add event listener to cancel button
+        const cancelButton = customPrompt.querySelector('#cancelButton');
+        cancelButton.addEventListener('click', () => {
+            // Remove the prompt
+            customPrompt.remove();
+        });
+    } catch (error) {
+        console.error('Error retrieving vendor details:', error);
+        // Handle error if needed
+    }
 }
 
 // Function to update vendor details on the server
-function updateVendorPaidAmount(vendorName, totalPaid) {
-    showVendorLoadingAnimation ();
-    console.log(vendorName, totalPaid)
-
-    fetch(`/inventory/vendors/${encodeURIComponent(vendorName)}/paid_till_now`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ paid_till_now: totalPaid })
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to update vendor details.');
-            }
-            hideVendorLoadingAnimation();
-            refreshData();
-            console.log('Vendor details updated successfully.');
-            showToast(`${vendorName} updated successfully`);
-            // You can perform further actions here, like refreshing the page or updating the UI
-        })
-        .catch(error => {
-            hideVendorLoadingAnimation();
-            console.error('Error updating vendor details:', error);
-            showToast(` Failed to update ${vendorName}`,'red');
-            // Handle error if needed
+async function updateVendorPaidAmount(vendorName, totalPaid, balance) {
+    try {
+        const response = await fetch(`/inventory/vendors/${encodeURIComponent(vendorName)}/paid_till_now`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ paid_till_now: totalPaid.toFixed(2), balance: balance.toFixed(2) })
         });
+
+        if (!response.ok) {
+            throw new Error('Failed to update vendor details.');
+        }
+
+        console.log('Vendor details updated successfully.');
+        showToast(`${vendorName} updated successfully`);
+        refreshData(); // Assuming you have a function to refresh data
+    } catch (error) {
+        console.error('Error updating vendor details:', error);
+        showToast(`Failed to update ${vendorName}`, 'red');
+        // Handle error if needed
+    }
 }
+
 
 // Function to handle searching vendor details
 function searchVendorDetails() {

@@ -14,4 +14,5 @@ document.addEventListener("DOMContentLoaded", function () {
         // Redirect to the new page
         window.location.href = "/inventory/generateInvoice";
     });
+
 });

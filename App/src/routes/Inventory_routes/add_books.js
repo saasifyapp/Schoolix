@@ -16,6 +16,7 @@ router.get('/inventory/books_vendor', (req, res) => {
 });
 
 router.post('/inventory/purchase/add_books', (req, res) => {
+
     
     const { title, class_of_title, purchase_price, selling_price, vendor, ordered_quantity } = req.body;
 

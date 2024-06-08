@@ -1,5 +1,10 @@
-document.addEventListener("DOMContentLoaded", function () {
 
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelector(".purchase-reports").addEventListener("click", function () {
+        // Show the purchase reports overlay
+        document.getElementById("purchaseReportsOverlay").style.display = "block";
+        populateVendorDetailsDropdown();
+    });
     populateVendorDetailsDropdown();
 
     var currentButtonName = '';
@@ -23,9 +28,9 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("exportButton").addEventListener("click", function () {
         exportToExcel(currentButtonName);
         setActiveButton('exportButton');
-    
+
         // Simulate download completion (replace this with actual callback if available)
-        setTimeout(function() {
+        setTimeout(function () {
             setActiveButton(null); // Reset the active state
         }, 1000); // Adjust timeout duration as needed
     });
@@ -230,10 +235,17 @@ document.addEventListener("DOMContentLoaded", function () {
         });*/
 
     function populateVendorDetailsDropdown() {
+        const vendorDetails = document.getElementById('vendorDetails');
+
+        // Fetch all vendors
         fetch('/inventory/all_vendor')
             .then(response => response.json())
             .then(data => {
-                const vendorDetails = document.getElementById('vendorDetails');
+                // Clear only the options with values, skip the first option with no value
+                const optionsToClear = Array.from(vendorDetails.options).slice(1);
+                optionsToClear.forEach(option => vendorDetails.removeChild(option));
+
+                // Populate dropdown with new options
                 data.forEach(item => {
                     const option = document.createElement('option');
                     option.value = item.vendor_name;
@@ -243,6 +255,7 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .catch(error => console.error('Error:', error));
     }
+
 
 
 
@@ -308,7 +321,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const dotlottiePlayer2 = document.createElement('dotlottie-player');
         dotlottiePlayer2.setAttribute('src', 'https://lottie.host/5d6fe6dc-d344-4b95-a6b4-17a5e01b88c8/2DhrGZVFGN.json');
         dotlottiePlayer2.setAttribute('background', 'transparent');
-        dotlottiePlayer2.setAttribute('speed', '1'); 
+        dotlottiePlayer2.setAttribute('speed', '1');
         dotlottiePlayer2.setAttribute('style', 'width: 600px; height: 450px;');
         dotlottiePlayer2.setAttribute('autoplay', 'true');
         dotlottiePlayer2.setAttribute('loop', 'true'); // Set loop manually

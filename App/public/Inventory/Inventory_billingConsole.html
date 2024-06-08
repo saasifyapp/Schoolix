@@ -11,16 +11,30 @@
 </head>
 
 <body>
+  <div id="loadingOverlayinventory" class="loading-overlay-inventory">
+    <div class="loader2"></div>
+  </div>
+  
+  <nav class="navbar">
+    <div class="logo_item">
+        <!-- <i class="bx bx-menu" id="sidebarOpen"></i> -->
+        <img id="logo" src="" alt="Logo">
+        <!-- <div class="user_name" id="user_name"></div> -->
+    </div>
 
-  <button class="corner-button left-button" onclick="window.location.href='/dashboard'"
-    style="animation: slide-in 0.7s ease forwards;">
-    <img src="/images/homeicon.png" alt="Dashboard Icon">
-    <span>Home</span>
-  </button>
-  <button class="corner-button right-button signout-button" id="logoutButton"
-    style="animation: slide-in 0.7s ease forwards;">
-    <img src="/images/logout.png" alt="Signout Icon">
-    <span>Signout</span>
+    <div class="navbar_center">
+        <button onclick="window.location.href='/dashboard'"> <i class='bx' id="backButton"> <img src="/images/back.png" alt="Previous Icon"></i></button>
+        <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img
+                    src="/images/homeicon.png" alt="Dashboard Icon"></i></button>
+        <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
+                    alt="Signout Icon"></i></button>
+    </div>
+
+    <div class="navbar_content">
+        <!-- <i class="bi bi-grid"></i>
+      <i class='bx bx-bell'></i> -->
+    </div>
+</nav>span>
   </button>
 
   <div class="adm-head">
@@ -44,8 +58,8 @@
       </a>
     </div>
 
-    <div class="card">
-      <a>
+    <div class="card search-invoice">
+      <a href="/inventory/searchInvoice">
         <button>
           <div class="dotlottie-container">
             <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
@@ -59,7 +73,7 @@
     </div>
 
     <div class="card">
-      <a>
+      <a href="/inventory/invoiceReports">
         <button>
           <div class="dotlottie-container">
 
@@ -79,7 +93,12 @@
   <!-- Overlay for Generate Invoice(select class) -->
   <div id="generateinvoiceOverlay" class="overlay">
     <div class="overlay-content">
-      <h2 class="overlay-head">Generate Invoice</h2>
+      
+       <div class="icon-container">
+        <i><img class="topicon" src="/images/invoiceicon.png" alt=""></i>     
+       </div>
+       <div class="close-icon" onclick="closeOverlay(event)">×</div>      
+      <h2 class="overlay-head">Generate Invoice</h2>          
       <form id="invoiceForm">
         <div class="form-group">
           <label for="classSelect" class="select-label">Select Class:</label>

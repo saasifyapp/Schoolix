@@ -8,23 +8,39 @@
   <link rel="stylesheet" href="/css/Inventory_Css/InventoryAll.css">
   <link rel="stylesheet" href="/css/Inventory_Css/Inventory.css">
   <link rel="stylesheet" href="/css/NavButtons.css">
+  <!-- Boxicons CSS -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 </head>
 
 <body>
   <div id="loadingOverlayinventory" class="loading-overlay-inventory">
     <div class="loader2"></div>
   </div>
-  <button class="corner-button left-button" onclick="window.location.href='/dashboard'"
-    style="animation: slide-in 0.7s ease forwards;">
-    <img src="/images/homeicon.png" alt="Dashboard Icon">
-    <span>Home</span>
-  </button>
-  <button class="corner-button right-button signout-button" id="logoutButton"
-    style="animation: slide-in 0.7s ease forwards;">
-    <img src="/images/logout.png" alt="Signout Icon">
-    <span>Signout</span>
-  </button>
 
+
+  <nav class="navbar">
+    <div class="logo_item">
+      <!-- <i class="bx bx-menu" id="sidebarOpen"></i> -->
+      <img id="logo" src="" alt="Logo">
+      <!-- <div class="user_name" id="user_name"></div> -->
+    </div>
+
+    <div class="navbar_center">
+      <button onclick="window.location.href='/dashboard'"> <i class='bx' id="backButton"> <img src="/images/back.png" alt="Previous Icon"></i></button>
+      <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img src="/images/homeicon.png"
+            alt="Dashboard Icon"></i></button>
+      <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
+            alt="Signout Icon"></i></button>
+    </div>
+
+    <div class="navbar_content">
+      <!-- <i class="bi bi-grid"></i>
+      <i class='bx bx-bell'></i> -->
+    </div>
+  </nav>
 
   <div class="adm-head">
     <div class="button-container">
@@ -92,7 +108,9 @@
       </a>
     </div>
   </div>
-  <div id="toast" class="toast"></div>
+  <div id="toast-container" class="toast-container">
+    <div id="toast" class="toast"></div>
+  </div>
 
   <!-- Overlay for Add Vendor -->
   <div id="addVendorOverlay" class="overlay">
@@ -117,7 +135,9 @@
 
         <form action="/inventory/purchase/add_vendor" method="post" id="vendorForm" class="addVendorForm">
 
-          <div id="toast" class="toast"></div>
+          <div id="toast-container" class="toast-container">
+            <div id="toast" class="toast"></div>
+          </div>
 
           <div class="form-group">
             <input type="text" class="form-control wide" id="vendorName" name="vendorName" placeholder=" " required
@@ -196,7 +216,9 @@
       <div class="form-container"
         style="display: flex; justify-content: center; align-items: center; margin-top: 3.5rem;">
         <form id="addBooksForm" class="addBookForm" style="display: flex; flex-wrap: wrap; gap: 0.6rem; width: 100%;">
-          <div id="toast" class="toast"></div>
+          <div id="toast-container" class="toast-container">
+            <div id="toast" class="toast"></div>
+          </div>
           <div class="form-group" style="flex: 1.6;">
             <input type="text" class="form-control" id="bookTitle" name="bookTitle" placeholder=" " required
               style="width: 100%;">
@@ -224,17 +246,24 @@
               <!-- Add more options for other classes -->
             </select>
           </div>
+
           <div class="form-group" style="flex: 1;">
-            <input type="number" class="form-control" id="purchasePrice" name="purchasePrice" placeholder=" " required
-              style="width: 100%;">
-            <span class="form-control-placeholder">Purchase Price</span>
-          </div>
-          <div class="form-group" style="flex: 1;">
-            <input type="number" class="form-control" id="sellingPrice" name="sellingPrice" placeholder=" " required
-              style="width: 100%;">
+            <input type="number" class="form-control" id="book_sellingPrice" name="book_sellingPrice" placeholder=" " required style="width: 100%;">
             <span class="form-control-placeholder">Selling Price</span>
-          </div>
-          <div class="form-group" style="flex: 1;">
+        </div>
+        
+        <div class="form-group" style="flex: 1;">
+            <input type="number" class="form-control" id="book_margin" name="book_margin" placeholder=" " required style="width: 80%;" step="0.01">
+            <span class="form-control-placeholder">% Margin</span>
+        </div>
+        
+        <div class="form-group" style="flex: 1;">
+            <input type="number" class="form-control" id="book_purchasePrice" name="book_purchasePrice" placeholder=" " required readonly style="width: 100%;">
+            <span class="form-control-placeholder">Purchase Price</span>
+        </div>
+
+
+          <div class="form-group" style="flex: 1.1;">
             <select id="bookvendor" name="vendor" class="custom-dropdown" required
               style="width: 100%; border-style: none; margin-bottom: 0.8rem;">
               <!-- Options will be populated dynamically -->
@@ -315,7 +344,9 @@
       <div class="form-container"
         style="display: flex; justify-content: center; align-items: center; margin-top: 3.5rem;">
         <form id="addUniformForm" class="addBookForm" style="display: flex; flex-wrap: wrap; gap: 0.6rem; width: 100%;">
-          <div id="toast" class="toast"></div>
+          <div id="toast-container" class="toast-container">
+            <div id="toast" class="toast"></div>
+          </div>
           <div class="form-group" style="flex: 1;">
             <input type="text" class="form-control" id="uniformItem" name="uniform_item" placeholder=" " required
               style="width: 100%;">
@@ -329,17 +360,20 @@
           </div>
 
           <div class="form-group" style="flex: 1;">
-            <input type="number" class="form-control" id="purchasePrice" name="purchase_price" placeholder=" " required
-              style="width: 100%;">
-            <span class="form-control-placeholder">Purchase Price</span>
-          </div>
-
-          <div class="form-group" style="flex: 1;">
-            <input type="number" class="form-control" id="sellingPrice" name="selling_price" placeholder=" " required
-              style="width: 100%;">
+            <input type="number" class="form-control" id="uniform_sellingPrice" name="uniform_sellingPrice" placeholder=" " required style="width: 100%;">
             <span class="form-control-placeholder">Selling Price</span>
-          </div>
-
+        </div>
+        
+        <div class="form-group" style="flex: 1;">
+            <input type="number" class="form-control" id="uniform_margin" name="uniform_margin" placeholder=" " required style="width: 80%;" step="0.01">
+            <span class="form-control-placeholder">% Margin</span>
+        </div>
+        
+        <div class="form-group" style="flex: 1;">
+            <input type="number" class="form-control" id="uniform_purchasePrice" name="uniform_purchasePrice" placeholder=" " required readonly style="width: 100%;">
+            <span class="form-control-placeholder">Purchase Price</span>
+        </div>
+        
           <div class="form-group" style="flex: 1;">
             <select id="univendor" class="custom-dropdown form-control" name="vendor" required
               style="width: 100%;  margin-bottom: 0.8rem;">
@@ -459,7 +493,7 @@
 
 
   </div>
-
+  <!-- <script src="/js/Main_Dashboard/main_dashboard.js"></script> -->
   <script src="/js/Inventory_js/Inventory_addVendor.js"></script>
   <script src="/js/Inventory_js/Inventory_addBooks.js"></script>
   <script src="/js/Inventory_js/Inventory_addUniform.js"></script>

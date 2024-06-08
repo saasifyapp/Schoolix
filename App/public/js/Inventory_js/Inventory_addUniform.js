@@ -9,6 +9,24 @@ function hideUniformLoadingAnimation() {
     document.getElementById('loadingOverlayuniform').style.display = 'none';
 }
 
+function calculateUniformPurchasePrice() {
+    const sellingPrice = parseFloat(document.getElementById('uniform_sellingPrice').value);
+    const marginPercentage = parseFloat(document.getElementById('uniform_margin').value);
+
+    if (!isNaN(sellingPrice) && !isNaN(marginPercentage) && document.getElementById('uniform_sellingPrice').value !== '' && document.getElementById('uniform_margin').value !== '') {
+        const marginAmount = (marginPercentage / 100) * sellingPrice;
+        const purchasePrice = sellingPrice - marginAmount;
+
+        document.getElementById('uniform_purchasePrice').value = purchasePrice.toFixed(2);
+    } else {
+        document.getElementById('uniform_purchasePrice').value = '';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('uniform_sellingPrice').addEventListener('input', calculateUniformPurchasePrice);
+    document.getElementById('uniform_margin').addEventListener('input', calculateUniformPurchasePrice);
+});
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -21,7 +39,17 @@ document.addEventListener("DOMContentLoaded", function () {
         const formData = new FormData(event.target);
         const jsonData = {};
         formData.forEach((value, key) => {
-            jsonData[key] = value;
+            switch (key) {
+                case 'uniform_sellingPrice':
+                    jsonData['selling_price'] = value;
+                    break;
+                case 'uniform_purchasePrice':
+                    jsonData['purchase_price'] = value;
+                    break;
+                // Add cases for other keys as needed
+                default:
+                    jsonData[key] = value;
+            }
         });
         fetch('/inventory/purchase/add_uniforms', {
             method: 'POST',
@@ -45,6 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 hideUniformLoadingAnimation();
                 console.log('Uniform added successfully');
                 showToast(`${jsonData.uniform_item} of size ${jsonData.size_of_item} added successfully`);
+                refreshData();
                 refreshUniformsData();
             
                 // populateUniformsVendorDropdown() // Uncomment this if you have a function to populate uniform vendor dropdown
@@ -277,8 +306,11 @@ function updateUniformItem(uniformItem, sizeOfItem) {
                         <h2>${uniformItem} (${sizeOfItem})</h2>
                         <p>Previously Ordered : ${existingOrderedQuantity}</p>
                         <p>Remaining Quantity : ${remainingQuantity}</p>
-                        <p>Enter the new order quantity:</p>
-                        <input type="number" id="newQuantityInput" min="0">
+                        <p>Enter the new order quantity:</p>                       
+                         <div class="form-group">
+        <input type="number" class="form-control" id="newQuantityInput" min="0" placeholder=" " required style="width:6rem;">
+        <span class="form-control-placeholder">New Order Quantity</span>
+    </div>
                         <p id="totalOrder">Total Order : ${existingOrderedQuantity}</p>
                         <p id="newRemainingQuantity">New Remaining Quantity : ${remainingQuantity}</p>
                         <button id="confirmButton" style="background-color: transparent;
@@ -428,13 +460,17 @@ function returnUniform(uniformItem, sizeOfItem) {
             // Create custom prompt
             const customPrompt = document.createElement('div');
             customPrompt.classList.add('custom-prompt');
+            customPrompt.classList.add('custom-prompt-return');
             const returnPromptContent = () => {
                 customPrompt.innerHTML = `
-                    <div class="prompt-content">
+                    <div class="prompt-content" ">
                         <h2>${uniformItem} (${sizeOfItem})</h2>
                         <p>Remaining Quantity : ${remainingQuantity}</p>
-                        <p>Enter the return quantity:</p>
-                        <input type="number" id="returnQuantityInput" min="0">
+                        <p>Enter the return quantity:</p>                       
+                         <div class="form-group">
+                        <input type="number" class="form-control wide" id="returnQuantityInput" min="0" placeholder=" " required>
+                        <span class="form-control-placeholder">Return Quantity</span>
+                        </div>
                         <p id="newRemainingQuantity">New Remaining Quantity : ${newRemainingQuantity}</p>
                         <button id="confirmButton" style="background-color: transparent;
                             border: none;
