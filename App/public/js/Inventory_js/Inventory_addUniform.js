@@ -9,6 +9,8 @@ function hideUniformLoadingAnimation() {
     document.getElementById('loadingOverlayuniform').style.display = 'none';
 }
 
+
+/*
 function calculateUniformPurchasePrice() {
     const sellingPrice = parseFloat(document.getElementById('uniform_sellingPrice').value);
     const marginPercentage = parseFloat(document.getElementById('uniform_margin').value);
@@ -26,7 +28,7 @@ function calculateUniformPurchasePrice() {
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('uniform_sellingPrice').addEventListener('input', calculateUniformPurchasePrice);
     document.getElementById('uniform_margin').addEventListener('input', calculateUniformPurchasePrice);
-});
+}); */
 
 document.addEventListener("DOMContentLoaded", function () {
 
