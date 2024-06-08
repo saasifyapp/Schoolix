@@ -14,6 +14,7 @@ function hideSearchInventoryLoadingAnimation() {
 async function refreshInvoiceData() {
     showSearchInventoryLoadingAnimation();
     document.getElementById('searchBar').value = '';
+    document.getElementById('classFilter').value = '';
     try {
         const response = await fetch('/inventory/invoices');
         const data = await response.json();
@@ -134,11 +135,11 @@ function displayInvoices(data) {
 async function searchInvoiceDetails() {
     const searchTerm = document.getElementById('searchBar').value.trim();
 
-    if (searchTerm === '') {
-        showToast("Please enter a search term", true)
-        refreshInvoiceData();
-        return;
-    }
+    // if (searchTerm === '') {
+    //     showToast("Please enter a search term", true)
+    //     refreshInvoiceData();
+    //     return;
+    // }
 
     let searchUrl = `/inventory/searchinvoices?`;
     if (isNaN(searchTerm)) {
@@ -178,10 +179,78 @@ async function searchInvoiceDetails() {
                     <td>${invoice.balance_amount}</td>
                     <td>${invoice.mode_of_payment}</td>
                     <td>
-                        <button onclick="showUpdateModal('${invoice.invoiceNo}', '${invoice.total_payable}', '${invoice.paid_amount}', '${invoice.balance_amount}', '${invoice.buyerName}')">Update</button>
-                        <button onclick="printInvoice(${invoice.invoiceNo})">Print</button>
-                        <button onclick="deleteInvoice(${invoice.invoiceNo})">Delete</button>
-                    </td>
+                <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+                <button style="background-color: transparent;
+                            border: none;
+                            color: black; /* Change text color to black */
+                            padding: 0;
+                            text-align: center;
+                            text-decoration: none;
+                            display: flex; /* Use flex for centering */
+                            align-items: center; /* Center vertically */
+                            justify-content: center; /* Center horizontally */
+                            font-size: 14px;
+                            cursor: pointer;
+                            max-height: 100%;
+                            border-radius: 20px; /* Round corners */
+                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                            transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                            margin-bottom: 10px;" /* Added margin bottom for spacing */
+                    onclick="showUpdateModal('${invoice.invoiceNo}', '${invoice.total_payable}', '${invoice.paid_amount}', '${invoice.balance_amount}', '${invoice.buyerName}')"
+                    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                    <img src="/images/update.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                    <span style="margin-right: 10px;">Update</span>
+                </button>
+            
+                <button style="background-color: transparent;
+                            border: none;
+                            color: black; /* Change text color to black */
+                            padding: 0;
+                            text-align: center;
+                            text-decoration: none;
+                            display: flex; /* Use flex for centering */
+                            align-items: center; /* Center vertically */
+                            justify-content: center; /* Center horizontally */
+                            font-size: 14px;
+                            cursor: pointer;
+                            max-height: 100%;
+                            border-radius: 20px; /* Round corners */
+                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                            transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                            margin-bottom: 10px;" /* Added margin bottom for spacing */
+                    onclick="printInvoice(${invoice.invoiceNo})"
+                    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                    <img src="/images/printer.gif" alt="Print" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                    <span style="margin-right: 10px;">Print</span>
+                </button>
+            
+                <button style="background-color: transparent;
+                            border: none;
+                            color: black; /* Change text color to black */
+                            padding: 0;
+                            text-align: center;
+                            text-decoration: none;
+                            display: flex; /* Use flex for centering */
+                            align-items: center; /* Center vertically */
+                            justify-content: center; /* Center horizontally */
+                            font-size: 14px;
+                            cursor: pointer;
+                            max-height: 100%;
+                            border-radius: 20px; /* Round corners */
+                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                            transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                            margin-bottom: 10px;" /* Added margin bottom for spacing */
+                    onclick="deleteInvoice(${invoice.invoiceNo})"
+                    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                    <img src="/images/deletebill.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                    <span style="margin-right: 10px;">Delete</span>
+                </button>
+            </div>
+            
+                </td>
                 `;
                 invoiceTable.appendChild(row);
             });
@@ -217,6 +286,129 @@ async function deleteInvoice(invoiceNo) {
     }
 }
 
+function filterByClass() {
+    // document.getElementById('searchField').value = '';
+    const selectedClass = document.getElementById('classFilter').value;
+    console.log(selectedClass)
+    const invoiceDetailsContainer = document.getElementById('invoiceTable');
+    showSearchInventoryLoadingAnimation();
+
+    if (selectedClass === '') {
+        // If no class selected, refresh data to show all students
+        refreshData();
+        return;
+    }
+
+    // Fetch data from the server filtered by class
+    fetch(`/inventory/class/${selectedClass}`)
+        .then(response => response.json())
+        .then(data => {
+            invoiceDetailsContainer.innerHTML = ''; // Clear previous data
+
+            if (data.length === 0) {
+                // If no results found, display a message
+                invoiceDetailsContainer.innerHTML = '<tr><td colspan="6">No results found</td></tr>';
+            } else {
+                // Append student data to the table
+                data.forEach(invoice => {
+                    const billDate = new Date(invoice.billDate).toLocaleDateString('en-GB', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
+    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${invoice.invoiceNo}</td>
+                        <td>${billDate}</td>
+                        <td>${invoice.buyerName}</td>
+                        <td>${invoice.buyerPhone}</td>
+                        <td>${invoice.class_of_buyer}</td>
+                        <td>${invoice.total_payable}</td>
+                        <td>${invoice.paid_amount}</td>
+                        <td>${invoice.balance_amount}</td>
+                        <td>${invoice.mode_of_payment}</td>
+                        <td>
+                <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+                <button style="background-color: transparent;
+                            border: none;
+                            color: black; /* Change text color to black */
+                            padding: 0;
+                            text-align: center;
+                            text-decoration: none;
+                            display: flex; /* Use flex for centering */
+                            align-items: center; /* Center vertically */
+                            justify-content: center; /* Center horizontally */
+                            font-size: 14px;
+                            cursor: pointer;
+                            max-height: 100%;
+                            border-radius: 20px; /* Round corners */
+                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                            transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                            margin-bottom: 10px;" /* Added margin bottom for spacing */
+                    onclick="showUpdateModal('${invoice.invoiceNo}', '${invoice.total_payable}', '${invoice.paid_amount}', '${invoice.balance_amount}', '${invoice.buyerName}')"
+                    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                    <img src="/images/update.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                    <span style="margin-right: 10px;">Update</span>
+                </button>
+            
+                <button style="background-color: transparent;
+                            border: none;
+                            color: black; /* Change text color to black */
+                            padding: 0;
+                            text-align: center;
+                            text-decoration: none;
+                            display: flex; /* Use flex for centering */
+                            align-items: center; /* Center vertically */
+                            justify-content: center; /* Center horizontally */
+                            font-size: 14px;
+                            cursor: pointer;
+                            max-height: 100%;
+                            border-radius: 20px; /* Round corners */
+                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                            transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                            margin-bottom: 10px;" /* Added margin bottom for spacing */
+                    onclick="printInvoice(${invoice.invoiceNo})"
+                    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                    <img src="/images/printer.gif" alt="Print" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                    <span style="margin-right: 10px;">Print</span>
+                </button>
+            
+                <button style="background-color: transparent;
+                            border: none;
+                            color: black; /* Change text color to black */
+                            padding: 0;
+                            text-align: center;
+                            text-decoration: none;
+                            display: flex; /* Use flex for centering */
+                            align-items: center; /* Center vertically */
+                            justify-content: center; /* Center horizontally */
+                            font-size: 14px;
+                            cursor: pointer;
+                            max-height: 100%;
+                            border-radius: 20px; /* Round corners */
+                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                            transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                            margin-bottom: 10px;" /* Added margin bottom for spacing */
+                    onclick="deleteInvoice(${invoice.invoiceNo})"
+                    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                    <img src="/images/deletebill.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                    <span style="margin-right: 10px;">Delete</span>
+                </button>
+            </div>
+            
+                </td>
+                    `;
+                    invoiceTable.appendChild(row);
+                });
+            }
+            hideSearchInventoryLoadingAnimation();
+        })
+        .catch(error => console.error('Error:', error));
+}
 
 
 async function showUpdateModal(invoiceNo, totalAmount, paidAmount, balanceAmount, buyerName) {
@@ -304,10 +496,10 @@ window.onclick = function (event) {
     }
 }
 
-// Close modal when clicking on the close button
-document.querySelector('.close').onclick = function () {
-    closeModal();
-}
+// // Close modal when clicking on the close button
+// document.querySelector('.close').onclick = function () {
+//     closeModal();
+// }
 
 // Print Invoice
 async function printInvoice(invoiceNo) {
@@ -374,4 +566,46 @@ function showToast(message, isError) {
             toast.remove();
         });
     }, 4000);
+}
+
+ ////////////////////////////// EXPORT TO EXCEL //////////////////////////////////////////////
+
+
+
+ function exportToExcel() {
+
+    const selectedClass = document.getElementById('classFilter').value;
+
+    var htmlTable = document.getElementById('invoiceTable');
+    var html = htmlTable.outerHTML;
+
+    // Generate a temporary download link
+    var downloadLink = document.createElement("a");
+    document.body.appendChild(downloadLink);
+
+    // CSV representation of the HTML table
+    var csv = [];
+    var rows = htmlTable.rows;
+    for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].cells;
+        for (var j = 0; j < cols.length - 1; j++)
+            row.push(cols[j].innerText);
+        csv.push(row.join(","));
+    }
+
+    // Convert to CSV string
+    var csvContent = csv.join("\n");
+
+    // Set CSV as href and download attributes
+    downloadLink.href = 'data:text/csv;charset=utf-8,' + encodeURI(csvContent);
+
+    if (selectedClass == '') {
+        downloadLink.download = 'All Invoice Reports.csv';
+    }
+    else {
+        downloadLink.download = selectedClass + ' Invoice Reports.csv';
+    }
+
+    // Trigger the download
+    downloadLink.click();
 }
