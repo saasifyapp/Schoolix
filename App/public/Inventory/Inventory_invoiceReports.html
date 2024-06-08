@@ -8,10 +8,10 @@
     <link rel="stylesheet" href="/css/Inventory_Css/invoiceReport.css">
     <link rel="stylesheet" href="/css/NavButtons.css">
 
-     <!-- Include jQuery and jQuery UI -->
-     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
-     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <!-- Include jQuery and jQuery UI -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 
 </head>
 
@@ -51,29 +51,29 @@
             <div class="dropdown">
                 <label for="filter-class">Filter by Class:</label>
                 <select id="filter-class">
-                    <option value="AllClass">All Class</option>
-              <option value="Nursery" class="Nursery">Nursery</option>
-              <option value="KG1" class="KG1">KG1</option>
-              <option value="KG2" class="KG2">KG2</option>
-              <option value="1st" class="1st">1st</option>
-              <option value="2nd" class="2nd">2nd</option>
-              <option value="3rd" class="3rd">3rd</option>
-              <option value="4th" class="4th">4th</option>
-              <option value="5th" class="5th">5th</option>
-              <option value="6th" class="6th">6th</option>
-              <option value="7th" class="7th">7th</option>
-              <option value="8th" class="8th">8th</option>
-              <option value="9th" class="9th">9th</option>
-              <option value="10th" class="10th">10th</option>
+                    <option value="">Select Class</option>
+                    <option value="All Class">All Class</option>
+                    <option value="Nursery" class="Nursery">Nursery</option>
+                    <option value="KG1" class="KG1">KG1</option>
+                    <option value="KG2" class="KG2">KG2</option>
+                    <option value="1st" class="1st">1st</option>
+                    <option value="2nd" class="2nd">2nd</option>
+                    <option value="3rd" class="3rd">3rd</option>
+                    <option value="4th" class="4th">4th</option>
+                    <option value="5th" class="5th">5th</option>
+                    <option value="6th" class="6th">6th</option>
+                    <option value="7th" class="7th">7th</option>
+                    <option value="8th" class="8th">8th</option>
+                    <option value="9th" class="9th">9th</option>
+                    <option value="10th" class="10th">10th</option>
                 </select>
             </div>
-            <div class="dropdown">
-                <label for="defaulter-list">Defaulter List:</label>
-                <select id="defaulter-list">
-                    <option value="all">All</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                </select>
+            <div class="toggle-switch">
+                <label for="defaulter-switch">Defaulter List:</label>
+                <label class="switch">
+                    <input type="checkbox" id="defaulter-switch">
+                    <span class="slider"></span>
+                </label>
             </div>
         </div>
         <div class="section">
@@ -95,7 +95,25 @@
                 </div>
             </div>
             <div class="right-section">
-                <h3>Table Section</h3>
+                <h3><span id="table-heading"></span></h3>
+                <table id="invoice-table">
+                    <thead>
+                        <tr>
+                            <th>Invoice No</th>
+                            <th>Bill Date</th>
+                            <th>Buyer Name</th>
+                            <th>Buyer Phone</th>
+                            <th>Class</th>
+                            <th>Total Payable</th>
+                            <th>Paid Amount</th>
+                            <th>Balance Amount</th>
+                            <th>Mode of Payment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dynamic rows will be added here -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

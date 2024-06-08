@@ -70,7 +70,6 @@ app.post('/login', (req, res) => {
             user: process.env.DB_USER,
             password: process.env.DB_PASS,
             database: process.env.DB_NAME,
-            timezone: 'Asia/Kolkata' // Set the timezone explicitly to IST
         });
 
 

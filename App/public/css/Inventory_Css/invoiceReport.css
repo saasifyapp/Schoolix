@@ -59,6 +59,91 @@ h2 {
     width: 80px; /* Adjust the width as needed */
     text-align: center;
 }
+
+/* Table  Section */
+
+
 .right-section {    
     margin-top: 1rem;
+}
+
+
+#invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#invoice-table th, #invoice-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#invoice-table th {
+    background-color: #f2f2f2;
+    text-align: left;
+}
+
+#invoice-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+
+/* Toggle Switch */
+
+/* Container around the switch */
+.toggle-switch {
+    display: flex;
+    align-items: center;
+}
+
+.toggle-switch label {
+    margin-right: 10px;
+}
+
+/* Switch styling */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+/* Hide the checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
 }
