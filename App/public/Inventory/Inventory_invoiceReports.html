@@ -13,70 +13,87 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
-
 </head>
 
 <body>
-
     <nav class="navbar">
         <div class="logo_item">
-            <!-- <i class="bx bx-menu" id="sidebarOpen"></i> -->
             <img id="logo" src="" alt="Logo">
-            <!-- <div class="user_name" id="user_name"></div> -->
         </div>
-
         <div class="navbar_center">
-            <button onclick="window.location.href='/inventory/billing'"> <i class='bx' id="backButton"> <img
-                        src="/images/back.png" alt="Previous Icon"></i></button>
-            <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img
-                        src="/images/homeicon.png" alt="Dashboard Icon"></i></button>
-            <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
-                        alt="Signout Icon"></i></button>
+            <button onclick="window.location.href='/inventory/billing'">
+                <i class='bx' id="backButton">
+                    <img src="/images/back.png" alt="Previous Icon">
+                </i>
+            </button>
+            <button onclick="window.location.href='/dashboard'">
+                <i class='bx' id="homeButton">
+                    <img src="/images/homeicon.png" alt="Dashboard Icon">
+                </i>
+            </button>
+            <button id="logoutButton">
+                <i class='bx' id="signoutButton">
+                    <img src="/images/logout.png" alt="Signout Icon">
+                </i>
+            </button>
         </div>
-
         <div class="navbar_content">
-            <!-- <i class="bi bi-grid"></i>
-      <i class='bx bx-bell'></i> -->
         </div>
     </nav>
-
 
     <div class="main">
         <h2 class="head">Invoice Report</h2>
         <div class="filter-container">
             <div class="dropdown">
                 <label for="filter-date">Filter by Date:</label>
-                <input type="" id="datepicker">
+                <div class="custom-input-container">
+                    <img src="/images/calendar.gif" alt="Calendar Icon" class="custom-input-icon" style="height: 2rem; width: 2rem;">
+                    <input type="text" id="datepicker" class="custom-input common-height" style="width: 6.5rem; text-align: right;">
+                </div>
             </div>
-
-            <div class="dropdown">               
-                <select id="filter-class" class="custom-dropdown">
-                    <option value="">Filter by Class</option>
-                    <option value="All Class">All Class</option>
-                    <option value="Nursery" class="Nursery">Nursery</option>
-                    <option value="KG1" class="KG1">KG1</option>
-                    <option value="KG2" class="KG2">KG2</option>
-                    <option value="1st" class="1st">1st</option>
-                    <option value="2nd" class="2nd">2nd</option>
-                    <option value="3rd" class="3rd">3rd</option>
-                    <option value="4th" class="4th">4th</option>
-                    <option value="5th" class="5th">5th</option>
-                    <option value="6th" class="6th">6th</option>
-                    <option value="7th" class="7th">7th</option>
-                    <option value="8th" class="8th">8th</option>
-                    <option value="9th" class="9th">9th</option>
-                    <option value="10th" class="10th">10th</option>
-                </select>
+        
+            <div class="dropdown">
+                <label for="filter-class">Filter by Class:</label>
+                <div class="custom-dropdown-container">
+                    <img src="/images/filterrbyclass.gif" alt="Dropdown Icon" class="custom-dropdown-left-icon" style="height: 2rem; width: 2rem;">
+                    <select id="filter-class" class="custom-dropdown common-height">
+                        <option value="">Select Class</option>
+                        <option value="All Class">All Class</option>
+                        <option value="Nursery" class="Nursery">Nursery</option>
+                        <option value="KG1" class="KG1">KG1</option>
+                        <option value="KG2" class="KG2">KG2</option>
+                        <option value="1st" class="1st">1st</option>
+                        <option value="2nd" class="2nd">2nd</option>
+                        <option value="3rd" class="3rd">3rd</option>
+                        <option value="4th" class="4th">4th</option>
+                        <option value="5th" class="5th">5th</option>
+                        <option value="6th" class="6th">6th</option>
+                        <option value="7th" class="7th">7th</option>
+                        <option value="8th" class="8th">8th</option>
+                        <option value="9th" class="9th">9th</option>
+                        <option value="10th" class="10th">10th</option>
+                    </select>
+                    <img src="/images/down-arrow.png" alt="Right Dropdown Icon" class="custom-dropdown-right-icon">
+                </div>
             </div>
-            
+        
             <div class="toggle-switch">
-                <label for="defaulter-switch">Defaulter List:</label>
+                <label for="defaulter-switch" class="switch-label">
+                    Defaulter List:
+                </label>
                 <label class="switch">
+                    <img src="/images/defaulter.gif" alt="Toggle Icon" class="toggle-icon">
                     <input type="checkbox" id="defaulter-switch">
                     <span class="slider"></span>
                 </label>
             </div>
+            
+            
+            
         </div>
+        
+        
+
         <div class="section">
             <div class="left-section">
                 <div class="container">
