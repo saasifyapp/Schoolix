@@ -6,27 +6,43 @@ body {
 }
 
 .container {
-    width: 100%;   
+    display: flex;
+    flex-direction: column;    
+    width: 100%;
     padding: 20px;
-    background-color: transparent;   
-    margin-top: 9rem;
+    background-color: transparent;
+    margin-top: 2rem;
 }
 
-.head {
-    position: absolute;
-    top: 15%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    box-sizing: border-box;
+.head {   
     font-size: 20px;
     color: var(--grey-color);
+    text-align: center;
 }
 
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+        margin-top: 3rem;
+    }
 
+    .head {
+        font-size: 18px;
+    }
+}
 
+@media (max-width: 480px) {
+    .container {
+        margin-top: 2rem;
+    }
 
-#refereshButton{
+    .head {
+        font-size: 16px;
+    }
+}
+
+#refreshButton, #export_registered_students {
     margin-bottom: 15px; /* Add margin between the buttons */
     cursor: pointer;
     background-color: transparent;
@@ -47,12 +63,12 @@ body {
     font-weight: bold;
 }
 
-#refreshButton img{
+#refreshButton img, #export_registered_students img {
     height: 80%; /* Set image height to fit button */
     margin-right: 5px; /* Add a 5px margin to the right of the image */
 }
 
-#refereshButton:hover {
+#refreshButton:hover, #export_registered_students:hover {
     background-color: #76D7C4; /* Change background color on hover */
     transform: scale(1.09); /* Increase size on hover */
 }
@@ -64,18 +80,48 @@ h1 {
 
 .search-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
     margin-bottom: 20px;
+    margin-right: 300px;
 }
+
+.form-Searchgroup {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between elements */
+    width: 100%;
+    max-width: 1200px;
+}
+
+.custom-select {
+    height: 3rem;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 0 10px;
+    font-size: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.custom-select:focus, .custom-select:hover {   
+    box-shadow: 0 0 10px #5DADE2; /* Add shadow on hover and focus */   
+    outline: none;
+}
+
 
 #searchBar {    
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ddd;
     border-radius: 20px;
-    height: 1.8rem;      
+    height: 3rem;
+    flex-grow: 3; /* Allow it to take up remaining space */
 }
 
+.vendorIcon {
+    width: 2rem;
+    height: 2rem;
+}
 
 @keyframes fadeUp {
     from {
@@ -99,11 +145,9 @@ h1 {
     margin-right: 2rem;
 }
 
-
 table {
     width: 100%;
     border-collapse: collapse;
-    
 }
 
 table, th, td {
@@ -122,8 +166,6 @@ th {
     top: 0;
     z-index: 1;    
 }  
-  
-
 
 tr:hover {
     background-color: #D6DBDF;
@@ -137,10 +179,7 @@ tr:hover td {
     font-weight: bold;    
 }
 
-
-    
-
- /* Modal styles */
+/* Modal styles */
 .modal {
     display: none;
     align-items: center;
@@ -270,27 +309,21 @@ h2, h3 {
     }
 }
 
-     
-/* loading aniamtion */
+/* Loading animation */
 .loading-overlay {
     position: fixed;
     top: 0;
     left: 0;
     height: 100%;
     width: 100%;
-    /* display: flex; */
     justify-content: center;
     align-items: center;
     background-color: rgba(255, 255, 255, 0.7);
-    /* Semi-transparent white background */
     backdrop-filter: blur(5px);
-    /* Adjust blur as needed */
     z-index: 9999;
-    /* Ensure the overlay appears on top of other content */
     display: none;
 }
 
-/* HTML: <div class="loader"></div> */
 .pyramid-loader {
     position: relative;
     width: 300px;
@@ -298,158 +331,65 @@ h2, h3 {
     display: block;
     transform-style: preserve-3d;
     transform: rotateX(-20deg);
-  }
-  
-  .wrapper {
+}
+
+.wrapper {
     position: relative;
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
     animation: spin 4s linear infinite;
-  }
-  
-  @keyframes spin {
+}
+
+@keyframes spin {
     100% {
-      transform: rotateY(360deg);
+        transform: rotateY(360deg);
     }
-  }
-  
-  .pyramid-loader .wrapper .side {
+}
+
+.pyramid-loader .wrapper .side {
     width: 70px;
     height: 70px;
-    background: linear-gradient(to bottom right, #FFA500, #FF4500);
+    background: linear-gradient(45deg, #3498db, #8e44ad);
     position: absolute;
-    top: 0;
     left: 0;
     right: 0;
+    top: 0;
     bottom: 0;
     margin: auto;
-    transform-origin: center top;
     clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-  }
-  
-  .pyramid-loader .wrapper .side1 {
-    transform: rotateZ(-30deg) rotateY(90deg);
-    background: linear-gradient(to bottom right, #FF4500, #FFA500);
-  }
-  
-  .pyramid-loader .wrapper .side2 {
-    transform: rotateZ(30deg) rotateY(90deg);
-    background: linear-gradient(to bottom right, #FFA500, #FF4500);
-  }
-  
-  .pyramid-loader .wrapper .side3 {
-    transform: rotateX(30deg);
-    background: linear-gradient(to bottom right, #FFA500, #FF4500);
-  }
-  
-  .pyramid-loader .wrapper .side4 {
-    transform: rotateX(-30deg);
-    background: linear-gradient(to bottom right, #FF4500, #FFA500);
-  }
-  
-  .pyramid-loader .wrapper .shadow {
-    width: 60px;
-    height: 60px;
-    background: #FF8C00;
+    transform-origin: 50% 100%;
+}
+
+.pyramid-loader .wrapper .side:nth-child(1) {
+    transform: rotateY(0deg) translateZ(35px) rotateX(30deg);
+}
+
+.pyramid-loader .wrapper .side:nth-child(2) {
+    transform: rotateY(90deg) translateZ(35px) rotateX(30deg);
+}
+
+.pyramid-loader .wrapper .side:nth-child(3) {
+    transform: rotateY(180deg) translateZ(35px) rotateX(30deg);
+}
+
+.pyramid-loader .wrapper .side:nth-child(4) {
+    transform: rotateY(-90deg) translateZ(35px) rotateX(30deg);
+}
+
+.pyramid-loader .shadow {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
-    transform: rotateX(90deg) translateZ(-40px);
-    filter: blur(12px);
-  }
-
-
-#output {
-    margin-left: 1rem;
-  }
-
-
-
-  #output {
+    bottom: -20px;
     width: 100%;
-    max-height: calc(88vh - 1rem); /* Set maximum height for the table container */
-    overflow-y: auto;
-    margin-top: 0.625rem; /* Set margin between the table container and overlay content */
-    border-radius: 10px;
-    margin-bottom: 1rem;
+    height: 20px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    filter: blur(5px);
+    animation: shadow 4s linear infinite;
 }
 
-
-/* Adjust height of table body to fit between overlay content and bottom margin */
-
-
-
-
-@keyframes l6-0 {
-    0% {
-        background-position: 0 100%, 100% 100%, 100% 0
-    }
-
-    33% {
-        background-position: 100% 100%, 100% 100%, 100% 0
-    }
-
-    66% {
-        background-position: 100% 0, 100% 0, 100% 0
-    }
-}
-
-@keyframes l6-0-0 {
-    0% {
-        transform: scaleX(1) rotate(0deg)
-    }
-
-    50% {
-        transform: scaleX(-1) rotate(-90deg)
-    }
-}
-
-@keyframes l6-1 {
-    16.5% {
-        transform: perspective(150px) rotateX(-90deg) rotateY(0deg) rotateX(0deg);
-        filter: grayscale(0.8)
-    }
-
-    33% {
-        transform: perspective(150px) rotateX(-180deg) rotateY(0deg) rotateX(0deg)
-    }
-
-    66% {
-        transform: perspective(150px) rotateX(-180deg) rotateY(-180deg) rotateX(0deg)
-    }
-
+@keyframes shadow {
     100% {
-        transform: perspective(150px) rotateX(-180deg) rotateY(-180deg) rotateX(-180deg);
-        filter: grayscale(0.8)
+        transform: rotateY(360deg);
     }
-}
-
-/* Define thin and curved scrollbar */
-::-webkit-scrollbar {
-    width: 8px;
-    /* Set the width of the scrollbar */
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    /* Color of the scrollbar track */
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-    background: #888;
-    /* Color of the scrollbar handle */
-    border-radius: 10px;
-    /* Make the scrollbar handle curved */
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: #555;
-    /* Color of the scrollbar handle on hover */
 }

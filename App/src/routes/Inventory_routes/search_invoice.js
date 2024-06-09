@@ -1,5 +1,24 @@
 const express = require('express'); 
 const router = express.Router();
+const mysql = require('mysql');
+
+
+// Define dbCredentials and connection outside the endpoint
+let dbCredentials;
+let connection;
+
+// Middleware to set dbCredentials and connection
+router.use((req, res, next) => {
+    dbCredentials = req.session.dbCredentials;
+    connection = mysql.createPool({
+        host: dbCredentials.host,
+        user: dbCredentials.user,
+        password: dbCredentials.password,
+        database: dbCredentials.database
+    });
+    next();
+});
+
 
 // Get data for invoice display
 router.get('/inventory/invoices', (req, res) => {
@@ -51,7 +70,23 @@ router.get('/inventory/searchinvoices', (req, res) => {
     });
 });
 
+// Add a new endpoint to retrieve student data based on the selected class
+router.get("/inventory/class/:class", (req, res) => {
+    const selectedClass = req.params.class; // Get the selected class from request parameters
 
+    // Construct the SQL query to filter based on the standard column
+    let query = `SELECT * FROM inventory_invoice_details WHERE class_of_buyer = ?`;
+
+    // Execute the SQL query
+    connection.query(query, [selectedClass], (err, rows) => {
+        if (err) {
+            console.error("Error fetching data: " + err.stack);
+            res.status(500).json({ error: "Error fetching data" });
+            return;
+        }
+        res.json(rows);
+    });
+});
 
 // Update paid amount for an invoice
 router.put('/inventory/updatePaidAmount', (req, res) => {

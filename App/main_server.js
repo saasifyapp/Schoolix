@@ -4,13 +4,13 @@ const path = require('path');
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
 const app = express();
+
 app.use(express.json());
-app.use(cookieParser()); 
-
-const scheduledTask = require('../App/src/routes/scheduledTask'); // Import the scheduled task module
-
-
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 
 
 
@@ -19,151 +19,102 @@ dotenv.config({ path: path.join(__dirname, 'src', '.env') });
 // Serve static files from the parent directory
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+// Set up Express to parse request bodies
+app.use(express.urlencoded({ extended: true }));
+
+// Define the connection_auth pool
+const connection_auth = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+});
+
+// Session configuration
+const sessionStore = new MySQLStore({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME
+});
+
+
+app.use(session({
+    key: 'session_cookie',
+    secret: 'your_secret_key', // Replace with your secret key
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 2 // 2 hours
+    }
+}));
+
+const JWT_SECRET = 'this_is_my_secret_key_which_is_highly_confidential';
+
 // Route to serve index.html for login page
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Login', 'index.html'));
 });
 
-// Set up Express to parse request bodies
-app.use(express.urlencoded({ extended: true }));
 
-
-///////////////////////////////// AUTHENTICATION //////////////////////////
-
-// const connection_auth = mysql.createPool({
-//     connectionLimit: 10, // Adjust this value based on your application's needs
-//     host: process.env.DB_HOST,
-//     user: process.env.DB_USER,
-//     password: process.env.DB_PASS,
-//     database: process.env.DB_NAME
-// });
-
-const JWT_SECRET = 'this_is_my_secret_key_which_is_highly_confidential';
-
-// // Testing the connection
-// connection_auth.getConnection((err, connection_auth) => {
-//     if (err) {
-//         console.error('Error connecting to MySQL database:', err);
-//         return;
-//     }
-//     console.log('Connected to MySQL database as id', connection_auth.threadId);
-//     connection_auth.release(); // Release the connection as it's just for testing the connection
-// });
-
-let globalConnection = null;
 app.post('/login', (req, res) => {
-
     const { username, password } = req.body;
+    console.log(`Login attempt for user: ${username}`);
+
     const query = 'SELECT * FROM user_details WHERE loginName = ? AND loginPassword = ?';
 
-    if (req.cookies.jwt && req.cookies.schoolName && req.cookies.username == username) {
-        console.log("same user logged in to new tab | NO NEW CONNECTION ESTABLISHED")
+    connection_auth.query(query, [username, password], (error, results) => {
+        if (error) {
+            console.error('Error querying database:', error);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        if (results.length === 0) {
+            console.log('Invalid username or password.');
+            return res.status(401).send('Invalid username or password.');
+        }
+
+        const user = results[0];
+        req.session.user = {
+            username: user.LoginName,
+            schoolName: user.schoolName
+        };
+
+        req.session.dbCredentials = {
+            host: user.serverName,
+            user: user.databaseUser,
+            password: user.databasePassword,
+            database: user.databaseName
+        };
+
+        // Set cookies
+        res.cookie('username', username, { httpOnly: false, maxAge: 7200000  });
+        res.cookie('schoolName', user.schoolName, { httpOnly: false, maxAge: 1000 * 60 * 60 * 2 });
+        res.cookie('jwt', 'your_generated_token', { httpOnly: false, maxAge: 1000 * 60 * 60 * 2 });
+
+        
+
+        console.log('User logged in and session created:', req.session.user);
         res.redirect('/dashboard');
-    }
-
-    else {
-
-        // Create a new connection pool for authentication
-        const connection_auth = mysql.createPool({
-            connectionLimit: 10,
-            host: process.env.DB_HOST,
-            user: process.env.DB_USER,
-            password: process.env.DB_PASS,
-            database: process.env.DB_NAME,
-        });
-
-
-        // Testing the connection
-        connection_auth.getConnection((err, connection) => {
-            if (err) {
-                console.error('Error connecting to MySQL database:', err);
-                return res.status(500).send('Internal Server Error');
-            }
-            console.log('Connected to user(demo) database as id', connection.threadId);
-            connection.release(); // Release the connection as it's just for testing the connection
-
-            // Proceed with authentication after successful connection
-            connection_auth.getConnection((err, connection) => {
-                if (err) {
-                    console.error('Error getting connection from pool:', err);
-                    res.status(500).send('Internal Server Error');
-                    return;
-                }
-
-                connection.query(query, [username, password], (error, results) => {
-                    connection.release(); // Release the connection back to the pool
-
-                    if (error) {
-                        console.error('Error querying database:', error);
-                        res.status(500).send('Internal Server Error');
-                        return;
-                    }
-
-                    // Check if a session is already active
-                    if (req.cookies.jwt && req.cookies.schoolName) {
-                        if (!results.length === 0) {
-                            console.log("A session is already active. Please close that session to continue.");
-                            res.status(402).send('A session is already active. Please close that session to continue.');
-                            return;
-                        }
-                    }
-
-                    // If no user found with given credentials
-                    if (results.length === 0) {
-                        res.status(401).send('Invalid username or password.');
-                        if (connection_auth) {
-                            connection_auth.end((err) => {
-                                if (err) {
-                                    console.error('Error closing MySQL connection:', err);
-                                } else {
-                                    console.log('User(demo) database disconnected.');
-                                }
-                            });
-                        }
-                        return;
-                    }
-
-                    // Close the connection pool of demo database after 5 seconds
-                    setTimeout(() => {
-                        connection_auth.end((err) => {
-                            if (err) {
-                                console.error('Error closing connection pool:', err);
-                                return;
-                            }
-                            console.log('User(demo) database disconnected after 5 sec.');
-                        });
-                    }, 5000); // 5000 milliseconds = 5 seconds
-
-                    // Assuming only one user is found with given credentials
-                    const user = results[0];
-                    const { serverName, databaseUser, databasePassword, databaseName, schoolName, LoginName } = user;
-
-                    // Create a connection using user's database credentials
-                
-                    global.connection = mysql.createPool({
-                        host: serverName,
-                        user: databaseUser,
-                        password: databasePassword,
-                        database: databaseName
-                    });
-                
-
-                    // Generate JWT token
-                    const token = jwt.sign({ userId: user.userId }, JWT_SECRET, { expiresIn: '2h' });
-
-                    // Save JWT and schoolName to cookies
-                    res.cookie('schoolName', schoolName, { maxAge: 7200000  });
-                    res.cookie('jwt', token, { httpOnly: false, maxAge: 7200000  });
-                    res.cookie('username', LoginName, { httpOnly: false, maxAge: 7200000  });
-
-                    // Redirect to dashboard
-                    res.redirect('/dashboard');
-                });
-            });
-        });
-    };
+    });
 });
 
+
+// Function to Authenticate //
+
+function authenticateToken(req, res, next) {
+    if (!req.session.user) {
+        return res.redirect('/');
+    }
+    next();
+}
 
 
 app.get('/get-variable', (req, res) => {
@@ -172,10 +123,55 @@ app.get('/get-variable', (req, res) => {
 app.use(authenticateToken);
 
 
-// Route to serve main_dashboard after login
+app.post('/clear-cookies', (req, res) => {
+    // Clear the cookies by setting their expiration to a past date
+    res.clearCookie('jwt');
+    res.clearCookie('schoolName');
+    res.sendStatus(200); // Send a success response
+    console.log("deleted by Tab")
+});
+
+
+app.get('/logout', (req, res) => {
+    // Log the username of the user logging out
+    console.log('User logged out:', req.session.user.username);
+
+    // Clear cookies
+    res.clearCookie('jwt');
+    res.clearCookie('schoolName');
+    res.clearCookie('username');
+    res.clearCookie('session_cookie');
+
+    // If the user has a userConnectionPool, end it
+    if (req.session.userConnectionPool) {
+        req.session.userConnectionPool.end((err) => {
+            if (err) {
+                console.error('Error closing MySQL connection:', err);
+            } else {
+                console.log('User-specific database disconnected on signout.');
+            }
+        });
+    }
+
+    // Destroy the session
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Error destroying session:', err);
+        }
+    });
+
+    // Redirect to the home page
+    res.redirect('/');
+});
+
+
+
 app.get('/dashboard', authenticateToken, (req, res) => {
+    // Serve the main_dashboard.html file
     res.sendFile(path.join(__dirname, 'public', 'Main_Dashboard', 'main_dashboard.html'));
 });
+
+
 // Route to serve dashboard after login
 app.get('/pre_adm_dashboard', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Pre_Admission_Console', 'pre_adm_dashboard.html'));
@@ -236,74 +232,11 @@ app.get('/inventory/invoiceReports', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_invoiceReports.html'));
 });
 
+/////////////////////// ROUTES FOR MAIN DASHBOARD COMPONENTS ///////////////////////////////////////
 
-// Middleware to authenticate JWT
-function authenticateToken(req, res, next) {
-    const token = req.cookies.jwt;
-    const schoolNameCookie = req.cookies.schoolName;
-    const usernameCookie = req.cookies.username;
+const main_dashboard_dataRouter = require('./src/routes/main_dashboard_data');
+app.use('/', main_dashboard_dataRouter);
 
-    if (!schoolNameCookie || !usernameCookie) {
-        return res.redirect('/');
-    }
-
-    // If you need to use the JWT token for further processing, you can include it here
-    if (!token) {
-        return res.redirect('/');
-    }
-
-    jwt.verify(token, JWT_SECRET, (err, decoded) => {
-        if (err) {
-            res.clearCookie('jwt');
-            res.clearCookie('schoolName');
-            return res.redirect('/')
-        }
-        req.user = decoded;
-        next();
-    });
-}
-
-app.post('/clear-cookies', (req, res) => {
-    // Clear the cookies by setting their expiration to a past date
-    res.clearCookie('jwt');
-    res.clearCookie('schoolName');
-    res.sendStatus(200); // Send a success response
-    console.log("deleted by Tab")
-});
-
-
-// Logout route
-app.get('/logout', (req, res) => {
-    // Clear the JWT cookie by setting its expiration to a past date
-    res.clearCookie('jwt');
-    res.clearCookie('schoolName');
-    res.clearCookie('username');
-
-    // Close the MySQL connection
-    if (global.connection) {
-        global.connection.end((err) => {
-            if (err) {
-                console.error('Error closing MySQL connection:', err);
-            } else {
-                console.log('School database disconnected on signout.');
-            }
-            globalConnection = null;
-        });
-    }
-
-    // // Close the MySQL connection
-    // if (connection_auth) {
-    //     connection_auth.end((err) => {
-    //         if (err) {
-    //             console.error('Error closing MySQL connection:', err);
-    //         } else {
-    //             console.log('MySQL connection closed successfully.');
-    //         }
-    //     });
-    // }
-
-    res.redirect('/');
-});
 
 //////////////////////// STUDENT CONSOLE////////////////////////////////
 // Import the router for handling student details submission
@@ -338,16 +271,6 @@ const displayadmTeacherRouter = require('./src/routes/pre_admission_console_rout
 // Mount the admitted teacher display router to the root path
 app.use('/', displayadmTeacherRouter);
 
-
-/////////////////////// ROUTES FOR MAIN DASHBOARD COMPONENTS ///////////////////////////////////////
-
-const main_dashboard_dataRouter = require('./src/routes/main_dashboard_data');
-app.use('/', main_dashboard_dataRouter);
- 
-
-/////////////////////// Call a Scheduled Task to send a ping to own server every 25 mins ///////////////////////////////////////
-
-// scheduledTask();
 
 /////////////////////// ROUTES FOR INVENTORY MODULE ///////////////////////////////////////
 

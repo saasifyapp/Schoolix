@@ -3,6 +3,7 @@ $(function () {
     $("#datepicker").datepicker({
         dateFormat: "yy-mm-dd",
         onSelect: function (dateText) {
+            console.log(dateText)
             fetchDataByDate(dateText);
         }
     });
@@ -123,14 +124,19 @@ function updateUI(data, filterValue) {
         tableHeading = "Bills for " + filterValue;
     }
     $("#table-heading").text(tableHeading);
-
+   
     // Populate table with fetched data
     let tableRows = '';
     data.forEach(entry => {
+        const billDate = new Date(entry.billDate).toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
         tableRows += `
             <tr>
                 <td>${entry.invoiceNo}</td>
-                <td>${entry.billDate}</td>
+                <td>${billDate}</td>
                 <td>${entry.buyerName}</td>
                 <td>${entry.buyerPhone}</td>
                 <td>${entry.class_of_buyer}</td>
