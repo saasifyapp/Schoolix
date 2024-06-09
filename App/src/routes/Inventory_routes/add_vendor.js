@@ -1,5 +1,24 @@
 const express = require('express');
 const router = express.Router();
+const mysql = require('mysql');
+
+
+// Define dbCredentials and connection outside the endpoint
+let dbCredentials;
+let connection;
+
+// Middleware to set dbCredentials and connection
+router.use((req, res, next) => {
+    dbCredentials = req.session.dbCredentials;
+    connection = mysql.createPool({
+        host: dbCredentials.host,
+        user: dbCredentials.user,
+        password: dbCredentials.password,
+        database: dbCredentials.database
+    });
+    next();
+});
+
 
 
 router.post('/inventory/purchase/add_vendor', (req, res) => {
