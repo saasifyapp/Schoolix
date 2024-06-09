@@ -7,9 +7,12 @@ body {
 .main{
     margin-top: 4rem;
 }
-h2 {
-    margin-top: 0;
+.head {   
+    font-size: 35px;
+    color: var(--grey-color);
+    text-align: center;
 }
+
 .filter-container {
     display: flex;
     justify-content: center;
@@ -20,6 +23,42 @@ h2 {
     display: flex;
     flex-direction: column;
 }
+
+.custom-dropdown {
+    height: 2.8125rem; /* Adjust the height as needed */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('../../images/down-arrow.png'); /* Set your PNG image */
+    background-size: 1.5625rem 1.5625rem; /* Adjust the size of your image */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    padding-right: 1.25rem; /* Add more padding on the right for the image */
+    background-position: calc(100% - 0.5rem) center; /* Position the image to the extreme right */
+    padding: 0.5rem 1.5rem; /* Adjust padding as needed */
+    border: 0.0625rem solid #ccc; /* Adjust border as needed */
+    border-radius: 0.625rem; /* Adjust border-radius as needed */
+    font-size: 1rem; /* Adjust font size as needed */
+    cursor: pointer;
+    position: relative; /* Add position relative to allow absolute positioning */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Add transition for smooth effect */
+}
+
+.custom-dropdown:hover,
+.custom-dropdown:focus {
+    box-shadow: 0 0 10px #5DADE2; /* Add shadow on hover and focus */   
+    border: 1px solid #85C1E9;
+    outline: none;
+}
+
+/* Style the dropdown arrow (if necessary) */
+.custom-dropdown::after {
+    content: '\25BC'; /* Unicode character for down arrow */
+    position: absolute;
+    top: 50%;
+    right: 0.5rem;
+    transform: translateY(-50%);
+}
+
 .dropdown label {
     margin-bottom: 5px;
 }

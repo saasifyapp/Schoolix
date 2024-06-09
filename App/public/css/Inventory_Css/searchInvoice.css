@@ -14,8 +14,7 @@ body {
     margin-top: 2rem;
 }
 
-.head {
-   
+.head {   
     font-size: 20px;
     color: var(--grey-color);
     text-align: center;

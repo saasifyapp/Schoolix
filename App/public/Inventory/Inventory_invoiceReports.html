@@ -42,17 +42,16 @@
 
 
     <div class="main">
-        <h2>Invoice Report</h2>
+        <h2 class="head">Invoice Report</h2>
         <div class="filter-container">
             <div class="dropdown">
                 <label for="filter-date">Filter by Date:</label>
-                <input type="text" id="datepicker">
+                <input type="" id="datepicker">
             </div>
 
-            <div class="dropdown">
-                <label for="filter-class">Filter by Class:</label>
-                <select id="filter-class">
-                    <option value="">Select Class</option>
+            <div class="dropdown">               
+                <select id="filter-class" class="custom-dropdown">
+                    <option value="">Filter by Class</option>
                     <option value="All Class">All Class</option>
                     <option value="Nursery" class="Nursery">Nursery</option>
                     <option value="KG1" class="KG1">KG1</option>
@@ -69,6 +68,7 @@
                     <option value="10th" class="10th">10th</option>
                 </select>
             </div>
+            
             <div class="toggle-switch">
                 <label for="defaulter-switch">Defaulter List:</label>
                 <label class="switch">
