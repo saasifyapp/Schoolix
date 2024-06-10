@@ -16,23 +16,25 @@
             <div style="display: flex; justify-content: center; align-items: center; height: 100%">
                 <style>
                     .dotlottie-container {
-                    margin-left: 40px;
-                    transition: transform 0.3s ease; /* Smooth scale animation */
+                        margin-left: 40px;
+                        transition: transform 0.3s ease;
                     }
                     .dotlottie-container:hover {
-                        transform: scale(1.05); /* Scale up by 10% on hover */
+                        transform: scale(1.05);
                     }
                 </style>
-                <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> 
+                <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
                 <dotlottie-player class="dotlottie-container" src="https://lottie.host/35a60971-7397-4266-8b83-be4c5b463c35/sF64YJc6Ya.json" background="transparent" speed="1" style="width: 85%; height: 85%;" loop autoplay></dotlottie-player>
             </div>
-            
- 
         </div>
         <div class="container2">
+            <div class="toggle-container">
+                <label class="toggle-label" for="loginToggle">School Login</label>
+                <input type="checkbox" id="loginToggle" class="toggle-switch">
+            </div>
             <div class="login-form">
-                <form action="/login"  id="loginForm">
-                    <img src="../images/locked.png" alt="Login Icon"> <!-- Your PNG image -->
+                <form action="/login" id="loginForm">
+                    <img src="../images/locked.png" alt="Login Icon">
                     <input type="text" name="username" placeholder="Username" id="username" required>
                     <input type="password" name="password" placeholder="Password" id="password" required>
                     <button type="submit">Login</button>
@@ -43,7 +45,7 @@
     <footer>
         <p>&copy; 2024 SAASIFYAPPS. All rights reserved.</p>
     </footer>
-    
+
     <script src="../js/Login/login.js"></script>
 </body>
 
