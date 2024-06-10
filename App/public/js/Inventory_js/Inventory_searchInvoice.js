@@ -13,6 +13,8 @@ function hideSearchInventoryLoadingAnimation() {
 }
 async function refreshInvoiceData() {
     showSearchInventoryLoadingAnimation();
+    const invoiceTable = document.getElementById('invoiceTable');
+    invoiceTable.innerHTML = ''; // Clear previous data
     document.getElementById('searchBar').value = '';
     document.getElementById('classFilter').value = '';
     try {
@@ -206,7 +208,7 @@ async function searchInvoiceDetails() {
                     onclick="showUpdateModal('${invoice.invoiceNo}', '${invoice.total_payable}', '${invoice.paid_amount}', '${invoice.balance_amount}', '${invoice.buyerName}')"
                     onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
                     onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                    <img src="/images/update.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                    <img src="/images/update.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px; mix-blend-mode: multiply; /* Add this property */">
                     <span style="margin-right: 10px;">Update</span>
                 </button>
             
@@ -229,7 +231,7 @@ async function searchInvoiceDetails() {
                     onclick="printInvoice(${invoice.invoiceNo})"
                     onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
                     onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                    <img src="/images/printer.gif" alt="Print" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                    <img src="/images/printer.gif" alt="Print" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px; mix-blend-mode: multiply; /* Add this property */">
                     <span style="margin-right: 10px;">Print</span>
                 </button>
             
@@ -252,7 +254,7 @@ async function searchInvoiceDetails() {
                     onclick="deleteInvoice(${invoice.invoiceNo})"
                     onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
                     onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                    <img src="/images/deletebill.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                    <img src="/images/deletebill.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;mix-blend-mode: multiply; /* Add this property */">
                     <span style="margin-right: 10px;">Delete</span>
                 </button>
             </div>
@@ -356,7 +358,7 @@ function filterByClass() {
                     onclick="showUpdateModal('${invoice.invoiceNo}', '${invoice.total_payable}', '${invoice.paid_amount}', '${invoice.balance_amount}', '${invoice.buyerName}')"
                     onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
                     onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                    <img src="/images/update.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                    <img src="/images/update.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px; mix-blend-mode: multiply; /* Add this property */">
                     <span style="margin-right: 10px;">Update</span>
                 </button>
             
@@ -379,7 +381,7 @@ function filterByClass() {
                     onclick="printInvoice(${invoice.invoiceNo})"
                     onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
                     onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                    <img src="/images/printer.gif" alt="Print" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                    <img src="/images/printer.gif" alt="Print" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px; mix-blend-mode: multiply; /* Add this property */">
                     <span style="margin-right: 10px;">Print</span>
                 </button>
             
@@ -402,7 +404,7 @@ function filterByClass() {
                     onclick="deleteInvoice(${invoice.invoiceNo})"
                     onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
                     onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                    <img src="/images/deletebill.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                    <img src="/images/deletebill.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px; mix-blend-mode: multiply; /* Add this property */">
                     <span style="margin-right: 10px;">Delete</span>
                 </button>
             </div>

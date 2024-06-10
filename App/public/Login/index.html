@@ -10,7 +10,9 @@
 
 <body>
     <div class="loading-bar"></div>
-    <div id="toast" class="toast"></div>
+    <div id="toast-container" class="toast-container">
+        <div id="toast" class="toast"></div>
+    </div>
     <div class="container">
         <div class="container1" id="container1">
             <div style="display: flex; justify-content: center; align-items: center; height: 100%">
@@ -29,8 +31,8 @@
         </div>
         <div class="container2">
             <div class="toggle-container">
-                <label class="toggle-label" for="loginToggle">School Login</label>
-                <input type="checkbox" id="loginToggle" class="toggle-switch">
+                <button id="schoolButton" class="toggle-button active">School </button>
+                <button id="adminButton" class="toggle-button">Admin </button>
             </div>
             <div class="login-form">
                 <form action="/login" id="loginForm">

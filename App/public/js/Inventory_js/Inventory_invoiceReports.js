@@ -3,33 +3,27 @@ $(function () {
     $("#datepicker").datepicker({
         dateFormat: "yy-mm-dd",
         onSelect: function (dateText) {
-            console.log(dateText)
             fetchDataByDate(dateText);
         }
     });
 
-    // Set datepicker to today's date and manually trigger onSelect function for today's date
     let today = $.datepicker.formatDate("yy-mm-dd", new Date());
     $("#datepicker").datepicker("setDate", today);
     fetchDataByDate(today);
 
-    // Event listener for class dropdown
     $("#filter-class").change(function () {
         let selectedClass = $(this).val();
         fetchDataByClass(selectedClass);
     });
 
-    // Event listener for defaulter switch
     $("#defaulter-switch").change(function () {
         if ($(this).is(":checked")) {
             fetchDataByDefaulter(true);
         } else {
-            let selectedClass = $("#filter-class").val();
-            fetchDataByClass(selectedClass);
+            fetchDataByClass($("#filter-class").val());
         }
     });
 
-    // Fetch data by date
     function fetchDataByDate(dateText) {
         $.ajax({
             url: '/inventory/invoice/query_by_date',
@@ -38,13 +32,10 @@ $(function () {
             success: function (data) {
                 updateUI(data, dateText);
             },
-            error: function (xhr, status, error) {
-                console.error("Error fetching data:", error);
-            }
+            error: handleError
         });
     }
 
-    // Fetch data by class
     function fetchDataByClass(classOfBuyer) {
         $.ajax({
             url: '/inventory/invoice/query_by_class',
@@ -53,13 +44,10 @@ $(function () {
             success: function (data) {
                 updateUI(data, classOfBuyer);
             },
-            error: function (xhr, status, error) {
-                console.error("Error fetching data:", error);
-            }
+            error: handleError
         });
     }
 
-    // Fetch data for defaulter list
     function fetchDataByDefaulter(isDefaulter) {
         $.ajax({
             url: '/inventory/invoice/query_by_defaulter',
@@ -68,90 +56,87 @@ $(function () {
             success: function (data) {
                 updateUI(data, "Defaulter List");
             },
-            error: function (xhr, status, error) {
-                console.error("Error fetching data:", error);
+            error: handleError
+        });
+    }
+
+    function handleError(xhr, status, error) {
+        console.error("Error fetching data:", error);
+        alert("An error occurred while fetching data. Please try again later.");
+    }
+
+    function updateUI(data, filterValue) {
+        let cashTotal = 0;
+        let upiTotal = 0;
+        data.forEach(entry => {
+            if (entry.mode_of_payment === 'CASH') {
+                cashTotal += entry.paid_amount;
+            } else if (entry.mode_of_payment === 'UPI') {
+                upiTotal += entry.paid_amount;
             }
         });
-    }
 
-    // Update the UI with fetched data
-function updateUI(data, filterValue) {
-    // Calculate and update Collection Summary
-    let cashTotal = 0;
-    let upiTotal = 0;
-    data.forEach(entry => {
-        if (entry.mode_of_payment === 'CASH') {
-            cashTotal += entry.paid_amount;
-        } else if (entry.mode_of_payment === 'UPI') {
-            upiTotal += entry.paid_amount;
-        }
-    });
-    $(".box:eq(0)").text("CASH: " + cashTotal);
-    $(".box:eq(1)").text("UPI: " + upiTotal);
-    $(".box:eq(2)").text("TOTAL: " + (cashTotal + upiTotal));
+        animateNumber($(".box:eq(0)").find(".box-number p"), cashTotal);
+        animateNumber($(".box:eq(1)").find(".box-number p"), upiTotal);
+        animateNumber($(".box:eq(2)").find(".box-number p"), cashTotal + upiTotal);
 
-    // Update Collection Summary date/class
-    if (!isDate(filterValue)) {
-        $("#collection-date").text(filterValue); // Display selected class or defaulter list
-    } else {
         $("#collection-date").text(filterValue);
-    }
 
-    // Calculate and update Invoice Summary
-    let totalBills = data.length;
-    let netSell = data.reduce((acc, curr) => acc + curr.total_payable, 0);
-    let received = data.reduce((acc, curr) => acc + curr.paid_amount, 0);
-    let outstanding = data.reduce((acc, curr) => acc + curr.balance_amount, 0);
-    $(".box:eq(3)").text("Total Bills: " + totalBills);
-    $(".box:eq(4)").text("Net Sell: " + netSell);
-    $(".box:eq(5)").text("Received: " + received);
-    $(".box:eq(6)").text("Outstanding: " + outstanding);
+        let totalBills = data.length;
+        let netSell = data.reduce((acc, curr) => acc + curr.total_payable, 0);
+        let received = data.reduce((acc, curr) => acc + curr.paid_amount, 0);
+        let outstanding = data.reduce((acc, curr) => acc + curr.balance_amount, 0);
 
-    // Update Invoice Summary date/class
-    if (!isDate(filterValue)) {
-        $("#invoice-date").text(filterValue); // Display selected class or defaulter list
-    } else {
+        animateNumber($(".box:eq(3)").find(".box-number p"), totalBills);
+        animateNumber($(".box:eq(4)").find(".box-number p"), netSell);
+        animateNumber($(".box:eq(5)").find(".box-number p"), received);
+        animateNumber($(".box:eq(6)").find(".box-number p"), outstanding);
+
         $("#invoice-date").text(filterValue);
-    }
 
-    // Update table heading dynamically
-    let tableHeading = "";
-    if (filterValue === "Defaulter List") {
-        tableHeading = "Defaulter Details";
-    } else if (!isDate(filterValue)) {
-        tableHeading = "Bills for Class - " + filterValue;
-    } else {
-        tableHeading = "Bills for " + filterValue;
-    }
-    $("#table-heading").text(tableHeading);
-   
-    // Populate table with fetched data
-    let tableRows = '';
-    data.forEach(entry => {
-        const billDate = new Date(entry.billDate).toLocaleDateString('en-GB', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
+        let tableHeading = filterValue === "Defaulter List" ? "Defaulter Details" :
+                           !isDate(filterValue) ? "Bills for Class - " + filterValue :
+                           "Bills for " + filterValue;
+        $("#table-heading").text(tableHeading);
+
+        let tableRows = '';
+        data.forEach(entry => {
+            const billDate = new Date(entry.billDate).toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+            tableRows += `
+                <tr>
+                    <td>${entry.invoiceNo}</td>
+                    <td>${billDate}</td>
+                    <td>${entry.buyerName}</td>
+                    <td>${entry.buyerPhone}</td>
+                    <td>${entry.class_of_buyer}</td>
+                    <td>${entry.total_payable}</td>
+                    <td>${entry.paid_amount}</td>
+                    <td>${entry.balance_amount}</td>
+                    <td>${entry.mode_of_payment}</td>
+                </tr>
+            `;
         });
-        tableRows += `
-            <tr>
-                <td>${entry.invoiceNo}</td>
-                <td>${billDate}</td>
-                <td>${entry.buyerName}</td>
-                <td>${entry.buyerPhone}</td>
-                <td>${entry.class_of_buyer}</td>
-                <td>${entry.total_payable}</td>
-                <td>${entry.paid_amount}</td>
-                <td>${entry.balance_amount}</td>
-                <td>${entry.mode_of_payment}</td>
-            </tr>
-        `;
-    });
-    $("#invoice-table tbody").html(tableRows);
-}
+        $("#invoice-table tbody").html(tableRows);
+    }
 
-    // Utility function to check if filterValue is a date
     function isDate(value) {
         return /^\d{4}-\d{2}-\d{2}$/.test(value);
     }
+
+    function animateNumber(element, endValue) {
+        $(element).prop('Counter', 0).animate({
+            Counter: endValue
+        }, {
+            duration: 2000,
+            easing: 'swing',
+            step: function (now) {
+                $(this).text(Math.ceil(now));
+            }
+        });
+    }
 });
+ 

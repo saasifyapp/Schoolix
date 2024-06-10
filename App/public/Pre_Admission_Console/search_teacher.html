@@ -218,6 +218,8 @@
 
                     async function refreshData() {
                         showLoadingAnimation();
+                        const teacherTableBody = document.getElementById('teacherData');
+                        teacherTableBody.innerHTML = ''; // Clear previous data
                         document.getElementById('searchField').value = '';
                         try {
                             const response = await fetch('/teachers');
