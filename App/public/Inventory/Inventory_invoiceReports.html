@@ -13,6 +13,9 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <style>
+        /* Your CSS code here */
+    </style>
 </head>
 
 <body>
@@ -85,20 +88,15 @@
                     Defaulter List:
                 </label>
                 <label class="switch">
-                    <img src="/images/defaulter.gif" alt="Toggle Icon" class="toggle-icon" style="mix-blend-mode: multiply; /* Add this property */">
+                    <img src="/images/defaulter.gif" alt="Toggle Icon" class="toggle-icon"
+                        style="mix-blend-mode: multiply; /* Add this property */">
                     <input type="checkbox" id="defaulter-switch">
                     <span class="slider"></span>
                 </label>
             </div>
-
-
-
         </div>
 
-
-
         <div class="section">
-
             <div class="left-section">
                 <div class="container">
                     <h3>Collection Summary</h3>
@@ -108,7 +106,9 @@
                             <div class="box-content">
                                 <div class="box-col1">
                                     <div class="box-heading">CASH</div>
-                                    <div class="box-number"><p></p></div>
+                                    <div class="box-number">
+                                        <p></p>
+                                    </div>
                                 </div>
                                 <div class="box-col2">
                                     <img src="/images/cash.png" alt="Cash Icon" class="box-icon">
@@ -119,7 +119,9 @@
                             <div class="box-content">
                                 <div class="box-col1">
                                     <div class="box-heading">UPI</div>
-                                    <div class="box-number"><p></p></div>
+                                    <div class="box-number">
+                                        <p></p>
+                                    </div>
                                 </div>
                                 <div class="box-col2">
                                     <img src="/images/upi.png" alt="UPI Icon" class="box-icon">
@@ -130,7 +132,9 @@
                             <div class="box-content">
                                 <div class="box-col1">
                                     <div class="box-heading">TOTAL</div>
-                                    <div class="box-number"><p></p></div>
+                                    <div class="box-number">
+                                        <p></p>
+                                    </div>
                                 </div>
                                 <div class="box-col2">
                                     <img src="/images/total.png" alt="Total Icon" class="box-icon">
@@ -147,7 +151,9 @@
                             <div class="box-content">
                                 <div class="box-col1">
                                     <div class="box-heading">Total Bills</div>
-                                    <div class="box-number"><p></p></div>
+                                    <div class="box-number">
+                                        <p></p>
+                                    </div>
                                 </div>
                                 <div class="box-col2">
                                     <img src="/images/totalbill.png" alt="Bills Icon" class="box-icon">
@@ -158,7 +164,9 @@
                             <div class="box-content">
                                 <div class="box-col1">
                                     <div class="box-heading">Net Sell</div>
-                                    <div class="box-number"><p></p></div>
+                                    <div class="box-number">
+                                        <p></p>
+                                    </div>
                                 </div>
                                 <div class="box-col2">
                                     <img src="/images/netsell.png" alt="Sell Icon" class="box-icon">
@@ -169,7 +177,9 @@
                             <div class="box-content">
                                 <div class="box-col1">
                                     <div class="box-heading">Received</div>
-                                    <div class="box-number"><p></p></div>
+                                    <div class="box-number">
+                                        <p></p>
+                                    </div>
                                 </div>
                                 <div class="box-col2">
                                     <img src="/images/recived.png" alt="Received Icon" class="box-icon">
@@ -180,7 +190,9 @@
                             <div class="box-content">
                                 <div class="box-col1">
                                     <div class="box-heading">Outstanding</div>
-                                    <div class="box-number"><p></p></div>
+                                    <div class="box-number">
+                                        <p></p>
+                                    </div>
                                 </div>
                                 <div class="box-col2">
                                     <img src="/images/cash.png" alt="Outstanding Icon" class="box-icon">
@@ -189,33 +201,33 @@
                         </div>
                     </div>
                 </div>
-            </div>        
-            
-            
-
+            </div>
 
             <div class="right-section">
                 <h3><span id="table-heading"></span></h3>
-                <table id="invoice-table">
-                    <thead>
-                        <tr>
-                            <th>Invoice No</th>
-                            <th>Bill Date</th>
-                            <th>Buyer Name</th>
-                            <th>Buyer Phone</th>
-                            <th>Class</th>
-                            <th>Total Payable</th>
-                            <th>Paid Amount</th>
-                            <th>Balance Amount</th>
-                            <th>Mode of Payment</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Dynamic rows will be added here -->
-                    </tbody>
-                </table>
+                <div class="table-wrapper">
+                    <table id="invoice-table">
+                        <thead>
+                            <tr>
+                                <th>Invoice No</th>
+                                <th>Bill Date</th>
+                                <th>Buyer Name</th>
+                                <th>Buyer Phone</th>
+                                <th>Class</th>
+                                <th>Total Payable</th>
+                                <th>Paid Amount</th>
+                                <th>Balance Amount</th>
+                                <th>Mode of Payment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dynamic rows will be added here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+    </div>
     </div>
 </body>
 
