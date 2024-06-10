@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Get the form element
     const uniformForm = document.getElementById('addUniformForm');
     const univendorSelect = document.getElementById("univendor");
-    uniformForm.addEventListener('submit', function (event) {
+    uniformForm.addEventListener('submit', async function (event) {
         event.preventDefault();
         showUniformLoadingAnimation();
         const formData = new FormData(event.target);
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     jsonData[key] = value;
             }
         });
-        fetch('/inventory/purchase/add_uniforms', {
+        await fetch('/inventory/purchase/add_uniforms', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -103,9 +103,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 // Function to populate vendor dropdowns
-function populateUniformVendorDropdown() {
+async function populateUniformVendorDropdown() {
     // Fetch vendors from the server
-    fetch('/inventory/uniform_vendor')
+    await fetch('/inventory/uniform_vendor')
         .then(response => response.json())
         .then(data => {
             // Dropdowns to be populated
@@ -146,10 +146,10 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Function to refresh and display uniform data
-function refreshUniformsData() {
+async function refreshUniformsData() {
     showUniformLoadingAnimation();
     document.getElementById('uniformsearchField').value = '';
-    fetch('/inventory/uniforms')
+    await fetch('/inventory/uniforms')
         .then(response => response.json())
         .then(data => displayUniforms(data))
         .catch(error => {
@@ -254,11 +254,11 @@ function displayUniforms(data) {
 }
  
 // Function to handle deleting a uniform
-function deleteUniform(uniformItem, sizeOfItem) {
+async function deleteUniform(uniformItem, sizeOfItem) {
     const confirmation = confirm(`Are you sure you want to delete the uniform "${uniformItem}" of size "${sizeOfItem}"?`);
     if (confirmation) {
         showUniformLoadingAnimation();
-        fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}`, {
+        await fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}`, {
             method: 'DELETE'
         })
             .then(response => {
@@ -286,8 +286,8 @@ function deleteUniform(uniformItem, sizeOfItem) {
 }
 
 // Function to update a uniform item
-function updateUniformItem(uniformItem, sizeOfItem) {
-    fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`)
+async function updateUniformItem(uniformItem, sizeOfItem) {
+    await fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Failed to retrieve quantity.');
@@ -410,9 +410,9 @@ function updateUniformItem(uniformItem, sizeOfItem) {
 }
 
 // Function to update ordered quantity on the server
-function updateUniformOrderedQuantity(uniformItem, sizeOfItem, totalOrder, newRemainingQuantity) {
+async function updateUniformOrderedQuantity(uniformItem, sizeOfItem, totalOrder, newRemainingQuantity) {
     showUniformLoadingAnimation();
-    fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`, {
+    await fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -443,10 +443,10 @@ function updateUniformOrderedQuantity(uniformItem, sizeOfItem, totalOrder, newRe
 
 
 // Function to return a uniform
-function returnUniform(uniformItem, sizeOfItem) {
+async function returnUniform(uniformItem, sizeOfItem) {
     let newRemainingQuantity; // Declare newRemainingQuantity here
 
-    fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`)
+    await fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Failed to retrieve quantity.');
@@ -568,10 +568,10 @@ function returnUniform(uniformItem, sizeOfItem) {
 }
 
 // Function to update ordered quantity on the server
-function returnUniformQuantity(uniformItem, sizeOfItem, returnedQuantity, newRemainingQuantity) {
+async function returnUniformQuantity(uniformItem, sizeOfItem, returnedQuantity, newRemainingQuantity) {
     console.log(uniformItem, sizeOfItem, returnedQuantity, newRemainingQuantity)
     showUniformLoadingAnimation();
-    fetch(`/inventory/return_uniform/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`, {
+    await fetch(`/inventory/return_uniform/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -674,7 +674,7 @@ function submitEditUniformForm() {
     });
 }
 */
-function searchUniformDetails() {
+async function searchUniformDetails() {
     // showLoadingAnimation(); 
 
     const searchTerm = document.getElementById('uniformsearchField').value.trim();
@@ -689,7 +689,7 @@ function searchUniformDetails() {
     }
 
     // Fetch data from the server based on the search term
-    fetch(`/inventory/uniforms/search?search=${encodeURIComponent(searchTerm)}`)
+    await fetch(`/inventory/uniforms/search?search=${encodeURIComponent(searchTerm)}`)
         .then(response => response.json())
         .then(data => {
             const uniformTableBody = document.getElementById('uniformTableBody');

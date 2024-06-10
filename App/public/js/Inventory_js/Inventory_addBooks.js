@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Check if the form exists
   if (booksform) {
     // Add submit event listener to the form
-    booksform.addEventListener("submit", function (event) {
+    booksform.addEventListener("submit", async function (event) {
       showBooksLoadingAnimation();
       event.preventDefault(); // Prevent the default form submission
 
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       // Make a POST request to the endpoint
-      fetch("/inventory/purchase/add_books", {
+      await fetch("/inventory/purchase/add_books", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -163,9 +163,9 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Function to populate vendor dropdowns
-function populateBooksVendorDropdown() {
+async function populateBooksVendorDropdown() {
   // Fetch vendors from the server
-  fetch("/inventory/books_vendor")
+  await fetch("/inventory/books_vendor")
     .then((response) => response.json())
     .then((data) => {
       // Dropdowns to be populated
@@ -207,10 +207,10 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Refresh data function for fetching and displaying books
-function refreshbooksData() {
+async function refreshbooksData() {
   showBooksLoadingAnimation();
   document.getElementById("bookssearchField").value = "";
-  fetch("/inventory/books")
+  await fetch("/inventory/books")
     .then((response) => response.json())
     .then((data) => displayBooks(data))
     .catch((error) => {
@@ -320,13 +320,13 @@ function displayBooks(data) {
 }
 
 // Function to delete a book
-function deleteBook(title) {
+async function deleteBook(title) {
   const confirmation = confirm(
     `Are you sure you want to delete the book "${title}"?`
   );
   if (confirmation) {
     showBooksLoadingAnimation();
-    fetch(`/inventory/books/${encodeURIComponent(title)}`, {
+    await fetch(`/inventory/books/${encodeURIComponent(title)}`, {
       method: "DELETE",
     })
       .then((response) => {
@@ -351,8 +351,8 @@ function deleteBook(title) {
 }
 
 // Function to update a book
-function updateBook(title) {
-  fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`) // Assuming you have modified the endpoint to retrieve both ordered_quantity and remaining_quantity
+async function updateBook(title) {
+  await fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`) // Assuming you have modified the endpoint to retrieve both ordered_quantity and remaining_quantity
     .then((response) => {
       if (!response.ok) {
         throw new Error("Failed to retrieve quantity.");
@@ -480,9 +480,9 @@ function updateBook(title) {
 }
 
 // Function to update ordered quantity on the server
-function updateBookOrderedQuantity(title, totalOrder, newRemainingQuantity) {
+async function updateBookOrderedQuantity(title, totalOrder, newRemainingQuantity) {
   showBooksLoadingAnimation();
-  fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`, {
+  await fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -514,10 +514,10 @@ function updateBookOrderedQuantity(title, totalOrder, newRemainingQuantity) {
 }
 
 // Function to return a book
-function returnBook(title) {
+async function returnBook(title) {
   let newRemainingQuantity; // Declare newRemainingQuantity here
 
-  fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`)
+  await fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`)
     .then((response) => {
       if (!response.ok) {
         throw new Error("Failed to retrieve quantity.");
@@ -647,9 +647,9 @@ function returnBook(title) {
 }
 
 // Function to update ordered quantity on the server
-function returnBookQuantity(title, returnedQuantity, newRemainingQuantity) {
+async function returnBookQuantity(title, returnedQuantity, newRemainingQuantity) {
   showBooksLoadingAnimation();
-  fetch(`/inventory/return_books/${encodeURIComponent(title)}/quantity`, {
+  await fetch(`/inventory/return_books/${encodeURIComponent(title)}/quantity`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -679,7 +679,7 @@ function returnBookQuantity(title, returnedQuantity, newRemainingQuantity) {
     });
 }
 
-function searchBookDetails() {
+async function searchBookDetails() {
   // showBooksLoadingAnimation();
 
   const searchTerm = document.getElementById("bookssearchField").value.trim();
@@ -695,7 +695,7 @@ function searchBookDetails() {
   }
 
   // Fetch data from the server based on the search term
-  fetch(`/inventory/books/search?search=${encodeURIComponent(searchTerm)}`)
+  await fetch(`/inventory/books/search?search=${encodeURIComponent(searchTerm)}`)
     .then((response) => response.json())
     .then((data) => {
       const booksTableBody = document.getElementById("booksTableBody");

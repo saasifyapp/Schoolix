@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById('vendorForm');
 
     // Add submit event listener to the form
-    form.addEventListener('submit', function (event) {
+    form.addEventListener('submit', async function (event) {
         event.preventDefault(); // Prevent the default form submission
         showVendorLoadingAnimation (); 
         // Get the vendor name and amount paid from the form
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         // Make a POST request to the endpoint
-        fetch('/inventory/purchase/add_vendor', {
+        await fetch('/inventory/purchase/add_vendor', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -75,10 +75,10 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 //refresh data
-function refreshData() {
+async function refreshData() {
     showVendorLoadingAnimation ();
     document.getElementById('searchField').value = '';
-    fetch('/inventory/vendors')
+    await fetch('/inventory/vendors')
         .then(response => response.json())
         .then(data => displayVendors(data))
         .catch(error => {
@@ -162,11 +162,11 @@ function displayVendors(data) {
     }
 }
 
-function deleteVendor(vendorName) {
+async function deleteVendor(vendorName) {
     const confirmation = confirm(`Are you sure you want to delete the vendor "${vendorName}"?`);
     if (confirmation) {
         showVendorLoadingAnimation ();
-        fetch(`/inventory/vendors/${encodeURIComponent(vendorName)}`, {
+        await fetch(`/inventory/vendors/${encodeURIComponent(vendorName)}`, {
             method: 'DELETE'
         })
             .then(response => {
@@ -305,7 +305,7 @@ async function updateVendorPaidAmount(vendorName, totalPaid, balance) {
 
 
 // Function to handle searching vendor details
-function searchVendorDetails() {
+async function searchVendorDetails() {
     const searchTerm = document.getElementById('searchField').value.trim();
 
     if (!searchTerm) {
@@ -318,7 +318,7 @@ function searchVendorDetails() {
 
 
     // Fetch data from the server based on the search term
-    fetch(`/inventory/vendors/search?search=${encodeURIComponent(searchTerm)}`)
+    await fetch(`/inventory/vendors/search?search=${encodeURIComponent(searchTerm)}`)
         .then(response => response.json())
         .then(data => {
 
