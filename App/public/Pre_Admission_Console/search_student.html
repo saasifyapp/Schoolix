@@ -153,7 +153,8 @@
                     <div class="search_item">
 
                         <div style="position: relative; display: inline-block; margin-right: 10px;">
-                            <input type="text" id="searchField" placeholder="Enter Student Name..." oninput="searchDetails()">
+                            <input type="text" id="searchField" placeholder="Enter Student Name..."
+                                oninput="searchDetails()">
 
                             <!-- <button id="searchButton" class="search-button" onclick="searchDetails()">
                                 <img src="../images/search.gif" alt="Search Icon" style="height: 100%;">
@@ -236,15 +237,28 @@
             document.getElementById('loadingOverlay').style.display = 'none';
         }
 
-        function refreshData() {
+        async function refreshData() {
             showLoadingAnimation();
             document.getElementById('searchField').value = '';
             document.getElementById('classFilter').value = '';
-            fetch('/students')
-                .then(response => response.json())
-                .then(data => displayStudents(data))
-                .catch(error => console.error('Error:', error));
+            try {
+                const response = await fetch('/students');
+                const data = await response.json();
+                if (data.length === 0) {
+                    hideLoadingAnimation();
+                    const noResultsRow = document.createElement('tr');
+                    noResultsRow.innerHTML = '<td colspan="10">No results found</td>';
+                    // Assuming you have a table element to append this row to, e.g., studentTable
+                    studentTable.appendChild(noResultsRow);
+                } else {
+                    displayStudents(data);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                // showToast('Error fetching students. Please try again.', true);
+            }
         }
+
 
         // Function to add fade-up animation to table rows
         function addFadeUpAnimation() {

@@ -136,7 +136,7 @@ h1 {
 
 .invoice-table-container {
     display: block;
-    height: 550px; /* Adjust the 20px to the height of other elements above/below the table */
+    height: 44rem; /* Adjust the 20px to the height of other elements above/below the table */
     overflow-y: auto;
     border: 1px solid #ddd; /* Optional: Add a border around the scrollable area */
     animation: fadeUp 0.5s ease-out; /* Apply the fade-up animation */
