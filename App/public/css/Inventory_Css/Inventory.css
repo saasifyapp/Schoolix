@@ -635,7 +635,7 @@ table {
 
 /* Style the dropdown arrow (if necessary) */
 .custom-dropdown::after {
-    content: '\25BC'; /* Unicode character for down arrow */
+    /* content: '\25BC';  */
     position: absolute;
     top: 50%;
     right: 0.5rem;
@@ -855,17 +855,19 @@ table {
 
 .custom-dropdown {
     position: relative;
-    width: 100%;
-    border: 1px solid #ccc;
+    width: 100%;   
     background-color: white;
     cursor: pointer;
     user-select: none;
     border-radius: 20px;
+    height: 2.8125rem;
+    
   }
   
   .dropdown-selected {
-    padding: 0.5rem;
+    margin-right: 30px;  
     width: 100%;
+    
   }
   
   .dropdown-options {
@@ -876,7 +878,7 @@ table {
     width: 100%;
     border: 1px solid #ccc;
     background-color: white;
-    z-index: 1;
+    z-index: 2;
   }
   
   .dropdown-options .option {
