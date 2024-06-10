@@ -76,6 +76,7 @@ body {
     width: 1.5rem; /* Adjust the size as needed */
     height: 1.5rem; /* Adjust the size as needed */
     pointer-events: none; /* Ensure the icon does not interfere with input */
+    border-radius: 15px;
 }
 
 .custom-input-icon {
@@ -132,6 +133,7 @@ body {
         width: 2.2rem; /* Adjust size as needed */
         height: 2.2rem; /* Adjust size as needed */
         background-color: transparent;
+        border-radius: 15px;
     }
     
     .switch input {
