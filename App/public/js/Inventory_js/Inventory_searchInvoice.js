@@ -13,6 +13,8 @@ function hideSearchInventoryLoadingAnimation() {
 }
 async function refreshInvoiceData() {
     showSearchInventoryLoadingAnimation();
+    const invoiceTable = document.getElementById('invoiceTable');
+    invoiceTable.innerHTML = ''; // Clear previous data
     document.getElementById('searchBar').value = '';
     document.getElementById('classFilter').value = '';
     try {
