@@ -73,51 +73,6 @@ body {
     animation: slide-in 1s ease forwards;
 }
 
-.toggle-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.toggle-label {
-    margin-right: 10px;
-    font-size: 1rem;
-    font-weight: bold;
-    color: #333;
-}
-
-.toggle-switch {
-    appearance: none;
-    width: 50px;
-    height: 25px;
-    background: #ccc;
-    border-radius: 25px;
-    position: relative;
-    cursor: pointer;
-    outline: none;
-    transition: background-color 0.3s ease;
-}
-
-.toggle-switch:checked {
-    background: #5896fb;
-}
-
-.toggle-switch:before {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 21px;
-    height: 21px;
-    background: white;
-    border-radius: 50%;
-    transition: transform 0.3s ease;
-}
-
-.toggle-switch:checked:before {
-    transform: translateX(25px);
-}
 
 .toggle-container {
     display: flex;
@@ -143,7 +98,6 @@ body {
 .toggle-button:hover {
     background-color: #ea7a00;
 }
-
 
 
 
@@ -373,26 +327,4 @@ footer p {
     to {
         width: 100%; /* End with full width */
     }
-}
-
-.toggle-button {
-    background-color: #5896fb;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease; /* Added transform for subtle animation */
-    margin: 0 10px;
-    border-radius: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow for a raised effect */
-}
-
-.toggle-button.active {
-    background-color: #ea7a00;
-    transform: scale(1.05); /* Scale up the button when active */
-}
-
-.toggle-button:hover {
-    background-color: #ea7a00;
-    transform: scale(1.05); /* Scale up the button on hover */
 }
