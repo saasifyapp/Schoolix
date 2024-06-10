@@ -86,7 +86,7 @@ app.post('/login', (req, res) => {
             username: user.LoginName,
             schoolName: user.schoolName
         };
-
+        req.session.isSchool = true;
         req.session.dbCredentials = {
             host: user.serverName,
             user: user.databaseUser,
@@ -132,7 +132,7 @@ app.post('/admin-login', (req, res) => {
         req.session.user = {
             username: admin.username
         };
-
+        req.session.isSchool = false;
         req.session.dbCredentials = {
             host: admin.serverName,
             user: admin.databaseUser,
@@ -280,8 +280,17 @@ app.get('/inventory/invoiceReports', authenticateToken, (req, res) => {
 
 /////////////////////// ROUTES FOR MAIN DASHBOARD COMPONENTS ///////////////////////////////////////
 
-const main_dashboard_dataRouter = require('./src/routes/main_dashboard_data');
-app.use('/', main_dashboard_dataRouter);
+// const main_dashboard_dataRouter = require('./src/routes/main_dashboard_data');
+// app.use('/', main_dashboard_dataRouter);
+
+// Middleware to conditionally include school routes
+app.use((req, res, next) => {
+    if (req.session.isSchool) {
+        const schoolRouter = require('./src/routes/main_dashboard_data');
+        app.use('/', schoolRouter);
+    }
+    next();
+});
 
 ////////////////////////////////////ADMIN CONSOLE //////////////////////////////////
 //////////////////////Submit Credentials of Database ///////////////////////////////
