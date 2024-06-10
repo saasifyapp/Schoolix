@@ -446,7 +446,7 @@
         });
 
 
-        function reg_student() {
+        async function reg_student() {
 
             // Show loading animation
             showLoadingAnimation();
@@ -480,7 +480,7 @@
                 };
 
                 // Send form data to server
-                fetch('/submit', {
+                await fetch('/submit', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

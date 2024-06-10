@@ -363,7 +363,7 @@
         //         .catch(error => console.error('Error:', error));
         // }
 
-        function filterByClass() {
+        async function filterByClass() {
             document.getElementById('searchField').value = '';
             const selectedClass = document.getElementById('classFilter').value;
             const studentTable = document.getElementById('studentData');
@@ -376,7 +376,7 @@
             }
 
             // Fetch data from the server filtered by class
-            fetch(`/admitted_student/class/${selectedClass}`)
+            await fetch(`/admitted_student/class/${selectedClass}`)
                 .then(response => response.json())
                 .then(data => {
                     studentTable.innerHTML = ''; // Clear previous data
@@ -477,7 +477,7 @@
         //         .catch(error => console.error('Error:', error));
         // }
 
-        function searchDetails() {
+        async function searchDetails() {
             // document.getElementById('classFilter').value = '';
             // showLoadingAnimation();
 
@@ -499,7 +499,7 @@
             }
 
             // Fetch data from the server based on the search term
-            fetch(`/admitted_student/search?search=${encodeURIComponent(searchTerm)}`)
+            await fetch(`/admitted_student/search?search=${encodeURIComponent(searchTerm)}`)
                 .then(response => response.json())
                 .then(data => {
                     const studentTable = document.getElementById('studentData');
@@ -551,11 +551,11 @@
         }
 
 
-        function removeStudent(studentName, mobileNo) {
+        async function removeStudent(studentName, mobileNo) {
             const confirmation = confirm(`Are you sure you want to remove the student "${studentName}"?`);
             if (confirmation) {
                 showLoadingAnimation();
-                fetch(`/remove-adm-student?name=${encodeURIComponent(studentName)}&mobile=${encodeURIComponent(mobileNo)}`, {
+                await fetch(`/remove-adm-student?name=${encodeURIComponent(studentName)}&mobile=${encodeURIComponent(mobileNo)}`, {
                     method: 'DELETE'
                 })
                     .then(response => {
