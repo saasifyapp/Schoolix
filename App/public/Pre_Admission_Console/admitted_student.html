@@ -250,6 +250,8 @@
 
         async function refreshData() {
             showLoadingAnimation();
+            const studentTable = document.getElementById('studentData');
+            studentTable.innerHTML = ''; // Clear previous data
             document.getElementById('searchField').value = '';
             document.getElementById('classFilter').value = '';
             try {

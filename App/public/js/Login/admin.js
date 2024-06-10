@@ -24,6 +24,7 @@ document.getElementById('configForm').addEventListener('submit', function(event)
     .then(data => {
         console.log('Success:', data);
         showToast('Configuration submitted successfully');
+        document.getElementById('configForm').reset();
     })
     .catch((error) => {
         console.error('Error:', error);
