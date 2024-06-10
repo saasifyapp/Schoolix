@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
-const createTables = require('./createTables'); // Import the createTables function
 const app = express();
  
 app.use(express.json());
