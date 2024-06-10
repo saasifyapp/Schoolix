@@ -223,6 +223,7 @@ body {
     gap: 10px; /* Adjust spacing between boxes */
 }
 
+
 /* Enhanced box styling */
 .box {
     background-color: white; /* White background */
@@ -236,8 +237,34 @@ body {
     justify-content: space-between;
     align-items: center; /* Center align items */
     position: relative; /* Position for icon */
+    transition: box-shadow 0.3s ease;
 }
 
+.box:hover {
+    box-shadow: 0 0 10px #5DADE2;
+}
+
+
+.box-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.box-col1 {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+}
+
+.box-col2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
 .box-heading {
     font-size: 1rem; /* Adjust heading font size */
     font-weight: bold; /* Bold heading text */
@@ -259,10 +286,15 @@ body {
 }
 
 .box p {
-    margin: 0; /* Remove default margin */
-    font-size: 1.25rem; /* Adjust font size */
-    font-weight: bold; /* Bold text */
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: var(--grey-color); /* Ensure consistency with other text elements */
     flex: 1; /* Allow text to take up available space */
+}
+.box-col2 img {
+    width: 40px;
+    height: 40px;
 }
 
 
