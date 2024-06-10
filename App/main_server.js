@@ -94,11 +94,15 @@ app.post('/login', (req, res) => {
             password: user.databasePassword,
             database: user.databaseName
         };
-        createTables(connection); 
+
+         // Generate JWT token
+         const token = jwt.sign({ userId: user.userId }, JWT_SECRET, { expiresIn: '2h' });
+         res.cookie('jwt', token, { httpOnly: false, maxAge: 7200000  });
+
         // Set cookies
         res.cookie('username', username, { httpOnly: false, maxAge: 7200000  });
         res.cookie('schoolName', user.schoolName, { httpOnly: false, maxAge: 1000 * 60 * 60 * 2 });
-        res.cookie('jwt', 'your_generated_token', { httpOnly: false, maxAge: 1000 * 60 * 60 * 2 });
+        //res.cookie('jwt', 'your_generated_token', { httpOnly: false, maxAge: 1000 * 60 * 60 * 2 });
 
         
 
