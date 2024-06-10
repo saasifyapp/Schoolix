@@ -47,15 +47,18 @@
             <div class="dropdown">
                 <label for="filter-date">Filter by Date:</label>
                 <div class="custom-input-container">
-                    <img src="/images/calendar.gif" alt="Calendar Icon" class="custom-input-icon" style="height: 2rem; width: 2rem;">
-                    <input type="text" id="datepicker" class="custom-input common-height" style="width: 6.5rem; text-align: right;">
+                    <img src="/images/calendar.gif" alt="Calendar Icon" class="custom-input-icon"
+                        style="height: 2rem; width: 2rem;">
+                    <input type="text" id="datepicker" class="custom-input common-height"
+                        style="width: 6.5rem; text-align: right;">
                 </div>
             </div>
-        
+
             <div class="dropdown">
                 <label for="filter-class">Filter by Class:</label>
                 <div class="custom-dropdown-container">
-                    <img src="/images/filterrbyclass.gif" alt="Dropdown Icon" class="custom-dropdown-left-icon" style="height: 2rem; width: 2rem;">
+                    <img src="/images/filterrbyclass.gif" alt="Dropdown Icon" class="custom-dropdown-left-icon"
+                        style="height: 2rem; width: 2rem;">
                     <select id="filter-class" class="custom-dropdown common-height">
                         <option value="">Select Class</option>
                         <option value="All Class">All Class</option>
@@ -76,7 +79,7 @@
                     <img src="/images/down-arrow.png" alt="Right Dropdown Icon" class="custom-dropdown-right-icon">
                 </div>
             </div>
-        
+
             <div class="toggle-switch">
                 <label for="defaulter-switch" class="switch-label">
                     Defaulter List:
@@ -87,31 +90,82 @@
                     <span class="slider"></span>
                 </label>
             </div>
-            
-            
-            
+
+
+
         </div>
-        
-        
+
+
 
         <div class="section">
+
             <div class="left-section">
                 <div class="container">
                     <h3>Collection Summary</h3>
                     <p id="collection-date"></p> <!-- Date for Collection Summary -->
-                    <div class="box">CASH</div>
-                    <div class="box">UPI</div>
-                    <div class="box">TOTAL</div>
+                    <div class="box-container">
+                        <div class="box">
+                            <div class="box-heading">CASH</div>
+                            <div class="box-number">
+                                <p>1234</p>
+                                <img src="/images/cash.png" alt="Cash Icon" class="box-icon">
+                            </div>
+                        </div>
+                        <div class="box">
+                            <div class="box-heading">UPI</div>
+                            <div class="box-number">
+                                <p>5678</p>
+                                <img src="/images/upi.png" alt="UPI Icon" class="box-icon">
+                            </div>
+                        </div>
+                        <div class="box">
+                            <div class="box-heading">TOTAL</div>
+                            <div class="box-number">
+                                <p>6900</p>
+                                <img src="/images/total.png" alt="Total Icon" class="box-icon">
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="container">
                     <h3>Invoice Summary</h3>
                     <p id="invoice-date"></p> <!-- Date for Invoice Summary -->
-                    <div class="box">Total Bills</div>
-                    <div class="box">Net Sell</div>
-                    <div class="box">Received</div>
-                    <div class="box">Outstanding</div>
+                    <div class="box-container">
+                        <div class="box">
+                            <div class="box-heading">Total Bills</div>
+                            <div class="box-number">
+                                <p>20</p>
+                                <img src="/images/totalbill.png" alt="Bills Icon" class="box-icon">
+                            </div>
+                        </div>
+                        <div class="box">
+                            <div class="box-heading">Net Sell</div>
+                            <div class="box-number">
+                                <p>15000</p>
+                                <img src="/images/netsell.png" alt="Sell Icon" class="box-icon">
+                            </div>
+                        </div>
+                        <div class="box">
+                            <div class="box-heading">Received</div>
+                            <div class="box-number">
+                                <p>10000</p>
+                                <img src="/images/recived.png" alt="Received Icon" class="box-icon">
+                            </div>
+                        </div>
+                        <div class="box">
+                            <div class="box-heading">Outstanding</div>
+                            <div class="box-number">
+                                <p>5000</p>
+                                <img src="/images/cash.png" alt="Outstanding Icon" class="box-icon">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+            
+            
+
+
             <div class="right-section">
                 <h3><span id="table-heading"></span></h3>
                 <table id="invoice-table">
