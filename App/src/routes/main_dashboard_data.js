@@ -1,7 +1,26 @@
 const express = require('express');
 const router = express.Router();
+const mysql = require('mysql');
+
+
+// Define dbCredentials and connection outside the endpoint
+let dbCredentials;
+let connection;
+
+// Middleware to set dbCredentials and connection
+router.use((req, res, next) => {
+    dbCredentials = req.session.dbCredentials;
+    connection = mysql.createPool({
+        host: dbCredentials.host,
+        user: dbCredentials.user,
+        password: dbCredentials.password,
+        database: dbCredentials.database
+    });
+    next();
+});
 
 router.get('/main_dashboard_data', (req, res) => {
+
 
     const createTableQuery = `
     CREATE TABLE IF NOT EXISTS pre_adm_registered_students (

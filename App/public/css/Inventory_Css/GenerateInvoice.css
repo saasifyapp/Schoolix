@@ -403,6 +403,7 @@ hr {
   .control-button img {
     height: 80%; /* Set image height to fit button */
     margin-right: 5px;
+    mix-blend-mode: multiply;
   }
   
   .control-button:hover {

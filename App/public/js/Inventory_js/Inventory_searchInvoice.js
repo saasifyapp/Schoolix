@@ -18,7 +18,14 @@ async function refreshInvoiceData() {
     try {
         const response = await fetch('/inventory/invoices');
         const data = await response.json();
+        if (data.length === 0) {
+            hideSearchInventoryLoadingAnimation();
+            const noResultsRow = document.createElement('tr');
+            noResultsRow.innerHTML = '<td colspan="10">No results found</td>';
+            invoiceTable.appendChild(noResultsRow);
+        } else {
         displayInvoices(data);
+        }
     } catch (error) {
         console.error('Error:', error);
         // showToast('Error fetching invoices. Please try again.', true);
@@ -157,7 +164,7 @@ async function searchInvoiceDetails() {
 
         if (data.length === 0) {
             const noResultsRow = document.createElement('tr');
-            noResultsRow.innerHTML = '<td colspan="6">No results found</td>';
+            noResultsRow.innerHTML = '<td colspan="10">No results found</td>';
             invoiceTable.appendChild(noResultsRow);
         } else {
             data.forEach(invoice => {
@@ -307,7 +314,7 @@ function filterByClass() {
 
             if (data.length === 0) {
                 // If no results found, display a message
-                invoiceDetailsContainer.innerHTML = '<tr><td colspan="6">No results found</td></tr>';
+                invoiceDetailsContainer.innerHTML = '<tr><td colspan="10">No results found</td></tr>';
             } else {
                 // Append student data to the table
                 data.forEach(invoice => {
