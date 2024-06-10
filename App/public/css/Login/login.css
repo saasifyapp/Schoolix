@@ -119,6 +119,31 @@ body {
     transform: translateX(25px);
 }
 
+.toggle-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.toggle-button {
+    background-color: #5896fb;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 0 10px;
+    border-radius: 20px;
+}
+
+.toggle-button.active {
+    background-color: #ea7a00;
+}
+
+.toggle-button:hover {
+    background-color: #ea7a00;
+}
+
 
 
 
@@ -348,4 +373,26 @@ footer p {
     to {
         width: 100%; /* End with full width */
     }
+}
+
+.toggle-button {
+    background-color: #5896fb;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Added transform for subtle animation */
+    margin: 0 10px;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow for a raised effect */
+}
+
+.toggle-button.active {
+    background-color: #ea7a00;
+    transform: scale(1.05); /* Scale up the button when active */
+}
+
+.toggle-button:hover {
+    background-color: #ea7a00;
+    transform: scale(1.05); /* Scale up the button on hover */
 }

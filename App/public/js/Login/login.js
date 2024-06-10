@@ -1,133 +1,101 @@
-function showLoadingBar() {
+document.addEventListener('DOMContentLoaded', () => {
+    // Show/Hide loading bar functions
     const loadingBar = document.querySelector('.loading-bar');
-    loadingBar.style.display = 'block';
-}
 
-function hideLoadingBar() {
-    const loadingBar = document.querySelector('.loading-bar');
-    loadingBar.style.display = 'none';
-}
+    function showLoadingBar() {
+        loadingBar.style.display = 'block';
+    }
 
-// Toggle login type
-const toggleSwitch = document.getElementById('loginToggle');
-const toggleLabel = document.querySelector('.toggle-label');
-let loginType = 'school';
+    function hideLoadingBar() {
+        loadingBar.style.display = 'none';
+    }
 
-toggleSwitch.addEventListener('change', () => {
-    if (toggleSwitch.checked) {
-        loginType = 'admin';
-        toggleLabel.textContent = 'Admin Login';
-    } else {
+    // Toggle login type
+    const schoolButton = document.getElementById('schoolButton');
+    const adminButton = document.getElementById('adminButton');
+    let loginType = 'school';
+
+    schoolButton.addEventListener('click', () => {
         loginType = 'school';
-        toggleLabel.textContent = 'School Login';
-    }
-});
-
-// Form Flip Image Animation
-const usernameInput = document.querySelector('input[name="username"]');
-const passwordInput = document.querySelector('input[name="password"]');
-const loginIcon = document.querySelector('.login-form img');
-
-function animateUsernameImage(imgSrc) {
-    loginIcon.src = imgSrc;
-
-    const rotationAnimation = loginIcon.animate([
-        { transform: 'rotateY(-90deg)', opacity: 0 },
-        { transform: 'rotateY(0)', opacity: 1 }
-    ], {
-        duration: 1000,
-        easing: 'ease',
-        fill: 'forwards'
+        schoolButton.classList.add('active');
+        adminButton.classList.remove('active');
+        flipLoginForm(); // Adjust form for school login
     });
 
-    loginIcon.style.opacity = '0';
-}
-
-function animatePasswordImage(imgSrc) {
-    loginIcon.src = imgSrc;
-
-    const rotationAnimation = loginIcon.animate([
-        { transform: 'rotateY(-90deg)', opacity: 0 },
-        { transform: 'rotateY(0)', opacity: 1 }
-    ], {
-        duration: 500,
-        easing: 'ease',
-        fill: 'forwards'
+    adminButton.addEventListener('click', () => {
+        loginType = 'admin';
+        adminButton.classList.add('active');
+        schoolButton.classList.remove('active');
+        flipLoginForm(); // Adjust form for admin login
     });
 
-    loginIcon.style.opacity = '0';
-}
-
-usernameInput.addEventListener('focus', function () {
-    animateUsernameImage('../images/login.png');
-});
-
-usernameInput.addEventListener('blur', function () {
-    animateUsernameImage('../images/locked.png');
-});
-
-passwordInput.addEventListener('focus', function () {
-    animatePasswordImage('../images/key.png');
-});
-
-passwordInput.addEventListener('blur', function () {
-    animatePasswordImage('../images/locked.png');
-});
-
-// Handle form submission
-document.getElementById('loginForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    showLoadingBar();
-
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-
-    fetch('/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password, loginType })
-    })
-    .then(response => {
-        if (response.ok) {
-            hideLoadingBar();
-            window.location.href = '/dashboard';
-        } else if (response.status === 401) {
-            hideLoadingBar();
-            response.text().then(message => showToast(message, true));
-        } else if (response.status === 402) {
-            hideLoadingBar();
-            window.location.href = '/dashboard';
-        } else if (response.status === 500) {
-            hideLoadingBar();
-            showToast('Internal Server Error. Please try again later.', true);
-        } else {
-            hideLoadingBar();
-            showToast('An error occurred. Please try again.', true);
-        }
-    })
-    .catch(error => {
-        hideLoadingBar();
-        showToast('Network error. Please check your connection and try again.', true);
-        console.error('Error logging in:', error);
-    });
-});
-
-// Function to display toast message
-function showToast(message, isError) {
-    const toast = document.getElementById('toast');
-    toast.textContent = message;
-
-    if (isError) {
-        toast.classList.add('error');
-    } else {
-        toast.classList.remove('error');
+    // Function to flip login form
+    function flipLoginForm() {
+        const loginForm = document.querySelector('.login-form');
+        loginForm.classList.add('flip-animation');
+        loginForm.addEventListener('animationend', () => {
+            loginForm.classList.remove('flip-animation');
+            const loginIcon = document.querySelector('.login-form img');
+            loginIcon.src = loginType === 'admin' ? '../images/admin.png' : '../images/locked.png';
+        }, { once: true });
     }
 
-    toast.style.display = 'block';
+    // Form Flip Image Animation
+    const usernameInput = document.querySelector('input[name="username"]');
+    const passwordInput = document.querySelector('input[name="password"]');
+    const loginIcon = document.querySelector('.login-form img');
 
-    setTimeout(function () {
-        toast.style.display = 'none';
-    }, 3000);
-}
+    function animateImage(imgSrc, duration = 1000) {
+        loginIcon.src = imgSrc;
+        loginIcon.style.opacity = '0';
+        loginIcon.animate([
+            { transform: 'rotateY(-90deg)', opacity: 0 },
+            { transform: 'rotateY(0)', opacity: 1 }
+        ], {
+            duration: duration,
+            easing: 'ease',
+            fill: 'forwards'
+        });
+    }
+
+    usernameInput.addEventListener('focus', () => animateImage('../images/login.png', 1000));
+    usernameInput.addEventListener('blur', () => animateImage('../images/locked.png', 500));
+    passwordInput.addEventListener('focus', () => animateImage('../images/key.png', 500));
+    passwordInput.addEventListener('blur', () => animateImage('../images/locked.png', 500));
+
+    // Handle form submission
+    document.getElementById('loginForm').addEventListener('submit', (event) => {
+        event.preventDefault();
+        showLoadingBar();
+
+        const username = usernameInput.value;
+        const password = passwordInput.value;
+
+        fetch('/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password, loginType })
+        })
+        .then(response => response.ok ? response.json() : Promise.reject(response))
+        .then(data => {
+            hideLoadingBar();
+            window.location.href = '/dashboard';
+        })
+        .catch(error => {
+            hideLoadingBar();
+            showToast(error.message || 'Network error. Please check your connection and try again.', true);
+        });
+    });
+
+    // Function to display toast message
+    function showToast(message, isError) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = isError ? 'toast error' : 'toast';
+        toast.style.display = 'block';
+
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 3000);
+    }
+});
