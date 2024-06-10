@@ -153,7 +153,8 @@
 
                     <div class="search_item">
                         <div style="position: relative; display: inline-block;">
-                            <input type="text" id="searchField" placeholder="Enter Teacher Name..." oninput="searchDetails()">
+                            <input type="text" id="searchField" placeholder="Enter Teacher Name..."
+                                oninput="searchDetails()">
                             <!-- <button id="searchButton" class="search-button" onclick="searchDetails()">
                                 <img src="../images/search.gif" alt="Search Icon" style="height: 100%;">
                             </button> -->
@@ -215,13 +216,25 @@
                         });
                     }
 
-                    function refreshData() {
+                    async function refreshData() {
                         showLoadingAnimation();
                         document.getElementById('searchField').value = '';
-                        fetch('/teachers')
-                            .then(response => response.json())
-                            .then(data => displayTeachers(data))
-                            .catch(error => console.error('Error:', error));
+                        try {
+                            const response = await fetch('/teachers');
+                            const data = await response.json();
+                            if (data.length === 0) {
+                                hideLoadingAnimation();
+                                const noResultsRow = document.createElement('tr');
+                                noResultsRow.innerHTML = '<td colspan="10">No results found</td>';
+                                // Assuming you have a table element to append this row to, e.g., teacherTable
+                                teacherTable.appendChild(noResultsRow);
+                            } else {
+                                displayTeachers(data);
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                            // showToast('Error fetching teachers. Please try again.', true);
+                        }
                     }
 
                     function displayTeachers(data) {
