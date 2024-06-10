@@ -77,6 +77,7 @@ body {
     height: 1.5rem; /* Adjust the size as needed */
     pointer-events: none; /* Ensure the icon does not interfere with input */
     border-radius: 15px;
+    mix-blend-mode: multiply; /* Add this property */
 }
 
 .custom-input-icon {

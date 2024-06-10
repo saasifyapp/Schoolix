@@ -121,6 +121,7 @@ h1 {
 .vendorIcon {
     width: 2rem;
     height: 2rem;
+    mix-blend-mode: multiply; /* Add this property */
 }
 
 @keyframes fadeUp {
