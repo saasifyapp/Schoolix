@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
+const createTables = require('./createTables'); // Import the createTables function
 const app = express();
  
 app.use(express.json());
@@ -93,7 +94,7 @@ app.post('/login', (req, res) => {
             password: user.databasePassword,
             database: user.databaseName
         };
-
+        createTables(connection); 
         // Set cookies
         res.cookie('username', username, { httpOnly: false, maxAge: 7200000  });
         res.cookie('schoolName', user.schoolName, { httpOnly: false, maxAge: 1000 * 60 * 60 * 2 });
