@@ -110,7 +110,43 @@ app.post('/login', (req, res) => {
     });
 });
 
+//Login endpoint for admin
+app.post('/admin-login', (req, res) => {
+    const { username, password } = req.body;
+    console.log(`Login attempt for admin user: ${username}`);
 
+    const query = 'SELECT * FROM admin_details WHERE username = ? AND password = ?';
+
+    connection_auth.query(query, [username, password], (error, results) => {
+        if (error) {
+            console.error('Error querying database:', error);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        if (results.length === 0) {
+            console.log('Invalid username or password.');
+            return res.status(401).send('Invalid username or password.');
+        }
+
+        const admin = results[0];
+        req.session.user = {
+            username: admin.username
+        };
+
+        req.session.dbCredentials = {
+            host: admin.serverName,
+            user: admin.databaseUser,
+            password: admin.databasePassword,
+            database: admin.databaseName
+        };
+
+        const token = jwt.sign({ userId: admin.userId }, JWT_SECRET, { expiresIn: '2h' });
+        res.cookie('jwt', token, { httpOnly: true, maxAge: 7200000 });
+
+        console.log('Admin user logged in and session created:', req.session.user);
+        res.status(200).json({ message: 'Admin login successful', isAdmin: true });
+    });
+});
 // Function to Authenticate //
 
 function authenticateToken(req, res, next) {
@@ -174,6 +210,12 @@ app.get('/dashboard', authenticateToken, (req, res) => {
     // Serve the main_dashboard.html file
     res.sendFile(path.join(__dirname, 'public', 'Main_Dashboard', 'main_dashboard.html'));
 });
+
+app.get('/adminpanel', authenticateToken, (req, res) => {
+    // Serve the main_dashboard.html file
+    res.sendFile(path.join(__dirname, 'public', 'Login', 'admin.html'));
+});
+
 
 
 // Route to serve dashboard after login
@@ -241,6 +283,24 @@ app.get('/inventory/invoiceReports', authenticateToken, (req, res) => {
 const main_dashboard_dataRouter = require('./src/routes/main_dashboard_data');
 app.use('/', main_dashboard_dataRouter);
 
+////////////////////////////////////ADMIN CONSOLE //////////////////////////////////
+//////////////////////Submit Credentials of Database ///////////////////////////////
+app.post('/submit-config', (req, res) => {
+    const { loginName, loginPassword, serverName, databaseUser, databasePassword, databaseName, schoolName } = req.body;
+
+    const query = `
+        INSERT INTO user_details (loginName, loginPassword, serverName, databaseUser, databasePassword, databaseName, schoolName)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
+    
+    connection_auth.query(query, [loginName, loginPassword, serverName, databaseUser, databasePassword, databaseName, schoolName], (err, result) => {
+        if (err) {
+            console.error('Error inserting data into user_details table:', err.stack);
+            return res.status(500).json({ message: 'Error inserting data into user_details table' });
+        }
+        res.status(200).json({ message: 'Configuration submitted successfully', data: result });
+    });
+});
 
 //////////////////////// STUDENT CONSOLE////////////////////////////////
 // Import the router for handling student details submission

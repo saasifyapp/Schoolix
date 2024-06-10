@@ -204,6 +204,7 @@ document.getElementById('logoutbtn').addEventListener('click', function (event) 
                     window.location.href = '/';
                 } else {
                     console.error('Logout failed');
+                    // showToast('Logout failed');
                 }
             })
             .catch(error => console.error('Error during logout:', error));
