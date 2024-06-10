@@ -256,7 +256,7 @@
             });
         });
 
-        function reg_teacher() {
+        async function reg_teacher() {
             showLoadingAnimation();
 
             const teacher_name = document.getElementById("name").value;
@@ -291,7 +291,7 @@
                 };
 
                 // Send form data to server
-                fetch('/submit_teacher', {
+                await fetch('/submit_teacher', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

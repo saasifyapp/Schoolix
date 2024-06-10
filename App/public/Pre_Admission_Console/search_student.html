@@ -360,11 +360,11 @@
         //     });
         // }
 
-        function moveToAdmitted(studentName, mobileNo, address, dob, standard) {
+        async function moveToAdmitted(studentName, mobileNo, address, dob, standard) {
             const confirmation = confirm(`Are you sure you want to admit the student "${studentName}"?`);
             if (confirmation) {
                 showLoadingAnimation();
-                fetch(`/move-to-admitted?name=${encodeURIComponent(studentName)}&mobile=${encodeURIComponent(mobileNo)}&address=${encodeURIComponent(address)}&dob=${encodeURIComponent(dob)}&standard=${encodeURIComponent(standard)}`, {
+                await fetch(`/move-to-admitted?name=${encodeURIComponent(studentName)}&mobile=${encodeURIComponent(mobileNo)}&address=${encodeURIComponent(address)}&dob=${encodeURIComponent(dob)}&standard=${encodeURIComponent(standard)}`, {
                     method: 'POST'
                 })
                     .then(response => {
@@ -389,11 +389,11 @@
         }
 
 
-        function removeStudent(studentName, mobileNo) {
+        async function removeStudent(studentName, mobileNo) {
             const confirmation = confirm(`Are you sure you want to remove the student "${studentName}"?`);
             if (confirmation) {
                 showLoadingAnimation();
-                fetch(`/remove-student?name=${encodeURIComponent(studentName)}&mobile=${encodeURIComponent(mobileNo)}`, {
+                await fetch(`/remove-student?name=${encodeURIComponent(studentName)}&mobile=${encodeURIComponent(mobileNo)}`, {
                     method: 'DELETE'
                 })
                     .then(response => {
@@ -457,7 +457,7 @@
         //         .catch(error => console.error('Error:', error));
         // }
 
-        function filterByClass() {
+        async function filterByClass() {
             document.getElementById('searchField').value = '';
             const selectedClass = document.getElementById('classFilter').value;
             const studentDetailsContainer = document.getElementById('studentData');
@@ -470,7 +470,7 @@
             }
 
             // Fetch data from the server filtered by class
-            fetch(`/students/class/${selectedClass}`)
+            await fetch(`/students/class/${selectedClass}`)
                 .then(response => response.json())
                 .then(data => {
                     studentDetailsContainer.innerHTML = ''; // Clear previous data
@@ -589,7 +589,7 @@
         //         .catch(error => console.error('Error:', error));
         // }
 
-        function searchDetails() {
+        async function searchDetails() {
             document.getElementById('classFilter').value = '';
             // showLoadingAnimation();
 
@@ -611,7 +611,7 @@
             }
 
             // Fetch data from the server based on the search term
-            fetch(`/students/search?search=${encodeURIComponent(searchTerm)}`)
+            await fetch(`/students/search?search=${encodeURIComponent(searchTerm)}`)
                 .then(response => response.json())
                 .then(data => {
                     const studentTable = document.getElementById('studentData');
