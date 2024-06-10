@@ -60,6 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         <td><input type="number" class="form-control-table" value="1" min="1"  style="width: 3rem"></td>
                         <td>${book.selling_price}</td>
                         <td class="total-price">${book.selling_price}</td>
+                        <td class="class-of-title" style="display: none;">${book.class_of_title}</td>
                     `;
                     booksTableBody.appendChild(row);
                 });
@@ -371,10 +372,10 @@ async function lowStockCheck() {
         // Show a single alert with all low-stock messages and insufficient items
         if (lowStockMessagesBooks.length > 0 || lowStockMessagesUniforms.length > 0 || insufficientItemsBooks.length > 0 || insufficientItemsUniforms.length > 0) {
             showLowStockAlert(
-                lowStockMessagesBooks.join('<br>'), 
-                lowStockMessagesUniforms.join('<br>'), 
-                insufficientItemsBooks.join('<br>'), 
-                insufficientItemsUniforms.join('<br>'), 
+                lowStockMessagesBooks.join('<br>'),
+                lowStockMessagesUniforms.join('<br>'),
+                insufficientItemsBooks.join('<br>'),
+                insufficientItemsUniforms.join('<br>'),
                 zeroQuantity
             );
         } else {
@@ -659,10 +660,9 @@ document.getElementById("printButton").addEventListener("click", async function 
             const title = row.cells[0].innerText;
             const quantity = row.cells[1].querySelector('input').value; // Get input value instead of cell text
             const book_type = 'Book'; // Set type as 'Book' for book items
-            const notebook_type = title.toLowerCase().includes('notebook') ? 'Notebook' : 'Book'; // Check if the title contains the keyword Notebook
-            const itemClass = notebook_type === 'Notebook' ? 'AllClass' : buyerClass;
-
-            return (parseInt(quantity) > 0) ? { title, class: itemClass, quantity, book_type, notebook_type } : null;
+            const class_of_title = row.querySelector('.class-of-title').innerText; // Get hidden class
+        
+            return (parseInt(quantity) > 0) ? { title, class: class_of_title, quantity, book_type } : null;
         }).filter(item => item);
 
         // Get uniform details, filtering out items with quantity 0 or null
@@ -749,7 +749,7 @@ document.getElementById("printButton").addEventListener("click", async function 
 });
 
 
- 
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*****************************         RESET BUTTON FUNCTIONALITY       ************************/

@@ -42,6 +42,43 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("input", calculateBookPurchasePrice);
 });
 
+/////////////// Class Dropdown ////////////////
+
+function toggleDropdown() {
+  const dropdown = document.querySelector('.dropdown-options');
+  dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+}
+
+document.querySelectorAll('.option').forEach(option => {
+  option.addEventListener('click', function(event) {
+    if (!this.classList.contains('has-submenu')) {
+      const selectedText = this.textContent.trim();
+      document.querySelector('.dropdown-selected').textContent = selectedText;
+      document.getElementById('bookClass').value = this.dataset.value;
+      document.querySelector('.dropdown-options').style.display = 'none';
+    }
+  });
+});
+
+document.querySelectorAll('.submenu-option').forEach(subOption => {
+  subOption.addEventListener('click', function(event) {
+    const selectedText = this.textContent.trim();
+    document.querySelector('.dropdown-selected').textContent = selectedText;
+    document.getElementById('bookClass').value = this.dataset.value;
+    document.querySelector('.dropdown-options').style.display = 'none';
+    event.stopPropagation();
+  });
+});
+
+document.addEventListener('click', function(event) {
+  const dropdown = document.querySelector('.dropdown-options');
+  if (!dropdown.contains(event.target) && !event.target.matches('.dropdown-selected')) {
+    dropdown.style.display = 'none';
+  }
+});
+
+//////////////////////////////////
+
 document.addEventListener("DOMContentLoaded", function () {
   // Get the form element
   const booksform = document.getElementById("addBooksForm");

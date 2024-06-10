@@ -44,19 +44,29 @@ router.get("/inventory/generate_invoice/getLast_invoice_number", (req, res) => {
 router.post("/inventory/generate_invoice/get_books", (req, res) => {
     const selectedClass = req.body.class; // Retrieve the selected class from the request body
 
-    //console.log("Received class for books:", selectedClass); // Debugging line to check received class
+    // Define the class ranges
+    const classRanges = {
+        "Nursery to KG2": ["Nursery", "KG1", "KG2"],
+        "Nursery to 4th": ["Nursery", "KG1", "KG2", "1st", "2nd", "3rd", "4th"],
+        "1st to 4th": ["1st", "2nd", "3rd", "4th"],
+        "5th to 10th": ["5th", "6th", "7th", "8th", "9th", "10th"],
+        "1st to 10th": ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"],
+        "All Class": ["Nursery", "KG1", "KG2", "1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"]
+    };
 
-    // SQL query to get books based on the selected class
-    let query_getBooks = `SELECT title, selling_price FROM inventory_book_details WHERE class_of_title = ? OR class_of_title = 'AllClass'`;
+    // Get the ranges that include the selected class
+    const applicableRanges = Object.keys(classRanges).filter(range => classRanges[range].includes(selectedClass));
+
+    // SQL query to get books based on the selected class and applicable ranges
+    let query_getBooks = `SELECT title, selling_price, class_of_title  FROM inventory_book_details WHERE class_of_title IN (?)`;
 
     // Execute the SQL query
-    connection.query(query_getBooks, [selectedClass], (err, rows) => {
+    connection.query(query_getBooks, [[selectedClass, ...applicableRanges]], (err, rows) => {
         if (err) {
             console.error("Error fetching books data: " + err.stack);
             return res.status(500).json({ error: "Error fetching books data" });
         }
 
-        //console.log("Books query result:", rows); // Debugging line to check query result
         res.json(rows);
     });
 });
@@ -238,7 +248,7 @@ router.post("/inventory/generate_invoice/invoice_items", (req, res) => {
         });
     });
 });
-
+ 
 
 // Endpoint to reduce the remaining quantity of purchased items for both books and uniforms
 router.post("/inventory/reduce_quantity", (req, res) => {
@@ -257,10 +267,11 @@ router.post("/inventory/reduce_quantity", (req, res) => {
             return res.status(404).json({ message: "No purchased items found for this invoice" });
         }
 
-        // Separate purchased items into books, uniforms, and notebooks
-        let books = results.filter(item => item.type === 'Book' && item.item_name.toLowerCase() !== 'notebook');
+        // Separate purchased items into books and uniforms
+        let books = results.filter(item => item.type === 'Book');
         let uniforms = results.filter(item => item.type === 'Uniform');
-        let notebooks = results.filter(item => item.item_name.toLowerCase() === 'notebook');
+
+        // Removed condition for notebooks
 
         // Update remaining quantities for books
         if (books.length > 0) {
@@ -311,32 +322,6 @@ router.post("/inventory/reduce_quantity", (req, res) => {
                 })
                 .catch(err => {
                     console.error("Error updating remaining quantities for uniforms: " + err.stack);
-                });
-        }
-
-        // Update remaining quantities for notebooks
-        if (notebooks.length > 0) {
-            let notebookUpdatePromises = notebooks.map(notebook => {
-                return new Promise((resolve, reject) => {
-                    let { item_name, quantity } = notebook;
-                    let query_updateNotebookQuantity = `UPDATE inventory_book_details SET remaining_quantity = remaining_quantity - ? WHERE title = 'Notebook'`;
-
-                    connection.query(query_updateNotebookQuantity, [quantity], (err, result) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(result);
-                        }
-                    });
-                });
-            });
-
-            Promise.all(notebookUpdatePromises)
-                .then(() => {
-                    console.log("Remaining quantities for notebooks updated successfully");
-                })
-                .catch(err => {
-                    console.error("Error updating remaining quantities for notebooks: " + err.stack);
                 });
         }
 

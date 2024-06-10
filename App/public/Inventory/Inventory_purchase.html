@@ -224,27 +224,41 @@
               style="width: 100%;">
             <span class="form-control-placeholder">Book Title</span>
           </div>
-          <div class="form-group" style="flex: 0.7;">
-            <select id="bookClass" name="bookClass" class="custom-dropdown" required
-              style="width: 100%; border-style: none; margin-bottom: 0.8rem;">
-              <option value="" disabled selected>Class</option>
-              <option value="AllClass">All Class</option>
-              <option value="Nursery" class="Nursery">Nursery</option>
-              <option value="KG1" class="KG1">KG1</option>
-              <option value="KG2" class="KG2">KG2</option>
-              <option value="1st" class="1st">1st</option>
-              <option value="2nd" class="2nd">2nd</option>
-              <option value="3rd" class="3rd">3rd</option>
-              <option value="4th" class="4th">4th</option>
-              <option value="5th" class="5th">5th</option>
-              <option value="6th" class="6th">6th</option>
-              <option value="7th" class="7th">7th</option>
-              <option value="8th" class="8th">8th</option>
-              <option value="9th" class="9th">9th</option>
-              <option value="10th" class="10th">10th</option>
 
-              <!-- Add more options for other classes -->
-            </select>
+          <!-- CSS for below dropdown added in Inventory.css-->
+          <div class="form-group" style="flex: 0.7; position: relative;">
+            <div id="customDropdown" class="custom-dropdown">
+              <div class="dropdown-selected" onclick="toggleDropdown()">Class</div>
+              <div class="dropdown-options">
+                <div class="option" data-value="Range">
+                  Range
+                  <div class="submenu">
+                    <div class="submenu-option" data-value="Nursery to KG2">Nursery to KG2</div>
+                    <div class="submenu-option" data-value="Nursery to 4th">Nursery to 4th</div>
+                    <div class="submenu-option" data-value="1st to 4th">1st to 4th</div>
+                    <div class="submenu-option" data-value="5th to 10th">5th to 10th</div>
+                    <div class="submenu-option" data-value="1st to 10th">1st to 10th</div>
+                    <div class="submenu-option" data-value="All Class">All Class</div>
+                    <!-- Add more range options here -->
+                  </div>
+                </div>
+                <div class="option" data-value="Nursery">Nursery</div>
+                <div class="option" data-value="KG1">KG1</div>
+                <div class="option" data-value="KG2">KG2</div>
+                <div class="option" data-value="1st">1st</div>
+                <div class="option" data-value="2nd">2nd</div>
+                <div class="option" data-value="3rd">3rd</div>
+                <div class="option" data-value="4th">4th</div>
+                <div class="option" data-value="5th">5th</div>
+                <div class="option" data-value="6th">6th</div>
+                <div class="option" data-value="7th">7th</div>
+                <div class="option" data-value="8th">8th</div>
+                <div class="option" data-value="9th">9th</div>
+                <div class="option" data-value="10th">10th</div>
+                <!-- Add more options for other classes -->
+              </div>
+            </div>
+            <input type="hidden" id="bookClass" name="bookClass" required>
           </div>
 
           <div class="form-group" style="flex: 1;">

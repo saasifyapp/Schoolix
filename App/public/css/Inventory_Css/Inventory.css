@@ -851,4 +851,65 @@ table {
     }
 }
 
+/* Class Dropdown */
 
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+    border: 1px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 20px;
+  }
+  
+  .dropdown-selected {
+    padding: 0.5rem;
+    width: 100%;
+  }
+  
+  .dropdown-options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    border: 1px solid #ccc;
+    background-color: white;
+    z-index: 1;
+  }
+  
+  .dropdown-options .option {
+    padding: 0.5rem;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  
+  .dropdown-options .option:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .option .submenu {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    min-width: 150px;
+    border: 1px solid #ccc;
+    background-color: white;
+    z-index: 1;
+  }
+  
+  .option:hover .submenu {
+    display: block;
+  }
+  
+  .submenu .submenu-option {
+    padding: 0.5rem;
+    cursor: pointer;
+  }
+  
+  .submenu .submenu-option:hover {
+    background-color: #f0f0f0;
+  }
+  
