@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Configuration Form</title>
+    <link rel="stylesheet" href="../css/Login/admin.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Database Configuration</h2>
+        <form id="configForm">
+            <div class="form-group">
+                <label for="loginName">Login Name</label>
+                <input type="text" id="loginName" name="loginName" required>
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Login Password</label>
+                <input type="password" id="loginPassword" name="loginPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="serverName">Server Name</label>
+                <input type="text" id="serverName" name="serverName" value="srv1473.hstgr.io" readonly>
+            </div>
+            <div class="form-group">
+                <label for="databaseUser">Database User</label>
+                <input type="text" id="databaseUser" name="databaseUser" required>
+            </div>
+            <div class="form-group">
+                <label for="databasePassword">Database Password</label>
+                <input type="password" id="databasePassword" name="databasePassword" value="SaasifyApp@1980" readonly>
+            </div>
+            <div class="form-group">
+                <label for="databaseName">Database Name</label>
+                <input type="text" id="databaseName" name="databaseName" required>
+            </div>
+            <div class="form-group">
+                <label for="schoolName">School Name</label>
+                <input type="text" id="schoolName" name="schoolName" required>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        <button id="logoutbtn">Sign Out</button>
+    </div>
+    <script src="../js/Login/admin.js"></script>
+</body>
+</html>

@@ -77,59 +77,87 @@ passwordInput.addEventListener('blur', function () {
 });
 
 // Handle form submission
-document.getElementById('loginForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    showLoadingBar();
+document.addEventListener('DOMContentLoaded', () => {
+    const loginForm = document.getElementById('loginForm');
+    const schoolButton = document.getElementById('schoolButton');
+    const adminButton = document.getElementById('adminButton');
+    let isAdmin = false;
 
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+    schoolButton.addEventListener('click', () => {
+        isAdmin = false;
+        schoolButton.classList.add('active');
+        adminButton.classList.remove('active');
+    });
 
-    fetch('/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password, loginType })
-    })
-    .then(response => {
-        if (response.ok) {
+    adminButton.addEventListener('click', () => {
+        isAdmin = true;
+        adminButton.classList.add('active');
+        schoolButton.classList.remove('active');
+    });
+
+    loginForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        showLoadingBar();
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        const loginEndpoint = isAdmin ? '/admin-login' : '/login';
+
+        fetch(loginEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        })
+        .then(response => {
+            if (response.ok) {
+                hideLoadingBar();
+                window.location.href = isAdmin ? '/adminpanel' : '/dashboard';
+            } else if (response.status === 401) {
+                hideLoadingBar();
+                response.text().then(message => showToast(message, true));
+            } else if (response.status === 500) {
+                hideLoadingBar();
+                showToast('Internal Server Error. Please try again later.', true);
+            } else {
+                hideLoadingBar();
+                showToast('An error occurred. Please try again.', true);
+            }
+        })
+        .catch(error => {
             hideLoadingBar();
-            window.location.href = '/dashboard';
-        } else if (response.status === 401) {
-            hideLoadingBar();
-            response.text().then(message => showToast(message, true));
-        } else if (response.status === 402) {
-            hideLoadingBar();
-            window.location.href = '/dashboard';
-        } else if (response.status === 500) {
-            hideLoadingBar();
-            showToast('Internal Server Error. Please try again later.', true);
-        } else {
-            hideLoadingBar();
-            showToast('An error occurred. Please try again.', true);
-        }
-    })
-    .catch(error => {
-        hideLoadingBar();
-        showToast('Network error. Please check your connection and try again.', true);
-        console.error('Error logging in:', error);
+            showToast('Network error. Please check your connection and try again.', true);
+            console.error('Error logging in:', error);
+        });
     });
 });
 
+
 // Function to display toast message
 function showToast(message, isError) {
-    const toast = document.getElementById('toast');
+    const toastContainer = document.getElementById("toast-container");
+
+    // Create a new toast element
+    const toast = document.createElement("div");
+    toast.classList.add("toast");
+    if (isError) {
+        toast.classList.add("error");
+    }
     toast.textContent = message;
 
-    if (isError) {
-        toast.classList.add('error');
-    } else {
-        toast.classList.remove('error');
-    }
+    // Append the toast to the container
+    toastContainer.appendChild(toast);
 
+    // Show the toast
     toast.style.display = 'block';
 
+    // Remove the toast after 4 seconds
     setTimeout(function () {
-        toast.style.display = 'none';
-    }, 3000);
+        toast.style.animation = 'slideOutRight 0.5s forwards';
+        toast.addEventListener('animationend', function () {
+            toast.remove();
+        });
+    }, 4000);
 }
