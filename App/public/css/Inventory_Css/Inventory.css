@@ -518,8 +518,8 @@ table {
     position: fixed;
     top: 50%;
     left: 50%;
-    height: 22rem;
-    width: 18rem;
+    height: auto;
+    width: auto;
     transform: translate(-50%, -50%);
     background-color: white;
     padding: 20px;
@@ -603,6 +603,7 @@ table {
 
 .custom-dropdown {
     height: 2.8125rem; /* Adjust the height as needed */
+    width: auto;
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -854,7 +855,7 @@ table {
 
 .custom-dropdown {
     position: relative;
-    width: 100%;   
+    width: auto;   
     background-color: white;
     cursor: pointer;
     user-select: none;
