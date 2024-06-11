@@ -300,11 +300,15 @@ document.addEventListener('visibilitychange', () => {
 // Function to handle password for PURCHASE console
 
 function handlePurchaseClick(event) {
-    event.preventDefault(); // Prevent default link behavior
+    event.preventDefault(); 
 
     // Show custom prompt
     const overlay = document.getElementById('passwordPromptOverlay');
     overlay.style.display = 'flex';
+
+     // Focus the password input field automatically
+     const passwordInput = document.getElementById('passwordPromptInput');
+     passwordInput.focus();
 
     // Function to handle password verification
     function verifyPassword() {
@@ -316,12 +320,14 @@ function handlePurchaseClick(event) {
             window.location.href = '/inventory/purchase';
         } else {
             // Show an error message or handle incorrect password
-            alert('Incorrect password!');
+            // alert('Incorrect password!');
+            showToast("Invalid password", true);
+            document.getElementById('passwordPromptInput').value = '';
         }
 
         // Hide custom prompt and clear the input
-        overlay.style.display = 'none';
-        document.getElementById('passwordPromptInput').value = '';
+        // overlay.style.display = 'none';
+        
     }
 
     // Handle OK button click
@@ -345,3 +351,30 @@ function handlePurchaseClick(event) {
 // Add event listener to the Purchase link
 const purchaseLink = document.getElementById('purchaseLink');
 purchaseLink.addEventListener('click', handlePurchaseClick);
+
+// Function to display toast message
+function showToast(message, isError) {
+    const toastContainer = document.getElementById("toast-container");
+  
+    // Create a new toast element
+    const toast = document.createElement("div");
+    toast.classList.add("toast");
+    if (isError) {
+        toast.classList.add("error");
+    }
+    toast.textContent = message;
+  
+    // Append the toast to the container
+    toastContainer.appendChild(toast);
+  
+    // Show the toast
+    toast.style.display = 'block';
+  
+    // Remove the toast after 4 seconds
+    setTimeout(function () {
+        toast.style.animation = 'slideOutRight 0.5s forwards';
+        toast.addEventListener('animationend', function () {
+            toast.remove();
+        });
+    }, 4000);
+  }
