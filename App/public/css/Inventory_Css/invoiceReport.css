@@ -242,7 +242,8 @@ body {
     box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3); /* Box shadow for depth */
     padding: 15px; /* Increased padding for better spacing */
     border-radius: 10px; /* Rounded corners */
-    width: 120px; /* Adjust width as needed */
+    min-width: 120px; /* Minimum width */
+    width: auto; /* Auto width to expand as needed */
     text-align: center;
     display: flex;
     flex-direction: column;
