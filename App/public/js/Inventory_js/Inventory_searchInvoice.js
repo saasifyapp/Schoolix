@@ -144,11 +144,11 @@ function displayInvoices(data) {
 async function searchInvoiceDetails() {
     const searchTerm = document.getElementById('searchBar').value.trim();
 
-    // if (searchTerm === '') {
-    //     showToast("Please enter a search term", true)
-    //     refreshInvoiceData();
-    //     return;
-    // }
+    if (searchTerm === '') {
+        // showToast("Please enter a search term", true)
+        refreshInvoiceData();
+        return;
+    }
 
     let searchUrl = `/inventory/searchinvoices?`;
     if (isNaN(searchTerm)) {

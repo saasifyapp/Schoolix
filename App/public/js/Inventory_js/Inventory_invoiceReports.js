@@ -1,3 +1,14 @@
+////Loading Animation
+function showInvoiceLoadingAnimation () {
+    console.log("show")
+    document.getElementById('loadingOverlayReportsinventory').style.display = 'flex';
+}
+
+function hideInvoiceLoadingAnimation() {
+    console.log("hide")
+    document.getElementById('loadingOverlayReportsinventory').style.display = 'none';
+}
+
 $(function () {
     // Initialize datepicker
     $("#datepicker").datepicker({
@@ -25,11 +36,13 @@ $(function () {
     });
 
     function fetchDataByDate(dateText) {
+        showInvoiceLoadingAnimation();
         $.ajax({
             url: '/inventory/invoice/query_by_date',
             type: 'GET',
             data: { date: dateText },
             success: function (data) {
+                hideInvoiceLoadingAnimation();
                 updateUI(data, dateText);
             },
             error: handleError
@@ -37,11 +50,13 @@ $(function () {
     }
 
     function fetchDataByClass(classOfBuyer) {
+        showInvoiceLoadingAnimation();
         $.ajax({
             url: '/inventory/invoice/query_by_class',
             type: 'GET',
             data: { class: classOfBuyer },
             success: function (data) {
+                hideInvoiceLoadingAnimation()
                 updateUI(data, classOfBuyer);
             },
             error: handleError
@@ -49,11 +64,13 @@ $(function () {
     }
 
     function fetchDataByDefaulter(isDefaulter) {
+        showInvoiceLoadingAnimation();
         $.ajax({
             url: '/inventory/invoice/query_by_defaulter',
             type: 'GET',
             data: { defaulter: isDefaulter },
             success: function (data) {
+                hideInvoiceLoadingAnimation()
                 updateUI(data, "Defaulter List");
             },
             error: handleError
@@ -62,7 +79,8 @@ $(function () {
 
     function handleError(xhr, status, error) {
         console.error("Error fetching data:", error);
-        alert("An error occurred while fetching data. Please try again later.");
+        hideInvoiceLoadingAnimation();
+        showToast("An error occurred while fetching data. Please try again later.");
     }
 
     function updateUI(data, filterValue) {
@@ -98,6 +116,7 @@ $(function () {
                            !isDate(filterValue) ? "Bills for Class - " + filterValue :
                            "Bills for " + filterValue;
         $("#table-heading").text(tableHeading);
+       
 
         let tableRows = '';
         data.forEach(entry => {
@@ -137,6 +156,32 @@ $(function () {
                 $(this).text(Math.ceil(now));
             }
         });
+    }
+
+    function showToast(message, isError) {
+        const toastContainer = document.getElementById("toast-container");
+    
+        // Create a new toast element
+        const toast = document.createElement("div");
+        toast.classList.add("toast");
+        if (isError) {
+            toast.classList.add("error");
+        }
+        toast.textContent = message;
+    
+        // Append the toast to the container
+        toastContainer.appendChild(toast);
+    
+        // Show the toast
+        toast.style.display = 'block';
+    
+        // Remove the toast after 4 seconds
+        setTimeout(function () {
+            toast.style.animation = 'slideOutRight 0.5s forwards';
+            toast.addEventListener('animationend', function () {
+                toast.remove();
+            });
+        }, 4000);
     }
 });
  
