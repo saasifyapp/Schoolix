@@ -226,6 +226,13 @@ function displayBooks(data) {
   bookTableBody.innerHTML = "";
 
   try {
+    if (data.length === 0) {
+      hideLoadingAnimation();
+      const noResultsRow = document.createElement('tr');
+      noResultsRow.innerHTML = '<td colspan="9">No results found</td>';
+      // Assuming you have a table element to append this row to, e.g., teacherTable
+      bookTableBody.appendChild(noResultsRow);
+  } else {
     data.forEach((book) => {
       const row = document.createElement("tr");
       row.innerHTML = `
@@ -311,6 +318,7 @@ function displayBooks(data) {
             `;
       bookTableBody.appendChild(row);
     });
+  }
     hideBooksLoadingAnimation();
   } catch (error) {
     console.error("Error displaying books:", error);

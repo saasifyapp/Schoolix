@@ -162,6 +162,13 @@ async function refreshUniformsData() {
 function displayUniforms(data) {
     const uniformTableBody = document.getElementById('uniformTableBody');
     uniformTableBody.innerHTML = ''; // Clear existing rows
+    if (data.length === 0) {
+        hideLoadingAnimation();
+        const noResultsRow = document.createElement('tr');
+        noResultsRow.innerHTML = '<td colspan="9">No results found</td>';
+        // Assuming you have a table element to append this row to, e.g., teacherTable
+        uniformTableBody.appendChild(noResultsRow);
+    } else {
     data.forEach(uniform => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -250,6 +257,7 @@ function displayUniforms(data) {
         `;
         uniformTableBody.appendChild(row);
     });
+}
     hideUniformLoadingAnimation();
 }
  

@@ -93,6 +93,13 @@ function displayVendors(data) {
     vendorTableBody.innerHTML = ''; // Clear previous data
 
     try {
+        if (data.length === 0) {
+            hideLoadingAnimation();
+            const noResultsRow = document.createElement('tr');
+            noResultsRow.innerHTML = '<td colspan="9">No results found</td>';
+            // Assuming you have a table element to append this row to, e.g., teacherTable
+            vendorTableBody.appendChild(noResultsRow);
+        } else {
         data.forEach(vendor => {
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -153,6 +160,7 @@ function displayVendors(data) {
             
             vendorTableBody.appendChild(row);
         });
+    }
         hideVendorLoadingAnimation();
 
     } catch (error) {
