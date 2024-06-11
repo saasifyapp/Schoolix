@@ -119,27 +119,24 @@
 
     <!-- Update paid amount pop-up-->
     <div id="updateModal" class="modal">
-        <div class="modal-content">
-            <h2>Update Invoice</h2>
+        <div class="modal-content" style="position: relative; padding-top: 50px;"> <!-- Adjust padding to make space for the icon -->
+            <img src="/images/updatebill.png" alt="Icon" style="width: 40px; height: 40px; position: absolute; top: 10px; left: 10px;">
+            <h2>Update Invoice</h2> <!-- Adjust margin to make space for the icon -->
             <h3 id="modalHeading"></h3>
             <div class="form-group">
-                <input type="number" class="form-control" id="modalTotalAmount" name="total_amount" placeholder=" "
-                    readonly style="width: 100%;">
+                <input type="number" class="form-control" id="modalTotalAmount" name="total_amount" placeholder=" " readonly style="width: 100%;">
                 <span class="form-control-placeholder">Net Payable</span>
             </div>
             <div class="form-group">
-                <input type="number" class="form-control" id="modalPaidAmount" name="paid_amount" placeholder=" "
-                    readonly style="width: 100%;">
+                <input type="number" class="form-control" id="modalPaidAmount" name="paid_amount" placeholder=" " readonly style="width: 100%;">
                 <span class="form-control-placeholder">Paid Till Now</span>
             </div>
             <div class="form-group">
-                <input type="number" class="form-control" id="modalNewPaidAmount" name="new_paid_amount" placeholder=" "
-                    oninput="calculateBalance()" style="width: 100%;">
+                <input type="number" class="form-control" id="modalNewPaidAmount" name="new_paid_amount" placeholder=" " oninput="calculateBalance()" style="width: 100%;">
                 <span class="form-control-placeholder">New Paid Amount</span>
             </div>
             <div class="form-group">
-                <input type="number" class="form-control" id="modalBalanceAmount" name="balance_amount" placeholder=" "
-                    readonly style="width: 100%;">
+                <input type="number" class="form-control" id="modalBalanceAmount" name="balance_amount" placeholder=" " readonly style="width: 100%;">
                 <span class="form-control-placeholder">Balance</span>
             </div>
             <div class="button-group">
@@ -154,6 +151,8 @@
             </div>
         </div>
     </div>
+    
+    
 
 
     <script src="/js/Inventory_js/Inventory_searchInvoice.js"></script>

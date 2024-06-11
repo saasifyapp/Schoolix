@@ -208,12 +208,13 @@ tr:hover td {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
     top: 9rem;
-    animation: fadeUp 0.3s ease-in-out;
+    animation: fadeUp 0.3s ease-in-out;   
 }
 
 h2, h3 {
     text-align: center;
     color: var(--grey-color);
+    margin-top: -1rem;
 }
 
 .form-group {
