@@ -213,11 +213,12 @@ tr:hover td {
 
 h2, h3 {
     text-align: center;
+    color: var(--grey-color);
 }
 
 .form-group {
     position: relative;
-    width: 100%;
+    width: 60%;
     max-width: 20rem;
     margin-bottom: 1.5rem;    
 }
@@ -267,8 +268,7 @@ h2, h3 {
 .styled-button {
     background-color: transparent;
     border: none;
-    color: black;
-    padding: 10px 20px;
+    color: black;   
     text-align: center;
     text-decoration: none;
     display: flex;
