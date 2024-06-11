@@ -192,7 +192,7 @@
                             <div class="section control-panel" style="margin-left: 0.8rem; ">
                                 <h5>Control Panel</h5>
                                 <div class="control-button-container">
-                                    <button id="generateButton" class="control-button">
+                                    <button id="generateButtontest" class="control-button">
                                         <img src="/images/generateinvoice.png" alt="Refresh Icon"
                                             style="width: 25px; height: 25px;">
                                         Generate
@@ -221,6 +221,20 @@
 
 
             </div>
+
+            <!-- Pop-up structure TEST-->
+<div id="billPopupOverlay" class="popup-overlay">
+    <div id="billPopup" class="popup">
+        <h3>Generated Bill</h3>
+        <div id="billContent">
+            <!-- Bill content will be dynamically inserted here -->
+        </div>
+        <div class="popup-buttons">
+            <button id="printButton" class="popup-button">Print</button>
+            <button id="closeButton" class="popup-button">Close</button>
+        </div>
+    </div>
+</div>
 
 
             <!-- Second Container -->
