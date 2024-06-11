@@ -9,19 +9,25 @@ body {
     margin-top: 4rem;
 }
 
+
+/* Apply the animation to the .head class */
 .head {
     font-size: 35px;
     color: var(--grey-color);
     text-align: center;
     margin-top: 5rem;
+    animation: fadeInFromUp 1s ease-out; /* Animation applied here */
 }
 
+/* Apply the animation to the .filter-container class */
 .filter-container {
     display: flex;
     justify-content: center;
     gap: 30px;
     margin-top: -10px;
+    animation: fadeInFromUp 1s ease-out; /* Animation applied here */
 }
+
 
 .filter-container label{
     color: var(--grey-color);
@@ -206,11 +212,15 @@ body {
     flex-direction: column;
     gap: 10px; /* Adjust spacing between elements */
     color: var(--grey-color);
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 10px;
 }
 
 .container h3 {
     margin-bottom: 0.5rem; /* Space between the heading and date */
     font-size: 1.25rem; /* Adjust font size as needed */
+    margin-top: 0rem;
 }
 
 .container p {
@@ -229,7 +239,7 @@ body {
 /* Enhanced box styling */
 .box {
     background-color: white; /* White background */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow for depth */
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3); /* Box shadow for depth */
     padding: 15px; /* Increased padding for better spacing */
     border-radius: 10px; /* Rounded corners */
     width: 120px; /* Adjust width as needed */
@@ -240,6 +250,8 @@ body {
     align-items: center; /* Center align items */
     position: relative; /* Position for icon */
     transition: box-shadow 0.3s ease;
+    opacity: 0; /* Initial opacity for fade effect */
+    animation: fadeUp 1s forwards; /* Animation properties */
 }
 
 .box:hover {
@@ -304,15 +316,22 @@ body {
 
 /* Table Section */
 .right-section {
-    
+    margin-top: -1rem;
+}
+
+.table-container {
+    max-height: calc(100%); /* Set maximum height for the table container */
+    overflow-y: auto;
+    margin-top: 0.725rem; /* Set margin between the table container and overlay content */
+    border-radius: 10px;  
+   
 }
 
 #invoice-table {
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
-    border-radius: 1rem;
-    overflow: hidden; /* Prevent content overflow from breaking the border radius */
+    border-radius: 1rem;  
     box-shadow: 0 0 0 1px #dddddd;
     margin: auto;
 }
@@ -324,6 +343,8 @@ body {
     text-align: left;
     box-sizing: border-box;
     text-align: center;
+    opacity: 0; /* Initial opacity for fade effect */
+    animation: fadeUp 1s forwards; /* Animation properties */
 }
 
 #invoice-table th {
@@ -395,5 +416,41 @@ body {
 
     #invoice-table td {
         font-size: 0.75rem;
+    }
+}
+
+
+
+@keyframes fadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInFromUp {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Define the fade in from up animation */
+@keyframes fadeInFromUp {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
