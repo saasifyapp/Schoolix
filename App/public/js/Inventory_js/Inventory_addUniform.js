@@ -162,104 +162,111 @@ async function refreshUniformsData() {
 function displayUniforms(data) {
     const uniformTableBody = document.getElementById('uniformTableBody');
     uniformTableBody.innerHTML = ''; // Clear existing rows
-    if (data.length === 0) {
-        hideLoadingAnimation();
-        const noResultsRow = document.createElement('tr');
-        noResultsRow.innerHTML = '<td colspan="9">No results found</td>';
-        // Assuming you have a table element to append this row to, e.g., teacherTable
-        uniformTableBody.appendChild(noResultsRow);
-    } else {
-    data.forEach(uniform => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${uniform.uniform_item}</td>
-            <td>${uniform.size_of_item}</td>
-            <td>${uniform.purchase_price}</td>
-            <td>${uniform.selling_price}</td>
-            <td>${uniform.vendor}</td>
-            <td>${uniform.ordered_quantity}</td>
-            <td>${uniform.remaining_quantity}</td>
-            <td>${uniform.returned_quantity}</td>
-            <td>
-            <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
-            <button style="background-color: transparent;
-                border: none;
-                color: black; /* Change text color to black */
-                padding: 0;
-                text-align: center;
-                text-decoration: none;
-                display: flex; /* Use flex for centering */
-                align-items: center; /* Center vertically */
-                justify-content: center; /* Center horizontally */
-                font-size: 14px;
-                cursor: pointer;
-                max-height: 100%;
-                border-radius: 20px; /* Round corners */
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-                transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
-                margin-bottom: 10px;" /* Added margin bottom for spacing */
-        onclick="updateUniformItem('${uniform.uniform_item}', '${uniform.size_of_item}')"
-        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-    <img src="/images/add_uniform.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-    <span style="margin-right: 10px;">Restock</span>
-</button>
 
-<button style="background-color: transparent;
-                border: none;
-                color: black; /* Change text color to black */
-                padding: 0;
-                text-align: center;
-                text-decoration: none;
-                display: flex; /* Use flex for centering */
-                align-items: center; /* Center vertically */
-                justify-content: center; /* Center horizontally */
-                font-size: 14px;
-                cursor: pointer;
-                max-height: 100%;
-                border-radius: 20px; /* Round corners */
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-                transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
-                margin-bottom: 10px;" /* Added margin bottom for spacing */
-        onclick="returnUniform('${uniform.uniform_item}', '${uniform.size_of_item}')"
-        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-    <img src="/images/return_book.png" alt="Return" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-    <span style="margin-right: 10px;">Return</span>
-</button>
+    try {
+        // Reverse the data array
+        data.reverse();
 
-<button style="background-color: transparent;
-                border: none;
-                color: black; /* Change text color to black */
-                padding: 0;
-                text-align: center;
-                text-decoration: none;
-                display: flex; /* Use flex for centering */
-                align-items: center; /* Center vertically */
-                justify-content: center; /* Center horizontally */
-                font-size: 14px;
-                cursor: pointer;
-                max-height: 100%;
-                border-radius: 20px; /* Round corners */
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-                transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
-                margin-bottom: 10px;" /* Added margin bottom for spacing */
-                onclick="deleteUniform('${uniform.uniform_item}', '${uniform.size_of_item}')"
-        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-    <img src="/images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-    <span style="margin-right: 10px;">Delete</span>
-</button>
-</div>
+        if (data.length === 0) {
+            hideUniformLoadingAnimation();
+            const noResultsRow = document.createElement('tr');
+            noResultsRow.innerHTML = '<td colspan="9">No results found</td>';
+            uniformTableBody.appendChild(noResultsRow);
+        } else {
+            data.forEach(uniform => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${uniform.uniform_item}</td>
+                    <td>${uniform.size_of_item}</td>
+                    <td>${uniform.purchase_price}</td>
+                    <td>${uniform.selling_price}</td>
+                    <td>${uniform.vendor}</td>
+                    <td>${uniform.ordered_quantity}</td>
+                    <td>${uniform.remaining_quantity}</td>
+                    <td>${uniform.returned_quantity}</td>
+                    <td>
+                        <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+                            <button style="background-color: transparent;
+                                border: none;
+                                color: black; /* Change text color to black */
+                                padding: 0;
+                                text-align: center;
+                                text-decoration: none;
+                                display: flex; /* Use flex for centering */
+                                align-items: center; /* Center vertically */
+                                justify-content: center; /* Center horizontally */
+                                font-size: 14px;
+                                cursor: pointer;
+                                max-height: 100%;
+                                border-radius: 20px; /* Round corners */
+                                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                                transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                                margin-bottom: 10px;" /* Added margin bottom for spacing */
+                                onclick="updateUniformItem('${uniform.uniform_item}', '${uniform.size_of_item}')"
+                                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                                <img src="/images/add_uniform.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                                <span style="margin-right: 10px;">Restock</span>
+                            </button>
 
+                            <button style="background-color: transparent;
+                                border: none;
+                                color: black; /* Change text color to black */
+                                padding: 0;
+                                text-align: center;
+                                text-decoration: none;
+                                display: flex; /* Use flex for centering */
+                                align-items: center; /* Center vertically */
+                                justify-content: center; /* Center horizontally */
+                                font-size: 14px;
+                                cursor: pointer;
+                                max-height: 100%;
+                                border-radius: 20px; /* Round corners */
+                                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                                transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                                margin-bottom: 10px;" /* Added margin bottom for spacing */
+                                onclick="returnUniform('${uniform.uniform_item}', '${uniform.size_of_item}')"
+                                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                                <img src="/images/return_book.png" alt="Return" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                                <span style="margin-right: 10px;">Return</span>
+                            </button>
 
-            </td>
-        `;
-        uniformTableBody.appendChild(row);
-    });
+                            <button style="background-color: transparent;
+                                border: none;
+                                color: black; /* Change text color to black */
+                                padding: 0;
+                                text-align: center;
+                                text-decoration: none;
+                                display: flex; /* Use flex for centering */
+                                align-items: center; /* Center vertically */
+                                justify-content: center; /* Center horizontally */
+                                font-size: 14px;
+                                cursor: pointer;
+                                max-height: 100%;
+                                border-radius: 20px; /* Round corners */
+                                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                                transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                                margin-bottom: 10px;" /* Added margin bottom for spacing */
+                                onclick="deleteUniform('${uniform.uniform_item}', '${uniform.size_of_item}')"
+                                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                                <img src="/images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                                <span style="margin-right: 10px;">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                uniformTableBody.appendChild(row);
+            });
+        }
+        hideUniformLoadingAnimation();
+    } catch (error) {
+        console.error('Error displaying uniforms:', error);
+        hideUniformLoadingAnimation();
+    }
 }
-    hideUniformLoadingAnimation();
-}
+
  
 // Function to handle deleting a uniform
 async function deleteUniform(uniformItem, sizeOfItem) {

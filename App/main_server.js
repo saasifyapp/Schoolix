@@ -63,6 +63,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Login', 'index.html'));
 });
 
+/*
 const createSchoolTables = (connection) => {
     return new Promise((resolve, reject) => {
         const createTableQueries = [
@@ -160,7 +161,7 @@ const createSchoolTables = (connection) => {
         .then(() => resolve())
         .catch(err => reject(err));
     });
-};
+};*/
 
 
 app.post('/login', (req, res) => {
@@ -205,8 +206,9 @@ app.post('/login', (req, res) => {
         
 
         console.log('User logged in and session created:', req.session.user);
+        res.redirect('/dashboard');
         // Create tables if it's a school login
-        if (req.session.isSchool) {
+        /*if (req.session.isSchool) {
             const connection = mysql.createPool(req.session.dbCredentials);
             createSchoolTables(connection)
                 .then(() => {
@@ -218,7 +220,7 @@ app.post('/login', (req, res) => {
                 });
         } else {
             res.redirect('/dashboard');
-        }
+        }*/
     });
 });
 

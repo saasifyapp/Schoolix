@@ -223,102 +223,103 @@ async function refreshbooksData() {
 // Function to display book data
 function displayBooks(data) {
   const bookTableBody = document.getElementById("booksTableBody");
-  bookTableBody.innerHTML = "";
+  bookTableBody.innerHTML = ""; // Clear previous data
 
   try {
+    // Reverse the data array
+    data.reverse();
+
     if (data.length === 0) {
-      hideLoadingAnimation();
+      hideBooksLoadingAnimation();
       const noResultsRow = document.createElement('tr');
       noResultsRow.innerHTML = '<td colspan="9">No results found</td>';
-      // Assuming you have a table element to append this row to, e.g., teacherTable
       bookTableBody.appendChild(noResultsRow);
-  } else {
-    data.forEach((book) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-                <td>${book.title}</td>
-                <td>${book.class_of_title}</td>
-                <td>${book.purchase_price}</td>
-                <td>${book.selling_price}</td>
-                <td>${book.vendor}</td>
-                <td>${book.ordered_quantity}</td>
-                <td>${book.remaining_quantity}</td>
-                <td>${book.returned_quantity}</td>
-                <td>
-                <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
-                <button style="background-color: transparent;
-                        border: none;
-                        color: black; /* Change text color to black */
-                        padding: 0;
-                        text-align: center;
-                        text-decoration: none;
-                        display: flex; /* Use flex for centering */
-                        align-items: center; /* Center vertically */
-                        justify-content: center; /* Center horizontally */
-                        font-size: 14px;
-                        cursor: pointer;
-                        max-height: 100%;
-                        border-radius: 20px; /* Round corners */
-                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-                        transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
-                        margin-bottom: 10px;" /* Added margin bottom for spacing */
-                onclick="updateBook('${book.title}')"
-                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-            <img src="/images/add_book.png" alt="Update" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-            <span style="margin-right: 10px;">Restock</span>
-        </button>
-        <button style="background-color: transparent;
-                        border: none;
-                        color: black; /* Change text color to black */
-                        padding: 0;
-                        text-align: center;
-                        text-decoration: none;
-                        display: flex; /* Use flex for centering */
-                        align-items: center; /* Center vertically */
-                        justify-content: center; /* Center horizontally */
-                        font-size: 14px;
-                        cursor: pointer;
-                        max-height: 100%;
-                        border-radius: 20px; /* Round corners */
-                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-                        transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
-                        margin-bottom: 10px;" /* Added margin bottom for spacing */
-                onclick="returnBook('${book.title}')"
-                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-            <img src="/images/return_book.png" alt="Update" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-            <span style="margin-right: 10px;">Return</span>
-        </button>
-        <button style="background-color: transparent;
-                        border: none;
-                        color: black; /* Change text color to black */
-                        padding: 0;
-                        text-align: center;
-                        text-decoration: none;
-                        display: flex; /* Use flex for centering */
-                        align-items: center; /* Center vertically */
-                        justify-content: center; /* Center horizontally */
-                        font-size: 14px;
-                        cursor: pointer;
-                        max-height: 100%;
-                        border-radius: 20px; /* Round corners */
-                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-                        transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
-                        margin-bottom: 10px;" /* Added margin bottom for spacing */
-                onclick="deleteBook('${book.title}')"
-                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-            <img src="/images/delete_vendor.png" alt="Update" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-            <span style="margin-right: 10px;">Delete</span>
-        </button>
-       </div> 
-        
-                </td>
-            `;
-      bookTableBody.appendChild(row);
-    });
-  }
+    } else {
+      data.forEach((book) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${book.title}</td>
+          <td>${book.class_of_title}</td>
+          <td>${book.purchase_price}</td>
+          <td>${book.selling_price}</td>
+          <td>${book.vendor}</td>
+          <td>${book.ordered_quantity}</td>
+          <td>${book.remaining_quantity}</td>
+          <td>${book.returned_quantity}</td>
+          <td>
+            <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+              <button style="background-color: transparent;
+                              border: none;
+                              color: black; /* Change text color to black */
+                              padding: 0;
+                              text-align: center;
+                              text-decoration: none;
+                              display: flex; /* Use flex for centering */
+                              align-items: center; /* Center vertically */
+                              justify-content: center; /* Center horizontally */
+                              font-size: 14px;
+                              cursor: pointer;
+                              max-height: 100%;
+                              border-radius: 20px; /* Round corners */
+                              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                              transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                              margin-bottom: 10px;" /* Added margin bottom for spacing */
+              onclick="updateBook('${book.title}')"
+              onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+              onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                <img src="/images/add_book.png" alt="Update" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                <span style="margin-right: 10px;">Restock</span>
+              </button>
+              <button style="background-color: transparent;
+                              border: none;
+                              color: black; /* Change text color to black */
+                              padding: 0;
+                              text-align: center;
+                              text-decoration: none;
+                              display: flex; /* Use flex for centering */
+                              align-items: center; /* Center vertically */
+                              justify-content: center; /* Center horizontally */
+                              font-size: 14px;
+                              cursor: pointer;
+                              max-height: 100%;
+                              border-radius: 20px; /* Round corners */
+                              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                              transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                              margin-bottom: 10px;" /* Added margin bottom for spacing */
+              onclick="returnBook('${book.title}')"
+              onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+              onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                <img src="/images/return_book.png" alt="Return" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                <span style="margin-right: 10px;">Return</span>
+              </button>
+              <button style="background-color: transparent;
+                              border: none;
+                              color: black; /* Change text color to black */
+                              padding: 0;
+                              text-align: center;
+                              text-decoration: none;
+                              display: flex; /* Use flex for centering */
+                              align-items: center; /* Center vertically */
+                              justify-content: center; /* Center horizontally */
+                              font-size: 14px;
+                              cursor: pointer;
+                              max-height: 100%;
+                              border-radius: 20px; /* Round corners */
+                              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                              transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                              margin-bottom: 10px;" /* Added margin bottom for spacing */
+              onclick="deleteBook('${book.title}')"
+              onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+              onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                <img src="/images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                <span style="margin-right: 10px;">Delete</span>
+              </button>
+            </div>
+          </td>
+        `;
+        bookTableBody.appendChild(row);
+      });
+    }
     hideBooksLoadingAnimation();
   } catch (error) {
     console.error("Error displaying books:", error);
@@ -326,6 +327,7 @@ function displayBooks(data) {
     hideBooksLoadingAnimation();
   }
 }
+
 
 // Function to delete a book
 async function deleteBook(title) {
