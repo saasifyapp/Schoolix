@@ -93,74 +93,75 @@ function displayVendors(data) {
     vendorTableBody.innerHTML = ''; // Clear previous data
 
     try {
+        // Reverse the data array
+        data.reverse();
+
         if (data.length === 0) {
-            hideLoadingAnimation();
+            hideVendorLoadingAnimation();
             const noResultsRow = document.createElement('tr');
             noResultsRow.innerHTML = '<td colspan="9">No results found</td>';
-            // Assuming you have a table element to append this row to, e.g., teacherTable
             vendorTableBody.appendChild(noResultsRow);
         } else {
-        data.forEach(vendor => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-            <td>${vendor.vendor_name}</td>
-            <td>${vendor.vendorFor}</td>
-            <!--<td>${vendor.net_payable}</td>-->
-            <td>${vendor.paid_till_now}</td>
-            <!--<td>${vendor.balance}</td>-->
-            <td>
-    <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
-        <button style="background-color: transparent;
-        border: none;
-        color: black; /* Change text color to black */
-        padding: 0;
-        text-align: center;
-        text-decoration: none;
-        display: inline-flex; /* Use flex for centering */
-        align-items: center; /* Center vertically */
-        justify-content: center; /* Center horizontally */
-        font-size: 14px;
-        cursor: pointer;
-        max-height: 100%;
-        border-radius: 20px; /* Round corners */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-        transition: transform 0.2s, box-shadow 0.2s;
-        margin-bottom: 10px;"
-        onclick="updateVendor('${vendor.vendor_name}')"
-        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-            <img src="../images/update_vendor.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-            <span style="margin-right: 10px;">Pay Vendor</span>
-        </button>
-        <button style="background-color: transparent;
-        border: none;
-        color: black; /* Change text color to black */
-        padding: 0;
-        text-align: center;
-        text-decoration: none;
-        display: inline-flex; /* Use flex for centering */
-        align-items: center; /* Center vertically */
-        justify-content: center; /* Center horizontally */
-        font-size: 14px;
-        cursor: pointer;
-        max-height: 100%;
-        border-radius: 20px; /* Round corners */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-        transition: transform 0.2s, box-shadow 0.2s;
-        margin-bottom: 10px;"
-        onclick="deleteVendor('${vendor.vendor_name}')"
-        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-            <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-            <span style="margin-right: 10px;">Delete</span>
-        </button>
-    </div>
-</td>
-            `;
-            
-            vendorTableBody.appendChild(row);
-        });
-    }
+            data.forEach(vendor => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${vendor.vendor_name}</td>
+                    <td>${vendor.vendorFor}</td>
+                    <!--<td>${vendor.net_payable}</td>-->
+                    <td>${vendor.paid_till_now}</td>
+                    <!--<td>${vendor.balance}</td>-->
+                    <td>
+                        <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+                            <button style="background-color: transparent;
+                            border: none;
+                            color: black; /* Change text color to black */
+                            padding: 0;
+                            text-align: center;
+                            text-decoration: none;
+                            display: inline-flex; /* Use flex for centering */
+                            align-items: center; /* Center vertically */
+                            justify-content: center; /* Center horizontally */
+                            font-size: 14px;
+                            cursor: pointer;
+                            max-height: 100%;
+                            border-radius: 20px; /* Round corners */
+                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                            transition: transform 0.2s, box-shadow 0.2s;
+                            margin-bottom: 10px;"
+                            onclick="updateVendor('${vendor.vendor_name}')"
+                            onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                                <img src="../images/update_vendor.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                                <span style="margin-right: 10px;">Pay Vendor</span>
+                            </button>
+                            <button style="background-color: transparent;
+                            border: none;
+                            color: black; /* Change text color to black */
+                            padding: 0;
+                            text-align: center;
+                            text-decoration: none;
+                            display: inline-flex; /* Use flex for centering */
+                            align-items: center; /* Center vertically */
+                            justify-content: center; /* Center horizontally */
+                            font-size: 14px;
+                            cursor: pointer;
+                            max-height: 100%;
+                            border-radius: 20px; /* Round corners */
+                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                            transition: transform 0.2s, box-shadow 0.2s;
+                            margin-bottom: 10px;"
+                            onclick="deleteVendor('${vendor.vendor_name}')"
+                            onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                                <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                                <span style="margin-right: 10px;">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                vendorTableBody.appendChild(row);
+            });
+        }
         hideVendorLoadingAnimation();
 
     } catch (error) {
@@ -169,6 +170,7 @@ function displayVendors(data) {
         // Handle error if needed
     }
 }
+
 
 async function deleteVendor(vendorName) {
     const confirmation = confirm(`Are you sure you want to delete the vendor "${vendorName}"?`);
@@ -222,8 +224,11 @@ async function updateVendor(vendorName) {
                     <h2>${vendorName}</h2>
                     <p>Net Payable: ${net_payable.toFixed(2)}</p>
                     <p>Paid Till Now: ${existingPaidAmount.toFixed(2)}</p>
-                    <p>New Amount Paid:</p>
-                    <input type="number" step="0.01" id="newPaidAmountInput" min="0">
+                    <p>New Amount Paid:</p>                   
+                    <div class="form-group">
+        <input type="number" class="form-control" id="newPaidAmountInput" min="0" placeholder=" " required style="width:6rem;">
+        <span class="form-control-placeholder">Enter Amount Paid</span>
+    </div>
                     <p id="totalPaid">Total Paid: ${existingPaidAmount.toFixed(2)}</p>
                     <p id="balance">Balance: ${initialBalance.toFixed(2)}</p>
                     <button id="confirmButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;" onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
