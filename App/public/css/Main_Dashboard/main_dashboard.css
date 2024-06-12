@@ -546,4 +546,48 @@ body.dark {
     margin-bottom: 8px; /* Add margin-bottom to move count slightly up */
   }
 
-  
+  /* Toast container to hold multiple toasts */
+.toast-container {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    z-index: 9999;
+}
+
+/* Toast CSS */
+.toast {
+    width: 15rem;
+    margin-bottom: 10px;
+    background-color: #4CAF50; /* Green background */
+    color: white;
+    padding: 16px;
+    border-radius: 8px;
+    display: none; 
+    animation: slideInRight 0.5s forwards; /* Slide in animation */
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+.toast.error {
+    background-color: #f44336; /* Red background for error */
+}

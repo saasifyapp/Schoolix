@@ -121,6 +121,7 @@ h1 {
 .vendorIcon {
     width: 2rem;
     height: 2rem;
+    mix-blend-mode: multiply; /* Add this property */
 }
 
 @keyframes fadeUp {
@@ -207,16 +208,18 @@ tr:hover td {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
     top: 9rem;
-    animation: fadeUp 0.3s ease-in-out;
+    animation: fadeUp 0.3s ease-in-out;   
 }
 
 h2, h3 {
     text-align: center;
+    color: var(--grey-color);
+    margin-top: -1rem;
 }
 
 .form-group {
     position: relative;
-    width: 100%;
+    width: 60%;
     max-width: 20rem;
     margin-bottom: 1.5rem;    
 }
@@ -266,8 +269,7 @@ h2, h3 {
 .styled-button {
     background-color: transparent;
     border: none;
-    color: black;
-    padding: 10px 20px;
+    color: black;   
     text-align: center;
     text-decoration: none;
     display: flex;

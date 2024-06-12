@@ -13,9 +13,26 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <style>
+        /* Your CSS code here */
+    </style>
 </head>
 
 <body>
+    <div id="loadingOverlayReportsinventory" class="loading-overlay">
+        <div class="pyramid-loader">
+            <div class="wrapper">
+                <span class="side side1"></span>
+                <span class="side side2"></span>
+                <span class="side side3"></span>
+                <span class="side side4"></span>
+                <span class="shadow"></span>
+            </div>
+        </div>
+    </div>
+    <div id="toast-container" class="toast-container">
+        <div id="toast" class="toast"></div>
+    </div>
     <nav class="navbar">
         <div class="logo_item">
             <img id="logo" src="" alt="Logo">
@@ -47,15 +64,18 @@
             <div class="dropdown">
                 <label for="filter-date">Filter by Date:</label>
                 <div class="custom-input-container">
-                    <img src="/images/calendar.gif" alt="Calendar Icon" class="custom-input-icon" style="height: 2rem; width: 2rem;">
-                    <input type="text" id="datepicker" class="custom-input common-height" style="width: 6.5rem; text-align: right;">
+                    <img src="/images/calendar.gif" alt="Calendar Icon" class="custom-input-icon"
+                        style="height: 2rem; width: 2rem;">
+                    <input type="text" id="datepicker" class="custom-input common-height"
+                        style="width: 6.5rem; text-align: right;">
                 </div>
             </div>
-        
+
             <div class="dropdown">
                 <label for="filter-class">Filter by Class:</label>
                 <div class="custom-dropdown-container">
-                    <img src="/images/filterrbyclass.gif" alt="Dropdown Icon" class="custom-dropdown-left-icon" style="height: 2rem; width: 2rem;">
+                    <img src="/images/filterrbyclass.gif" alt="Dropdown Icon" class="custom-dropdown-left-icon"
+                        style="height: 2rem; width: 2rem;">
                     <select id="filter-class" class="custom-dropdown common-height">
                         <option value="">Select Class</option>
                         <option value="All Class">All Class</option>
@@ -76,64 +96,152 @@
                     <img src="/images/down-arrow.png" alt="Right Dropdown Icon" class="custom-dropdown-right-icon">
                 </div>
             </div>
-        
+
             <div class="toggle-switch">
                 <label for="defaulter-switch" class="switch-label">
                     Defaulter List:
                 </label>
                 <label class="switch">
-                    <img src="/images/defaulter.gif" alt="Toggle Icon" class="toggle-icon">
+                    <img src="/images/defaulter.gif" alt="Toggle Icon" class="toggle-icon"
+                        style="mix-blend-mode: multiply; /* Add this property */">
                     <input type="checkbox" id="defaulter-switch">
                     <span class="slider"></span>
                 </label>
             </div>
-            
-            
-            
         </div>
-        
-        
 
         <div class="section">
             <div class="left-section">
                 <div class="container">
                     <h3>Collection Summary</h3>
-                    <p id="collection-date"></p> <!-- Date for Collection Summary -->
-                    <div class="box">CASH</div>
-                    <div class="box">UPI</div>
-                    <div class="box">TOTAL</div>
+                    <p id="collection-date" style="color: black;">Date</p> <!-- Date for Collection Summary -->
+                    <div class="box-container">
+                        <div class="box">
+                            <div class="box-content">
+                                <div class="box-col1">
+                                    <div class="box-heading">CASH</div>
+                                    <div class="box-number">
+                                        <p>0000</p>
+                                    </div>
+                                </div>
+                                <div class="box-col2">
+                                    <img src="/images/cash.png" alt="Cash Icon" class="box-icon">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box">
+                            <div class="box-content">
+                                <div class="box-col1">
+                                    <div class="box-heading">UPI</div>
+                                    <div class="box-number">
+                                        <p>0000</p>
+                                    </div>
+                                </div>
+                                <div class="box-col2">
+                                    <img src="/images/upi.png" alt="UPI Icon" class="box-icon">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box">
+                            <div class="box-content">
+                                <div class="box-col1">
+                                    <div class="box-heading">TOTAL</div>
+                                    <div class="box-number">
+                                        <p>0000</p>
+                                    </div>
+                                </div>
+                                <div class="box-col2">
+                                    <img src="/images/total.png" alt="Total Icon" class="box-icon">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="container">
                     <h3>Invoice Summary</h3>
-                    <p id="invoice-date"></p> <!-- Date for Invoice Summary -->
-                    <div class="box">Total Bills</div>
-                    <div class="box">Net Sell</div>
-                    <div class="box">Received</div>
-                    <div class="box">Outstanding</div>
+                    <p id="invoice-date" style="color: black;">Date</p> <!-- Date for Invoice Summary -->
+                    <div class="box-container">
+                        <div class="box">
+                            <div class="box-content">
+                                <div class="box-col1">
+                                    <div class="box-heading">Bills</div>
+                                    <div class="box-number">
+                                        <p>0000</p>
+                                    </div>
+                                </div>
+                                <div class="box-col2">
+                                    <img src="/images/totalBill2.png" alt="Bills Icon" class="box-icon">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box">
+                            <div class="box-content">
+                                <div class="box-col1">
+                                    <div class="box-heading">Net Sell</div>
+                                    <div class="box-number">
+                                        <p>0000</p>
+                                    </div>
+                                </div>
+                                <div class="box-col2">
+                                    <img src="/images/netsell.png" alt="Sell Icon" class="box-icon">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box">
+                            <div class="box-content">
+                                <div class="box-col1">
+                                    <div class="box-heading">Received</div>
+                                    <div class="box-number">
+                                        <p>0000</p>
+                                    </div>
+                                </div>
+                                <div class="box-col2">
+                                    <img src="/images/recived.png" alt="Received Icon" class="box-icon">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box">
+                            <div class="box-content">
+                                <div class="box-col1">
+                                    <div class="box-heading">Balance</div>
+                                    <div class="box-number">
+                                        <p>0000</p>
+                                    </div>
+                                </div>
+                                <div class="box-col2">
+                                    <img src="/images/balance.png" alt="Outstanding Icon" class="box-icon">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
             <div class="right-section">
-                <h3><span id="table-heading"></span></h3>
-                <table id="invoice-table">
-                    <thead>
-                        <tr>
-                            <th>Invoice No</th>
-                            <th>Bill Date</th>
-                            <th>Buyer Name</th>
-                            <th>Buyer Phone</th>
-                            <th>Class</th>
-                            <th>Total Payable</th>
-                            <th>Paid Amount</th>
-                            <th>Balance Amount</th>
-                            <th>Mode of Payment</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Dynamic rows will be added here -->
-                    </tbody>
-                </table>
+                <h3><span id="table-heading">Bill for Date</span></h3>
+                <div class="table-container">
+                    <table id="invoice-table">
+                        <thead>
+                            <tr>
+                                <th>Invoice No</th>
+                                <th>Bill Date</th>
+                                <th>Buyer Name</th>
+                                <th>Buyer Phone</th>
+                                <th>Class</th>
+                                <th>Total Payable</th>
+                                <th>Paid Amount</th>
+                                <th>Balance Amount</th>
+                                <th>Mode of Payment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dynamic rows will be added here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+    </div>
     </div>
 </body>
 

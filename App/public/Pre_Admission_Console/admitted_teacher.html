@@ -217,6 +217,8 @@
 
                     async function refreshData() {
                         showLoadingAnimation();
+                        const teacherTableBody = document.getElementById('teacherData');
+                        teacherTableBody.innerHTML = ''; // Clear previous data
                         document.getElementById('searchField').value = '';
                         try {
                             const response = await fetch('/admitted_teachers');
@@ -285,7 +287,7 @@
                         }
                     }
 
-                    function searchDetails() {
+                    async function searchDetails() {
 
 
                         const searchTerm = document.getElementById('searchField').value.trim();
@@ -307,7 +309,7 @@
 
                         // Fetch data from the server based on the search term
                         // showLoadingAnimation();
-                        fetch(`/admitted_teachers/search?search=${encodeURIComponent(searchTerm)}`)
+                        await fetch(`/admitted_teachers/search?search=${encodeURIComponent(searchTerm)}`)
                             .then(response => response.json())
                             .then(data => {
                                 const teacherTableBody = document.getElementById('teacherData');
@@ -361,11 +363,11 @@
 
 
 
-                    function removeTeacher(teacherName, mobileNo) {
+                    async function removeTeacher(teacherName, mobileNo) {
                         const confirmation = confirm(`Are you sure you want to remove the teacher "${teacherName}"?`);
                         if (confirmation) {
                             showLoadingAnimation();
-                            fetch(`/remove-adm-teacher?name=${encodeURIComponent(teacherName)}&mobile=${encodeURIComponent(mobileNo)}`, {
+                            await fetch(`/remove-adm-teacher?name=${encodeURIComponent(teacherName)}&mobile=${encodeURIComponent(mobileNo)}`, {
                                 method: 'DELETE'
                             })
                                 .then(response => {

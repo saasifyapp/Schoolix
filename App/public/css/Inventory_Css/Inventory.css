@@ -342,8 +342,7 @@ select {
 
 .submit-icon{
     width: 50px;    
-    height: 50px;    
-    
+    height: 50px;        
     vertical-align: middle;   
     margin-top: 5px;  
     cursor: pointer;  
@@ -370,7 +369,7 @@ select {
 
 
 .table-container,
-#tableContainer {
+.table-container {
     max-height: calc(100% - 15rem); /* Set maximum height for the table container */
     overflow-y: auto;
     margin-top: 0.725rem; /* Set margin between the table container and overlay content */
@@ -385,8 +384,7 @@ select {
 
 .styled-table {
     border-radius: 1rem;
-    border-collapse: collapse; /* Ensure that the border radius is applied properly */
-    overflow: hidden; /* Prevent content overflow from breaking the border radius */
+    border-collapse: collapse; /* Ensure that the border radius is applied properly */   
     width: 100%;
     box-shadow: 0 0 0 1px #dddddd;
     margin: auto;
@@ -519,8 +517,8 @@ table {
     position: fixed;
     top: 50%;
     left: 50%;
-    height: 22rem;
-    width: 18rem;
+    height: auto;
+    width: auto;
     transform: translate(-50%, -50%);
     background-color: white;
     padding: 20px;
@@ -604,6 +602,7 @@ table {
 
 .custom-dropdown {
     height: 2.8125rem; /* Adjust the height as needed */
+    width: auto;
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -635,7 +634,7 @@ table {
 
 /* Style the dropdown arrow (if necessary) */
 .custom-dropdown::after {
-    content: '\25BC'; /* Unicode character for down arrow */
+    /* content: '\25BC';  */
     position: absolute;
     top: 50%;
     right: 0.5rem;
@@ -851,4 +850,67 @@ table {
     }
 }
 
+/* Class Dropdown */
 
+.custom-dropdown {
+    position: relative;
+    width: auto;   
+    background-color: white;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 20px;
+    height: 2.8125rem;
+    
+  }
+  
+  .dropdown-selected {
+    margin-right: 10px;  
+    width: 100%;
+    
+  }
+  
+  .dropdown-options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    border: 1px solid #ccc;
+    background-color: white;
+    z-index: 2;
+  }
+  
+  .dropdown-options .option {
+    padding: 0.5rem;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  
+  .dropdown-options .option:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .option .submenu {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    min-width: 150px;
+    border: 1px solid #ccc;
+    background-color: white;
+    z-index: 1;
+  }
+  
+  .option:hover .submenu {
+    display: block;
+  }
+  
+  .submenu .submenu-option {
+    padding: 0.5rem;
+    cursor: pointer;
+  }
+  
+  .submenu .submenu-option:hover {
+    background-color: #f0f0f0;
+  }
+  

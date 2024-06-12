@@ -42,6 +42,43 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("input", calculateBookPurchasePrice);
 });
 
+/////////////// Class Dropdown ////////////////
+
+function toggleDropdown() {
+  const dropdown = document.querySelector('.dropdown-options');
+  dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+}
+
+document.querySelectorAll('.option').forEach(option => {
+  option.addEventListener('click', function(event) {
+    if (!this.classList.contains('has-submenu')) {
+      const selectedText = this.textContent.trim();
+      document.querySelector('.dropdown-selected').textContent = selectedText;
+      document.getElementById('bookClass').value = this.dataset.value;
+      document.querySelector('.dropdown-options').style.display = 'none';
+    }
+  });
+});
+
+document.querySelectorAll('.submenu-option').forEach(subOption => {
+  subOption.addEventListener('click', function(event) {
+    const selectedText = this.textContent.trim();
+    document.querySelector('.dropdown-selected').textContent = selectedText;
+    document.getElementById('bookClass').value = this.dataset.value;
+    document.querySelector('.dropdown-options').style.display = 'none';
+    event.stopPropagation();
+  });
+});
+
+document.addEventListener('click', function(event) {
+  const dropdown = document.querySelector('.dropdown-options');
+  if (!dropdown.contains(event.target) && !event.target.matches('.dropdown-selected')) {
+    dropdown.style.display = 'none';
+  }
+});
+
+//////////////////////////////////
+
 document.addEventListener("DOMContentLoaded", function () {
   // Get the form element
   const booksform = document.getElementById("addBooksForm");
@@ -49,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Check if the form exists
   if (booksform) {
     // Add submit event listener to the form
-    booksform.addEventListener("submit", function (event) {
+    booksform.addEventListener("submit", async function (event) {
       showBooksLoadingAnimation();
       event.preventDefault(); // Prevent the default form submission
 
@@ -83,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       // Make a POST request to the endpoint
-      fetch("/inventory/purchase/add_books", {
+      await fetch("/inventory/purchase/add_books", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -126,9 +163,9 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Function to populate vendor dropdowns
-function populateBooksVendorDropdown() {
+async function populateBooksVendorDropdown() {
   // Fetch vendors from the server
-  fetch("/inventory/books_vendor")
+  await fetch("/inventory/books_vendor")
     .then((response) => response.json())
     .then((data) => {
       // Dropdowns to be populated
@@ -170,10 +207,10 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Refresh data function for fetching and displaying books
-function refreshbooksData() {
+async function refreshbooksData() {
   showBooksLoadingAnimation();
   document.getElementById("bookssearchField").value = "";
-  fetch("/inventory/books")
+  await fetch("/inventory/books")
     .then((response) => response.json())
     .then((data) => displayBooks(data))
     .catch((error) => {
@@ -186,94 +223,103 @@ function refreshbooksData() {
 // Function to display book data
 function displayBooks(data) {
   const bookTableBody = document.getElementById("booksTableBody");
-  bookTableBody.innerHTML = "";
+  bookTableBody.innerHTML = ""; // Clear previous data
 
   try {
-    data.forEach((book) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-                <td>${book.title}</td>
-                <td>${book.class_of_title}</td>
-                <td>${book.purchase_price}</td>
-                <td>${book.selling_price}</td>
-                <td>${book.vendor}</td>
-                <td>${book.ordered_quantity}</td>
-                <td>${book.remaining_quantity}</td>
-                <td>${book.returned_quantity}</td>
-                <td>
-                <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
-                <button style="background-color: transparent;
-                        border: none;
-                        color: black; /* Change text color to black */
-                        padding: 0;
-                        text-align: center;
-                        text-decoration: none;
-                        display: flex; /* Use flex for centering */
-                        align-items: center; /* Center vertically */
-                        justify-content: center; /* Center horizontally */
-                        font-size: 14px;
-                        cursor: pointer;
-                        max-height: 100%;
-                        border-radius: 20px; /* Round corners */
-                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-                        transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
-                        margin-bottom: 10px;" /* Added margin bottom for spacing */
-                onclick="updateBook('${book.title}')"
-                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-            <img src="/images/add_book.png" alt="Update" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-            <span style="margin-right: 10px;">Restock</span>
-        </button>
-        <button style="background-color: transparent;
-                        border: none;
-                        color: black; /* Change text color to black */
-                        padding: 0;
-                        text-align: center;
-                        text-decoration: none;
-                        display: flex; /* Use flex for centering */
-                        align-items: center; /* Center vertically */
-                        justify-content: center; /* Center horizontally */
-                        font-size: 14px;
-                        cursor: pointer;
-                        max-height: 100%;
-                        border-radius: 20px; /* Round corners */
-                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-                        transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
-                        margin-bottom: 10px;" /* Added margin bottom for spacing */
-                onclick="returnBook('${book.title}')"
-                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-            <img src="/images/return_book.png" alt="Update" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-            <span style="margin-right: 10px;">Return</span>
-        </button>
-        <button style="background-color: transparent;
-                        border: none;
-                        color: black; /* Change text color to black */
-                        padding: 0;
-                        text-align: center;
-                        text-decoration: none;
-                        display: flex; /* Use flex for centering */
-                        align-items: center; /* Center vertically */
-                        justify-content: center; /* Center horizontally */
-                        font-size: 14px;
-                        cursor: pointer;
-                        max-height: 100%;
-                        border-radius: 20px; /* Round corners */
-                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-                        transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
-                        margin-bottom: 10px;" /* Added margin bottom for spacing */
-                onclick="deleteBook('${book.title}')"
-                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-            <img src="/images/delete_vendor.png" alt="Update" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-            <span style="margin-right: 10px;">Delete</span>
-        </button>
-       </div> 
-        
-                </td>
-            `;
-      bookTableBody.appendChild(row);
-    });
+    // Reverse the data array
+    data.reverse();
+
+    if (data.length === 0) {
+      hideBooksLoadingAnimation();
+      const noResultsRow = document.createElement('tr');
+      noResultsRow.innerHTML = '<td colspan="9">No results found</td>';
+      bookTableBody.appendChild(noResultsRow);
+    } else {
+      data.forEach((book) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${book.title}</td>
+          <td>${book.class_of_title}</td>
+          <td>${book.purchase_price}</td>
+          <td>${book.selling_price}</td>
+          <td>${book.vendor}</td>
+          <td>${book.ordered_quantity}</td>
+          <td>${book.remaining_quantity}</td>
+          <td>${book.returned_quantity}</td>
+          <td>
+            <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+              <button style="background-color: transparent;
+                              border: none;
+                              color: black; /* Change text color to black */
+                              padding: 0;
+                              text-align: center;
+                              text-decoration: none;
+                              display: flex; /* Use flex for centering */
+                              align-items: center; /* Center vertically */
+                              justify-content: center; /* Center horizontally */
+                              font-size: 14px;
+                              cursor: pointer;
+                              max-height: 100%;
+                              border-radius: 20px; /* Round corners */
+                              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                              transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                              margin-bottom: 10px;" /* Added margin bottom for spacing */
+              onclick="updateBook('${book.title}')"
+              onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+              onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                <img src="/images/add_book.png" alt="Update" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                <span style="margin-right: 10px;">Restock</span>
+              </button>
+              <button style="background-color: transparent;
+                              border: none;
+                              color: black; /* Change text color to black */
+                              padding: 0;
+                              text-align: center;
+                              text-decoration: none;
+                              display: flex; /* Use flex for centering */
+                              align-items: center; /* Center vertically */
+                              justify-content: center; /* Center horizontally */
+                              font-size: 14px;
+                              cursor: pointer;
+                              max-height: 100%;
+                              border-radius: 20px; /* Round corners */
+                              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                              transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                              margin-bottom: 10px;" /* Added margin bottom for spacing */
+              onclick="returnBook('${book.title}')"
+              onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+              onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                <img src="/images/return_book.png" alt="Return" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                <span style="margin-right: 10px;">Return</span>
+              </button>
+              <button style="background-color: transparent;
+                              border: none;
+                              color: black; /* Change text color to black */
+                              padding: 0;
+                              text-align: center;
+                              text-decoration: none;
+                              display: flex; /* Use flex for centering */
+                              align-items: center; /* Center vertically */
+                              justify-content: center; /* Center horizontally */
+                              font-size: 14px;
+                              cursor: pointer;
+                              max-height: 100%;
+                              border-radius: 20px; /* Round corners */
+                              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                              transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                              margin-bottom: 10px;" /* Added margin bottom for spacing */
+              onclick="deleteBook('${book.title}')"
+              onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+              onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                <img src="/images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                <span style="margin-right: 10px;">Delete</span>
+              </button>
+            </div>
+          </td>
+        `;
+        bookTableBody.appendChild(row);
+      });
+    }
     hideBooksLoadingAnimation();
   } catch (error) {
     console.error("Error displaying books:", error);
@@ -282,14 +328,15 @@ function displayBooks(data) {
   }
 }
 
+
 // Function to delete a book
-function deleteBook(title) {
+async function deleteBook(title) {
   const confirmation = confirm(
     `Are you sure you want to delete the book "${title}"?`
   );
   if (confirmation) {
     showBooksLoadingAnimation();
-    fetch(`/inventory/books/${encodeURIComponent(title)}`, {
+    await fetch(`/inventory/books/${encodeURIComponent(title)}`, {
       method: "DELETE",
     })
       .then((response) => {
@@ -314,8 +361,8 @@ function deleteBook(title) {
 }
 
 // Function to update a book
-function updateBook(title) {
-  fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`) // Assuming you have modified the endpoint to retrieve both ordered_quantity and remaining_quantity
+async function updateBook(title) {
+  await fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`) // Assuming you have modified the endpoint to retrieve both ordered_quantity and remaining_quantity
     .then((response) => {
       if (!response.ok) {
         throw new Error("Failed to retrieve quantity.");
@@ -443,9 +490,9 @@ function updateBook(title) {
 }
 
 // Function to update ordered quantity on the server
-function updateBookOrderedQuantity(title, totalOrder, newRemainingQuantity) {
+async function updateBookOrderedQuantity(title, totalOrder, newRemainingQuantity) {
   showBooksLoadingAnimation();
-  fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`, {
+  await fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -477,10 +524,10 @@ function updateBookOrderedQuantity(title, totalOrder, newRemainingQuantity) {
 }
 
 // Function to return a book
-function returnBook(title) {
+async function returnBook(title) {
   let newRemainingQuantity; // Declare newRemainingQuantity here
 
-  fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`)
+  await fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`)
     .then((response) => {
       if (!response.ok) {
         throw new Error("Failed to retrieve quantity.");
@@ -610,9 +657,9 @@ function returnBook(title) {
 }
 
 // Function to update ordered quantity on the server
-function returnBookQuantity(title, returnedQuantity, newRemainingQuantity) {
+async function returnBookQuantity(title, returnedQuantity, newRemainingQuantity) {
   showBooksLoadingAnimation();
-  fetch(`/inventory/return_books/${encodeURIComponent(title)}/quantity`, {
+  await fetch(`/inventory/return_books/${encodeURIComponent(title)}/quantity`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -642,7 +689,7 @@ function returnBookQuantity(title, returnedQuantity, newRemainingQuantity) {
     });
 }
 
-function searchBookDetails() {
+async function searchBookDetails() {
   // showBooksLoadingAnimation();
 
   const searchTerm = document.getElementById("bookssearchField").value.trim();
@@ -658,7 +705,7 @@ function searchBookDetails() {
   }
 
   // Fetch data from the server based on the search term
-  fetch(`/inventory/books/search?search=${encodeURIComponent(searchTerm)}`)
+  await fetch(`/inventory/books/search?search=${encodeURIComponent(searchTerm)}`)
     .then((response) => response.json())
     .then((data) => {
       const booksTableBody = document.getElementById("booksTableBody");

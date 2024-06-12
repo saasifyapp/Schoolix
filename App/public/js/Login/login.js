@@ -8,146 +8,156 @@ function hideLoadingBar() {
     loadingBar.style.display = 'none';
 }
 
+// Toggle login type
+const schoolButton = document.getElementById('schoolButton');
+const adminButton = document.getElementById('adminButton');
+let loginType = 'school';
 
+schoolButton.addEventListener('click', () => {
+    loginType = 'school';
+    schoolButton.classList.add('active');
+    adminButton.classList.remove('active');
+});
 
- //===========================TO ANIMATE FORM FLIP IMAGE========================//
+adminButton.addEventListener('click', () => {
+    loginType = 'admin';
+    adminButton.classList.add('active');
+    schoolButton.classList.remove('active');
+});
 
- // Select username and password inputs
- const usernameInput = document.querySelector('input[name="username"]');
- const passwordInput = document.querySelector('input[name="password"]');
- const loginIcon = document.querySelector('.login-form img');
+// Form Flip Image Animation
+const usernameInput = document.querySelector('input[name="username"]');
+const passwordInput = document.querySelector('input[name="password"]');
+const loginIcon = document.querySelector('.login-form img');
 
+function animateUsernameImage(imgSrc) {
+    loginIcon.src = imgSrc;
 
+    const rotationAnimation = loginIcon.animate([
+        { transform: 'rotateY(-90deg)', opacity: 0 },
+        { transform: 'rotateY(0)', opacity: 1 }
+    ], {
+        duration: 1000,
+        easing: 'ease',
+        fill: 'forwards'
+    });
 
- // Function to handle animation for username input
- function animateUsernameImage(imgSrc) {
-     // Initially hide the image
-     // Update image source after the animation is finished
-     loginIcon.src = imgSrc; // Update image source
+    loginIcon.style.opacity = '0';
+}
 
-     // Apply rotation animation
-     const rotationAnimation = loginIcon.animate([
-         { transform: 'rotateY(-90deg)', opacity: 0 }, // Rotate and hide the image
-         { transform: 'rotateY(0)', opacity: 1 } // Rotate back and show the image
-     ], {
-         duration: 1000, // Animation duration in milliseconds
-         easing: 'ease', // Animation easing function
-         fill: 'forwards' // Maintain the final state of the animation
-     });
+function animatePasswordImage(imgSrc) {
+    loginIcon.src = imgSrc;
 
-     loginIcon.style.opacity = '0';
+    const rotationAnimation = loginIcon.animate([
+        { transform: 'rotateY(-90deg)', opacity: 0 },
+        { transform: 'rotateY(0)', opacity: 1 }
+    ], {
+        duration: 500,
+        easing: 'ease',
+        fill: 'forwards'
+    });
 
+    loginIcon.style.opacity = '0';
+}
 
- }
+usernameInput.addEventListener('focus', function () {
+    animateUsernameImage('../images/login.png');
+});
 
- // Function to handle animation for password input
- function animatePasswordImage(imgSrc) {
+usernameInput.addEventListener('blur', function () {
+    animateUsernameImage('../images/locked.png');
+});
 
-     // Update image source after the animation is finished  
-     loginIcon.src = imgSrc; // Update image source
+passwordInput.addEventListener('focus', function () {
+    animatePasswordImage('../images/key.png');
+});
 
-     // Apply rotation animation
-     const rotationAnimation = loginIcon.animate([
-         { transform: 'rotateY(-90deg)', opacity: 0 }, // Rotate and hide the image
-         { transform: 'rotateY(0)', opacity: 1 } // Rotate back and show the image
-     ], {
-         duration: 500, // Animation duration in milliseconds
-         easing: 'ease', // Animation easing function
-         fill: 'forwards' // Maintain the final state of the animation
-     });
-
-     loginIcon.style.opacity = '0'; // Initially hide the image               
-
- }
-
- // Listen for focus events on username input
- usernameInput.addEventListener('focus', function () {
-     animateUsernameImage('../images/login.png');
- });
-
- // Listen for blur events on username input
- usernameInput.addEventListener('blur', function () {
-     animateUsernameImage('../images/locked.png');
- });
-
- // Listen for focus events on password input
- passwordInput.addEventListener('focus', function () {
-     animatePasswordImage('../images/key.png');
- });
-
- // Listen for blur events on password input
- passwordInput.addEventListener('blur', function () {
-     animatePasswordImage('../images/locked.png');
- });
+passwordInput.addEventListener('blur', function () {
+    animatePasswordImage('../images/locked.png');
+});
 
 // Handle form submission
-document.getElementById('loginForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent the form from submitting
-    showLoadingBar();
-    // Get username and password from the form
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+document.addEventListener('DOMContentLoaded', () => {
+    const loginForm = document.getElementById('loginForm');
+    const schoolButton = document.getElementById('schoolButton');
+    const adminButton = document.getElementById('adminButton');
+    let isAdmin = false;
 
-    // Make a POST request to the server to log in
-    fetch('/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password })
-    })
-    .then(response => {
-        if (response.ok) {
-            // If login succeeds, redirect to dashboard
-            hideLoadingBar()
-            window.location.href = '/dashboard';
-        } else if (response.status === 401) {
-            // If login fails, display error message
-            hideLoadingBar()
-            response.text().then(message => showToast(message, true));
-            // window.location.href = '/dashboard';
-        } 
-        else if (response.status === 402) {
-            // If login fails, display error message
-            // response.text().then(message => showToast(message, true));
-            hideLoadingBar()
-            window.location.href = '/dashboard';
-        }
-        else if (response.status === 500) {
-            // If internal server error, display error message
-            hideLoadingBar()
-            showToast('Internal Server Error. Please try again later.', true);
-        } else {
-            // If other errors (e.g., bad request), display error message
-            hideLoadingBar()
-            showToast('An error occurred. Please try again.', true);
-        }
-    })
-    .catch(error => {
-        // If network error, display error message
-        hideLoadingBar()
-        showToast('Network error. Please check your connection and try again.', true);
-        console.error('Error logging in:', error);
+    schoolButton.addEventListener('click', () => {
+        isAdmin = false;
+        schoolButton.classList.add('active');
+        adminButton.classList.remove('active');
+    });
+
+    adminButton.addEventListener('click', () => {
+        isAdmin = true;
+        adminButton.classList.add('active');
+        schoolButton.classList.remove('active');
+    });
+
+    loginForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        showLoadingBar();
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        const loginEndpoint = isAdmin ? '/admin-login' : '/login';
+
+        fetch(loginEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        })
+        .then(response => {
+            if (response.ok) {
+                hideLoadingBar();
+                window.location.href = isAdmin ? '/adminpanel' : '/dashboard';
+            } else if (response.status === 401) {
+                hideLoadingBar();
+                response.text().then(message => showToast(message, true));
+            } else if (response.status === 500) {
+                hideLoadingBar();
+                showToast('Internal Server Error. Please try again later.', true);
+            } else {
+                hideLoadingBar();
+                showToast('An error occurred. Please try again.', true);
+            }
+        })
+        .catch(error => {
+            hideLoadingBar();
+            showToast('Network error. Please check your connection and try again.', true);
+            console.error('Error logging in:', error);
+        });
     });
 });
 
+
 // Function to display toast message
 function showToast(message, isError) {
-    const toast = document.getElementById('toast');
+    const toastContainer = document.getElementById("toast-container");
+
+    // Create a new toast element
+    const toast = document.createElement("div");
+    toast.classList.add("toast");
+    if (isError) {
+        toast.classList.add("error");
+    }
     toast.textContent = message;
 
-    // Set class based on isError flag
-    if (isError) {
-        toast.classList.add('error');
-    } else {
-        toast.classList.remove('error');
-    }
+    // Append the toast to the container
+    toastContainer.appendChild(toast);
 
     // Show the toast
     toast.style.display = 'block';
 
-    // Hide the toast after 3 seconds
+    // Remove the toast after 4 seconds
     setTimeout(function () {
-        toast.style.display = 'none';
-    }, 3000);
+        toast.style.animation = 'slideOutRight 0.5s forwards';
+        toast.addEventListener('animationend', function () {
+            toast.remove();
+        });
+    }, 4000);
 }

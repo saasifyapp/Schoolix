@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Get the form element
     const uniformForm = document.getElementById('addUniformForm');
     const univendorSelect = document.getElementById("univendor");
-    uniformForm.addEventListener('submit', function (event) {
+    uniformForm.addEventListener('submit', async function (event) {
         event.preventDefault();
         showUniformLoadingAnimation();
         const formData = new FormData(event.target);
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     jsonData[key] = value;
             }
         });
-        fetch('/inventory/purchase/add_uniforms', {
+        await fetch('/inventory/purchase/add_uniforms', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -103,9 +103,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 // Function to populate vendor dropdowns
-function populateUniformVendorDropdown() {
+async function populateUniformVendorDropdown() {
     // Fetch vendors from the server
-    fetch('/inventory/uniform_vendor')
+    await fetch('/inventory/uniform_vendor')
         .then(response => response.json())
         .then(data => {
             // Dropdowns to be populated
@@ -146,10 +146,10 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Function to refresh and display uniform data
-function refreshUniformsData() {
+async function refreshUniformsData() {
     showUniformLoadingAnimation();
     document.getElementById('uniformsearchField').value = '';
-    fetch('/inventory/uniforms')
+    await fetch('/inventory/uniforms')
         .then(response => response.json())
         .then(data => displayUniforms(data))
         .catch(error => {
@@ -162,103 +162,118 @@ function refreshUniformsData() {
 function displayUniforms(data) {
     const uniformTableBody = document.getElementById('uniformTableBody');
     uniformTableBody.innerHTML = ''; // Clear existing rows
-    data.forEach(uniform => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${uniform.uniform_item}</td>
-            <td>${uniform.size_of_item}</td>
-            <td>${uniform.purchase_price}</td>
-            <td>${uniform.selling_price}</td>
-            <td>${uniform.vendor}</td>
-            <td>${uniform.ordered_quantity}</td>
-            <td>${uniform.remaining_quantity}</td>
-            <td>${uniform.returned_quantity}</td>
-            <td>
-            <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
-            <button style="background-color: transparent;
-                border: none;
-                color: black; /* Change text color to black */
-                padding: 0;
-                text-align: center;
-                text-decoration: none;
-                display: flex; /* Use flex for centering */
-                align-items: center; /* Center vertically */
-                justify-content: center; /* Center horizontally */
-                font-size: 14px;
-                cursor: pointer;
-                max-height: 100%;
-                border-radius: 20px; /* Round corners */
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-                transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
-                margin-bottom: 10px;" /* Added margin bottom for spacing */
-        onclick="updateUniformItem('${uniform.uniform_item}', '${uniform.size_of_item}')"
-        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-    <img src="/images/add_uniform.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-    <span style="margin-right: 10px;">Restock</span>
-</button>
 
-<button style="background-color: transparent;
-                border: none;
-                color: black; /* Change text color to black */
-                padding: 0;
-                text-align: center;
-                text-decoration: none;
-                display: flex; /* Use flex for centering */
-                align-items: center; /* Center vertically */
-                justify-content: center; /* Center horizontally */
-                font-size: 14px;
-                cursor: pointer;
-                max-height: 100%;
-                border-radius: 20px; /* Round corners */
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-                transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
-                margin-bottom: 10px;" /* Added margin bottom for spacing */
-        onclick="returnUniform('${uniform.uniform_item}', '${uniform.size_of_item}')"
-        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-    <img src="/images/return_book.png" alt="Return" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-    <span style="margin-right: 10px;">Return</span>
-</button>
+    try {
+        // Reverse the data array
+        data.reverse();
 
-<button style="background-color: transparent;
-                border: none;
-                color: black; /* Change text color to black */
-                padding: 0;
-                text-align: center;
-                text-decoration: none;
-                display: flex; /* Use flex for centering */
-                align-items: center; /* Center vertically */
-                justify-content: center; /* Center horizontally */
-                font-size: 14px;
-                cursor: pointer;
-                max-height: 100%;
-                border-radius: 20px; /* Round corners */
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
-                transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
-                margin-bottom: 10px;" /* Added margin bottom for spacing */
-                onclick="deleteUniform('${uniform.uniform_item}', '${uniform.size_of_item}')"
-        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-    <img src="/images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-    <span style="margin-right: 10px;">Delete</span>
-</button>
-</div>
+        if (data.length === 0) {
+            hideUniformLoadingAnimation();
+            const noResultsRow = document.createElement('tr');
+            noResultsRow.innerHTML = '<td colspan="9">No results found</td>';
+            uniformTableBody.appendChild(noResultsRow);
+        } else {
+            data.forEach(uniform => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${uniform.uniform_item}</td>
+                    <td>${uniform.size_of_item}</td>
+                    <td>${uniform.purchase_price}</td>
+                    <td>${uniform.selling_price}</td>
+                    <td>${uniform.vendor}</td>
+                    <td>${uniform.ordered_quantity}</td>
+                    <td>${uniform.remaining_quantity}</td>
+                    <td>${uniform.returned_quantity}</td>
+                    <td>
+                        <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+                            <button style="background-color: transparent;
+                                border: none;
+                                color: black; /* Change text color to black */
+                                padding: 0;
+                                text-align: center;
+                                text-decoration: none;
+                                display: flex; /* Use flex for centering */
+                                align-items: center; /* Center vertically */
+                                justify-content: center; /* Center horizontally */
+                                font-size: 14px;
+                                cursor: pointer;
+                                max-height: 100%;
+                                border-radius: 20px; /* Round corners */
+                                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                                transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                                margin-bottom: 10px;" /* Added margin bottom for spacing */
+                                onclick="updateUniformItem('${uniform.uniform_item}', '${uniform.size_of_item}')"
+                                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                                <img src="/images/add_uniform.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                                <span style="margin-right: 10px;">Restock</span>
+                            </button>
 
+                            <button style="background-color: transparent;
+                                border: none;
+                                color: black; /* Change text color to black */
+                                padding: 0;
+                                text-align: center;
+                                text-decoration: none;
+                                display: flex; /* Use flex for centering */
+                                align-items: center; /* Center vertically */
+                                justify-content: center; /* Center horizontally */
+                                font-size: 14px;
+                                cursor: pointer;
+                                max-height: 100%;
+                                border-radius: 20px; /* Round corners */
+                                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                                transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                                margin-bottom: 10px;" /* Added margin bottom for spacing */
+                                onclick="returnUniform('${uniform.uniform_item}', '${uniform.size_of_item}')"
+                                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                                <img src="/images/return_book.png" alt="Return" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                                <span style="margin-right: 10px;">Return</span>
+                            </button>
 
-            </td>
-        `;
-        uniformTableBody.appendChild(row);
-    });
-    hideUniformLoadingAnimation();
+                            <button style="background-color: transparent;
+                                border: none;
+                                color: black; /* Change text color to black */
+                                padding: 0;
+                                text-align: center;
+                                text-decoration: none;
+                                display: flex; /* Use flex for centering */
+                                align-items: center; /* Center vertically */
+                                justify-content: center; /* Center horizontally */
+                                font-size: 14px;
+                                cursor: pointer;
+                                max-height: 100%;
+                                border-radius: 20px; /* Round corners */
+                                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                                transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                                margin-bottom: 10px;" /* Added margin bottom for spacing */
+                                onclick="deleteUniform('${uniform.uniform_item}', '${uniform.size_of_item}')"
+                                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                                <img src="/images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                                <span style="margin-right: 10px;">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                uniformTableBody.appendChild(row);
+            });
+        }
+        hideUniformLoadingAnimation();
+    } catch (error) {
+        console.error('Error displaying uniforms:', error);
+        hideUniformLoadingAnimation();
+    }
 }
+
  
 // Function to handle deleting a uniform
-function deleteUniform(uniformItem, sizeOfItem) {
+async function deleteUniform(uniformItem, sizeOfItem) {
     const confirmation = confirm(`Are you sure you want to delete the uniform "${uniformItem}" of size "${sizeOfItem}"?`);
     if (confirmation) {
         showUniformLoadingAnimation();
-        fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}`, {
+        await fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}`, {
             method: 'DELETE'
         })
             .then(response => {
@@ -286,8 +301,8 @@ function deleteUniform(uniformItem, sizeOfItem) {
 }
 
 // Function to update a uniform item
-function updateUniformItem(uniformItem, sizeOfItem) {
-    fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`)
+async function updateUniformItem(uniformItem, sizeOfItem) {
+    await fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Failed to retrieve quantity.');
@@ -410,9 +425,9 @@ function updateUniformItem(uniformItem, sizeOfItem) {
 }
 
 // Function to update ordered quantity on the server
-function updateUniformOrderedQuantity(uniformItem, sizeOfItem, totalOrder, newRemainingQuantity) {
+async function updateUniformOrderedQuantity(uniformItem, sizeOfItem, totalOrder, newRemainingQuantity) {
     showUniformLoadingAnimation();
-    fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`, {
+    await fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -443,10 +458,10 @@ function updateUniformOrderedQuantity(uniformItem, sizeOfItem, totalOrder, newRe
 
 
 // Function to return a uniform
-function returnUniform(uniformItem, sizeOfItem) {
+async function returnUniform(uniformItem, sizeOfItem) {
     let newRemainingQuantity; // Declare newRemainingQuantity here
 
-    fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`)
+    await fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Failed to retrieve quantity.');
@@ -568,10 +583,10 @@ function returnUniform(uniformItem, sizeOfItem) {
 }
 
 // Function to update ordered quantity on the server
-function returnUniformQuantity(uniformItem, sizeOfItem, returnedQuantity, newRemainingQuantity) {
+async function returnUniformQuantity(uniformItem, sizeOfItem, returnedQuantity, newRemainingQuantity) {
     console.log(uniformItem, sizeOfItem, returnedQuantity, newRemainingQuantity)
     showUniformLoadingAnimation();
-    fetch(`/inventory/return_uniform/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`, {
+    await fetch(`/inventory/return_uniform/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -674,7 +689,7 @@ function submitEditUniformForm() {
     });
 }
 */
-function searchUniformDetails() {
+async function searchUniformDetails() {
     // showLoadingAnimation(); 
 
     const searchTerm = document.getElementById('uniformsearchField').value.trim();
@@ -689,7 +704,7 @@ function searchUniformDetails() {
     }
 
     // Fetch data from the server based on the search term
-    fetch(`/inventory/uniforms/search?search=${encodeURIComponent(searchTerm)}`)
+    await fetch(`/inventory/uniforms/search?search=${encodeURIComponent(searchTerm)}`)
         .then(response => response.json())
         .then(data => {
             const uniformTableBody = document.getElementById('uniformTableBody');

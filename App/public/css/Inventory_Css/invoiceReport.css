@@ -9,19 +9,25 @@ body {
     margin-top: 4rem;
 }
 
+
+/* Apply the animation to the .head class */
 .head {
     font-size: 35px;
     color: var(--grey-color);
     text-align: center;
     margin-top: 5rem;
+    animation: fadeInFromUp 1s ease-out; /* Animation applied here */
 }
 
+/* Apply the animation to the .filter-container class */
 .filter-container {
     display: flex;
     justify-content: center;
     gap: 30px;
     margin-top: -10px;
+    animation: fadeInFromUp 1s ease-out; /* Animation applied here */
 }
+
 
 .filter-container label{
     color: var(--grey-color);
@@ -76,6 +82,8 @@ body {
     width: 1.5rem; /* Adjust the size as needed */
     height: 1.5rem; /* Adjust the size as needed */
     pointer-events: none; /* Ensure the icon does not interfere with input */
+    border-radius: 15px;
+    mix-blend-mode: multiply; /* Add this property */
 }
 
 .custom-input-icon {
@@ -105,6 +113,8 @@ body {
 }
 
 
+
+
 /* Toggle Switch */
 /* Container around the switch */
 
@@ -132,6 +142,7 @@ body {
         width: 2.2rem; /* Adjust size as needed */
         height: 2.2rem; /* Adjust size as needed */
         background-color: transparent;
+        border-radius: 15px;
     }
     
     .switch input {
@@ -184,52 +195,398 @@ body {
     flex: 1;
     padding: 20px;
 }
-
+/* Remove background color from left-section */
 .left-section {
-    background-color: #f9f9f9;
+    /* No background color */
     border-right: 2px solid #ccc;
     display: flex;
     flex-direction: column;
     gap: 20px;
+    padding: 20px;
 }
 
+/* Style containers with h3 on top, date on the next line, and boxes horizontally aligned */
+/* Style containers with h3 on top, date on the next line, and boxes horizontally aligned */
 .container {
     display: flex;
-    justify-content: space-around; /* Align items horizontally with space between */
-    background-color: #e0e0e0;
-    padding: 10px;
-    border-radius: 5px;
+    flex-direction: column;
+    gap: 10px; /* Adjust spacing between elements */
+    color: var(--grey-color);
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 10px;
 }
 
-.box {
-    background-color: #ccc;
-    padding: 10px;
-    border-radius: 5px;
-    width: 80px; /* Adjust the width as needed */
-    text-align: center;
+.container h3 {
+    margin-bottom: 0.5rem; /* Space between the heading and date */
+    font-size: 1.25rem; /* Adjust font size as needed */
+    margin-top: 0rem;
 }
+
+.container p {
+    margin: 0; /* Remove default margin */
+    font-size: 1rem; /* Adjust font size as needed */
+    color: var(--grey-color); /* Ensure consistency with other text elements */
+}
+
+.container .box-container {
+    display: flex;
+    justify-content: space-around; /* Align boxes horizontally with space between */
+    gap: 10px; /* Adjust spacing between boxes */
+}
+
+
+/* Enhanced box styling */
+.box {
+    background-color: white; /* White background */
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3); /* Box shadow for depth */
+    padding: 15px; /* Increased padding for better spacing */
+    border-radius: 10px; /* Rounded corners */
+    min-width: 120px; /* Minimum width */
+    width: auto; /* Auto width to expand as needed */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center; /* Center align items */
+    position: relative; /* Position for icon */
+    transition: box-shadow 0.3s ease;
+    opacity: 0; /* Initial opacity for fade effect */
+    animation: fadeUp 1s forwards; /* Animation properties */
+}
+
+.box:hover {
+    box-shadow: 0 0 10px #5DADE2;
+}
+
+
+.box-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.box-col1 {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+}
+
+.box-col2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.box-heading {
+    font-size: 1rem; /* Adjust heading font size */
+    font-weight: bold; /* Bold heading text */
+    margin-bottom: 10px; /* Space between heading and number */
+}
+
+.box-number {
+    display: flex;
+    justify-content: space-between; /* Space between text and icon */
+    width: 100%; /* Ensure the icon and text are aligned within the box */
+}
+
+.box-number .box-icon {
+    width: 40px; /* Icon size */
+    height: 40px; /* Icon size */
+    /* Align icon to the right */
+    display: flex;
+    align-items: center;
+}
+
+.box p {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: var(--grey-color); /* Ensure consistency with other text elements */
+    flex: 1; /* Allow text to take up available space */
+}
+.box-col2 img {
+    width: 40px;
+    height: 40px;
+}
+
+
+
 
 /* Table Section */
 .right-section {
-    margin-top: 1rem;
+    margin-top: -1rem;
+}
+
+.table-container {
+    max-height: calc(100%); /* Set maximum height for the table container */
+    overflow-y: auto;
+    margin-top: 0.725rem; /* Set margin between the table container and overlay content */
+    border-radius: 10px;  
+   
 }
 
 #invoice-table {
     width: 100%;
     border-collapse: collapse;
+    border-spacing: 0;
+    border-radius: 1rem;  
+    box-shadow: 0 0 0 1px #dddddd;
+    margin: auto;
 }
 
 #invoice-table th,
 #invoice-table td {
     border: 1px solid #ddd;
     padding: 8px;
+    text-align: left;
+    box-sizing: border-box;
+    text-align: center;
+    opacity: 0; /* Initial opacity for fade effect */
+    animation: fadeUp 1s forwards; /* Animation properties */
 }
 
 #invoice-table th {
-    background-color: #f2f2f2;
-    text-align: left;
+    background-color: #2C3E50;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 10px;
 }
 
 #invoice-table tr:hover {
     background-color: #f1f1f1;
+}
+
+#invoice-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#invoice-table tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+#invoice-table td {
+    border: 1px solid #dddddd;
+    padding: 0.5rem;
+    text-align: center;
+    height: 50px; /* Fixed height */
+    overflow: hidden; /* Hide content that overflows */
+}
+
+#invoice-table tr:hover td {
+    background-color: #D6DBDF;
+    font-weight: bold;
+}
+
+#invoice-table thead th {
+    width: calc(100% / 9); /* Adjust width for each column */
+}
+#table-heading{
+    color: var(--grey-color);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    #invoice-table th,
+    #invoice-table td {
+        padding: 0.5rem;
+    }
+
+    #invoice-table th {
+        font-size: 0.875rem;
+    }
+
+    #invoice-table td {
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #invoice-table th,
+    #invoice-table td {
+        padding: 0.25rem;
+    }
+
+    #invoice-table th {
+        font-size: 0.75rem;
+    }
+
+    #invoice-table td {
+        font-size: 0.75rem;
+    }
+}
+
+
+
+@keyframes fadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInFromUp {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Define the fade in from up animation */
+@keyframes fadeInFromUp {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* loading aniamtion */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    /* Semi-transparent white background */
+    backdrop-filter: blur(5px);
+    /* Adjust blur as needed */
+    z-index: 9999;
+    /* Ensure the overlay appears on top of other content */
+    display: none;
+}
+
+/* HTML: <div class="loader"></div> */
+.pyramid-loader {
+    position: relative;
+    width: 300px;
+    height: 150px;
+    display: block;
+    transform-style: preserve-3d;
+    transform: rotateX(-20deg);
+  }
+  
+  .wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    animation: spin 4s linear infinite;
+  }
+  
+  @keyframes spin {
+    100% {
+      transform: rotateY(360deg);
+    }
+  }
+  
+  .pyramid-loader .wrapper .side {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(to bottom right, #FFA500, #FF4500);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    transform-origin: center top;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  }
+  
+  .pyramid-loader .wrapper .side1 {
+    transform: rotateZ(-30deg) rotateY(90deg);
+    background: linear-gradient(to bottom right, #FF4500, #FFA500);
+  }
+  
+  .pyramid-loader .wrapper .side2 {
+    transform: rotateZ(30deg) rotateY(90deg);
+    background: linear-gradient(to bottom right, #FFA500, #FF4500);
+  }
+  
+  .pyramid-loader .wrapper .side3 {
+    transform: rotateX(30deg);
+    background: linear-gradient(to bottom right, #FFA500, #FF4500);
+  }
+  
+  .pyramid-loader .wrapper .side4 {
+    transform: rotateX(-30deg);
+    background: linear-gradient(to bottom right, #FF4500, #FFA500);
+  }
+  
+  .pyramid-loader .wrapper .shadow {
+    width: 60px;
+    height: 60px;
+    background: #FF8C00;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    transform: rotateX(90deg) translateZ(-40px);
+    filter: blur(12px);
+  }
+
+  /* Toast container to hold multiple toasts */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.toast {
+    width: 15rem;
+    position: fixed;
+    top: 20px;
+    right: -200px;
+    /* Initially off-screen to the right */
+    background-color: #4CAF50;
+    /* Green background */
+    color: white;
+    padding: 16px;
+    border-radius: 8px;
+    z-index: 9999;
+    display: none;
+    /* Changed from 'none' to 'block' */
+    animation: slideInRight 0.5s forwards;
+    /* Slide in animation */
+}
+
+@keyframes slideInRight {
+    from {
+        right: -200px;
+        /* Start off-screen to the right */
+    }
+
+    to {
+        right: 20px;
+        /* End at the desired position */
+    }
+}
+
+.toast.error {
+    background-color: #f44336;
+    color: white;
+    /* Red background for error */
 }

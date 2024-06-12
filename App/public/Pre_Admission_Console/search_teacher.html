@@ -218,6 +218,8 @@
 
                     async function refreshData() {
                         showLoadingAnimation();
+                        const teacherTableBody = document.getElementById('teacherData');
+                        teacherTableBody.innerHTML = ''; // Clear previous data
                         document.getElementById('searchField').value = '';
                         try {
                             const response = await fetch('/teachers');
@@ -306,7 +308,7 @@
 
 
 
-                    function searchDetails() {
+                    async function searchDetails() {
                         // showLoadingAnimation();
 
                         const searchTerm = document.getElementById('searchField').value.trim();
@@ -327,7 +329,7 @@
                         }
 
                         // Fetch data from the server based on the search term
-                        fetch(`/teachers/search?search=${encodeURIComponent(searchTerm)}`)
+                        await fetch(`/teachers/search?search=${encodeURIComponent(searchTerm)}`)
                             .then(response => response.json())
                             .then(data => {
                                 const teacherTable = document.getElementById('teacherData');
@@ -401,11 +403,11 @@
 
 
 
-                    function moveToAdmitted(teacherName, mobileNo, address, dob, qualification, experience) {
+                    async function moveToAdmitted(teacherName, mobileNo, address, dob, qualification, experience) {
                         const confirmation = confirm(`Are you sure you want to admit the teacher "${teacherName}"?`);
                         if (confirmation) {
                             showLoadingAnimation();
-                            fetch(`/move-to-admitted-teacher?name=${encodeURIComponent(teacherName)}&mobile=${encodeURIComponent(mobileNo)}&address=${encodeURIComponent(address)}&dob=${encodeURIComponent(dob)}&qualification=${encodeURIComponent(qualification)}&experience=${encodeURIComponent(experience)}`, {
+                            await fetch(`/move-to-admitted-teacher?name=${encodeURIComponent(teacherName)}&mobile=${encodeURIComponent(mobileNo)}&address=${encodeURIComponent(address)}&dob=${encodeURIComponent(dob)}&qualification=${encodeURIComponent(qualification)}&experience=${encodeURIComponent(experience)}`, {
                                 method: 'POST'
                             })
                                 .then(response => {
@@ -428,11 +430,11 @@
                         }
                     }
 
-                    function removeTeacher(teacherName, mobileNo) {
+                    async function removeTeacher(teacherName, mobileNo) {
                         const confirmation = confirm(`Are you sure you want to remove the teacher "${teacherName}"?`);
                         if (confirmation) {
                             showLoadingAnimation();
-                            fetch(`/remove-teacher?name=${encodeURIComponent(teacherName)}&mobile=${encodeURIComponent(mobileNo)}`, {
+                            await fetch(`/remove-teacher?name=${encodeURIComponent(teacherName)}&mobile=${encodeURIComponent(mobileNo)}`, {
                                 method: 'DELETE'
                             })
                                 .then(response => {
