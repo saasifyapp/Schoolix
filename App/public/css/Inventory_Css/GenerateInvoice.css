@@ -4,6 +4,24 @@ html, body {
     padding: 0;
 }
 
+
+:root {
+  --body-font: 'Poppins', sans-serif;
+}
+
+/* Bootstrap Override */
+body {
+  --bs-font-sans-serif: 'Poppins', sans-serif;
+  --bs-body-font-family: var(--bs-font-sans-serif);
+  --bs-body-font-size: 1rem;
+  --bs-body-font-weight: 400;
+  --bs-body-line-height: 2;
+  --bs-body-color: #41403E;
+  --bs-primary: #0070E4;
+  --bs-primary-rgb: 0, 112, 228;
+  --bs-border-color: #eeeeee;
+}
+
 .container-fluid {
     height: 100%;
     display: flex;
@@ -17,7 +35,7 @@ html, body {
 }
 
 .first{
-  width: 70%;
+  
   height: 100% !important;
 }
 
@@ -312,7 +330,7 @@ hr {
   margin-right: 1rem;
   flex: 1;
   /* Allow input fields to grow */
-  height: 3rem;
+  height: 3rem !important;
   /* Increased height for input fields */
   transition: transform 0.3s ease-in-out;
 }
@@ -349,7 +367,7 @@ hr {
 
 .form-control:focus+.form-control-placeholder,
 .form-control:not(:placeholder-shown)+.form-control-placeholder {
-  top: -0.2rem;
+  top: -0.5rem;
   /* Adjusted position when focused */
   font-size: 0.80rem;
   font-weight: 400;
@@ -856,16 +874,19 @@ hr {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  overflow: auto; /* Enable scrolling for the overlay */
 }
 
 .popup {
   background: #fff;
   padding: 20px;
-  border-radius: 8px;
+  border-radius:10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  max-width: 500px;
+  max-width: 75%;
   width: 100%;
+  max-height: 80%; /* Set a maximum height for the popup */
+  overflow-y: auto; /* Enable vertical scrolling for the popup content */
 }
 
 .popup-buttons {
