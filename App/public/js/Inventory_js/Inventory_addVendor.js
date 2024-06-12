@@ -224,8 +224,11 @@ async function updateVendor(vendorName) {
                     <h2>${vendorName}</h2>
                     <p>Net Payable: ${net_payable.toFixed(2)}</p>
                     <p>Paid Till Now: ${existingPaidAmount.toFixed(2)}</p>
-                    <p>New Amount Paid:</p>
-                    <input type="number" step="0.01" id="newPaidAmountInput" min="0">
+                    <p>New Amount Paid:</p>                   
+                    <div class="form-group">
+        <input type="number" class="form-control" id="newPaidAmountInput" min="0" placeholder=" " required style="width:6rem;">
+        <span class="form-control-placeholder">Enter Amount Paid</span>
+    </div>
                     <p id="totalPaid">Total Paid: ${existingPaidAmount.toFixed(2)}</p>
                     <p id="balance">Balance: ${initialBalance.toFixed(2)}</p>
                     <button id="confirmButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;" onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
