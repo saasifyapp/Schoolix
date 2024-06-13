@@ -29,7 +29,8 @@
     </div>
 
     <div class="navbar_center">
-      <button onclick="window.location.href='/dashboard'"> <i class='bx' id="backButton"> <img src="/images/back.png" alt="Previous Icon"></i></button>
+      <button onclick="window.location.href='/dashboard'"> <i class='bx' id="backButton"> <img src="/images/back.png"
+            alt="Previous Icon"></i></button>
       <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img src="/images/homeicon.png"
             alt="Dashboard Icon"></i></button>
       <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
@@ -151,7 +152,7 @@
           </div>
 
           <div class="form-group" style="margin-bottom: 1.8rem;">
-            <select id="vendorFor" class="custom-dropdown" name="vendorFor" required>
+            <select id="vendorFor" class="custom-dropdown" name="vendorFor" required style=" min-width: 10rem">
               <option value="" disabled selected> Vendor For </option>
               <option value="Books">Books</option>
               <option value="Uniform">Uniform</option>
@@ -226,9 +227,11 @@
           </div>
 
           <!-- CSS for below dropdown added in Inventory.css-->
-          <div class="form-group" style="flex: 0.7; position: relative;"  >
-            <div id="customDropdown" class="custom-dropdown" style=" height: 2rem;" onclick="toggleDropdown()">
-              <div class="dropdown-selected">Class</div>
+          <div class="form-group" style="flex: 0.9; position: relative;">
+            <div id="customDropdown" class="custom-dropdown"
+              style="min-height: 2rem; height: auto; min-width: 65px; margin-bottom: 0.8rem;"
+              onclick="toggleDropdown()">
+              <div class="dropdown-selected" disabled style="margin-top: 3px;">Class</div>
               <div class="dropdown-options">
                 <div class="option" data-value="Range">
                   Range &#8680;
@@ -261,25 +264,29 @@
             <input type="hidden" id="bookClass" name="bookClass" required>
           </div>
 
+
           <div class="form-group" style="flex: 1;">
-            <input type="number" class="form-control" id="book_sellingPrice" name="book_sellingPrice" placeholder=" " required style="width: 100%;">
+            <input type="number" class="form-control" id="book_sellingPrice" name="book_sellingPrice" placeholder=" "
+              required style="width: 100%;">
             <span class="form-control-placeholder">Selling Price</span>
-        </div>
-        
-        <div class="form-group" style="flex: 1;">
-            <input type="number" class="form-control" id="book_margin" name="book_margin" placeholder=" " required style="width: 80%;" step="0.01">
+          </div>
+
+          <div class="form-group" style="flex: 1;">
+            <input type="number" class="form-control" id="book_margin" name="book_margin" placeholder=" " required
+              style="width: 80%;" step="0.01">
             <span class="form-control-placeholder">% Margin</span>
-        </div>
-        
-        <div class="form-group" style="flex: 1;">
-            <input type="number" class="form-control" id="book_purchasePrice" name="book_purchasePrice" placeholder=" " required readonly style="width: 100%;">
+          </div>
+
+          <div class="form-group" style="flex: 1;">
+            <input type="number" class="form-control" id="book_purchasePrice" name="book_purchasePrice" placeholder=" "
+              required readonly style="width: 100%;">
             <span class="form-control-placeholder">Purchase Price</span>
-        </div>
+          </div>
 
 
           <div class="form-group" style="flex: 1.1;">
             <select id="bookvendor" name="vendor" class="custom-dropdown" required
-              style="border-style: none; margin-bottom: 0.8rem;">
+              style="border-style: none; margin-bottom: 0.8rem; min-width: 11rem;">
               <!-- Options will be populated dynamically -->
               <option value="" disabled selected>Vendor</option>
             </select>
@@ -287,7 +294,7 @@
           <div class="form-group" style="flex: 1;">
             <input type="number" class="form-control" id="orderedQuantity" name="orderedQuantity" placeholder=" "
               required style="width: 100%;">
-            <span class="form-control-placeholder">Ordered Quantity</span>
+            <span class="form-control-placeholder">Quantity</span>
           </div>
           <button class="form-group" type="submit"
             style="border-style: none; background-color: transparent; align-self: center;">
@@ -374,22 +381,24 @@
           </div>
 
           <div class="form-group" style="flex: 1;">
-            <input type="number" class="form-control" id="uniform_purchasePrice" name="uniform_purchasePrice" placeholder=" " required  style="width: 100%;">
+            <input type="number" class="form-control" id="uniform_purchasePrice" name="uniform_purchasePrice"
+              placeholder=" " required style="width: 100%;">
             <span class="form-control-placeholder">Purchase Price</span>
-        </div> 
+          </div>
 
           <div class="form-group" style="flex: 1;">
-            <input type="number" class="form-control" id="uniform_sellingPrice" name="uniform_sellingPrice" placeholder=" " required style="width: 100%;">
+            <input type="number" class="form-control" id="uniform_sellingPrice" name="uniform_sellingPrice"
+              placeholder=" " required style="width: 100%;">
             <span class="form-control-placeholder">Selling Price</span>
-        </div>
-        <!--
+          </div>
+          <!--
         <div class="form-group" style="flex: 1;">
             <input type="number" class="form-control" id="uniform_margin" name="uniform_margin" placeholder=" " required style="width: 80%;" step="0.01">
             <span class="form-control-placeholder">% Margin</span>
         </div> -->
-        
 
-        
+
+
           <div class="form-group" style="flex: 1;">
             <select id="univendor" class="custom-dropdown form-control" name="vendor" required
               style="width: 100%;  margin-bottom: 0.8rem;">
@@ -486,23 +495,23 @@
       </div>
 
       <div id="table-container" class="table-container" style=" max-height: calc(100% - 10rem);">
-      
-          <div id="loadingOverlayReport" class="loading-overlay">
-            <div>
-              <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
-                type="module"></script>
-  
-              <dotlottie-player src="https://lottie.host/7319098f-7e9e-40eb-8ffe-6c22f55e9d70/qNoQ09vbMn.json"
-                background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
-            </div>
-          </div>
-          <div id="emptyMessage" class="empty-message ">
+
+        <div id="loadingOverlayReport" class="loading-overlay">
+          <div>
             <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
               type="module"></script>
-            <dotlottie-player src="https://lottie.host/5d6fe6dc-d344-4b95-a6b4-17a5e01b88c8/2DhrGZVFGN.json"
-              background="transparent" speed="1" style="width: 600px; height: 450px;" loop autoplay></dotlottie-player>
-          </div>  
-        
+
+            <dotlottie-player src="https://lottie.host/7319098f-7e9e-40eb-8ffe-6c22f55e9d70/qNoQ09vbMn.json"
+              background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+          </div>
+        </div>
+        <div id="emptyMessage" class="empty-message ">
+          <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+            type="module"></script>
+          <dotlottie-player src="https://lottie.host/5d6fe6dc-d344-4b95-a6b4-17a5e01b88c8/2DhrGZVFGN.json"
+            background="transparent" speed="1" style="width: 600px; height: 450px;" loop autoplay></dotlottie-player>
+        </div>
+
       </div> <!-- Container to display the table -->
     </div>
   </div>

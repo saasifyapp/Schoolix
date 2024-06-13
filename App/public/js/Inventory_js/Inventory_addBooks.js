@@ -43,39 +43,45 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 /////////////// Class Dropdown ////////////////
-
+// Function to toggle dropdown visibility
 function toggleDropdown() {
   const dropdown = document.querySelector('.dropdown-options');
   dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
 }
 
+// Event listeners for options
 document.querySelectorAll('.option').forEach(option => {
   option.addEventListener('click', function(event) {
     if (!this.classList.contains('has-submenu')) {
       const selectedText = this.textContent.trim();
       document.querySelector('.dropdown-selected').textContent = selectedText;
       document.getElementById('bookClass').value = this.dataset.value;
-      document.querySelector('.dropdown-options').style.display = 'none';
+      document.querySelector('.dropdown-options').style.display = 'none'; // Hide dropdown
     }
   });
 });
 
+// Event listeners for sub-options
 document.querySelectorAll('.submenu-option').forEach(subOption => {
   subOption.addEventListener('click', function(event) {
     const selectedText = this.textContent.trim();
     document.querySelector('.dropdown-selected').textContent = selectedText;
     document.getElementById('bookClass').value = this.dataset.value;
-    document.querySelector('.dropdown-options').style.display = 'none';
+    document.querySelector('.dropdown-options').style.display = 'none'; // Hide dropdown
     event.stopPropagation();
   });
 });
 
+// Event listener to hide dropdown when clicking outside
 document.addEventListener('click', function(event) {
   const dropdown = document.querySelector('.dropdown-options');
-  if (!dropdown.contains(event.target) && !event.target.matches('.dropdown-selected')) {
+  const customDropdown = document.getElementById('customDropdown');
+  if (!customDropdown.contains(event.target)) {
     dropdown.style.display = 'none';
   }
 });
+
+
 
 //////////////////////////////////
 
@@ -87,6 +93,15 @@ document.addEventListener("DOMContentLoaded", function () {
   if (booksform) {
     // Add submit event listener to the form
     booksform.addEventListener("submit", async function (event) {
+
+      const bookClassValue = document.getElementById('bookClass').value;
+
+      // Check if the bookClass field is empty
+      if (!bookClassValue) {
+        event.preventDefault(); // Prevent the default form submission
+        showToast("Please select a class before submitting", "red");
+        return;
+      }
       showBooksLoadingAnimation();
       event.preventDefault(); // Prevent the default form submission
 
@@ -136,6 +151,8 @@ document.addEventListener("DOMContentLoaded", function () {
           hideBooksLoadingAnimation();
           // Clear input fields after successful submission
           booksform.reset();
+          // Reset the dropdown
+        resetDropdown();
         })
         .then((data) => {
           hideBooksLoadingAnimation();
@@ -160,6 +177,22 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
   }
+});
+
+function resetDropdown() {
+  document.querySelector('.dropdown-selected').textContent = "Class";
+  document.getElementById('bookClass').value = "";
+  document.querySelector('.dropdown-options').style.display = 'none';
+}
+
+document.querySelectorAll('.submenu-option').forEach(subOption => {
+  subOption.addEventListener('click', function(event) {
+    const selectedText = this.textContent.trim();
+    document.querySelector('.dropdown-selected').textContent = selectedText;
+    document.getElementById('bookClass').value = this.dataset.value;
+    document.querySelector('.dropdown-options').style.display = 'none'; // Hide dropdown
+    event.stopPropagation();
+  });
 });
 
 // Function to populate vendor dropdowns
