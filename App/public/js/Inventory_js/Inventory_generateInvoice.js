@@ -208,10 +208,82 @@ function updatePrice(selectElement) {
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////// GENERATE BUTTON FUNCTIONALITY TEST ////////////////////////////////////////////////////////////////////
+
+document.addEventListener('DOMContentLoaded', () => {
+    const generateButton = document.getElementById('generateButton');
+    const initialImage = document.querySelector('dotlottie-player');
+    const billContainer = document.getElementById('invoiceDetails');
+
+    generateButton.addEventListener('click', () => {
+        // Hide the initial image
+        initialImage.style.display = 'none';
+        // Show the bill container
+        billContainer.style.display = 'block';
+
+        // Call function to generate the bill details
+        generateBill_test();
+    });
+});
+
+function generateBill_test() {
+    // Fetch and populate books table data
+    const booksTableRows = document.querySelectorAll('#booksTable tbody tr');
+    const booksData = [];
+    booksTableRows.forEach(row => {
+        const title = row.children[0].textContent;
+        const quantity = parseInt(row.querySelector('input[type="number"]').value);
+        const unitPrice = parseFloat(row.children[2].textContent);
+        const total = quantity * unitPrice;
+        booksData.push({ title, quantity, unitPrice, total });
+    });
+
+    // Fetch and populate uniforms table data
+    const uniformsTableRows = document.querySelectorAll('#uniformsTable tbody tr');
+    const uniformsData = [];
+    uniformsTableRows.forEach(row => {
+        const item = row.children[0].textContent;
+        const size = row.querySelector('select').value;
+        const quantity = parseInt(row.querySelector('input[type="number"]').value);
+        const unitPrice = parseFloat(row.children[3].textContent);
+        const total = quantity * unitPrice;
+        uniformsData.push({ item, size, quantity, unitPrice, total });
+    });
+
+    // Combine books and uniforms data into one array for the bill
+    const billData = [...booksData, ...uniformsData];
+
+    // Clear previous bill details if needed
+    const billTableBody = document.getElementById('billTableBody');
+    billTableBody.innerHTML = '';
+
+    // Populate items into the bill table
+    billData.forEach((item, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${item.title || `${item.item} (Size: ${item.size})`}</td>
+            <td>${item.unitPrice.toFixed(2)}</td>
+            <td>${item.quantity}</td>
+            <td>${item.total.toFixed(2)}</td>
+        `;
+        billTableBody.appendChild(row);
+    });
+
+    // Calculate sub-total and grand total
+    let subTotal = 0;
+    billData.forEach(item => {
+        subTotal += item.total;
+    });
+    document.getElementById('subTotal').textContent = subTotal.toFixed(2);
+    document.getElementById('grandTotal').textContent = subTotal.toFixed(2); // For now, grand total same as sub-total
+}
 
 /*****************************        GENERATE BUTTON FUNCTIONALITY     *********************** */
-///////////////COMMENTING IN CASE OF ROLLBACK
+
+// UNCOMMENT WHEN GENERATE INVOICE IS COMPLETELY BUILD ////////
+
+// At the bottom of this function, call a function to create the invoice ///
 
 // document.getElementById("generateButton").addEventListener("click", async function () {
 //     showInventoryLoadingAnimation();
@@ -826,25 +898,3 @@ function printBill() {
     document.body.removeChild(printFrame);
 }
 //////////////////////NEW COMMIT FOR TESTING //////////////////////
-document.getElementById('generateButtontest').addEventListener('click', function(event) {
-    event.preventDefault();
-
-    // // Generate bill content (this is just an example, replace with your actual bill content)
-    // const billContent = `
-    //     <p>Bill No: 12345</p>
-    //     <p>Buyer: John Doe</p>
-    //     <p>Total Amount: $100</p>
-    //     <!-- Add more bill details here -->
-    // `;
-
-    // // Insert the generated bill content into the pop-up
-    // document.getElementById('billContent').innerHTML = billContent;
-
-    // Display the pop-up
-    document.getElementById('billPopupOverlay').style.display = 'flex';
-});
-
-document.getElementById('closeButton').addEventListener('click', function() {
-    // Hide the pop-up
-    document.getElementById('billPopupOverlay').style.display = 'none';
-});

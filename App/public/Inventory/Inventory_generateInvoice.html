@@ -11,12 +11,10 @@
     <link rel="stylesheet" href="/css/NavButtons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 </head>
 
@@ -91,7 +89,7 @@
                                 <h5>Invoice Details</h5>
                                 <form>
                                     <div class="form-row" style="justify-content: center;">
-                                        <div class="form-group" >
+                                        <div class="form-group">
                                             <label for="invoiceNo" style="margin-top: 3px;">Invoice No &#8594;</label>
                                             <input id="invoiceNo" style="border: none; width: 5rem; margin-left: 1rem;">
                                             <!-- arrow character -->
@@ -127,8 +125,8 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                
-                                
+
+
                             </div>
                         </div>
                         <!-- Display Uniform -->
@@ -151,7 +149,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                
+
                             </div>
                         </div>
                     </div>
@@ -202,7 +200,7 @@
                             <div class="section control-panel" style="margin-left: 0.8rem; height: 110px;">
                                 <h5>Control Panel</h5>
                                 <div class="control-button-container">
-                                    <button id="generateButtontest" class="control-button">
+                                    <button id="generateButton" class="control-button">
                                         <img src="/images/generateinvoice.png" alt="Refresh Icon"
                                             style="width: 25px; height: 25px;">
                                         Generate
@@ -224,150 +222,80 @@
                 </div>
             </div>
 
-           
-            
+
+
 
 
             <!-- Second Container -->
             <div class="bill-container" style="height: 100%;" id="printableContainer">
-                <div class="section bill">
+                <!-- Initial image display -->
+                <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                    type="module"></script>
+
+                <dotlottie-player src="https://lottie.host/97f9d044-7f3e-4e77-8876-9e50bf6f91a9/ABiWgVQcNd.json"
+                    background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                    autoplay></dotlottie-player>
+
+
+                <!-- Invoice details section -->
+                <div class="section bill" id="invoiceDetails" style="display: none;">
                     <h5>Display Bill</h5>
-                    <div class="full-width table-container" style="overflow-y: hidden; /* Enable vertical scrolling */">
-                        <!-- Bill details go here -->               
-                                                                                               
-                            <section id="invoice">
-                                <div class="container ">                                  
-                                    <!-- <div class="text-center border-top border-bottom  py-2">
-                                        <h2 class="display-5 fw-bold">Invoice V1 </h2>
-                                        <p class="m-0">Invoice No: 12345</p>
-                                        <p class="m-0">Invoice Date: 20 May, 2024</p>
-                                    </div> -->
-
-                                    <div class="d-md-flex justify-content-between">
-                                        <div>
-                                            <p class="text-primary">Invoice To</p>
-                                            <h6><iconify-icon icon="ph:student-duotone"  style="color: #3498DB"></iconify-icon>
-
-                                                Name</h6>
-                                            <ul class="list-unstyled">
-                                                <li><iconify-icon icon="mingcute:classify-add-2-line"  style="color: #3498DB"></iconify-icon>
-                                                    Class</li>
-                                                <li><iconify-icon icon="mage:phone-call"  style="color: #3498DB"></iconify-icon>
-                                                    Phone</li>
-                                                <!-- <li>123 Main Street</li> -->
-                                            </ul>
-                                        </div>
-                                        <div class="mt-5 mt-md-0">
-                                            <p class="text-primary"> Invoice Details</p>
-                                            <h6>Name</h6>
-                                            <ul class="list-unstyled">
-                                                <li><iconify-icon icon="uil:invoice"  style="color: #3498DB"></iconify-icon>
-                                                    Invoice No.</li>
-                                                <li><iconify-icon icon="uiw:date"  style="color: #3498DB"></iconify-icon> Date</li>
-                                                <li><iconify-icon icon="mdi:tick-circle-outline"  style="color: #3498DB"></iconify-icon>
-                                                    Status</li>
-                                            </ul>
-                                        </div>
+                    <div class="full-width table-container" style="overflow-y: hidden;">
+                        <section id="invoice">
+                            <div class="container">
+                                <div class="d-md-flex justify-content-between">
+                                    <div>
+                                        <p class="text-primary">Invoice To</p>
+                                        <h6><iconify-icon icon="ph:student-duotone"
+                                                style="color: #3498DB"></iconify-icon>Name</h6>
+                                        <ul class="list-unstyled">
+                                            <li><iconify-icon icon="mingcute:classify-add-2-line"
+                                                    style="color: #3498DB"></iconify-icon>Class</li>
+                                            <li><iconify-icon icon="mage:phone-call"
+                                                    style="color: #3498DB"></iconify-icon>Phone</li>
+                                        </ul>
                                     </div>
-
-                                    <table class="table border my-5">
-                                        <thead>
-                                            <tr class="bg-primary-subtle">
-                                                <th scope="col" style="width: 10.33%;">No.</th>
-                                                <th scope="col">Item</th>
-                                                <th scope="col">Price</th>
-                                                <th scope="col">Quantity</th>
-                                                <th scope="col">Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody style="overflow: hidden;">
-                                            <tr>
-                                              <td>1</td>
-                                                <td>item1 </td>
-                                                <td>350</td>
-                                                <td>2</td>
-                                                <td>700</td>
-                                            </tr>
-                                            <tr>
-                                               <td>2</td>
-                                                <td>item2 </td>
-                                                <td>250</td>
-                                                <td>1</td>
-                                                <td>250</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>item3 </td>
-                                                <td>100.00</td>
-                                                <td>4</td>
-                                                <td>400</td>
-                                            </tr>
-                                           <td>4</td>
-                                            <td>item4 </td>
-                                            <td>350</td>
-                                            <td>2</td>
-                                            <td>700</td>
-                                            </tr>
-                                            <tr>
-                                               <td>5</td>
-                                                <td>item5</td>
-                                                <td>250</td>
-                                                <td>2</td>
-                                                <td>500</td>
-                                            </tr>
-                                            <tr>
-                                               <td>6</td>
-                                                <td>item5 </td>
-                                                <td>100</td>
-                                                <td>4</td>
-                                                <td>400</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td class="">Sub-Total</td>
-                                                <td>2,350</td>
-                                            </tr>
-                                            <!-- <tr>
-                                                <th></th>
-                                                <td></td>
-                                                <td></td>
-                                                <td class="">TAX 20%</td>
-                                                <td>$470.00</td>
-                                            </tr> -->
-                                            <tr>
-                                               <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td class="text-primary fw-bold">Grand-Total</td>
-                                                <td class="text-primary fw-bold">1,880.00</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-<!-- 
-                                    <div class="text-center my-5">
-                                        <p class="text-muted"><span class="fw-semibold">NOTICE: </span> A finance charge
-                                            of 1.5% will be made on
-                                            unpaid balances after 30 days.</p>
-                                    </div> -->
-
-                                    <!-- <div id="footer-bottom">
-                                        <div class="container border-top">
-                                            <div class="row mt-3">
-                                                <div class="col-md-6 copyright">
-                                                    <p>© 2024 Invoice. <a href="#" target="_blank"
-                                                            class="text-decoration-none text-black-50">Terms &
-                                                            Conditions</a> </p>
-                                                </div>                                               
-                                            </div>
-                                        </div>
-                                    </div> -->
-
+                                    <div class="mt-5 mt-md-0">
+                                        <p class="text-primary"> Invoice Details</p>
+                                        <h6>Name</h6>
+                                        <ul class="list-unstyled">
+                                            <li><iconify-icon icon="uil:invoice"
+                                                    style="color: #3498DB"></iconify-icon>Invoice No.</li>
+                                            <li><iconify-icon icon="uiw:date" style="color: #3498DB"></iconify-icon>Date
+                                            </li>
+                                            <li><iconify-icon icon="mdi:tick-circle-outline"
+                                                    style="color: #3498DB"></iconify-icon>Status</li>
+                                        </ul>
+                                    </div>
                                 </div>
-                            </section>                       
-                                                
+
+                                <!-- Table for displaying bill items -->
+                                <table class="table border my-5">
+                                    <thead>
+                                        <tr class="bg-primary-subtle">
+                                            <th scope="col" style="width: 10.33%;">No.</th>
+                                            <th scope="col">Item</th>
+                                            <th scope="col">Price</th>
+                                            <th scope="col">Quantity</th>
+                                            <th scope="col">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="billTableBody">
+                                        <!-- Bill items will be dynamically inserted here -->
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="4" class="text-primary fw-bold">Sub-Total</td>
+                                            <td id="subTotal" class="text-primary fw-bold">0.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="text-primary fw-bold">Grand-Total</td>
+                                            <td id="grandTotal" class="text-primary fw-bold">0.00</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </section>
                     </div>
                 </div>
             </div>
@@ -423,11 +351,10 @@
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-        <script
-                                src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-                                integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-                                crossorigin="anonymous"></script>
-                            <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+            crossorigin="anonymous"></script>
+        <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 </body>
 
 </html>
