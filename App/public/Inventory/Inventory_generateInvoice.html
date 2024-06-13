@@ -90,8 +90,8 @@
                             <div class="section invoice-details">
                                 <h5>Invoice Details</h5>
                                 <form>
-                                    <div class="form-row">
-                                        <div class="form-group ">
+                                    <div class="form-row" style="justify-content: center;">
+                                        <div class="form-group" >
                                             <label for="invoiceNo" style="margin-top: 3px;">Invoice No &#8594;</label>
                                             <input id="invoiceNo" style="border: none; width: 5rem; margin-left: 1rem;">
                                             <!-- arrow character -->
@@ -116,7 +116,7 @@
                                     <table class="table table-bordered" id="booksTable">
                                         <thead>
                                             <tr>
-                                                <th style="width: 29%;">Title</th>
+                                                <th>Title</th>
                                                 <th>Quantity</th>
                                                 <th>Unit Price</th>
                                                 <th>Price</th>
@@ -127,6 +127,8 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                
+                                
                             </div>
                         </div>
                         <!-- Display Uniform -->
@@ -149,11 +151,12 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                
                             </div>
                         </div>
                     </div>
 
-                    <div class="bottom-container">
+                    <div class="bottom-container" style="margin-top: -1.3rem;">
 
                         <div class="row">
                             <!-- Invoice Summary -->
@@ -196,7 +199,7 @@
 
                             <!-- Control Panel -->
 
-                            <div class="section control-panel" style="margin-left: 0.8rem; ">
+                            <div class="section control-panel" style="margin-left: 0.8rem; height: 110px;">
                                 <h5>Control Panel</h5>
                                 <div class="control-button-container">
                                     <button id="generateButtontest" class="control-button">
@@ -221,210 +224,48 @@
                 </div>
             </div>
 
-            <!-- Pop-up structure TEST-->
-            <div id="billPopupOverlay" class="popup-overlay">
-                <div id="billPopup" class="popup">                    
-                    <div id="billContent">
-                        <!-- Bill content will be dynamically inserted here -->
-
-                        <section id="invoice">
-                            <div class="container my-1 py-1">
-                                <div class="text-center">
-                                    <img src="images/logo_dark.png" alt="">
-                                </div>
-                                <div class="text-center border-top border-bottom my-5 py-3">
-                                    <h2 class="display-5 fw-bold">Invoice V1 </h2>
-                                    <p class="m-0">Invoice No: 12345</p>
-                                    <p class="m-0">Invoice Date: 20 May, 2024</p>
-                                </div>
-                    
-                                <div class="d-md-flex justify-content-between">
-                                    <div>
-                                        <p class="text-primary">Invoice To</p>
-                                        <h4>Roger Y. Will</h4>
-                                        <ul class="list-unstyled">
-                                            <li>XYZ Company</li>
-                                            <li>info@xyzcompany.com</li>
-                                            <li>123 Main Street</li>
-                                        </ul>
-                                    </div>
-                                    <div class="mt-5 mt-md-0">
-                                        <p class="text-primary">Invoice From</p>
-                                        <h4>William Peter</h4>
-                                        <ul class="list-unstyled">
-                                            <li>ABC Company</li>
-                                            <li>info@abccompany.com</li>
-                                            <li>456 Main Street</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                    
-                                <table class="table border my-5">
-                                    <thead>
-                                        <tr class="bg-primary-subtle">
-                                            <th scope="col">No.</th>
-                                            <th scope="col">Description</th>
-                                            <th scope="col">Price</th>
-                                            <th scope="col">Quantity</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>Brand Designing</td>
-                                            <td>$350.00</td>
-                                            <td>2</td>
-                                            <td>$700.00</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">2</th>
-                                            <td>Website Development</td>
-                                            <td>$250.00</td>
-                                            <td>1</td>
-                                            <td>$250.00</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">3</th>
-                                            <td>Blog Writing</td>
-                                            <td>$100.00</td>
-                                            <td>4</td>
-                                            <td>$400.00</td>
-                                        </tr>
-                                        <th scope="row">4</th>
-                                        <td>Logo Designing</td>
-                                        <td>$350.00</td>
-                                        <td>2</td>
-                                        <td>$700.00</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">5</th>
-                                            <td>Wordpress Theme Development</td>
-                                            <td>$250.00</td>
-                                            <td>2</td>
-                                            <td>$500.00</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">6</th>
-                                            <td>Website Advertisement</td>
-                                            <td>$100.00</td>
-                                            <td>4</td>
-                                            <td>$400.00</td>
-                                        </tr>
-                                        <tr>
-                                            <th></th>
-                                            <td></td>
-                                            <td></td>
-                                            <td class="">Sub-Total</td>
-                                            <td>$2,350.00</td>
-                                        </tr>
-                                        <tr>
-                                            <th></th>
-                                            <td></td>
-                                            <td></td>
-                                            <td class="">TAX 20%</td>
-                                            <td>$470.00</td>
-                                        </tr>
-                                        <tr>
-                                            <th></th>
-                                            <td></td>
-                                            <td></td>
-                                            <td class="text-primary fw-bold">Grand-Total</td>
-                                            <td class="text-primary fw-bold">$1,880.00</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                    
-                                <div class="d-md-flex justify-content-between my-5">
-                                    <div>
-                                        <h5 class="fw-bold my-4">Contact Us</h5>
-                                        <ul class="list-unstyled">
-                                            <li><iconify-icon class="social-icon text-primary fs-5 me-2" icon="mdi:location"
-                                                    style="vertical-align:text-bottom"></iconify-icon> 30 E Lake St, Chicago, USA</li>
-                                            <li><iconify-icon class="social-icon text-primary fs-5 me-2" icon="solar:phone-bold"
-                                                    style="vertical-align:text-bottom"></iconify-icon> (510) 710-3464</li>
-                                            <li><iconify-icon class="social-icon text-primary fs-5 me-2" icon="ic:baseline-email"
-                                                    style="vertical-align:text-bottom"></iconify-icon> info@worldcourse.com</li>
-                                        </ul>
-                                    </div>
-                                    <div>
-                                        <h5 class="fw-bold my-4">Payment Info</h5>
-                                        <ul class="list-unstyled">
-                                            <li><span class="fw-semibold">Account No: </span> 102 3345 56938</li>
-                                            <li><span class="fw-semibold">Account Name: </span> William Peter</li>
-                                            <li><span class="fw-semibold">Branch Name: </span> XYZ </li>
-                    
-                                        </ul>
-                                    </div>
-                    
-                    
-                                </div>
-                    
-                                <div class="text-center my-5">
-                                    <p class="text-muted"><span class="fw-semibold">NOTICE: </span> A finance charge of 1.5% will be made on
-                                        unpaid balances after 30 days.</p>
-                                </div>
-                    
-                                <div id="footer-bottom">
-                                    <div class="container border-top">
-                                        <div class="row mt-3">
-                                            <div class="col-md-6 copyright">
-                                                <p>© 2024 Invoice. <a href="#" target="_blank"
-                                                        class="text-decoration-none text-black-50">Terms & Conditions</a> </p>
-                                            </div>
-                                            <div class="col-md-6 text-md-end">
-                                                <p>Free HTML Template by: <a href="https://templatesjungle.com/" target="_blank"
-                                                        class="text-decoration-none text-black-50">
-                                                        TemplatesJungle</a> </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                    
-                            </div>
-                        </section>
-                    
-                    </div>
-                    <div class="popup-buttons">
-                        <button id="printButton" class="popup-button">Print</button>
-                        <button id="closeButton" class="popup-button">Close</button>
-                    </div>
-                </div>
-            </div>
+           
+            
 
 
             <!-- Second Container -->
             <div class="bill-container" style="height: 100%;" id="printableContainer">
                 <div class="section bill">
                     <h5>Display Bill</h5>
-                    <div class="full-width table-container" style="overflow-y: auto; /* Enable vertical scrolling */">
+                    <div class="full-width table-container" style="overflow-y: hidden; /* Enable vertical scrolling */">
                         <!-- Bill details go here -->               
                                                                                                
                             <section id="invoice">
                                 <div class="container ">                                  
-                                    <div class="text-center border-top border-bottom  py-2">
+                                    <!-- <div class="text-center border-top border-bottom  py-2">
                                         <h2 class="display-5 fw-bold">Invoice V1 </h2>
                                         <p class="m-0">Invoice No: 12345</p>
                                         <p class="m-0">Invoice Date: 20 May, 2024</p>
-                                    </div>
+                                    </div> -->
 
                                     <div class="d-md-flex justify-content-between">
                                         <div>
                                             <p class="text-primary">Invoice To</p>
-                                            <h4>Roger Y. Will</h4>
+                                            <h6><iconify-icon icon="ph:student-duotone"  style="color: #3498DB"></iconify-icon>
+
+                                                Name</h6>
                                             <ul class="list-unstyled">
-                                                <li>XYZ Company</li>
-                                                <li>info@xyzcompany.com</li>
-                                                <li>123 Main Street</li>
+                                                <li><iconify-icon icon="mingcute:classify-add-2-line"  style="color: #3498DB"></iconify-icon>
+                                                    Class</li>
+                                                <li><iconify-icon icon="mage:phone-call"  style="color: #3498DB"></iconify-icon>
+                                                    Phone</li>
+                                                <!-- <li>123 Main Street</li> -->
                                             </ul>
                                         </div>
                                         <div class="mt-5 mt-md-0">
-                                            <p class="text-primary">Invoice From</p>
-                                            <h4>William Peter</h4>
+                                            <p class="text-primary"> Invoice Details</p>
+                                            <h6>Name</h6>
                                             <ul class="list-unstyled">
-                                                <li>ABC Company</li>
-                                                <li>info@abccompany.com</li>
-                                                <li>456 Main Street</li>
+                                                <li><iconify-icon icon="uil:invoice"  style="color: #3498DB"></iconify-icon>
+                                                    Invoice No.</li>
+                                                <li><iconify-icon icon="uiw:date"  style="color: #3498DB"></iconify-icon> Date</li>
+                                                <li><iconify-icon icon="mdi:tick-circle-outline"  style="color: #3498DB"></iconify-icon>
+                                                    Status</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -432,7 +273,7 @@
                                     <table class="table border my-5">
                                         <thead>
                                             <tr class="bg-primary-subtle">
-                                                <th scope="col">No.</th>
+                                                <th scope="col" style="width: 10.33%;">No.</th>
                                                 <th scope="col">Item</th>
                                                 <th scope="col">Price</th>
                                                 <th scope="col">Quantity</th>
@@ -442,41 +283,41 @@
                                         <tbody style="overflow: hidden;">
                                             <tr>
                                                 <th scope="row">1</th>
-                                                <td>Brand </td>
+                                                <td>item1 </td>
                                                 <td>350</td>
                                                 <td>2</td>
                                                 <td>700</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">2</th>
-                                                <td>Website </td>
+                                                <td>item2 </td>
                                                 <td>250</td>
                                                 <td>1</td>
                                                 <td>250</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">3</th>
-                                                <td>Blog </td>
-                                                <td>$100.00</td>
+                                                <td>item3 </td>
+                                                <td>100.00</td>
                                                 <td>4</td>
                                                 <td>400</td>
                                             </tr>
                                             <th scope="row">4</th>
-                                            <td>Logo </td>
+                                            <td>item4 </td>
                                             <td>350</td>
                                             <td>2</td>
                                             <td>700</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">5</th>
-                                                <td>Wordpress</td>
+                                                <td>item5</td>
                                                 <td>250</td>
                                                 <td>2</td>
                                                 <td>500</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">6</th>
-                                                <td>Website </td>
+                                                <td>item5 </td>
                                                 <td>100</td>
                                                 <td>4</td>
                                                 <td>400</td>
@@ -488,31 +329,31 @@
                                                 <td class="">Sub-Total</td>
                                                 <td>2,350</td>
                                             </tr>
-                                            <tr>
+                                            <!-- <tr>
                                                 <th></th>
                                                 <td></td>
                                                 <td></td>
                                                 <td class="">TAX 20%</td>
                                                 <td>$470.00</td>
-                                            </tr>
+                                            </tr> -->
                                             <tr>
                                                 <th></th>
                                                 <td></td>
                                                 <td></td>
                                                 <td class="text-primary fw-bold">Grand-Total</td>
-                                                <td class="text-primary fw-bold">$1,880.00</td>
+                                                <td class="text-primary fw-bold">1,880.00</td>
                                             </tr>
                                         </tbody>
                                     </table>
 
-
+<!-- 
                                     <div class="text-center my-5">
                                         <p class="text-muted"><span class="fw-semibold">NOTICE: </span> A finance charge
                                             of 1.5% will be made on
                                             unpaid balances after 30 days.</p>
-                                    </div>
+                                    </div> -->
 
-                                    <div id="footer-bottom">
+                                    <!-- <div id="footer-bottom">
                                         <div class="container border-top">
                                             <div class="row mt-3">
                                                 <div class="col-md-6 copyright">
@@ -522,7 +363,7 @@
                                                 </div>                                               
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                 </div>
                             </section>                       
