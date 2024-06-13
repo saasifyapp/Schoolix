@@ -93,6 +93,15 @@ document.addEventListener("DOMContentLoaded", function () {
   if (booksform) {
     // Add submit event listener to the form
     booksform.addEventListener("submit", async function (event) {
+
+      const bookClassValue = document.getElementById('bookClass').value;
+
+      // Check if the bookClass field is empty
+      if (!bookClassValue) {
+        event.preventDefault(); // Prevent the default form submission
+        showToast("Please select a class before submitting", "red");
+        return;
+      }
       showBooksLoadingAnimation();
       event.preventDefault(); // Prevent the default form submission
 
@@ -173,7 +182,18 @@ document.addEventListener("DOMContentLoaded", function () {
 function resetDropdown() {
   document.querySelector('.dropdown-selected').textContent = "Class";
   document.getElementById('bookClass').value = "";
+  document.querySelector('.dropdown-options').style.display = 'none';
 }
+
+document.querySelectorAll('.submenu-option').forEach(subOption => {
+  subOption.addEventListener('click', function(event) {
+    const selectedText = this.textContent.trim();
+    document.querySelector('.dropdown-selected').textContent = selectedText;
+    document.getElementById('bookClass').value = this.dataset.value;
+    document.querySelector('.dropdown-options').style.display = 'none'; // Hide dropdown
+    event.stopPropagation();
+  });
+});
 
 // Function to populate vendor dropdowns
 async function populateBooksVendorDropdown() {
