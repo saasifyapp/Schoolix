@@ -456,7 +456,6 @@ function showLowStockAlert(bookMessage, uniformMessage, insufficientBooksMessage
 // Call the function
 
 // FUNCTION TO GENERATE BILL //
-
 function generateBill_test() {
     const initialImage = document.querySelector('dotlottie-player');
     const billContainer = document.getElementById('invoiceDetails');
@@ -544,24 +543,53 @@ function generateBill_test() {
 
     // Fetch and populate buyer details in the bill
     const buyerDetails = document.querySelector('#invoiceDetails .buyer-details');
-    buyerDetails.querySelector('h6').textContent = buyerName;
+    buyerDetails.querySelector('h6').innerHTML = `<iconify-icon icon="ph:student-duotone" style="color: #3498DB"></iconify-icon> Name: ${buyerName}`;
     const buyerDetailsList = buyerDetails.querySelectorAll('ul li');
-    buyerDetailsList[0].textContent = `Class: ${buyerClass}`;
-    buyerDetailsList[1].textContent = `Phone: ${buyerMobile}`;
+    buyerDetailsList[0].innerHTML = `<iconify-icon icon="mdi:phone" style="color: #3498DB"></iconify-icon> Phone: ${buyerMobile}`;
+    buyerDetailsList[1].innerHTML = `<iconify-icon icon="mdi:school" style="color: #3498DB"></iconify-icon> Class: ${buyerClass}`;
 
     // Fetch and populate invoice details in the bill
     const invoiceNo = document.getElementById('invoiceNo').value;
-    const invoiceDate = document.getElementById('invoiceDate').value;
-    const invoiceStatus = 'Pending'; // Assuming the default status is 'Pending'
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleDateString('en-GB'); // Format as 'DD/MM/YYYY'
+    
+    const invoiceStatus = 'Pending'; // Change this to 'Paid', 'Balance', or 'Unpaid' based on your logic
 
     const invoiceDetails = document.querySelector('#invoiceDetails .invoice-details');
     const invoiceDetailsList = invoiceDetails.querySelectorAll('ul li');
-    invoiceDetailsList[0].textContent = `Invoice No.: ${invoiceNo}`;
-    invoiceDetailsList[1].textContent = `Date: ${invoiceDate}`;
-    invoiceDetailsList[2].textContent = `Status: ${invoiceStatus}`;
+
+    invoiceDetailsList[0].innerHTML = `<iconify-icon icon="mdi:invoice" style="color: #3498DB"></iconify-icon> Invoice No.: ${invoiceNo}`;
+    invoiceDetailsList[1].innerHTML = `<iconify-icon icon="mdi:calendar" style="color: #3498DB"></iconify-icon> Date: ${formattedDate}`;
+    
+    // Conditional status icon
+    let statusIcon;
+    let statusColor;
+    switch (invoiceStatus) {
+        case 'Paid':
+            statusIcon = 'mdi:tick-circle-outline';
+            statusColor = '#3498DB';
+            break;
+        case 'Balance':
+            statusIcon = 'typcn:warning-outline';
+            statusColor = '#db9e33';
+            break;
+        case 'Unpaid':
+            statusIcon = 'subway:error';
+            statusColor = '#d04435';
+            break;
+        default:
+            statusIcon = 'mdi:alert-circle-outline';
+            statusColor = '#000000';
+            break;
+    }
+
+    invoiceDetailsList[2].innerHTML = `<iconify-icon icon="${statusIcon}" style="color: ${statusColor}"></iconify-icon> Status: ${invoiceStatus}`;
 
     return true;
 }
+
+
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
