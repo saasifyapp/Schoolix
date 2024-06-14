@@ -209,24 +209,42 @@ function updatePrice(selectElement) {
 
 
 /////////////////////////////////////////// GENERATE BUTTON FUNCTIONALITY TEST ////////////////////////////////////////////////////////////////////
-
 document.addEventListener('DOMContentLoaded', () => {
     const generateButton = document.getElementById('generateButton');
     const initialImage = document.querySelector('dotlottie-player');
     const billContainer = document.getElementById('invoiceDetails');
 
     generateButton.addEventListener('click', () => {
-        // Hide the initial image
-        initialImage.style.display = 'none';
-        // Show the bill container
-        billContainer.style.display = 'block';
-
         // Call function to generate the bill details
-        generateBill_test();
+        if (generateBill_test()) {
+            // Hide the initial image
+            initialImage.style.display = 'none';
+            // Show the bill container
+            billContainer.style.display = 'block';
+        }
     });
 });
 
 function generateBill_test() {
+    // Validate Buyer Details
+    const buyerName = document.getElementById('buyerName').value.trim();
+    const buyerMobile = document.getElementById('buyerMobile').value.trim();
+    const buyerClass = document.getElementById('buyerClass').value.trim();
+    if (!buyerName || !buyerMobile || !buyerClass) {
+        alert("Please fill in all the Buyer Details fields.");
+        return false;
+    }
+
+    // Validate Invoice Summary
+    const totalAmount = document.getElementById('totalAmount').value.trim();
+    const amountPaid = document.getElementById('amountPaid').value.trim();
+    const balanceAmount = document.getElementById('balanceAmount').value.trim();
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+    if (!totalAmount || !amountPaid || !balanceAmount || !paymentMethod) {
+        alert("Please fill in all the Invoice Summary fields.");
+        return false;
+    }
+
     // Fetch and populate books table data
     const booksTableRows = document.querySelectorAll('#booksTable tbody tr');
     const booksData = [];
@@ -259,13 +277,15 @@ function generateBill_test() {
 
     // Populate items into the bill table
     billData.forEach((item, index) => {
+        console.log('Item:', item); // Debugging: Check item data
+
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${item.title || `${item.item} (Size: ${item.size})`}</td>
-            <td>${item.unitPrice.toFixed(2)}</td>
-            <td>${item.quantity}</td>
-            <td>${item.total.toFixed(2)}</td>
+            <td style="padding: 8px;">${index + 1}</td>
+            <td style="padding: 8px;">${item.title || `${item.item} (Size: ${item.size})`}</td>
+            <td style="padding: 8px;">${item.unitPrice.toFixed(2)}</td>
+            <td style="padding: 8px;">${item.quantity}</td>
+            <td style="padding: 8px;">${item.total.toFixed(2)}</td>
         `;
         billTableBody.appendChild(row);
     });
@@ -277,7 +297,29 @@ function generateBill_test() {
     });
     document.getElementById('subTotal').textContent = subTotal.toFixed(2);
     document.getElementById('grandTotal').textContent = subTotal.toFixed(2); // For now, grand total same as sub-total
+
+    // Fetch and populate buyer details in the bill
+    const buyerDetails = document.querySelector('#invoiceDetails .buyer-details');
+    buyerDetails.querySelector('h6').textContent = buyerName;
+    const buyerDetailsList = buyerDetails.querySelectorAll('ul li');
+    buyerDetailsList[0].textContent = `Class: ${buyerClass}`;
+    buyerDetailsList[1].textContent = `Phone: ${buyerMobile}`;
+
+    // Fetch and populate invoice details in the bill
+    const invoiceNo = document.getElementById('invoiceNo').value;
+    const invoiceDate = document.getElementById('invoiceDate').value;
+    const invoiceStatus = 'Pending'; // Assuming the default status is 'Pending'
+
+    const invoiceDetails = document.querySelector('#invoiceDetails .invoice-details');
+    const invoiceDetailsList = invoiceDetails.querySelectorAll('ul li');
+    invoiceDetails.querySelector('h6').textContent = buyerName;
+    invoiceDetailsList[0].textContent = `Invoice No.: ${invoiceNo}`;
+    invoiceDetailsList[1].textContent = `Date: ${invoiceDate}`;
+    invoiceDetailsList[2].textContent = `Status: ${invoiceStatus}`;
+
+    return true;
 }
+
 
 /*****************************        GENERATE BUTTON FUNCTIONALITY     *********************** */
 

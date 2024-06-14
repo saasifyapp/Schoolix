@@ -3,6 +3,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+  background-color: white;
 }
 
 .container-fluid {
@@ -24,8 +25,9 @@ body {
 
 .bill-container {
   margin-top: 0.5rem;
-  width: 30%;
+  width: 31%;
   height: 100%;
+  background-color: white;
 }
 
 .bottom-container {
