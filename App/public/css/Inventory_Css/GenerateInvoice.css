@@ -125,6 +125,19 @@ body {
   table-layout: fixed; /* Ensure the columns align */
 }
 
+.table tr:hover{
+  background-color: #e5e9eb;
+}
+
+.table td tr {
+    transition: background-color 0.3s ease;
+}
+
+
+.table tr:hover td {
+    font-weight: bold;    
+}
+
 
 .form-control-table {
   font-size: 1rem;
