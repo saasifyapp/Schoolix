@@ -208,188 +208,75 @@ function updatePrice(selectElement) {
 }
 
 
-/////////////////////////////////////////// GENERATE BUTTON FUNCTIONALITY TEST ////////////////////////////////////////////////////////////////////
-document.addEventListener('DOMContentLoaded', () => {
-    const generateButton = document.getElementById('generateButton');
-    const initialImage = document.querySelector('dotlottie-player');
-    const billContainer = document.getElementById('invoiceDetails');
 
-    generateButton.addEventListener('click', () => {
-        // Call function to generate the bill details
-        if (generateBill_test()) {
-            // Hide the initial image
-            initialImage.style.display = 'none';
-            // Show the bill container
-            billContainer.style.display = 'block';
-        }
-    });
-});
-
-function generateBill_test() {
-    // Validate Buyer Details
-    const buyerName = document.getElementById('buyerName').value.trim();
-    const buyerMobile = document.getElementById('buyerMobile').value.trim();
-    const buyerClass = document.getElementById('buyerClass').value.trim();
-    if (!buyerName || !buyerMobile || !buyerClass) {
-        alert("Please fill in all the Buyer Details fields.");
-        return false;
-    }
-
-    // Validate Invoice Summary
-    const totalAmount = document.getElementById('totalAmount').value.trim();
-    const amountPaid = document.getElementById('amountPaid').value.trim();
-    const balanceAmount = document.getElementById('balanceAmount').value.trim();
-    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
-    if (!totalAmount || !amountPaid || !balanceAmount || !paymentMethod) {
-        alert("Please fill in all the Invoice Summary fields.");
-        return false;
-    }
-
-    // Fetch and populate books table data
-    const booksTableRows = document.querySelectorAll('#booksTable tbody tr');
-    const booksData = [];
-    booksTableRows.forEach(row => {
-        const title = row.children[0].textContent;
-        const quantity = parseInt(row.querySelector('input[type="number"]').value);
-        const unitPrice = parseFloat(row.children[2].textContent);
-        const total = quantity * unitPrice;
-        booksData.push({ title, quantity, unitPrice, total });
-    });
-
-    // Fetch and populate uniforms table data
-    const uniformsTableRows = document.querySelectorAll('#uniformsTable tbody tr');
-    const uniformsData = [];
-    uniformsTableRows.forEach(row => {
-        const item = row.children[0].textContent;
-        const size = row.querySelector('select').value;
-        const quantity = parseInt(row.querySelector('input[type="number"]').value);
-        const unitPrice = parseFloat(row.children[3].textContent);
-        const total = quantity * unitPrice;
-        uniformsData.push({ item, size, quantity, unitPrice, total });
-    });
-
-    // Combine books and uniforms data into one array for the bill
-    const billData = [...booksData, ...uniformsData];
-
-    // Clear previous bill details if needed
-    const billTableBody = document.getElementById('billTableBody');
-    billTableBody.innerHTML = '';
-
-    // Populate items into the bill table
-    billData.forEach((item, index) => {
-        console.log('Item:', item); // Debugging: Check item data
-
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td style="padding: 8px;">${index + 1}</td>
-            <td style="padding: 8px;">${item.title || `${item.item} (Size: ${item.size})`}</td>
-            <td style="padding: 8px;">${item.unitPrice.toFixed(2)}</td>
-            <td style="padding: 8px;">${item.quantity}</td>
-            <td style="padding: 8px;">${item.total.toFixed(2)}</td>
-        `;
-        billTableBody.appendChild(row);
-    });
-
-    // Calculate sub-total and grand total
-    let subTotal = 0;
-    billData.forEach(item => {
-        subTotal += item.total;
-    });
-    document.getElementById('subTotal').textContent = subTotal.toFixed(2);
-    document.getElementById('grandTotal').textContent = subTotal.toFixed(2); // For now, grand total same as sub-total
-
-    // Fetch and populate buyer details in the bill
-    const buyerDetails = document.querySelector('#invoiceDetails .buyer-details');
-    buyerDetails.querySelector('h6').textContent = buyerName;
-    const buyerDetailsList = buyerDetails.querySelectorAll('ul li');
-    buyerDetailsList[0].textContent = `Class: ${buyerClass}`;
-    buyerDetailsList[1].textContent = `Phone: ${buyerMobile}`;
-
-    // Fetch and populate invoice details in the bill
-    const invoiceNo = document.getElementById('invoiceNo').value;
-    const invoiceDate = document.getElementById('invoiceDate').value;
-    const invoiceStatus = 'Pending'; // Assuming the default status is 'Pending'
-
-    const invoiceDetails = document.querySelector('#invoiceDetails .invoice-details');
-    const invoiceDetailsList = invoiceDetails.querySelectorAll('ul li');
-    invoiceDetails.querySelector('h6').textContent = buyerName;
-    invoiceDetailsList[0].textContent = `Invoice No.: ${invoiceNo}`;
-    invoiceDetailsList[1].textContent = `Date: ${invoiceDate}`;
-    invoiceDetailsList[2].textContent = `Status: ${invoiceStatus}`;
-
-    return true;
-}
 
 
 /*****************************        GENERATE BUTTON FUNCTIONALITY     *********************** */
 
-// UNCOMMENT WHEN GENERATE INVOICE IS COMPLETELY BUILD ////////
+document.getElementById("generateButton").addEventListener("click", async function () {
+    showInventoryLoadingAnimation();
+    // Retrieve payment method
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
 
-// At the bottom of this function, call a function to create the invoice ///
+    // Get buyer details from input fields
+    var buyerName = document.getElementById("buyerName").value;
+    var buyerMobile = document.getElementById("buyerMobile").value;
+    var amountPaid = document.getElementById("amountPaid").value;
+    var buyerClass = document.getElementById("buyerClass").value;
 
-// document.getElementById("generateButton").addEventListener("click", async function () {
-//     showInventoryLoadingAnimation();
-//     // Retrieve payment method
-//     const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
+    // Validate required fields
+    if (!buyerName || !buyerMobile || !amountPaid) {
+        hideInventoryLoadingAnimation();
+        showToast("Name, Mobile, or Paid amount must not be empty.", true);
+        return; // Stop execution if validation fails
+    }
 
-//     // Get buyer details from input fields
-//     var buyerName = document.getElementById("buyerName").value;
-//     var buyerMobile = document.getElementById("buyerMobile").value;
-//     var amountPaid = document.getElementById("amountPaid").value;
-//     var buyerClass = document.getElementById("buyerClass").value;
+    // Validate mobile number length
+    if (buyerMobile.length !== 10) {
+        hideInventoryLoadingAnimation();
+        showToast("Mobile number must be 10 digits long.", true);
+        return; // Stop execution if validation fails
+    }
 
-//     // Validate required fields
-//     if (!buyerName || !buyerMobile || !amountPaid) {
-//         hideInventoryLoadingAnimation();
-//         showToast("Name, Mobile, or Paid amount must not be empty.", true);
-//         return; // Stop execution if validation fails
-//     }
+    // Send a request to the server to check if the buyer exists for the given class
+    try {
+        const response = await fetch("/inventory/generate_invoice/check_buyer", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ buyerName: buyerName, buyerClass: buyerClass })
+        });
 
-//     // Validate mobile number length
-//     if (buyerMobile.length !== 10) {
-//         hideInventoryLoadingAnimation();
-//         showToast("Mobile number must be 10 digits long.", true);
-//         return; // Stop execution if validation fails
-//     }
+        if (response.ok) {
+            const data = await response.json();
+            if (data.exists) {
+                hideInventoryLoadingAnimation();
+                // Buyer exists for the given class
+                // Show a toast message indicating that the buyer already exists
+                showToast("Invoice for this name already exists", 'red');
+            } else {
+                hideInventoryLoadingAnimation();
+                // Check if the payment method is selected
+                if (!paymentMethod) {
+                    showToast("Please select a payment method", true);
+                    return;
+                } else {
+                    // Buyer does not exist for the given class
+                    // Proceed with generating the bill
+                    lowStockCheck(); // Assuming lowStockCheck() is the function to generate the invoice
+                }
+            }
+        } else {
+            throw new Error("Error checking buyer");
+        }
+    } catch (error) {
+        hideInventoryLoadingAnimation();
+        console.error("Error:", error);
+        showToast("An error occurred while checking the buyer.", true);
+    }
+});
 
-//     // Send a request to the server to check if the buyer exists for the given class
-//     try {
-//         const response = await fetch("/inventory/generate_invoice/check_buyer", {
-//             method: "POST",
-//             headers: {
-//                 "Content-Type": "application/json"
-//             },
-//             body: JSON.stringify({ buyerName: buyerName, buyerClass: buyerClass })
-//         });
-
-//         if (response.ok) {
-//             const data = await response.json();
-//             if (data.exists) {
-//                 hideInventoryLoadingAnimation();
-//                 // Buyer exists for the given class
-//                 // Show a toast message indicating that the buyer already exists
-//                 showToast("Invoice for this name already exists", 'red');
-//             } else {
-//                 hideInventoryLoadingAnimation();
-//                 // Check if the payment method is selected
-//                 if (!paymentMethod) {
-//                     showToast("Please select a payment method", true);
-//                     return;
-//                 } else {
-//                     // Buyer does not exist for the given class
-//                     // Proceed with generating the bill
-//                     lowStockCheck();
-//                 }
-//             }
-//         } else {
-//             throw new Error("Error checking buyer");
-//         }
-//     } catch (error) {
-//         hideInventoryLoadingAnimation();
-//         console.error("Error:", error);
-//         showToast("An error occurred while checking the buyer.", true);
-//     }
-// });
 
 // Determine payment status
 let paymentStatus = '';
@@ -495,7 +382,7 @@ async function lowStockCheck() {
             );
         } else {
             // If there are no low stock items and no insufficient items, call generateBill()
-            generateBill();
+            generateBill_test();
         }
     } catch (error) {
         console.error("Error:", error);
@@ -556,7 +443,7 @@ function showLowStockAlert(bookMessage, uniformMessage, insufficientBooksMessage
     proceedBtn.onclick = function () {
         if (!zeroQuantity) {
             modal.style.display = 'none';
-            generateBill();  // Call generateBill() when Proceed is clicked
+            generateBill_test();  // Call generateBill() when Proceed is clicked
         }
     }
 
@@ -570,163 +457,115 @@ function showLowStockAlert(bookMessage, uniformMessage, insufficientBooksMessage
 
 // FUNCTION TO GENERATE BILL //
 
-function generateBill() {
-    showToast('Invoice Generated Successfully.');
-    // Retrieve payment method
-    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
-    // Retrieve buyer details
-    const buyerName = document.getElementById("buyerName").value;
-    const buyerMobile = document.getElementById("buyerMobile").value;
-    const buyerClass = document.getElementById("buyerClass").value;
+function generateBill_test() {
+    const initialImage = document.querySelector('dotlottie-player');
+    const billContainer = document.getElementById('invoiceDetails');
 
-    // Retrieve invoice details
-    const invoiceNo = document.getElementById("invoiceNo").value;
-    const invoiceDate = new Date().toISOString().split('T')[0];
+    // Call function to generate the bill details
 
-    // Retrieve invoice summary
-    const totalAmount = document.getElementById("totalAmount").value;
-    const amountPaid = document.getElementById("amountPaid").value;
-    const balanceAmount = document.getElementById("balanceAmount").value;
+    // Hide the initial image
+    initialImage.style.display = 'none';
+
+    // Show the bill container
+    billContainer.style.display = 'block';
 
 
-    if (balanceAmount == 0) {
-        paymentStatus = 'Paid';
-        badgeClass = 'badge-success';
-    } else if (amountPaid == 0) {
-        paymentStatus = 'Unpaid';
-        badgeClass = 'badge-warning';
-    } else {
-        paymentStatus = 'Balance';
-        badgeClass = 'badge-info';
+    // Validate Buyer Details
+    const buyerName = document.getElementById('buyerName').value.trim();
+    const buyerMobile = document.getElementById('buyerMobile').value.trim();
+    const buyerClass = document.getElementById('buyerClass').value.trim();
+    if (!buyerName || !buyerMobile || !buyerClass) {
+        alert("Please fill in all the Buyer Details fields.");
+        return false;
     }
 
-    // Retrieve book details
-    const bookRows = document.querySelectorAll("#booksTableBody tr");
-    const bookDetails = [];
-    bookRows.forEach((row, index) => {
-        const title = row.cells[0].innerText;
-        const quantity = row.cells[1].querySelector('input').value;
-        const unitPrice = row.cells[2].innerText;
-        const price = row.cells[3].innerText;
+    // Validate Invoice Summary
+    const totalAmount = document.getElementById('totalAmount').value.trim();
+    const amountPaid = document.getElementById('amountPaid').value.trim();
+    const balanceAmount = document.getElementById('balanceAmount').value.trim();
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+    if (!totalAmount || !amountPaid || !balanceAmount || !paymentMethod) {
+        alert("Please fill in all the Invoice Summary fields.");
+        return false;
+    }
 
-        if (parseInt(quantity) > 0) {
-            bookDetails.push({ title, quantity, unitPrice, price });
+    // Fetch and populate books table data
+    const booksTableRows = document.querySelectorAll('#booksTable tbody tr');
+    const booksData = [];
+    booksTableRows.forEach(row => {
+        const quantity = parseInt(row.querySelector('input[type="number"]').value);
+        if (quantity > 0) {
+            const title = row.children[0].textContent;
+            const unitPrice = parseFloat(row.children[2].textContent);
+            const total = quantity * unitPrice;
+            booksData.push({ title, quantity, unitPrice, total });
         }
     });
 
-    // Retrieve uniform details
-    const uniformRows = document.querySelectorAll("#uniformsTableBody tr");
-    const uniformDetails = [];
-    uniformRows.forEach((row, index) => {
-        const item = row.cells[0].innerText;
-        const size = row.cells[1].querySelector('select').value;
-        const quantity = row.cells[2].querySelector('input').value;
-        const unitPrice = row.cells[3].innerText;
-        const price = row.cells[4].innerText;
-
-        if (parseInt(quantity) > 0) {
-            uniformDetails.push({ item, size, quantity, unitPrice, price });
+    // Fetch and populate uniforms table data
+    const uniformsTableRows = document.querySelectorAll('#uniformsTable tbody tr');
+    const uniformsData = [];
+    uniformsTableRows.forEach(row => {
+        const quantity = parseInt(row.querySelector('input[type="number"]').value);
+        if (quantity > 0) {
+            const item = row.children[0].textContent;
+            const size = row.querySelector('select').value;
+            const unitPrice = parseFloat(row.children[3].textContent);
+            const total = quantity * unitPrice;
+            uniformsData.push({ item, size, quantity, unitPrice, total });
         }
     });
 
-    // Construct the bill HTML
-    const billHtml = `
-    <div class="page-header text-blue-d2">
-        <h1 class="page-title text-secondary-d1">Invoice <small class="page-info"><i class="fa fa-angle-double-right text-80"></i> ID: #${invoiceNo}</small></h1>
-    </div>
-    <div class="container px-0">
-        <div class="row mt-4">
-            <div class="col-12 col-lg-12">                
-                
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div>
-                            <span class="text-sm text-grey-m2 align-middle">To:</span>
-                            <span class="text-600 text-110 text-blue align-middle">${buyerName}</span>
-                        </div>
-                        <div class="text-grey-m2">
-                            <div class="my-1">Class: ${buyerClass}</div>
-                            <div class="my-1"><i class="fa fa-phone fa-flip-horizontal text-secondary"></i> <b class="text-600">${buyerMobile}</b></div>
-                        </div>
-                    </div>
-                    <div class="text-95 col-sm-6 align-self-start d-sm-flex justify-content-end">
-                        <div class="text-grey-m2">
-                            <div class="mt-1 mb-2 text-secondary-m1 text-600 text-125">Invoice</div>
-                            <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">ID:</span> #${invoiceNo}</div>
-                            <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">Issue Date:</span> ${invoiceDate}</div>
-                            <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">Status:</span> <span class="badge badge-warning badge-pill px-25">${paymentStatus}</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="table-container"  >
-                    <table class="table table-striped table-borderless border-0 border-b-2 brc-default-l1" style="height:100%">
-                        <thead class="bg-none bgc-default-tp1">
-                            <tr class="text-white">
-                                <th class="opacity-2">#</th>
-                                <th>Title</th>
-                                <th>Qty</th>
-                                <th>Unit Price</th>
-                                <th width="140">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-95 text-secondary-d3" style="overflow: auto; ">
-                            ${bookDetails.map((book, index) => `
-                                <tr>
-                                    <td>${index + 1}</td>
-                                    <td>${book.title}</td>
-                                    <td>${book.quantity}</td>
-                                    <td>${book.unitPrice}</td>
-                                    <td>${book.price}</td>
-                                </tr>
-                            `).join('')}
-                            ${uniformDetails.map((uniform, index) => `
-                                <tr>
-                                    <td>${index + bookDetails.length + 1}</td>
-                                    <td>${uniform.item} (Size: ${uniform.size})</td>
-                                    <td>${uniform.quantity}</td>
-                                    <td>${uniform.unitPrice}</td>
-                                    <td>${uniform.price}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-12 col-sm-7 text-grey-d2 text-95 mt-2 mt-lg-0">
-                        
-                    </div>
-                    <div class="col-12 col-sm-5 text-grey text-90 order-first order-sm-last">
-                        <div class="row my-2">
-                            <div class="col-7 text-right">SubTotal</div>
-                            <div class="col-5"><span class="text-120 text-secondary-d1">${totalAmount}</span></div>
-                        </div>
-                        <div class="row my-2">
-                            <div class="col-7 text-right">Paid Amount</div>
-                            <div class="col-5"><span class="text-110 text-secondary-d1">${amountPaid}</span></div>
-                        </div>
-                        <div class="row my-2 align-items-center bgc-primary-l3 p-2">
-                            <div class="col-7 text-right">Balance Amount</div>
-                            <div class="col-5"><span class="text-150 text-success-d3 opacity-2">${balanceAmount}</span></div>
-                        </div>
-                        <div class="row my-2 align-items-center bgc-primary-l3 p-2">
-                            <div class="col-7 text-right">Mode of Payment</div>
-                            <div class="col-5"><span class="text-150 text-success-d3 opacity-2">${paymentMethod}</span></div>
-                        </div>
-                    </div>
-                </div>
-                <hr />
-                <div>
-                    <span class="text-secondary-d1 text-105">Thank you for your business</span>
-                </div>
-            </div>
-        </div>
-    </div>
-`;
+    // Combine books and uniforms data into one array for the bill
+    const billData = [...booksData, ...uniformsData];
 
+    // Clear previous bill details if needed
+    const billTableBody = document.getElementById('billTableBody');
+    billTableBody.innerHTML = '';
 
-    // Insert the bill HTML into the display container
-    document.querySelector(".section.bill .table-container .page-content").innerHTML = billHtml;
+    // Populate items into the bill table
+    billData.forEach((item, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td style="padding: 8px;">${index + 1}</td>
+            <td style="padding: 8px;">${item.title || `${item.item} (Size: ${item.size})`}</td>
+            <td style="padding: 8px;">${item.unitPrice.toFixed(2)}</td>
+            <td style="padding: 8px;">${item.quantity}</td>
+            <td style="padding: 8px;">${item.total.toFixed(2)}</td>
+        `;
+        billTableBody.appendChild(row);
+    });
+
+    // Calculate sub-total and grand total
+    let subTotal = 0;
+    billData.forEach(item => {
+        subTotal += item.total;
+    });
+    document.getElementById('subTotal').textContent = subTotal.toFixed(2);
+    document.getElementById('grandTotal').textContent = subTotal.toFixed(2); // For now, grand total same as sub-total
+
+    // Fetch and populate buyer details in the bill
+    const buyerDetails = document.querySelector('#invoiceDetails .buyer-details');
+    buyerDetails.querySelector('h6').textContent = buyerName;
+    const buyerDetailsList = buyerDetails.querySelectorAll('ul li');
+    buyerDetailsList[0].textContent = `Class: ${buyerClass}`;
+    buyerDetailsList[1].textContent = `Phone: ${buyerMobile}`;
+
+    // Fetch and populate invoice details in the bill
+    const invoiceNo = document.getElementById('invoiceNo').value;
+    const invoiceDate = document.getElementById('invoiceDate').value;
+    const invoiceStatus = 'Pending'; // Assuming the default status is 'Pending'
+
+    const invoiceDetails = document.querySelector('#invoiceDetails .invoice-details');
+    const invoiceDetailsList = invoiceDetails.querySelectorAll('ul li');
+    invoiceDetails.querySelector('h6').textContent = buyerName;
+    invoiceDetailsList[0].textContent = `Invoice No.: ${invoiceNo}`;
+    invoiceDetailsList[1].textContent = `Date: ${invoiceDate}`;
+    invoiceDetailsList[2].textContent = `Status: ${invoiceStatus}`;
+
+    return true;
 }
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -776,7 +615,7 @@ document.getElementById("printButton").addEventListener("click", async function 
             const quantity = row.cells[1].querySelector('input').value; // Get input value instead of cell text
             const book_type = 'Book'; // Set type as 'Book' for book items
             const class_of_title = row.querySelector('.class-of-title').innerText; // Get hidden class
-        
+
             return (parseInt(quantity) > 0) ? { title, class: class_of_title, quantity, book_type } : null;
         }).filter(item => item);
 
