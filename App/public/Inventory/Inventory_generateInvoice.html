@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="/css/NavButtons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -273,14 +276,24 @@
                                         <!-- Bill items will be dynamically inserted here -->
                                     </tbody>
                                     
-                                        <tr>
-                                            <td colspan="4" style="text-align: right; font-weight: bold; padding: 8px;" class="text-primary">Sub-Total</td>
-                                            <td id="subTotal" style="text-align: right; font-weight: bold; padding: 8px;" class="text-primary">0.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="4" style="text-align: right; font-weight: bold; padding: 8px;" class="text-primary">Grand-Total</td>
-                                            <td id="grandTotal" style="text-align: right; font-weight: bold; padding: 8px;" class="text-primary">0.00</td>
-                                        </tr>
+                                    <tr>
+                                        <td colspan="4" style="text-align: right; font-weight: bold; padding: 8px;" class="text-primary">
+                                            <i class="fas fa-dollar-sign" style="margin-right: 5px;"></i> Total:
+                                        </td>
+                                        <td id="totalAmountDisplay" style="text-align: right; font-weight: bold; padding: 8px;" class="text-primary">0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" style="text-align: right; font-weight: bold; padding: 8px;" class="text-primary">
+                                            <i class="fas fa-money-bill-alt" style="margin-right: 5px;"></i> Paid:
+                                        </td>
+                                        <td id="amountPaidDisplay" style="text-align: right; font-weight: bold; padding: 8px;" class="text-primary">0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" style="text-align: right; font-weight: bold; padding: 8px;" class="text-primary">
+                                            <i class="fas fa-balance-scale" style="margin-right: 5px;"></i> Balance:
+                                        </td>
+                                        <td id="balanceAmountDisplay" style="text-align: right; font-weight: bold; padding: 8px;" class="text-primary">0.00</td>
+                                    </tr>
                                     
                                 </table>
                             </div>

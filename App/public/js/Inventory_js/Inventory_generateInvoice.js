@@ -461,33 +461,22 @@ function generateBill_test() {
     const initialImage = document.querySelector('dotlottie-player');
     const billContainer = document.getElementById('invoiceDetails');
 
-    // Call function to generate the bill details
-
     // Hide the initial image
     initialImage.style.display = 'none';
 
     // Show the bill container
     billContainer.style.display = 'block';
 
-
     // Validate Buyer Details
     const buyerName = document.getElementById('buyerName').value.trim();
     const buyerMobile = document.getElementById('buyerMobile').value.trim();
     const buyerClass = document.getElementById('buyerClass').value.trim();
-    if (!buyerName || !buyerMobile || !buyerClass) {
-        alert("Please fill in all the Buyer Details fields.");
-        return false;
-    }
 
     // Validate Invoice Summary
-    const totalAmount = document.getElementById('totalAmount').value.trim();
-    const amountPaid = document.getElementById('amountPaid').value.trim();
-    const balanceAmount = document.getElementById('balanceAmount').value.trim();
+    const totalAmount = parseFloat(document.getElementById('totalAmount').value.trim());
+    const amountPaid = parseFloat(document.getElementById('amountPaid').value.trim());
+    const balanceAmount = parseFloat(document.getElementById('balanceAmount').value.trim());
     const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
-    if (!totalAmount || !amountPaid || !balanceAmount || !paymentMethod) {
-        alert("Please fill in all the Invoice Summary fields.");
-        return false;
-    }
 
     // Fetch and populate books table data
     const booksTableRows = document.querySelectorAll('#booksTable tbody tr');
@@ -541,8 +530,17 @@ function generateBill_test() {
     billData.forEach(item => {
         subTotal += item.total;
     });
-    document.getElementById('subTotal').textContent = subTotal.toFixed(2);
-    document.getElementById('grandTotal').textContent = subTotal.toFixed(2); // For now, grand total same as sub-total
+
+    // Display Total, Paid, Balance using provided values
+    if (!isNaN(totalAmount)) {
+        document.getElementById('totalAmountDisplay').textContent = totalAmount.toFixed(2);
+    }
+    if (!isNaN(amountPaid)) {
+        document.getElementById('amountPaidDisplay').textContent = amountPaid.toFixed(2);
+    }
+    if (!isNaN(balanceAmount)) {
+        document.getElementById('balanceAmountDisplay').textContent = balanceAmount.toFixed(2);
+    }
 
     // Fetch and populate buyer details in the bill
     const buyerDetails = document.querySelector('#invoiceDetails .buyer-details');
@@ -558,14 +556,12 @@ function generateBill_test() {
 
     const invoiceDetails = document.querySelector('#invoiceDetails .invoice-details');
     const invoiceDetailsList = invoiceDetails.querySelectorAll('ul li');
-    invoiceDetails.querySelector('h6').textContent = buyerName;
     invoiceDetailsList[0].textContent = `Invoice No.: ${invoiceNo}`;
     invoiceDetailsList[1].textContent = `Date: ${invoiceDate}`;
     invoiceDetailsList[2].textContent = `Status: ${invoiceStatus}`;
 
     return true;
 }
-
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
