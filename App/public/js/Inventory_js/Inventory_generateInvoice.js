@@ -543,10 +543,11 @@ function generateBill_test() {
 
     // Fetch and populate buyer details in the bill
     const buyerDetails = document.querySelector('#invoiceDetails .buyer-details');
-    buyerDetails.querySelector('h6').innerHTML = `<iconify-icon icon="ph:student-duotone" style="color: #3498DB"></iconify-icon> Name: ${buyerName}`;
     const buyerDetailsList = buyerDetails.querySelectorAll('ul li');
-    buyerDetailsList[0].innerHTML = `<iconify-icon icon="mdi:phone" style="color: #3498DB"></iconify-icon> Phone: ${buyerMobile}`;
-    buyerDetailsList[1].innerHTML = `<iconify-icon icon="mdi:school" style="color: #3498DB"></iconify-icon> Class: ${buyerClass}`;
+    buyerDetailsList[0].innerHTML = `<iconify-icon icon="ph:student-duotone" style="color: #3498DB"></iconify-icon> Name: ${buyerName}`;
+    buyerDetailsList[1].innerHTML = `<iconify-icon icon="mdi:phone" style="color: #3498DB"></iconify-icon> Phone: ${buyerMobile}`;
+    buyerDetailsList[2].innerHTML = `<iconify-icon icon="mdi:school" style="color: #3498DB"></iconify-icon> Class: ${buyerClass}`;
+    
 
     // Fetch and populate invoice details in the bill
     const invoiceNo = document.getElementById('invoiceNo').value;

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/css/Inventory_Css/InventoryAll.css">
     <link rel="stylesheet" href="/css/Inventory_Css/GenerateInvoice.css">
     <link rel="stylesheet" href="/css/NavButtons.css">
+    <link rel="stylesheet" href="/css/Inventory_Css/invoiceDisplay.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
@@ -241,28 +242,36 @@
                     <div class="table-container" style="width: 100%; overflow-x: auto;">
                         <section id="invoice">
                             <div class="container" style="width: 100%;">
+                                <div class="container">
+                                    <!-- Invoice Header Section -->
+                                    <div class="invoice-header">
+                                        <div class="invoice-title">
+                                            <h1>INVOICE</h1>
+                                            <p>Invoice ID: #1234567890</p>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="d-md-flex justify-content-between" style="display: flex; justify-content: space-between;">
                                     <div class="buyer-details">
                                         <p class="text-primary">Invoice To</p>
-                                        <h6><!-- Buyer Name here --></h6>
-                                        <ul class="list-unstyled" style="list-style: none; padding: 0;">
+                                        <ul class="list-unstyled buyer-details-list" style="list-style: none; padding: 0;">
                                             <li><!-- Buyer Class here --></li>
+                                            <li><!-- Buyer Phone here --></li>
                                             <li><!-- Buyer Phone here --></li>
                                         </ul>
                                     </div>
                                     <div class="mt-5 mt-md-0 invoice-details" style="margin-top: 0;">
                                         <p class="text-primary">Invoice Details</p>
-                                        <h6><!-- Buyer Name here --></h6>
-                                        <ul class="list-unstyled" style="list-style: none; padding: 0;">
+                                        <ul class="list-unstyled invoice-details-list" style="list-style: none; padding: 0;">
                                             <li><!-- Invoice Number here --></li>
                                             <li><!-- Invoice Date here --></li>
                                             <li><!-- Invoice Status here --></li>
                                         </ul>
                                     </div>
                                 </div>
-            
+                
                                 <!-- Table for displaying bill items -->
-                                <table class="table border my-5" style="width: 100%; border: 1px solid #dee2e6; margin: 2rem 0;">
+                                <table class="invoice_table border my-5" style="width: 100%; border: 1px solid #dee2e6; margin: 2rem 0;">
                                     <thead>
                                         <tr class="bg-primary-subtle" style="background-color: #e9ecef;">
                                             <th scope="col" style="width: 10%; padding: 8px;">No.</th>
@@ -275,32 +284,30 @@
                                     <tbody id="billTableBody">
                                         <!-- Bill items will be dynamically inserted here -->
                                     </tbody>
-                                    
-                                    <tr>
-                                        <td colspan="4" style="text-align: right; font-weight: bold; padding: 8px;" class="text-primary">
+                
+                                    <tr class="bg-primary-subtle rounded-top">
+                                        <td colspan="4" style="text-align: right; font-weight: bold; padding: 8px;"> <!-- No background color here -->
                                             <i class="fas fa-dollar-sign" style="margin-right: 5px;"></i> Total:
                                         </td>
-                                        <td id="totalAmountDisplay" style="text-align: right; font-weight: bold; padding: 8px;" class="text-primary">0.00</td>
+                                        <td id="totalAmountDisplay" style="text-align: right; font-weight: bold; padding: 8px; background-color: #3a3c3d; color: white;">0.00</td>
                                     </tr>
-                                    <tr>
-                                        <td colspan="4" style="text-align: right; font-weight: bold; padding: 8px;" class="text-primary">
+                                    <tr class="bg-primary-subtle">
+                                        <td colspan="4" style="text-align: right; font-weight: bold; padding: 8px;"> <!-- No background color here -->
                                             <i class="fas fa-money-bill-alt" style="margin-right: 5px;"></i> Paid:
                                         </td>
-                                        <td id="amountPaidDisplay" style="text-align: right; font-weight: bold; padding: 8px;" class="text-primary">0.00</td>
+                                        <td id="amountPaidDisplay" style="text-align: right; font-weight: bold; padding: 8px; background-color: #3a3c3d; color: white;">0.00</td>
                                     </tr>
-                                    <tr>
-                                        <td colspan="4" style="text-align: right; font-weight: bold; padding: 8px;" class="text-primary">
+                                    <tr class="bg-primary-subtle rounded-bottom">
+                                        <td colspan="4" style="text-align: right; font-weight: bold; padding: 8px;"> <!-- No background color here -->
                                             <i class="fas fa-balance-scale" style="margin-right: 5px;"></i> Balance:
                                         </td>
-                                        <td id="balanceAmountDisplay" style="text-align: right; font-weight: bold; padding: 8px;" class="text-primary">0.00</td>
+                                        <td id="balanceAmountDisplay" style="text-align: right; font-weight: bold; padding: 8px; background-color: #3a3c3d; color: white;">0.00</td>
                                     </tr>
-                                    
                                 </table>
                             </div>
                         </section>
                     </div>
                 </div>
-            </div>
             
 
             <!-- Third Container -->
