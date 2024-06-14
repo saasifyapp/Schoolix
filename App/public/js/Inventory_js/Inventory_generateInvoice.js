@@ -553,36 +553,29 @@ function generateBill_test() {
     const currentDate = new Date();
     const formattedDate = currentDate.toLocaleDateString('en-GB'); // Format as 'DD/MM/YYYY'
     
-    const invoiceStatus = 'Pending'; // Change this to 'Paid', 'Balance', or 'Unpaid' based on your logic
+    // Determine invoice status based on amount paid and balance amount
+    let invoiceStatus;
+    let statusIcon;
+    let statusColor;
+
+    if (amountPaid === 0) {
+        invoiceStatus = 'Unpaid';
+        statusIcon = 'subway:error';
+        statusColor = '#d04435';
+    } else if (balanceAmount !== 0) {
+        invoiceStatus = 'Balance';
+        statusIcon = 'typcn:warning-outline';
+        statusColor = '#db9e33';
+    } else if (balanceAmount === 0) {
+        invoiceStatus = 'Paid';
+        statusIcon = 'mdi:tick-circle-outline';
+        statusColor = '#3498DB';
+    }
 
     const invoiceDetails = document.querySelector('#invoiceDetails .invoice-details');
     const invoiceDetailsList = invoiceDetails.querySelectorAll('ul li');
-
     invoiceDetailsList[0].innerHTML = `<iconify-icon icon="mdi:invoice" style="color: #3498DB"></iconify-icon> Invoice No.: ${invoiceNo}`;
     invoiceDetailsList[1].innerHTML = `<iconify-icon icon="mdi:calendar" style="color: #3498DB"></iconify-icon> Date: ${formattedDate}`;
-    
-    // Conditional status icon
-    let statusIcon;
-    let statusColor;
-    switch (invoiceStatus) {
-        case 'Paid':
-            statusIcon = 'mdi:tick-circle-outline';
-            statusColor = '#3498DB';
-            break;
-        case 'Balance':
-            statusIcon = 'typcn:warning-outline';
-            statusColor = '#db9e33';
-            break;
-        case 'Unpaid':
-            statusIcon = 'subway:error';
-            statusColor = '#d04435';
-            break;
-        default:
-            statusIcon = 'mdi:alert-circle-outline';
-            statusColor = '#000000';
-            break;
-    }
-
     invoiceDetailsList[2].innerHTML = `<iconify-icon icon="${statusIcon}" style="color: ${statusColor}"></iconify-icon> Status: ${invoiceStatus}`;
 
     return true;
