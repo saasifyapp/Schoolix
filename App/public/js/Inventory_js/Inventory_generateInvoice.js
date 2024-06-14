@@ -596,6 +596,141 @@ function generateBill_test() {
 
 /*****************************         PRINT BUTTON FUNCTIONALITY       ************************/
 
+function printInvoice() {
+    // Get the invoice details container
+    const invoiceDetails = document.getElementById('invoiceDetails');
+
+    // Clone the invoice details to preserve the original
+    const clone = invoiceDetails.cloneNode(true);
+
+    // Create a new window to print
+    const printWindow = window.open('', '_blank');
+
+    // Append the cloned invoice details to the new window
+    printWindow.document.body.appendChild(clone);
+
+    // Append styles for printing
+    const styles = `
+        <style>
+            body {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.d-md-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.justify-content-between {
+    justify-content: space-between;
+}
+
+/* Invoice details section */
+.section {
+    display: block;
+    margin-bottom: 20px;
+}
+
+.bill {
+    display: block;
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Table styles */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.table th,
+.table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.table th {
+    background-color: #f2f2f2;
+}
+
+/* Invoice details */
+.invoice-details {
+    width: 100%;
+}
+
+.invoice-details p,
+.invoice-details h6 {
+    margin: 0;
+    font-weight: normal;
+}
+
+.invoice-details ul {
+    padding: 0;
+    list-style: none;
+}
+
+/* Bill table */
+#billTableBody tr td {
+    padding: 8px;
+}
+
+/* Total row */
+#billTableBody tr.total-row td {
+    font-weight: bold;
+}
+
+/* Print-specific styles */
+@media print {
+    body {
+        font-size: 10px; /* Adjust font size for printing */
+    }
+
+    .container {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .bill {
+        margin-top: 20px;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table th,
+    .table td {
+        border: 1px solid #ccc;
+        padding: 6px;
+    }
+
+    .invoice-details h6 {
+        font-size: 10px;
+    }
+}
+        </style>
+    `;
+    printWindow.document.head.innerHTML += styles;
+
+    // Trigger printing
+    printWindow.print();
+}
+
 document.getElementById("printButton").addEventListener("click", async function () {
     // Add validation to execute this only when the bill is generated i.e. displayed on the front-end
     if (paymentStatus === '') {
