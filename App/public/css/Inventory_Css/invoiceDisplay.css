@@ -86,7 +86,7 @@
     color: #3a3c3d;
     font-weight: bold; /* Make "Invoice To" bold */
     text-align: left; /* Align text to the left */
-    margin: 0 0 10px 2px; /* Add 20px margin to the left */
+    margin: 0 0 10px 50px; /* Add 20px margin to the left */
 }
 
 .list-unstyled {
@@ -123,4 +123,8 @@
     flex: 2;
     margin-left: 10px; /* Space between label and value */
     font-weight: normal; /* Make value normal */
+}
+
+.fa-solid{
+    margin-right: 5px;
 }
