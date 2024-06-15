@@ -54,7 +54,7 @@
             </div>
         </nav>
 
-        <div class="" style="margin-top:3rem; display: flex; height: 80%;">
+        <div class="" style="margin-top:3.3rem; display: flex; height: 80%;">
             <!-- First Container -->
             <div class="first">
                 <div class="section" style="border-style: none;">
@@ -78,7 +78,7 @@
 
                                             </div>
                                             <div class="form-group col-md-3">
-                                                <input type="text" class="form-control" id="buyerClass"
+                                                <input type="text" class="form-control" id="buyerClass" style="text-align: center;"
                                                     placeholder="Class" readonly>
                                                 <span class="form-control-placeholder">Class</span>
                                             </div>
@@ -168,16 +168,16 @@
                                 <div class="form-container">
                                     <div class="form-row">
                                         <div class="form-group col-md-3">
-                                            <input type="text" class="form-control" id="totalAmount" placeholder=""
+                                            <input type="text" class="form-control" id="totalAmount" placeholder="" style="text-align: center;"
                                                 readonly>
                                             <span class="form-control-placeholder">Total</span>
                                         </div>
                                         <div class="form-group col-md-3">
-                                            <input type="number" class="form-control" id="amountPaid" placeholder="">
+                                            <input type="number" class="form-control" id="amountPaid" placeholder="" style="text-align: center;">
                                             <span class="form-control-placeholder">Paid</span>
                                         </div>
                                         <div class="form-group col-md-2" style="min-width: 5rem;">  
-                                            <input type="text" class="form-control" id="balanceAmount" placeholder=""  style="width: auto; min-width: 5rem;"
+                                            <input type="text" class="form-control" id="balanceAmount" placeholder=""  style="width: auto; min-width: 5rem; text-align: center;"
                                                 readonly>
                                             <span class="form-control-placeholder">Balance</span>
                                         </div>
@@ -239,7 +239,7 @@
                 <!-- Invoice details section -->
                 <div class="section bill" id="invoiceDetails" style="display: none;">
                     <h5>Display Bill</h5>
-                    <div class="table-container" style="width: 100%; overflow-x: auto;">
+                    <div class="table-container" style="width: 100%; overflow: scroll;">
                         <section id="invoice">
                             <div class="container" style="width: 100%;">
                                 <div class="container">
@@ -261,8 +261,9 @@
                                         </ul>
                                     </div>
                                     <div class="mt-5 mt-md-0 invoice-details">
+                                       <strong> <p>Invoice Details</p></strong>
                                         <ul class="list-unstyled invoice-details-list">
-                                            <li class="item">
+                                            <li class="item" style="margin-top: -10px;">
                                                 <span class="label">Date:</span>
                                                 <span class="value">02/10/1999</span>
                                             </li>

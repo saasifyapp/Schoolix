@@ -396,6 +396,11 @@ hr {
   transition: box-shadow 0.3s ease, transform 0.3s ease-in-out;
 }
 
+.form-control[readonly] {
+  background-color: white;
+  opacity: 1;
+}
+
 
 
 .control-button-container {

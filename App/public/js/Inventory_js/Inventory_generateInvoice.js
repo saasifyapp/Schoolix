@@ -464,7 +464,7 @@ function generateBill_test() {
     initialImage.style.display = 'none';
 
     // Show the bill container
-    billContainer.style.display = 'block';
+    billContainer.style.display = 'flex';
 
     // Validate Buyer Details
     const buyerName = document.getElementById('buyerName').value.trim();
@@ -544,9 +544,9 @@ function generateBill_test() {
     // Fetch and populate buyer details in the bill
     const buyerDetails = document.querySelector('#invoiceDetails .buyer-details');
     const buyerDetailsList = buyerDetails.querySelectorAll('ul li');
-    buyerDetailsList[0].innerHTML = `<iconify-icon icon="ph:student-duotone" style="color: #EB984E"></iconify-icon> Name: ${buyerName}`;
-    buyerDetailsList[1].innerHTML = `<iconify-icon icon="mdi:phone" style="color: #3498DB"></iconify-icon> Phone: ${buyerMobile}`;
-    buyerDetailsList[2].innerHTML = `<iconify-icon icon="mdi:school" style="color: #EC7063"></iconify-icon> Class: ${buyerClass}`;
+    buyerDetailsList[0].innerHTML = `<iconify-icon icon="ph:student-duotone" style="color: #EB984E"></iconify-icon><strong>Name:</strong>: ${buyerName}`;
+    buyerDetailsList[1].innerHTML = `<iconify-icon icon="mdi:phone" style="color: #3498DB"></iconify-icon> <strong>Phone:</strong>: ${buyerMobile}`;
+    buyerDetailsList[2].innerHTML = `<iconify-icon icon="mdi:school" style="color: #EC7063"></iconify-icon> <strong>Class:</strong>: ${buyerClass}`;
 
     // Fetch and populate invoice details in the bill
     const invoiceNo = document.getElementById('invoiceNo').value;
