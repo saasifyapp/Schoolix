@@ -544,16 +544,15 @@ function generateBill_test() {
     // Fetch and populate buyer details in the bill
     const buyerDetails = document.querySelector('#invoiceDetails .buyer-details');
     const buyerDetailsList = buyerDetails.querySelectorAll('ul li');
-    buyerDetailsList[0].innerHTML = `<iconify-icon icon="ph:student-duotone" style="color: #3498DB"></iconify-icon> Name: ${buyerName}`;
+    buyerDetailsList[0].innerHTML = `<iconify-icon icon="ph:student-duotone" style="color: #EB984E"></iconify-icon> Name: ${buyerName}`;
     buyerDetailsList[1].innerHTML = `<iconify-icon icon="mdi:phone" style="color: #3498DB"></iconify-icon> Phone: ${buyerMobile}`;
-    buyerDetailsList[2].innerHTML = `<iconify-icon icon="mdi:school" style="color: #3498DB"></iconify-icon> Class: ${buyerClass}`;
-    
+    buyerDetailsList[2].innerHTML = `<iconify-icon icon="mdi:school" style="color: #EC7063"></iconify-icon> Class: ${buyerClass}`;
 
     // Fetch and populate invoice details in the bill
     const invoiceNo = document.getElementById('invoiceNo').value;
     const currentDate = new Date();
     const formattedDate = currentDate.toLocaleDateString('en-GB'); // Format as 'DD/MM/YYYY'
-    
+
     // Determine invoice status based on amount paid and balance amount
     let invoiceStatus;
     let statusIcon;
@@ -575,9 +574,11 @@ function generateBill_test() {
 
     const invoiceDetails = document.querySelector('#invoiceDetails .invoice-details');
     const invoiceDetailsList = invoiceDetails.querySelectorAll('ul li');
-    invoiceDetailsList[0].innerHTML = `<iconify-icon icon="mdi:invoice" style="color: #3498DB"></iconify-icon> Invoice No.: ${invoiceNo}`;
-    invoiceDetailsList[1].innerHTML = `<iconify-icon icon="mdi:calendar" style="color: #3498DB"></iconify-icon> Date: ${formattedDate}`;
-    invoiceDetailsList[2].innerHTML = `<iconify-icon icon="${statusIcon}" style="color: ${statusColor}"></iconify-icon> Status: ${invoiceStatus}`;
+    invoiceDetailsList[0].innerHTML = `<iconify-icon icon="mdi:calendar" style="color: #2ECC71"></iconify-icon> <strong>Date:</strong> ${formattedDate}`;
+    invoiceDetailsList[1].innerHTML = `<iconify-icon icon="${statusIcon}" style="color: ${statusColor}"></iconify-icon> <strong>Status:</strong> ${invoiceStatus}`;
+
+    // Populate Invoice Number in HTML
+    document.getElementById('invoiceNumberDisplay').textContent = `Invoice No: #${invoiceNo}`;
 
     return true;
 }
@@ -616,6 +617,7 @@ function printInvoice() {
             pdfWindow.print();
         };
     });
+
 }
 
 

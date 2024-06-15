@@ -1,13 +1,5 @@
 /* General styling for buyer and invoice details */
-.buyer-details .text-primary,
-.invoice-details .text-primary {
-    font-weight: bold; /* Make the label text bold */
-}
 
-.buyer-details .buyer-details-list li,
-.invoice-details .invoice-details-list li {
-    font-weight: normal; /* Make the value text normal */
-}
 
 
 .invoice-header {
@@ -85,3 +77,50 @@
     padding: 20px;
 }
 
+.buyer-details {
+    text-align: left;
+    width: 100%;
+}
+
+.buyer-details p {
+    color: #3a3c3d;
+    font-weight: bold; /* Make "Invoice To" bold */
+    text-align: left; /* Align text to the left */
+    margin: 0 0 10px 65px; /* Add 20px margin to the left */
+}
+
+.list-unstyled {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.list-unstyled li {
+    margin-bottom: 5px; /* Add some space between list items */
+}
+
+/* Flexbox styling for date and status */
+.invoice-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Space between items */
+    text-align: left; /* Align content to the left */
+    margin-right: 10px; /* Add right margin */
+}
+
+.invoice-details .item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.invoice-details .item .label {
+    flex: 1;
+    font-weight: bold; /* Make label bold */
+}
+
+.invoice-details .item .value {
+    flex: 2;
+    margin-left: 10px; /* Space between label and value */
+    font-weight: normal; /* Make value normal */
+}

@@ -46,12 +46,12 @@ body {
 
 .section h5 {
   position: absolute;
-  top: -10px;
+  top: -15px;
   /* Adjust as needed */
   left: 10px;
   /* Adjust as needed */
   background-color: white;
-  padding: 0 5px;
+  padding: -5px 5px; /* Adjust padding to reduce height */
 }
 
 .buyer-details,
@@ -84,13 +84,16 @@ body {
 
 .table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0; /* Ensures no gap between cells */
+  border: 1px solid #A3E4D7; /* Outer border for the table */
+  border-radius: 10px; /* Rounded corners for the table */
+  overflow: hidden; /* Ensure rounded corners are visible */
 }
 
 .table thead {
   display: table-header-group;
   background-color: white;
-  
 }
 
 .table tbody {
@@ -105,37 +108,39 @@ body {
   box-sizing: border-box;
   text-align: center;
   padding: 8px;
-  border: 1px solid #ddd;
+  border: none; /* Remove default cell borders */
+  border-bottom: 1px solid #A3E4D7; /* Add bottom border for each row */
 }
 
 .table th {
-  background-color: lightblue;
+  background-color: #48C9B0;
   text-align: center;
+  color: white;
 }
 
 .table tbody tr {
   display: table;
   width: 100%;
-  table-layout: fixed;  
+  table-layout: fixed;
 }
 
-.table thead, .table tbody tr {
+.table thead,
+.table tbody tr {
   display: table;
   width: 100%;
   table-layout: fixed; /* Ensure the columns align */
 }
 
-.table tr:hover{
-  background-color: #e5e9eb;
+.table tr:hover {
+  background-color: #EAECEE;
 }
 
-.table td tr {
-    transition: background-color 0.3s ease;
+.table td {
+  transition: background-color 0.3s ease;
 }
-
 
 .table tr:hover td {
-    font-weight: bold;    
+  font-weight: bold;
 }
 
 
@@ -150,13 +155,13 @@ body {
 
 
 .form-control-table:hover {
-  box-shadow: 0 0 10px #5DADE2;
+  box-shadow: 0 0 10px #73C6B6;
   transition: 0.3s;
 
 }
 
 .form-check-input:hover {
-  box-shadow: 0 0 10px #5DADE2;
+  box-shadow: 0 0 10px #73C6B6;
   transition: 0.3s;
 }
 
@@ -407,62 +412,64 @@ hr {
 }
 
 .control-button {
-  margin-bottom: 15px;
-  /* Add margin between the buttons */
+  margin-bottom: 15px; /* Add margin between the buttons */
   cursor: pointer;
   background-color: transparent;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Uniform box shadow */
   color: black;
   border: none;
   border-radius: 20px;
-  height: 2.3rem;
+  height: 3rem; /* Increase the height of the buttons */
   width: 6rem;
-  font-size: 1rem;
-  /* Reduce the font size */
+  font-size: 1rem; /* Reduce the font size */
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   text-decoration: none;
-  padding: 0 8px;
-  /* Add padding to fit content */
-  transition: all 0.3s;
-  /* Add transition for smooth hover effect */
+  padding: 0 8px; /* Add padding to fit content */
+  transition: all 0.3s; /* Add transition for smooth hover effect */
   font-family: 'Open Sans', sans-serif;
-  font-size: 14px;
+  font-size: 14px; /* Font size */
   font-weight: bold;
-  position: relative;
-  /* Change position to relative */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative; /* Change position to relative */
+  border: 2px solid transparent; /* Ensure border is initially transparent */
 }
 
 .control-button img {
-  height: 80%;
-  /* Set image height to fit button */
+  height: 100%; /* Set image height to fit button */
   margin-right: 5px;
   mix-blend-mode: multiply;
 }
 
+#generateButton {
+  border-color: #85C1E9; /* Border color for Generate button */
+}
+
+#printButton_Test {
+  border-color: #F8C471; /* Border color for Print button */
+}
+
+#resetButton {
+  border-color: #F1948A; /* Border color for Reset button */
+}
+
 .control-button:hover {
-  background-color: #27AE60;
-  /* Change background color on hover */
+  background-color: #85C1E9; /* Change background color on hover */
   transform: scale(1.1);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  color: white;
 }
 
 #resetButton:hover {
-  background-color: #76D7C4;
-  /* Change background color on hover */
+  background-color: #F1948A; /* Change background color on hover */
   transform: scale(1.1);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  color: white;
 }
 
 #printButton_Test:hover {
-  background-color: #B0B0B0;
-  /* Change background color on hover */
+  background-color: #F8C471; /* Change background color on hover */
   transform: scale(1.1);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  color: white;
 }
 
 /* loading aniamtion */

@@ -205,18 +205,18 @@
                                 <h5>Control Panel</h5>
                                 <div class="control-button-container">
                                     <button id="generateButton" class="control-button">
-                                        <img src="/images/generateinvoice.png" alt="Refresh Icon" style="width: 25px; height: 25px;">
+                                        <img src="/images/generateinvoice.gif" alt="Refresh Icon" style="width: 30px; height: 30px;">
                                         Generate
                                     </button>
                                     
                                     <button id="printButton_Test" class="control-button" onclick="printInvoice()">
                                         <img src="/images/printer.gif" alt="Refresh Icon"
-                                            style="width: 25px; height: 25px;">
+                                            style="width: 30px; height: 30px;">
                                         Print
                                     </button>
                                     <button id="resetButton" class="control-button">
                                         <img src="/images/reload.gif" alt="Refresh Icon"
-                                            style="width: 25px; height: 25px;">
+                                            style="width: 30px; height: 30px;">
                                         Reset
                                     </button>
                                 </div>
@@ -247,25 +247,29 @@
                                     <div class="invoice-header">
                                         <div class="invoice-title">
                                             <h1>INVOICE</h1>
-                                            <p>Invoice ID: #1234567890</p>
+                                            <p id="invoiceNumberDisplay">Invoice No: #1234567890</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="d-md-flex justify-content-between" style="display: flex; justify-content: space-between;">
                                     <div class="buyer-details">
-                                        <p class="text-primary">Invoice To</p>
-                                        <ul class="list-unstyled buyer-details-list" style="list-style: none; padding: 0;">
+                                        <p>Invoice To</p> <!-- "Invoice To" centered and bold -->
+                                        <ul class="list-unstyled buyer-details-list">
                                             <li><!-- Buyer Class here --></li>
                                             <li><!-- Buyer Phone here --></li>
                                             <li><!-- Buyer Phone here --></li>
                                         </ul>
                                     </div>
-                                    <div class="mt-5 mt-md-0 invoice-details" style="margin-top: 0;">
-                                        <p class="text-primary">Invoice Details</p>
-                                        <ul class="list-unstyled invoice-details-list" style="list-style: none; padding: 0;">
-                                            <li><!-- Invoice Number here --></li>
-                                            <li><!-- Invoice Date here --></li>
-                                            <li><!-- Invoice Status here --></li>
+                                    <div class="mt-5 mt-md-0 invoice-details">
+                                        <ul class="list-unstyled invoice-details-list">
+                                            <li class="item">
+                                                <span class="label">Date:</span>
+                                                <span class="value">02/10/1999</span>
+                                            </li>
+                                            <li class="item">
+                                                <span class="label">Status:</span>
+                                                <span class="value">Paid</span>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
