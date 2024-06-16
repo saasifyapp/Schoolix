@@ -38,6 +38,22 @@ function closeOverlay(event) {
   var overlay = event.target.closest(".overlay");
   if (overlay) {
     overlay.style.display = "none";
+
+    var addUniformForm = document.getElementById('addUniformForm');
+    var addBooksForm = document.getElementById('addBooksForm');
+    var vendorForm = document.getElementById('vendorForm');
+
+    if (addUniformForm) {
+      addUniformForm.reset(); // Reset the add uniform form
+    }
+
+    if (addBooksForm) {
+      addBooksForm.reset(); // Reset the add books form
+    }
+
+    if (vendorForm) {
+      vendorForm.reset(); // Reset the vendor form
+    }
   }
 }
 
