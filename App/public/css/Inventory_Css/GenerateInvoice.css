@@ -451,7 +451,7 @@ hr {
   border-color: #85C1E9; /* Border color for Generate button */
 }
 
-#printButton_Test {
+#printButton {
   border-color: #F8C471; /* Border color for Print button */
 }
 
@@ -471,7 +471,7 @@ hr {
   color: white;
 }
 
-#printButton_Test:hover {
+#printButton:hover {
   background-color: #F8C471; /* Change background color on hover */
   transform: scale(1.1);
   color: white;

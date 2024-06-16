@@ -586,44 +586,15 @@ function generateBill_test() {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*****************************         PRINT BUTTON FUNCTIONALITY       ************************/
-function printInvoice() {
-    // Get the invoice details container
-    const invoiceDetails = document.getElementById('invoice');
-
-    // Define the options for html2pdf
-    const opt = {
-        margin: 1,
-        filename: 'invoice.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-    };
-
-    // Generate the PDF
-    html2pdf().from(invoiceDetails).set(opt).outputPdf('blob').then(function (pdfBlob) {
-        // Create a URL for the PDF blob
-        const pdfUrl = URL.createObjectURL(pdfBlob);
-
-        // Open the PDF in a new window
-        const pdfWindow = window.open(pdfUrl, '_blank');
-
-        // Add an event listener to trigger the print dialog once the PDF is loaded
-        pdfWindow.onload = function () {
-            pdfWindow.focus();
-            pdfWindow.print();
-        };
-    });
-
-}
 
 
 
 document.getElementById("printButton").addEventListener("click", async function () {
     // Add validation to execute this only when the bill is generated i.e. displayed on the front-end
-    if (paymentStatus === '') {
+   /* if (invoiceStatus === '') {
         showToast("Please generate the bill first", true);
         return;
-    }
+    }*/
 
     showInventoryLoadingAnimation();
 
@@ -738,7 +709,7 @@ document.getElementById("printButton").addEventListener("click", async function 
             window.location.reload();
         }, 1000); // Match the duration of the toast message
 
-        printBill(); // PRINT THE BILL WHEN ALL OPERATIONS ARE SUCCESSFULLY COMPLETED //
+        printInvoice(); // PRINT THE BILL WHEN ALL OPERATIONS ARE SUCCESSFULLY COMPLETED //
 
     } catch (error) {
         console.error("Error:", error);
@@ -748,6 +719,35 @@ document.getElementById("printButton").addEventListener("click", async function 
     }
 });
 
+function printInvoice() {
+    // Get the invoice details container
+    const invoiceDetails = document.getElementById('invoice');
+
+    // Define the options for html2pdf
+    const opt = {
+        margin: 1,
+        filename: 'invoice.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    // Generate the PDF
+    html2pdf().from(invoiceDetails).set(opt).outputPdf('blob').then(function (pdfBlob) {
+        // Create a URL for the PDF blob
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+
+        // Open the PDF in a new window
+        const pdfWindow = window.open(pdfUrl, '_blank');
+
+        // Add an event listener to trigger the print dialog once the PDF is loaded
+        pdfWindow.onload = function () {
+            pdfWindow.focus();
+            pdfWindow.print();
+        };
+    });
+
+}
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -791,37 +791,5 @@ function showToast(message, isError) {
 }
 
 
-function printBill() {
-    // Create an iframe for printing
-    var printFrame = document.createElement('iframe');
-    printFrame.style.position = 'absolute';
-    printFrame.style.width = '0px';
-    printFrame.style.height = '0px';
-    printFrame.style.border = 'none';
-    document.body.appendChild(printFrame);
 
-    // Get the content of the printable container
-    var printContents = document.getElementById('printableContainer').innerHTML;
-
-    // Write the content to the iframe
-    var doc = printFrame.contentWindow.document;
-    doc.open();
-    doc.write('<html><head><title>Print Invoice</title>');
-    doc.write('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">');
-    doc.write('<link rel="stylesheet" href="/css/Inventory_Css/InventoryAll.css">');
-    doc.write('<link rel="stylesheet" href="/css/Inventory_Css/GenerateInvoice.css">');
-    doc.write('<link rel="stylesheet" href="/css/NavButtons.css">');
-    doc.write('<style>@media print { body * { visibility: hidden; } #printableContainer, #printableContainer * { visibility: visible; } #printableContainer { position: absolute; left: 0; top: 0; width: 100%; } }</style>');
-    doc.write('</head><body>');
-    doc.write('<div id="printableContainer">' + printContents + '</div>');
-    doc.write('</body></html>');
-    doc.close();
-
-    // Print the iframe content
-    printFrame.contentWindow.focus();
-    printFrame.contentWindow.print();
-
-    // Remove the iframe after printing
-    document.body.removeChild(printFrame);
-}
 //////////////////////NEW COMMIT FOR TESTING //////////////////////
