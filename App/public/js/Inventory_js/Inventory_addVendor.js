@@ -132,7 +132,7 @@ function displayVendors(data) {
                             onclick="showVendorUpdateModal('${vendor.sr_no}')"
                             onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
                             onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                                <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                                <img src="../images/edit.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
                                 <span style="margin-right: 10px;">Edit</span>
                             </button >
                             <button style="background-color: transparent;
@@ -378,6 +378,28 @@ async function searchVendorDetails() {
                         <!--<td>${vendor.balance}</td>-->
                         <td>
     <div class="button-container"style="display: flex; justify-content: center; gap: 20px;">
+    <button style="background-color: transparent;
+                            border: none;
+                            color: black; /* Change text color to black */
+                            padding: 0;
+                            text-align: center;
+                            text-decoration: none;
+                            display: inline-flex; /* Use flex for centering */
+                            align-items: center; /* Center vertically */
+                            justify-content: center; /* Center horizontally */
+                            font-size: 14px;
+                            cursor: pointer;
+                            max-height: 100%;
+                            border-radius: 20px; /* Round corners */
+                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                            transition: transform 0.2s, box-shadow 0.2s;
+                            margin-bottom: 10px;"
+                            onclick="showVendorUpdateModal('${vendor.sr_no}')"
+                            onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                                <img src="../images/edit.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                                <span style="margin-right: 10px;">Edit</span>
+                            </button >
         <button style="background-color: transparent;
         border: none;
         color: black; /* Change text color to black */
@@ -458,9 +480,7 @@ async function showVendorUpdateModal(sr_no) {
             <p>Vendor Name:</p>
             <input type="text" class="form-control" id="vendorNameInput" value="${data.vendor_name}" required>
             <p>Vendor For: ${data.vendorFor}</p>
-
-
-             <button id="saveButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;">
+            <button id="saveButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;">
                 <img src="../images/conform.png" alt="Save" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
                 <span style="margin-right: 10px;">Save</span>
             </button>
@@ -477,11 +497,16 @@ async function showVendorUpdateModal(sr_no) {
         const cancelButton = customPrompt.querySelector('#cancelButton');
 
         saveButton.addEventListener('click', async () => {
-            // Remove the prompt
-            customPrompt.remove();
             showVendorLoadingAnimation();
             const updatedVendorName = customPrompt.querySelector('#vendorNameInput').value;
-            const updatedVendorFor = customPrompt.querySelector('#vendorForInput').value;
+            const updatedVendorFor = data.vendorFor; // Assuming vendorFor is not editable in this context
+
+            // Check if a vendor with the same name already exists
+            if (await isDuplicateVendor(updatedVendorName, sr_no)) {
+                showToast('A vendor with the same name already exists.', true);
+                hideVendorLoadingAnimation();
+                return;
+            }
 
             // Update the vendor details on the server
             try {
@@ -496,11 +521,8 @@ async function showVendorUpdateModal(sr_no) {
                     })
                 });
 
-
                 if (!response.ok) {
                     throw new Error('Failed to update vendor details.');
-                    showToast('Failed to update vendor details', true)
-                    hideVendorLoadingAnimation();
                 }
 
                 hideVendorLoadingAnimation();
@@ -509,7 +531,7 @@ async function showVendorUpdateModal(sr_no) {
                 await refreshData();
                 populateBooksVendorDropdown();
                 populateUniformVendorDropdown();
-
+                customPrompt.remove(); // Remove prompt after successful update
 
             } catch (error) {
                 hideVendorLoadingAnimation();
@@ -517,15 +539,32 @@ async function showVendorUpdateModal(sr_no) {
                 showToast('Failed to update vendor details', true);
                 // Handle error if needed
             }
-
-
         });
 
         cancelButton.addEventListener('click', () => {
-            customPrompt.remove();
+            customPrompt.remove(); // Remove prompt on cancel
         });
-    }
-    catch (error) {
+    } catch (error) {
         console.error('Error:', error);
+    }
+}
+
+// Helper function to check for duplicate vendor name
+async function isDuplicateVendor(vendorName, sr_no) {
+    try {
+        const response = await fetch('/inventory/vendors');
+        if (!response.ok) {
+            throw new Error('Failed to fetch vendors.');
+        }
+
+        const vendors = await response.json();
+
+        return vendors.some(vendor =>
+            vendor.vendor_name.trim().toLowerCase() === vendorName.trim().toLowerCase() &&
+            vendor.sr_no !== sr_no // Exclude the vendor being edited
+        );
+    } catch (error) {
+        console.error('Error checking for duplicate vendor name:', error);
+        return false;
     }
 }

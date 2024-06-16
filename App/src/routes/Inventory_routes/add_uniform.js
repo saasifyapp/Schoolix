@@ -220,5 +220,61 @@ router.get("/inventory/uniforms/search", (req, res) => {
 });
 
 
+// GET and PUT endpoint to fetch and update uniform details by sr_no
+router.route('/inventory/uniforms/:sr_no')
+    .get((req, res) => {
+        const sr_no = req.params.sr_no;
+        const sql = 'SELECT * FROM inventory_uniform_details WHERE sr_no = ?';
+
+        connection.query(sql, [sr_no], (err, result) => {
+            if (err) {
+                console.error('Error fetching uniform details:', err);
+                return res.status(500).json({ error: 'Failed to fetch uniform details' });
+            }
+            if (result.length === 0) {
+                return res.status(404).json({ error: 'Uniform not found' });
+            }
+            res.status(200).json(result[0]);
+        });
+    })
+    .put((req, res) => {
+        const sr_no = req.params.sr_no;
+        const {
+            uniform_item,
+            size_of_item,
+            purchase_price,
+            selling_price,
+        } = req.body;
+
+        if (!uniform_item || !size_of_item || !purchase_price || !selling_price) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
+
+        const sql = `
+            UPDATE inventory_uniform_details 
+            SET uniform_item = ?, size_of_item = ?, purchase_price = ?, selling_price = ?
+            WHERE sr_no = ?;
+        `;
+
+        connection.query(
+            sql,
+            [uniform_item, size_of_item, purchase_price, selling_price, sr_no],
+            (err, result) => {
+                if (err) {
+                    console.error('Error updating uniform details:', err);
+                    return res.status(500).json({ error: 'Failed to update uniform details' });
+                }
+
+                if (result.affectedRows === 0) {
+                    return res.status(404).json({ error: 'Uniform not found' });
+                }
+
+                res.status(200).json({ message: 'Uniform details updated successfully' });
+            }
+        );
+    });
+
+
+
 
 module.exports = router;

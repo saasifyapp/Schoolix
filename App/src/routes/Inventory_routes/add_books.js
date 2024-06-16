@@ -183,12 +183,12 @@ router.get("/inventory/books/search", (req, res) => {
 });
 
 // Define the route to fetch and update book details
-router.route('/inventory/books/:title')
+router.route('/inventory/books/:sr_no')
     .get((req, res) => {
-        const title = req.params.title;
-        const sql = 'SELECT title, class_of_title, purchase_price, selling_price FROM inventory_book_details WHERE title = ?';
-        
-        connection.query(sql, [title], (err, result) => {
+        const sr_no = req.params.sr_no;
+        const sql = 'SELECT title, class_of_title, purchase_price, selling_price FROM inventory_book_details WHERE sr_no = ?';
+
+        connection.query(sql, [sr_no], (err, result) => {
             if (err) {
                 console.error('Error fetching book details:', err);
                 return res.status(500).json({ error: 'Failed to fetch book details' });
@@ -200,7 +200,7 @@ router.route('/inventory/books/:title')
         });
     })
     .put((req, res) => {
-        const title = req.params.title;
+        const sr_no = req.params.sr_no;
         const { newTitle, class_of_title, purchase_price, selling_price } = req.body;
 
         if (!newTitle || !class_of_title || !purchase_price || !selling_price) {
@@ -210,10 +210,10 @@ router.route('/inventory/books/:title')
         const sql = `
             UPDATE inventory_book_details 
             SET title = ?, class_of_title = ?, purchase_price = ?, selling_price = ?
-            WHERE title = ?;
+            WHERE sr_no = ?;
         `;
 
-        connection.query(sql, [newTitle, class_of_title, purchase_price, selling_price, title], (err, result) => {
+        connection.query(sql, [newTitle, class_of_title, purchase_price, selling_price, sr_no], (err, result) => {
             if (err) {
                 console.error('Error updating book details:', err);
                 return res.status(500).json({ error: 'Failed to update book details' });
