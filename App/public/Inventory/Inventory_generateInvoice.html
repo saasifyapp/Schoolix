@@ -255,15 +255,14 @@
                                     <div class="buyer-details">
                                         <p>Invoice To</p> <!-- "Invoice To" centered and bold -->
                                         <ul class="list-unstyled buyer-details-list">
-                                            <li><!-- Buyer Class here --></li>
+                                            <li style="margin-left: 5px;"><!-- Buyer Class here --></li>
                                             <li><!-- Buyer Phone here --></li>
                                             <li><!-- Buyer Phone here --></li>
                                         </ul>
                                     </div>
-                                    <div class="mt-5 mt-md-0 invoice-details">
-                                       <strong> <p>Invoice Details</p></strong>
+                                    <div class="mt-5 mt-md-0 invoice-details">                                      
                                         <ul class="list-unstyled invoice-details-list">
-                                            <li class="item" style="margin-top: -10px;">
+                                            <li class="item" style="margin-top: 2rem;">
                                                 <span class="label">Date:</span>
                                                 <span class="value">02/10/1999</span>
                                             </li>
@@ -289,26 +288,33 @@
                                     <tbody id="billTableBody">
                                         <!-- Bill items will be dynamically inserted here -->
                                     </tbody>
-                
+                                
                                     <tr class="bg-primary-subtle rounded-top">
                                         <td colspan="4" style="text-align: right; font-weight: bold; padding: 8px;"> <!-- No background color here -->
-                                            <i class="fas fa-dollar-sign" style="margin-right: 5px;"></i> Total:
+                                            <span style="background-color: #3a3c3d; color: white; padding: 5px;border-radius: 5px;">
+                                                <i class="fas fa-dollar-sign" style="margin-right: 5px;"></i> Total:
+                                            </span>
                                         </td>
                                         <td id="totalAmountDisplay" style="text-align: right; font-weight: bold; padding: 8px; background-color: #3a3c3d; color: white;">0.00</td>
                                     </tr>
                                     <tr class="bg-primary-subtle">
                                         <td colspan="4" style="text-align: right; font-weight: bold; padding: 8px;"> <!-- No background color here -->
-                                            <i class="fas fa-money-bill-alt" style="margin-right: 5px;"></i> Paid:
+                                            <span style="background-color: #3a3c3d; color: white; padding: 5px; border-radius: 5px;">
+                                                <i class="fas fa-money-bill-alt" style="margin-right: 5px;"></i> Paid:
+                                            </span>
                                         </td>
                                         <td id="amountPaidDisplay" style="text-align: right; font-weight: bold; padding: 8px; background-color: #3a3c3d; color: white;">0.00</td>
                                     </tr>
                                     <tr class="bg-primary-subtle rounded-bottom">
                                         <td colspan="4" style="text-align: right; font-weight: bold; padding: 8px;"> <!-- No background color here -->
-                                            <i class="fas fa-balance-scale" style="margin-right: 5px;"></i> Balance:
+                                            <span style="background-color: #3a3c3d; color: white; padding: 5px;border-radius: 5px;">
+                                                <i class="fas fa-balance-scale" style="margin-right: 5px;"></i> Balance:
+                                            </span>
                                         </td>
                                         <td id="balanceAmountDisplay" style="text-align: right; font-weight: bold; padding: 8px; background-color: #3a3c3d; color: white;">0.00</td>
                                     </tr>
                                 </table>
+                                
                             </div>
                         </section>
                     </div>
