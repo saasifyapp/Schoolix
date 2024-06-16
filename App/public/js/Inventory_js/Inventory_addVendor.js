@@ -1,5 +1,5 @@
 ////Loading Animation
-function showVendorLoadingAnimation () {
+function showVendorLoadingAnimation() {
     console.log("show")
     document.getElementById('loadingOverlayVendor').style.display = 'flex';
 }
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add submit event listener to the form
     form.addEventListener('submit', async function (event) {
         event.preventDefault(); // Prevent the default form submission
-        showVendorLoadingAnimation (); 
+        showVendorLoadingAnimation();
         // Get the vendor name and amount paid from the form
         const vendorNameInput = document.getElementById('vendorName');
         const vendorFor = document.getElementById('vendorFor').value;
@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //refresh data
 async function refreshData() {
-    showVendorLoadingAnimation ();
+    showVendorLoadingAnimation();
     document.getElementById('searchField').value = '';
     await fetch('/inventory/vendors')
         .then(response => response.json())
@@ -84,7 +84,7 @@ async function refreshData() {
         .catch(error => {
             console.error('Error:', error);
             showToast('Error fetching vendors. Please try again.', true);
-            hideVendorLoadingAnimation(); 
+            hideVendorLoadingAnimation();
         });
 }
 
@@ -111,7 +111,30 @@ function displayVendors(data) {
                     <td>${vendor.paid_till_now}</td>
                     <!--<td>${vendor.balance}</td>-->
                     <td>
+                    
                         <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+                        <button style="background-color: transparent;
+                            border: none;
+                            color: black; /* Change text color to black */
+                            padding: 0;
+                            text-align: center;
+                            text-decoration: none;
+                            display: inline-flex; /* Use flex for centering */
+                            align-items: center; /* Center vertically */
+                            justify-content: center; /* Center horizontally */
+                            font-size: 14px;
+                            cursor: pointer;
+                            max-height: 100%;
+                            border-radius: 20px; /* Round corners */
+                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                            transition: transform 0.2s, box-shadow 0.2s;
+                            margin-bottom: 10px;"
+                            onclick="showVendorUpdateModal('${vendor.sr_no}')"
+                            onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                                <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                                <span style="margin-right: 10px;">Edit</span>
+                            </button >
                             <button style="background-color: transparent;
                             border: none;
                             color: black; /* Change text color to black */
@@ -175,7 +198,7 @@ function displayVendors(data) {
 async function deleteVendor(vendorName) {
     const confirmation = confirm(`Are you sure you want to delete the vendor "${vendorName}"?`);
     if (confirmation) {
-        showVendorLoadingAnimation ();
+        showVendorLoadingAnimation();
         await fetch(`/inventory/vendors/${encodeURIComponent(vendorName)}`, {
             method: 'DELETE'
         })
@@ -188,7 +211,7 @@ async function deleteVendor(vendorName) {
             .then(data => {
                 hideVendorLoadingAnimation();
                 refreshData();
-                showToast(`${vendorName} deleted successfully`,false); // Show success toast
+                showToast(`${vendorName} deleted successfully`, false); // Show success toast
                 populateBooksVendorDropdown();
                 populateUniformVendorDropdown();
                 // Refresh data after deleting the vendor
@@ -207,7 +230,7 @@ async function updateVendor(vendorName) {
         if (!response.ok) {
             throw new Error('Failed to retrieve vendor details.');
         }
-        
+
         const data = await response.json();
         let existingPaidAmount = parseFloat(data.paid_till_now) || 0;
         let net_payable = parseFloat(data.net_payable) || 0;
@@ -217,7 +240,7 @@ async function updateVendor(vendorName) {
         // Create custom prompt
         const customPrompt = document.createElement('div');
         customPrompt.classList.add('custom-prompt');
-        
+
         const updatePromptContent = () => {
             customPrompt.innerHTML = `
                 <div class="prompt-content">
@@ -242,7 +265,7 @@ async function updateVendor(vendorName) {
                 </div>
             `;
         };
-        
+
         updatePromptContent();
         document.body.appendChild(customPrompt);
 
@@ -417,3 +440,92 @@ async function searchVendorDetails() {
 refreshData();
 
 
+async function showVendorUpdateModal(sr_no) {
+    try {
+        const response = await fetch(`/inventory/vendors/${encodeURIComponent(sr_no)}`);
+        if (!response.ok) {
+            throw new Error('Failed to retrieve vendor details.');
+        }
+
+        const data = await response.json();
+
+        const customPrompt = document.createElement('div');
+        customPrompt.classList.add('custom-prompt2');
+
+        customPrompt.innerHTML = `
+        <div class="prompt-content">
+            <h2>Update Vendor</h2>
+            <p>Vendor Name:</p>
+            <input type="text" class="form-control" id="vendorNameInput" value="${data.vendor_name}" required>
+            <p>Vendor For: ${data.vendorFor}</p>
+
+
+             <button id="saveButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;">
+                <img src="../images/conform.png" alt="Save" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                <span style="margin-right: 10px;">Save</span>
+            </button>
+            <button id="cancelButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;">
+                <img src="../images/cancel.png" alt="Cancel" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                <span style="margin-right: 10px;">Cancel</span>
+            </button>
+        </div>
+    `;
+
+        document.body.appendChild(customPrompt);
+
+        const saveButton = customPrompt.querySelector('#saveButton');
+        const cancelButton = customPrompt.querySelector('#cancelButton');
+
+        saveButton.addEventListener('click', async () => {
+            // Remove the prompt
+            customPrompt.remove();
+            showVendorLoadingAnimation();
+            const updatedVendorName = customPrompt.querySelector('#vendorNameInput').value;
+            const updatedVendorFor = customPrompt.querySelector('#vendorForInput').value;
+
+            // Update the vendor details on the server
+            try {
+                const response = await fetch(`/inventory/vendors/${encodeURIComponent(sr_no)}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        vendor_name: updatedVendorName,
+                        vendorFor: updatedVendorFor
+                    })
+                });
+
+
+                if (!response.ok) {
+                    throw new Error('Failed to update vendor details.');
+                    showToast('Failed to update vendor details', true)
+                    hideVendorLoadingAnimation();
+                }
+
+                hideVendorLoadingAnimation();
+                showToast('Vendor details updated successfully', false);
+                // Refresh the vendor list or update the UI accordingly
+                await refreshData();
+                populateBooksVendorDropdown();
+                populateUniformVendorDropdown();
+
+
+            } catch (error) {
+                hideVendorLoadingAnimation();
+                console.error('Error updating vendor details:', error);
+                showToast('Failed to update vendor details', true);
+                // Handle error if needed
+            }
+
+
+        });
+
+        cancelButton.addEventListener('click', () => {
+            customPrompt.remove();
+        });
+    }
+    catch (error) {
+        console.error('Error:', error);
+    }
+}

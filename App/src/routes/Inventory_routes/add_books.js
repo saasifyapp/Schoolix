@@ -182,4 +182,50 @@ router.get("/inventory/books/search", (req, res) => {
 
 });
 
+// Define the route to fetch and update book details
+router.route('/inventory/books/:title')
+    .get((req, res) => {
+        const title = req.params.title;
+        const sql = 'SELECT title, class_of_title, purchase_price, selling_price FROM inventory_book_details WHERE title = ?';
+        
+        connection.query(sql, [title], (err, result) => {
+            if (err) {
+                console.error('Error fetching book details:', err);
+                return res.status(500).json({ error: 'Failed to fetch book details' });
+            }
+            if (result.length === 0) {
+                return res.status(404).json({ error: 'Book not found' });
+            }
+            res.status(200).json(result[0]);
+        });
+    })
+    .put((req, res) => {
+        const title = req.params.title;
+        const { newTitle, class_of_title, purchase_price, selling_price } = req.body;
+
+        if (!newTitle || !class_of_title || !purchase_price || !selling_price) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
+
+        const sql = `
+            UPDATE inventory_book_details 
+            SET title = ?, class_of_title = ?, purchase_price = ?, selling_price = ?
+            WHERE title = ?;
+        `;
+
+        connection.query(sql, [newTitle, class_of_title, purchase_price, selling_price, title], (err, result) => {
+            if (err) {
+                console.error('Error updating book details:', err);
+                return res.status(500).json({ error: 'Failed to update book details' });
+            }
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ error: 'Book not found' });
+            }
+
+            res.status(200).json({ message: 'Book details updated successfully' });
+        });
+    });
+
+
 module.exports = router;

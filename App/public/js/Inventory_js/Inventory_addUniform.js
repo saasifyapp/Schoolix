@@ -813,4 +813,6 @@ async function searchUniformDetails() {
         });
 }
 
+
+
 refreshUniformsData();
