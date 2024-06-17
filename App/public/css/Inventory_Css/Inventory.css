@@ -148,7 +148,7 @@ body {
 
 
 .form-control {
-    padding: 1rem 1rem;
+    /* padding: 1rem 1rem; */
     /* Adjusted padding to center placeholder vertically */
     font-size: 1rem;
     /* Increased font size */
