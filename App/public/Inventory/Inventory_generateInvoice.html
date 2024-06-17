@@ -59,7 +59,7 @@
             <div class="sub-container sub-container-1">
                 <div class="sub-container-1-part1">
                     <h5 class="heading"> <img src="/images/buyerdetail.gif" alt="Invoice Icon"
-                            style="width: 30px; height: 30px;  mix-blend-mode: multiply;">Buyer Details</h5>
+                            style="width: 35px; height: 35px;  mix-blend-mode: multiply;">Buyer Details</h5>
                     <div class="form-container">
                         <form>
                             <div class="form-row">
@@ -87,8 +87,8 @@
                     </div>
                 </div>
                 <div class="sub-container-1-part2">
-                    <h5 class="heading-2"><i class="fa-solid fa-file-invoice-dollar"
-                            style="color: #74C0FC;margin-left: 4px;"></i>Invoice Details</h5>
+                    <h5 class="heading-2"><img src="/images/invoicedetails.gif" alt="Invoice Icon"
+                        style="width: 30px; height: 30px; margin-right: 4px;">Invoice Details</h5>
                     <form>
                         <div class="form-row" style="justify-content: center;">
                             <div class="form-group">
@@ -162,8 +162,8 @@
             <div class="sub-container sub-container-3">
                 <div class="invoice-summary">
                     <h5 style="text-align: center;">
-                        <img src="/images/invoicesummery.png" alt="Invoice Icon"
-                            style="width: 25px; height: 25px; margin-right: 8px;">Invoice Summary
+                        <img src="/images/invoicesummery.gif" alt="Invoice Icon"
+                            style="width: 30px; height: 30px; margin-right: 2px;">Invoice Summary
                     </h5>
 
                     <div class="form-container" style="margin-top: 0.5rem;">
@@ -184,8 +184,8 @@
                                 <span class="form-control-placeholder">Balance</span>
                             </div>
                             <div class="col-md-4" style="margin-bottom: 1rem;">
-                                <label>Payment Method:</label><br>
-                                <div class="form-check form-check-inline">
+                                <!-- <label>Payment Method:</label><br> -->
+                                <!-- <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="paymentMethod" id="cashPayment"
                                         value="CASH">
                                     <label class="form-check-label" for="cashPayment">Cash</label>
@@ -194,6 +194,25 @@
                                     <input class="form-check-input" type="radio" name="paymentMethod" id="upiPayment"
                                         value="UPI">
                                     <label class="form-check-label" for="upiPayment">UPI</label>
+                                </div> -->
+
+                                <div class="radio-inputs">
+                                    <label>
+                                        <input class="radio-input" type="radio" name="engine" id="cashPayment">
+                                        <span class="radio-tile">
+                                            <span class="radio-icon"> <img src="/images/cash.gif" alt="Invoice Icon"
+                                                style="width: 25px; height: 25px; margin-right: 4px;"></i></span>
+                                            <span class="radio-label">cash</span>
+                                        </span>
+                                    </label>
+                                    <label>
+                                        <input checked class="radio-input" type="radio" name="engine"  id="upiPayment">
+                                        <span class="radio-tile">
+                                            <span class="radio-icon"> <img src="/images/upimoney.gif" alt="Invoice Icon"
+                                                style="width: 32px; height: 30px; margin-right: 4px;"></span>
+                                            <span class="radio-label">UPI</span>
+                                        </span>
+                                    </label>                                   
                                 </div>
                             </div>
                         </div>
