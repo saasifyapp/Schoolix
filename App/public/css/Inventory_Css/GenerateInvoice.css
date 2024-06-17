@@ -1,482 +1,700 @@
-html,
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+* {
+
+    font-family: "Poppins", sans-serif;
+}
+
+:root {
+    --white-color: #fff;
+    --blue-color: #4070f4;
+    --grey-color: #707070;
+    --grey-color-light: #aaa;
+}
+
 body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  background-color: white;
+    font-family: american typewriter, sans-serif;
+    text-align: center;
+    /* background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%); */
+    background-color: white;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    /* Prevent scrolling */
 }
 
-.container-fluid {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+
+body,
+html {  
+    height: 100%;
+    width: 100%;  
+    box-sizing: border-box;    
+    color: #484b51;
+}
+
+.navbar {
+    width: 100%;
+    background-color: #333;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.main-container {
+    width: calc(100% - 4px);
+    /* Adjust for margin */
+    height: calc(100% - 55px - 4px);
+    /* Adjust for navbar height and margins */
+    margin: 2px;
+    display: flex;
+    color: #484b51;
+    margin-top: 4.5rem;
+    
+}
+
+.container-1 {
+    width: 70%;
+    height: 100%;
+    background-color: #f1f1f1;
+    display: flex;
+    flex-direction: column;
+}
+
+.container-2 {
+    width: 30%;
+    height: 100%;
+    background-color: white;
+    padding: 10px;
+}
+
+.container-2 h5 {
+    margin: 0 0 10px 0;
+    color: var(--grey-color);
+    font-weight: 800; 
+}
+
+.bill-content {
+    height: calc(100% - 24px - 4px);
+    background-color: white;
+    padding: 10px;
+    border: 1px solid #000;
+    border-radius: 10px;
+    /* Optional: Add border */
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+}
+
+
+.sub-container {
+    width: 100%;
+}
+
+.sub-container-1 {
+    height: 20%;
+    background-color: white;
+    display: flex;
 
 }
 
-.row {
-  margin-bottom: 10px;
-  background-color: transparent;
+.sub-container-1-part1 {
+    width: 70%;
+    padding: 10px;
+    border: 1px solid #000;
+    /* Add border */
+    margin: 5px;
+    border-radius: 10px;
+    margin-top: 10px;
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+
+
 }
 
-.first {
-  width: 70%;
-  height: 100% !important;
+
+.sub-container-1-part2 {
+    width: 40%;
+    padding: 10px;
+    /* display: flex; */
+    border: 1px solid #000;
+    margin: 5px;
+    border-radius: 10px;
+    margin-top: 10px;
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
 }
 
-.bill-container {
-  margin-top: 0.5rem;
-  width: 31%;
-  height: 100%;
-  background-color: white;
+
+
+.invoice-details div {
+    display: flex;
+    flex-direction: column;
 }
 
-.bottom-container {
-  margin-left: 1rem;
+
+.sub-container-2 {
+    height: 60%;
+    background-color: white;
+    display: flex;
 }
 
-.section {
-  border: 1px solid rgb(92, 84, 84);
-  padding: 10px;
-  box-sizing: border-box;
-  background-color: white;
-  position: relative;
-  border-radius: 10px;
-  height: 100%;
+.heading {
+    position: absolute;
+    top: 70px;
+    left: 20px;
+    background-color: white;
+    padding: -5px 5px;
+    border-radius: 5px;
+    color: var(--grey-color);
+    font-weight: 800; 
 }
 
-.section h5 {
-  position: absolute;
-  top: -15px;
-  /* Adjust as needed */
-  left: 10px;
-  /* Adjust as needed */
-  background-color: white;
-  padding: -5px 5px; /* Adjust padding to reduce height */
+.heading-2 {
+    top: 70px;
+    position: absolute;
+    background-color: white;
+    border-radius: 5px;  
+    color: var(--grey-color);
+    font-weight: 800; 
 }
 
-.buyer-details,
-.invoice-details,
-.summary,
-.control-panel {
-  height: 100px;
-  padding-top: 10px;
+
+.display-books,
+.display-uniform {
+    width: 50%;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid #000;
+    /* Optional: Add border */
+    overflow: hidden;
+    /* Prevent overflow from affecting the layout */
+    margin: 5px;
+    border-radius: 10px;
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
 }
 
-.books,
-.uniform {
-  height: 95%;
+
+.display-books h5, .display-uniform h5 {
+    margin: 0 0 10px 0;
+    padding-left: 10px; /* Add padding to align the heading */
+    text-align: center;
+    color: var(--grey-color);
+    font-weight: 800; 
 }
 
-.bill {
-  height: 112%;
-  padding-top: 10px;
-  z-index: 1;
+.table-wrapper {
+    overflow-y: auto;
+    max-height: calc(100% - 40px); /* Adjust this value based on header height and padding */
+    border: 1px solid #A3E4D7;
+    /* Outer border for the table */
+    border-radius: 10px;
+    /* Rounded corners for the table */
+    /* Adjust as needed */
+    flex-grow: 1;
 }
 
-.control-panel button {
-  width: 120px;
+.books-table,
+.uniform-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    /* Ensure borders are contiguous */
 }
 
-.table-container {
-  width: 100%;
-  overflow: hidden;
+.books-table th,
+.books-table td,
+.uniform-table th,
+.uniform-table td {
+    border: 1px solid #A3E4D7;
+    padding: 8px;
+    text-align: center;
 }
 
-.table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0; /* Ensures no gap between cells */
-  border: 1px solid #A3E4D7; /* Outer border for the table */
-  border-radius: 10px; /* Rounded corners for the table */
-  overflow: hidden; /* Ensure rounded corners are visible */
+.books-table thead,
+.uniform-table thead {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    /* Light grey background for headers */
 }
 
-.table thead {
-  display: table-header-group;
-  background-color: white;
+.books-table th,
+.uniform-table th {
+    background-color: #48C9B0;
+    color: white;
 }
 
-.table tbody {
-  display: block;
-  height: 350px; /* Set the desired height */
-  overflow-y: auto;
-  width: 100%;
+tr:hover {
+    background-color: #EAECEE;
 }
 
-.table th,
-.table td {
-  box-sizing: border-box;
-  text-align: center;
-  padding: 8px;
-  border: none; /* Remove default cell borders */
-  border-bottom: 1px solid #A3E4D7; /* Add bottom border for each row */
+td {
+    transition: background-color 0.3s ease;
 }
 
-.table th {
-  background-color: #48C9B0;
-  text-align: center;
-  color: white;
+tr:hover td {
+    font-weight: bold;
 }
 
-.table tbody tr {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
-}
-
-.table thead,
-.table tbody tr {
-  display: table;
-  width: 100%;
-  table-layout: fixed; /* Ensure the columns align */
-}
-
-.table tr:hover {
-  background-color: #EAECEE;
-}
-
-.table td {
-  transition: background-color 0.3s ease;
-}
-
-.table tr:hover td {
-  font-weight: bold;
-}
 
 
 .form-control-table {
-  font-size: 1rem;
-  border: 1px solid #ced4da;
-  border-radius: 10px;
-  transition: border-color 0.3s ease;
-  height: 2rem;
-  text-align: center;
+    font-size: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 10px;
+    transition: border-color 0.3s ease;
+    height: 2rem;
+    text-align: center;
 }
 
 
 .form-control-table:hover {
-  box-shadow: 0 0 10px #73C6B6;
-  transition: 0.3s;
+    box-shadow: 0 0 10px #73C6B6;
+    transition: 0.3s;
 
 }
 
 .form-check-input:hover {
-  box-shadow: 0 0 10px #73C6B6;
-  transition: 0.3s;
+    box-shadow: 0 0 10px #73C6B6;
+    transition: 0.3s;
+}
+
+
+.display-books h3,
+.display-uniform h3 {
+    margin: 0 0 10px 0;
+}
+
+.sub-container-3 {
+    height: 20%;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    /* Align children divs side by side */
+}
+
+.invoice-summary {
+    width: 70%;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid #000;
+    /* Optional: Add border */
+    margin: 5px;
+    border-radius: 10px;
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+}
+
+.control-panel {
+    width: 40%;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid #000;
+    /* Optional: Add border */
+    margin: 5px;
+    border-radius: 10px;
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+}
+
+.invoice-summary h5,
+.control-panel h5 {
+    margin: 0 0 10px 0;
+    color: var(--grey-color);
+    font-weight: 800; 
+}
+
+.invoice-summary .input-group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.invoice-summary input {
+    padding: 5px;
+    margin-right: 10px;
+    /* Space between inputs */
+}
+
+.payment-methods {
+    display: flex;
+    justify-content: space-between;
+}
+
+.payment-methods label {
+    margin-right: 10px;
+    /* Space between radio buttons */
+}
+
+.control-panel .button-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+.control-panel button {
+    padding: 10px;
+    margin-right: 10px;
+    /* Space between buttons */
 }
 
 
 
-body {
-  margin-top: 20px;
-  color: #484b51;
-}
-
-.text-secondary-d1 {
-  color: #728299 !important;
-}
-
-.page-header {
-  margin: 0 0 1rem;
-  padding-bottom: 1rem;
-  padding-top: .5rem;
-  border-bottom: 1px dotted #e2e2e2;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  -ms-flex-align: center;
-  align-items: center;
-
-}
-
-.page-title {
-  padding: 0;
-  margin: 0;
-  font-size: 1.75rem;
-  font-weight: 300;
-}
-
-.brc-default-l1 {
-  border-color: #dce9f0 !important;
-}
-
-.ml-n1,
-.mx-n1 {
-  margin-left: -.25rem !important;
-}
-
-.mr-n1,
-.mx-n1 {
-  margin-right: -.25rem !important;
-}
-
-.mb-4,
-.my-4 {
-  margin-bottom: 1.5rem !important;
-}
-
-hr {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  border: 0;
-  border-top: 1px solid rgba(0, 0, 0, .1);
-}
-
-.text-grey-m2 {
-  color: #888a8d !important;
-}
-
-.text-success-m2 {
-  color: #86bd68 !important;
-}
-
-.font-bolder,
-.text-600 {
-  font-weight: 600 !important;
-}
-
-.text-110 {
-  font-size: 110% !important;
-}
-
-.text-blue {
-  color: #478fcc !important;
-}
-
-.pb-25,
-.py-25 {
-  padding-bottom: .75rem !important;
-}
-
-.pt-25,
-.py-25 {
-  padding-top: .75rem !important;
-}
-
-.bgc-default-tp1 {
-  background-color: rgba(121, 169, 197, .92) !important;
-}
-
-.bgc-default-l4,
-.bgc-h-default-l4:hover {
-  background-color: #f3f8fa !important;
-}
-
-.page-header .page-tools {
-  -ms-flex-item-align: end;
-  align-self: flex-end;
-}
-
-.btn-light {
-  color: #757984;
-  background-color: #f5f6f9;
-  border-color: #dddfe4;
-}
-
-.w-2 {
-  width: 1rem;
-}
-
-.text-120 {
-  font-size: 120% !important;
-}
-
-.text-primary-m1 {
-  color: #4087d4 !important;
-}
-
-.text-danger-m1 {
-  color: #dd4949 !important;
-}
-
-.text-blue-m2 {
-  color: #68a3d5 !important;
-}
-
-.text-150 {
-  font-size: 150% !important;
-}
-
-.text-60 {
-  font-size: 60% !important;
-}
-
-.text-grey-m1 {
-  color: #7b7d81 !important;
-}
-
-.align-bottom {
-  vertical-align: bottom !important;
-}
 
 
 
 .form-container {
-  margin-top: 1rem;
-  display: flex;
-  justify-content: center;
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
 }
 
 .form-group {
-  position: relative;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  animation: slideDownFromUp 0.7s ease-in-out;
-  /* Adjust timing as needed */
+    position: relative;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    animation: slideDownFromUp 0.7s ease-in-out;
+    /* Adjust timing as needed */
 }
 
 
 .form-control {
-  padding: 1rem 1rem;
-  /* Adjusted padding to center placeholder vertically */
-  font-size: 1rem;
-  /* Increased font size */
-  border: 1px solid #ced4da;
-  border-radius: 10px;
-  transition: border-color 0.3s ease;
-  margin-right: 1rem;
-  flex: 1;
-  /* Allow input fields to grow */
-  height: 3rem;
-  /* Increased height for input fields */
-  transition: transform 0.3s ease-in-out;
+    padding: 1rem 1rem !important;
+    /* Adjusted padding to center placeholder vertically */
+    font-size: 1rem !important;
+    /* Increased font size */
+    border: 1px solid #ced4da;
+    border-radius: 10px !important;
+    transition: border-color 0.3s ease;
+    margin-right: 1rem !important;
+    flex: 1;
+    /* Allow input fields to grow */
+    height: 3rem !important;
+    /* Increased height for input fields */
+    transition: transform 0.3s ease-in-out;
 }
 
 
 
 .form-control.wide {
-  flex: 2;
-  /* Make first two fields wider */
+    flex: 2;
+    /* Make first two fields wider */
 }
 
 .form-control:focus {
-  box-shadow: 0 0 10px #5DADE2;
-  outline: 1px solid #85C1E9;
-  /* Add a solid outline */
+    box-shadow: 0 0 10px #5DADE2;
+    outline: 1px solid #85C1E9;
+    /* Add a solid outline */
 }
 
 .form-control:hover {
-  box-shadow: 0 0 10px #5DADE2;
-  transition: 0.3s;
+    box-shadow: 0 0 10px #5DADE2;
+    transition: 0.3s;
 
 }
 
 .form-control-placeholder {
-  position: absolute;
-  top: 50%;
-  left: 0.75rem;
-  transform: translateY(-50%);
-  /* Center placeholder vertically */
-  pointer-events: none;
-  transition: top 0.2s, font-size 0.2s, transform 0.2s;
-  font-size: 16px;
-  color: #999;
+    position: absolute;
+    top: 50%;
+    left: 0.75rem;
+    transform: translateY(-50%);
+    /* Center placeholder vertically */
+    pointer-events: none;
+    transition: top 0.2s, font-size 0.2s, transform 0.2s;
+    font-size: 16px;
+    color: #999;
 
 }
 
 .form-control:focus+.form-control-placeholder,
 .form-control:not(:placeholder-shown)+.form-control-placeholder {
-  top: -0.2rem;
-  /* Adjusted position when focused */
-  font-size: 0.80rem;
-  font-weight: 400;
-  background-color: white;
-  border-radius: 5px;
-  border-color: #85C1E9;
-  border-top: 1px solid #85C1E9;
-  /* Adding border top */
-  transform: translateY(0);
-  /* Reset transform */
-  color: #000;
+    top: -0.2rem;
+    /* Adjusted position when focused */
+    font-size: 0.80rem;
+    font-weight: 400;
+    background-color: white;
+    border-radius: 5px;
+    border-color: #85C1E9;
+    border-top: 1px solid #85C1E9;
+    /* Adding border top */
+    transform: translateY(0);
+    /* Reset transform */
+    color: #000;
 }
 
 .form-control {
-  transition: box-shadow 0.3s ease, transform 0.3s ease-in-out;
+    transition: box-shadow 0.3s ease, transform 0.3s ease-in-out;
 }
 
 .form-control[readonly] {
-  background-color: white;
-  opacity: 1;
+    background-color: white;
+    opacity: 1;
 }
 
 
 
 .control-button-container {
-  display: flex;
-  justify-content: space-between;
-  /* Distributes space between buttons evenly */
-  align-items: center;
-  /* Vertically centers the buttons */
-  gap: 15px;
-  /* Adds some space between buttons */
-  flex-wrap: nowrap;
-  /* Prevents wrapping to a new line */
-  margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    /* Distributes space between buttons evenly */
+    align-items: center;
+    /* Vertically centers the buttons */
+    gap: 15px;
+    /* Adds some space between buttons */
+    flex-wrap: nowrap;
+    /* Prevents wrapping to a new line */
+    margin-top: 1rem;
 }
 
 .control-button {
-  margin-bottom: 15px; /* Add margin between the buttons */
-  cursor: pointer;
-  background-color: transparent;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Uniform box shadow */
-  color: black;
-  border: none;
-  border-radius: 20px;
-  height: 3rem; /* Increase the height of the buttons */
-  width: 6rem;
-  font-size: 1rem; /* Reduce the font size */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  text-decoration: none;
-  padding: 0 8px; /* Add padding to fit content */
-  transition: all 0.3s; /* Add transition for smooth hover effect */
-  font-family: 'Open Sans', sans-serif;
-  font-size: 14px; /* Font size */
-  font-weight: bold;
-  position: relative; /* Change position to relative */
-  border: 2px solid transparent; /* Ensure border is initially transparent */
+    margin-bottom: 15px;
+    /* Add margin between the buttons */
+    cursor: pointer;
+    background-color: transparent;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    /* Uniform box shadow */
+    color: black;
+    border: none;
+    border-radius: 20px;
+    height: 3rem;
+    /* Increase the height of the buttons */
+    width: 6rem;
+    font-size: 1rem;
+    /* Reduce the font size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    text-decoration: none;
+    padding: 0 8px;
+    /* Add padding to fit content */
+    transition: all 0.3s;
+    /* Add transition for smooth hover effect */
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    /* Font size */
+    font-weight: bold;
+    position: relative;
+    /* Change position to relative */
+    border: 2px solid transparent;
+    /* Ensure border is initially transparent */
 }
 
 .control-button img {
-  height: 100%; /* Set image height to fit button */
-  margin-right: 5px;
-  mix-blend-mode: multiply;
+    height: 100%;
+    /* Set image height to fit button */
+    margin-right: 5px;
+    mix-blend-mode: multiply;
 }
 
 #generateButton {
-  border-color: #85C1E9; /* Border color for Generate button */
+    border-color: #85C1E9;
+    /* Border color for Generate button */
 }
 
-#printButton {
-  border-color: #F8C471; /* Border color for Print button */
+#printButton_Test {
+    border-color: #F8C471;
+    /* Border color for Print button */
 }
 
 #resetButton {
-  border-color: #F1948A; /* Border color for Reset button */
+    border-color: #F1948A;
+    /* Border color for Reset button */
 }
 
 .control-button:hover {
-  background-color: #85C1E9; /* Change background color on hover */
-  transform: scale(1.1);
-  color: white;
+    background-color: #85C1E9;
+    /* Change background color on hover */
+    transform: scale(1.1);
+    color: white;
 }
 
 #resetButton:hover {
-  background-color: #F1948A; /* Change background color on hover */
-  transform: scale(1.1);
-  color: white;
+    background-color: #F1948A;
+    /* Change background color on hover */
+    transform: scale(1.1);
+    color: white;
 }
 
-#printButton:hover {
-  background-color: #F8C471; /* Change background color on hover */
-  transform: scale(1.1);
-  color: white;
+#printButton_Test:hover {
+    background-color: #F8C471;
+    /* Change background color on hover */
+    transform: scale(1.1);
+    color: white;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ///////////////////////////////   Invoive Display CSS /////////////////////////////////////////////// */
+
+/* General styling for buyer and invoice details */
+
+
+
+.invoice-header {
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.invoice-title h1 {
+    margin: 0;
+    font-size: 2em;
+}
+
+.invoice-title p {
+    margin: 0;
+    font-size: 1em;
+}
+
+.text-primary {
+    color: #007bff;
+}
+
+.invoice_table {
+    width: 100%;
+    border-collapse: collapse;
+    /* Collapse borders */
+    margin: 2rem 0;
+    border-radius: 12px;
+    /* Rounded corners for the entire table */
+    overflow: hidden;
+    /* Clip children to border-radius */
+}
+
+.invoice_table th,
+.invoice_table td {
+    padding: 8px;
+    text-align: center;
+    border: none;
+    /* Remove all borders */
+}
+
+.invoice_table thead th:first-child {
+    background-color: #3a3c3d;
+    /* Grey background */
+    color: white;
+    /* White text */
+    border: none;
+    /* Remove borders */
+    border-top-left-radius: 12px;
+    /* Top left corner */
+    border-bottom-left-radius: 12px;
+    /* Bottom left corner */
+}
+
+.invoice_table thead th:last-child {
+    background-color: #3a3c3d;
+    /* Grey background */
+    color: white;
+    /* White text */
+    border: none;
+    /* Remove borders */
+    border-top-right-radius: 12px;
+    /* Top right corner */
+    border-bottom-right-radius: 12px;
+    /* Bottom right corner */
+}
+
+.invoice_table thead th:not(:first-child):not(:last-child) {
+    background-color: #3a3c3d;
+    /* Grey background */
+    color: white;
+    /* White text */
+    border: none;
+    /* Remove borders */
+}
+
+.invoice_table tbody td {
+    border: none;
+    /* Remove borders for table cells */
+}
+
+.total-row td {
+    text-align: right;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.fas {
+    margin-right: 5px;
+}
+
+.container {
+    width: 100%;
+    padding: 20px;
+}
+
+.buyer-details {
+    text-align: left;
+    width: 100%;
+}
+
+.buyer-details p {
+    color: #3a3c3d;
+    font-weight: bold;
+    /* Make "Invoice To" bold */
+    text-align: left;
+    /* Align text to the left */
+    margin: 0 0 10px 50px;
+    /* Add 20px margin to the left */
+}
+
+.list-unstyled {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.list-unstyled li {
+    margin-bottom: 5px;
+    /* Add some space between list items */
+}
+
+/* Flexbox styling for date and status */
+.invoice-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    /* Space between items */
+    text-align: left;
+    /* Align content to the left */
+    margin-right: 10px;
+    /* Add right margin */
+}
+
+.invoice-details .item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.invoice-details .item .label {
+    flex: 1;
+    font-weight: bold;
+    /* Make label bold */
+}
+
+.invoice-details .item .value {
+    flex: 2;
+    margin-left: 10px;
+    /* Space between label and value */
+    font-weight: normal;
+    /* Make value normal */
+}
+
+.fa-solid {
+    margin-right: 5px;
+}
 /* loading aniamtion */
 /* HTML: <div class="loader"></div> */
 .loading-overlay {
