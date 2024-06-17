@@ -238,6 +238,13 @@ document.getElementById("generateButton").addEventListener("click", async functi
         return; // Stop execution if validation fails
     }
 
+    // Validate mobile number length
+    if (!paymentMethod) {
+        hideInventoryLoadingAnimation();
+        showToast("Please select a payment method", true);
+        return; // Stop execution if validation fails
+    }
+
     // Send a request to the server to check if the buyer exists for the given class
     try {
         const response = await fetch("/inventory/generate_invoice/check_buyer", {
@@ -257,15 +264,9 @@ document.getElementById("generateButton").addEventListener("click", async functi
                 showToast("Invoice for this name already exists", 'red');
             } else {
                 hideInventoryLoadingAnimation();
-                // Check if the payment method is selected
-                if (!paymentMethod) {
-                    showToast("Please select a payment method", true);
-                    return;
-                } else {
-                    // Buyer does not exist for the given class
-                    // Proceed with generating the bill
-                    lowStockCheck(); // Assuming lowStockCheck() is the function to generate the invoice
-                }
+                // Buyer does not exist for the given class
+                // Proceed with generating the bill
+                lowStockCheck(); // Assuming lowStockCheck() is the function to generate the invoice
             }
         } else {
             throw new Error("Error checking buyer");
