@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
             displayAnimation();
         } else {
             // Fetch and display data for the selected vendor
-            createAndFetchTable(`/inventory/vendors_details?vendor=${selectedVendor}`, 'vendorDetailsTableBody', displayVendorDetails, ['Vendor Name', 'Item Ordered', 'Purchase Price', 'Ordered Quantity', 'Returned Quantity', 'Items in Stock', 'Ordered Price', 'Returned Price', 'Net Payable']);
+            createAndFetchTable(`/inventory/vendors_details?vendor=${selectedVendor}`, 'vendorDetailsTableBody', displayVendorDetails, ['Vendor Name', 'Item Ordered', 'Purchase Price', 'Selling Price' ,'Ordered Quantity', 'Returned Quantity', 'Items in Stock', 'Ordered Price', 'Returned Price', 'Net Payable']);
             setActiveButton('vendorDetails');
         }
     });
@@ -153,6 +153,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <td>${detail.vendor_name}</td>
                 <td>${detail.item_ordered}</td>
                 <td>${detail.purchase_price}</td>
+                <td>${detail.selling_price}</td>
                 <td>${detail.ordered_quantity}</td>
                 <td>${detail.returned_quantity}</td>
                 <td>${detail.no_of_items_in_stock}</td>
@@ -169,7 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const totalRow = document.createElement('tr');
         totalRow.innerHTML = `
-            <td colspan="5"></td>
+            <td colspan="6"></td>
             <td colspan="1" style="text-align: center; border-right: none; border-left: 4px solid #2C3E50; border-top: 4px solid #2C3E50; border-bottom: 4px solid #2C3E50;"><strong>Total :</strong></td>
             <td style="border-right: none; border-top: 4px solid #2C3E50; border-bottom: 4px solid #2C3E50;"><strong>${totalOrderedPrice}</strong></td>
             <td style="border-right: none; border-top: 4px solid #2C3E50; border-bottom: 4px solid #2C3E50;"><strong>${totalReturnedPrice}</strong></td>
