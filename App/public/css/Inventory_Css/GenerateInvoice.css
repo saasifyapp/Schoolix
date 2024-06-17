@@ -198,15 +198,18 @@ html {
 .uniform-table {
     width: 100%;
     border-collapse: collapse;
-
-    /* Ensure borders are contiguous */
 }
 
 .books-table th,
+.uniform-table th {
+    padding: 8px;
+    text-align: center;
+    background-color: #85C1E9;
+    color: white;
+}
+
 .books-table td,
-.uniform-table th,
 .uniform-table td {
-    border: 1px solid #A3E4D7;
     padding: 8px;
     text-align: center;
 }
@@ -216,13 +219,11 @@ html {
     position: sticky;
     top: 0;
     background-color: transparent;
-    /* Light grey background for headers */
 }
 
-.books-table th,
-.uniform-table th {
-    background-color: #48C9B0;
-    color: white;
+.books-table tr,
+.uniform-table tr {
+    border: 1px solid #AED6F1;
 }
 
 tr:hover {
@@ -238,7 +239,6 @@ tr:hover td {
 }
 
 
-
 .form-control-table {
     font-size: 1rem;
     border: 1px solid #ced4da;
@@ -250,14 +250,17 @@ tr:hover td {
 
 
 .form-control-table:hover {
-    box-shadow: 0 0 10px #73C6B6;
+    box-shadow: 0 0 10px #AED6F1;
     transition: 0.3s;
 
 }
 
 .form-check-input:hover {
-    box-shadow: 0 0 10px #73C6B6;
+    box-shadow: 0 0 10px #AED6F1;
     transition: 0.3s;
+    cursor: pointer;
+    transform: scale(1.2); /* Increase size */
+
 }
 
 
@@ -448,7 +451,7 @@ tr:hover td {
     /* Prevents wrapping to a new line */
     margin-top: 1rem;
 }
-
+ 
 .control-button {
     margin-bottom: 15px;
     /* Add margin between the buttons */
