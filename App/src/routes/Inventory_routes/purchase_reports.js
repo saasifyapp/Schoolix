@@ -29,7 +29,7 @@ router.get('/inventory/all_vendor', (req, res) => {
             res.status(500).json({ error: 'Error fetching books' });
         } else {
             res.status(200).json(result);
-            
+
         }
     });
 });
@@ -63,6 +63,7 @@ router.get('/inventory/vendors_details', (req, res) => {
         WHEN U.uniform_item IS NOT NULL THEN CONCAT(U.uniform_item, '_', U.size_of_item)
     END AS item_ordered,
         COALESCE(B.purchase_price, U.purchase_price) AS purchase_price,
+        COALESCE(B.selling_price, U.selling_price) AS selling_price,
             COALESCE(B.ordered_quantity, U.ordered_quantity) AS ordered_quantity,
                 COALESCE(B.returned_quantity, U.returned_quantity) AS returned_quantity,
                     COALESCE(B.remaining_quantity, U.remaining_quantity) AS no_of_items_in_stock,
