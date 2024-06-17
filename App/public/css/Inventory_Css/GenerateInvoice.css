@@ -63,7 +63,7 @@ html {
 
 .container-2 {
     width: 30%;
-    height: 100%;
+    height: 95%;
     background-color: white;
     padding: 10px;
 }
@@ -81,7 +81,8 @@ html {
     border: 1px solid #000;
     border-radius: 10px;
     /* Optional: Add border */
-    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+    background-image: linear-gradient(to right, #F7FDFE 10%, #F9EFFF 100%);
+
 }
 
 
@@ -90,7 +91,7 @@ html {
 }
 
 .sub-container-1 {
-    height: 20%;
+    height: 18%;
     background-color: white;
     display: flex;
 
@@ -104,7 +105,8 @@ html {
     margin: 5px;
     border-radius: 10px;
     margin-top: 10px;
-    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+    background-image: linear-gradient(to right, #F7FDFE 10%, #F9EFFF 100%);
+
 
 
 }
@@ -118,7 +120,8 @@ html {
     margin: 5px;
     border-radius: 10px;
     margin-top: 10px;
-    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+    background-image: linear-gradient(to right, #F7FDFE 10%, #F9EFFF 100%);
+
 }
 
 
@@ -167,7 +170,8 @@ html {
     /* Prevent overflow from affecting the layout */
     margin: 5px;
     border-radius: 10px;
-    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+    background-image: linear-gradient(to right, #F7FDFE 10%, #F9EFFF 100%);
+
 }
 
 
@@ -263,7 +267,7 @@ tr:hover td {
 }
 
 .sub-container-3 {
-    height: 20%;
+    height: 18%;
     background-color: white;
     display: flex;
     justify-content: space-between;
@@ -278,7 +282,8 @@ tr:hover td {
     /* Optional: Add border */
     margin: 5px;
     border-radius: 10px;
-    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+    background-image: linear-gradient(to right, #F7FDFE 10%, #F9EFFF 100%);
+
 }
 
 .control-panel {
@@ -289,7 +294,8 @@ tr:hover td {
     /* Optional: Add border */
     margin: 5px;
     border-radius: 10px;
-    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+    background-image: linear-gradient(to right, #F7FDFE 10%, #F9EFFF 100%);
+
 }
 
 .invoice-summary h5,
