@@ -308,7 +308,7 @@ nav {
 }
 
 .age-table {
-    width: 100%;
+    width: 95%;
     border-collapse: collapse;
     margin-bottom: 20px;
 }
@@ -561,8 +561,8 @@ nav {
 
 #studentTable th,
 #teacherTable th {
-    background-color: #2C3E50;
-    color: white;
+    background-color: lightblue;
+    color: black;
     position: sticky;
     top: 0;
     z-index: 1;

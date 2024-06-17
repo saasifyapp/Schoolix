@@ -186,6 +186,30 @@ function displayUniforms(data) {
                     <td>${uniform.returned_quantity}</td>
                     <td>
                         <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+
+                        <button style="background-color: transparent;
+                                border: none;
+                                color: black; /* Change text color to black */
+                                padding: 0;
+                                text-align: center;
+                                text-decoration: none;
+                                display: flex; /* Use flex for centering */
+                                align-items: center; /* Center vertically */
+                                justify-content: center; /* Center horizontally */
+                                font-size: 14px;
+                                cursor: pointer;
+                                max-height: 100%;
+                                border-radius: 20px; /* Round corners */
+                                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                                transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                                margin-bottom: 10px;" /* Added margin bottom for spacing */
+                                onclick="showUniformUpdateModal('${uniform.sr_no}')"
+                                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                                <img src="/images/edit.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                                <span style="margin-right: 10px;">Edit</span>
+                            </button>
+
                             <button style="background-color: transparent;
                                 border: none;
                                 color: black; /* Change text color to black */
@@ -731,6 +755,29 @@ async function searchUniformDetails() {
                         <td style="text-align: center;">
                         <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
                         <button style="background-color: transparent;
+                                border: none;
+                                color: black; /* Change text color to black */
+                                padding: 0;
+                                text-align: center;
+                                text-decoration: none;
+                                display: flex; /* Use flex for centering */
+                                align-items: center; /* Center vertically */
+                                justify-content: center; /* Center horizontally */
+                                font-size: 14px;
+                                cursor: pointer;
+                                max-height: 100%;
+                                border-radius: 20px; /* Round corners */
+                                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                                transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                                margin-bottom: 10px;" /* Added margin bottom for spacing */
+                                onclick="showUniformUpdateModal('${uniform.sr_no}')"
+                                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                                <img src="/images/edit.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                                <span style="margin-right: 10px;">Edit</span>
+                            </button>
+
+                        <button style="background-color: transparent;
                 border: none;
                 color: black; /* Change text color to black */
                 padding: 0;
@@ -811,6 +858,154 @@ async function searchUniformDetails() {
             console.error('Error:', error);
             // hideLoadingAnimation(); 
         });
+}
+
+
+// Function to show modal for updating uniform details
+// Function to show modal for updating uniform details
+async function showUniformUpdateModal(sr_no) {
+    try {
+        // Fetch uniform details by sr_no
+        const response = await fetch(`/inventory/uniforms/${encodeURIComponent(sr_no)}`);
+        if (!response.ok) {
+            throw new Error('Failed to retrieve uniform details.');
+        }
+
+        const data = await response.json();
+
+        // Create the custom prompt/modal
+        const customPrompt = document.createElement('div');
+        customPrompt.classList.add('custom-prompt');
+
+        // Populate the prompt with uniform details
+        customPrompt.innerHTML = `
+            <div class="prompt-content">
+                <h2>Update Uniform Details</h2>
+                <p>Uniform Item:</p>
+                <input type="text" class="form-control" id="uniformItemInput" value="${data.uniform_item}" required>
+                <p>Size of Item:</p>
+                <input type="text" class="form-control" id="sizeOfItemInput" value="${data.size_of_item}" required>
+                <p>Purchase Price:</p>
+                <input type="number" step="0.01" class="form-control" id="purchasePriceInput" value="${data.purchase_price}" required>
+                <p>Selling Price:</p>
+                <input type="number" class="form-control" id="sellingPriceInput" value="${data.selling_price}" required>
+                <button id="saveButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;">
+                  <img src="../images/conform.png" alt="Save" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                  <span style="margin-right: 10px;">Save</span>
+              </button>
+              <button id="cancelButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;">
+                  <img src="../images/cancel.png" alt="Cancel" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                  <span style="margin-right: 10px;">Cancel</span>
+              </button>
+          </div>
+            </div>
+        `;
+
+        document.body.appendChild(customPrompt);
+
+        // Attach event listeners to buttons
+        const saveButton = customPrompt.querySelector('#saveButton');
+        const cancelButton = customPrompt.querySelector('#cancelButton');
+
+        saveButton.addEventListener('click', async () => {
+            const updatedUniformItem = customPrompt.querySelector('#uniformItemInput').value;
+            const updatedSizeOfItem = customPrompt.querySelector('#sizeOfItemInput').value;
+            const updatedPurchasePrice = parseFloat(customPrompt.querySelector('#purchasePriceInput').value);
+            const updatedSellingPrice = parseFloat(customPrompt.querySelector('#sellingPriceInput').value);
+
+            // Validate if uniform with same details already exists
+            if (await isDuplicateUniform(updatedUniformItem, updatedSizeOfItem, updatedPurchasePrice, updatedSellingPrice, sr_no)) {
+                showToast('A uniform with the same item name, size, purchase price, and selling price already exists.', true);
+                return;
+            }
+
+            // Validate if a uniform with the same item name and size already exists
+            if (await isUniformNameDuplicate(updatedUniformItem, updatedSizeOfItem, sr_no)) {
+                showToast('A uniform with the same item name and size already exists.', true);
+                return;
+            }
+
+            customPrompt.remove(); // Remove the modal
+
+            try {
+                // Send updated data to server for update
+                const response = await fetch(`/inventory/uniforms/${encodeURIComponent(sr_no)}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        uniform_item: updatedUniformItem,
+                        size_of_item: updatedSizeOfItem,
+                        purchase_price: updatedPurchasePrice,
+                        selling_price: updatedSellingPrice
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to update uniform details.');
+                }
+
+                // Handle success (e.g., show toast, refresh data)
+                showToast('Uniform details updated successfully', false);
+                refreshUniformsData(); // Example function to refresh uniform data
+            } catch (error) {
+                console.error('Error updating uniform details:', error);
+                showToast('Failed to update uniform details', true);
+            }
+        });
+
+        cancelButton.addEventListener('click', () => {
+            customPrompt.remove(); // Remove the modal on cancel
+        });
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+// Helper function to check for duplicate uniform
+async function isDuplicateUniform(uniformItem, sizeOfItem, purchasePrice, sellingPrice, sr_no) {
+    try {
+        const response = await fetch('/inventory/uniforms');
+        if (!response.ok) {
+            throw new Error('Failed to fetch uniforms.');
+        }
+
+        const uniforms = await response.json();
+
+        return uniforms.some(uniform =>
+            uniform.uniform_item.trim().toLowerCase() === uniformItem.trim().toLowerCase() &&
+            uniform.size_of_item.trim().toLowerCase() === sizeOfItem.trim().toLowerCase() &&
+            uniform.purchase_price === purchasePrice &&
+            uniform.selling_price === sellingPrice &&
+            uniform.sr_no !== sr_no // Exclude the current uniform being edited
+        );
+    } catch (error) {
+        console.error('Error checking for duplicate uniform:', error);
+        return false;
+    }
+}
+
+// Helper function to check for duplicate uniform name and size
+async function isUniformNameDuplicate(uniformItem, sizeOfItem, sr_no) {
+    try {
+        const response = await fetch('/inventory/uniforms');
+        if (!response.ok) {
+            throw new Error('Failed to fetch uniforms.');
+        }
+
+        const uniforms = await response.json();
+
+        return uniforms.some(uniform =>
+            uniform.uniform_item.trim().toLowerCase() === uniformItem.trim().toLowerCase() &&
+            uniform.size_of_item.trim().toLowerCase() === sizeOfItem.trim().toLowerCase() &&
+            uniform.sr_no !== sr_no // Exclude the current uniform being edited
+        );
+    } catch (error) {
+        console.error('Error checking for duplicate uniform name and size:', error);
+        return false;
+    }
 }
 
 refreshUniformsData();

@@ -133,11 +133,12 @@
 
 .logo_item {
   display: flex;
-  align-items: center;
+  align-items: start;
   column-gap: 10px;
   font-size: 22px;
   font-weight: 500;
   color: var(--blue-color);
+  min-width: 140px;
 }
 
 .navbar img {

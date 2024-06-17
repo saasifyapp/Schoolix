@@ -51,7 +51,7 @@ function toggleDropdown() {
 
 // Event listeners for options
 document.querySelectorAll('.option').forEach(option => {
-  option.addEventListener('click', function(event) {
+  option.addEventListener('click', function (event) {
     if (!this.classList.contains('has-submenu')) {
       const selectedText = this.textContent.trim();
       document.querySelector('.dropdown-selected').textContent = selectedText;
@@ -63,7 +63,7 @@ document.querySelectorAll('.option').forEach(option => {
 
 // Event listeners for sub-options
 document.querySelectorAll('.submenu-option').forEach(subOption => {
-  subOption.addEventListener('click', function(event) {
+  subOption.addEventListener('click', function (event) {
     const selectedText = this.textContent.trim();
     document.querySelector('.dropdown-selected').textContent = selectedText;
     document.getElementById('bookClass').value = this.dataset.value;
@@ -73,7 +73,7 @@ document.querySelectorAll('.submenu-option').forEach(subOption => {
 });
 
 // Event listener to hide dropdown when clicking outside
-document.addEventListener('click', function(event) {
+document.addEventListener('click', function (event) {
   const dropdown = document.querySelector('.dropdown-options');
   const customDropdown = document.getElementById('customDropdown');
   if (!customDropdown.contains(event.target)) {
@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function () {
           // Clear input fields after successful submission
           booksform.reset();
           // Reset the dropdown
-        resetDropdown();
+          resetDropdown();
         })
         .then((data) => {
           hideBooksLoadingAnimation();
@@ -186,7 +186,7 @@ function resetDropdown() {
 }
 
 document.querySelectorAll('.submenu-option').forEach(subOption => {
-  subOption.addEventListener('click', function(event) {
+  subOption.addEventListener('click', function (event) {
     const selectedText = this.textContent.trim();
     document.querySelector('.dropdown-selected').textContent = selectedText;
     document.getElementById('bookClass').value = this.dataset.value;
@@ -240,7 +240,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Refresh data function for fetching and displaying books
-async function refreshbooksData() {
+/*async function refreshbooksData() {
   showBooksLoadingAnimation();
   document.getElementById("bookssearchField").value = "";
   await fetch("/inventory/books")
@@ -251,7 +251,7 @@ async function refreshbooksData() {
       // Handle error if needed
       hideBooksLoadingAnimation();
     });
-}
+}*/
 
 // Function to display book data
 function displayBooks(data) {
@@ -281,6 +281,28 @@ function displayBooks(data) {
           <td>${book.returned_quantity}</td>
           <td>
             <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+             <button style="background-color: transparent;
+                              border: none;
+                              color: black; /* Change text color to black */
+                              padding: 0;
+                              text-align: center;
+                              text-decoration: none;
+                              display: flex; /* Use flex for centering */
+                              align-items: center; /* Center vertically */
+                              justify-content: center; /* Center horizontally */
+                              font-size: 14px;
+                              cursor: pointer;
+                              max-height: 100%;
+                              border-radius: 20px; /* Round corners */
+                              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                              transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                              margin-bottom: 10px;" /* Added margin bottom for spacing */
+              onclick="showBookUpdateModal('${book.sr_no}')"
+              onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+              onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                <img src="/images/edit.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                <span style="margin-right: 10px;">Edit</span>
+              </button>
               <button style="background-color: transparent;
                               border: none;
                               color: black; /* Change text color to black */
@@ -764,6 +786,30 @@ async function searchBookDetails() {
                         <td>${book.returned_quantity}</td>
                         <td style="text-align: center;">
                         <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+
+                        <button style="background-color: transparent;
+                              border: none;
+                              color: black; /* Change text color to black */
+                              padding: 0;
+                              text-align: center;
+                              text-decoration: none;
+                              display: flex; /* Use flex for centering */
+                              align-items: center; /* Center vertically */
+                              justify-content: center; /* Center horizontally */
+                              font-size: 14px;
+                              cursor: pointer;
+                              max-height: 100%;
+                              border-radius: 20px; /* Round corners */
+                              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+                              transition: transform 0.2s, box-shadow 0.2s; /* Transition for transform and box-shadow */
+                              margin-bottom: 10px;" /* Added margin bottom for spacing */
+              onclick="showBookUpdateModal('${book.sr_no}')"
+              onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+              onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                <img src="/images/edit.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                <span style="margin-right: 10px;">Edit</span>
+              </button>
+
                         <button style="background-color: transparent;
                         border: none;
                         color: black; /* Change text color to black */
@@ -845,6 +891,194 @@ async function searchBookDetails() {
       // hideBooksLoadingAnimation();
     });
 }
+
+async function showBookUpdateModal(sr_no) {
+  try {
+      // Fetch book details by sr_no
+      const response = await fetch(`/inventory/books/${encodeURIComponent(sr_no)}`);
+      if (!response.ok) {
+          throw new Error('Failed to retrieve book details.');
+      }
+
+      const data = await response.json();
+
+      // Create the custom prompt
+      const customPrompt = document.createElement('div');
+      customPrompt.classList.add('custom-prompt2');
+
+      // Populate the prompt with book details
+      customPrompt.innerHTML = `
+          <div class="prompt-content">
+              <h2>Update Book</h2>
+              <p>Title:</p>
+              <input type="text" class="form-control" id="titleInput" value="${data.title}" required>
+              <p>Class of Title:</p>
+              <select id="classOfTitleInput" class="form-control" required>
+                  <option value="${data.class_of_title}" selected>${data.class_of_title}</option>
+                  <!-- List of other options -->
+                  <option value="Nursery to KG2">Nursery to KG2</option>
+                  <option value="Nursery to 4th">Nursery to 4th</option>
+                  <option value="1st to 4th">1st to 4th</option>
+                  <option value="5th to 10th">5th to 10th</option>
+                  <option value="1st to 10th">1st to 10th</option>
+                  <option value="All Class">All Class</option>
+                  <option value="Nursery">Nursery</option>
+                  <option value="KG1">KG1</option>
+                  <option value="KG2">KG2</option>
+                  <option value="1st">1st</option>
+                  <option value="2nd">2nd</option>
+                  <option value="3rd">3rd</option>
+                  <option value="4th">4th</option>
+                  <option value="5th">5th</option>
+                  <option value="6th">6th</option>
+                  <option value="7th">7th</option>
+                  <option value="8th">8th</option>
+                  <option value="9th">9th</option>
+                  <option value="10th">10th</option>
+              </select>
+              <p>Purchase Price:</p>
+              <input type="number" class="form-control" id="purchasePriceInput" value="${data.purchase_price}" required>
+              <p>Selling Price:</p>
+              <input type="number" class="form-control" id="sellingPriceInput" value="${data.selling_price}" required>
+
+              <button id="saveButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;">
+                  <img src="../images/conform.png" alt="Save" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                  <span style="margin-right: 10px;">Save</span>
+              </button>
+              <button id="cancelButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;">
+                  <img src="../images/cancel.png" alt="Cancel" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                  <span style="margin-right: 10px;">Cancel</span>
+              </button>
+          </div>
+      `;
+
+      document.body.appendChild(customPrompt);
+
+      const saveButton = customPrompt.querySelector('#saveButton');
+      const cancelButton = customPrompt.querySelector('#cancelButton');
+
+      saveButton.addEventListener('click', async () => {
+          const updatedTitle = customPrompt.querySelector('#titleInput').value;
+          const updatedClassOfTitle = customPrompt.querySelector('#classOfTitleInput').value;
+          const updatedPurchasePrice = parseFloat(customPrompt.querySelector('#purchasePriceInput').value);
+          const updatedSellingPrice = parseFloat(customPrompt.querySelector('#sellingPriceInput').value);
+
+          // Validate if book with same details already exists
+          if (await isDuplicateBook(updatedTitle, updatedClassOfTitle, updatedPurchasePrice, updatedSellingPrice, sr_no)) {
+              showToast('A book with the same title, class, purchase and selling price already exists.', true);
+              return;
+          }
+
+          // Validate if a book with the same title already exists
+          if (await isTitleDuplicate(updatedTitle, sr_no)) {
+              showToast('A book with the same title already exists.', true);
+              return;
+          }
+
+          customPrompt.remove();
+          showBooksLoadingAnimation();
+
+          try {
+              // Update the book details by sr_no
+              const response = await fetch(`/inventory/books/${encodeURIComponent(sr_no)}`, {
+                  method: 'PUT',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                      newTitle: updatedTitle,
+                      class_of_title: updatedClassOfTitle,
+                      purchase_price: updatedPurchasePrice,
+                      selling_price: updatedSellingPrice
+                  })
+              });
+
+              if (!response.ok) {
+                  throw new Error('Failed to update book details.');
+              }
+
+              showToast('Book details updated successfully', false);
+              await refreshbooksData();
+              hideBooksLoadingAnimation();
+              
+          } catch (error) {
+              console.error('Error updating book details:', error);
+              showToast('Failed to update book details', true);
+              hideBooksLoadingAnimation();
+          }
+      });
+
+      cancelButton.addEventListener('click', () => {
+          customPrompt.remove();
+      });
+  } catch (error) {
+      console.error('Error:', error);
+      hideBooksLoadingAnimation();
+  }
+}
+
+// Helper function to check for duplicate book
+async function isDuplicateBook(title, classOfTitle, purchasePrice, sellingPrice, sr_no) {
+  try {
+      const response = await fetch('/inventory/books');
+      if (!response.ok) {
+          throw new Error('Failed to fetch books.');
+      }
+
+      const books = await response.json();
+
+      return books.some(book => 
+          book.title.trim().toLowerCase() === title.trim().toLowerCase() &&
+          book.class_of_title.trim().toLowerCase() === classOfTitle.trim().toLowerCase() &&
+          book.purchase_price === purchasePrice &&
+          book.selling_price === sellingPrice &&
+          book.sr_no !== sr_no  // Exclude the book being edited
+      );
+  } catch (error) {
+      console.error('Error checking for duplicate book:', error);
+      return false;
+  }
+}
+
+// Helper function to check for duplicate book title
+async function isTitleDuplicate(title, sr_no) {
+  try {
+      const response = await fetch('/inventory/books');
+      if (!response.ok) {
+          throw new Error('Failed to fetch books.');
+      }
+
+      const books = await response.json();
+
+      return books.some(book => 
+          book.title.trim().toLowerCase() === title.trim().toLowerCase() &&
+          book.sr_no !== sr_no  // Exclude the book being edited
+      );
+  } catch (error) {
+      console.error('Error checking for duplicate title:', error);
+      return false;
+  }
+}
+
+async function refreshbooksData() {
+  showBooksLoadingAnimation();
+  document.getElementById("bookssearchField").value = "";
+  try {
+      const response = await fetch("/inventory/books");
+      if (!response.ok) {
+          throw new Error("Failed to fetch books data.");
+      }
+      const data = await response.json();
+      displayBooks(data);
+  } catch (error) {
+      console.error("Error:", error);
+      // Handle error if needed
+  } finally {
+      hideBooksLoadingAnimation();
+  }
+}
+
+
 
 // Call refreshData initially to fetch and display book data when the page is loaded
 refreshbooksData();

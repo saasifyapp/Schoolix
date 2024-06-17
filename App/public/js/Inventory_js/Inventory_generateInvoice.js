@@ -208,74 +208,75 @@ function updatePrice(selectElement) {
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 /*****************************        GENERATE BUTTON FUNCTIONALITY     *********************** */
-///////////////COMMENTING IN CASE OF ROLLBACK
 
-// document.getElementById("generateButton").addEventListener("click", async function () {
-//     showInventoryLoadingAnimation();
-//     // Retrieve payment method
-//     const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
+document.getElementById("generateButton").addEventListener("click", async function () {
+    showInventoryLoadingAnimation();
+    // Retrieve payment method
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
 
-//     // Get buyer details from input fields
-//     var buyerName = document.getElementById("buyerName").value;
-//     var buyerMobile = document.getElementById("buyerMobile").value;
-//     var amountPaid = document.getElementById("amountPaid").value;
-//     var buyerClass = document.getElementById("buyerClass").value;
+    // Get buyer details from input fields
+    var buyerName = document.getElementById("buyerName").value;
+    var buyerMobile = document.getElementById("buyerMobile").value;
+    var amountPaid = document.getElementById("amountPaid").value;
+    var buyerClass = document.getElementById("buyerClass").value;
 
-//     // Validate required fields
-//     if (!buyerName || !buyerMobile || !amountPaid) {
-//         hideInventoryLoadingAnimation();
-//         showToast("Name, Mobile, or Paid amount must not be empty.", true);
-//         return; // Stop execution if validation fails
-//     }
+    // Validate required fields
+    if (!buyerName || !buyerMobile || !amountPaid) {
+        hideInventoryLoadingAnimation();
+        showToast("Name, Mobile, or Paid amount must not be empty.", true);
+        return; // Stop execution if validation fails
+    }
 
-//     // Validate mobile number length
-//     if (buyerMobile.length !== 10) {
-//         hideInventoryLoadingAnimation();
-//         showToast("Mobile number must be 10 digits long.", true);
-//         return; // Stop execution if validation fails
-//     }
+    // Validate mobile number length
+    if (buyerMobile.length !== 10) {
+        hideInventoryLoadingAnimation();
+        showToast("Mobile number must be 10 digits long.", true);
+        return; // Stop execution if validation fails
+    }
 
-//     // Send a request to the server to check if the buyer exists for the given class
-//     try {
-//         const response = await fetch("/inventory/generate_invoice/check_buyer", {
-//             method: "POST",
-//             headers: {
-//                 "Content-Type": "application/json"
-//             },
-//             body: JSON.stringify({ buyerName: buyerName, buyerClass: buyerClass })
-//         });
+    // Send a request to the server to check if the buyer exists for the given class
+    try {
+        const response = await fetch("/inventory/generate_invoice/check_buyer", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ buyerName: buyerName, buyerClass: buyerClass })
+        });
 
-//         if (response.ok) {
-//             const data = await response.json();
-//             if (data.exists) {
-//                 hideInventoryLoadingAnimation();
-//                 // Buyer exists for the given class
-//                 // Show a toast message indicating that the buyer already exists
-//                 showToast("Invoice for this name already exists", 'red');
-//             } else {
-//                 hideInventoryLoadingAnimation();
-//                 // Check if the payment method is selected
-//                 if (!paymentMethod) {
-//                     showToast("Please select a payment method", true);
-//                     return;
-//                 } else {
-//                     // Buyer does not exist for the given class
-//                     // Proceed with generating the bill
-//                     lowStockCheck();
-//                 }
-//             }
-//         } else {
-//             throw new Error("Error checking buyer");
-//         }
-//     } catch (error) {
-//         hideInventoryLoadingAnimation();
-//         console.error("Error:", error);
-//         showToast("An error occurred while checking the buyer.", true);
-//     }
-// });
+        if (response.ok) {
+            const data = await response.json();
+            if (data.exists) {
+                hideInventoryLoadingAnimation();
+                // Buyer exists for the given class
+                // Show a toast message indicating that the buyer already exists
+                showToast("Invoice for this name already exists", 'red');
+            } else {
+                hideInventoryLoadingAnimation();
+                // Check if the payment method is selected
+                if (!paymentMethod) {
+                    showToast("Please select a payment method", true);
+                    return;
+                } else {
+                    // Buyer does not exist for the given class
+                    // Proceed with generating the bill
+                    lowStockCheck(); // Assuming lowStockCheck() is the function to generate the invoice
+                }
+            }
+        } else {
+            throw new Error("Error checking buyer");
+        }
+    } catch (error) {
+        hideInventoryLoadingAnimation();
+        console.error("Error:", error);
+        showToast("An error occurred while checking the buyer.", true);
+    }
+});
+
 
 // Determine payment status
 let paymentStatus = '';
@@ -381,7 +382,7 @@ async function lowStockCheck() {
             );
         } else {
             // If there are no low stock items and no insufficient items, call generateBill()
-            generateBill();
+            generateBill_test();
         }
     } catch (error) {
         console.error("Error:", error);
@@ -442,7 +443,7 @@ function showLowStockAlert(bookMessage, uniformMessage, insufficientBooksMessage
     proceedBtn.onclick = function () {
         if (!zeroQuantity) {
             modal.style.display = 'none';
-            generateBill();  // Call generateBill() when Proceed is clicked
+            generateBill_test();  // Call generateBill() when Proceed is clicked
         }
     }
 
@@ -455,176 +456,145 @@ function showLowStockAlert(bookMessage, uniformMessage, insufficientBooksMessage
 // Call the function
 
 // FUNCTION TO GENERATE BILL //
+function generateBill_test() {
+    const initialImage = document.querySelector('dotlottie-player');
+    const billContainer = document.getElementById('invoiceDetails');
 
-function generateBill() {
-    showToast('Invoice Generated Successfully.');
-    // Retrieve payment method
-    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
-    // Retrieve buyer details
-    const buyerName = document.getElementById("buyerName").value;
-    const buyerMobile = document.getElementById("buyerMobile").value;
-    const buyerClass = document.getElementById("buyerClass").value;
+    // Hide the initial image
+    initialImage.style.display = 'none';
 
-    // Retrieve invoice details
-    const invoiceNo = document.getElementById("invoiceNo").value;
-    const invoiceDate = new Date().toISOString().split('T')[0];
+    // Show the bill container
+    billContainer.style.display = 'flex';
 
-    // Retrieve invoice summary
-    const totalAmount = document.getElementById("totalAmount").value;
-    const amountPaid = document.getElementById("amountPaid").value;
-    const balanceAmount = document.getElementById("balanceAmount").value;
+    // Validate Buyer Details
+    const buyerName = document.getElementById('buyerName').value.trim();
+    const buyerMobile = document.getElementById('buyerMobile').value.trim();
+    const buyerClass = document.getElementById('buyerClass').value.trim();
 
+    // Validate Invoice Summary
+    const totalAmount = parseFloat(document.getElementById('totalAmount').value.trim());
+    const amountPaid = parseFloat(document.getElementById('amountPaid').value.trim());
+    const balanceAmount = parseFloat(document.getElementById('balanceAmount').value.trim());
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
 
-    if (balanceAmount == 0) {
-        paymentStatus = 'Paid';
-        badgeClass = 'badge-success';
-    } else if (amountPaid == 0) {
-        paymentStatus = 'Unpaid';
-        badgeClass = 'badge-warning';
-    } else {
-        paymentStatus = 'Balance';
-        badgeClass = 'badge-info';
+    // Fetch and populate books table data
+    const booksTableRows = document.querySelectorAll('#booksTable tbody tr');
+    const booksData = [];
+    booksTableRows.forEach(row => {
+        const quantity = parseInt(row.querySelector('input[type="number"]').value);
+        if (quantity > 0) {
+            const title = row.children[0].textContent;
+            const unitPrice = parseFloat(row.children[2].textContent);
+            const total = quantity * unitPrice;
+            booksData.push({ title, quantity, unitPrice, total });
+        }
+    });
+
+    // Fetch and populate uniforms table data
+    const uniformsTableRows = document.querySelectorAll('#uniformsTable tbody tr');
+    const uniformsData = [];
+    uniformsTableRows.forEach(row => {
+        const quantity = parseInt(row.querySelector('input[type="number"]').value);
+        if (quantity > 0) {
+            const item = row.children[0].textContent;
+            const size = row.querySelector('select').value;
+            const unitPrice = parseFloat(row.children[3].textContent);
+            const total = quantity * unitPrice;
+            uniformsData.push({ item, size, quantity, unitPrice, total });
+        }
+    });
+
+    // Combine books and uniforms data into one array for the bill
+    const billData = [...booksData, ...uniformsData];
+
+    // Clear previous bill details if needed
+    const billTableBody = document.getElementById('billTableBody');
+    billTableBody.innerHTML = '';
+
+    // Populate items into the bill table
+    billData.forEach((item, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td style="padding: 8px;">${index + 1}</td>
+            <td style="padding: 8px;">${item.title || `${item.item} (Size: ${item.size})`}</td>
+            <td style="padding: 8px;">${item.unitPrice.toFixed(2)}</td>
+            <td style="padding: 8px;">${item.quantity}</td>
+            <td style="padding: 8px;">${item.total.toFixed(2)}</td>
+        `;
+        billTableBody.appendChild(row);
+    });
+
+    // Calculate sub-total and grand total
+    let subTotal = 0;
+    billData.forEach(item => {
+        subTotal += item.total;
+    });
+
+    // Display Total, Paid, Balance using provided values
+    if (!isNaN(totalAmount)) {
+        document.getElementById('totalAmountDisplay').textContent = totalAmount.toFixed(2);
+    }
+    if (!isNaN(amountPaid)) {
+        document.getElementById('amountPaidDisplay').textContent = amountPaid.toFixed(2);
+    }
+    if (!isNaN(balanceAmount)) {
+        document.getElementById('balanceAmountDisplay').textContent = balanceAmount.toFixed(2);
     }
 
-    // Retrieve book details
-    const bookRows = document.querySelectorAll("#booksTableBody tr");
-    const bookDetails = [];
-    bookRows.forEach((row, index) => {
-        const title = row.cells[0].innerText;
-        const quantity = row.cells[1].querySelector('input').value;
-        const unitPrice = row.cells[2].innerText;
-        const price = row.cells[3].innerText;
+    // Fetch and populate buyer details in the bill
+    const buyerDetails = document.querySelector('#invoiceDetails .buyer-details');
+    const buyerDetailsList = buyerDetails.querySelectorAll('ul li');
+    buyerDetailsList[0].innerHTML = `<i class="fa-solid fa-user" style="color: #74C0FC;"></i><strong>Name:</strong>: ${buyerName}`;
+    buyerDetailsList[1].innerHTML = `<i class="fa-solid fa-phone" style="color: #74C0FC;"></i> <strong>Phone:</strong>: ${buyerMobile}`;
+    buyerDetailsList[2].innerHTML = `<i class="fa-solid fa-graduation-cap" style="color: #74C0FC;"></i> <strong>Class:</strong>: ${buyerClass}`;
 
-        if (parseInt(quantity) > 0) {
-            bookDetails.push({ title, quantity, unitPrice, price });
-        }
-    });
+    // Fetch and populate invoice details in the bill
+    const invoiceNo = document.getElementById('invoiceNo').value;
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleDateString('en-GB'); // Format as 'DD/MM/YYYY'
 
-    // Retrieve uniform details
-    const uniformRows = document.querySelectorAll("#uniformsTableBody tr");
-    const uniformDetails = [];
-    uniformRows.forEach((row, index) => {
-        const item = row.cells[0].innerText;
-        const size = row.cells[1].querySelector('select').value;
-        const quantity = row.cells[2].querySelector('input').value;
-        const unitPrice = row.cells[3].innerText;
-        const price = row.cells[4].innerText;
+    // Determine invoice status based on amount paid and balance amount
+    let invoiceStatus;
+    let statusIcon;    
 
-        if (parseInt(quantity) > 0) {
-            uniformDetails.push({ item, size, quantity, unitPrice, price });
-        }
-    });
+    if (amountPaid === 0) {
+        invoiceStatus = 'Unpaid';
+        statusIcon = '<i class="fa-solid fa-ban" style="color: #d00b0b;"></i>';        
+    } else if (balanceAmount !== 0) {
+        invoiceStatus = 'Balance';
+        statusIcon = '<i class="fa-solid fa-triangle-exclamation" style="color: #e60f0f;"></i>';       
+    } else if (balanceAmount === 0) {
+        invoiceStatus = 'Paid';
+        statusIcon = '<i class="fa-regular fa-circle-check" style="color: #63E6BE;margin-right: 5px"></i>';       
+    }
 
-    // Construct the bill HTML
-    const billHtml = `
-    <div class="page-header text-blue-d2">
-        <h1 class="page-title text-secondary-d1">Invoice <small class="page-info"><i class="fa fa-angle-double-right text-80"></i> ID: #${invoiceNo}</small></h1>
-    </div>
-    <div class="container px-0">
-        <div class="row mt-4">
-            <div class="col-12 col-lg-12">                
-                
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div>
-                            <span class="text-sm text-grey-m2 align-middle">To:</span>
-                            <span class="text-600 text-110 text-blue align-middle">${buyerName}</span>
-                        </div>
-                        <div class="text-grey-m2">
-                            <div class="my-1">Class: ${buyerClass}</div>
-                            <div class="my-1"><i class="fa fa-phone fa-flip-horizontal text-secondary"></i> <b class="text-600">${buyerMobile}</b></div>
-                        </div>
-                    </div>
-                    <div class="text-95 col-sm-6 align-self-start d-sm-flex justify-content-end">
-                        <div class="text-grey-m2">
-                            <div class="mt-1 mb-2 text-secondary-m1 text-600 text-125">Invoice</div>
-                            <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">ID:</span> #${invoiceNo}</div>
-                            <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">Issue Date:</span> ${invoiceDate}</div>
-                            <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">Status:</span> <span class="badge badge-warning badge-pill px-25">${paymentStatus}</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="table-container"  >
-                    <table class="table table-striped table-borderless border-0 border-b-2 brc-default-l1" style="height:100%">
-                        <thead class="bg-none bgc-default-tp1">
-                            <tr class="text-white">
-                                <th class="opacity-2">#</th>
-                                <th>Title</th>
-                                <th>Qty</th>
-                                <th>Unit Price</th>
-                                <th width="140">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-95 text-secondary-d3" style="overflow: auto; ">
-                            ${bookDetails.map((book, index) => `
-                                <tr>
-                                    <td>${index + 1}</td>
-                                    <td>${book.title}</td>
-                                    <td>${book.quantity}</td>
-                                    <td>${book.unitPrice}</td>
-                                    <td>${book.price}</td>
-                                </tr>
-                            `).join('')}
-                            ${uniformDetails.map((uniform, index) => `
-                                <tr>
-                                    <td>${index + bookDetails.length + 1}</td>
-                                    <td>${uniform.item} (Size: ${uniform.size})</td>
-                                    <td>${uniform.quantity}</td>
-                                    <td>${uniform.unitPrice}</td>
-                                    <td>${uniform.price}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-12 col-sm-7 text-grey-d2 text-95 mt-2 mt-lg-0">
-                        
-                    </div>
-                    <div class="col-12 col-sm-5 text-grey text-90 order-first order-sm-last">
-                        <div class="row my-2">
-                            <div class="col-7 text-right">SubTotal</div>
-                            <div class="col-5"><span class="text-120 text-secondary-d1">${totalAmount}</span></div>
-                        </div>
-                        <div class="row my-2">
-                            <div class="col-7 text-right">Paid Amount</div>
-                            <div class="col-5"><span class="text-110 text-secondary-d1">${amountPaid}</span></div>
-                        </div>
-                        <div class="row my-2 align-items-center bgc-primary-l3 p-2">
-                            <div class="col-7 text-right">Balance Amount</div>
-                            <div class="col-5"><span class="text-150 text-success-d3 opacity-2">${balanceAmount}</span></div>
-                        </div>
-                        <div class="row my-2 align-items-center bgc-primary-l3 p-2">
-                            <div class="col-7 text-right">Mode of Payment</div>
-                            <div class="col-5"><span class="text-150 text-success-d3 opacity-2">${paymentMethod}</span></div>
-                        </div>
-                    </div>
-                </div>
-                <hr />
-                <div>
-                    <span class="text-secondary-d1 text-105">Thank you for your business</span>
-                </div>
-            </div>
-        </div>
-    </div>
-`;
+    const invoiceDetails = document.querySelector('#invoiceDetails .invoice-details');
+    const invoiceDetailsList = invoiceDetails.querySelectorAll('ul li');
+    invoiceDetailsList[0].innerHTML = `<i class="fa-regular fa-calendar-days" style="color: #B197FC;margin-right: 5px"></i><strong>Date: </strong> ${formattedDate}`;
+    invoiceDetailsList[1].innerHTML = `${statusIcon}<strong>Status: </strong> ${invoiceStatus}`;
 
+    // Populate Invoice Number in HTML
+    document.getElementById('invoiceNumberDisplay').textContent = `Invoice No: #${invoiceNo}`;
 
-    // Insert the bill HTML into the display container
-    document.querySelector(".section.bill .table-container .page-content").innerHTML = billHtml;
+    return true;
 }
+
+
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*****************************         PRINT BUTTON FUNCTIONALITY       ************************/
 
+
+
 document.getElementById("printButton").addEventListener("click", async function () {
     // Add validation to execute this only when the bill is generated i.e. displayed on the front-end
-    if (paymentStatus === '') {
+   /* if (invoiceStatus === '') {
         showToast("Please generate the bill first", true);
         return;
-    }
+    }*/
 
     showInventoryLoadingAnimation();
 
@@ -662,7 +632,7 @@ document.getElementById("printButton").addEventListener("click", async function 
             const quantity = row.cells[1].querySelector('input').value; // Get input value instead of cell text
             const book_type = 'Book'; // Set type as 'Book' for book items
             const class_of_title = row.querySelector('.class-of-title').innerText; // Get hidden class
-        
+
             return (parseInt(quantity) > 0) ? { title, class: class_of_title, quantity, book_type } : null;
         }).filter(item => item);
 
@@ -739,7 +709,7 @@ document.getElementById("printButton").addEventListener("click", async function 
             window.location.reload();
         }, 1000); // Match the duration of the toast message
 
-        printBill(); // PRINT THE BILL WHEN ALL OPERATIONS ARE SUCCESSFULLY COMPLETED //
+        printInvoice(); // PRINT THE BILL WHEN ALL OPERATIONS ARE SUCCESSFULLY COMPLETED //
 
     } catch (error) {
         console.error("Error:", error);
@@ -749,6 +719,35 @@ document.getElementById("printButton").addEventListener("click", async function 
     }
 });
 
+function printInvoice() {
+    // Get the invoice details container
+    const invoiceDetails = document.getElementById('invoice');
+
+    // Define the options for html2pdf
+    const opt = {
+        margin: 1,
+        filename: 'invoice.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    // Generate the PDF
+    html2pdf().from(invoiceDetails).set(opt).outputPdf('blob').then(function (pdfBlob) {
+        // Create a URL for the PDF blob
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+
+        // Open the PDF in a new window
+        const pdfWindow = window.open(pdfUrl, '_blank');
+
+        // Add an event listener to trigger the print dialog once the PDF is loaded
+        pdfWindow.onload = function () {
+            pdfWindow.focus();
+            pdfWindow.print();
+        };
+    });
+
+}
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -792,59 +791,5 @@ function showToast(message, isError) {
 }
 
 
-function printBill() {
-    // Create an iframe for printing
-    var printFrame = document.createElement('iframe');
-    printFrame.style.position = 'absolute';
-    printFrame.style.width = '0px';
-    printFrame.style.height = '0px';
-    printFrame.style.border = 'none';
-    document.body.appendChild(printFrame);
 
-    // Get the content of the printable container
-    var printContents = document.getElementById('printableContainer').innerHTML;
-
-    // Write the content to the iframe
-    var doc = printFrame.contentWindow.document;
-    doc.open();
-    doc.write('<html><head><title>Print Invoice</title>');
-    doc.write('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">');
-    doc.write('<link rel="stylesheet" href="/css/Inventory_Css/InventoryAll.css">');
-    doc.write('<link rel="stylesheet" href="/css/Inventory_Css/GenerateInvoice.css">');
-    doc.write('<link rel="stylesheet" href="/css/NavButtons.css">');
-    doc.write('<style>@media print { body * { visibility: hidden; } #printableContainer, #printableContainer * { visibility: visible; } #printableContainer { position: absolute; left: 0; top: 0; width: 100%; } }</style>');
-    doc.write('</head><body>');
-    doc.write('<div id="printableContainer">' + printContents + '</div>');
-    doc.write('</body></html>');
-    doc.close();
-
-    // Print the iframe content
-    printFrame.contentWindow.focus();
-    printFrame.contentWindow.print();
-
-    // Remove the iframe after printing
-    document.body.removeChild(printFrame);
-}
 //////////////////////NEW COMMIT FOR TESTING //////////////////////
-document.getElementById('generateButtontest').addEventListener('click', function(event) {
-    event.preventDefault();
-
-    // // Generate bill content (this is just an example, replace with your actual bill content)
-    // const billContent = `
-    //     <p>Bill No: 12345</p>
-    //     <p>Buyer: John Doe</p>
-    //     <p>Total Amount: $100</p>
-    //     <!-- Add more bill details here -->
-    // `;
-
-    // // Insert the generated bill content into the pop-up
-    // document.getElementById('billContent').innerHTML = billContent;
-
-    // Display the pop-up
-    document.getElementById('billPopupOverlay').style.display = 'flex';
-});
-
-document.getElementById('closeButton').addEventListener('click', function() {
-    // Hide the pop-up
-    document.getElementById('billPopupOverlay').style.display = 'none';
-});

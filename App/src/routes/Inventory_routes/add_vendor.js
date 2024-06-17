@@ -22,7 +22,7 @@ router.use((req, res, next) => {
 
 
 router.post('/inventory/purchase/add_vendor', (req, res) => {
-    
+
     const { vendorName, amountPaid, vendorFor } = req.body;
 
     const netPayable = req.body.netPayable || 0;
@@ -88,7 +88,7 @@ router.route('/inventory/vendors/:vendorName/paid_till_now')
                     res.status(404).json({ error: 'Vendor not found' });
                 } else {
                     const { vendor_name, paid_till_now, net_payable, balance } = result[0];
-                    res.status(200).json({ vendor_name, paid_till_now, net_payable,balance });
+                    res.status(200).json({ vendor_name, paid_till_now, net_payable, balance });
                 }
             }
         });
@@ -96,7 +96,7 @@ router.route('/inventory/vendors/:vendorName/paid_till_now')
     .put((req, res) => {
         const vendorName = req.params.vendorName;
         const totalPaid = req.body.paid_till_now; // Get the new total paid amount from the request body
-    
+
         const sql = 'UPDATE inventory_vendor_details SET paid_till_now = ? WHERE vendor_name = ?';
         connection.query(sql, [totalPaid, vendorName], (err, result) => {
             if (err) {
@@ -113,7 +113,7 @@ router.route('/inventory/vendors/:vendorName/paid_till_now')
     });
 
 
- 
+
 // Calculate net_payable and update it to vendor table //
 router.get('/inventory/vendors', (req, res) => {
     const sqlQuery = `
@@ -183,5 +183,107 @@ router.get("/inventory/vendors/search", (req, res) => {
 
 
 });
+
+// // Endpoint to update vendor details
+// router.put('/inventory/vendors/:vendorName', (req, res) => {
+//     const vendorName = req.params.vendorName;
+//     const { vendor_name, vendorFor } = req.body;
+
+//     if (!vendor_name || !vendorFor) {
+//         return res.status(400).json({ error: 'Vendor name and type are required.' });
+//     }
+
+//     const sql = 'UPDATE inventory_vendor_details SET vendor_name = ?, vendorFor = ? WHERE vendor_name = ?';
+//     connection.query(sql, [vendor_name, vendorFor, vendorName], (err, result) => {
+//         if (err) {
+//             console.error('Error updating vendor details:', err);
+//             return res.status(500).json({ error: 'Failed to update vendor details.' });
+//         }
+//         res.json({ message: 'Vendor details updated successfully.' });
+//     });
+// });
+
+router.route('/inventory/vendors/:sr_no')
+    .get((req, res) => {
+        const sr_no = req.params.sr_no;
+        const sql = 'SELECT vendor_name, vendorFor FROM inventory_vendor_details WHERE sr_no = ?';
+        connection.query(sql, [sr_no], (err, result) => {
+            if (err) {
+                console.error('Error fetching vendor details:', err);
+                return res.status(500).json({ error: 'Failed to fetch vendor details' });
+            }
+            if (result.length === 0) {
+                return res.status(404).json({ error: 'Vendor not found' });
+            }
+            res.status(200).json(result[0]);
+        });
+    })
+    .put((req, res) => {
+        const sr_no = req.params.sr_no;
+        const { vendor_name, vendorFor } = req.body;
+
+        if (!vendor_name || !vendorFor) {
+            return res.status(400).json({ error: 'Vendor name and type are required' });
+        }
+
+        // First, fetch the old vendor name to use it in the dependent table updates
+        const fetchOldVendorNameSql = 'SELECT vendor_name FROM inventory_vendor_details WHERE sr_no = ?';
+        connection.query(fetchOldVendorNameSql, [sr_no], (err, result) => {
+            if (err) {
+                console.error('Error fetching old vendor name:', err);
+                return res.status(500).json({ error: 'Failed to fetch old vendor name' });
+            }
+            if (result.length === 0) {
+                return res.status(404).json({ error: 'Vendor not found' });
+            }
+
+            const oldVendorName = result[0].vendor_name;
+
+            // Update the vendor details
+            const updateVendorSql = `
+                UPDATE inventory_vendor_details 
+                SET vendor_name = ?, vendorFor = ?
+                WHERE sr_no = ?;
+            `;
+            connection.query(updateVendorSql, [vendor_name, vendorFor, sr_no], (err, result) => {
+                if (err) {
+                    console.error('Error updating vendor details:', err);
+                    return res.status(500).json({ error: 'Failed to update vendor details' });
+                }
+
+                // Depending on the vendorFor value, update the corresponding table
+                let updateDependentTableSql = '';
+                if (vendorFor === 'Books') {
+                    updateDependentTableSql = `
+                        UPDATE inventory_book_details
+                        SET vendor = ?
+                        WHERE vendor = ?;
+                    `;
+                } else if (vendorFor === 'Uniform') {
+                    updateDependentTableSql = `
+                        UPDATE inventory_uniform_details
+                        SET vendor = ?
+                        WHERE vendor = ?;
+                    `;
+                }
+
+                if (updateDependentTableSql) {
+                    connection.query(updateDependentTableSql, [vendor_name, oldVendorName], (err, result) => {
+                        if (err) {
+                            console.error('Error updating dependent table:', err);
+                            return res.status(500).json({ error: 'Failed to update dependent table' });
+                        }
+
+                        res.status(200).json({ message: 'Vendor details updated successfully' });
+                    });
+                } else {
+                    // If vendorFor is not 'book' or 'uniform', just send a success response for the vendor update
+                    res.status(200).json({ message: 'Vendor details updated successfully' });
+                }
+            });
+        });
+    });
+
+
 
 module.exports = router;

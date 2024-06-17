@@ -98,8 +98,9 @@ const createSchoolTables = (connection) => {
                 experience varchar(30) NOT NULL
             )`,
             `CREATE TABLE IF NOT EXISTS inventory_book_details (
+                sr_no int(11) NOT NULL AUTO_INCREMENT,
                 title varchar(30) DEFAULT NULL,
-                class_of_title varchar(10) DEFAULT NULL,
+                class_of_title varchar(25) DEFAULT NULL,
                 purchase_price decimal(10,2) DEFAULT NULL,
                 selling_price int(11) DEFAULT NULL,
                 vendor varchar(30) DEFAULT NULL,
@@ -108,6 +109,7 @@ const createSchoolTables = (connection) => {
                 returned_quantity int(11) DEFAULT NULL
             )`,
             `CREATE TABLE IF NOT EXISTS inventory_uniform_details (
+                sr_no int(11) NOT NULL AUTO_INCREMENT,
                 uniform_item varchar(30) DEFAULT NULL,
                 size_of_item varchar(10) DEFAULT NULL,
                 purchase_price decimal(10,2) DEFAULT NULL,
@@ -118,6 +120,7 @@ const createSchoolTables = (connection) => {
                 returned_quantity int(11) DEFAULT NULL
             )`,
             `CREATE TABLE IF NOT EXISTS inventory_vendor_details (
+                sr_no int(11) NOT NULL AUTO_INCREMENT,
                 vendor_name varchar(30) DEFAULT NULL,
                 net_payable decimal(10,2) DEFAULT NULL,
                 paid_till_now decimal(10,2) DEFAULT NULL,
