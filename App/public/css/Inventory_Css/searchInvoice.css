@@ -7,14 +7,14 @@ body {
 
 .container {
     display: flex;
-    flex-direction: column;    
+    flex-direction: column;
     width: 100%;
     padding: 20px;
     background-color: transparent;
     margin-top: 2rem;
 }
 
-.head {   
+.head {
     font-size: 20px;
     color: var(--grey-color);
     text-align: center;
@@ -42,8 +42,10 @@ body {
     }
 }
 
-#refreshButton, #export_registered_students {
-    margin-bottom: 15px; /* Add margin between the buttons */
+#refreshButton,
+#export_registered_students {
+    margin-bottom: 15px;
+    /* Add margin between the buttons */
     cursor: pointer;
     background-color: transparent;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -52,25 +54,34 @@ body {
     border-radius: 20px;
     height: 2.3rem;
     width: 6rem;
-    font-size: 1rem; /* Reduce the font size */
+    font-size: 1rem;
+    /* Reduce the font size */
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 8px; /* Add padding to fit content */
-    transition: all 0.3s; /* Add transition for smooth hover effect */
+    padding: 0 8px;
+    /* Add padding to fit content */
+    transition: all 0.3s;
+    /* Add transition for smooth hover effect */
     font-family: 'Open Sans', sans-serif;
     font-size: 14px;
     font-weight: bold;
 }
 
-#refreshButton img, #export_registered_students img {
-    height: 80%; /* Set image height to fit button */
-    margin-right: 5px; /* Add a 5px margin to the right of the image */
+#refreshButton img,
+#export_registered_students img {
+    height: 80%;
+    /* Set image height to fit button */
+    margin-right: 5px;
+    /* Add a 5px margin to the right of the image */
 }
 
-#refreshButton:hover, #export_registered_students:hover {
-    background-color: #76D7C4; /* Change background color on hover */
-    transform: scale(1.09); /* Increase size on hover */
+#refreshButton:hover,
+#export_registered_students:hover {
+    background-color: #76D7C4;
+    /* Change background color on hover */
+    transform: scale(1.09);
+    /* Increase size on hover */
 }
 
 h1 {
@@ -89,7 +100,8 @@ h1 {
 .form-Searchgroup {
     display: flex;
     align-items: center;
-    gap: 10px; /* Space between elements */
+    gap: 10px;
+    /* Space between elements */
     width: 100%;
     max-width: 1200px;
 }
@@ -103,25 +115,29 @@ h1 {
     transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.custom-select:focus, .custom-select:hover {   
-    box-shadow: 0 0 10px #5DADE2; /* Add shadow on hover and focus */   
+.custom-select:focus,
+.custom-select:hover {
+    box-shadow: 0 0 10px #5DADE2;
+    /* Add shadow on hover and focus */
     outline: none;
 }
 
 
-#searchBar {    
+#searchBar {
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ddd;
     border-radius: 20px;
     height: 3rem;
-    flex-grow: 3; /* Allow it to take up remaining space */
+    flex-grow: 3;
+    /* Allow it to take up remaining space */
 }
 
 .vendorIcon {
     width: 2rem;
     height: 2rem;
-    mix-blend-mode: multiply; /* Add this property */
+    mix-blend-mode: multiply;
+    /* Add this property */
 }
 
 @keyframes fadeUp {
@@ -129,6 +145,7 @@ h1 {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -137,12 +154,16 @@ h1 {
 
 .invoice-table-container {
     display: block;
-    height: calc(100vh - 250px); /* Adjust the 20px to the height of other elements above/below the table */
+    height: calc(100vh - 250px);
+    /* Adjust the 20px to the height of other elements above/below the table */
     overflow-y: auto;
-    border: 1px solid #ddd; /* Optional: Add a border around the scrollable area */
-    animation: fadeUp 0.5s ease-out; /* Apply the fade-up animation */
+    border: 1px solid #ddd;
+    /* Optional: Add a border around the scrollable area */
+    animation: fadeUp 0.5s ease-out;
+    /* Apply the fade-up animation */
     border-radius: 10px;
-    box-sizing: border-box; /* Ensure padding and border are included in the height */
+    box-sizing: border-box;
+    /* Ensure padding and border are included in the height */
     margin-right: 2rem;
 }
 
@@ -152,11 +173,14 @@ table {
     border-collapse: collapse;
 }
 
-table, th, td {
+table,
+th,
+td {
     border: 1px solid #ddd;
 }
 
-th, td {
+th,
+td {
     padding: 10px;
     text-align: center;
 }
@@ -166,8 +190,8 @@ th {
     color: black;
     position: sticky;
     top: 0;
-    z-index: 1;    
-}  
+    z-index: 1;
+}
 
 tr:hover {
     background-color: #D6DBDF;
@@ -178,7 +202,7 @@ tr td {
 }
 
 tr:hover td {
-    font-weight: bold;    
+    font-weight: bold;
 }
 
 /* Modal styles */
@@ -193,7 +217,7 @@ tr:hover td {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
 .modal-content {
@@ -209,10 +233,11 @@ tr:hover td {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
     top: 9rem;
-    animation: fadeUp 0.3s ease-in-out;   
+    animation: fadeUp 0.3s ease-in-out;
 }
 
-h2, h3 {
+h2,
+h3 {
     text-align: center;
     color: var(--grey-color);
     margin-top: -1rem;
@@ -222,7 +247,7 @@ h2, h3 {
     position: relative;
     width: 60%;
     max-width: 20rem;
-    margin-bottom: 1.5rem;    
+    margin-bottom: 1.5rem;
 }
 
 .form-control {
@@ -247,8 +272,8 @@ h2, h3 {
     color: #aaa;
 }
 
-.form-control:focus + .form-control-placeholder,
-.form-control:not(:placeholder-shown) + .form-control-placeholder {
+.form-control:focus+.form-control-placeholder,
+.form-control:not(:placeholder-shown)+.form-control-placeholder {
     top: -0.75rem;
     left: 0.5rem;
     background-color: white;
@@ -270,7 +295,7 @@ h2, h3 {
 .styled-button {
     background-color: transparent;
     border: none;
-    color: black;   
+    color: black;
     text-align: center;
     text-decoration: none;
     display: flex;
@@ -285,14 +310,14 @@ h2, h3 {
 }
 
 .styled-button:hover {
-    transform: scale(1.1); 
+    transform: scale(1.1);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
     background-color: #76D7C4;
 }
 
 .styled-button img {
-    width: 25px; 
-    height: 25px; 
+    width: 25px;
+    height: 25px;
     margin-right: 5px;
 }
 
@@ -306,6 +331,7 @@ h2, h3 {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -327,6 +353,7 @@ h2, h3 {
     display: none;
 }
 
+/* HTML: <div class="loader"></div> */
 .pyramid-loader {
     position: relative;
     width: 300px;
@@ -353,46 +380,47 @@ h2, h3 {
 .pyramid-loader .wrapper .side {
     width: 70px;
     height: 70px;
-    background: linear-gradient(45deg, #3498db, #8e44ad);
+    background: linear-gradient(to bottom right, #FFA500, #FF4500);
     position: absolute;
+    top: 0;
     left: 0;
     right: 0;
-    top: 0;
     bottom: 0;
     margin: auto;
+    transform-origin: center top;
     clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-    transform-origin: 50% 100%;
 }
 
-.pyramid-loader .wrapper .side:nth-child(1) {
-    transform: rotateY(0deg) translateZ(35px) rotateX(30deg);
+.pyramid-loader .wrapper .side1 {
+    transform: rotateZ(-30deg) rotateY(90deg);
+    background: linear-gradient(to bottom right, #FF4500, #FFA500);
 }
 
-.pyramid-loader .wrapper .side:nth-child(2) {
-    transform: rotateY(90deg) translateZ(35px) rotateX(30deg);
+.pyramid-loader .wrapper .side2 {
+    transform: rotateZ(30deg) rotateY(90deg);
+    background: linear-gradient(to bottom right, #FFA500, #FF4500);
 }
 
-.pyramid-loader .wrapper .side:nth-child(3) {
-    transform: rotateY(180deg) translateZ(35px) rotateX(30deg);
+.pyramid-loader .wrapper .side3 {
+    transform: rotateX(30deg);
+    background: linear-gradient(to bottom right, #FFA500, #FF4500);
 }
 
-.pyramid-loader .wrapper .side:nth-child(4) {
-    transform: rotateY(-90deg) translateZ(35px) rotateX(30deg);
+.pyramid-loader .wrapper .side4 {
+    transform: rotateX(-30deg);
+    background: linear-gradient(to bottom right, #FF4500, #FFA500);
 }
 
-.pyramid-loader .shadow {
+.pyramid-loader .wrapper .shadow {
+    width: 60px;
+    height: 60px;
+    background: #FF8C00;
     position: absolute;
-    bottom: -20px;
-    width: 100%;
-    height: 20px;
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 50%;
-    filter: blur(5px);
-    animation: shadow 4s linear infinite;
-}
-
-@keyframes shadow {
-    100% {
-        transform: rotateY(360deg);
-    }
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    transform: rotateX(90deg) translateZ(-40px);
+    filter: blur(12px);
 }
