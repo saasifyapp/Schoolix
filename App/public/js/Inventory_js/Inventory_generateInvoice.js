@@ -460,7 +460,6 @@ function showLowStockAlert(bookMessage, uniformMessage, insufficientBooksMessage
 function generateBill_test() {
     const initialImage = document.querySelector('dotlottie-player');
     const billContainer = document.getElementById('invoiceDetails');
-
     // Hide the initial image
     initialImage.style.display = 'none';
 

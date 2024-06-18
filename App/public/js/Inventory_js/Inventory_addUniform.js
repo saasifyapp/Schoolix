@@ -919,11 +919,14 @@ async function showUniformUpdateModal(sr_no) {
                 return;
             }
 
-            // Validate if a uniform with the same item name and size already exists
-            if (await isUniformNameDuplicate(updatedUniformItem, updatedSizeOfItem, sr_no)) {
-                showToast('A uniform with the same item name and size already exists.', true);
-                return;
-            }
+             // Validate if a uniform with the same item name and size already exists
+    const originalUniformItem = data.uniform_item; // assuming data.uniform_item contains the original item name fetched from the server
+    const originalSizeOfItem = data.size_of_item; // assuming data.size_of_item contains the original size fetched from the server
+
+    if ((updatedUniformItem !== originalUniformItem || updatedSizeOfItem !== originalSizeOfItem) && await isUniformNameDuplicate(updatedUniformItem, updatedSizeOfItem, sr_no)) {
+        showToast('A uniform with the same item name and size already exists.', true);
+        return;
+    }
 
             customPrompt.remove(); // Remove the modal
 

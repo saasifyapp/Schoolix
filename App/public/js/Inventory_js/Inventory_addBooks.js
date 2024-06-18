@@ -1010,11 +1010,12 @@ async function showBookUpdateModal(sr_no) {
         return;
       }
 
-      // Validate if a book with the same title already exists
-      if (await isTitleDuplicate(updatedTitle, sr_no)) {
+       // Validate if a book with the same title already exists
+    const originalTitle = data.title; // assuming data.title contains the original title fetched from the server
+    if (updatedTitle !== originalTitle && await isTitleDuplicate(updatedTitle, sr_no)) {
         showToast('A book with the same title already exists.', true);
         return;
-      }
+    }
 
       customPrompt.remove();
       showBooksLoadingAnimation();
