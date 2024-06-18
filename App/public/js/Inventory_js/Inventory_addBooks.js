@@ -416,6 +416,7 @@ async function deleteBook(title) {
 
 // Function to update a book
 async function updateBook(title) {
+  showBooksLoadingAnimation();
   await fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`) // Assuming you have modified the endpoint to retrieve both ordered_quantity and remaining_quantity
     .then((response) => {
       if (!response.ok) {
@@ -428,7 +429,7 @@ async function updateBook(title) {
       let remainingQuantity = data.remaining_quantity;
       let class_of_title = data.class_of_title;
       let newOrderedQuantity = 0;
-
+      hideBooksLoadingAnimation();
       // Create custom prompt
       const customPrompt = document.createElement("div");
       customPrompt.classList.add("custom-prompt");
@@ -498,6 +499,7 @@ async function updateBook(title) {
       // Add event listener to confirm button
       const confirmButton = customPrompt.querySelector("#confirmButton");
       confirmButton.addEventListener("click", () => {
+        showBooksLoadingAnimation();
         // Get the new ordered quantity from the input field
         newOrderedQuantity =
           parseInt(customPrompt.querySelector("#newQuantityInput").value, 10) ||
@@ -549,7 +551,7 @@ async function updateBookOrderedQuantity(
   totalOrder,
   newRemainingQuantity
 ) {
-  showBooksLoadingAnimation();
+  // showBooksLoadingAnimation();
   await fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`, {
     method: "PUT",
     headers: {
@@ -583,6 +585,7 @@ async function updateBookOrderedQuantity(
 
 // Function to return a book
 async function returnBook(title) {
+  showBooksLoadingAnimation();
   let newRemainingQuantity; // Declare newRemainingQuantity here
 
   await fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`)
@@ -598,7 +601,7 @@ async function returnBook(title) {
       let returnedQuantity = data.returned_quantity;
 
       newRemainingQuantity = remainingQuantity; // Initialize newRemainingQuantity here
-
+      hideBooksLoadingAnimation();
       // Create custom prompt
       const customPrompt = document.createElement("div");
       customPrompt.classList.add("custom-prompt");
@@ -666,6 +669,7 @@ async function returnBook(title) {
       // Add event listener to confirm button
       const confirmButton = customPrompt.querySelector("#confirmButton");
       confirmButton.addEventListener("click", () => {
+        showBooksLoadingAnimation();
         // Get the return quantity from the input field
         let userReturnedQuantity =
           parseInt(
@@ -720,7 +724,7 @@ async function returnBookQuantity(
   returnedQuantity,
   newRemainingQuantity
 ) {
-  showBooksLoadingAnimation();
+  // showBooksLoadingAnimation();
   await fetch(`/inventory/return_books/${encodeURIComponent(title)}/quantity`, {
     method: "PUT",
     headers: {
@@ -903,6 +907,7 @@ async function searchBookDetails() {
 
 async function showBookUpdateModal(sr_no) {
   try {
+    showBooksLoadingAnimation();
     // Fetch book details by sr_no
     const response = await fetch(
       `/inventory/books/${encodeURIComponent(sr_no)}`
@@ -912,7 +917,7 @@ async function showBookUpdateModal(sr_no) {
     }
 
     const data = await response.json();
-
+    hideBooksLoadingAnimation();
     // Create the custom prompt
     const customPrompt = document.createElement("div");
     customPrompt.classList.add("custom-prompt2");
@@ -1049,6 +1054,8 @@ async function showBookUpdateModal(sr_no) {
     const cancelButton = customPrompt.querySelector("#cancelButton");
 
     saveButton.addEventListener("click", async () => {
+      showBooksLoadingAnimation();
+      customPrompt.remove();
       const updatedTitle = customPrompt.querySelector("#titleInput").value;
       const updatedClassOfTitle =
         customPrompt.querySelector("#classOfTitleInput").value;
@@ -1069,6 +1076,7 @@ async function showBookUpdateModal(sr_no) {
           sr_no
         )
       ) {
+        hideBooksLoadingAnimation();
         showToast(
           "A book with the same title, class, purchase and selling price already exists.",
           true
@@ -1085,9 +1093,6 @@ async function showBookUpdateModal(sr_no) {
         showToast("A book with the same title already exists.", true);
         return;
       }
-
-      customPrompt.remove();
-      showBooksLoadingAnimation();
 
       try {
         // Update the book details by sr_no

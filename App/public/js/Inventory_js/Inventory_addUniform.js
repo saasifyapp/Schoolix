@@ -326,6 +326,7 @@ async function deleteUniform(uniformItem, sizeOfItem) {
 
 // Function to update a uniform item
 async function updateUniformItem(uniformItem, sizeOfItem) {
+    showUniformLoadingAnimation();
     await fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`)
         .then(response => {
             if (!response.ok) {
@@ -337,7 +338,7 @@ async function updateUniformItem(uniformItem, sizeOfItem) {
             let existingOrderedQuantity = data.ordered_quantity;
             let remainingQuantity = data.remaining_quantity;
             let newOrderedQuantity = 0;
-
+            hideUniformLoadingAnimation();
             // Create custom prompt
             const customPrompt = document.createElement('div');
             customPrompt.classList.add('custom-prompt');
@@ -407,6 +408,7 @@ async function updateUniformItem(uniformItem, sizeOfItem) {
             // Add event listener to confirm button
             const confirmButton = customPrompt.querySelector('#confirmButton');
             confirmButton.addEventListener('click', () => {
+                showUniformLoadingAnimation();
                 // Get the new ordered quantity from the input field
                 newOrderedQuantity = parseInt(customPrompt.querySelector('#newQuantityInput').value, 10) || 0;
 
@@ -444,13 +446,14 @@ async function updateUniformItem(uniformItem, sizeOfItem) {
         })
         .catch(error => {
             console.error('Error retrieving quantity:', error);
+            hideUniformLoadingAnimation();
             // Handle error if needed
         });
 }
 
 // Function to update ordered quantity on the server
 async function updateUniformOrderedQuantity(uniformItem, sizeOfItem, totalOrder, newRemainingQuantity) {
-    showUniformLoadingAnimation();
+    // showUniformLoadingAnimation();
     await fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`, {
         method: 'PUT',
         headers: {
@@ -483,6 +486,7 @@ async function updateUniformOrderedQuantity(uniformItem, sizeOfItem, totalOrder,
 
 // Function to return a uniform
 async function returnUniform(uniformItem, sizeOfItem) {
+    showUniformLoadingAnimation();
     let newRemainingQuantity; // Declare newRemainingQuantity here
 
     await fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`)
@@ -497,7 +501,7 @@ async function returnUniform(uniformItem, sizeOfItem) {
             let returnedQuantity = data.returned_quantity; // Get old returned quantity
 
             newRemainingQuantity = remainingQuantity; // Initialize newRemainingQuantity here
-
+            hideUniformLoadingAnimation();
             // Create custom prompt
             const customPrompt = document.createElement('div');
             customPrompt.classList.add('custom-prompt');
@@ -566,6 +570,7 @@ async function returnUniform(uniformItem, sizeOfItem) {
             // Add event listener to confirm button
             const confirmButton = customPrompt.querySelector('#confirmButton');
             confirmButton.addEventListener('click', () => {
+                showUniformLoadingAnimation();
                 // Get the return quantity from the input field
                 let userReturnedQuantity = parseInt(customPrompt.querySelector('#returnQuantityInput').value, 10) || 0;
 
@@ -609,7 +614,7 @@ async function returnUniform(uniformItem, sizeOfItem) {
 // Function to update ordered quantity on the server
 async function returnUniformQuantity(uniformItem, sizeOfItem, returnedQuantity, newRemainingQuantity) {
     console.log(uniformItem, sizeOfItem, returnedQuantity, newRemainingQuantity)
-    showUniformLoadingAnimation();
+    // showUniformLoadingAnimation();
     await fetch(`/inventory/return_uniform/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`, {
         method: 'PUT',
         headers: {
@@ -864,6 +869,7 @@ async function searchUniformDetails() {
 // Function to show modal for updating uniform details
 // Function to show modal for updating uniform details
 async function showUniformUpdateModal(sr_no) {
+    showUniformLoadingAnimation();
     try {
         // Fetch uniform details by sr_no
         const response = await fetch(`/inventory/uniforms/${encodeURIComponent(sr_no)}`);
@@ -872,7 +878,7 @@ async function showUniformUpdateModal(sr_no) {
         }
 
         const data = await response.json();
-
+        hideUniformLoadingAnimation();
         // Create the custom prompt/modal
         const customPrompt = document.createElement('div');
         customPrompt.classList.add('custom-prompt');
@@ -931,6 +937,8 @@ async function showUniformUpdateModal(sr_no) {
         const cancelButton = customPrompt.querySelector('#cancelButton');
 
         saveButton.addEventListener('click', async () => {
+            customPrompt.remove(); // Remove the modal
+            showUniformLoadingAnimation();
             const updatedUniformItem = customPrompt.querySelector('#uniformItemInput').value;
             const updatedSizeOfItem = customPrompt.querySelector('#sizeOfItemInput').value;
             const updatedPurchasePrice = parseFloat(customPrompt.querySelector('#purchasePriceInput').value);
@@ -951,7 +959,7 @@ async function showUniformUpdateModal(sr_no) {
         return;
     }
 
-            customPrompt.remove(); // Remove the modal
+            // customPrompt.remove(); // Remove the modal
 
             try {
                 // Send updated data to server for update
@@ -971,7 +979,7 @@ async function showUniformUpdateModal(sr_no) {
                 if (!response.ok) {
                     throw new Error('Failed to update uniform details.');
                 }
-
+                hideUniformLoadingAnimation();
                 // Handle success (e.g., show toast, refresh data)
                 showToast('Uniform details updated successfully', false);
                 refreshUniformsData(); // Example function to refresh uniform data
@@ -987,6 +995,7 @@ async function showUniformUpdateModal(sr_no) {
 
     } catch (error) {
         console.error('Error:', error);
+        hideUniformLoadingAnimation();
     }
 }
 
