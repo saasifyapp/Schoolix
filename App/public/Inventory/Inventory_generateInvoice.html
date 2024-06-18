@@ -261,7 +261,7 @@
                     autoplay></dotlottie-player>
 
                 <div class="section bill printableContainer" id="invoiceDetails"
-                    style="display: none;border: 1px solid;border-radius: 10px;  height: 100%; overflow-y: auto;">
+                    style="display: none;border-radius: 10px;  height: 95%; overflow-y: auto;">
                     <!-- <h5>Display Bill</h5> -->
                     <div class="table-container" style="width: 100%;">
                         <section id="invoice">
@@ -280,7 +280,7 @@
                                     <div class="buyer-details">
                                         <p>Invoice To</p> <!-- "Invoice To" centered and bold -->
                                         <ul class="list-unstyled buyer-details-list">
-                                            <li style="margin-left: 5px;"><!-- Buyer Class here --></li>
+                                            <li><!-- Buyer Class here --></li>
                                             <li><!-- Buyer Phone here --></li>
                                             <li><!-- Buyer Phone here --></li>
                                         </ul>
@@ -300,8 +300,7 @@
                                 </div>
 
                                 <!-- Table for displaying bill items -->
-                                <table class="invoice_table border my-5"
-                                    style="width: 100%; border: 1px solid #dee2e6; margin: 2rem 0;">
+                                <table class="invoice_table border my-5" style="width: 100%; border: 1px solid #dee2e6; margin: 2rem 0;">
                                     <thead>
                                         <tr class="bg-primary-subtle" style="background-color: #e9ecef;">
                                             <th scope="col" style="width: 10%; padding: 8px;">No.</th>
@@ -314,44 +313,29 @@
                                     <tbody id="billTableBody">
                                         <!-- Bill items will be dynamically inserted here -->
                                     </tbody>
-
-                                    <tr class="bg-primary-subtle rounded-top">
-                                        <td colspan="4" style="text-align: right; font-weight: bold; padding: 8px;">
-                                            <!-- No background color here -->
-                                            <span
-                                                style="background-color: #3a3c3d; color: white; padding: 5px;border-radius: 5px;">
-                                                <i class="fas fa-dollar-sign" style="margin-right: 5px;"></i> Total:
-                                            </span>
-                                        </td>
-                                        <td id="totalAmountDisplay"
-                                            style="text-align: right; font-weight: bold; padding: 8px; background-color: #3a3c3d; color: white;">
-                                            0.00</td>
-                                    </tr>
-                                    <tr class="bg-primary-subtle">
-                                        <td colspan="4" style="text-align: right; font-weight: bold; padding: 8px;">
-                                            <!-- No background color here -->
-                                            <span
-                                                style="background-color: #3a3c3d; color: white; padding: 5px; border-radius: 5px;">
-                                                <i class="fas fa-money-bill-alt" style="margin-right: 5px;"></i> Paid:
-                                            </span>
-                                        </td>
-                                        <td id="amountPaidDisplay"
-                                            style="text-align: right; font-weight: bold; padding: 8px; background-color: #3a3c3d; color: white;">
-                                            0.00</td>
-                                    </tr>
-                                    <tr class="bg-primary-subtle rounded-bottom">
-                                        <td colspan="4" style="text-align: right; font-weight: bold; padding: 8px;">
-                                            <!-- No background color here -->
-                                            <span
-                                                style="background-color: #3a3c3d; color: white; padding: 5px;border-radius: 5px;">
-                                                <i class="fas fa-balance-scale" style="margin-right: 5px;"></i> Balance:
-                                            </span>
-                                        </td>
-                                        <td id="balanceAmountDisplay"
-                                            style="text-align: right; font-weight: bold; padding: 8px; background-color: #3a3c3d; color: white;">
-                                            0.00</td>
-                                    </tr>
+                                    <tfoot>
+                                        <tr class="bg-primary-subtle">
+                                            <td colspan="4"></td>
+                                            <td style="padding: 8px; text-align: right; vertical-align: top;">
+                                                <div style="text-align: left;">
+                                                    <div style="background-color: #3a3c3d; color: white; padding: 5px; border-radius: 5px; margin-bottom: 5px;">
+                                                        <i class="fas fa-dollar-sign" style="margin-right: 5px;"></i> Total:
+                                                        <span id="totalAmountDisplay" style="margin-left: 10px;">0.00</span>
+                                                    </div>
+                                                    <div style="background-color: #3a3c3d; color: white; padding: 5px; border-radius: 5px; margin-bottom: 5px;">
+                                                        <i class="fas fa-money-bill-alt" style="margin-right: 5px;"></i> Paid:
+                                                        <span id="amountPaidDisplay" style="margin-left: 10px;">0.00</span>
+                                                    </div>
+                                                    <div style="background-color: #3a3c3d; color: white; padding: 5px; border-radius: 5px;">
+                                                        <i class="fas fa-balance-scale" style="margin-right: 5px;"></i> Balance:
+                                                        <span id="balanceAmountDisplay" style="margin-left: 10px;">0.00</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
+                                
 
                             </div>
                         </section>

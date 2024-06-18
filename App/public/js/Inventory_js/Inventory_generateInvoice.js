@@ -544,7 +544,7 @@ function generateBill_test() {
     // Fetch and populate buyer details in the bill
     const buyerDetails = document.querySelector('#invoiceDetails .buyer-details');
     const buyerDetailsList = buyerDetails.querySelectorAll('ul li');
-    buyerDetailsList[0].innerHTML = `<i class="fa-solid fa-user" style="color: #74C0FC;"></i><strong>Name:</strong> ${buyerName}`;
+    buyerDetailsList[0].innerHTML = `<i class="fa-solid fa-user" style="color: #74C0FC;"></i><strong style="margin-left: 7px;">Name:</strong> ${buyerName}`;
     buyerDetailsList[1].innerHTML = `<i class="fa-solid fa-phone" style="color: #74C0FC;"></i> <strong>Phone:</strong> ${buyerMobile}`;
     buyerDetailsList[2].innerHTML = `<i class="fa-solid fa-graduation-cap" style="color: #74C0FC;"></i> <strong>Class:</strong> ${buyerClass}`;
 
@@ -570,8 +570,8 @@ function generateBill_test() {
 
     const invoiceDetails = document.querySelector('#invoiceDetails .invoice-details');
     const invoiceDetailsList = invoiceDetails.querySelectorAll('ul li');
-    invoiceDetailsList[0].innerHTML = `<i class="fa-regular fa-calendar-days" style="color: #B197FC;margin-right: 5px"></i><strong>Date:</strong>  ${formattedDate}`;
-    invoiceDetailsList[1].innerHTML = `${statusIcon}<strong>Status: </strong> ${invoiceStatus}`;
+    invoiceDetailsList[0].innerHTML = `<i class="fa-regular fa-calendar-days" style="color: #B197FC;margin-right: 5px"></i><strong style="margin-right: 4px;">Date:</strong>  ${formattedDate}`;
+    invoiceDetailsList[1].innerHTML = `${statusIcon}<strong style="margin-right: 4px;">Status:</strong> ${invoiceStatus}`;
 
     // Populate Invoice Number in HTML
     document.getElementById('invoiceNumberDisplay').textContent = `Invoice No: #${invoiceNo}`;
