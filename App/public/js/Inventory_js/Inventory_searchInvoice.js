@@ -35,6 +35,10 @@ async function refreshInvoiceData() {
 }
 
 function displayInvoices(data) {
+
+        // Reverse the data array
+        data.reverse();
+        
     const invoiceTable = document.getElementById('invoiceTable');
     invoiceTable.innerHTML = ''; // Clear previous data
 
