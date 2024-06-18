@@ -251,7 +251,7 @@ td {
 }
 
 tr:hover td {
-    font-weight: bold;
+   color: #000;
 }
 
 
@@ -266,7 +266,7 @@ tr:hover td {
 
 
 .form-control-table:hover {
-    box-shadow: 0 0 10px #AED6F1;
+    box-shadow: 0 0 10px #79c5ff;
     transition: 0.3s;
 
 }
