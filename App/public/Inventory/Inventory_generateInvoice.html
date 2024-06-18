@@ -351,6 +351,36 @@
 
         </div>
 
+         <!-- Custom Low Stock Alert Modal -->
+         <div id="lowStockAlert" class="modal">
+            <div class="modal-content">
+                <h2>Low Stock Alert</h2>
+                <div class="stock-container">
+                    <div id="bookStock" class="stock-column">
+                        <h3>Books</h3>
+                        <p id="lowStockMessagesBooks"></p>
+                        <p id="insufficientBooksMessages" class="insufficient"></p>
+                    </div>
+                    <div id="uniformStock" class="stock-column">
+                        <h3>Uniforms</h3>
+                        <p id="lowStockMessagesUniforms"></p>
+                        <p id="insufficientUniformsMessages" class="insufficient"></p>
+                    </div>
+                </div>
+                <div class="button-container">
+                    <button id="proceedBtn" class="modal-btn">
+                        <img src="/images/conform.png" alt="Proceed">
+                        <span>Proceed</span>
+                    </button>
+
+                    <button id="closeBtn" class="modal-btn">
+                        <img src="/images/close.png" alt="Close">
+                        <span>Close</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
     <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Inventory_js/Inventory_generateInvoice.js"></script>

@@ -725,15 +725,31 @@ function printInvoice() {
 
     // Define the options for html2pdf
     const opt = {
-        margin: 1,
+        margin: 0,
         filename: 'invoice.pdf',
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
+
+    // Adjust the scaling factor to fit content to one page
+    const contentHeight = invoiceDetails.scrollHeight;
+    const a4Height = 297; // A4 height in mm
+    const scaleFactor = a4Height / (contentHeight * 0.264583); // Convert px to mm
+
+    // Apply CSS transform to scale the content
+    invoiceDetails.style.transform = `scale(${scaleFactor})`;
+    invoiceDetails.style.transformOrigin = 'top left';
+    invoiceDetails.style.width = `calc(210mm / ${scaleFactor})`;
+    invoiceDetails.style.height = `calc(297mm / ${scaleFactor})`;
 
     // Generate the PDF
     html2pdf().from(invoiceDetails).set(opt).outputPdf('blob').then(function (pdfBlob) {
+        // Reset the scaling after PDF generation
+        invoiceDetails.style.transform = '';
+        invoiceDetails.style.width = '';
+        invoiceDetails.style.height = '';
+
         // Create a URL for the PDF blob
         const pdfUrl = URL.createObjectURL(pdfBlob);
 
@@ -744,12 +760,13 @@ function printInvoice() {
         pdfWindow.onload = function () {
             pdfWindow.focus();
             pdfWindow.print();
+
+            // If you want the print window to only show 1 page in print preview,
+            // you can customize the print window settings here.
+            // Some browsers might require a manual step for advanced settings.
         };
     });
-
 }
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*****************************         RESET BUTTON FUNCTIONALITY       ************************/
