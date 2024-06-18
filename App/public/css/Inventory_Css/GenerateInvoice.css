@@ -40,6 +40,22 @@ html {
     box-sizing: border-box;
 }
 
+  /* Scrollbar Styles */
+  ::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0000;
+    border-radius: 30px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #1C4ED8;
+    border-radius: 30px;
+    border: 20px solid #555777;
+}
+
 .main-container {
     width: calc(100% - 4px);
     /* Adjust for margin */
