@@ -881,22 +881,45 @@ async function showUniformUpdateModal(sr_no) {
         customPrompt.innerHTML = `
             <div class="prompt-content">
                 <h2>Update Uniform Details</h2>
-                <p>Uniform Item:</p>
-                <input type="text" class="form-control" id="uniformItemInput" value="${data.uniform_item}" required>
-                <p>Size of Item:</p>
-                <input type="text" class="form-control" id="sizeOfItemInput" value="${data.size_of_item}" required>
-                <p>Purchase Price:</p>
-                <input type="number" step="0.01" class="form-control" id="purchasePriceInput" value="${data.purchase_price}" required>
-                <p>Selling Price:</p>
-                <input type="number" class="form-control" id="sellingPriceInput" value="${data.selling_price}" required>
-                <button id="saveButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;">
-                  <img src="../images/conform.png" alt="Save" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-                  <span style="margin-right: 10px;">Save</span>
-              </button>
-              <button id="cancelButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;">
-                  <img src="../images/cancel.png" alt="Cancel" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-                  <span style="margin-right: 10px;">Cancel</span>
-              </button>
+             
+               <div class="form-group">
+    <input type="text" class="form-control" id="uniformItemInput" value="${data.uniform_item}" required style="width: 6rem; text-align: center;" placeholder=" ">
+    <span class="form-control-placeholder">Uniform Item</span>
+</div>
+
+             
+                <div class="form-group">
+    <input type="text" class="form-control" id="sizeOfItemInput" value="${data.size_of_item}" required style="width: 6rem; text-align: center;" placeholder=" ">
+    <span class="form-control-placeholder">Size of Item</span>
+</div>
+
+               
+               <div class="form-group">
+    <input type="number" step="0.01" class="form-control" id="purchasePriceInput" value="${data.purchase_price}" required style="width: 6rem; text-align: center;" placeholder=" ">
+    <span class="form-control-placeholder">Purchase Price</span>
+</div>
+
+               
+               <div class="form-group">
+    <input type="number" class="form-control" id="sellingPriceInput" value="${data.selling_price}" required style="width: 6rem; text-align: center;" placeholder=" ">
+    <span class="form-control-placeholder">Selling Price</span>
+</div>
+
+                <button id="saveButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+    onclick="saveFunction()"
+    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+    <img src="../images/conform.png" alt="Save" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+    <span style="margin-right: 10px;">Save</span>
+</button>
+<button id="cancelButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+    onclick="cancelFunction()"
+    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+    <img src="../images/cancel.png" alt="Cancel" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+    <span style="margin-right: 10px;">Cancel</span>
+</button>
+
           </div>
             </div>
         `;

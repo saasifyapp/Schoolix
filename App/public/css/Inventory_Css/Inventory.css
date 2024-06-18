@@ -30,7 +30,8 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    max-width: 100%; /* Adjust as necessary */
+    max-width: 100%;
+    /* Adjust as necessary */
     backdrop-filter: blur(5px);
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
@@ -118,30 +119,39 @@ body {
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
-    animation: slideDownFromUp 0.7s ease-in-out; /* Adjust timing as needed */
+    animation: slideDownFromUp 0.7s ease-in-out;
+    /* Adjust timing as needed */
 }
 
 
 .form-Searchgroup {
-    position: relative;  
+    position: relative;
     display: flex;
     align-items: center;
-    margin: 0 auto; /* Center the element horizontally */
-    width: 30rem; /* 500px converted to rem (assuming 1rem = 16px)*/
-    animation: slideInFromDown 0.8s ease-in-out;  
-     
+    margin: 0 auto;
+    /* Center the element horizontally */
+    width: 30rem;
+    /* 500px converted to rem (assuming 1rem = 16px)*/
+    animation: slideInFromDown 0.8s ease-in-out;
+
 }
+
 .form-Searchgroup {
     display: flex;
     align-items: center;
 }
+
 .form-controlSearch {
-    flex: 1; /* This will make the input field take up the remaining space */
+    flex: 1;
+    /* This will make the input field take up the remaining space */
 }
 
-#bookssearchField:hover,#searchField:hover,#searchField:focus,
+#bookssearchField:hover,
+#searchField:hover,
+#searchField:focus,
 #bookssearchField:focus {
-    box-shadow: 0 0 10px #5DADE2; /* Add shadow on hover and focus */   
+    box-shadow: 0 0 10px #5DADE2;
+    /* Add shadow on hover and focus */
 }
 
 
@@ -161,7 +171,7 @@ body {
     height: 3rem;
     /* Increased height for input fields */
     transition: transform 0.3s ease-in-out;
-    
+
 }
 
 .form-control.wide {
@@ -171,8 +181,10 @@ body {
 
 .form-control:focus {
     box-shadow: 0 0 10px #5DADE2;
-    outline: 1px solid #85C1E9; /* Add a solid outline */
+    outline: 1px solid #85C1E9;
+    /* Add a solid outline */
 }
+
 .form-control:hover {
     box-shadow: 0 0 10px #5DADE2;
     transition: 0.3s;
@@ -200,16 +212,17 @@ body {
     font-weight: 400;
     background-color: white;
     border-radius: 5px;
-    border-color: #85C1E9;   
-    border-top: 1px solid #85C1E9; /* Adding border top */
+    border-color: #85C1E9;
+    border-top: 1px solid #85C1E9;
+    /* Adding border top */
     transform: translateY(0);
     /* Reset transform */
     color: #000;
 }
 
-    .form-control {
-        transition: box-shadow 0.3s ease, transform 0.3s ease-in-out;
-    }
+.form-control {
+    transition: box-shadow 0.3s ease, transform 0.3s ease-in-out;
+}
 
 
 
@@ -223,7 +236,7 @@ body {
 /* .addBookForm {
     display: flex;
     flex-direction: column;
-    gap: 1rem; /* Space between rows */   
+    gap: 1rem; /* Space between rows */
 
 /* Form Styles */
 form {
@@ -249,7 +262,7 @@ select {
     top: 10px;
     right: 30px;
     cursor: pointer;
-    font-size: 5rem;   
+    font-size: 5rem;
     color: #aaa;
     float: right;
     font-size: 40px;
@@ -264,22 +277,24 @@ select {
 }
 
 .icon {
-    width: 50px;    
-    height: 50px;    
-    border-radius: 50%;    
-    vertical-align: middle;   
-    margin-top: 5px;  
-    cursor: pointer;   
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-top: 5px;
+    cursor: pointer;
 }
 
 .topicon {
     position: absolute;
     top: 0;
     left: 0;
-    padding: 10px;      /* Optional: Adds some padding to the icon */
-    color: white;       /* Optional: Sets the color of the icon */
-    width: 50px;    
-    height: 50px;   
+    padding: 10px;
+    /* Optional: Adds some padding to the icon */
+    color: white;
+    /* Optional: Sets the color of the icon */
+    width: 50px;
+    height: 50px;
 }
 
 
@@ -289,28 +304,32 @@ select {
 }
 
 .icon-container .vendorIcon {
-    margin-right: 10px;   
-    width: 50px;   
-    height: 50px;   
+    margin-right: 10px;
+    width: 50px;
+    height: 50px;
     vertical-align: middle;
 }
 
 .icon-container h2 {
-    margin: 0;    
+    margin: 0;
 }
 
 
 .vendorIcon {
     position: absolute;
     top: 42%;
-    right: 120px; /* Adjust as needed */
-    transform: translateY(-50%); /* This centers the icon vertically */
+    right: 120px;
+    /* Adjust as needed */
+    transform: translateY(-50%);
+    /* This centers the icon vertically */
     width: 40px;
     height: 40px;
 }
 
-#refreshvendorbutton ,#refreshButton {
-    margin-bottom: 15px; /* Add margin between the buttons */
+#refreshvendorbutton,
+#refreshButton {
+    margin-bottom: 15px;
+    /* Add margin between the buttons */
     cursor: pointer;
     background-color: transparent;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -319,49 +338,63 @@ select {
     border-radius: 20px;
     height: 2.3rem;
     width: 6rem;
-    font-size: 1rem; /* Reduce the font size */
+    font-size: 1rem;
+    /* Reduce the font size */
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 8px; /* Add padding to fit content */
-    transition: all 0.3s; /* Add transition for smooth hover effect */
+    padding: 0 8px;
+    /* Add padding to fit content */
+    transition: all 0.3s;
+    /* Add transition for smooth hover effect */
     font-family: 'Open Sans', sans-serif;
     font-size: 14px;
     font-weight: bold;
 }
-#refreshvendorbutton img ,#refreshButton img{
-    height: 80%; /* Set image height to fit button */
-    margin-right: 5px; /* Add a 5px margin to the right of the image */
+
+#refreshvendorbutton img,
+#refreshButton img {
+    height: 80%;
+    /* Set image height to fit button */
+    margin-right: 5px;
+    /* Add a 5px margin to the right of the image */
 }
 
-#refreshvendorbutton:hover ,#refreshButton:hover {
-    background-color: #76D7C4; /* Change background color on hover */
-    transform: scale(1.09); /* Increase size on hover */
+#refreshvendorbutton:hover,
+#refreshButton:hover {
+    background-color: #76D7C4;
+    /* Change background color on hover */
+    transform: scale(1.09);
+    /* Increase size on hover */
 }
 
 
-.submit-icon{
-    width: 50px;    
-    height: 50px;        
-    vertical-align: middle;   
-    margin-top: 5px;  
-    cursor: pointer;  
-    transition: all 0.3s; /* Add transition for smooth hover effect */
-    margin-bottom: 15px; /* Add margin between the buttons */
+.submit-icon {
+    width: 50px;
+    height: 50px;
+    vertical-align: middle;
+    margin-top: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+    /* Add transition for smooth hover effect */
+    margin-bottom: 15px;
+    /* Add margin between the buttons */
     background-color: transparent;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
     color: black;
-    border: none;    
-    border-radius: 20px;   
+    border: none;
+    border-radius: 20px;
     display: flex;
     align-items: center;
-    justify-content: center;   
+    justify-content: center;
 
 }
 
 .submit-icon:hover {
-    box-shadow:  0 0 10px rgba(0, 0, 0, 0.8);;
-    transform: scale(1.09); /* Increase size on hover */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    ;
+    transform: scale(1.09);
+    /* Increase size on hover */
 }
 
 
@@ -370,40 +403,47 @@ select {
 
 .table-container,
 .table-container {
-    max-height: calc(100% - 15rem); /* Set maximum height for the table container */
+    max-height: calc(100% - 15rem);
+    /* Set maximum height for the table container */
     overflow-y: auto;
-    margin-top: 0.725rem; /* Set margin between the table container and overlay content */
+    margin-top: 0.725rem;
+    /* Set margin between the table container and overlay content */
     border-radius: 10px;
 }
 
 /* Adjust height of table body to fit between overlay content and bottom margin */
 .tableFixBody {
-    height: calc(100% - 3.125rem - 6rem - 1rem); /* Calculate height for table body */
+    height: calc(100% - 3.125rem - 6rem - 1rem);
+    /* Calculate height for table body */
 }
 
 
 .styled-table {
     border-radius: 1rem;
-    border-collapse: collapse; /* Ensure that the border radius is applied properly */   
+    border-collapse: collapse;
+    /* Ensure that the border radius is applied properly */
     width: 100%;
     box-shadow: 0 0 0 1px #dddddd;
     margin: auto;
     animation: fadeUp 0.5s ease-in-out;
-    animation-delay: 0.4s; /* Delay to start after overlay animation */
+    animation-delay: 0.4s;
+    /* Delay to start after overlay animation */
     animation-fill-mode: backwards;
 }
 
 #vendorTable,
 #booksTable,
 #uniformTable {
-    width: 100%; /* Set table width to 100% */
+    width: 100%;
+    /* Set table width to 100% */
     border-collapse: collapse;
     border-spacing: 0;
     border-radius: 2rem;
     box-shadow: 0 0 0 1px #dddddd;
     margin: auto;
     animation: fadeUp 0.5s ease-in-out;
-    animation-delay: 0.4s; /* Delay to start after overlay animation */
+    animation-delay: 0.4s;
+    /* Delay to start after overlay animation */
     animation-fill-mode: backwards;
 }
 
@@ -419,7 +459,8 @@ select {
     text-align: center;
     padding: 0.5rem;
     box-sizing: border-box;
-    width: calc(100% / 7); /* Set the width for each column */
+    width: calc(100% / 7);
+    /* Set the width for each column */
 }
 
 .styled-table th,
@@ -440,8 +481,10 @@ select {
     border: 1px solid #dddddd;
     padding: 0px;
     text-align: center;
-    height: 50px; /* Fixed height */
-    overflow: hidden; /* Hide content that overflows */
+    height: 50px;
+    /* Fixed height */
+    overflow: hidden;
+    /* Hide content that overflows */
 }
 
 .styled-table td button,
@@ -469,7 +512,7 @@ select {
 #vendorTable tr:hover td,
 #booksTable tr:hover td,
 #uniformTable tr:hover td {
-    font-weight: bold;    
+    font-weight: bold;
 }
 
 .tableFixHead {
@@ -514,23 +557,16 @@ table {
 
 
 .custom-prompt {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: fixed;
-    top: 50%;
-    left: 50%;
-    height: auto;
-    width: auto;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
-    outline: 2px solid rgba(0, 0, 0, 0.2); /* Add outline */  
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 1000;
-    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
-}
-
-.custom-prompt-return{
-    height: 18rem;
 }
 
 
@@ -540,14 +576,16 @@ table {
     animation: fadeUp 0.3s ease-in-out;
 }
 
+
+
 .prompt-content label {
     display: block;
     margin-bottom: 0.6rem;
 }
 
 
-.prompt-content h2{
-    font-size: 1.5rem;   
+.prompt-content h2 {
+    font-size: 1.5rem;
     font-weight: 700;
     line-height: 1.2;
     text-align: center;
@@ -555,14 +593,14 @@ table {
     color: #484b51;
 }
 
-.prompt-content p{
-    font-size: 1rem;   
+.prompt-content p {
+    font-size: 1rem;
     font-weight: 500;
     line-height: 1.2;
     text-align: center;
     pointer-events: auto;
-    color: #484b51;   
-    
+    color: #484b51;
+
 }
 
 
@@ -574,12 +612,15 @@ table {
 }
 
 .prompt-content button {
-    padding: 0.5rem 1.25rem; /* 8px and 20px converted to rem */
-    margin-right: 0.625rem; /* 10px converted to rem */
+    padding: 0.5rem 1.25rem;
+    /* 8px and 20px converted to rem */
+    margin-right: 0.625rem;
+    /* 10px converted to rem */
     border: none;
     background-color: #4caf50;
     color: white;
-    border-radius: 0.1875rem; /* 3px converted to rem */
+    border-radius: 0.1875rem;
+    /* 3px converted to rem */
     cursor: pointer;
 }
 
@@ -601,31 +642,44 @@ table {
 
 
 .custom-dropdown {
-    height: 2.8125rem; /* Adjust the height as needed */
+    height: 2.8125rem;
+    /* Adjust the height as needed */
     width: auto;
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background-image: url('../../images/down-arrow.png'); /* Set your PNG image */
-    background-size: 1.5625rem 1.5625rem; /* Adjust the size of your image */
-    background-repeat: no-repeat; /* Prevent the image from repeating */
-    padding-right: 1.25rem; /* Add more padding on the right for the image */
-    background-position: calc(100% - 0.5rem) center; /* Position the image to the extreme right */
+    background-image: url('../../images/down-arrow.png');
+    /* Set your PNG image */
+    background-size: 1.5625rem 1.5625rem;
+    /* Adjust the size of your image */
+    background-repeat: no-repeat;
+    /* Prevent the image from repeating */
+    padding-right: 1.25rem;
+    /* Add more padding on the right for the image */
+    background-position: calc(100% - 0.5rem) center;
+    /* Position the image to the extreme right */
     /* Adjust the value based on the size of your image and padding */
-    padding: 0.5rem 1.5rem; /* Adjust padding as needed */
-    border: 0.0625rem solid #ccc; /* Adjust border as needed */
-    border-radius: 0.625rem; /* Adjust border-radius as needed */
-    font-size: 1rem; /* Adjust font size as needed */
+    padding: 0.5rem 1.5rem;
+    /* Adjust padding as needed */
+    border: 0.0625rem solid #ccc;
+    /* Adjust border as needed */
+    border-radius: 0.625rem;
+    /* Adjust border-radius as needed */
+    font-size: 1rem;
+    /* Adjust font size as needed */
     cursor: pointer;
-    position: relative; /* Add position relative to allow absolute positioning */
-    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Add transition for smooth effect */
-   
+    position: relative;
+    /* Add position relative to allow absolute positioning */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    /* Add transition for smooth effect */
+
 }
 
 
 .custom-dropdown:hover,
 .custom-dropdown:focus {
-    box-shadow: 0 0 10px #5DADE2; /* Add shadow on hover and focus */   
+    box-shadow: 0 0 10px #5DADE2;
+    /* Add shadow on hover and focus */
     border: 1px solid #85C1E9;
     outline: none;
 }
@@ -645,39 +699,46 @@ table {
 
 .horizontal-container {
     display: flex;
-    align-items: center; /* Align items vertically in the center */
+    align-items: center;
+    /* Align items vertically in the center */
     justify-content: center;
-    gap: 5rem; /* Space between items */
-    margin-top: 50px; /* Adjust this value to position the container vertically */
-   
-  }
-  
-  .horizontal-container h3{
+    gap: 5rem;
+    /* Space between items */
+    margin-top: 50px;
+    /* Adjust this value to position the container vertically */
+
+}
+
+.horizontal-container h3 {
     margin-left: 5px;
     margin-bottom: 5px;
     color: #2C3E50;
-  }
-  .horizontal-form-group {
+}
+
+.horizontal-form-group {
     display: flex;
-    align-items: center; /* Ensure the content inside buttons are centered */
-  }
-  
-  .custom-dropdown {
-    margin: 0 10px; /* Optional: to add space around the dropdown */
-  }
+    align-items: center;
+    /* Ensure the content inside buttons are centered */
+}
+
+.custom-dropdown {
+    margin: 0 10px;
+    /* Optional: to add space around the dropdown */
+}
 
 
 
-  #tableContainer {
+#tableContainer {
     position: relative;
-    min-height: 300px; /* Minimum height for the container */
+    min-height: 300px;
+    /* Minimum height for the container */
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 20px;
-  }
-  
-  .empty-message {
+}
+
+.empty-message {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -685,49 +746,57 @@ table {
     text-align: center;
     color: gray;
     font-size: 18px;
-    padding: 20px;  
-  }
+    padding: 20px;
+}
 
-  .horizontal-container .horizontal-form-group {
+.horizontal-container .horizontal-form-group {
     border-style: none;
     background-color: transparent;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
     transition: box-shadow 0.3s ease-in-out;
     border-radius: 1rem;
-    transition: all 0.3s; /* Add transition for smooth hover effect */
-    animation: slideDownFromUp 0.7s ease-in-out; /* Adjust timing as needed */
-  }
+    transition: all 0.3s;
+    /* Add transition for smooth hover effect */
+    animation: slideDownFromUp 0.7s ease-in-out;
+    /* Adjust timing as needed */
+}
 
-  .horizontal-container .horizontal-form-group:hover {
-    box-shadow: 0 0 10px #5DADE2; /* Add shadow on hover and focus */   
-    transform: scale(1.09); /* Increase size on hover */
+.horizontal-container .horizontal-form-group:hover {
+    box-shadow: 0 0 10px #5DADE2;
+    /* Add shadow on hover and focus */
+    transform: scale(1.09);
+    /* Increase size on hover */
     cursor: pointer;
-  }
+}
 
-  /* .horizontal-container select.custom-dropdown {   
+/* .horizontal-container select.custom-dropdown {   
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
     transition: all 0.3s; /* Add transition for smooth hover effect */
-    .horizontal-dropdown:hover{
-        box-shadow: 0 0 10px #1f9cf0; /* Persistent shadow for active state */
-        transition: box-shadow 0.3s ease-in-out;
-    }
+.horizontal-dropdown:hover {
+    box-shadow: 0 0 10px #1f9cf0;
+    /* Persistent shadow for active state */
+    transition: box-shadow 0.3s ease-in-out;
+}
 
 
 
-  .horizontal-container .horizontal-form-group.active {
-    box-shadow: 0 0 10px #1f9cf0; /* Persistent shadow for active state */
-    transform: scale(1.09); /* Persistent scale for active state */
-  }
+.horizontal-container .horizontal-form-group.active {
+    box-shadow: 0 0 10px #1f9cf0;
+    /* Persistent shadow for active state */
+    transform: scale(1.09);
+    /* Persistent scale for active state */
+}
 
 
-  
-  /* //////////////////////////////////Animations//////////////////////////// */
 
-  @keyframes slideInFromDown {
+/* //////////////////////////////////Animations//////////////////////////// */
+
+@keyframes slideInFromDown {
     from {
         opacity: 0;
         transform: translateY(50%);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -739,6 +808,7 @@ table {
         opacity: 0;
         transform: translateX(100%);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -750,6 +820,7 @@ table {
         opacity: 0;
         transform: translateY(-50%);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -774,6 +845,7 @@ table {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -809,6 +881,7 @@ table {
         opacity: 0;
         transform: translate(-50%, -100%);
     }
+
     to {
         opacity: 1;
         transform: translate(-50%, -50%);
@@ -833,6 +906,7 @@ table {
         opacity: 0;
         transform: translateX(-100%);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -844,33 +918,46 @@ table {
         opacity: 0;
         transform: translateY(-100%);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+
 /* Class Dropdown */
 
 .custom-dropdown {
     position: relative;
-    width: auto;   
+    width: auto;
     background-color: white;
     cursor: pointer;
     user-select: none;
     border-radius: 20px;
     height: 2.8125rem;
-    
-  }
-  
-  .dropdown-selected {
-    margin-right: 10px;  
+
+}
+
+.dropdown-selected {
+    margin-right: 10px;
     width: 100%;
     align-items: center;
-    
-  }
-  
-  .dropdown-options {
+
+}
+
+.dropdown-options {
     display: none;
     position: absolute;
     top: 100%;
@@ -879,19 +966,19 @@ table {
     border: 1px solid #ccc;
     background-color: white;
     z-index: 2;
-  }
-  
-  .dropdown-options .option {
+}
+
+.dropdown-options .option {
     padding: 0.5rem;
     cursor: pointer;
     white-space: nowrap;
-  }
-  
-  .dropdown-options .option:hover {
+}
+
+.dropdown-options .option:hover {
     background-color: #f0f0f0;
-  }
-  
-  .option .submenu {
+}
+
+.option .submenu {
     display: none;
     position: absolute;
     top: 0;
@@ -900,38 +987,38 @@ table {
     border: 1px solid #ccc;
     background-color: white;
     z-index: 1;
-  }
-  
-  .option:hover .submenu {
+}
+
+.option:hover .submenu {
     display: block;
-  }
-  
-  .submenu .submenu-option {
+}
+
+.submenu .submenu-option {
     padding: 0.5rem;
     cursor: pointer;
-  }
-  
-  .submenu .submenu-option:hover {
+}
+
+.submenu .submenu-option:hover {
     background-color: #f0f0f0;
-  }
+}
 
 
 
 
-  
-  /* Overlay for the modal */
-    .custom-prompt2 {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-    }
+
+/* Overlay for the modal */
+.custom-prompt2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
 
 /* Content of the modal */
 .prompt-content {
@@ -939,8 +1026,11 @@ table {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 300px; /* Adjust the width as needed */
+    min-width: 300px;
+    width: auto;
+    /* Adjust the width as needed */
     text-align: center;
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
 }
 
 .prompt-content h2 {
@@ -951,8 +1041,10 @@ table {
     margin-bottom: 1.8rem;
 }
 
-.prompt-content select, .prompt-content input {
-    width: 100%; /* Ensure full width for input fields */
+.prompt-content select,
+.prompt-content input {
+    width: 100%;
+    /* Ensure full width for input fields */
     margin-bottom: 10px;
 }
 
