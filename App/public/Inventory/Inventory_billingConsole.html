@@ -101,24 +101,27 @@
       <h2 class="overlay-head">Generate Invoice</h2>          
       <form id="invoiceForm">
         <div class="form-group">
-          <label for="classSelect" class="select-label">Select Class:</label>
-          <select id="classSelect" name="classSelect" class="class-select">
-            <option value="Nursery" class="Nursery">Nursery</option>
-            <option value="KG1" class="KG1">KG-1</option>
-            <option value="KG2" class="KG2">KG-2</option>
-            <option value="1st" class="1st">1st</option>
-            <option value="2nd" class="2nd">2nd</option>
-            <option value="3rd" class="3rd">3rd</option>
-            <option value="4th" class="4th">4th</option>
-            <option value="5th" class="5th">5th</option>
-            <option value="6th" class="6th">6th</option>
-            <option value="7th" class="7th">7th</option>
-            <option value="8th" class="8th">8th</option>
-            <option value="9th" class="9th">9th</option>
-            <option value="10th" class="10th">10th</option>
-          </select>
-        </div>
-        <button type="submit" class="submit-button">Generate Invoice</button>
+          <select id="classSelect" name="classSelect" class="form-control" style="text-align: center; width: 96px; background-color: white;">
+              <option value="" disabled selected>Select Class</option>
+              <option value="Nursery" class="Nursery">Nursery</option>
+              <option value="KG1" class="KG1">KG-1</option>
+              <option value="KG2" class="KG2">KG-2</option>
+              <option value="1st" class="1st">1st</option>
+              <option value="2nd" class="2nd">2nd</option>
+              <option value="3rd" class="3rd">3rd</option>
+              <option value="4th" class="4th">4th</option>
+              <option value="5th" class="5th">5th</option>
+              <option value="6th" class="6th">6th</option>
+              <option value="7th" class="7th">7th</option>
+              <option value="8th" class="8th">8th</option>
+              <option value="9th" class="9th">9th</option>
+              <option value="10th" class="10th">10th</option>
+          </select>         
+      </div>
+        <button type="submit" class="submit-button">
+          <img src="/images/generate.gif" alt="Generate Invoice">
+          <span>Generate Invoice</span>
+      </button>
       </form>
     </div>
   </div>

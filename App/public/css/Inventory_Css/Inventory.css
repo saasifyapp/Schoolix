@@ -408,7 +408,7 @@ select {
     overflow-y: auto;
     margin-top: 0.725rem;
     /* Set margin between the table container and overlay content */
-    border-radius: 10px;
+    border-radius: 10px 10px 0 0; /* Apply border-radius to top corners */
 }
 
 /* Adjust height of table body to fit between overlay content and bottom margin */
@@ -419,7 +419,7 @@ select {
 
 
 .styled-table {
-    border-radius: 1rem;
+    /* border-radius: 1rem; */
     border-collapse: collapse;
     /* Ensure that the border radius is applied properly */
     width: 100%;
@@ -438,7 +438,7 @@ select {
     /* Set table width to 100% */
     border-collapse: collapse;
     border-spacing: 0;
-    border-radius: 2rem;
+    /* border-radius: 2rem; */
     box-shadow: 0 0 0 1px #dddddd;
     margin: auto;
     animation: fadeUp 0.5s ease-in-out;

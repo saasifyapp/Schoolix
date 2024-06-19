@@ -326,14 +326,13 @@ body {
 
 .table-container {
     display: block;
-    height: calc(100vh - 250px); /* Adjust the 20px to the height of other elements above/below the table */
+    height: calc(100vh - 20rem); /* Takes the full viewport height minus 1rem padding */
     overflow-y: auto;
     border: 1px solid #ddd; /* Optional: Add a border around the scrollable area */
     animation: fadeUp 0.5s ease-out; /* Apply the fade-up animation */
-    border-radius: 10px;
+    border-radius: 10px 10px 0 0; /* Apply border-radius to top corners */
     box-sizing: border-box; /* Ensure padding and border are included in the height */
     margin-right: 2rem;
-   
 }
 
 #invoice-table {

@@ -221,7 +221,7 @@ tr:hover td {
 }
 
 .modal-content {
-    background-color: #fefefe;
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
     position: relative;
     margin: auto;
     padding: 1rem;
