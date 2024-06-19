@@ -514,46 +514,7 @@ window.onclick = function (event) {
 //     closeModal();
 // }
 
-// Print Invoice
-async function printInvoice(invoiceNo) {
-    try {
-        const response = await fetch(`/print-invoice/${invoiceNo}`);
-        const invoiceData = await response.json();
-        const printWindow = window.open('', '_blank');
-        printWindow.document.write(`<html><head><title>Invoice #${invoiceNo}</title><style>${getInvoiceStyles()}</style></head><body>${constructInvoiceHTML(invoiceData)}</body></html>`);
-        printWindow.document.close();
-        printWindow.print();
-    } catch (error) {
-        console.error('Error printing invoice:', error);
-    }
-}
 
-function getInvoiceStyles() {
-    // Define your CSS styles for the invoice here
-    return `
-        /* Example styles */
-        body { font-family: Arial, sans-serif; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #ddd; padding: 8px; }
-        th { background-color: #f2f2f2; }
-        .text-center { text-align: center; }
-    `;
-}
-
-function constructInvoiceHTML(invoiceData) {
-    // Construct HTML for displaying invoice data
-    let html = `
-        <div class="page-header text-blue-d2">
-            <h1 class="page-title text-secondary-d1">Invoice <small class="page-info"><i class="fa fa-angle-double-right text-80"></i> ID: #${invoiceData.invoiceNo}</small></h1>
-        </div>
-        <div class="container px-0">
-            <!-- Invoice data here -->
-        </div>
-    `;
-
-    // Add more HTML content using invoiceData
-    return html;
-}
 
 function showToast(message, isError) {
     const toastContainer = document.getElementById("toast-container");
@@ -621,4 +582,91 @@ function showToast(message, isError) {
 
     // Trigger the download
     downloadLink.click();
+}
+
+
+
+
+
+// Print Invoice //
+
+
+/* function getInvoiceStyles() {
+    // Define your CSS styles for the invoice here
+    return `
+
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background-color: #f2f2f2; }
+        .text-center { text-align: center; }
+    `;
+}
+
+function constructInvoiceHTML(invoiceData) {
+    // Construct HTML for displaying invoice data
+    let html = `
+        <div class="page-header text-blue-d2">
+            <h1 class="page-title text-secondary-d1">Invoice <small class="page-info"><i class="fa fa-angle-double-right text-80"></i> ID: #${invoiceData.invoiceNo}</small></h1>
+        </div>
+        <div class="container px-0">
+            <!-- Invoice data here -->
+        </div>
+    `;
+
+    // Add more HTML content using invoiceData
+    return html;
+}*/
+
+/*
+async function printInvoice(invoiceNo) {
+    try {
+        const response = await fetch(`/print-invoice/${invoiceNo}`);
+        const invoiceData = await response.json();
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`<html><head><title>Invoice #${invoiceNo}</title><style>${getInvoiceStyles()}</style></head><body>${constructInvoiceHTML(invoiceData)}</body></html>`);
+        printWindow.document.close();
+        printWindow.print();
+    } catch (error) {
+        console.error('Error printing invoice:', error);
+    }
+}*/
+
+
+
+async function printInvoice(invoiceNo) {
+    try {
+        showSearchInventoryLoadingAnimation();
+        
+        const response = await fetch(`/inventory/printInvoice?invoiceNo=${encodeURIComponent(invoiceNo)}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch invoice details.');
+        }
+
+        const invoiceData = await response.json();
+        
+        // Call the helper function to display the invoice data
+        displayInvoice(invoiceData);
+
+        console.log('Invoice fetched successfully.');
+        showToast('Invoice fetched successfully.', false);
+    } catch (error) {
+        console.error('Error fetching invoice:', error);
+        showToast('An error occurred while fetching the invoice.', true);
+    } finally {
+        hideSearchInventoryLoadingAnimation();
+    }
+}
+
+// Helper function to display the invoice data
+function displayInvoice(invoiceData) {
+    // Implement how you want to display the invoice data or print it
+    console.log('Invoice Data:', invoiceData);
+    // Example: you could open a new window or generate a PDF
 }

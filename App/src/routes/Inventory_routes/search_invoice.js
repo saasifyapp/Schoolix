@@ -172,4 +172,62 @@ router.delete("/inventory/deleteInvoice", (req, res) => {
 });
 
 
+// Print Invoice on Search Page - endpoint //
+
+router.get('/inventory/printInvoice', (req, res) => {
+    const invoiceNo = req.query.invoiceNo;
+    if (!invoiceNo) {
+        return res.status(400).json({ error: 'Invoice number is required' });
+    }
+
+    const invoiceQuery = `
+        SELECT 
+            invoiceNo, 
+            billDate, 
+            buyerName, 
+            buyerPhone, 
+            class_of_buyer, 
+            total_payable, 
+            paid_amount, 
+            balance_amount, 
+            mode_of_payment 
+        FROM inventory_invoice_details 
+        WHERE invoiceNo = ?`;
+
+    const itemsQuery = `
+        SELECT 
+            item_name, 
+            quantity, 
+        FROM inventory_invoice_items 
+        WHERE invoiceNo = ?`;
+
+    connection.query(invoiceQuery, [invoiceNo], (err, invoiceResults) => {
+        if (err) {
+            console.error('Error fetching invoice data: ' + err.stack);
+            return res.status(500).json({ error: 'Error fetching invoice data' });
+        }
+
+        if (invoiceResults.length === 0) {
+            return res.status(404).json({ error: 'Invoice not found' });
+        }
+
+        connection.query(itemsQuery, [invoiceNo], (err, itemsResults) => {
+            if (err) {
+                console.error('Error fetching invoice items: ' + err.stack);
+                return res.status(500).json({ error: 'Error fetching invoice items' });
+            }
+
+            const invoiceData = {
+                invoiceDetails: invoiceResults[0],
+                invoiceItems: itemsResults
+            };
+
+            // Send the combined result as response
+            res.json(invoiceData);
+        });
+    });
+});
+
+
+
 module.exports = router;
