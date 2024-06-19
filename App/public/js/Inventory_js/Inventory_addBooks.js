@@ -95,6 +95,16 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add submit event listener to the form
     booksform.addEventListener("submit", async function (event) {
       const bookClassValue = document.getElementById("bookClass").value;
+      // Get the uniform item and size from the form
+      const bookItem = document.getElementById('bookTitle').value;
+
+      // Validate uniform item and size for commas
+      if (bookItem.includes(',') ) {
+        event.preventDefault();
+        hideBooksLoadingAnimation();
+          showToast('Book name should not contain a comma', 'red');
+          return;
+      }
 
       // Check if the bookClass field is empty
       if (!bookClassValue) {
@@ -1090,6 +1100,7 @@ async function showBookUpdateModal(sr_no) {
         updatedTitle !== originalTitle &&
         (await isTitleDuplicate(updatedTitle, sr_no))
       ) {
+        hideBooksLoadingAnimation();
         showToast("A book with the same title already exists.", true);
         return;
       }

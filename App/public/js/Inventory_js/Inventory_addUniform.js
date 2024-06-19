@@ -35,8 +35,20 @@ document.addEventListener("DOMContentLoaded", function () {
     // Get the form element
     const uniformForm = document.getElementById('addUniformForm');
     const univendorSelect = document.getElementById("univendor");
+
+
     uniformForm.addEventListener('submit', async function (event) {
+        
         event.preventDefault();
+        // Get the uniform item and size from the form
+        const uniformItem = document.getElementById('uniformItem').value;
+        const sizeOfItem = document.getElementById('sizeOfItem').value;
+
+        // Validate uniform item and size for commas
+        if (uniformItem.includes(',') || sizeOfItem.includes(',')) {
+            showToast('Uniform name and size should not contain a comma', 'red');
+            return;
+        }
         showUniformLoadingAnimation();
         const formData = new FormData(event.target);
         const jsonData = {};
@@ -77,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 showToast(`${jsonData.uniform_item} of size ${jsonData.size_of_item} added successfully`);
                 refreshData();
                 refreshUniformsData();
-            
+
                 // populateUniformsVendorDropdown() // Uncomment this if you have a function to populate uniform vendor dropdown
                 // You can update the UI or do something else here after successful submission
             })
@@ -99,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const univendorSelect = document.getElementById("univendor");
         univendorSelect.selectedIndex = 0; // Assuming the placeholder is the first option
     });
-}); 
+});
 
 
 // Function to populate vendor dropdowns
@@ -291,7 +303,7 @@ function displayUniforms(data) {
     }
 }
 
- 
+
 // Function to handle deleting a uniform
 async function deleteUniform(uniformItem, sizeOfItem) {
     const confirmation = confirm(`Are you sure you want to delete the uniform "${uniformItem}" of size "${sizeOfItem}"?`);
@@ -312,7 +324,7 @@ async function deleteUniform(uniformItem, sizeOfItem) {
                 console.log('Uniform deleted successfully');
                 showToast(`${uniformItem} with size ${sizeOfItem} deleted successfully`); // Show success toast
                 refreshUniformsData(); // Refresh uniform data
-            
+
                 populateUniformVendorDropdown()
             })
             .catch(error => {
@@ -467,7 +479,7 @@ async function updateUniformOrderedQuantity(uniformItem, sizeOfItem, totalOrder,
             }
             hideUniformLoadingAnimation();
             refreshUniformsData();
-        
+
             console.log('Quantity updated successfully.');
             showToast(`${uniformItem} with size ${sizeOfItem} restocked successfully`); // Show success toast
             populateUniformVendorDropdown();
@@ -946,18 +958,20 @@ async function showUniformUpdateModal(sr_no) {
 
             // Validate if uniform with same details already exists
             if (await isDuplicateUniform(updatedUniformItem, updatedSizeOfItem, updatedPurchasePrice, updatedSellingPrice, sr_no)) {
+                hideUniformLoadingAnimation();
                 showToast('A uniform with the same item name, size, purchase price, and selling price already exists.', true);
                 return;
             }
 
-             // Validate if a uniform with the same item name and size already exists
-    const originalUniformItem = data.uniform_item; // assuming data.uniform_item contains the original item name fetched from the server
-    const originalSizeOfItem = data.size_of_item; // assuming data.size_of_item contains the original size fetched from the server
+            // Validate if a uniform with the same item name and size already exists
+            const originalUniformItem = data.uniform_item; // assuming data.uniform_item contains the original item name fetched from the server
+            const originalSizeOfItem = data.size_of_item; // assuming data.size_of_item contains the original size fetched from the server
 
-    if ((updatedUniformItem !== originalUniformItem || updatedSizeOfItem !== originalSizeOfItem) && await isUniformNameDuplicate(updatedUniformItem, updatedSizeOfItem, sr_no)) {
-        showToast('A uniform with the same item name and size already exists.', true);
-        return;
-    }
+            if ((updatedUniformItem !== originalUniformItem || updatedSizeOfItem !== originalSizeOfItem) && await isUniformNameDuplicate(updatedUniformItem, updatedSizeOfItem, sr_no)) {
+                hideUniformLoadingAnimation();
+                showToast('A uniform with the same item name and size already exists.', true);
+                return;
+            }
 
             // customPrompt.remove(); // Remove the modal
 
