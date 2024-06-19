@@ -172,14 +172,11 @@ router.delete("/inventory/deleteInvoice", (req, res) => {
 });
 
 
-// Print Invoice on Search Page - endpoint //
+// Endpoint to fetch and print invoice details
+router.get('/get_invoice/:invoiceNo', (req, res) => {
+    const invoiceNo = req.params.invoiceNo;
 
-router.get('/inventory/printInvoice', (req, res) => {
-    const invoiceNo = req.query.invoiceNo;
-    if (!invoiceNo) {
-        return res.status(400).json({ error: 'Invoice number is required' });
-    }
-
+    // Query to fetch invoice details
     const invoiceQuery = `
         SELECT 
             invoiceNo, 
@@ -194,39 +191,57 @@ router.get('/inventory/printInvoice', (req, res) => {
         FROM inventory_invoice_details 
         WHERE invoiceNo = ?`;
 
+    // Query to fetch invoice items
     const itemsQuery = `
         SELECT 
-            item_name, 
-            quantity, 
-        FROM inventory_invoice_items 
-        WHERE invoiceNo = ?`;
+            ii.item_name, 
+            ii.quantity, 
+            CASE
+                WHEN ii.type = 'Book' THEN bd.selling_price
+                WHEN ii.type = 'Uniform' THEN ud.selling_price
+                ELSE 0
+            END AS purchase_price,
+            ii.quantity * CASE
+                WHEN ii.type = 'Book' THEN bd.selling_price
+                WHEN ii.type = 'Uniform' THEN ud.selling_price
+                ELSE 0
+            END AS total
+        FROM inventory_invoice_items ii
+        LEFT JOIN inventory_book_details bd ON ii.item_name = bd.title AND ii.type = 'Book'
+        LEFT JOIN inventory_uniform_details ud ON ii.item_name = ud.uniform_item AND ii.type = 'Uniform'
+        WHERE ii.invoiceNo = ?`;
 
+    // Execute invoice details query
     connection.query(invoiceQuery, [invoiceNo], (err, invoiceResults) => {
         if (err) {
             console.error('Error fetching invoice data: ' + err.stack);
             return res.status(500).json({ error: 'Error fetching invoice data' });
         }
 
+        // If no invoice found
         if (invoiceResults.length === 0) {
             return res.status(404).json({ error: 'Invoice not found' });
         }
 
+        // Execute invoice items query
         connection.query(itemsQuery, [invoiceNo], (err, itemsResults) => {
             if (err) {
                 console.error('Error fetching invoice items: ' + err.stack);
                 return res.status(500).json({ error: 'Error fetching invoice items' });
             }
 
+            // Combine invoice details and items into a single object
             const invoiceData = {
                 invoiceDetails: invoiceResults[0],
                 invoiceItems: itemsResults
             };
 
-            // Send the combined result as response
+            // Send the combined result as JSON response
             res.json(invoiceData);
         });
     });
 });
+
 
 
 

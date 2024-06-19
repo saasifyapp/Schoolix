@@ -424,3 +424,321 @@ h3 {
     transform: rotateX(90deg) translateZ(-40px);
     filter: blur(12px);
 }
+
+
+/* invoice css and invocie display css*/ 
+/* General styling for buyer and invoice details */
+.invoice-header {
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.invoice-title h1 {
+    margin: 0;
+    font-size: 2em;
+}
+
+.invoice-title p {
+    margin: 0;
+    font-size: 1em;
+}
+
+.text-primary {
+    color: #007bff;
+}
+
+.invoice_table {
+    width: 100%;
+    border-collapse: collapse; /* Collapse borders */
+    margin: 2rem 0;
+    border-radius: 12px; /* Rounded corners for the entire table */
+    overflow: hidden; /* Clip children to border-radius */
+}
+
+.invoice_table th,
+.invoice_table td {
+    padding: 8px;
+    text-align: center;
+    border: none; /* Remove all borders */
+}
+
+.invoice_table thead th:first-child {
+    background-color: #3a3c3d; /* Grey background */
+    color: white; /* White text */
+    border: none; /* Remove borders */
+    border-top-left-radius: 12px; /* Top left corner */
+    border-bottom-left-radius: 12px; /* Bottom left corner */
+}
+
+.invoice_table thead th:last-child {
+    background-color: #3a3c3d; /* Grey background */
+    color: white; /* White text */
+    border: none; /* Remove borders */
+    border-top-right-radius: 12px; /* Top right corner */
+    border-bottom-right-radius: 12px; /* Bottom right corner */
+}
+
+.invoice_table thead th:not(:first-child):not(:last-child) {
+    background-color: #3a3c3d; /* Grey background */
+    color: white; /* White text */
+    border: none; /* Remove borders */
+}
+
+.invoice_table tbody td {
+    border: none; /* Remove borders for table cells */
+}
+
+.total-row td {
+    text-align: right;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.fas {
+    margin-right: 5px;
+}
+
+.container {
+    width: 100%;
+    padding: 20px;
+}
+
+.buyer-details {
+    text-align: left;
+    width: 100%;
+}
+
+.buyer-details p {
+    color: #3a3c3d;
+    font-weight: bold; /* Make "Invoice To" bold */
+    text-align: left; /* Align text to the left */
+    margin: 0 0 10px 50px; /* Add 20px margin to the left */
+}
+
+.list-unstyled {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.list-unstyled li {
+    margin-bottom: 5px; /* Add some space between list items */
+}
+
+/* Flexbox styling for date and status */
+.invoice-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Space between items */
+    text-align: left; /* Align content to the left */
+    margin-right: 10px; /* Add right margin */
+}
+
+.invoice-details .item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.invoice-details .item .label {
+    flex: 1;
+    font-weight: bold; /* Make label bold */
+}
+
+.invoice-details .item .value {
+    flex: 2;
+    margin-left: 10px; /* Space between label and value */
+    font-weight: normal; /* Make value normal */
+}
+
+.fa-solid{
+    margin-right: 5px;
+}
+
+.invoice-header {
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.invoice-title h1 {
+    margin: 0;
+    font-size: 2em;
+}
+
+.invoice-title p {
+    margin: 0;
+    font-size: 1em;
+}
+
+.text-primary {
+    color: #007bff;
+}
+
+.invoice_table {
+    width: 100%;
+    border-collapse: collapse;
+    /* Collapse borders */
+    margin: 2rem 0;
+    border-radius: 12px;
+    /* Rounded corners for the entire table */
+    overflow: hidden;
+    /* Clip children to border-radius */
+}
+
+.invoice_table th,
+.invoice_table td {
+    padding: 8px;
+    text-align: center;
+    border: none;
+    /* Remove all borders */
+}
+
+.invoice_table thead th:first-child {
+    background-color: #3a3c3d;
+    /* Grey background */
+    color: white;
+    /* White text */
+    border: none;
+    /* Remove borders */
+    border-top-left-radius: 12px;
+    /* Top left corner */
+    border-bottom-left-radius: 12px;
+    /* Bottom left corner */
+}
+
+.invoice_table thead th:last-child {
+    background-color: #3a3c3d;
+    /* Grey background */
+    color: white;
+    /* White text */
+    border: none;
+    /* Remove borders */
+    border-top-right-radius: 12px;
+    /* Top right corner */
+    border-bottom-right-radius: 12px;
+    /* Bottom right corner */
+}
+
+.invoice_table thead th:not(:first-child):not(:last-child) {
+    background-color: #3a3c3d;
+    /* Grey background */
+    color: white;
+    /* White text */
+    border: none;
+    /* Remove borders */
+}
+
+.invoice_table tbody td {
+    border: none;
+    /* Remove borders for table cells */
+}
+
+.total-row td {
+    text-align: right;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.fas {
+    margin-right: 5px;
+}
+
+.container {
+    width: 100%;
+    padding: 20px;
+}
+
+.buyer-details {
+    text-align: left;
+    width: 100%;
+}
+
+.buyer-details p {
+    color: #3a3c3d;
+    font-weight: bold;
+    /* Make "Invoice To" bold */
+    text-align: left;
+    /* Align text to the left */
+    margin: 0 0 10px 50px;
+    /* Add 20px margin to the left */
+}
+
+.list-unstyled {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.list-unstyled li {
+    margin-bottom: 5px;
+    /* Add some space between list items */
+}
+
+/* Flexbox styling for date and status */
+.invoice-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    /* Space between items */
+    text-align: left;
+    /* Align content to the left */
+    margin-right: 10px;
+    /* Add right margin */
+}
+
+.invoice-details .item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.invoice-details .item .label {
+    flex: 1;
+    font-weight: bold;
+    /* Make label bold */
+}
+
+.invoice-details .item .value {
+    flex: 2;
+    margin-left: 10px;
+    /* Space between label and value */
+    font-weight: normal;
+    /* Make value normal */
+}
+
+.fa-solid {
+    margin-right: 5px;
+}
+
+#invoice {
+    width: 210mm; /* A4 width */
+    min-height: 297mm; /* A4 height */
+    overflow: hidden; /* Hide any content that overflows the page */
+    padding: 10mm; /* Add padding for content */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  
+  @media print {
+  
+    #invoice {
+      page-break-after: avoid;
+  }
+    /* body * {
+      visibility: hidden;
+    } */
+  
+    .print-section,
+    .print-section * {
+      visibility: visible;
+    }
+  
+    .print-section {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+    }
+  }

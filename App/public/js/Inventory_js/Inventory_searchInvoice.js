@@ -1,4 +1,4 @@
-let currentInvoice = null; 
+let currentInvoice = null;
 
 // Function to show the loading animation
 function showSearchInventoryLoadingAnimation() {
@@ -26,7 +26,7 @@ async function refreshInvoiceData() {
             noResultsRow.innerHTML = '<td colspan="10">No results found</td>';
             invoiceTable.appendChild(noResultsRow);
         } else {
-        displayInvoices(data);
+            displayInvoices(data);
         }
     } catch (error) {
         console.error('Error:', error);
@@ -36,9 +36,9 @@ async function refreshInvoiceData() {
 
 function displayInvoices(data) {
 
-        // Reverse the data array
-        data.reverse();
-        
+    // Reverse the data array
+    data.reverse();
+
     const invoiceTable = document.getElementById('invoiceTable');
     invoiceTable.innerHTML = ''; // Clear previous data
 
@@ -329,7 +329,7 @@ function filterByClass() {
                         month: '2-digit',
                         year: 'numeric'
                     });
-    
+
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${invoice.invoiceNo}</td>
@@ -462,7 +462,7 @@ async function submitUpdatedAmount() {
 
     const newTotalPaidAmount = currentInvoice.paidAmount + newPaidAmount;
     const newBalanceAmount = currentInvoice.totalAmount - newTotalPaidAmount;
- 
+
     try {
         showSearchInventoryLoadingAnimation();
         const response = await fetch('/inventory/updatePaidAmount', {
@@ -542,11 +542,11 @@ function showToast(message, isError) {
     }, 4000);
 }
 
- ////////////////////////////// EXPORT TO EXCEL //////////////////////////////////////////////
+////////////////////////////// EXPORT TO EXCEL //////////////////////////////////////////////
 
 
 
- function exportToExcel() {
+function exportToExcel() {
 
     const selectedClass = document.getElementById('classFilter').value;
 
@@ -637,36 +637,169 @@ async function printInvoice(invoiceNo) {
 async function printInvoice(invoiceNo) {
     try {
         showSearchInventoryLoadingAnimation();
-        
-        const response = await fetch(`/inventory/printInvoice?invoiceNo=${encodeURIComponent(invoiceNo)}`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            }
-        });
-
+        const response = await fetch(`/get_invoice/${invoiceNo}`);
         if (!response.ok) {
-            throw new Error('Failed to fetch invoice details.');
+            throw new Error(`Failed to fetch invoice details: ${response.status} ${response.statusText}`);
         }
-
         const invoiceData = await response.json();
-        
-        // Call the helper function to display the invoice data
-        displayInvoice(invoiceData);
 
-        console.log('Invoice fetched successfully.');
-        showToast('Invoice fetched successfully.', false);
+        // Populate invoice details in HTML
+        populateInvoiceDetails(invoiceData);
+
+        // After successful population, open print window
+        printInvoiceWindow();
     } catch (error) {
-        console.error('Error fetching invoice:', error);
-        showToast('An error occurred while fetching the invoice.', true);
-    } finally {
         hideSearchInventoryLoadingAnimation();
+        console.error('Error generating bill:', error);
+        // Handle error as needed (e.g., show error message to user)
     }
 }
 
-// Helper function to display the invoice data
-function displayInvoice(invoiceData) {
-    // Implement how you want to display the invoice data or print it
-    console.log('Invoice Data:', invoiceData);
-    // Example: you could open a new window or generate a PDF
+function populateInvoiceDetails(invoiceData) {
+    // Populate invoice header
+    document.getElementById('invoiceNumberDisplay').textContent = `Invoice No: #${invoiceData.invoiceDetails.invoiceNo}`;
+
+    // Populate buyer details
+    const buyerDetailsList = document.querySelector('.buyer-details-list');
+    buyerDetailsList.innerHTML = `
+        <li>${invoiceData.invoiceDetails.buyerName}</li>
+        <li>${invoiceData.invoiceDetails.buyerPhone}</li>
+        <li>${invoiceData.invoiceDetails.class_of_buyer}</li>
+    `;
+
+    // Extract the date part (YYYY-MM-DD) from the full date-time string
+    const fullDate = new Date(invoiceData.invoiceDetails.billDate);
+    const billDateFormatted = fullDate.toISOString().split('T')[0];
+
+    // Populate the formatted date in the HTML element
+    document.querySelector('.invoice-details-list .item .value').textContent = billDateFormatted;
+
+    // Determine invoice status based on paid_amount and balance_amount
+    let invoiceStatusText = '';
+    if (invoiceData.invoiceDetails.paid_amount === 0) {
+        invoiceStatusText = 'Unpaid';
+    } else if (invoiceData.invoiceDetails.balance_amount !== 0) {
+        invoiceStatusText = 'Balance';
+    } else {
+        invoiceStatusText = 'Paid';
+    }
+
+    // Populate invoice status in the HTML
+    document.querySelectorAll('.invoice-details-list .item .value')[1].textContent = invoiceStatusText;
+
+    // Populate bill items table
+    const billTableBody = document.getElementById('billTableBody');
+    billTableBody.innerHTML = ''; // Clear previous items
+
+    invoiceData.invoiceItems.forEach((item, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td style="padding: 8px; border: 1px solid #dee2e6;">${index + 1}</td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">${item.item_name}</td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">${item.purchase_price.toFixed(2)}</td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">${item.quantity}</td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">${item.total.toFixed(2)}</td>
+        `;
+        billTableBody.appendChild(row);
+    });
+
+    // Populate total amounts
+    document.getElementById('totalAmountDisplay').textContent = invoiceData.invoiceDetails.total_payable.toFixed(2);
+    document.getElementById('amountPaidDisplay').textContent = invoiceData.invoiceDetails.paid_amount.toFixed(2);
+    document.getElementById('balanceAmountDisplay').textContent = invoiceData.invoiceDetails.balance_amount.toFixed(2);
 }
+
+
+function printInvoiceWindow() {
+    // Open a new window for printing
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write('<html><head><title>Print Invoice</title>');
+
+    // Include external CSS files
+    printWindow.document.write('<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">');
+    printWindow.document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">');
+    printWindow.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">');
+    // // printWindow.document.write('<link rel="stylesheet" href="/css/Inventory_Css/searchInvoice.css">');
+    // // // Include external JavaScript files
+    printWindow.document.write('<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>');
+    printWindow.document.write('<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>');
+    printWindow.document.write('<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>');
+    // printWindow.document.write('<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>');
+    printWindow.document.write('<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>');
+    // printWindow.document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>');
+    // printWindow.document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>');
+
+    // printWindow.document.write('<link rel="preconnect" href="https://fonts.googleapis.com">');
+    // printWindow.document.write('<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>');
+    // printWindow.document.write(' <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">');
+
+
+    // Append the HTML content of the invoice details container
+    const invoiceDetailsHtml = document.getElementById('invoiceDetails').innerHTML;
+    printWindow.document.write(invoiceDetailsHtml);
+
+    // Close the HTML document
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    hideSearchInventoryLoadingAnimation();
+    // Wait for content to load before printing
+    printWindow.onload = function () {
+        printWindow.focus();
+        printWindow.print();
+        // printWindow.close(); 
+    };
+}
+
+// function printInvoiceWindow() {
+//     hideSearchInventoryLoadingAnimation();
+//    // Get the invoice details container
+//    const invoiceDetails = document.getElementById('invoice');
+
+//    // Define the options for html2pdf
+//    const opt = {
+//        margin: 0,
+//        filename: 'invoice.pdf',
+//        image: { type: 'jpeg', quality: 0.98 },
+//        html2canvas: { scale: 2 },
+//        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+//    };
+
+//    // Adjust the scaling factor to fit content to one page
+//    const contentHeight = invoiceDetails.scrollHeight;
+//    const a4Height = 297; // A4 height in mm
+//    const scaleFactor = a4Height / (contentHeight * 0.264583); // Convert px to mm
+
+//    // Apply CSS transform to scale the content
+//    invoiceDetails.style.transform = `scale(${scaleFactor})`;
+//    invoiceDetails.style.transformOrigin = 'top left';
+//    invoiceDetails.style.width = `calc(210mm / ${scaleFactor})`;
+//    invoiceDetails.style.height = `calc(297mm / ${scaleFactor})`;
+
+//    // Generate the PDF
+//    html2pdf().from(invoiceDetails).set(opt).outputPdf('blob').then(function (pdfBlob) {
+//        // Reset the scaling after PDF generation
+//        invoiceDetails.style.transform = '';
+//        invoiceDetails.style.width = '';
+//        invoiceDetails.style.height = '';
+
+//        // Create a URL for the PDF blob
+//        const pdfUrl = URL.createObjectURL(pdfBlob);
+
+//        // Open the PDF in a new window
+//        const pdfWindow = window.open(pdfUrl, '_blank');
+
+//        // Add an event listener to trigger the print dialog once the PDF is loaded
+//        pdfWindow.onload = function () {
+//            pdfWindow.focus();
+//            pdfWindow.print();
+
+//            // If you want the print window to only show 1 page in print preview,
+//            // you can customize the print window settings here.
+//            // Some browsers might require a manual step for advanced settings.
+//        };
+//    });
+// }
+
+
+
+
