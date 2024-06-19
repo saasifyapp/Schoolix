@@ -25,6 +25,13 @@ document.addEventListener("DOMContentLoaded", function () {
         const vendorName = vendorNameInput.value;
         const amountPaid = parseFloat(amountPaidInput.value);
 
+        // Validate vendor name for comma
+        if (vendorName.includes(',')) {
+            hideVendorLoadingAnimation();
+            showToast('Vendor name should not contain a comma', 'red');
+            return;
+        }
+
         // Prepare the data to send in the request body
         const data = {
             vendorName: vendorName,
