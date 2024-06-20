@@ -779,7 +779,7 @@ function populateInvoiceDetails(invoiceData) {
 // }
 
 function printInvoiceWindow() {
-    hideSearchInventoryLoadingAnimation();
+    
     // Get the invoice details container
     const invoiceDetails = document.getElementById('invoice');
 
@@ -802,7 +802,7 @@ function printInvoiceWindow() {
     invoiceDetails.style.transformOrigin = 'top left';
     invoiceDetails.style.width = `calc(210mm / ${scaleFactor})`;
     invoiceDetails.style.height = `calc(297mm / ${scaleFactor})`;
-
+    hideSearchInventoryLoadingAnimation();
     // Generate the PDF
     html2pdf().from(invoiceDetails).set(opt).outputPdf('blob').then(function (pdfBlob) {
         // Reset the scaling after PDF generation
