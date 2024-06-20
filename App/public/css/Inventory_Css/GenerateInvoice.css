@@ -678,13 +678,13 @@ tr:hover td {
 
 
 .invoice-header {
-    margin-bottom: 20px;
-    text-align: right;
+    margin-bottom: 20px;   
 }
 
 .invoice-title h1 {
     margin: 0;
     font-size: 2em;
+    text-align: center;
 }
 
 .invoice-title p {

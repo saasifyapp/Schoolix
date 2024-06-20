@@ -436,6 +436,7 @@ h3 {
 .invoice-title h1 {
     margin: 0;
     font-size: 2em;
+    font-weight: 500;
 }
 
 .invoice-title p {
@@ -459,7 +460,7 @@ h3 {
 .invoice_table td {
     padding: 8px;
     text-align: center;
-    border: none; /* Remove all borders */
+    border: none !important;  /* Remove all borders */
 }
 
 .invoice_table thead th:first-child {
