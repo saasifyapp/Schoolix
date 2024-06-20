@@ -90,15 +90,15 @@ router.get("/inventory/class/:class", (req, res) => {
 
 // Update paid amount for an invoice
 router.put('/inventory/updatePaidAmount', (req, res) => {
-    const { invoiceNo, paidAmount, balanceAmount } = req.body;
+    const { invoiceNo, paidAmount, balanceAmount, invoiceDate } = req.body;
 
     const query = `
         UPDATE inventory_invoice_details 
-        SET paid_amount = ?, balance_amount = ? 
+        SET paid_amount = ?, balance_amount = ?, billDate = ? 
         WHERE invoiceNo = ?
     `;
 
-    connection.query(query, [paidAmount, balanceAmount, invoiceNo], (err, result) => {
+    connection.query(query, [paidAmount, balanceAmount, invoiceDate, invoiceNo], (err, result) => {
         if (err) {
             console.error('Error updating invoice:', err);
             return res.status(500).send('Error updating invoice');

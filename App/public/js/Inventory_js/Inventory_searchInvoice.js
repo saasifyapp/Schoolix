@@ -460,8 +460,27 @@ async function submitUpdatedAmount() {
         return;
     }
 
+    // Function to get current date in local time (IST)
+    function getCurrentDateInIST() {
+        const currentDate = new Date();
+        const offset = currentDate.getTimezoneOffset(); // Get the timezone offset in minutes
+
+        // Adjust the current date to IST timezone (UTC+5:30)
+        const ISTOffset = 330; // Offset in minutes for IST (5 hours 30 minutes)
+        const currentISTTime = new Date(currentDate.getTime() + (offset + ISTOffset) * 60000); // Convert offset to milliseconds
+
+        return currentISTTime.toISOString().split('T')[0]; // Return date in YYYY-MM-DD format
+    }
+
+
+
     const newTotalPaidAmount = currentInvoice.paidAmount + newPaidAmount;
     const newBalanceAmount = currentInvoice.totalAmount - newTotalPaidAmount;
+
+    // Get current date in IST
+    const invoiceDate = getCurrentDateInIST();
+
+
 
     try {
         showSearchInventoryLoadingAnimation();
@@ -473,7 +492,9 @@ async function submitUpdatedAmount() {
             body: JSON.stringify({
                 invoiceNo: currentInvoice.invoiceNo,
                 paidAmount: newTotalPaidAmount,
-                balanceAmount: newBalanceAmount
+                balanceAmount: newBalanceAmount,
+                invoiceDate: invoiceDate // Include invoiceDate in the request body
+
             })
         });
 
@@ -674,19 +695,19 @@ function populateInvoiceDetails(invoiceData) {
     const fullDate = new Date(invoiceData.invoiceDetails.billDate);
     const billDateFormatted = fullDate.toLocaleDateString('en-GB');
 
-   
+
     // Determine invoice status based on paid_amount and balance_amount
     let invoiceStatusText = '';
-    let statusIcon; 
+    let statusIcon;
     if (invoiceData.invoiceDetails.paid_amount === 0) {
         invoiceStatusText = 'Unpaid';
-        statusIcon = '<i class="fa-solid fa-ban" style="color: #d00b0b;"></i>';  
+        statusIcon = '<i class="fa-solid fa-ban" style="color: #d00b0b;"></i>';
     } else if (invoiceData.invoiceDetails.balance_amount !== 0) {
         invoiceStatusText = 'Balance';
-        statusIcon = '<i class="fa-solid fa-triangle-exclamation" style="color: #e60f0f;"></i>';  
+        statusIcon = '<i class="fa-solid fa-triangle-exclamation" style="color: #e60f0f;"></i>';
     } else {
         invoiceStatusText = 'Paid';
-        statusIcon = '<i class="fa-regular fa-circle-check" style="color: #63E6BE;margin-right: 5px"></i>';   
+        statusIcon = '<i class="fa-regular fa-circle-check" style="color: #63E6BE;margin-right: 5px"></i>';
     }
 
     const invoiceDetails = document.querySelector('#invoiceDetails .invoice-details');
@@ -759,52 +780,52 @@ function populateInvoiceDetails(invoiceData) {
 
 function printInvoiceWindow() {
     hideSearchInventoryLoadingAnimation();
-   // Get the invoice details container
-   const invoiceDetails = document.getElementById('invoice');
+    // Get the invoice details container
+    const invoiceDetails = document.getElementById('invoice');
 
-   // Define the options for html2pdf
-   const opt = {
-       margin: 0,
-       filename: 'invoice.pdf',
-       image: { type: 'jpeg', quality: 0.98 },
-       html2canvas: { scale: 2 },
-       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-   };
+    // Define the options for html2pdf
+    const opt = {
+        margin: 0,
+        filename: 'invoice.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
 
-   // Adjust the scaling factor to fit content to one page
-   const contentHeight = invoiceDetails.scrollHeight;
-   const a4Height = 297; // A4 height in mm
-   const scaleFactor = a4Height / (contentHeight * 0.264583); // Convert px to mm
+    // Adjust the scaling factor to fit content to one page
+    const contentHeight = invoiceDetails.scrollHeight;
+    const a4Height = 297; // A4 height in mm
+    const scaleFactor = a4Height / (contentHeight * 0.264583); // Convert px to mm
 
-   // Apply CSS transform to scale the content
-   invoiceDetails.style.transform = `scale(${scaleFactor})`;
-   invoiceDetails.style.transformOrigin = 'top left';
-   invoiceDetails.style.width = `calc(210mm / ${scaleFactor})`;
-   invoiceDetails.style.height = `calc(297mm / ${scaleFactor})`;
+    // Apply CSS transform to scale the content
+    invoiceDetails.style.transform = `scale(${scaleFactor})`;
+    invoiceDetails.style.transformOrigin = 'top left';
+    invoiceDetails.style.width = `calc(210mm / ${scaleFactor})`;
+    invoiceDetails.style.height = `calc(297mm / ${scaleFactor})`;
 
-   // Generate the PDF
-   html2pdf().from(invoiceDetails).set(opt).outputPdf('blob').then(function (pdfBlob) {
-       // Reset the scaling after PDF generation
-       invoiceDetails.style.transform = '';
-       invoiceDetails.style.width = '';
-       invoiceDetails.style.height = '';
+    // Generate the PDF
+    html2pdf().from(invoiceDetails).set(opt).outputPdf('blob').then(function (pdfBlob) {
+        // Reset the scaling after PDF generation
+        invoiceDetails.style.transform = '';
+        invoiceDetails.style.width = '';
+        invoiceDetails.style.height = '';
 
-       // Create a URL for the PDF blob
-       const pdfUrl = URL.createObjectURL(pdfBlob);
+        // Create a URL for the PDF blob
+        const pdfUrl = URL.createObjectURL(pdfBlob);
 
-       // Open the PDF in a new window
-       const pdfWindow = window.open(pdfUrl, '_blank');
+        // Open the PDF in a new window
+        const pdfWindow = window.open(pdfUrl, '_blank');
 
-       // Add an event listener to trigger the print dialog once the PDF is loaded
-       pdfWindow.onload = function () {
-           pdfWindow.focus();
-           pdfWindow.print();
+        // Add an event listener to trigger the print dialog once the PDF is loaded
+        pdfWindow.onload = function () {
+            pdfWindow.focus();
+            pdfWindow.print();
 
-           // If you want the print window to only show 1 page in print preview,
-           // you can customize the print window settings here.
-           // Some browsers might require a manual step for advanced settings.
-       };
-   });
+            // If you want the print window to only show 1 page in print preview,
+            // you can customize the print window settings here.
+            // Some browsers might require a manual step for advanced settings.
+        };
+    });
 }
 
 

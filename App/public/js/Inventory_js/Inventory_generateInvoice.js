@@ -555,17 +555,17 @@ function generateBill_test() {
 
     // Determine invoice status based on amount paid and balance amount
     let invoiceStatus;
-    let statusIcon;    
+    let statusIcon;
 
     if (amountPaid === 0) {
         invoiceStatus = 'Unpaid';
-        statusIcon = '<i class="fa-solid fa-ban" style="color: #d00b0b;"></i>';        
+        statusIcon = '<i class="fa-solid fa-ban" style="color: #d00b0b;"></i>';
     } else if (balanceAmount !== 0) {
         invoiceStatus = 'Balance';
-        statusIcon = '<i class="fa-solid fa-triangle-exclamation" style="color: #e60f0f;"></i>';       
+        statusIcon = '<i class="fa-solid fa-triangle-exclamation" style="color: #e60f0f;"></i>';
     } else if (balanceAmount === 0) {
         invoiceStatus = 'Paid';
-        statusIcon = '<i class="fa-regular fa-circle-check" style="color: #63E6BE;margin-right: 5px"></i>';       
+        statusIcon = '<i class="fa-regular fa-circle-check" style="color: #63E6BE;margin-right: 5px"></i>';
     }
 
     const invoiceDetails = document.querySelector('#invoiceDetails .invoice-details');
@@ -591,12 +591,24 @@ function generateBill_test() {
 
 document.getElementById("printButton").addEventListener("click", async function () {
     // Add validation to execute this only when the bill is generated i.e. displayed on the front-end
-   /* if (invoiceStatus === '') {
-        showToast("Please generate the bill first", true);
-        return;
-    }*/
+    /* if (invoiceStatus === '') {
+         showToast("Please generate the bill first", true);
+         return;
+     }*/
 
     showInventoryLoadingAnimation();
+
+    // Function to get current date in local time (IST)
+    function getCurrentDateInIST() {
+        const currentDate = new Date();
+        const offset = currentDate.getTimezoneOffset(); // Get the timezone offset in minutes
+
+        // Adjust the current date to IST timezone (UTC+5:30)
+        const ISTOffset = 330; // Offset in minutes for IST (5 hours 30 minutes)
+        const currentISTTime = new Date(currentDate.getTime() + (offset + ISTOffset) * 60000); // Convert offset to milliseconds
+
+        return currentISTTime.toISOString().split('T')[0]; // Return date in YYYY-MM-DD format
+    }
 
     try {
         // Retrieve payment method
@@ -610,8 +622,7 @@ document.getElementById("printButton").addEventListener("click", async function 
         const invoiceNo = document.getElementById("invoiceNo").value;
 
         // Get current date
-        const currentDate = new Date();
-        const invoiceDate = currentDate.toISOString().split('T')[0];
+        const invoiceDate = getCurrentDateInIST();
 
         // Get invoice summary
         const totalAmount = document.getElementById("totalAmount").value;
@@ -780,7 +791,7 @@ document.getElementById("resetButton").addEventListener("click", function () {
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
- 
+
 function showToast(message, isError) {
     const toastContainer = document.getElementById("toast-container");
 
