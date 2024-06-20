@@ -44,48 +44,45 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("input", calculateBookPurchasePrice);
 });
 
-
-
 /////////////// Class Dropdown ////////////////
 // Function to toggle dropdown visibility
 function toggleDropdown() {
-  const dropdown = document.querySelector('.dropdown-options');
-  dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+  const dropdown = document.querySelector(".dropdown-options");
+  dropdown.style.display =
+    dropdown.style.display === "block" ? "none" : "block";
 }
 
 // Event listeners for options
-document.querySelectorAll('.option').forEach(option => {
-  option.addEventListener('click', function (event) {
-    if (!this.classList.contains('has-submenu')) {
+document.querySelectorAll(".option").forEach((option) => {
+  option.addEventListener("click", function (event) {
+    if (!this.classList.contains("has-submenu")) {
       const selectedText = this.textContent.trim();
-      document.querySelector('.dropdown-selected').textContent = selectedText;
-      document.getElementById('bookClass').value = this.dataset.value;
-      document.querySelector('.dropdown-options').style.display = 'none'; // Hide dropdown
+      document.querySelector(".dropdown-selected").textContent = selectedText;
+      document.getElementById("bookClass").value = this.dataset.value;
+      document.querySelector(".dropdown-options").style.display = "none"; // Hide dropdown
     }
   });
 });
 
 // Event listeners for sub-options
-document.querySelectorAll('.submenu-option').forEach(subOption => {
-  subOption.addEventListener('click', function (event) {
+document.querySelectorAll(".submenu-option").forEach((subOption) => {
+  subOption.addEventListener("click", function (event) {
     const selectedText = this.textContent.trim();
-    document.querySelector('.dropdown-selected').textContent = selectedText;
-    document.getElementById('bookClass').value = this.dataset.value;
-    document.querySelector('.dropdown-options').style.display = 'none'; // Hide dropdown
+    document.querySelector(".dropdown-selected").textContent = selectedText;
+    document.getElementById("bookClass").value = this.dataset.value;
+    document.querySelector(".dropdown-options").style.display = "none"; // Hide dropdown
     event.stopPropagation();
   });
 });
 
 // Event listener to hide dropdown when clicking outside
-document.addEventListener('click', function (event) {
-  const dropdown = document.querySelector('.dropdown-options');
-  const customDropdown = document.getElementById('customDropdown');
+document.addEventListener("click", function (event) {
+  const dropdown = document.querySelector(".dropdown-options");
+  const customDropdown = document.getElementById("customDropdown");
   if (!customDropdown.contains(event.target)) {
-    dropdown.style.display = 'none';
+    dropdown.style.display = "none";
   }
 });
-
-
 
 //////////////////////////////////
 
@@ -97,8 +94,17 @@ document.addEventListener("DOMContentLoaded", function () {
   if (booksform) {
     // Add submit event listener to the form
     booksform.addEventListener("submit", async function (event) {
+      const bookClassValue = document.getElementById("bookClass").value;
+      // Get the uniform item and size from the form
+      const bookItem = document.getElementById('bookTitle').value;
 
-      const bookClassValue = document.getElementById('bookClass').value;
+      // Validate uniform item and size for commas
+      if (bookItem.includes(',') ) {
+        event.preventDefault();
+        hideBooksLoadingAnimation();
+          showToast('Book name should not contain a comma', 'red');
+          return;
+      }
 
       // Check if the bookClass field is empty
       if (!bookClassValue) {
@@ -184,17 +190,17 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function resetDropdown() {
-  document.querySelector('.dropdown-selected').textContent = "Class";
-  document.getElementById('bookClass').value = "";
-  document.querySelector('.dropdown-options').style.display = 'none';
+  document.querySelector(".dropdown-selected").textContent = "Class";
+  document.getElementById("bookClass").value = "";
+  document.querySelector(".dropdown-options").style.display = "none";
 }
 
-document.querySelectorAll('.submenu-option').forEach(subOption => {
-  subOption.addEventListener('click', function (event) {
+document.querySelectorAll(".submenu-option").forEach((subOption) => {
+  subOption.addEventListener("click", function (event) {
     const selectedText = this.textContent.trim();
-    document.querySelector('.dropdown-selected').textContent = selectedText;
-    document.getElementById('bookClass').value = this.dataset.value;
-    document.querySelector('.dropdown-options').style.display = 'none'; // Hide dropdown
+    document.querySelector(".dropdown-selected").textContent = selectedText;
+    document.getElementById("bookClass").value = this.dataset.value;
+    document.querySelector(".dropdown-options").style.display = "none"; // Hide dropdown
     event.stopPropagation();
   });
 });
@@ -268,7 +274,7 @@ function displayBooks(data) {
 
     if (data.length === 0) {
       hideBooksLoadingAnimation();
-      const noResultsRow = document.createElement('tr');
+      const noResultsRow = document.createElement("tr");
       noResultsRow.innerHTML = '<td colspan="9">No results found</td>';
       bookTableBody.appendChild(noResultsRow);
     } else {
@@ -387,7 +393,6 @@ function displayBooks(data) {
   }
 }
 
-
 // Function to delete a book
 async function deleteBook(title) {
   const confirmation = confirm(
@@ -421,6 +426,7 @@ async function deleteBook(title) {
 
 // Function to update a book
 async function updateBook(title) {
+  showBooksLoadingAnimation();
   await fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`) // Assuming you have modified the endpoint to retrieve both ordered_quantity and remaining_quantity
     .then((response) => {
       if (!response.ok) {
@@ -433,7 +439,7 @@ async function updateBook(title) {
       let remainingQuantity = data.remaining_quantity;
       let class_of_title = data.class_of_title;
       let newOrderedQuantity = 0;
-
+      hideBooksLoadingAnimation();
       // Create custom prompt
       const customPrompt = document.createElement("div");
       customPrompt.classList.add("custom-prompt");
@@ -503,6 +509,7 @@ async function updateBook(title) {
       // Add event listener to confirm button
       const confirmButton = customPrompt.querySelector("#confirmButton");
       confirmButton.addEventListener("click", () => {
+        showBooksLoadingAnimation();
         // Get the new ordered quantity from the input field
         newOrderedQuantity =
           parseInt(customPrompt.querySelector("#newQuantityInput").value, 10) ||
@@ -549,8 +556,12 @@ async function updateBook(title) {
 }
 
 // Function to update ordered quantity on the server
-async function updateBookOrderedQuantity(title, totalOrder, newRemainingQuantity) {
-  showBooksLoadingAnimation();
+async function updateBookOrderedQuantity(
+  title,
+  totalOrder,
+  newRemainingQuantity
+) {
+  // showBooksLoadingAnimation();
   await fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`, {
     method: "PUT",
     headers: {
@@ -584,6 +595,7 @@ async function updateBookOrderedQuantity(title, totalOrder, newRemainingQuantity
 
 // Function to return a book
 async function returnBook(title) {
+  showBooksLoadingAnimation();
   let newRemainingQuantity; // Declare newRemainingQuantity here
 
   await fetch(`/inventory/books/${encodeURIComponent(title)}/quantity`)
@@ -599,7 +611,7 @@ async function returnBook(title) {
       let returnedQuantity = data.returned_quantity;
 
       newRemainingQuantity = remainingQuantity; // Initialize newRemainingQuantity here
-
+      hideBooksLoadingAnimation();
       // Create custom prompt
       const customPrompt = document.createElement("div");
       customPrompt.classList.add("custom-prompt");
@@ -667,6 +679,7 @@ async function returnBook(title) {
       // Add event listener to confirm button
       const confirmButton = customPrompt.querySelector("#confirmButton");
       confirmButton.addEventListener("click", () => {
+        showBooksLoadingAnimation();
         // Get the return quantity from the input field
         let userReturnedQuantity =
           parseInt(
@@ -716,8 +729,12 @@ async function returnBook(title) {
 }
 
 // Function to update ordered quantity on the server
-async function returnBookQuantity(title, returnedQuantity, newRemainingQuantity) {
-  showBooksLoadingAnimation();
+async function returnBookQuantity(
+  title,
+  returnedQuantity,
+  newRemainingQuantity
+) {
+  // showBooksLoadingAnimation();
   await fetch(`/inventory/return_books/${encodeURIComponent(title)}/quantity`, {
     method: "PUT",
     headers: {
@@ -764,7 +781,9 @@ async function searchBookDetails() {
   }
 
   // Fetch data from the server based on the search term
-  await fetch(`/inventory/books/search?search=${encodeURIComponent(searchTerm)}`)
+  await fetch(
+    `/inventory/books/search?search=${encodeURIComponent(searchTerm)}`
+  )
     .then((response) => response.json())
     .then((data) => {
       const booksTableBody = document.getElementById("booksTableBody");
@@ -898,65 +917,95 @@ async function searchBookDetails() {
 
 async function showBookUpdateModal(sr_no) {
   try {
+    showBooksLoadingAnimation();
     // Fetch book details by sr_no
-    const response = await fetch(`/inventory/books/${encodeURIComponent(sr_no)}`);
+    const response = await fetch(
+      `/inventory/books/${encodeURIComponent(sr_no)}`
+    );
     if (!response.ok) {
-      throw new Error('Failed to retrieve book details.');
+      throw new Error("Failed to retrieve book details.");
     }
 
     const data = await response.json();
-
+    hideBooksLoadingAnimation();
     // Create the custom prompt
-    const customPrompt = document.createElement('div');
-    customPrompt.classList.add('custom-prompt2');
+    const customPrompt = document.createElement("div");
+    customPrompt.classList.add("custom-prompt2");
 
     // Populate the prompt with book details
     customPrompt.innerHTML = `
       <div class="prompt-content">
         <h2>Update Book</h2>
-        <p>Title:</p>
-        <input type="text" class="form-control" id="titleInput" value="${data.title}" required>
-        <p>Class of Title:</p>
-        <select id="classOfTitleInput" class="form-control" required>
-          <option value="${data.class_of_title}" selected>${data.class_of_title}</option>
-          <!-- List of other options -->
-          <option value="Nursery to KG2">Nursery to KG2</option>
-          <option value="Nursery to 4th">Nursery to 4th</option>
-          <option value="1st to 4th">1st to 4th</option>
-          <option value="5th to 10th">5th to 10th</option>
-          <option value="1st to 10th">1st to 10th</option>
-          <option value="All Class">All Class</option>
-          <option value="Nursery">Nursery</option>
-          <option value="KG1">KG1</option>
-          <option value="KG2">KG2</option>
-          <option value="1st">1st</option>
-          <option value="2nd">2nd</option>
-          <option value="3rd">3rd</option>
-          <option value="4th">4th</option>
-          <option value="5th">5th</option>
-          <option value="6th">6th</option>
-          <option value="7th">7th</option>
-          <option value="8th">8th</option>
-          <option value="9th">9th</option>
-          <option value="10th">10th</option>
-        </select>
-        <p>Selling Price:</p>
-        <input type="number" class="form-control" id="sellingPriceInput" value="${data.selling_price}" required>
+       
+       <div class="form-group">
+    <input type="text" class="form-control" id="titleInput" value="${data.title}" required style="width:6rem;text-align: center;" placeholder=" ">
+    <span class="form-control-placeholder">Title</span>
+</div>
 
-        <p>% Margin:</p>
-        <input type="number" class="form-control" id="percentMarginInput" value="" required>
+        
+        <div class="form-group">
+    <select id="classOfTitleInput" class="form-control" required style="width: 10rem; text-align: center;" placeholder=" ">
+        <option value="${data.class_of_title}" selected>${data.class_of_title}</option>
+        <!-- List of other options -->
+        <option value="Nursery to KG2">Nursery to KG2</option>
+        <option value="Nursery to 4th">Nursery to 4th</option>
+        <option value="1st to 4th">1st to 4th</option>
+        <option value="5th to 10th">5th to 10th</option>
+        <option value="1st to 10th">1st to 10th</option>
+        <option value="All Class">All Class</option>
+        <option value="Nursery">Nursery</option>
+        <option value="KG1">KG1</option>
+        <option value="KG2">KG2</option>
+        <option value="1st">1st</option>
+        <option value="2nd">2nd</option>
+        <option value="3rd">3rd</option>
+        <option value="4th">4th</option>
+        <option value="5th">5th</option>
+        <option value="6th">6th</option>
+        <option value="7th">7th</option>
+        <option value="8th">8th</option>
+        <option value="9th">9th</option>
+        <option value="10th">10th</option>
+    </select>
+    <span class="form-control-placeholder">Class of Title</span>
+</div>
 
-        <p>Purchase Price:</p>
-        <input type="number" class="form-control" id="purchasePriceInput" value="${data.purchase_price}" readonly required>
+       
+      <div class="form-group">
+    <input type="number" class="form-control" id="sellingPriceInput" value="${data.selling_price}" required style="width:6rem; text-align: center;" placeholder=" ">
+    <span class="form-control-placeholder">Selling Price</span>
+</div>
 
-        <button id="saveButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;">
-          <img src="../images/conform.png" alt="Save" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-          <span style="margin-right: 10px;">Save</span>
-        </button>
-        <button id="cancelButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;">
-          <img src="../images/cancel.png" alt="Cancel" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-          <span style="margin-right: 10px;">Cancel</span>
-        </button>
+       
+       <div class="form-group">
+    <input type="number" class="form-control" id="percentMarginInput" value="" required style="width:6rem; text-align: center;" placeholder=" ">
+    <span class="form-control-placeholder">Percent Margin</span>
+</div>
+
+
+        
+        <div class="form-group">
+    <input type="number" class="form-control" id="purchasePriceInput" value="${data.purchase_price}" readonly required style="width: 6rem; text-align: center;">
+    <span class="form-control-placeholder">Purchase Price</span>
+</div>
+
+
+        <button id="saveButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+        onclick="saveVendor()"
+        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+    <img src="../images/conform.png" alt="Save" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+    <span style="margin-right: 10px;">Save</span>
+</button>
+
+<button id="cancelButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+        onclick="cancelVendor()"
+        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+    <img src="../images/cancel.png" alt="Cancel" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+    <span style="margin-right: 10px;">Cancel</span>
+</button>
+
       </div>
     `;
 
@@ -964,12 +1013,18 @@ async function showBookUpdateModal(sr_no) {
 
     // Function to calculate margin percentage
     function calculateMarginPercentage() {
-      const sellingPrice = parseFloat(document.getElementById("sellingPriceInput").value);
-      const purchasePrice = parseFloat(document.getElementById("purchasePriceInput").value);
+      const sellingPrice = parseFloat(
+        document.getElementById("sellingPriceInput").value
+      );
+      const purchasePrice = parseFloat(
+        document.getElementById("purchasePriceInput").value
+      );
 
       if (!isNaN(sellingPrice) && !isNaN(purchasePrice) && sellingPrice !== 0) {
-        const marginPercentage = ((sellingPrice - purchasePrice) / sellingPrice) * 100;
-        document.getElementById("percentMarginInput").value = marginPercentage.toFixed(2);
+        const marginPercentage =
+          ((sellingPrice - purchasePrice) / sellingPrice) * 100;
+        document.getElementById("percentMarginInput").value =
+          marginPercentage.toFixed(2);
       } else {
         document.getElementById("percentMarginInput").value = "";
       }
@@ -977,105 +1032,146 @@ async function showBookUpdateModal(sr_no) {
 
     // Function to calculate purchase price
     function calculatePurchasePrice() {
-      const sellingPrice = parseFloat(document.getElementById("sellingPriceInput").value);
-      const marginPercentage = parseFloat(document.getElementById("percentMarginInput").value);
+      const sellingPrice = parseFloat(
+        document.getElementById("sellingPriceInput").value
+      );
+      const marginPercentage = parseFloat(
+        document.getElementById("percentMarginInput").value
+      );
 
       if (!isNaN(sellingPrice) && !isNaN(marginPercentage)) {
-        const purchasePrice = sellingPrice - (sellingPrice * (marginPercentage / 100));
-        document.getElementById("purchasePriceInput").value = purchasePrice.toFixed(2);
+        const purchasePrice =
+          sellingPrice - sellingPrice * (marginPercentage / 100);
+        document.getElementById("purchasePriceInput").value =
+          purchasePrice.toFixed(2);
       } else {
         document.getElementById("purchasePriceInput").value = "";
       }
     }
 
     // Attach event listeners to the input fields after the overlay is shown
-    document.getElementById("sellingPriceInput").addEventListener("input", calculatePurchasePrice);
-    document.getElementById("percentMarginInput").addEventListener("input", calculatePurchasePrice);
-    
+    document
+      .getElementById("sellingPriceInput")
+      .addEventListener("input", calculatePurchasePrice);
+    document
+      .getElementById("percentMarginInput")
+      .addEventListener("input", calculatePurchasePrice);
+
     // Initial calculation on overlay display if values are already present
     calculateMarginPercentage();
 
-    const saveButton = customPrompt.querySelector('#saveButton');
-    const cancelButton = customPrompt.querySelector('#cancelButton');
+    const saveButton = customPrompt.querySelector("#saveButton");
+    const cancelButton = customPrompt.querySelector("#cancelButton");
 
-    saveButton.addEventListener('click', async () => {
-      const updatedTitle = customPrompt.querySelector('#titleInput').value;
-      const updatedClassOfTitle = customPrompt.querySelector('#classOfTitleInput').value;
-      const updatedPurchasePrice = parseFloat(customPrompt.querySelector('#purchasePriceInput').value);
-      const updatedSellingPrice = parseFloat(customPrompt.querySelector('#sellingPriceInput').value);
+    saveButton.addEventListener("click", async () => {
+      showBooksLoadingAnimation();
+      customPrompt.remove();
+      const updatedTitle = customPrompt.querySelector("#titleInput").value;
+      const updatedClassOfTitle =
+        customPrompt.querySelector("#classOfTitleInput").value;
+      const updatedPurchasePrice = parseFloat(
+        customPrompt.querySelector("#purchasePriceInput").value
+      );
+      const updatedSellingPrice = parseFloat(
+        customPrompt.querySelector("#sellingPriceInput").value
+      );
 
       // Validate if book with same details already exists
-      if (await isDuplicateBook(updatedTitle, updatedClassOfTitle, updatedPurchasePrice, updatedSellingPrice, sr_no)) {
-        showToast('A book with the same title, class, purchase and selling price already exists.', true);
+      if (
+        await isDuplicateBook(
+          updatedTitle,
+          updatedClassOfTitle,
+          updatedPurchasePrice,
+          updatedSellingPrice,
+          sr_no
+        )
+      ) {
+        hideBooksLoadingAnimation();
+        showToast(
+          "A book with the same title, class, purchase and selling price already exists.",
+          true
+        );
         return;
       }
 
       // Validate if a book with the same title already exists
-      if (await isTitleDuplicate(updatedTitle, sr_no)) {
-        showToast('A book with the same title already exists.', true);
+      const originalTitle = data.title; // assuming data.title contains the original title fetched from the server
+      if (
+        updatedTitle !== originalTitle &&
+        (await isTitleDuplicate(updatedTitle, sr_no))
+      ) {
+        hideBooksLoadingAnimation();
+        showToast("A book with the same title already exists.", true);
         return;
       }
 
-      customPrompt.remove();
-      showBooksLoadingAnimation();
-
       try {
         // Update the book details by sr_no
-        const response = await fetch(`/inventory/books/${encodeURIComponent(sr_no)}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            newTitle: updatedTitle,
-            class_of_title: updatedClassOfTitle,
-            purchase_price: updatedPurchasePrice,
-            selling_price: updatedSellingPrice
-          })
-        });
+        const response = await fetch(
+          `/inventory/books/${encodeURIComponent(sr_no)}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              newTitle: updatedTitle,
+              class_of_title: updatedClassOfTitle,
+              purchase_price: updatedPurchasePrice,
+              selling_price: updatedSellingPrice,
+            }),
+          }
+        );
 
         if (!response.ok) {
-          throw new Error('Failed to update book details.');
+          throw new Error("Failed to update book details.");
         }
 
-        showToast('Book details updated successfully', false);
+        showToast("Book details updated successfully", false);
         await refreshbooksData();
         hideBooksLoadingAnimation();
-
       } catch (error) {
-        console.error('Error updating book details:', error);
-        showToast('Failed to update book details', true);
+        console.error("Error updating book details:", error);
+        showToast("Failed to update book details", true);
         hideBooksLoadingAnimation();
       }
     });
 
-    cancelButton.addEventListener('click', () => {
+    cancelButton.addEventListener("click", () => {
       customPrompt.remove();
     });
   } catch (error) {
-    console.error('Error:', error);
+    console.error("Error:", error);
     hideBooksLoadingAnimation();
   }
 }
 // Helper function to check for duplicate book
-async function isDuplicateBook(title, classOfTitle, purchasePrice, sellingPrice, sr_no) {
+async function isDuplicateBook(
+  title,
+  classOfTitle,
+  purchasePrice,
+  sellingPrice,
+  sr_no
+) {
   try {
-    const response = await fetch('/inventory/books');
+    const response = await fetch("/inventory/books");
     if (!response.ok) {
-      throw new Error('Failed to fetch books.');
+      throw new Error("Failed to fetch books.");
     }
 
     const books = await response.json();
 
-    return books.some(book =>
-      book.title.trim().toLowerCase() === title.trim().toLowerCase() &&
-      book.class_of_title.trim().toLowerCase() === classOfTitle.trim().toLowerCase() &&
-      book.purchase_price === purchasePrice &&
-      book.selling_price === sellingPrice &&
-      book.sr_no !== sr_no  // Exclude the book being edited
+    return books.some(
+      (book) =>
+        book.title.trim().toLowerCase() === title.trim().toLowerCase() &&
+        book.class_of_title.trim().toLowerCase() ===
+          classOfTitle.trim().toLowerCase() &&
+        book.purchase_price === purchasePrice &&
+        book.selling_price === sellingPrice &&
+        book.sr_no !== sr_no // Exclude the book being edited
     );
   } catch (error) {
-    console.error('Error checking for duplicate book:', error);
+    console.error("Error checking for duplicate book:", error);
     return false;
   }
 }
@@ -1083,19 +1179,20 @@ async function isDuplicateBook(title, classOfTitle, purchasePrice, sellingPrice,
 // Helper function to check for duplicate book title
 async function isTitleDuplicate(title, sr_no) {
   try {
-    const response = await fetch('/inventory/books');
+    const response = await fetch("/inventory/books");
     if (!response.ok) {
-      throw new Error('Failed to fetch books.');
+      throw new Error("Failed to fetch books.");
     }
 
     const books = await response.json();
 
-    return books.some(book =>
-      book.title.trim().toLowerCase() === title.trim().toLowerCase() &&
-      book.sr_no !== sr_no  // Exclude the book being edited
+    return books.some(
+      (book) =>
+        book.title.trim().toLowerCase() === title.trim().toLowerCase() &&
+        book.sr_no !== sr_no // Exclude the book being edited
     );
   } catch (error) {
-    console.error('Error checking for duplicate title:', error);
+    console.error("Error checking for duplicate title:", error);
     return false;
   }
 }
@@ -1117,8 +1214,6 @@ async function refreshbooksData() {
     hideBooksLoadingAnimation();
   }
 }
-
-
 
 // Call refreshData initially to fetch and display book data when the page is loaded
 refreshbooksData();

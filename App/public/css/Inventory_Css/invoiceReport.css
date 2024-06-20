@@ -325,11 +325,14 @@ body {
 }
 
 .table-container {
-    max-height: calc(115%); /* Set maximum height for the table container */
+    display: block;
+    height: calc(100vh - 20rem); /* Takes the full viewport height minus 1rem padding */
     overflow-y: auto;
-    margin-top: 0.725rem; /* Set margin between the table container and overlay content */
-    border-radius: 10px;  
-   
+    border: 1px solid #ddd; /* Optional: Add a border around the scrollable area */
+    animation: fadeUp 0.5s ease-out; /* Apply the fade-up animation */
+    border-radius: 10px 10px 0 0; /* Apply border-radius to top corners */
+    box-sizing: border-box; /* Ensure padding and border are included in the height */
+    margin-right: 2rem;
 }
 
 #invoice-table {

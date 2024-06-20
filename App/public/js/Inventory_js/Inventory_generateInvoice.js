@@ -238,6 +238,13 @@ document.getElementById("generateButton").addEventListener("click", async functi
         return; // Stop execution if validation fails
     }
 
+    // Validate mobile number length
+    if (!paymentMethod) {
+        hideInventoryLoadingAnimation();
+        showToast("Please select a payment method", true);
+        return; // Stop execution if validation fails
+    }
+
     // Send a request to the server to check if the buyer exists for the given class
     try {
         const response = await fetch("/inventory/generate_invoice/check_buyer", {
@@ -256,16 +263,10 @@ document.getElementById("generateButton").addEventListener("click", async functi
                 // Show a toast message indicating that the buyer already exists
                 showToast("Invoice for this name already exists", 'red');
             } else {
-                hideInventoryLoadingAnimation();
-                // Check if the payment method is selected
-                if (!paymentMethod) {
-                    showToast("Please select a payment method", true);
-                    return;
-                } else {
-                    // Buyer does not exist for the given class
-                    // Proceed with generating the bill
-                    lowStockCheck(); // Assuming lowStockCheck() is the function to generate the invoice
-                }
+                // hideInventoryLoadingAnimation();
+                // Buyer does not exist for the given class
+                // Proceed with generating the bill
+                lowStockCheck(); // Assuming lowStockCheck() is the function to generate the invoice
             }
         } else {
             throw new Error("Error checking buyer");
@@ -279,7 +280,7 @@ document.getElementById("generateButton").addEventListener("click", async functi
 
 
 // Determine payment status
-let paymentStatus = '';
+let invoiceStatus = '';
 let badgeClass = '';
 
 async function lowStockCheck() {
@@ -312,6 +313,7 @@ async function lowStockCheck() {
 
     // If both Books and Uniforms arrays are empty, show a toast and return
     if (Books.length === 0 && Uniforms.length === 0) {
+        hideInventoryLoadingAnimation();
         showToast('No items to check in inventory!', 'red');
         return;
     }
@@ -338,9 +340,11 @@ async function lowStockCheck() {
             dataBooks.forEach((book, index) => {
                 const enteredQuantity = Books[index].quantity;
                 if (book.remaining_quantity < 10) {
+                    // hideInventoryLoadingAnimation();
                     lowStockMessagesBooks.push(`${book.title}: ${book.remaining_quantity} remaining`);
                 }
                 if (book.remaining_quantity === 0 || book.remaining_quantity < enteredQuantity) {
+                    // hideInventoryLoadingAnimation();
                     zeroQuantity = true;
                     insufficientItemsBooks.push(`${book.title}: Entered ${enteredQuantity}, Available ${book.remaining_quantity}`);
                 }
@@ -362,9 +366,11 @@ async function lowStockCheck() {
             dataUniforms.forEach((uniform, index) => {
                 const enteredQuantity = Uniforms[index].quantity;
                 if (uniform.remaining_quantity < 10) {
+                    // hideInventoryLoadingAnimation();
                     lowStockMessagesUniforms.push(`${uniform.uniform_item} (${uniform.size_of_item}): ${uniform.remaining_quantity} remaining`);
                 }
                 if (uniform.remaining_quantity === 0 || uniform.remaining_quantity < enteredQuantity) {
+                    // hideInventoryLoadingAnimation();
                     zeroQuantity = true;
                     insufficientItemsUniforms.push(`${uniform.uniform_item} (${uniform.size_of_item}): Entered ${enteredQuantity}, Available ${uniform.remaining_quantity}`);
                 }
@@ -373,6 +379,7 @@ async function lowStockCheck() {
 
         // Show a single alert with all low-stock messages and insufficient items
         if (lowStockMessagesBooks.length > 0 || lowStockMessagesUniforms.length > 0 || insufficientItemsBooks.length > 0 || insufficientItemsUniforms.length > 0) {
+            hideInventoryLoadingAnimation();
             showLowStockAlert(
                 lowStockMessagesBooks.join('<br>'),
                 lowStockMessagesUniforms.join('<br>'),
@@ -441,6 +448,7 @@ function showLowStockAlert(bookMessage, uniformMessage, insufficientBooksMessage
     }
 
     proceedBtn.onclick = function () {
+        showInventoryLoadingAnimation();
         if (!zeroQuantity) {
             modal.style.display = 'none';
             generateBill_test();  // Call generateBill() when Proceed is clicked
@@ -459,7 +467,6 @@ function showLowStockAlert(bookMessage, uniformMessage, insufficientBooksMessage
 function generateBill_test() {
     const initialImage = document.querySelector('dotlottie-player');
     const billContainer = document.getElementById('invoiceDetails');
-
     // Hide the initial image
     initialImage.style.display = 'none';
 
@@ -544,9 +551,9 @@ function generateBill_test() {
     // Fetch and populate buyer details in the bill
     const buyerDetails = document.querySelector('#invoiceDetails .buyer-details');
     const buyerDetailsList = buyerDetails.querySelectorAll('ul li');
-    buyerDetailsList[0].innerHTML = `<i class="fa-solid fa-user" style="color: #74C0FC;"></i><strong>Name:</strong>: ${buyerName}`;
-    buyerDetailsList[1].innerHTML = `<i class="fa-solid fa-phone" style="color: #74C0FC;"></i> <strong>Phone:</strong>: ${buyerMobile}`;
-    buyerDetailsList[2].innerHTML = `<i class="fa-solid fa-graduation-cap" style="color: #74C0FC;"></i> <strong>Class:</strong>: ${buyerClass}`;
+    buyerDetailsList[0].innerHTML = `<i class="fa-solid fa-user" style="color: #74C0FC;"></i><strong style="margin-left: 7px;">Name:</strong> ${buyerName}`;
+    buyerDetailsList[1].innerHTML = `<i class="fa-solid fa-phone" style="color: #74C0FC;"></i> <strong>Phone:</strong> ${buyerMobile}`;
+    buyerDetailsList[2].innerHTML = `<i class="fa-solid fa-graduation-cap" style="color: #74C0FC;"></i> <strong>Class:</strong> ${buyerClass}`;
 
     // Fetch and populate invoice details in the bill
     const invoiceNo = document.getElementById('invoiceNo').value;
@@ -554,28 +561,28 @@ function generateBill_test() {
     const formattedDate = currentDate.toLocaleDateString('en-GB'); // Format as 'DD/MM/YYYY'
 
     // Determine invoice status based on amount paid and balance amount
-    let invoiceStatus;
-    let statusIcon;    
+    
+    let statusIcon;
 
     if (amountPaid === 0) {
         invoiceStatus = 'Unpaid';
-        statusIcon = '<i class="fa-solid fa-ban" style="color: #d00b0b;"></i>';        
+        statusIcon = '<i class="fa-solid fa-ban" style="color: #d00b0b;"></i>';
     } else if (balanceAmount !== 0) {
         invoiceStatus = 'Balance';
-        statusIcon = '<i class="fa-solid fa-triangle-exclamation" style="color: #e60f0f;"></i>';       
+        statusIcon = '<i class="fa-solid fa-triangle-exclamation" style="color: #e60f0f;"></i>';
     } else if (balanceAmount === 0) {
         invoiceStatus = 'Paid';
-        statusIcon = '<i class="fa-regular fa-circle-check" style="color: #63E6BE;margin-right: 5px"></i>';       
+        statusIcon = '<i class="fa-regular fa-circle-check" style="color: #63E6BE;margin-right: 5px"></i>';
     }
 
     const invoiceDetails = document.querySelector('#invoiceDetails .invoice-details');
     const invoiceDetailsList = invoiceDetails.querySelectorAll('ul li');
-    invoiceDetailsList[0].innerHTML = `<i class="fa-regular fa-calendar-days" style="color: #B197FC;margin-right: 5px"></i><strong>Date: </strong> ${formattedDate}`;
-    invoiceDetailsList[1].innerHTML = `${statusIcon}<strong>Status: </strong> ${invoiceStatus}`;
+    invoiceDetailsList[0].innerHTML = `<i class="fa-regular fa-calendar-days" style="color: #B197FC;margin-right: 5px"></i><strong style="margin-right: 4px;">Date:</strong>  ${formattedDate}`;
+    invoiceDetailsList[1].innerHTML = `${statusIcon}<strong style="margin-right: 4px;">Status:</strong> ${invoiceStatus}`;
 
     // Populate Invoice Number in HTML
     document.getElementById('invoiceNumberDisplay').textContent = `Invoice No: #${invoiceNo}`;
-
+    hideInventoryLoadingAnimation();
     return true;
 }
 
@@ -590,13 +597,25 @@ function generateBill_test() {
 
 
 document.getElementById("printButton").addEventListener("click", async function () {
-    // Add validation to execute this only when the bill is generated i.e. displayed on the front-end
-   /* if (invoiceStatus === '') {
-        showToast("Please generate the bill first", true);
-        return;
-    }*/
+    // // Add validation to execute this only when the bill is generated i.e. displayed on the front-end
+    if (invoiceStatus === '') {
+        //  showToast("Please generate the bill first", true);
+         return;
+     }
 
     showInventoryLoadingAnimation();
+
+    // Function to get current date in local time (IST)
+    function getCurrentDateInIST() {
+        const currentDate = new Date();
+        const offset = currentDate.getTimezoneOffset(); // Get the timezone offset in minutes
+
+        // Adjust the current date to IST timezone (UTC+5:30)
+        const ISTOffset = 330; // Offset in minutes for IST (5 hours 30 minutes)
+        const currentISTTime = new Date(currentDate.getTime() + (offset + ISTOffset) * 60000); // Convert offset to milliseconds
+
+        return currentISTTime.toISOString().split('T')[0]; // Return date in YYYY-MM-DD format
+    }
 
     try {
         // Retrieve payment method
@@ -610,8 +629,7 @@ document.getElementById("printButton").addEventListener("click", async function 
         const invoiceNo = document.getElementById("invoiceNo").value;
 
         // Get current date
-        const currentDate = new Date();
-        const invoiceDate = currentDate.toISOString().split('T')[0];
+        const invoiceDate = getCurrentDateInIST();
 
         // Get invoice summary
         const totalAmount = document.getElementById("totalAmount").value;
@@ -708,7 +726,6 @@ document.getElementById("printButton").addEventListener("click", async function 
         setTimeout(() => {
             window.location.reload();
         }, 1000); // Match the duration of the toast message
-
         printInvoice(); // PRINT THE BILL WHEN ALL OPERATIONS ARE SUCCESSFULLY COMPLETED //
 
     } catch (error) {
@@ -720,20 +737,40 @@ document.getElementById("printButton").addEventListener("click", async function 
 });
 
 function printInvoice() {
+    if (invoiceStatus === '') {
+        showToast("Please generate the bill first", true);
+        return;
+    }else{
     // Get the invoice details container
     const invoiceDetails = document.getElementById('invoice');
 
     // Define the options for html2pdf
     const opt = {
-        margin: 1,
+        margin: 0,
         filename: 'invoice.pdf',
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
+
+    // Adjust the scaling factor to fit content to one page
+    const contentHeight = invoiceDetails.scrollHeight;
+    const a4Height = 297; // A4 height in mm
+    const scaleFactor = a4Height / (contentHeight * 0.264583); // Convert px to mm
+
+    // Apply CSS transform to scale the content
+    invoiceDetails.style.transform = `scale(${scaleFactor})`;
+    invoiceDetails.style.transformOrigin = 'top left';
+    invoiceDetails.style.width = `calc(210mm / ${scaleFactor})`;
+    invoiceDetails.style.height = `calc(297mm / ${scaleFactor})`;
 
     // Generate the PDF
     html2pdf().from(invoiceDetails).set(opt).outputPdf('blob').then(function (pdfBlob) {
+        // Reset the scaling after PDF generation
+        invoiceDetails.style.transform = '';
+        invoiceDetails.style.width = '';
+        invoiceDetails.style.height = '';
+
         // Create a URL for the PDF blob
         const pdfUrl = URL.createObjectURL(pdfBlob);
 
@@ -744,12 +781,14 @@ function printInvoice() {
         pdfWindow.onload = function () {
             pdfWindow.focus();
             pdfWindow.print();
+
+            // If you want the print window to only show 1 page in print preview,
+            // you can customize the print window settings here.
+            // Some browsers might require a manual step for advanced settings.
         };
     });
-
 }
-
-
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*****************************         RESET BUTTON FUNCTIONALITY       ************************/

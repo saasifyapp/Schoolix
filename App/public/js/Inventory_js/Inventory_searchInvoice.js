@@ -1,4 +1,4 @@
-let currentInvoice = null; 
+let currentInvoice = null;
 
 // Function to show the loading animation
 function showSearchInventoryLoadingAnimation() {
@@ -26,7 +26,7 @@ async function refreshInvoiceData() {
             noResultsRow.innerHTML = '<td colspan="10">No results found</td>';
             invoiceTable.appendChild(noResultsRow);
         } else {
-        displayInvoices(data);
+            displayInvoices(data);
         }
     } catch (error) {
         console.error('Error:', error);
@@ -35,6 +35,10 @@ async function refreshInvoiceData() {
 }
 
 function displayInvoices(data) {
+
+    // Reverse the data array
+    data.reverse();
+
     const invoiceTable = document.getElementById('invoiceTable');
     invoiceTable.innerHTML = ''; // Clear previous data
 
@@ -325,7 +329,7 @@ function filterByClass() {
                         month: '2-digit',
                         year: 'numeric'
                     });
-    
+
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${invoice.invoiceNo}</td>
@@ -456,9 +460,28 @@ async function submitUpdatedAmount() {
         return;
     }
 
+    // Function to get current date in local time (IST)
+    function getCurrentDateInIST() {
+        const currentDate = new Date();
+        const offset = currentDate.getTimezoneOffset(); // Get the timezone offset in minutes
+
+        // Adjust the current date to IST timezone (UTC+5:30)
+        const ISTOffset = 330; // Offset in minutes for IST (5 hours 30 minutes)
+        const currentISTTime = new Date(currentDate.getTime() + (offset + ISTOffset) * 60000); // Convert offset to milliseconds
+
+        return currentISTTime.toISOString().split('T')[0]; // Return date in YYYY-MM-DD format
+    }
+
+
+
     const newTotalPaidAmount = currentInvoice.paidAmount + newPaidAmount;
     const newBalanceAmount = currentInvoice.totalAmount - newTotalPaidAmount;
- 
+
+    // Get current date in IST
+    const invoiceDate = getCurrentDateInIST();
+
+
+
     try {
         showSearchInventoryLoadingAnimation();
         const response = await fetch('/inventory/updatePaidAmount', {
@@ -469,7 +492,9 @@ async function submitUpdatedAmount() {
             body: JSON.stringify({
                 invoiceNo: currentInvoice.invoiceNo,
                 paidAmount: newTotalPaidAmount,
-                balanceAmount: newBalanceAmount
+                balanceAmount: newBalanceAmount,
+                invoiceDate: invoiceDate // Include invoiceDate in the request body
+
             })
         });
 
@@ -510,46 +535,7 @@ window.onclick = function (event) {
 //     closeModal();
 // }
 
-// Print Invoice
-async function printInvoice(invoiceNo) {
-    try {
-        const response = await fetch(`/print-invoice/${invoiceNo}`);
-        const invoiceData = await response.json();
-        const printWindow = window.open('', '_blank');
-        printWindow.document.write(`<html><head><title>Invoice #${invoiceNo}</title><style>${getInvoiceStyles()}</style></head><body>${constructInvoiceHTML(invoiceData)}</body></html>`);
-        printWindow.document.close();
-        printWindow.print();
-    } catch (error) {
-        console.error('Error printing invoice:', error);
-    }
-}
 
-function getInvoiceStyles() {
-    // Define your CSS styles for the invoice here
-    return `
-        /* Example styles */
-        body { font-family: Arial, sans-serif; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #ddd; padding: 8px; }
-        th { background-color: #f2f2f2; }
-        .text-center { text-align: center; }
-    `;
-}
-
-function constructInvoiceHTML(invoiceData) {
-    // Construct HTML for displaying invoice data
-    let html = `
-        <div class="page-header text-blue-d2">
-            <h1 class="page-title text-secondary-d1">Invoice <small class="page-info"><i class="fa fa-angle-double-right text-80"></i> ID: #${invoiceData.invoiceNo}</small></h1>
-        </div>
-        <div class="container px-0">
-            <!-- Invoice data here -->
-        </div>
-    `;
-
-    // Add more HTML content using invoiceData
-    return html;
-}
 
 function showToast(message, isError) {
     const toastContainer = document.getElementById("toast-container");
@@ -577,11 +563,11 @@ function showToast(message, isError) {
     }, 4000);
 }
 
- ////////////////////////////// EXPORT TO EXCEL //////////////////////////////////////////////
+////////////////////////////// EXPORT TO EXCEL //////////////////////////////////////////////
 
 
 
- function exportToExcel() {
+function exportToExcel() {
 
     const selectedClass = document.getElementById('classFilter').value;
 
@@ -618,3 +604,230 @@ function showToast(message, isError) {
     // Trigger the download
     downloadLink.click();
 }
+
+
+
+
+
+// Print Invoice //
+
+
+/* function getInvoiceStyles() {
+    // Define your CSS styles for the invoice here
+    return `
+
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background-color: #f2f2f2; }
+        .text-center { text-align: center; }
+    `;
+}
+
+function constructInvoiceHTML(invoiceData) {
+    // Construct HTML for displaying invoice data
+    let html = `
+        <div class="page-header text-blue-d2">
+            <h1 class="page-title text-secondary-d1">Invoice <small class="page-info"><i class="fa fa-angle-double-right text-80"></i> ID: #${invoiceData.invoiceNo}</small></h1>
+        </div>
+        <div class="container px-0">
+            <!-- Invoice data here -->
+        </div>
+    `;
+
+    // Add more HTML content using invoiceData
+    return html;
+}*/
+
+/*
+async function printInvoice(invoiceNo) {
+    try {
+        const response = await fetch(`/print-invoice/${invoiceNo}`);
+        const invoiceData = await response.json();
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`<html><head><title>Invoice #${invoiceNo}</title><style>${getInvoiceStyles()}</style></head><body>${constructInvoiceHTML(invoiceData)}</body></html>`);
+        printWindow.document.close();
+        printWindow.print();
+    } catch (error) {
+        console.error('Error printing invoice:', error);
+    }
+}*/
+
+
+
+async function printInvoice(invoiceNo) {
+    try {
+        showSearchInventoryLoadingAnimation();
+        const response = await fetch(`/get_invoice/${invoiceNo}`);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch invoice details: ${response.status} ${response.statusText}`);
+        }
+        const invoiceData = await response.json();
+        console.log(invoiceData);
+        // Populate invoice details in HTML
+        populateInvoiceDetails(invoiceData);
+
+        // After successful population, open print window
+        printInvoiceWindow();
+    } catch (error) {
+        hideSearchInventoryLoadingAnimation();
+        console.error('Error generating bill:', error);
+        // Handle error as needed (e.g., show error message to user)
+    }
+}
+
+function populateInvoiceDetails(invoiceData) {
+    // Populate invoice header
+    document.getElementById('invoiceNumberDisplay').textContent = `Invoice No: #${invoiceData.invoiceDetails.invoiceNo}`;
+
+    // Populate buyer details
+    const buyerDetailsList = document.querySelectorAll('ul li');
+    // buyerDetailsList.innerHTML = `
+    //     <li>${invoiceData.invoiceDetails.buyerName}</li>
+    //     <li>${invoiceData.invoiceDetails.buyerPhone}</li>
+    //     <li>${invoiceData.invoiceDetails.class_of_buyer}</li>
+    // `;
+    buyerDetailsList[0].innerHTML = `<i class="fa-solid fa-user" style="color: #74C0FC;"></i><strong style="margin-left: 7px;">Name:</strong> ${invoiceData.invoiceDetails.buyerName}`;
+    buyerDetailsList[1].innerHTML = `<i class="fa-solid fa-phone" style="color: #74C0FC;"></i> <strong>Phone:</strong> ${invoiceData.invoiceDetails.buyerPhone}`;
+    buyerDetailsList[2].innerHTML = `<i class="fa-solid fa-graduation-cap" style="color: #74C0FC;"></i> <strong>Class:</strong> ${invoiceData.invoiceDetails.class_of_buyer}`;
+
+    // Extract the date part (YYYY-MM-DD) from the full date-time string
+    const fullDate = new Date(invoiceData.invoiceDetails.billDate);
+    const billDateFormatted = fullDate.toLocaleDateString('en-GB');
+
+
+    // Determine invoice status based on paid_amount and balance_amount
+    let invoiceStatusText = '';
+    let statusIcon;
+    if (invoiceData.invoiceDetails.paid_amount === 0) {
+        invoiceStatusText = 'Unpaid';
+        statusIcon = '<i class="fa-solid fa-ban" style="color: #d00b0b;"></i>';
+    } else if (invoiceData.invoiceDetails.balance_amount !== 0) {
+        invoiceStatusText = 'Balance';
+        statusIcon = '<i class="fa-solid fa-triangle-exclamation" style="color: #e60f0f;"></i>';
+    } else {
+        invoiceStatusText = 'Paid';
+        statusIcon = '<i class="fa-regular fa-circle-check" style="color: #63E6BE;margin-right: 5px"></i>';
+    }
+
+    const invoiceDetails = document.querySelector('#invoiceDetails .invoice-details');
+    const invoiceDetailsList = invoiceDetails.querySelectorAll('ul li');
+    invoiceDetailsList[0].innerHTML = `<i class="fa-regular fa-calendar-days" style="color: #B197FC;margin-right: 5px"></i><strong style="margin-right: 4px;">Date:</strong> ${billDateFormatted}`;
+    invoiceDetailsList[1].innerHTML = `${statusIcon}<strong style="margin-right: 4px;">Status:</strong> ${invoiceStatusText}`;
+
+    // Populate bill items table
+    const billTableBody = document.getElementById('billTableBody');
+    billTableBody.innerHTML = ''; // Clear previous items
+
+    invoiceData.invoiceItems.forEach((item, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td style="padding: 8px; border: 1px solid #dee2e6;">${index + 1}</td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">${item.item_name || ''}</td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">${(item.purchase_price != null ? item.purchase_price.toFixed(2) : '0.00')}</td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">${item.quantity || 0}</td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">${(item.total != null ? item.total.toFixed(2) : '0.00')}</td>
+        `;
+        billTableBody.appendChild(row);
+    });
+
+    // Populate total amounts
+    document.getElementById('totalAmountDisplay').textContent = invoiceData.invoiceDetails.total_payable.toFixed(2);
+    document.getElementById('amountPaidDisplay').textContent = invoiceData.invoiceDetails.paid_amount.toFixed(2);
+    document.getElementById('balanceAmountDisplay').textContent = invoiceData.invoiceDetails.balance_amount.toFixed(2);
+}
+
+
+// function printInvoiceWindow() {
+//     // Open a new window for printing
+//     const printWindow = window.open('', '_blank');
+//     printWindow.document.write('<html><head><title>Print Invoice</title>');
+
+//     // Include external CSS files
+//     printWindow.document.write('<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">');
+//     printWindow.document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">');
+//     printWindow.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">');
+//     // // printWindow.document.write('<link rel="stylesheet" href="/css/Inventory_Css/searchInvoice.css">');
+//     // // // Include external JavaScript files
+//     printWindow.document.write('<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>');
+//     printWindow.document.write('<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>');
+//     printWindow.document.write('<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>');
+//     printWindow.document.write('<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>');
+//     printWindow.document.write('<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>');
+//     // printWindow.document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>');
+//     // printWindow.document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>');
+
+//     printWindow.document.write('<link rel="preconnect" href="https://fonts.googleapis.com">');
+//     printWindow.document.write('<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>');
+//     printWindow.document.write(' <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">');
+
+
+//     // Append the HTML content of the invoice details container
+//     const invoiceDetailsHtml = document.getElementById('invoiceDetails').innerHTML;
+//     printWindow.document.write(invoiceDetailsHtml);
+
+//     // Close the HTML document
+//     printWindow.document.write('</body></html>');
+//     printWindow.document.close();
+//     hideSearchInventoryLoadingAnimation();
+//     // Wait for content to load before printing
+//     printWindow.onload = function () {
+//         printWindow.focus();
+//         printWindow.print();
+//         // printWindow.close(); 
+//     };
+// }
+
+function printInvoiceWindow() {
+    
+    // Get the invoice details container
+    const invoiceDetails = document.getElementById('invoice');
+
+    // Define the options for html2pdf
+    const opt = {
+        margin: 0,
+        filename: 'invoice.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    // Adjust the scaling factor to fit content to one page
+    const contentHeight = invoiceDetails.scrollHeight;
+    const a4Height = 297; // A4 height in mm
+    const scaleFactor = a4Height / (contentHeight * 0.264583); // Convert px to mm
+
+    // Apply CSS transform to scale the content
+    invoiceDetails.style.transform = `scale(${scaleFactor})`;
+    invoiceDetails.style.transformOrigin = 'top left';
+    invoiceDetails.style.width = `calc(210mm / ${scaleFactor})`;
+    invoiceDetails.style.height = `calc(297mm / ${scaleFactor})`;
+    hideSearchInventoryLoadingAnimation();
+    // Generate the PDF
+    html2pdf().from(invoiceDetails).set(opt).outputPdf('blob').then(function (pdfBlob) {
+        // Reset the scaling after PDF generation
+        invoiceDetails.style.transform = '';
+        invoiceDetails.style.width = '';
+        invoiceDetails.style.height = '';
+
+        // Create a URL for the PDF blob
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+
+        // Open the PDF in a new window
+        const pdfWindow = window.open(pdfUrl, '_blank');
+
+        // Add an event listener to trigger the print dialog once the PDF is loaded
+        pdfWindow.onload = function () {
+            pdfWindow.focus();
+            pdfWindow.print();
+
+            // If you want the print window to only show 1 page in print preview,
+            // you can customize the print window settings here.
+            // Some browsers might require a manual step for advanced settings.
+        };
+    });
+}
+
+
+
+

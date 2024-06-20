@@ -45,25 +45,101 @@ body {
     background: #fff;
     padding: 20px;
     border-radius: 8px;
-    width: 90%;
+    width: 20%;
     max-width: 500px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
     animation: slideIn 0.3s ease-in-out;
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
 }
 
 /* Heading styling */
 .overlay-head {
     margin-bottom: 20px;
     font-size: 24px;
-    color: #333;
+   font-weight: bold;
+    color: var(--grey-color);
 }
 
 /* Form group styling */
+
 .form-group {
-    margin-bottom: 20px;
-    text-align: left;
+    position: relative;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    animation: slideDownFromUp 0.7s ease-in-out;
+    /* Adjust timing as needed */
 }
+
+
+.form-control {
+    /* padding: 1rem 1rem; */
+    /* Adjusted padding to center placeholder vertically */
+    font-size: 1rem;
+    /* Increased font size */
+    border: 1px solid #ced4da;
+    border-radius: 20px;
+    transition: border-color 0.3s ease;
+    margin-right: 1rem;
+    flex: 1;
+    /* Allow input fields to grow */
+    height: 3rem;
+    /* Increased height for input fields */
+    transition: transform 0.3s ease-in-out;
+
+}
+
+.form-control.wide {
+    flex: 2;
+    /* Make first two fields wider */
+}
+
+.form-control:focus {
+    box-shadow: 0 0 10px #5DADE2;
+    outline: 1px solid #85C1E9;
+    /* Add a solid outline */
+}
+
+.form-control:hover {
+    box-shadow: 0 0 10px #5DADE2;
+    transition: 0.3s;
+
+}
+
+.form-control-placeholder {
+    position: absolute;
+    top: 40%;
+    left: 0.75rem;
+    transform: translateY(-50%);
+    /* Center placeholder vertically */
+    pointer-events: none;
+    transition: top 0.2s, font-size 0.2s, transform 0.2s;
+    font-size: 16px;
+    color: #999;
+
+}
+
+.form-control:focus+.form-control-placeholder,
+.form-control:not(:placeholder-shown)+.form-control-placeholder {
+    top: -0.2rem;
+    /* Adjusted position when focused */
+    font-size: 0.80rem;
+    font-weight: 400;
+    background-color: white;
+    border-radius: 5px;
+    border-color: #85C1E9;
+    border-top: 1px solid #85C1E9;
+    /* Adding border top */
+    transform: translateY(0);
+    /* Reset transform */
+    color: #000;
+}
+
+.form-control {
+    transition: box-shadow 0.3s ease, transform 0.3s ease-in-out;
+}
+
 
 /* Label styling */
 .select-label {
@@ -95,21 +171,49 @@ body {
 }
 
 /* Button styling */
+/* styles.css */
+
 .submit-button {
-    width: 100%;
-    padding: 12px 20px;
-    font-size: 16px;
-    color: #fff;
-    background: #007bff;
+    background-color: #85C1E9;   
     border: none;
-    border-radius: 4px;
+    color: black;
+    padding: 0;
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
     cursor: pointer;
-    transition: background 0.3s;
+    max-height: 100%;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 10px;
+}
+
+.submit-button img {
+    width: 35px;
+    height: 35px;
+    border-radius: 0px;
+    margin: 5px;
+    mix-blend-mode: multiply;
+}
+
+.submit-button span {
+    margin-right: 10px;
 }
 
 .submit-button:hover {
-    background: #0056b3;
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
+
+.submit-button:focus {
+    transform: scale(1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
 
 .icon-container {
     position: absolute; /* Position icon container absolutely */

@@ -6,16 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice Page</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/Inventory_Css/InventoryAll.css">
+    <!-- <link rel="stylesheet" href="/css/Inventory_Css/InventoryAll.css"> -->
     <link rel="stylesheet" href="/css/Inventory_Css/GenerateInvoice.css">
     <link rel="stylesheet" href="/css/NavButtons.css">
     <link rel="stylesheet" href="/css/Inventory_Css/invoiceDisplay.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-
-
-
+  
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -23,225 +21,250 @@
 </head>
 
 <body>
-    <div class="container-fluid">
-        <div id="loadingOverlayInventory" class="loading-overlay">
-            <div class="typewriter">
-                <div class="slide"><i></i></div>
-                <div class="paper"></div>
-                <div class="keyboard"></div>
-            </div>
+
+    <div id="loadingOverlayInventory" class="loading-overlay">
+        <div class="typewriter">
+            <div class="slide"><i></i></div>
+            <div class="paper"></div>
+            <div class="keyboard"></div>
+        </div>
+    </div>
+
+    <nav class="navbar">
+        <div class="logo_item">
+            <!-- <i class="bx bx-menu" id="sidebarOpen"></i> -->
+            <img id="logo" src="" alt="Logo">
+            <!-- <div class="user_name" id="user_name"></div> -->
         </div>
 
-        <nav class="navbar">
-            <div class="logo_item">
-                <!-- <i class="bx bx-menu" id="sidebarOpen"></i> -->
-                <img id="logo" src="" alt="Logo">
-                <!-- <div class="user_name" id="user_name"></div> -->
-            </div>
+        <div class="navbar_center" style="margin-left: 5.5rem;">
+            <button onclick="window.location.href='/inventory/billing'"> <i class='bx' id="backButton"> <img
+                        src="/images/back.png" alt="Previous Icon"></i></button>
+            <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img
+                        src="/images/homeicon.png" alt="Dashboard Icon"></i></button>
+            <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
+                        alt="Signout Icon"></i></button>
+        </div>
 
-            <div class="navbar_center" style="margin-left: 5.5rem;">
-                <button onclick="window.location.href='/inventory/billing'"> <i class='bx' id="backButton"> <img
-                            src="/images/back.png" alt="Previous Icon"></i></button>
-                <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img
-                            src="/images/homeicon.png" alt="Dashboard Icon"></i></button>
-                <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
-                            alt="Signout Icon"></i></button>
-            </div>
-
-            <div class="navbar_content">
-                <!-- <i class="bi bi-grid"></i>
+        <div class="navbar_content">
+            <!-- <i class="bi bi-grid"></i>
           <i class='bx bx-bell'></i> -->
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="container-1">
+            <div class="sub-container sub-container-1">
+                <div class="sub-container-1-part1">
+                    <h5 class="heading"> <img src="/images/buyerdetail.gif" alt="Invoice Icon"
+                            style="width: 35px; height: 35px;  mix-blend-mode: multiply;">Buyer Details</h5>
+                    <div class="form-container">
+                        <form>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="buyerName" name="buyerName"
+                                        placeholder=" " required>
+                                    <span class="form-control-placeholder"><i class="fa-regular fa-user"
+                                            style="color: #F06292;margin-right: 4px;"></i>Name</span>
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="" class="form-control" id="buyerMobile" placeholder=""
+                                        maxlength="10"><span class="form-control-placeholder"><i
+                                            class="fa-solid fa-phone" style="color: #FF8A65;"></i>Mobile</span>
+
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="buyerClass"
+                                        style="text-align: center; width: 96px;background-color: white;" placeholder=""
+                                        readonly>
+                                    <span class="form-control-placeholder">Class</span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="sub-container-1-part2">
+                    <h5 class="heading-2"><img src="/images/invoicedetails.gif" alt="Invoice Icon"
+                        style="width: 30px; height: 30px; margin-right: 4px;">Invoice Details</h5>
+                    <form>
+                        <div class="form-row" style="justify-content: center;">
+                            <div class="form-group">
+                                <label for="invoiceNo"
+                                    style="margin-top: 3px; color: var(--grey-color);font-weight: 700;"><i
+                                        class="fa-solid fa-hashtag" style="color: #29B6F6;"></i>Invoice No
+                                    &#8594;</label>
+                                <input id="invoiceNo"
+                                    style="border: none; width: 5rem; margin-left: 1rem;background-color: transparent;">
+                                <!-- arrow character -->
+                            </div>
+                            <div class="form-group" style="margin-top: -1rem;">
+                                <label for="invoiceDate" style="    color: var(--grey-color); font-weight: 700;"><i
+                                        class="fa-solid fa-calendar-days" style="color: #F8C471;"></i>Date &#8594;
+                                </label>
+                                <input id="invoiceDate"
+                                    style="border: none; width: 14rem; margin-left: 1rem; background-color: transparent;">
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </nav>
 
-        <div class="" style="margin-top:3.3rem; display: flex; height: 80%;">
-            <!-- First Container -->
-            <div class="first">
-                <div class="section" style="border-style: none;">
-                    <div class="row">
-                        <!-- Buyer Details -->
-                        <div class="col-md-7">
-                            <div class="section buyer-details">
-                                <h5>Buyer Details</h5>
-                                <div class="form-container">
-                                    <form>
-                                        <div class="form-row">
-                                            <div class="form-group col-md-5">
-                                                <input type="text" class="form-control " id="buyerName" name="buyerName"
-                                                    placeholder=" " required>
-                                                <span class="form-control-placeholder">Name</span>
-                                            </div>
-
-                                            <div class="form-group col-md-4">
-                                                <input type="" class="form-control" id="buyerMobile" placeholder=""
-                                                    maxlength="10"><span class="form-control-placeholder">Mobile</span>
-
-                                            </div>
-                                            <div class="form-group col-md-3">
-                                                <input type="text" class="form-control" id="buyerClass" style="text-align: center;"
-                                                    placeholder="Class" readonly>
-                                                <span class="form-control-placeholder">Class</span>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Invoice No and Date -->
-                        <div class="" style="width: 40%;">
-                            <div class="section invoice-details">
-                                <h5>Invoice Details</h5>
-                                <form>
-                                    <div class="form-row" style="justify-content: center;">
-                                        <div class="form-group">
-                                            <label for="invoiceNo" style="margin-top: 3px;">Invoice No &#8594;</label>
-                                            <input id="invoiceNo" style="border: none; width: 5rem; margin-left: 1rem;">
-                                            <!-- arrow character -->
-                                        </div>
-                                        <div class="form-group ">
-                                            <label for="invoiceDate">Date &#8594; </label>
-                                            <input id="invoiceDate"
-                                                style="border: none; width: 14rem; margin-left: 1rem;">
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
+            <div class="sub-container sub-container-2">
+                <div class="display-books">
+                    <h5 class="heading3"> <img src="/images/addBook.gif" alt="Invoice Icon"
+                            style="width: 30px; height: 30px;  mix-blend-mode: multiply;">Display Books</h5>
+                    <div class="table-wrapper">
+                        <table class="books-table" id="booksTable">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody id="booksTableBody">
+                                <!-- Example rows -->
+                                <!-- Add more rows as needed -->
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="row">
-                        <!-- Display Books -->
-                        <div class="" style="width: 45%; margin-left: 1rem;">
-                            <div class="section books">
-                                <h5>Display Books</h5>
-                                <div class="table-container">
-                                    <table class="table table-bordered" id="booksTable">
-                                        <thead>
-                                            <tr>
-                                                <th>Title</th>
-                                                <th>Quantity</th>
-                                                <th>Unit Price</th>
-                                                <th>Price</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="booksTableBody">
-                                            <!-- Book entries go here -->
-                                        </tbody>
-                                    </table>
-                                </div>
+                </div>
 
-
-                            </div>
-                        </div>
-                        <!-- Display Uniform -->
-                        <div class="" style="width: 50%; margin-left: 1rem;">
-                            <div class="section uniform">
-                                <h5>Display Uniform</h5>
-                                <div class="table-container">
-                                    <table class="table table-bordered" id="uniformsTable">
-                                        <thead>
-                                            <tr>
-                                                <th class="uniform-item">Item</th>
-                                                <th class="uniform-size">Size</th>
-                                                <th class="uniform-quantity">Quantity</th>
-                                                <th class="uniform-price">Unit Price</th>
-                                                <th class="uniform-price">Price</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="uniformsTableBody">
-                                            <!-- Uniform entries go here -->
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                            </div>
-                        </div>
+                <div class="display-uniform">
+                    <h5> <img src="/images/tshirt.gif" alt="Invoice Icon"
+                            style="width: 30px; height: 30px;  mix-blend-mode: multiply;">Display Uniform</h5>
+                    <div class="table-wrapper">
+                        <table class="uniform-table" id="uniformsTable">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Size</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody id="uniformsTableBody">
+                                <!-- Example rows -->
+                                <!-- Add more rows as needed -->
+                            </tbody>
+                        </table>
                     </div>
+                </div>
 
-                    <div class="bottom-container" style="margin-top: -1.3rem;">
 
-                        <div class="row">
-                            <!-- Invoice Summary -->
+            </div>
 
-                            <div class="section " style="width: 58%; ">
-                                <h5>Invoice Summary</h5>
-                                <div class="form-container">
-                                    <div class="form-row">
-                                        <div class="form-group col-md-3">
-                                            <input type="text" class="form-control" id="totalAmount" placeholder="" style="text-align: center;"
-                                                readonly>
-                                            <span class="form-control-placeholder">Total</span>
-                                        </div>
-                                        <div class="form-group col-md-3">
-                                            <input type="number" class="form-control" id="amountPaid" placeholder="" style="text-align: center;">
-                                            <span class="form-control-placeholder">Paid</span>
-                                        </div>
-                                        <div class="form-group col-md-2" style="min-width: 5rem;">  
-                                            <input type="text" class="form-control" id="balanceAmount" placeholder=""  style="width: auto; min-width: 5rem; text-align: center;"
-                                                readonly>
-                                            <span class="form-control-placeholder">Balance</span>
-                                        </div>
-                                        <div class="col-md-4" style="margin-bottom: 1rem;">
-                                            <label>Payment Method:</label><br>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="paymentMethod"
-                                                    id="cashPayment" value="CASH">
-                                                <label class="form-check-label" for="cashPayment">Cash</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="paymentMethod"
-                                                    id="upiPayment" value="UPI">
-                                                <label class="form-check-label" for="upiPayment">UPI</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+            <div class="sub-container sub-container-3">
+                <div class="invoice-summary">
+                    <h5 style="text-align: center;">
+                        <img src="/images/invoicesummery.gif" alt="Invoice Icon"
+                            style="width: 30px; height: 30px; margin-right: 2px;">Invoice Summary
+                    </h5>
+
+                    <div class="form-container" style="margin-top: 0.5rem;">
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <input type="text" class="form-control" id="totalAmount" placeholder=""
+                                    style="text-align: center;" readonly>
+                                <span class="form-control-placeholder">Total</span>
                             </div>
+                            <div class="form-group col-md-3">
+                                <input type="number" class="form-control" id="amountPaid" placeholder=""
+                                    style="text-align: center;">
+                                <span class="form-control-placeholder">Paid</span>
+                            </div>
+                            <div class="form-group col-md-2" style="min-width: 5rem;">
+                                <input type="text" class="form-control" id="balanceAmount" placeholder=""
+                                    style="width: auto; min-width: 5rem; text-align: center;" readonly>
+                                <span class="form-control-placeholder">Balance</span>
+                            </div>
+                            <div class="col-md-4" style="margin-bottom: 1rem;">
+                                <!-- <label>Payment Method:</label><br> -->
+                                <!-- <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="paymentMethod" id="cashPayment"
+                                        value="CASH">
+                                    <label class="form-check-label" for="cashPayment">Cash</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="paymentMethod" id="upiPayment"
+                                        value="UPI">
+                                    <label class="form-check-label" for="upiPayment">UPI</label>
+                                </div> -->
 
-
-                            <!-- Control Panel -->
-
-                            <div class="section control-panel" style="margin-left: 0.8rem; height: 110px;">
-                                <h5>Control Panel</h5>
-                                <div class="control-button-container">
-                                    <button id="generateButton" class="control-button">
-                                        <img src="/images/generateinvoice.gif" alt="Refresh Icon" style="width: 30px; height: 30px;">
-                                        Generate
-                                    </button>
+                                <div class="radio-inputs">
                                     
-                                    <button id="printButton" class="control-button" >
-                                        <img src="/images/printer.gif" alt="Refresh Icon"
-                                            style="width: 30px; height: 30px;">
-                                        Print
-                                    </button>
-                                    <button id="resetButton" class="control-button">
-                                        <img src="/images/reload.gif" alt="Refresh Icon"
-                                            style="width: 30px; height: 30px;">
-                                        Reset
-                                    </button>
+                                    <label>
+                                        <input class="radio-input" type="radio" name="paymentMethod" id="cashPayment" value="CASH">
+                                        <span class="radio-tile">
+                                            <span class="radio-icon"> <img src="/images/cash.gif" alt="Invoice Icon"
+                                                style="width: 25px; height: 25px; margin-right: 4px;"></i></span>
+                                            <span class="radio-label">Cash</span>
+                                        </span>
+                                    </label>
+                                    <label>
+                                        <input  class="radio-input" type="radio" name="paymentMethod"  id="upiPayment" value="UPI">
+                                        <span class="radio-tile">
+                                            <span class="radio-icon"> <img src="/images/upimoney.gif" alt="Invoice Icon"
+                                                style="width: 32px; height: 30px; margin-right: 4px;"></span>
+                                            <span class="radio-label">UPI</span>
+                                        </span>
+                                    </label>                                   
                                 </div>
                             </div>
                         </div>
+                    </div>
+ 
+                </div>
+                <div class="control-panel">
+                    <h5 style="text-align: center;">
+                        <img src="/images/control.gif" alt="Invoice Icon"
+                            style="width: 25px; height: 25px; margin-right: 4px;">Control Panel
+                    </h5>
+                    <div class="control-button-container">
+                        <button id="generateButton" class="control-button" style="width: 7rem;">
+                            <img src="/images/generateinvoice.gif" alt="Refresh Icon"
+                                style="width: 30px; height: 30px;">
+                            Generate
+                        </button>
+
+                        <button id="printButton" class="control-button" onclick="printInvoice()">
+                            <img src="/images/printer.gif" alt="Refresh Icon" style="width: 30px; height: 30px;">
+                            Print
+                        </button>
+                        <button id="resetButton" class="control-button">
+                            <img src="/images/reload.gif" alt="Refresh Icon" style="width: 30px; height: 30px;">
+                            Reset
+                        </button>
                     </div>
                 </div>
             </div>
 
 
 
+        </div>
+        <div class="container-2">
 
+            <div class="bill-content" id="">
+                <h5> <img src="/images/displaybill.gif" alt="Invoice Icon"
+                        style="width: 30px; height: 30px;  mix-blend-mode: multiply;">Display Bill</h5>
+                <!-- Add bill content here -->
+                <!-- Bill details go here... -->
 
-            <!-- Second Container -->
-            <div class="bill-container" style="height: 100%;" id="printableContainer">
-                <!-- Initial image display -->
-                <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
-                <dotlottie-player src="https://lottie.host/97f9d044-7f3e-4e77-8876-9e50bf6f91a9/ABiWgVQcNd.json" background="transparent" speed="1" style="width: 500px; height: 600px;" loop autoplay></dotlottie-player>
-            
-                <!-- Invoice details section -->
-                <div class="section bill" id="invoiceDetails" style="display: none;">
-                    <h5>Display Bill</h5>
-                    <div class="table-container" style="width: 100%; overflow: scroll;">
+                <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                    type="module"></script>
+                <dotlottie-player src="https://lottie.host/97f9d044-7f3e-4e77-8876-9e50bf6f91a9/ABiWgVQcNd.json"
+                    background="transparent" speed="1" style="width: 100%; height: 100%;" loop
+                    autoplay></dotlottie-player>
+
+                <div class="section bill printableContainer" id="invoiceDetails"
+                    style="display: none;border-radius: 10px;  height: 95%; overflow-y: auto;">
+                    <!-- <h5>Display Bill</h5> -->
+                    <div class="table-container" style="width: 100%;">
                         <section id="invoice">
-                            <div class="container" style="width: 100%;">
+                            <div class="container" style="width: 100%;border: 1px solid; border-radius: 15px;">
                                 <div class="container">
                                     <!-- Invoice Header Section -->
                                     <div class="invoice-header">
@@ -251,16 +274,17 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="d-md-flex justify-content-between" style="display: flex; justify-content: space-between;">
+                                <div class="d-md-flex justify-content-between"
+                                    style="display: flex; justify-content: space-between;">
                                     <div class="buyer-details">
                                         <p>Invoice To</p> <!-- "Invoice To" centered and bold -->
                                         <ul class="list-unstyled buyer-details-list">
-                                            <li style="margin-left: 5px;"><!-- Buyer Class here --></li>
+                                            <li><!-- Buyer Class here --></li>
                                             <li><!-- Buyer Phone here --></li>
                                             <li><!-- Buyer Phone here --></li>
                                         </ul>
                                     </div>
-                                    <div class="mt-5 mt-md-0 invoice-details">                                      
+                                    <div class="mt-5 mt-md-0 invoice-details">
                                         <ul class="list-unstyled invoice-details-list">
                                             <li class="item" style="margin-top: 2rem;">
                                                 <span class="label">Date:</span>
@@ -273,7 +297,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                
+
                                 <!-- Table for displaying bill items -->
                                 <table class="invoice_table border my-5" style="width: 100%; border: 1px solid #dee2e6; margin: 2rem 0;">
                                     <thead>
@@ -288,41 +312,35 @@
                                     <tbody id="billTableBody">
                                         <!-- Bill items will be dynamically inserted here -->
                                     </tbody>
-                                
-                                    <tr class="bg-primary-subtle rounded-top">
-                                        <td colspan="4" style="text-align: right; font-weight: bold; padding: 8px;"> <!-- No background color here -->
-                                            <span style="background-color: #3a3c3d; color: white; padding: 5px;border-radius: 5px;">
-                                                <i class="fas fa-dollar-sign" style="margin-right: 5px;"></i> Total:
-                                            </span>
-                                        </td>
-                                        <td id="totalAmountDisplay" style="text-align: right; font-weight: bold; padding: 8px; background-color: #3a3c3d; color: white;">0.00</td>
-                                    </tr>
-                                    <tr class="bg-primary-subtle">
-                                        <td colspan="4" style="text-align: right; font-weight: bold; padding: 8px;"> <!-- No background color here -->
-                                            <span style="background-color: #3a3c3d; color: white; padding: 5px; border-radius: 5px;">
-                                                <i class="fas fa-money-bill-alt" style="margin-right: 5px;"></i> Paid:
-                                            </span>
-                                        </td>
-                                        <td id="amountPaidDisplay" style="text-align: right; font-weight: bold; padding: 8px; background-color: #3a3c3d; color: white;">0.00</td>
-                                    </tr>
-                                    <tr class="bg-primary-subtle rounded-bottom">
-                                        <td colspan="4" style="text-align: right; font-weight: bold; padding: 8px;"> <!-- No background color here -->
-                                            <span style="background-color: #3a3c3d; color: white; padding: 5px;border-radius: 5px;">
-                                                <i class="fas fa-balance-scale" style="margin-right: 5px;"></i> Balance:
-                                            </span>
-                                        </td>
-                                        <td id="balanceAmountDisplay" style="text-align: right; font-weight: bold; padding: 8px; background-color: #3a3c3d; color: white;">0.00</td>
-                                    </tr>
+                                    <tfoot>
+                                        <tr class="bg-primary-subtle">
+                                            <td colspan="4"></td>
+                                            <td style="padding: 8px; text-align: right; vertical-align: top;">
+                                                <div style="text-align: left; font-weight: bold;">
+                                                    <div style="background-color: #3a3c3d; color: white; padding: 5px; border-radius: 5px; margin-bottom: 5px;">
+                                                        <i class="fas fa-dollar-sign" style="margin-right: 5px;"></i> Total:
+                                                        <span id="totalAmountDisplay" style="margin-left: 10px;">0.00</span>
+                                                    </div>
+                                                    <div style="background-color: #3a3c3d; color: white; padding: 5px; border-radius: 5px; margin-bottom: 5px;">
+                                                        <i class="fas fa-money-bill-alt" style="margin-right: 5px;"></i> Paid:
+                                                        <span id="amountPaidDisplay" style="margin-left: 10px;">0.00</span>
+                                                    </div>
+                                                    <div style="background-color: #3a3c3d; color: white; padding: 5px; border-radius: 5px;">
+                                                        <i class="fas fa-balance-scale" style="margin-right: 5px;"></i> Balance:
+                                                        <span id="balanceAmountDisplay" style="margin-left: 10px;">0.00</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                                 
+
                             </div>
                         </section>
                     </div>
                 </div>
-            
 
-            <!-- Third Container -->
-            <div class="row" style="margin-top: 9rem;">
 
             </div>
 
@@ -330,54 +348,51 @@
                 <div id="toast" class="toast"></div>
             </div>
 
+        </div>
 
-
-
-            <!-- <div id="toast" class="toast"></div> -->
-
-            <!-- Custom Low Stock Alert Modal -->
-            <div id="lowStockAlert" class="modal">
-                <div class="modal-content">
-                    <h2>Low Stock Alert</h2>
-                    <div class="stock-container">
-                        <div id="bookStock" class="stock-column">
-                            <h3>Books</h3>
-                            <p id="lowStockMessagesBooks"></p>
-                            <p id="insufficientBooksMessages" class="insufficient"></p>
-                        </div>
-                        <div id="uniformStock" class="stock-column">
-                            <h3>Uniforms</h3>
-                            <p id="lowStockMessagesUniforms"></p>
-                            <p id="insufficientUniformsMessages" class="insufficient"></p>
-                        </div>
+         <!-- Custom Low Stock Alert Modal -->
+         <div id="lowStockAlert" class="modal">
+            <div class="modal-content">
+                <h2>Low Stock Alert</h2>
+                <div class="stock-container">
+                    <div id="bookStock" class="stock-column">
+                        <h3>Books</h3>
+                        <p id="lowStockMessagesBooks"></p>
+                        <p id="insufficientBooksMessages" class="insufficient"></p>
                     </div>
-                    <div class="button-container">
-                        <button id="proceedBtn" class="modal-btn">
-                            <img src="/images/conform.png" alt="Proceed">
-                            <span>Proceed</span>
-                        </button>
-
-                        <button id="closeBtn" class="modal-btn">
-                            <img src="/images/close.png" alt="Close">
-                            <span>Close</span>
-                        </button>
+                    <div id="uniformStock" class="stock-column">
+                        <h3>Uniforms</h3>
+                        <p id="lowStockMessagesUniforms"></p>
+                        <p id="insufficientUniformsMessages" class="insufficient"></p>
                     </div>
                 </div>
+                <div class="button-container">
+                    <button id="proceedBtn" class="modal-btn">
+                        <img src="/images/conform.png" alt="Proceed">
+                        <span>Proceed</span>
+                    </button>
+
+                    <button id="closeBtn" class="modal-btn">
+                        <img src="/images/close.png" alt="Close">
+                        <span>Close</span>
+                    </button>
+                </div>
             </div>
-
         </div>
-        <script src="/js/Inventory_js/All.js"></script>
-        <script src="/js/Inventory_js/Inventory_generateInvoice.js"></script>
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-            crossorigin="anonymous"></script>
-        <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    </div>
+    <script src="/js/Inventory_js/All.js"></script>
+    <script src="/js/Inventory_js/Inventory_generateInvoice.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
 
 </body>
 

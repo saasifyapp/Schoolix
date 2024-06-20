@@ -35,8 +35,20 @@ document.addEventListener("DOMContentLoaded", function () {
     // Get the form element
     const uniformForm = document.getElementById('addUniformForm');
     const univendorSelect = document.getElementById("univendor");
+
+
     uniformForm.addEventListener('submit', async function (event) {
+        
         event.preventDefault();
+        // Get the uniform item and size from the form
+        const uniformItem = document.getElementById('uniformItem').value;
+        const sizeOfItem = document.getElementById('sizeOfItem').value;
+
+        // Validate uniform item and size for commas
+        if (uniformItem.includes(',') || sizeOfItem.includes(',')) {
+            showToast('Uniform name and size should not contain a comma', 'red');
+            return;
+        }
         showUniformLoadingAnimation();
         const formData = new FormData(event.target);
         const jsonData = {};
@@ -77,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 showToast(`${jsonData.uniform_item} of size ${jsonData.size_of_item} added successfully`);
                 refreshData();
                 refreshUniformsData();
-            
+
                 // populateUniformsVendorDropdown() // Uncomment this if you have a function to populate uniform vendor dropdown
                 // You can update the UI or do something else here after successful submission
             })
@@ -99,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const univendorSelect = document.getElementById("univendor");
         univendorSelect.selectedIndex = 0; // Assuming the placeholder is the first option
     });
-}); 
+});
 
 
 // Function to populate vendor dropdowns
@@ -291,7 +303,7 @@ function displayUniforms(data) {
     }
 }
 
- 
+
 // Function to handle deleting a uniform
 async function deleteUniform(uniformItem, sizeOfItem) {
     const confirmation = confirm(`Are you sure you want to delete the uniform "${uniformItem}" of size "${sizeOfItem}"?`);
@@ -312,7 +324,7 @@ async function deleteUniform(uniformItem, sizeOfItem) {
                 console.log('Uniform deleted successfully');
                 showToast(`${uniformItem} with size ${sizeOfItem} deleted successfully`); // Show success toast
                 refreshUniformsData(); // Refresh uniform data
-            
+
                 populateUniformVendorDropdown()
             })
             .catch(error => {
@@ -326,6 +338,7 @@ async function deleteUniform(uniformItem, sizeOfItem) {
 
 // Function to update a uniform item
 async function updateUniformItem(uniformItem, sizeOfItem) {
+    showUniformLoadingAnimation();
     await fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`)
         .then(response => {
             if (!response.ok) {
@@ -337,7 +350,7 @@ async function updateUniformItem(uniformItem, sizeOfItem) {
             let existingOrderedQuantity = data.ordered_quantity;
             let remainingQuantity = data.remaining_quantity;
             let newOrderedQuantity = 0;
-
+            hideUniformLoadingAnimation();
             // Create custom prompt
             const customPrompt = document.createElement('div');
             customPrompt.classList.add('custom-prompt');
@@ -407,6 +420,7 @@ async function updateUniformItem(uniformItem, sizeOfItem) {
             // Add event listener to confirm button
             const confirmButton = customPrompt.querySelector('#confirmButton');
             confirmButton.addEventListener('click', () => {
+                showUniformLoadingAnimation();
                 // Get the new ordered quantity from the input field
                 newOrderedQuantity = parseInt(customPrompt.querySelector('#newQuantityInput').value, 10) || 0;
 
@@ -444,13 +458,14 @@ async function updateUniformItem(uniformItem, sizeOfItem) {
         })
         .catch(error => {
             console.error('Error retrieving quantity:', error);
+            hideUniformLoadingAnimation();
             // Handle error if needed
         });
 }
 
 // Function to update ordered quantity on the server
 async function updateUniformOrderedQuantity(uniformItem, sizeOfItem, totalOrder, newRemainingQuantity) {
-    showUniformLoadingAnimation();
+    // showUniformLoadingAnimation();
     await fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`, {
         method: 'PUT',
         headers: {
@@ -464,7 +479,7 @@ async function updateUniformOrderedQuantity(uniformItem, sizeOfItem, totalOrder,
             }
             hideUniformLoadingAnimation();
             refreshUniformsData();
-        
+
             console.log('Quantity updated successfully.');
             showToast(`${uniformItem} with size ${sizeOfItem} restocked successfully`); // Show success toast
             populateUniformVendorDropdown();
@@ -483,6 +498,7 @@ async function updateUniformOrderedQuantity(uniformItem, sizeOfItem, totalOrder,
 
 // Function to return a uniform
 async function returnUniform(uniformItem, sizeOfItem) {
+    showUniformLoadingAnimation();
     let newRemainingQuantity; // Declare newRemainingQuantity here
 
     await fetch(`/inventory/uniforms/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`)
@@ -497,7 +513,7 @@ async function returnUniform(uniformItem, sizeOfItem) {
             let returnedQuantity = data.returned_quantity; // Get old returned quantity
 
             newRemainingQuantity = remainingQuantity; // Initialize newRemainingQuantity here
-
+            hideUniformLoadingAnimation();
             // Create custom prompt
             const customPrompt = document.createElement('div');
             customPrompt.classList.add('custom-prompt');
@@ -566,6 +582,7 @@ async function returnUniform(uniformItem, sizeOfItem) {
             // Add event listener to confirm button
             const confirmButton = customPrompt.querySelector('#confirmButton');
             confirmButton.addEventListener('click', () => {
+                showUniformLoadingAnimation();
                 // Get the return quantity from the input field
                 let userReturnedQuantity = parseInt(customPrompt.querySelector('#returnQuantityInput').value, 10) || 0;
 
@@ -609,7 +626,7 @@ async function returnUniform(uniformItem, sizeOfItem) {
 // Function to update ordered quantity on the server
 async function returnUniformQuantity(uniformItem, sizeOfItem, returnedQuantity, newRemainingQuantity) {
     console.log(uniformItem, sizeOfItem, returnedQuantity, newRemainingQuantity)
-    showUniformLoadingAnimation();
+    // showUniformLoadingAnimation();
     await fetch(`/inventory/return_uniform/${encodeURIComponent(uniformItem)}/${encodeURIComponent(sizeOfItem)}/quantity`, {
         method: 'PUT',
         headers: {
@@ -864,6 +881,7 @@ async function searchUniformDetails() {
 // Function to show modal for updating uniform details
 // Function to show modal for updating uniform details
 async function showUniformUpdateModal(sr_no) {
+    showUniformLoadingAnimation();
     try {
         // Fetch uniform details by sr_no
         const response = await fetch(`/inventory/uniforms/${encodeURIComponent(sr_no)}`);
@@ -872,7 +890,7 @@ async function showUniformUpdateModal(sr_no) {
         }
 
         const data = await response.json();
-
+        hideUniformLoadingAnimation();
         // Create the custom prompt/modal
         const customPrompt = document.createElement('div');
         customPrompt.classList.add('custom-prompt');
@@ -881,22 +899,45 @@ async function showUniformUpdateModal(sr_no) {
         customPrompt.innerHTML = `
             <div class="prompt-content">
                 <h2>Update Uniform Details</h2>
-                <p>Uniform Item:</p>
-                <input type="text" class="form-control" id="uniformItemInput" value="${data.uniform_item}" required>
-                <p>Size of Item:</p>
-                <input type="text" class="form-control" id="sizeOfItemInput" value="${data.size_of_item}" required>
-                <p>Purchase Price:</p>
-                <input type="number" step="0.01" class="form-control" id="purchasePriceInput" value="${data.purchase_price}" required>
-                <p>Selling Price:</p>
-                <input type="number" class="form-control" id="sellingPriceInput" value="${data.selling_price}" required>
-                <button id="saveButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;">
-                  <img src="../images/conform.png" alt="Save" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-                  <span style="margin-right: 10px;">Save</span>
-              </button>
-              <button id="cancelButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;">
-                  <img src="../images/cancel.png" alt="Cancel" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-                  <span style="margin-right: 10px;">Cancel</span>
-              </button>
+             
+               <div class="form-group">
+    <input type="text" class="form-control" id="uniformItemInput" value="${data.uniform_item}" required style="width: 6rem; text-align: center;" placeholder=" ">
+    <span class="form-control-placeholder">Uniform Item</span>
+</div>
+
+             
+                <div class="form-group">
+    <input type="text" class="form-control" id="sizeOfItemInput" value="${data.size_of_item}" required style="width: 6rem; text-align: center;" placeholder=" ">
+    <span class="form-control-placeholder">Size of Item</span>
+</div>
+
+               
+               <div class="form-group">
+    <input type="number" step="0.01" class="form-control" id="purchasePriceInput" value="${data.purchase_price}" required style="width: 6rem; text-align: center;" placeholder=" ">
+    <span class="form-control-placeholder">Purchase Price</span>
+</div>
+
+               
+               <div class="form-group">
+    <input type="number" class="form-control" id="sellingPriceInput" value="${data.selling_price}" required style="width: 6rem; text-align: center;" placeholder=" ">
+    <span class="form-control-placeholder">Selling Price</span>
+</div>
+
+                <button id="saveButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+    onclick="saveFunction()"
+    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+    <img src="../images/conform.png" alt="Save" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+    <span style="margin-right: 10px;">Save</span>
+</button>
+<button id="cancelButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+    onclick="cancelFunction()"
+    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+    <img src="../images/cancel.png" alt="Cancel" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+    <span style="margin-right: 10px;">Cancel</span>
+</button>
+
           </div>
             </div>
         `;
@@ -908,6 +949,8 @@ async function showUniformUpdateModal(sr_no) {
         const cancelButton = customPrompt.querySelector('#cancelButton');
 
         saveButton.addEventListener('click', async () => {
+            customPrompt.remove(); // Remove the modal
+            showUniformLoadingAnimation();
             const updatedUniformItem = customPrompt.querySelector('#uniformItemInput').value;
             const updatedSizeOfItem = customPrompt.querySelector('#sizeOfItemInput').value;
             const updatedPurchasePrice = parseFloat(customPrompt.querySelector('#purchasePriceInput').value);
@@ -915,17 +958,22 @@ async function showUniformUpdateModal(sr_no) {
 
             // Validate if uniform with same details already exists
             if (await isDuplicateUniform(updatedUniformItem, updatedSizeOfItem, updatedPurchasePrice, updatedSellingPrice, sr_no)) {
+                hideUniformLoadingAnimation();
                 showToast('A uniform with the same item name, size, purchase price, and selling price already exists.', true);
                 return;
             }
 
             // Validate if a uniform with the same item name and size already exists
-            if (await isUniformNameDuplicate(updatedUniformItem, updatedSizeOfItem, sr_no)) {
+            const originalUniformItem = data.uniform_item; // assuming data.uniform_item contains the original item name fetched from the server
+            const originalSizeOfItem = data.size_of_item; // assuming data.size_of_item contains the original size fetched from the server
+
+            if ((updatedUniformItem !== originalUniformItem || updatedSizeOfItem !== originalSizeOfItem) && await isUniformNameDuplicate(updatedUniformItem, updatedSizeOfItem, sr_no)) {
+                hideUniformLoadingAnimation();
                 showToast('A uniform with the same item name and size already exists.', true);
                 return;
             }
 
-            customPrompt.remove(); // Remove the modal
+            // customPrompt.remove(); // Remove the modal
 
             try {
                 // Send updated data to server for update
@@ -945,7 +993,7 @@ async function showUniformUpdateModal(sr_no) {
                 if (!response.ok) {
                     throw new Error('Failed to update uniform details.');
                 }
-
+                hideUniformLoadingAnimation();
                 // Handle success (e.g., show toast, refresh data)
                 showToast('Uniform details updated successfully', false);
                 refreshUniformsData(); // Example function to refresh uniform data
@@ -961,6 +1009,7 @@ async function showUniformUpdateModal(sr_no) {
 
     } catch (error) {
         console.error('Error:', error);
+        hideUniformLoadingAnimation();
     }
 }
 

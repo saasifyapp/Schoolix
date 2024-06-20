@@ -6,7 +6,16 @@ document.addEventListener("DOMContentLoaded", function () {
         const classSelect = document.getElementById("classSelect");
         const selectedClass = classSelect.value;
 
-        //console.log("Selected class:", selectedClass); // Debugging line to check selected class
+        // Validation: Check if a class is selected
+        if (selectedClass === "") {
+            const validationMessage = document.getElementById("validationMessage");
+            validationMessage.style.display = "block";
+            return; // Exit the function to prevent form submission
+        } else {
+            // Hide validation message if a class is selected
+            const validationMessage = document.getElementById("validationMessage");
+            validationMessage.style.display = "none";
+        }
 
         // Save the selected class in local storage
         localStorage.setItem("selectedClass", selectedClass); // Save as plain string
@@ -14,5 +23,4 @@ document.addEventListener("DOMContentLoaded", function () {
         // Redirect to the new page
         window.location.href = "/inventory/generateInvoice";
     });
-
 });

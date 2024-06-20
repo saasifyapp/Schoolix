@@ -90,15 +90,15 @@ router.get("/inventory/class/:class", (req, res) => {
 
 // Update paid amount for an invoice
 router.put('/inventory/updatePaidAmount', (req, res) => {
-    const { invoiceNo, paidAmount, balanceAmount } = req.body;
+    const { invoiceNo, paidAmount, balanceAmount, invoiceDate } = req.body;
 
     const query = `
         UPDATE inventory_invoice_details 
-        SET paid_amount = ?, balance_amount = ? 
+        SET paid_amount = ?, balance_amount = ?, billDate = ? 
         WHERE invoiceNo = ?
     `;
 
-    connection.query(query, [paidAmount, balanceAmount, invoiceNo], (err, result) => {
+    connection.query(query, [paidAmount, balanceAmount, invoiceDate, invoiceNo], (err, result) => {
         if (err) {
             console.error('Error updating invoice:', err);
             return res.status(500).send('Error updating invoice');
@@ -170,6 +170,79 @@ router.delete("/inventory/deleteInvoice", (req, res) => {
         });
     });
 });
+
+
+// Endpoint to fetch and print invoice details
+router.get('/get_invoice/:invoiceNo', (req, res) => {
+    const invoiceNo = req.params.invoiceNo;
+
+    // Query to fetch invoice details
+    const invoiceQuery = `
+        SELECT 
+            invoiceNo, 
+            billDate, 
+            buyerName, 
+            buyerPhone, 
+            class_of_buyer, 
+            total_payable, 
+            paid_amount, 
+            balance_amount, 
+            mode_of_payment 
+        FROM inventory_invoice_details 
+        WHERE invoiceNo = ?`;
+
+    // Query to fetch invoice items
+    const itemsQuery = `
+        SELECT 
+            ii.item_name, 
+            ii.quantity, 
+            CASE
+                WHEN ii.type = 'Book' THEN bd.selling_price
+                WHEN ii.type = 'Uniform' THEN ud.selling_price
+                ELSE 0
+            END AS purchase_price,
+            ii.quantity * CASE
+                WHEN ii.type = 'Book' THEN bd.selling_price
+                WHEN ii.type = 'Uniform' THEN ud.selling_price
+                ELSE 0
+            END AS total
+        FROM inventory_invoice_items ii
+        LEFT JOIN inventory_book_details bd ON ii.item_name = bd.title AND ii.type = 'Book'
+        LEFT JOIN inventory_uniform_details ud ON ii.item_name = ud.uniform_item AND ii.type = 'Uniform'
+        WHERE ii.invoiceNo = ?`;
+
+    // Execute invoice details query
+    connection.query(invoiceQuery, [invoiceNo], (err, invoiceResults) => {
+        if (err) {
+            console.error('Error fetching invoice data: ' + err.stack);
+            return res.status(500).json({ error: 'Error fetching invoice data' });
+        }
+
+        // If no invoice found
+        if (invoiceResults.length === 0) {
+            return res.status(404).json({ error: 'Invoice not found' });
+        }
+
+        // Execute invoice items query
+        connection.query(itemsQuery, [invoiceNo], (err, itemsResults) => {
+            if (err) {
+                console.error('Error fetching invoice items: ' + err.stack);
+                return res.status(500).json({ error: 'Error fetching invoice items' });
+            }
+
+            // Combine invoice details and items into a single object
+            const invoiceData = {
+                invoiceDetails: invoiceResults[0],
+                invoiceItems: itemsResults
+            };
+
+            // Send the combined result as JSON response
+            res.json(invoiceData);
+        });
+    });
+});
+
+
 
 
 module.exports = router;

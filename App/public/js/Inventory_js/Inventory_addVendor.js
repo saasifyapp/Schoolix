@@ -25,6 +25,13 @@ document.addEventListener("DOMContentLoaded", function () {
         const vendorName = vendorNameInput.value;
         const amountPaid = parseFloat(amountPaidInput.value);
 
+        // Validate vendor name for comma
+        if (vendorName.includes(',')) {
+            hideVendorLoadingAnimation();
+            showToast('Vendor name should not contain a comma', 'red');
+            return;
+        }
+
         // Prepare the data to send in the request body
         const data = {
             vendorName: vendorName,
@@ -225,6 +232,7 @@ async function deleteVendor(vendorName) {
     }
 }
 async function updateVendor(vendorName) {
+    showVendorLoadingAnimation();
     try {
         const response = await fetch(`/inventory/vendors/${encodeURIComponent(vendorName)}/paid_till_now`);
         if (!response.ok) {
@@ -236,7 +244,7 @@ async function updateVendor(vendorName) {
         let net_payable = parseFloat(data.net_payable) || 0;
         let initialBalance = parseFloat(data.balance) || 0;
         let newPaidAmount = 0;
-
+        hideVendorLoadingAnimation();
         // Create custom prompt
         const customPrompt = document.createElement('div');
         customPrompt.classList.add('custom-prompt');
@@ -272,6 +280,7 @@ async function updateVendor(vendorName) {
         // Add event listener to confirm button
         const confirmButton = customPrompt.querySelector('#confirmButton');
         confirmButton.addEventListener('click', () => {
+            showVendorLoadingAnimation();
             // Get the new paid amount from the input field
             newPaidAmount = parseFloat(customPrompt.querySelector('#newPaidAmountInput').value) || 0;
 
@@ -311,6 +320,7 @@ async function updateVendor(vendorName) {
     } catch (error) {
         console.error('Error retrieving vendor details:', error);
         // Handle error if needed
+        hideVendorLoadingAnimation();
     }
 }
 
@@ -328,13 +338,14 @@ async function updateVendorPaidAmount(vendorName, totalPaid, balance) {
         if (!response.ok) {
             throw new Error('Failed to update vendor details.');
         }
-
+        hideVendorLoadingAnimation();
         console.log('Vendor details updated successfully.');
         showToast(`${vendorName} updated successfully`);
         refreshData(); // Assuming you have a function to refresh data
     } catch (error) {
         console.error('Error updating vendor details:', error);
         showToast(`Failed to update ${vendorName}`, 'red');
+        hideVendorLoadingAnimation();
         // Handle error if needed
     }
 }
@@ -463,6 +474,7 @@ refreshData();
 
 
 async function showVendorUpdateModal(sr_no) {
+    showVendorLoadingAnimation();
     try {
         const response = await fetch(`/inventory/vendors/${encodeURIComponent(sr_no)}`);
         if (!response.ok) {
@@ -473,21 +485,31 @@ async function showVendorUpdateModal(sr_no) {
 
         const customPrompt = document.createElement('div');
         customPrompt.classList.add('custom-prompt2');
-
+        hideVendorLoadingAnimation();
         customPrompt.innerHTML = `
         <div class="prompt-content">
-            <h2>Update Vendor</h2>
-            <p>Vendor Name:</p>
-            <input type="text" class="form-control" id="vendorNameInput" value="${data.vendor_name}" required>
+            <h2>Update Vendor</h2>          
+         <div class="form-group">
+        <input type="text" class="form-control" id="vendorNameInput" min="0" placeholder=" "value="${data.vendor_name}" required style="width:6rem;text-align: center;">
+        <span class="form-control-placeholder">Vendor Name</span>
+    </div>
             <p>Vendor For: ${data.vendorFor}</p>
-            <button id="saveButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;">
-                <img src="../images/conform.png" alt="Save" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-                <span style="margin-right: 10px;">Save</span>
-            </button>
-            <button id="cancelButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;">
-                <img src="../images/cancel.png" alt="Cancel" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-                <span style="margin-right: 10px;">Cancel</span>
-            </button>
+            <button id="saveButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+        onclick="saveVendor()"
+        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+    <img src="../images/conform.png" alt="Save" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+    <span style="margin-right: 10px;">Save</span>
+</button>
+
+<button id="cancelButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+        onclick="cancelVendor()"
+        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+    <img src="../images/cancel.png" alt="Cancel" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+    <span style="margin-right: 10px;">Cancel</span>
+</button>
+
         </div>
     `;
 
@@ -497,6 +519,7 @@ async function showVendorUpdateModal(sr_no) {
         const cancelButton = customPrompt.querySelector('#cancelButton');
 
         saveButton.addEventListener('click', async () => {
+            customPrompt.remove(); // Remove prompt after successful update
             showVendorLoadingAnimation();
             const updatedVendorName = customPrompt.querySelector('#vendorNameInput').value;
             const updatedVendorFor = data.vendorFor; // Assuming vendorFor is not editable in this context
@@ -531,8 +554,7 @@ async function showVendorUpdateModal(sr_no) {
                 await refreshData();
                 populateBooksVendorDropdown();
                 populateUniformVendorDropdown();
-                customPrompt.remove(); // Remove prompt after successful update
-
+               
             } catch (error) {
                 hideVendorLoadingAnimation();
                 console.error('Error updating vendor details:', error);
@@ -546,6 +568,7 @@ async function showVendorUpdateModal(sr_no) {
         });
     } catch (error) {
         console.error('Error:', error);
+        hideVendorLoadingAnimation();
     }
 }
 

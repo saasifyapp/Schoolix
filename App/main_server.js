@@ -31,8 +31,9 @@ const connection_auth = mysql.createPool({
     database: process.env.DB_NAME,
     port: process.env.DB_PORT,
     waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
+    connectionLimit: 20,
+    queueLimit: 0,
+    idleTimeoutMillis: 30000 // 30 seconds
 });
 
 // Session configuration
@@ -41,9 +42,13 @@ const sessionStore = new MySQLStore({
     port: process.env.DB_PORT,
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
-    database: process.env.DB_NAME
+    database: process.env.DB_NAME,
+    checkExpirationInterval: 900000, // How frequently expired sessions will be cleared; 15 minutes.
+    expiration: 7200000, // The maximum age of a valid session; 120 minutes (2 hours).
+    createDatabaseTable: true, // Whether or not to create the sessions database table, if one does not already exist.
+    connectionLimit: 20, // The maximum number of connections to create at once.
+    endConnectionOnClose: true // Whether or not to end the database connection when the store is closed.
 });
-
 
 app.use(session({
     key: 'session_cookie',
