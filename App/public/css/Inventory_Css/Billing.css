@@ -174,7 +174,8 @@ body {
 /* styles.css */
 
 .submit-button {
-    background-color: transparent;
+    background-color: #85C1E9;
+   
     border: none;
     color: black;
     padding: 0;
@@ -197,6 +198,7 @@ body {
     height: 25px;
     border-radius: 0px;
     margin: 5px;
+    mix-blend-mode: multiply;
 }
 
 .submit-button span {
