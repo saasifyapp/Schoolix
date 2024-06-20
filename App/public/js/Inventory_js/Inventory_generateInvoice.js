@@ -263,7 +263,7 @@ document.getElementById("generateButton").addEventListener("click", async functi
                 // Show a toast message indicating that the buyer already exists
                 showToast("Invoice for this name already exists", 'red');
             } else {
-                hideInventoryLoadingAnimation();
+                // hideInventoryLoadingAnimation();
                 // Buyer does not exist for the given class
                 // Proceed with generating the bill
                 lowStockCheck(); // Assuming lowStockCheck() is the function to generate the invoice
@@ -280,7 +280,7 @@ document.getElementById("generateButton").addEventListener("click", async functi
 
 
 // Determine payment status
-let paymentStatus = '';
+let invoiceStatus = '';
 let badgeClass = '';
 
 async function lowStockCheck() {
@@ -313,6 +313,7 @@ async function lowStockCheck() {
 
     // If both Books and Uniforms arrays are empty, show a toast and return
     if (Books.length === 0 && Uniforms.length === 0) {
+        hideInventoryLoadingAnimation();
         showToast('No items to check in inventory!', 'red');
         return;
     }
@@ -339,9 +340,11 @@ async function lowStockCheck() {
             dataBooks.forEach((book, index) => {
                 const enteredQuantity = Books[index].quantity;
                 if (book.remaining_quantity < 10) {
+                    // hideInventoryLoadingAnimation();
                     lowStockMessagesBooks.push(`${book.title}: ${book.remaining_quantity} remaining`);
                 }
                 if (book.remaining_quantity === 0 || book.remaining_quantity < enteredQuantity) {
+                    // hideInventoryLoadingAnimation();
                     zeroQuantity = true;
                     insufficientItemsBooks.push(`${book.title}: Entered ${enteredQuantity}, Available ${book.remaining_quantity}`);
                 }
@@ -363,9 +366,11 @@ async function lowStockCheck() {
             dataUniforms.forEach((uniform, index) => {
                 const enteredQuantity = Uniforms[index].quantity;
                 if (uniform.remaining_quantity < 10) {
+                    // hideInventoryLoadingAnimation();
                     lowStockMessagesUniforms.push(`${uniform.uniform_item} (${uniform.size_of_item}): ${uniform.remaining_quantity} remaining`);
                 }
                 if (uniform.remaining_quantity === 0 || uniform.remaining_quantity < enteredQuantity) {
+                    // hideInventoryLoadingAnimation();
                     zeroQuantity = true;
                     insufficientItemsUniforms.push(`${uniform.uniform_item} (${uniform.size_of_item}): Entered ${enteredQuantity}, Available ${uniform.remaining_quantity}`);
                 }
@@ -374,6 +379,7 @@ async function lowStockCheck() {
 
         // Show a single alert with all low-stock messages and insufficient items
         if (lowStockMessagesBooks.length > 0 || lowStockMessagesUniforms.length > 0 || insufficientItemsBooks.length > 0 || insufficientItemsUniforms.length > 0) {
+            hideInventoryLoadingAnimation();
             showLowStockAlert(
                 lowStockMessagesBooks.join('<br>'),
                 lowStockMessagesUniforms.join('<br>'),
@@ -442,6 +448,7 @@ function showLowStockAlert(bookMessage, uniformMessage, insufficientBooksMessage
     }
 
     proceedBtn.onclick = function () {
+        showInventoryLoadingAnimation();
         if (!zeroQuantity) {
             modal.style.display = 'none';
             generateBill_test();  // Call generateBill() when Proceed is clicked
@@ -554,7 +561,7 @@ function generateBill_test() {
     const formattedDate = currentDate.toLocaleDateString('en-GB'); // Format as 'DD/MM/YYYY'
 
     // Determine invoice status based on amount paid and balance amount
-    let invoiceStatus;
+    
     let statusIcon;
 
     if (amountPaid === 0) {
@@ -575,7 +582,7 @@ function generateBill_test() {
 
     // Populate Invoice Number in HTML
     document.getElementById('invoiceNumberDisplay').textContent = `Invoice No: #${invoiceNo}`;
-
+    hideInventoryLoadingAnimation();
     return true;
 }
 
@@ -590,11 +597,11 @@ function generateBill_test() {
 
 
 document.getElementById("printButton").addEventListener("click", async function () {
-    // Add validation to execute this only when the bill is generated i.e. displayed on the front-end
-    /* if (invoiceStatus === '') {
-         showToast("Please generate the bill first", true);
+    // // Add validation to execute this only when the bill is generated i.e. displayed on the front-end
+    if (invoiceStatus === '') {
+        //  showToast("Please generate the bill first", true);
          return;
-     }*/
+     }
 
     showInventoryLoadingAnimation();
 
@@ -719,7 +726,6 @@ document.getElementById("printButton").addEventListener("click", async function 
         setTimeout(() => {
             window.location.reload();
         }, 1000); // Match the duration of the toast message
-
         printInvoice(); // PRINT THE BILL WHEN ALL OPERATIONS ARE SUCCESSFULLY COMPLETED //
 
     } catch (error) {
@@ -731,6 +737,10 @@ document.getElementById("printButton").addEventListener("click", async function 
 });
 
 function printInvoice() {
+    if (invoiceStatus === '') {
+        showToast("Please generate the bill first", true);
+        return;
+    }else{
     // Get the invoice details container
     const invoiceDetails = document.getElementById('invoice');
 
@@ -777,6 +787,7 @@ function printInvoice() {
             // Some browsers might require a manual step for advanced settings.
         };
     });
+}
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
