@@ -7,18 +7,19 @@ const mysql = require('mysql');
 let dbCredentials;
 let connection;
 
-// Middleware to set dbCredentials and connection
+// Middleware to set dbCredentials and create the connection pool if it doesn't exist
 router.use((req, res, next) => {
     dbCredentials = req.session.dbCredentials;
-    connection = mysql.createPool({
-        host: dbCredentials.host,
-        user: dbCredentials.user,
-        password: dbCredentials.password,
-        database: dbCredentials.database
-    });
+    if (!connection) {
+        connection = mysql.createPool({
+            host: dbCredentials.host,
+            user: dbCredentials.user,
+            password: dbCredentials.password,
+            database: dbCredentials.database
+        });
+    }
     next();
 });
-
 
 // Handle form submission  // INSERT TO DATABASE //
 router.post('/submit', (req, res) => {

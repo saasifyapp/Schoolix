@@ -595,13 +595,12 @@ function generateBill_test() {
 /*****************************         PRINT BUTTON FUNCTIONALITY       ************************/
 
 
-
 document.getElementById("printButton").addEventListener("click", async function () {
-    // // Add validation to execute this only when the bill is generated i.e. displayed on the front-end
+    // Add validation to execute this only when the bill is generated i.e. displayed on the front-end
     if (invoiceStatus === '') {
-        //  showToast("Please generate the bill first", true);
-         return;
-     }
+        showToast("Please generate the bill first", true);
+        return;
+    }
 
     showInventoryLoadingAnimation();
 
@@ -666,7 +665,7 @@ document.getElementById("printButton").addEventListener("click", async function 
         }).filter(item => item);
 
         // Create the request body
-        const requestBody = JSON.stringify({
+        const requestBody = {
             buyerName,
             buyerMobile,
             buyerClass,
@@ -678,49 +677,21 @@ document.getElementById("printButton").addEventListener("click", async function 
             bookDetails,
             uniformDetails,
             paymentMethod
-        });
+        };
 
-        // Send the data to the server for invoice details
-        const invoiceDetailsResponse = await fetch("/inventory/generate_invoice/invoice_details", {
+        // Send the data to the server for all operations in a single request
+        const response = await fetch("/inventory/generate_invoice/invoice_details", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: requestBody
+            body: JSON.stringify(requestBody)
         });
 
-        if (!invoiceDetailsResponse.ok) {
-            throw new Error("Error inserting invoice details");
+        if (!response.ok) {
+            throw new Error("Error processing invoice");
         }
-        showToast("Invoice details saved successfully");
-
-        // Send the data to the server for invoice items
-        const invoiceItemsResponse = await fetch("/inventory/generate_invoice/invoice_items", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: requestBody
-        });
-
-        if (!invoiceItemsResponse.ok) {
-            throw new Error("Error inserting invoice items");
-        }
-        showToast("Invoice items saved successfully");
-
-        // After successfully inserting invoice items, update the remaining quantities
-        const updateQuantitiesResponse = await fetch("/inventory/reduce_quantity", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ invoiceNo })
-        });
-
-        if (!updateQuantitiesResponse.ok) {
-            throw new Error("Error updating remaining quantities");
-        }
-        showToast("Stock updated successfully");
+        showToast("Invoice processed successfully");
 
         // Reload the page after showing the toast message
         setTimeout(() => {

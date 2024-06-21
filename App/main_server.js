@@ -33,7 +33,7 @@ const connection_auth = mysql.createPool({
     waitForConnections: true,
     connectionLimit: 20,
     queueLimit: 0,
-    idleTimeoutMillis: 30000 // 30 seconds
+    //idleTimeoutMillis: 30000 // 30 seconds
 });
 
 // Session configuration
