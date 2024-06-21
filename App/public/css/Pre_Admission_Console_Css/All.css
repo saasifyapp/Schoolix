@@ -525,7 +525,7 @@ nav {
     max-height: calc(88vh - 1rem); /* Set maximum height for the table container */
     overflow-y: auto;
     margin-top: 0.625rem; /* Set margin between the table container and overlay content */
-    border-radius: 10px;
+    border-radius: 10px 10px 0 0 ;
     margin-bottom: 1rem;
 }
 
@@ -537,8 +537,7 @@ nav {
 #teacherTable {
     width: 100%; /* Set table width to 100% */
     border-collapse: collapse;
-    border-spacing: 0;
-    border-radius: 2rem;
+    border-spacing: 0;    
     box-shadow: 0 0 0 1px #dddddd;
     margin: auto;
     animation: fadeUp 0.5s ease-in-out;
