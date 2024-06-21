@@ -10,17 +10,15 @@ let connection;
 // Middleware to set dbCredentials and create the connection pool if it doesn't exist
 router.use((req, res, next) => {
     dbCredentials = req.session.dbCredentials;
-    if (!connection) {
         connection = mysql.createPool({
             host: dbCredentials.host,
             user: dbCredentials.user,
             password: dbCredentials.password,
             database: dbCredentials.database
         });
-    }
+    
     next();
 });
-
 
 // Fetching book data endpoint
 router.get('/inventory/uniform_vendor', (req, res) => {

@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
 
-
 // Define dbCredentials and connection outside the endpoint
 let dbCredentials;
 let connection;
@@ -10,22 +9,19 @@ let connection;
 // Middleware to set dbCredentials and create the connection pool if it doesn't exist
 router.use((req, res, next) => {
     dbCredentials = req.session.dbCredentials;
-    if (!connection) {
-        connection = mysql.createPool({
-            host: dbCredentials.host,
-            user: dbCredentials.user,
-            password: dbCredentials.password,
-            database: dbCredentials.database
-        });
-    }
+    connection = mysql.createPool({
+        host: dbCredentials.host,
+        user: dbCredentials.user,
+        password: dbCredentials.password,
+        database: dbCredentials.database
+    });
+
     next();
 });
 
-
+// Route to handle adding a new vendor
 router.post('/inventory/purchase/add_vendor', (req, res) => {
-
     const { vendorName, amountPaid, vendorFor } = req.body;
-
     const netPayable = req.body.netPayable || 0;
     const balance = req.body.balance || 0;
     const vendorType = req.body.vendorFor;
@@ -42,7 +38,7 @@ router.post('/inventory/purchase/add_vendor', (req, res) => {
                 res.status(400).send('Vendor name already exists');
             } else {
                 // If vendor name does not exist, proceed with insertion
-                const sql = 'INSERT INTO inventory_vendor_details (vendor_name ,net_payable, paid_till_now, balance, vendorFor) VALUES (?, ?, ?, ?, ?)';
+                const sql = 'INSERT INTO inventory_vendor_details (vendor_name, net_payable, paid_till_now, balance, vendorFor) VALUES (?, ?, ?, ?, ?)';
                 connection.query(sql, [vendorName, netPayable, amountPaid, balance, vendorType], (err, result) => {
                     if (err) {
                         console.error('Error adding vendor:', err);
@@ -57,8 +53,7 @@ router.post('/inventory/purchase/add_vendor', (req, res) => {
     });
 });
 
-
-// Deleting data endpoint
+// Route to delete a vendor
 router.delete('/inventory/vendors/:vendorName', (req, res) => {
     const vendorName = req.params.vendorName;
     const sql = 'DELETE FROM inventory_vendor_details WHERE vendor_name = ?';
@@ -74,8 +69,7 @@ router.delete('/inventory/vendors/:vendorName', (req, res) => {
     });
 });
 
-
-// Endpoint to handle both GET and PUT requests for retrieving and updating Paid Amount of Vendor
+// Route to handle both GET and PUT requests for retrieving and updating Paid Amount of Vendor
 router.route('/inventory/vendors/:vendorName/paid_till_now')
     .get((req, res) => {
         const vendorName = req.params.vendorName;
@@ -113,9 +107,7 @@ router.route('/inventory/vendors/:vendorName/paid_till_now')
         });
     });
 
-
-
-// Calculate net_payable and update it to vendor table //
+// Route to calculate net_payable and update it to vendor table
 router.get('/inventory/vendors', (req, res) => {
     const sqlQuery = `
         SELECT 
@@ -165,11 +157,11 @@ router.get('/inventory/vendors', (req, res) => {
     });
 });
 
-// Add a new endpoint to handle search queries (Vendors)
+// Route to search vendors by name
 router.get("/inventory/vendors/search", (req, res) => {
     const searchQuery = req.query.search.trim(); // Get the search query from request URL query parameters
 
-    // Construct the SQL query to filter based on the student name
+    // Construct the SQL query to filter based on the vendor name
     let query = `SELECT * FROM inventory_vendor_details WHERE vendor_name LIKE ?`;
 
     // Execute the SQL query
@@ -181,29 +173,9 @@ router.get("/inventory/vendors/search", (req, res) => {
         }
         res.json(rows);
     });
-
-
 });
 
-// // Endpoint to update vendor details
-// router.put('/inventory/vendors/:vendorName', (req, res) => {
-//     const vendorName = req.params.vendorName;
-//     const { vendor_name, vendorFor } = req.body;
-
-//     if (!vendor_name || !vendorFor) {
-//         return res.status(400).json({ error: 'Vendor name and type are required.' });
-//     }
-
-//     const sql = 'UPDATE inventory_vendor_details SET vendor_name = ?, vendorFor = ? WHERE vendor_name = ?';
-//     connection.query(sql, [vendor_name, vendorFor, vendorName], (err, result) => {
-//         if (err) {
-//             console.error('Error updating vendor details:', err);
-//             return res.status(500).json({ error: 'Failed to update vendor details.' });
-//         }
-//         res.json({ message: 'Vendor details updated successfully.' });
-//     });
-// });
-
+// Route to handle retrieving and updating vendor details by sr_no
 router.route('/inventory/vendors/:sr_no')
     .get((req, res) => {
         const sr_no = req.params.sr_no;
@@ -284,7 +256,5 @@ router.route('/inventory/vendors/:sr_no')
             });
         });
     });
-
-
 
 module.exports = router;
