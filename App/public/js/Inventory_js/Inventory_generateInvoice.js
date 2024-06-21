@@ -583,6 +583,7 @@ function generateBill_test() {
     // Populate Invoice Number in HTML
     document.getElementById('invoiceNumberDisplay').textContent = `Invoice No: #${invoiceNo}`;
     hideInventoryLoadingAnimation();
+    showToast("Invoice Generated Succesfully", false);
     return true;
 }
 
@@ -598,7 +599,7 @@ function generateBill_test() {
 document.getElementById("printButton").addEventListener("click", async function () {
     // Add validation to execute this only when the bill is generated i.e. displayed on the front-end
     if (invoiceStatus === '') {
-        showToast("Please generate the bill first", true);
+        // showToast("Please generate the bill first", true);
         return;
     }
 
@@ -752,7 +753,7 @@ function printInvoice() {
         pdfWindow.onload = function () {
             pdfWindow.focus();
             pdfWindow.print();
-
+            showToast("Invoice Printed Succesfully", false);
             // If you want the print window to only show 1 page in print preview,
             // you can customize the print window settings here.
             // Some browsers might require a manual step for advanced settings.

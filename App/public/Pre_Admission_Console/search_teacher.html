@@ -154,7 +154,7 @@
                     <div class="search_item">
                         <div style="position: relative; display: inline-block;">
                             <input type="text" id="searchField" placeholder="Enter Teacher Name..."
-                                oninput="searchDetails()">
+                                oninput="debouncedSearchDetails()">
                             <!-- <button id="searchButton" class="search-button" onclick="searchDetails()">
                                 <img src="../images/search.gif" alt="Search Icon" style="height: 100%;">
                             </button> -->
@@ -229,7 +229,7 @@
                                 const noResultsRow = document.createElement('tr');
                                 noResultsRow.innerHTML = '<td colspan="10">No results found</td>';
                                 // Assuming you have a table element to append this row to, e.g., teacherTable
-                                teacherTable.appendChild(noResultsRow);
+                                teacherTableBody.appendChild(noResultsRow);
                             } else {
                                 displayTeachers(data);
                             }
@@ -304,29 +304,38 @@
                             hideLoadingAnimation();
                         }
                     }
+                    let debounceTimeout;
+
+                    function debounce(func, delay) {
+                        return function (...args) {
+                            clearTimeout(debounceTimeout);
+                            debounceTimeout = setTimeout(() => func.apply(this, args), delay);
+                        };
+                    }
 
 
 
 
                     async function searchDetails() {
                         // showLoadingAnimation();
+                        console.log("executed")
 
                         const searchTerm = document.getElementById('searchField').value.trim();
 
-                        // Check if the search term is empty
-                        if (searchTerm === '') {
-                            // alert('Please enter a search term.');
-                            // showToast('Please enter a search term.', true); 
-                            refreshData();
-                            // hideLoadingAnimation();
-                            return;
-                        }
+                        // // Check if the search term is empty
+                        // if (searchTerm === '') {
+                        //     // alert('Please enter a search term.');
+                        //     // showToast('Please enter a search term.', true); 
+                        //     refreshData();
+                        //     // hideLoadingAnimation();
+                        //     return;
+                        // }
 
-                        // If search term is empty, refresh data to show all teachers
-                        if (!searchTerm) {
-                            refreshData();
-                            return;
-                        }
+                        // // If search term is empty, refresh data to show all teachers
+                        // if (!searchTerm) {
+                        //     refreshData();
+                        //     return;
+                        // }
 
                         // Fetch data from the server based on the search term
                         await fetch(`/teachers/search?search=${encodeURIComponent(searchTerm)}`)
@@ -336,11 +345,14 @@
                                 teacherTable.innerHTML = ''; // Clear previous data
 
                                 if (data.length === 0) {
+                                    console.log("No data")
+                                    teacherTable.innerHTML = '';
                                     // If no results found, display a message
                                     const noResultsRow = document.createElement('tr');
                                     noResultsRow.innerHTML = '<td colspan="7">No results found</td>';
                                     teacherTable.appendChild(noResultsRow);
                                 } else {
+                                    console.log("yes data")
                                     // Append teacher data to the table
                                     data.forEach(teacher => {
                                         const row = document.createElement('tr');
@@ -400,7 +412,8 @@
                             })
                             .catch(error => console.error('Error:', error));
                     }
-
+                    // Debounced version of searchDetails
+                    const debouncedSearchDetails = debounce(searchDetails, 500);
 
 
                     async function moveToAdmitted(teacherName, mobileNo, address, dob, qualification, experience) {

@@ -1,5 +1,5 @@
 ////Loading Animation
-function showInvoiceLoadingAnimation () {
+function showInvoiceLoadingAnimation() {
     console.log("show")
     document.getElementById('loadingOverlayReportsinventory').style.display = 'flex';
 }
@@ -113,10 +113,10 @@ $(function () {
         $("#invoice-date").text(filterValue);
 
         let tableHeading = filterValue === "Defaulter List" ? "Defaulter Details" :
-                           !isDate(filterValue) ? "Bills for Class - " + filterValue :
-                           "Bills for " + filterValue;
+            !isDate(filterValue) ? "Bills for Class - " + filterValue :
+                "Bills for " + filterValue;
         $("#table-heading").text(tableHeading);
-       
+
 
         let tableRows = '';
         data.forEach(entry => {
@@ -160,7 +160,7 @@ $(function () {
 
     function showToast(message, isError) {
         const toastContainer = document.getElementById("toast-container");
-    
+
         // Create a new toast element
         const toast = document.createElement("div");
         toast.classList.add("toast");
@@ -168,13 +168,13 @@ $(function () {
             toast.classList.add("error");
         }
         toast.textContent = message;
-    
+
         // Append the toast to the container
         toastContainer.appendChild(toast);
-    
+
         // Show the toast
         toast.style.display = 'block';
-    
+
         // Remove the toast after 4 seconds
         setTimeout(function () {
             toast.style.animation = 'slideOutRight 0.5s forwards';
@@ -183,5 +183,67 @@ $(function () {
             });
         }, 4000);
     }
+
+
+
 });
- 
+
+function exportToExcel() {
+    const selectedClass = $('#filter-class').val();
+    const defaulterSwitch = $('#defaulter-switch').is(":checked");
+    const dateText = $("#datepicker").val();
+
+    var htmlTable = document.getElementById('invoice-table');
+    var html = htmlTable.outerHTML;
+
+    // Generate a temporary download link
+    var downloadLink = document.createElement("a");
+    document.body.appendChild(downloadLink);
+
+    // CSV representation of the HTML table
+    var csv = [];
+    var rows = htmlTable.rows;
+    var totalPaid = 0;
+    var totalBalance = 0;
+
+    for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].cells;
+        for (var j = 0; j < cols.length; j++) {
+            row.push(cols[j].innerText);
+        }
+
+        // Sum up the Paid Amount and Balance Amount columns
+        if (i > 0) { // Skip header row
+            totalPaid += parseFloat(cols[6].innerText) || 0; // Paid Amount column (7th column, index 6)
+            totalBalance += parseFloat(cols[7].innerText) || 0; // Balance Amount column (8th column, index 7)
+        }
+
+        csv.push(row.join(","));
+    }
+
+    // Append totals to the CSV
+    csv.push(`,,,,,,Total Paid,${totalPaid.toFixed(2)}`);
+    csv.push(`,,,,,,Total Balance,${totalBalance.toFixed(2)}`);
+
+    // Convert to CSV string
+    var csvContent = csv.join("\n");
+
+    // Set CSV as href and download attributes
+    downloadLink.href = 'data:text/csv;charset=utf-8,' + encodeURI(csvContent);
+
+    // Determine the filename based on the current filter
+    let filename = 'Invoice_Reports.csv';
+    if (defaulterSwitch) {
+        filename = 'Defaulter_List.csv';
+    } else if (selectedClass) {
+        filename = selectedClass + '_Invoice_Reports.csv';
+    } else if (dateText) {
+        filename = dateText + '_Invoice_Reports.csv';
+    }
+
+    downloadLink.download = filename;
+
+    // Trigger the download
+    downloadLink.click();
+    document.body.removeChild(downloadLink); // Clean up the link element
+}
