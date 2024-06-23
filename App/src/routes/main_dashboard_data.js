@@ -3,22 +3,11 @@ const router = express.Router();
 const mysql = require('mysql');
 
 
-// Define dbCredentials and connection outside the endpoint
-let dbCredentials;
-let connection;
+const connectionManager = require('../middleware/connectionManager'); // Adjust the path to match the new location
 
-// Middleware to set dbCredentials and create the connection pool if it doesn't exist
-router.use((req, res, next) => {
-    dbCredentials = req.session.dbCredentials;
-        connection = mysql.createPool({
-            host: dbCredentials.host,
-            user: dbCredentials.user,
-            password: dbCredentials.password,
-            database: dbCredentials.database
-        });
-    
-    next();
-});
+// Use the connection manager middleware
+router.use(connectionManager);
+
 
 router.get('/main_dashboard_data', (req, res) => {
 
@@ -31,7 +20,7 @@ router.get('/main_dashboard_data', (req, res) => {
     // Fetch counts for each table
     const promises = tableNames.map(tableName => {
         return new Promise((resolve, reject) => {
-            connection.query(`SELECT COUNT(*) AS count FROM ${tableName}`, (error, results) => {
+            req.connectionPool.query(`SELECT COUNT(*) AS count FROM ${tableName}`, (error, results) => {
                 if (error) {
                     console.error(`Error querying MySQL for table ${tableName}:`, error);
                     reject(error);

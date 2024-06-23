@@ -3,32 +3,16 @@ const router = express.Router();
 const mysql = require('mysql');
 
 
-// Define dbCredentials and connection outside the endpoint
-let dbCredentials;
-let connection;
+const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
 
-// Middleware to set dbCredentials and create the connection pool if it doesn't exist
-router.use((req, res, next) => {
-    dbCredentials = req.session.dbCredentials;
+// Use the connection manager middleware
+router.use(connectionManager);
 
-    // Create or reuse connection pool based on dbCredentials
-    if (!connection || connection.config.host !== dbCredentials.host) {
-        // Create new connection pool if not already exists or different host
-        connection = mysql.createPool({
-            host: dbCredentials.host,
-            user: dbCredentials.user,
-            password: dbCredentials.password,
-            database: dbCredentials.database
-        });
-    }
-
-    next();
-});
 
 // Fetching book data endpoint
 router.get('/inventory/all_vendor', (req, res) => {
     const sql = 'SELECT vendor_name FROM inventory_vendor_details';
-    connection.query(sql, (err, result) => {
+    req.connectionPool.query(sql, (err, result) => {
         if (err) {
             console.error('Error fetching books:', err);
             res.status(500).json({ error: 'Error fetching books' });
@@ -45,7 +29,7 @@ router.get('/inventory/all_vendor', (req, res) => {
 router.get('/inventory/vendors_summary', (req, res) => {
     const sql = 'SELECT vendor_name,vendorFor,net_payable,paid_till_now, balance  FROM inventory_vendor_details';
 
-    connection.query(sql, (err, result) => {
+    req.connectionPool.query(sql, (err, result) => {
         if (err) {
             console.error('Error fetching vendor summary:', err);
             res.status(500).send("Error fetching vendor summary");
@@ -84,7 +68,7 @@ LEFT JOIN
     WHERE
     V.vendor_name = ?; `;
 
-    connection.query(sql, [vendorName], (err, result) => {
+    req.connectionPool.query(sql, [vendorName], (err, result) => {
         if (err) {
             console.error('Error fetching vendor details:', err);
             res.status(500).send("Error fetching vendor details");
@@ -101,12 +85,12 @@ router.get('/inventory/profit_loss', (req, res) => {
     const sqlBooks = 'SELECT SUM(purchase_price * (ordered_quantity - remaining_quantity - returned_quantity)) as total_purchase_price, SUM(selling_price * (ordered_quantity - remaining_quantity - returned_quantity)) as total_selling_price, SUM((selling_price - purchase_price) * (ordered_quantity - remaining_quantity - returned_quantity)) as total_profit FROM inventory_book_details';
     const sqlUniforms = 'SELECT SUM(purchase_price * (ordered_quantity - remaining_quantity - returned_quantity)) as total_purchase_price, SUM(selling_price * (ordered_quantity - remaining_quantity - returned_quantity)) as total_selling_price, SUM((selling_price - purchase_price) * (ordered_quantity - remaining_quantity - returned_quantity)) as total_profit FROM inventory_uniform_details';
 
-    connection.query(sqlBooks, (err, resultBooks) => {
+    req.connectionPool.query(sqlBooks, (err, resultBooks) => {
         if (err) {
             console.error('Error fetching books profit/loss:', err);
             res.status(500).send("Error fetching books profit/loss");
         } else {
-            connection.query(sqlUniforms, (err, resultUniforms) => {
+            req.connectionPool.query(sqlUniforms, (err, resultUniforms) => {
                 if (err) {
                     console.error('Error fetching uniforms profit/loss:', err);
                     res.status(500).send("Error fetching uniforms profit/loss");

@@ -3,27 +3,11 @@ const router = express.Router();
 const mysql = require('mysql');
 
 
-// Define dbCredentials and connection outside the endpoint
-let dbCredentials;
-let connection;
+const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
 
-// Middleware to set dbCredentials and create the connection pool if it doesn't exist
-router.use((req, res, next) => {
-    dbCredentials = req.session.dbCredentials;
+// Use the connection manager middleware
+router.use(connectionManager);
 
-    // Create or reuse connection pool based on dbCredentials
-    if (!connection || connection.config.host !== dbCredentials.host) {
-        // Create new connection pool if not already exists or different host
-        connection = mysql.createPool({
-            host: dbCredentials.host,
-            user: dbCredentials.user,
-            password: dbCredentials.password,
-            database: dbCredentials.database
-        });
-    }
-
-    next();
-});
 
 // Get data for invoice display
 router.get('/inventory/invoices', (req, res) => {
@@ -39,7 +23,7 @@ router.get('/inventory/invoices', (req, res) => {
                     mode_of_payment 
                    FROM inventory_invoice_details`;
 
-    connection.query(query, (err, results) => {
+    req.connectionPool.query(query, (err, results) => {
         if (err) {
             console.error('Error fetching invoice data: ' + err.stack);
             return res.status(500).json({ error: 'Error fetching invoice data' });
@@ -65,7 +49,7 @@ router.get('/inventory/searchinvoices', (req, res) => {
     }
 
     // Execute the SQL query with parameters
-    connection.query(query, (err, rows) => {
+    req.connectionPool.query(query, (err, rows) => {
         if (err) {
             console.error("Error fetching data: " + err.stack);
             res.status(500).json({ error: "Error fetching data" });
@@ -83,7 +67,7 @@ router.get("/inventory/class/:class", (req, res) => {
     let query = `SELECT * FROM inventory_invoice_details WHERE class_of_buyer = ?`;
 
     // Execute the SQL query
-    connection.query(query, [selectedClass], (err, rows) => {
+    req.connectionPool.query(query, [selectedClass], (err, rows) => {
         if (err) {
             console.error("Error fetching data: " + err.stack);
             res.status(500).json({ error: "Error fetching data" });
@@ -103,7 +87,7 @@ router.put('/inventory/updatePaidAmount', (req, res) => {
         WHERE invoiceNo = ?
     `;
 
-    connection.query(query, [paidAmount, balanceAmount, invoiceDate, invoiceNo], (err, result) => {
+    req.connectionPool.query(query, [paidAmount, balanceAmount, invoiceDate, invoiceNo], (err, result) => {
         if (err) {
             console.error('Error updating invoice:', err);
             return res.status(500).send('Error updating invoice');
@@ -123,7 +107,7 @@ router.delete("/inventory/deleteInvoice", (req, res) => {
     const deleteInvoiceQuery = `DELETE FROM inventory_invoice_details WHERE invoiceNo = ? LIMIT 1`;
 
     // Fetch related items
-    connection.query(selectItemsQuery, [invoiceNo], (err, items) => {
+    req.connectionPool.query(selectItemsQuery, [invoiceNo], (err, items) => {
         if (err) {
             console.error("Error fetching invoice items:", err);
             res.status(500).send("Error fetching invoice items");
@@ -131,7 +115,7 @@ router.delete("/inventory/deleteInvoice", (req, res) => {
         }
 
         // Delete related items
-        connection.query(deleteItemsQuery, [invoiceNo], (err, result) => {
+        req.connectionPool.query(deleteItemsQuery, [invoiceNo], (err, result) => {
             if (err) {
                 console.error("Error deleting invoice items:", err);
                 res.status(500).send("Error deleting invoice items");
@@ -143,14 +127,14 @@ router.delete("/inventory/deleteInvoice", (req, res) => {
                 const { item_name, quantity, type, class_size } = item;
                 if (type === 'Book') {
                     const updateBookQuery = `UPDATE inventory_book_details SET remaining_quantity = remaining_quantity + ? WHERE title = ? AND class_of_title = ?`;
-                    connection.query(updateBookQuery, [quantity, item_name, class_size], (err, result) => {
+                    req.connectionPool.query(updateBookQuery, [quantity, item_name, class_size], (err, result) => {
                         if (err) {
                             console.error(`Error updating book details for ${item_name}:`, err);
                         }
                     });
                 } else if (type === 'Uniform') {
                     const updateUniformQuery = `UPDATE inventory_uniform_details SET remaining_quantity = remaining_quantity + ? WHERE uniform_item = ? AND size_of_item = ?`;
-                    connection.query(updateUniformQuery, [quantity, item_name, class_size], (err, result) => {
+                    req.connectionPool.query(updateUniformQuery, [quantity, item_name, class_size], (err, result) => {
                         if (err) {
                             console.error(`Error updating uniform details for ${item_name}:`, err);
                         }
@@ -159,7 +143,7 @@ router.delete("/inventory/deleteInvoice", (req, res) => {
             });
 
             // Delete the invoice
-            connection.query(deleteInvoiceQuery, [invoiceNo], (err, result) => {
+            req.connectionPool.query(deleteInvoiceQuery, [invoiceNo], (err, result) => {
                 if (err) {
                     console.error("Error deleting invoice:", err);
                     res.status(500).send("Error deleting invoice");
@@ -217,7 +201,7 @@ router.get('/get_invoice/:invoiceNo', (req, res) => {
         WHERE ii.invoiceNo = ?`;
 
     // Execute invoice details query
-    connection.query(invoiceQuery, [invoiceNo], (err, invoiceResults) => {
+    req.connectionPool.query(invoiceQuery, [invoiceNo], (err, invoiceResults) => {
         if (err) {
             console.error('Error fetching invoice data: ' + err.stack);
             return res.status(500).json({ error: 'Error fetching invoice data' });
@@ -229,7 +213,7 @@ router.get('/get_invoice/:invoiceNo', (req, res) => {
         }
 
         // Execute invoice items query
-        connection.query(itemsQuery, [invoiceNo], (err, itemsResults) => {
+        req.connectionPool.query(itemsQuery, [invoiceNo], (err, itemsResults) => {
             if (err) {
                 console.error('Error fetching invoice items: ' + err.stack);
                 return res.status(500).json({ error: 'Error fetching invoice items' });

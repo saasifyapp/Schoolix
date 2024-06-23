@@ -2,28 +2,12 @@ const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
 
+const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
 
-// Define dbCredentials and connection outside the endpoint
-let dbCredentials;
-let connection;
+// Use the connection manager middleware
+router.use(connectionManager);
 
-// Middleware to set dbCredentials and create the connection pool if it doesn't exist
-router.use((req, res, next) => {
-    dbCredentials = req.session.dbCredentials;
 
-    // Create or reuse connection pool based on dbCredentials
-    if (!connection || connection.config.host !== dbCredentials.host) {
-        // Create new connection pool if not already exists or different host
-        connection = mysql.createPool({
-            host: dbCredentials.host,
-            user: dbCredentials.user,
-            password: dbCredentials.password,
-            database: dbCredentials.database
-        });
-    }
-
-    next();
-});
 
 // Handle form submission  // INSERT TO DATABASE
 router.post('/submit_teacher', (req, res) => {
@@ -39,7 +23,7 @@ router.post('/submit_teacher', (req, res) => {
         
     )
     `;
-    connection.query(createTableQuery3, (err, result) => {
+    req.connectionPool.query(createTableQuery3, (err, result) => {
         if (err) {
             console.error('Error creating table: ' + err.stack);
             return;
@@ -58,7 +42,7 @@ router.post('/submit_teacher', (req, res) => {
     )
     `;
 
-    connection.query(createTableQuery4, (err, result) => {
+    req.connectionPool.query(createTableQuery4, (err, result) => {
         if (err) {
             console.error('Error creating table: ' + err.stack);
             return;
@@ -69,7 +53,7 @@ router.post('/submit_teacher', (req, res) => {
 
     const dataToInsert = { teacher_name, mobile_no, res_address, dob, qualification, experience };
 
-    const query = connection.query('INSERT INTO pre_adm_registered_teachers SET ?', dataToInsert, (err, result) => {
+    const query = req.connectionPool.query('INSERT INTO pre_adm_registered_teachers SET ?', dataToInsert, (err, result) => {
         if (err) {
             console.error('Error inserting data: ' + err.stack);
             res.status(500).send('Internal Server Error');

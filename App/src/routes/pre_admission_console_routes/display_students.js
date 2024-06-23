@@ -3,32 +3,16 @@ const router = express.Router();
 const mysql = require('mysql');
 
 
-// Define dbCredentials and connection outside the endpoint
-let dbCredentials;
-let connection;
+const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
 
-// Middleware to set dbCredentials and create the connection pool if it doesn't exist
-router.use((req, res, next) => {
-    dbCredentials = req.session.dbCredentials;
+// Use the connection manager middleware
+router.use(connectionManager);
 
-    // Create or reuse connection pool based on dbCredentials
-    if (!connection || connection.config.host !== dbCredentials.host) {
-        // Create new connection pool if not already exists or different host
-        connection = mysql.createPool({
-            host: dbCredentials.host,
-            user: dbCredentials.user,
-            password: dbCredentials.password,
-            database: dbCredentials.database
-        });
-    }
-
-    next();
-});
 
 // Add a new endpoint to retrieve student data // READ FROM DATABASE
 router.get('/students', (req, res) => {
     const query = 'SELECT * FROM pre_adm_registered_students';
-    connection.query(query, (err, rows) => {
+    req.connectionPool.query(query, (err, rows) => {
         if (err) {
             console.error('Error fetching data: ' + err.stack);
             res.status(500).json({ error: 'Error fetching data' });
@@ -48,7 +32,7 @@ router.get("/students/class/:class", (req, res) => {
     let query = `SELECT * FROM pre_adm_registered_students WHERE standard = ?`;
 
     // Execute the SQL query
-    connection.query(query, [selectedClass], (err, rows) => {
+    req.connectionPool.query(query, [selectedClass], (err, rows) => {
         if (err) {
             console.error("Error fetching data: " + err.stack);
             res.status(500).json({ error: "Error fetching data" });
@@ -68,7 +52,7 @@ router.get("/students/search", (req, res) => {
     let query = `SELECT * FROM pre_adm_registered_students WHERE student_name LIKE ?`;
 
     // Execute the SQL query
-    connection.query(query, [`%${searchQuery}%`], (err, rows) => {
+    req.connectionPool.query(query, [`%${searchQuery}%`], (err, rows) => {
         if (err) {
             console.error("Error fetching data: " + err.stack);
             res.status(500).json({ error: "Error fetching data" });
@@ -92,7 +76,7 @@ router.post("/move-to-admitted", (req, res) => {
     const insertQuery = `INSERT INTO pre_adm_admitted_students (student_name, mobile_no, res_address, dob, standard) VALUES (?, ?, ?, ?, ?)`;
 
     // Execute the SQL query to insert the student into the admitted database
-    connection.query(insertQuery, [studentName, mobileNo, address, dob, standard], (insertErr, insertResult) => {
+    req.connectionPool.query(insertQuery, [studentName, mobileNo, address, dob, standard], (insertErr, insertResult) => {
         if (insertErr) {
             console.error("Error inserting student into admitted database:", insertErr);
             return res.status(500).send("Error admitting student");
@@ -102,7 +86,7 @@ router.post("/move-to-admitted", (req, res) => {
         const query = `DELETE FROM pre_adm_registered_students WHERE student_name = ? AND mobile_no = ? LIMIT 1`;
 
         // Execute the SQL query with the student's name as a parameter
-        connection.query(query, [studentName, mobileNo], (err, result) => {
+        req.connectionPool.query(query, [studentName, mobileNo], (err, result) => {
             if (err) {
                 console.error("Error removing student:", err);
                 res.status(500).send("Error removing student");
@@ -130,7 +114,7 @@ router.delete("/remove-student", (req, res) => {
     const query = `DELETE FROM pre_adm_registered_students WHERE student_name = ? AND mobile_no = ? LIMIT 1`;
 
     // Execute the SQL query with the student's name as a parameter
-    connection.query(query, [studentName, mobileNo], (err, result) => {
+    req.connectionPool.query(query, [studentName, mobileNo], (err, result) => {
         if (err) {
             console.error("Error removing student:", err);
             res.status(500).send("Error removing student");

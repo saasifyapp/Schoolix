@@ -2,27 +2,10 @@ const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
 
-// Define dbCredentials and connection outside the endpoint
-let dbCredentials;
-let connection;
+const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
 
-// Middleware to set dbCredentials and create the connection pool if it doesn't exist
-router.use((req, res, next) => {
-    dbCredentials = req.session.dbCredentials;
-
-    // Create or reuse connection pool based on dbCredentials
-    if (!connection || connection.config.host !== dbCredentials.host) {
-        // Create new connection pool if not already exists or different host
-        connection = mysql.createPool({
-            host: dbCredentials.host,
-            user: dbCredentials.user,
-            password: dbCredentials.password,
-            database: dbCredentials.database
-        });
-    }
-
-    next();
-});
+// Use the connection manager middleware
+router.use(connectionManager);
 
 // Endpoint to retrieve the last invoice number from the table
 router.get("/inventory/generate_invoice/getLast_invoice_number", (req, res) => {
@@ -30,7 +13,7 @@ router.get("/inventory/generate_invoice/getLast_invoice_number", (req, res) => {
     let query_lastInvoiceNumber = "SELECT MAX(invoiceNo) AS lastInvoiceNumber FROM inventory_invoice_details";
 
     // Execute the SQL query
-    connection.query(query_lastInvoiceNumber, (err, result) => {
+    req.connectionPool.query(query_lastInvoiceNumber, (err, result) => {
         if (err) {
             console.error("Error fetching last invoice number: " + err.stack);
             return res.status(500).json({ error: "Error fetching last invoice number" });
@@ -65,7 +48,7 @@ router.post("/inventory/generate_invoice/get_books", (req, res) => {
     let query_getBooks = `SELECT title, selling_price, class_of_title FROM inventory_book_details WHERE class_of_title IN (?)`;
 
     // Execute the SQL query
-    connection.query(query_getBooks, [[selectedClass, ...applicableRanges]], (err, rows) => {
+    req.connectionPool.query(query_getBooks, [[selectedClass, ...applicableRanges]], (err, rows) => {
         if (err) {
             console.error("Error fetching books data: " + err.stack);
             return res.status(500).json({ error: "Error fetching books data" });
@@ -81,7 +64,7 @@ router.get("/inventory/generate_invoice/get_uniforms", (req, res) => {
     let query_getUniforms = `SELECT uniform_item, size_of_item, selling_price FROM inventory_uniform_details`;
 
     // Execute the SQL query
-    connection.query(query_getUniforms, (err, rows) => {
+    req.connectionPool.query(query_getUniforms, (err, rows) => {
         if (err) {
             console.error("Error fetching uniforms data: " + err.stack);
             return res.status(500).json({ error: "Error fetching uniforms data" });
@@ -99,7 +82,7 @@ router.post("/inventory/generate_invoice/get_uniform_price", (req, res) => {
     let query_getUniformPrice = `SELECT selling_price FROM inventory_uniform_details WHERE uniform_item = ? AND size_of_item = ?`;
 
     // Execute the SQL query
-    connection.query(query_getUniformPrice, [uniformName, size], (err, rows) => {
+    req.connectionPool.query(query_getUniformPrice, [uniformName, size], (err, rows) => {
         if (err) {
             console.error("Error fetching uniform price: " + err.stack);
             return res.status(500).json({ error: "Error fetching uniform price" });
@@ -123,7 +106,7 @@ router.post("/inventory/generate_invoice/get_book_quantities", (req, res) => {
     let query_getBookQuantities = `SELECT title, remaining_quantity FROM inventory_book_details WHERE title IN (?)`;
 
     // Execute the SQL query
-    connection.query(query_getBookQuantities, [bookTitles], (err, rows) => {
+    req.connectionPool.query(query_getBookQuantities, [bookTitles], (err, rows) => {
         if (err) {
             console.error("Error fetching book quantities: " + err.stack);
             return res.status(500).json({ error: "Error fetching book quantities" });
@@ -145,7 +128,7 @@ router.post("/inventory/generate_invoice/get_uniform_quantities", (req, res) => 
     const uniformItemsForQuery = uniformItems.map(item => [item.item, item.size]);
 
     // Execute the SQL query
-    connection.query(query_getUniformQuantities, [uniformItemsForQuery], (err, rows) => {
+    req.connectionPool.query(query_getUniformQuantities, [uniformItemsForQuery], (err, rows) => {
         if (err) {
             console.error("Error fetching uniform quantities: " + err.stack);
             return res.status(500).json({ error: "Error fetching uniform quantities" });
@@ -163,7 +146,7 @@ router.post("/inventory/generate_invoice/check_buyer", (req, res) => {
     let query_checkBuyer = "SELECT * FROM inventory_invoice_details WHERE buyerName = ? AND class_of_buyer = ?";
 
     // Execute the SQL query
-    connection.query(query_checkBuyer, [buyerName, buyerClass], (err, result) => {
+    req.connectionPool.query(query_checkBuyer, [buyerName, buyerClass], (err, result) => {
         if (err) {
             console.error("Error checking buyer:", err);
             return res.status(500).json({ error: "Error checking buyer" });
