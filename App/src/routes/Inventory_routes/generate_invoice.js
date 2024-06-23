@@ -179,7 +179,7 @@ router.post("/inventory/generate_invoice/invoice_details", async (req, res) => {
     try {
         // Get a connection from the pool
         conn = await new Promise((resolve, reject) => {
-            connection.getConnection((err, conn) => {
+            req.connectionPool.getConnection((err, conn) => {
                 if (err) reject(err);
                 else resolve(conn);
             });
