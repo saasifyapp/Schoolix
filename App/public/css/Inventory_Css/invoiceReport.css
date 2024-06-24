@@ -326,14 +326,16 @@ body {
 
 .table-container {
     display: block;
-    height: calc(100vh - 20rem); /* Takes the full viewport height minus 1rem padding */
+    height: calc(100vh - 20rem);
     overflow-y: auto;
-    border: 1px solid #ddd; /* Optional: Add a border around the scrollable area */
-    animation: fadeUp 0.5s ease-out; /* Apply the fade-up animation */
-    border-radius: 10px 10px 0 0; /* Apply border-radius to top corners */
-    box-sizing: border-box; /* Ensure padding and border are included in the height */
-    margin-right: 2rem;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    border: 1px solid #ddd;
+    animation: fadeUp 0.5s ease-out;
+    border-radius: 10px 10px 0 0;
+    box-sizing: border-box;
+    margin-right: auto;
 }
+
 
 #invoice-table {
     width: 100%;
@@ -346,9 +348,11 @@ body {
 
 #invoice-table th,
 #invoice-table td {
+    width: auto;
+    max-width: 110px; /* Example: Set a maximum width for columns */
     border: 1px solid #ddd;
     padding: 8px;
-    text-align: left;
+    text-align: center;
     box-sizing: border-box;
     text-align: center;
     opacity: 0; /* Initial opacity for fade effect */
@@ -380,8 +384,10 @@ body {
     border: 1px solid #dddddd;
     padding: 0.5rem;
     text-align: center;
-    height: 50px; /* Fixed height */
-    overflow: hidden; /* Hide content that overflows */
+    height: 50px;
+    overflow: hidden;
+    white-space: nowrap; /* Prevent text wrapping */
+    text-overflow: ellipsis; /* Show ellipsis for overflow text */
 }
 
 #invoice-table tr:hover td {
@@ -389,9 +395,7 @@ body {
     font-weight: bold;
 }
 
-#invoice-table thead th {
-    width: calc(100% / 9); /* Adjust width for each column */
-}
+
 #table-heading{
     color: var(--grey-color);
 }
@@ -426,6 +430,13 @@ body {
         font-size: 0.75rem;
     }
 }
+@media (max-width: 768px) {
+    #invoice-table th, #invoice-table td {
+        /* Adjust styles for smaller screens */
+        max-width: none; /* Reset max-width if necessary */
+    }
+}
+
 
 
 
