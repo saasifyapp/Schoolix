@@ -182,28 +182,33 @@ router.get('/get_invoice/:invoiceNo', (req, res) => {
 
     // Query to fetch invoice items
     const itemsQuery = `
-        SELECT 
-    ii.item_name, 
-    ii.quantity, 
-    CASE
-        WHEN ii.type = 'Book' THEN bd.selling_price
-        WHEN ii.type = 'Uniform' THEN ud.selling_price
-        ELSE 0
-    END AS purchase_price,
-    ii.quantity * CASE
-        WHEN ii.type = 'Book' THEN bd.selling_price
-        WHEN ii.type = 'Uniform' THEN ud.selling_price
-        ELSE 0
-    END AS total
-FROM inventory_invoice_items ii
-LEFT JOIN inventory_uniform_details ud 
-    ON ii.item_name = ud.uniform_item 
-    AND ii.class_size = ud.size_of_item
-    AND ii.type = 'Uniform'
-LEFT JOIN inventory_book_details bd 
-    ON ii.item_name = bd.title 
-    AND ii.type = 'Book'
-WHERE ii.invoiceNo = ?;`;
+       SELECT 
+        ii.item_name,
+        ii.class_size,
+        ii.quantity, 
+        CASE
+            WHEN ii.type = 'Book' THEN bd.selling_price
+            WHEN ii.type = 'Uniform' THEN ud.selling_price
+            ELSE 0
+        END AS purchase_price,
+        ii.quantity * CASE
+            WHEN ii.type = 'Book' THEN bd.selling_price
+            WHEN ii.type = 'Uniform' THEN ud.selling_price
+            ELSE 0
+        END AS total,
+        CASE
+            WHEN ii.type = 'Uniform' THEN CONCAT(ii.item_name, ' (Size: ', ii.class_size, ')')
+            ELSE ii.item_name
+        END AS display_name
+    FROM inventory_invoice_items ii
+    LEFT JOIN inventory_uniform_details ud 
+        ON ii.item_name = ud.uniform_item 
+        AND ii.class_size = ud.size_of_item
+        AND ii.type = 'Uniform'
+    LEFT JOIN inventory_book_details bd 
+        ON ii.item_name = bd.title 
+        AND ii.type = 'Book'
+    WHERE ii.invoiceNo = ?;`;
 
     // Execute invoice details query
     req.connectionPool.query(invoiceQuery, [invoiceNo], (err, invoiceResults) => {
