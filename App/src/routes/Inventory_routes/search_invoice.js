@@ -40,11 +40,11 @@ router.get('/inventory/searchinvoices', (req, res) => {
 
     if (req.query.invoiceNo) {
         // Search by invoice number
-        const escapedQuery = connection.escape(req.query.invoiceNo + '%');
+        const escapedQuery = req.connectionPool.escape(req.query.invoiceNo + '%');
         query += ` AND invoiceNo LIKE ${escapedQuery}`;
     } else if (searchQuery) {
         // Search by buyer name (if invoiceNo is not present)
-        const escapedQuery = connection.escape('%' + searchQuery + '%');
+        const escapedQuery = req.connectionPool.escape('%' + searchQuery + '%');
         query += ` AND (invoiceNo LIKE ${escapedQuery} OR buyerName LIKE ${escapedQuery})`;
     }
 
