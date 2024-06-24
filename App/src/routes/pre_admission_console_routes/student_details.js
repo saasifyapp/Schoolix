@@ -3,21 +3,10 @@ const router = express.Router();
 const mysql = require('mysql');
 
 
-// Define dbCredentials and connection outside the endpoint
-let dbCredentials;
-let connection;
+const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
 
-// Middleware to set dbCredentials and connection
-router.use((req, res, next) => {
-    dbCredentials = req.session.dbCredentials;
-    connection = mysql.createPool({
-        host: dbCredentials.host,
-        user: dbCredentials.user,
-        password: dbCredentials.password,
-        database: dbCredentials.database
-    });
-    next();
-});
+// Use the connection manager middleware
+router.use(connectionManager);
 
 
 // Handle form submission  // INSERT TO DATABASE //
@@ -32,7 +21,7 @@ router.post('/submit', (req, res) => {
             standard varchar(8) DEFAULT NULL
         )
     `;
-    connection.query(createTableQuery, (err, result) => {
+    req.connectionPool.query(createTableQuery, (err, result) => {
         if (err) {
             console.error('Error creating table: ' + err.stack);
             return;
@@ -48,7 +37,7 @@ router.post('/submit', (req, res) => {
             standard varchar(8) DEFAULT NULL
         )
     `;
-    connection.query(createTableQuery2, (err, result) => {
+    req.connectionPool.query(createTableQuery2, (err, result) => {
         if (err) {
             console.error('Error creating table: ' + err.stack);
             return;
@@ -59,7 +48,7 @@ router.post('/submit', (req, res) => {
     const { student_name, mobile_no, res_address, dob, standard } = req.body;
     const dataToInsert = { student_name, mobile_no, res_address, dob, standard };
 
-    const query = connection.query('INSERT INTO pre_adm_registered_students SET ?', dataToInsert, (err, result) => {
+    const query = req.connectionPool.query('INSERT INTO pre_adm_registered_students SET ?', dataToInsert, (err, result) => {
         if (err) {
             console.error('Error inserting data: ' + err.stack);
             res.status(500).send('Error inserting data');

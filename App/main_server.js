@@ -14,6 +14,11 @@ app.use(express.urlencoded({ extended: true }));
 
 
 
+const logoutManager = require('./src/middleware/logoutManager');
+
+
+
+
 // Configure dotenv to load the .env file from the  src directory
 dotenv.config({ path: path.join(__dirname, 'src', '.env') });
 // Serve static files from the parent directory
@@ -33,7 +38,7 @@ const connection_auth = mysql.createPool({
     waitForConnections: true,
     connectionLimit: 20,
     queueLimit: 0,
-    idleTimeoutMillis: 30000 // 30 seconds
+    //idleTimeoutMillis: 30000 // 30 seconds
 });
 
 // Session configuration
@@ -294,39 +299,8 @@ app.post('/clear-cookies', (req, res) => {
 });
 
 
-app.get('/logout', (req, res) => {
-    // Log the username of the user logging out
-    console.log('User logged out:', req.session.user.username);
-
-    // Clear cookies
-    res.clearCookie('jwt');
-    res.clearCookie('schoolName');
-    res.clearCookie('username');
-    res.clearCookie('session_cookie');
-
-    // If the user has a userConnectionPool, end it
-    if (req.session.userConnectionPool) {
-        req.session.userConnectionPool.end((err) => {
-            if (err) {
-                console.error('Error closing MySQL connection:', err);
-            } else {
-                console.log('User-specific database disconnected on signout.');
-            }
-        });
-    }
-
-    // Destroy the session
-    req.session.destroy((err) => {
-        if (err) {
-            console.error('Error destroying session:', err);
-        }
-    });
-
-    // Redirect to the home page
-    res.redirect('/');
-});
-
-
+// Route to handle logout
+app.get('/logout', logoutManager);
 
 app.get('/dashboard', authenticateToken, (req, res) => {
     // Serve the main_dashboard.html file

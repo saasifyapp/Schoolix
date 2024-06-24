@@ -168,7 +168,7 @@
 
                         <div style="position: relative; display: inline-block; margin-right: 10px;">
                             <input type="text" id="searchField" placeholder="Enter Student Name..."
-                                oninput="searchDetails()">
+                            oninput="debouncedSearchDetails()">
 
                             <!-- <button id="searchButton" class="search-button" onclick="searchDetails()">
                                 <img src="../images/search.gif" alt="Search Icon" style="height: 100%;">
@@ -477,26 +477,35 @@
         //         .catch(error => console.error('Error:', error));
         // }
 
+        let debounceTimeout;
+
+        function debounce(func, delay) {
+            return function (...args) {
+                clearTimeout(debounceTimeout);
+                debounceTimeout = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+
         async function searchDetails() {
-            // document.getElementById('classFilter').value = '';
+            document.getElementById('classFilter').value = '';
             // showLoadingAnimation();
 
             const searchTerm = document.getElementById('searchField').value.trim();
 
-            // Check if the search term is empty
-            if (searchTerm === '') {
-                // alert('Please enter a search term.');
-                // showToast('Please enter a search term.', true); 
-                refreshData();
-                // hideLoadingAnimation();
-                return;
-            }
+            // // Check if the search term is empty
+            // if (searchTerm === '') {
+            //     // alert('Please enter a search term.');
+            //     // showToast('Please enter a search term.', true); 
+            //     refreshData();
+            //     // hideLoadingAnimation();
+            //     return;
+            // }
 
-            // If search term is empty, refresh data to show all students
-            if (!searchTerm) {
-                refreshData();
-                return;
-            }
+            // // If search term is empty, refresh data to show all students
+            // if (!searchTerm) {
+            //     refreshData();
+            //     return;
+            // }
 
             // Fetch data from the server based on the search term
             await fetch(`/admitted_student/search?search=${encodeURIComponent(searchTerm)}`)
@@ -549,6 +558,9 @@
                 })
                 .catch(error => console.error('Error:', error));
         }
+
+        // Debounced version of searchDetails
+        const debouncedSearchDetails = debounce(searchDetails, 500);
 
 
         async function removeStudent(studentName, mobileNo) {

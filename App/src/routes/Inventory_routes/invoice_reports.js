@@ -3,22 +3,10 @@ const router = express.Router();
 const mysql = require('mysql');
 
 
-// Define dbCredentials and connection outside the endpoint
-let dbCredentials;
-let connection;
+const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
 
-// Middleware to set dbCredentials and connection
-router.use((req, res, next) => {
-    dbCredentials = req.session.dbCredentials;
-    connection = mysql.createPool({
-        host: dbCredentials.host,
-        user: dbCredentials.user,
-        password: dbCredentials.password,
-        database: dbCredentials.database
-    });
-    next();
-});
-
+// Use the connection manager middleware
+router.use(connectionManager);
 
 
 // Endpoint to handle date filter query (GET request)
@@ -29,7 +17,7 @@ router.get("/inventory/invoice/query_by_date", (req, res) => {
     let query = `SELECT * FROM inventory_invoice_details WHERE billDate = ?`;
 
     // Execute the SQL query
-    connection.query(query, [date], (err, rows) => {
+    req.connectionPool.query(query, [date], (err, rows) => {
         if (err) {
             console.error("Error fetching data:", err);
             res.status(500).json({ error: "Error fetching data" });
@@ -54,7 +42,7 @@ router.get("/inventory/invoice/query_by_class", (req, res) => {
         params.push(classOfBuyer);
     }
 
-    connection.query(query, params, (err, rows) => {
+    req.connectionPool.query(query, params, (err, rows) => {
         if (err) {
             console.error("Error fetching data:", err);
             res.status(500).json({ error: "Error fetching data" });
@@ -76,7 +64,7 @@ router.get("/inventory/invoice/query_by_defaulter", (req, res) => {
     } 
 
     // Execute the SQL query
-    connection.query(query, (err, rows) => {
+    req.connectionPool.query(query, (err, rows) => {
         if (err) {
             console.error("Error fetching data:", err);
             res.status(500).json({ error: "Error fetching data" });

@@ -3,27 +3,15 @@ const router = express.Router();
 const mysql = require('mysql');
 
 
-// Define dbCredentials and connection outside the endpoint
-let dbCredentials;
-let connection;
+const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
 
-// Middleware to set dbCredentials and connection
-router.use((req, res, next) => {
-    dbCredentials = req.session.dbCredentials;
-    connection = mysql.createPool({
-        host: dbCredentials.host,
-        user: dbCredentials.user,
-        password: dbCredentials.password,
-        database: dbCredentials.database
-    });
-    next();
-});
-
+// Use the connection manager middleware
+router.use(connectionManager);
 
 // Fetching book data endpoint
 router.get('/inventory/books_vendor', (req, res) => {
     const sql = 'SELECT vendor_name FROM inventory_vendor_details WHERE vendorFor = "Books"';
-    connection.query(sql, (err, result) => {
+    req.connectionPool.query(sql, (err, result) => {
         if (err) {
             console.error('Error fetching books:', err);
             res.status(500).json({ error: 'Error fetching books' });
@@ -44,7 +32,7 @@ router.post('/inventory/purchase/add_books', (req, res) => {
 
     // Check if title already exists
     const checkSql = 'SELECT * FROM inventory_book_details WHERE title = ?';
-    connection.query(checkSql, [title], (err, result) => {
+    req.connectionPool.query(checkSql, [title], (err, result) => {
         if (err) {
             console.error('Error checking book:', err);
             res.status(500).send("Error checking book");
@@ -55,7 +43,7 @@ router.post('/inventory/purchase/add_books', (req, res) => {
             } else {
                 // If title does not exist, proceed with insertion
                 const sql = 'INSERT INTO inventory_book_details (title, class_of_title, purchase_price, selling_price, vendor, ordered_quantity, remaining_quantity, returned_quantity) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-                connection.query(sql, [title, class_of_title, purchase_price, selling_price, vendor, ordered_quantity, remaining_quantity, returned_quantity], (err, result) => {
+                req.connectionPool.query(sql, [title, class_of_title, purchase_price, selling_price, vendor, ordered_quantity, remaining_quantity, returned_quantity], (err, result) => {
                     if (err) {
                         console.error('Error adding books:', err);
                         res.status(500).send("Error adding books");
@@ -72,7 +60,7 @@ router.post('/inventory/purchase/add_books', (req, res) => {
 // Fetching book data endpoint
 router.get('/inventory/books', (req, res) => {
     const sql = 'SELECT * FROM inventory_book_details';
-    connection.query(sql, (err, result) => {
+    req.connectionPool.query(sql, (err, result) => {
         if (err) {
             console.error('Error fetching books:', err);
             res.status(500).json({ error: 'Error fetching books' });
@@ -86,7 +74,7 @@ router.get('/inventory/books', (req, res) => {
  router.delete('/inventory/books/:title', (req, res) => {
      const title = req.params.title
      const sql = 'DELETE FROM inventory_book_details WHERE title = ?';
-     connection.query(sql, [title], (err, result) => {
+     req.connectionPool.query(sql, [title], (err, result) => {
          if (err) {
              console.error('Error deleting book:', err);
              res.status(500).json({ error: 'Error deleting book' });
@@ -103,7 +91,7 @@ router.route('/inventory/books/:title/quantity')
     .get((req, res) => {
         const title = req.params.title;
         const sql = 'SELECT ordered_quantity, remaining_quantity, class_of_title, returned_quantity FROM inventory_book_details WHERE title = ?';
-        connection.query(sql, [title], (err, result) => {
+        req.connectionPool.query(sql, [title], (err, result) => {
             if (err) {
                 console.error('Error fetching quantity:', err);
                 res.status(500).json({ error: 'Error fetching quantity' });
@@ -123,7 +111,7 @@ router.route('/inventory/books/:title/quantity')
         const newRemainingQuantity = req.body.remaining_quantity; // Get the new remaining quantity from the request body
         
         const sql = 'UPDATE inventory_book_details SET ordered_quantity = ?, remaining_quantity = ? WHERE title = ?';
-        connection.query(sql, [newOrderedQuantity, newRemainingQuantity, title], (err, result) => {
+        req.connectionPool.query(sql, [newOrderedQuantity, newRemainingQuantity, title], (err, result) => {
             if (err) {
                 console.error('Error updating quantity:', err);
                 res.status(500).json({ error: 'Error updating quantity' });
@@ -148,7 +136,7 @@ router.route('/inventory/return_books/:title/quantity')
 
     
     const sql = 'UPDATE inventory_book_details SET returned_quantity = ?, remaining_quantity = ? WHERE title = ?';
-    connection.query(sql, [returnedQuantity, remainingQuantity, title], (err, result) => {
+    req.connectionPool.query(sql, [returnedQuantity, remainingQuantity, title], (err, result) => {
         if (err) {
             console.error('Error updating quantity:', err);
             res.status(500).json({ error: 'Error updating quantity' });
@@ -170,7 +158,7 @@ router.get("/inventory/books/search", (req, res) => {
     let query = `SELECT * FROM inventory_book_details WHERE title LIKE ?`;
 
     // Execute the SQL query
-    connection.query(query, [`%${searchQuery}%`], (err, rows) => {
+    req.connectionPool.query(query, [`%${searchQuery}%`], (err, rows) => {
         if (err) {
             console.error("Error fetching data: " + err.stack);
             res.status(500).json({ error: "Error fetching data" });
@@ -188,7 +176,7 @@ router.route('/inventory/books/:sr_no')
         const sr_no = req.params.sr_no;
         const sql = 'SELECT title, class_of_title, purchase_price, selling_price FROM inventory_book_details WHERE sr_no = ?';
 
-        connection.query(sql, [sr_no], (err, result) => {
+        req.connectionPool.query(sql, [sr_no], (err, result) => {
             if (err) {
                 console.error('Error fetching book details:', err);
                 return res.status(500).json({ error: 'Failed to fetch book details' });
@@ -213,7 +201,7 @@ router.route('/inventory/books/:sr_no')
             WHERE sr_no = ?;
         `;
 
-        connection.query(sql, [newTitle, class_of_title, purchase_price, selling_price, sr_no], (err, result) => {
+        req.connectionPool.query(sql, [newTitle, class_of_title, purchase_price, selling_price, sr_no], (err, result) => {
             if (err) {
                 console.error('Error updating book details:', err);
                 return res.status(500).json({ error: 'Failed to update book details' });

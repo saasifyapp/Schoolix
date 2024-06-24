@@ -2,36 +2,22 @@ const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
 
+const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
 
-// Define dbCredentials and connection outside the endpoint
-let dbCredentials;
-let connection;
-
-// Middleware to set dbCredentials and connection
-router.use((req, res, next) => {
-    dbCredentials = req.session.dbCredentials;
-    connection = mysql.createPool({
-        host: dbCredentials.host,
-        user: dbCredentials.user,
-        password: dbCredentials.password,
-        database: dbCredentials.database
-    });
-    next();
-});
+// Use the connection manager middleware
+router.use(connectionManager);
 
 
-
+// Route to handle adding a new vendor
 router.post('/inventory/purchase/add_vendor', (req, res) => {
-
     const { vendorName, amountPaid, vendorFor } = req.body;
-
     const netPayable = req.body.netPayable || 0;
     const balance = req.body.balance || 0;
     const vendorType = req.body.vendorFor;
 
     // Check if vendor name already exists
     const checkSql = 'SELECT * FROM inventory_vendor_details WHERE vendor_name = ?';
-    connection.query(checkSql, [vendorName], (err, result) => {
+    req.connectionPool.query(checkSql, [vendorName], (err, result) => {
         if (err) {
             console.error('Error checking vendor:', err);
             res.status(500).send("Error checking vendor");
@@ -41,8 +27,8 @@ router.post('/inventory/purchase/add_vendor', (req, res) => {
                 res.status(400).send('Vendor name already exists');
             } else {
                 // If vendor name does not exist, proceed with insertion
-                const sql = 'INSERT INTO inventory_vendor_details (vendor_name ,net_payable, paid_till_now, balance, vendorFor) VALUES (?, ?, ?, ?, ?)';
-                connection.query(sql, [vendorName, netPayable, amountPaid, balance, vendorType], (err, result) => {
+                const sql = 'INSERT INTO inventory_vendor_details (vendor_name, net_payable, paid_till_now, balance, vendorFor) VALUES (?, ?, ?, ?, ?)';
+                req.connectionPool.query(sql, [vendorName, netPayable, amountPaid, balance, vendorType], (err, result) => {
                     if (err) {
                         console.error('Error adding vendor:', err);
                         res.status(500).send("Error adding vendor");
@@ -56,13 +42,12 @@ router.post('/inventory/purchase/add_vendor', (req, res) => {
     });
 });
 
-
-// Deleting data endpoint
+// Route to delete a vendor
 router.delete('/inventory/vendors/:vendorName', (req, res) => {
     const vendorName = req.params.vendorName;
     const sql = 'DELETE FROM inventory_vendor_details WHERE vendor_name = ?';
 
-    connection.query(sql, [vendorName], (err, result) => {
+    req.connectionPool.query(sql, [vendorName], (err, result) => {
         if (err) {
             console.error('Error deleting vendor:', err);
             res.status(500).send("Error deleting vendor");
@@ -73,13 +58,12 @@ router.delete('/inventory/vendors/:vendorName', (req, res) => {
     });
 });
 
-
-// Endpoint to handle both GET and PUT requests for retrieving and updating Paid Amount of Vendor
+// Route to handle both GET and PUT requests for retrieving and updating Paid Amount of Vendor
 router.route('/inventory/vendors/:vendorName/paid_till_now')
     .get((req, res) => {
         const vendorName = req.params.vendorName;
         const sql = 'SELECT vendor_name, paid_till_now, net_payable, balance FROM inventory_vendor_details WHERE vendor_name = ?';
-        connection.query(sql, [vendorName], (err, result) => {
+        req.connectionPool.query(sql, [vendorName], (err, result) => {
             if (err) {
                 console.error('Error fetching quantity:', err);
                 res.status(500).json({ error: 'Error fetching quantity' });
@@ -98,7 +82,7 @@ router.route('/inventory/vendors/:vendorName/paid_till_now')
         const totalPaid = req.body.paid_till_now; // Get the new total paid amount from the request body
 
         const sql = 'UPDATE inventory_vendor_details SET paid_till_now = ? WHERE vendor_name = ?';
-        connection.query(sql, [totalPaid, vendorName], (err, result) => {
+        req.connectionPool.query(sql, [totalPaid, vendorName], (err, result) => {
             if (err) {
                 console.error('Error updating vendor details:', err);
                 res.status(500).json({ error: 'Error updating vendor details' });
@@ -112,9 +96,7 @@ router.route('/inventory/vendors/:vendorName/paid_till_now')
         });
     });
 
-
-
-// Calculate net_payable and update it to vendor table //
+// Route to calculate net_payable and update it to vendor table
 router.get('/inventory/vendors', (req, res) => {
     const sqlQuery = `
         SELECT 
@@ -137,14 +119,14 @@ router.get('/inventory/vendors', (req, res) => {
     `;
 
     // Execute the SQL query to calculate net_payable and balance, and update vendor table
-    connection.query(sqlQuery, (err, result) => {
+    req.connectionPool.query(sqlQuery, (err, result) => {
         if (err) {
             res.status(500).send("Error executing SQL query");
         } else {
             // Update net_payable and balance in vendor table
             result.forEach(row => {
                 const updateSql = `UPDATE inventory_vendor_details SET net_payable = ${row.net_payable}, balance = ${row.balance} WHERE vendor_name= '${row.vendor_name}'`;
-                connection.query(updateSql, (err, updateResult) => {
+                req.connectionPool.query(updateSql, (err, updateResult) => {
                     if (err) {
                         // Do nothing
                     }
@@ -153,7 +135,7 @@ router.get('/inventory/vendors', (req, res) => {
 
             // Fetch vendor details after updating
             const fetchVendorsSql = 'SELECT * FROM inventory_vendor_details';
-            connection.query(fetchVendorsSql, (err, vendorsResult) => {
+            req.connectionPool.query(fetchVendorsSql, (err, vendorsResult) => {
                 if (err) {
                     res.status(500).send("Error fetching vendors");
                 } else {
@@ -164,15 +146,15 @@ router.get('/inventory/vendors', (req, res) => {
     });
 });
 
-// Add a new endpoint to handle search queries (Vendors)
+// Route to search vendors by name
 router.get("/inventory/vendors/search", (req, res) => {
     const searchQuery = req.query.search.trim(); // Get the search query from request URL query parameters
 
-    // Construct the SQL query to filter based on the student name
+    // Construct the SQL query to filter based on the vendor name
     let query = `SELECT * FROM inventory_vendor_details WHERE vendor_name LIKE ?`;
 
     // Execute the SQL query
-    connection.query(query, [`%${searchQuery}%`], (err, rows) => {
+    req.connectionPool.query(query, [`%${searchQuery}%`], (err, rows) => {
         if (err) {
             console.error("Error fetching data: " + err.stack);
             res.status(500).json({ error: "Error fetching data" });
@@ -180,34 +162,14 @@ router.get("/inventory/vendors/search", (req, res) => {
         }
         res.json(rows);
     });
-
-
 });
 
-// // Endpoint to update vendor details
-// router.put('/inventory/vendors/:vendorName', (req, res) => {
-//     const vendorName = req.params.vendorName;
-//     const { vendor_name, vendorFor } = req.body;
-
-//     if (!vendor_name || !vendorFor) {
-//         return res.status(400).json({ error: 'Vendor name and type are required.' });
-//     }
-
-//     const sql = 'UPDATE inventory_vendor_details SET vendor_name = ?, vendorFor = ? WHERE vendor_name = ?';
-//     connection.query(sql, [vendor_name, vendorFor, vendorName], (err, result) => {
-//         if (err) {
-//             console.error('Error updating vendor details:', err);
-//             return res.status(500).json({ error: 'Failed to update vendor details.' });
-//         }
-//         res.json({ message: 'Vendor details updated successfully.' });
-//     });
-// });
-
+// Route to handle retrieving and updating vendor details by sr_no
 router.route('/inventory/vendors/:sr_no')
     .get((req, res) => {
         const sr_no = req.params.sr_no;
         const sql = 'SELECT vendor_name, vendorFor FROM inventory_vendor_details WHERE sr_no = ?';
-        connection.query(sql, [sr_no], (err, result) => {
+        req.connectionPool.query(sql, [sr_no], (err, result) => {
             if (err) {
                 console.error('Error fetching vendor details:', err);
                 return res.status(500).json({ error: 'Failed to fetch vendor details' });
@@ -228,7 +190,7 @@ router.route('/inventory/vendors/:sr_no')
 
         // First, fetch the old vendor name to use it in the dependent table updates
         const fetchOldVendorNameSql = 'SELECT vendor_name FROM inventory_vendor_details WHERE sr_no = ?';
-        connection.query(fetchOldVendorNameSql, [sr_no], (err, result) => {
+        req.connectionPool.query(fetchOldVendorNameSql, [sr_no], (err, result) => {
             if (err) {
                 console.error('Error fetching old vendor name:', err);
                 return res.status(500).json({ error: 'Failed to fetch old vendor name' });
@@ -245,7 +207,7 @@ router.route('/inventory/vendors/:sr_no')
                 SET vendor_name = ?, vendorFor = ?
                 WHERE sr_no = ?;
             `;
-            connection.query(updateVendorSql, [vendor_name, vendorFor, sr_no], (err, result) => {
+            req.connectionPool.query(updateVendorSql, [vendor_name, vendorFor, sr_no], (err, result) => {
                 if (err) {
                     console.error('Error updating vendor details:', err);
                     return res.status(500).json({ error: 'Failed to update vendor details' });
@@ -268,7 +230,7 @@ router.route('/inventory/vendors/:sr_no')
                 }
 
                 if (updateDependentTableSql) {
-                    connection.query(updateDependentTableSql, [vendor_name, oldVendorName], (err, result) => {
+                    req.connectionPool.query(updateDependentTableSql, [vendor_name, oldVendorName], (err, result) => {
                         if (err) {
                             console.error('Error updating dependent table:', err);
                             return res.status(500).json({ error: 'Failed to update dependent table' });
@@ -283,7 +245,5 @@ router.route('/inventory/vendors/:sr_no')
             });
         });
     });
-
-
 
 module.exports = router;

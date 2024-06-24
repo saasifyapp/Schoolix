@@ -3,27 +3,17 @@ const router = express.Router();
 const mysql = require('mysql');
 
 
-// Define dbCredentials and connection outside the endpoint
-let dbCredentials;
-let connection;
+const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
 
-// Middleware to set dbCredentials and connection
-router.use((req, res, next) => {
-    dbCredentials = req.session.dbCredentials;
-    connection = mysql.createPool({
-        host: dbCredentials.host,
-        user: dbCredentials.user,
-        password: dbCredentials.password,
-        database: dbCredentials.database
-    });
-    next();
-});
+// Use the connection manager middleware
+router.use(connectionManager);
+
 
 
 //retrieve teacher data
 router.get('/teachers', (req, res) => {
     const query = 'SELECT * FROM pre_adm_registered_teachers';
-    connection.query(query, (err, rows) => {
+    req.connectionPool.query(query, (err, rows) => {
         if (err) {
             console.error('Error fetching data: ' + err.stack);
             res.status(500).json({ error: 'Error fetching data' });
@@ -46,7 +36,7 @@ router.post("/move-to-admitted-teacher", (req, res) => {
     const insertQuery = `INSERT INTO pre_adm_admitted_teachers (teacher_name, mobile_no, res_address, dob, qualification, experience) VALUES (?, ?, ?, ?, ?, ?)`;
 
     // Execute the SQL query to insert the teacher into the admitted database
-    connection.query(insertQuery, [teacherName, mobileNo, address, dob, qualification, experience], (insertErr, insertResult) => {
+    req.connectionPool.query(insertQuery, [teacherName, mobileNo, address, dob, qualification, experience], (insertErr, insertResult) => {
         if (insertErr) {
             console.error("Error inserting teacher into admitted database:", insertErr);
             return res.status(500).send("Error admitting teacher");
@@ -56,7 +46,7 @@ router.post("/move-to-admitted-teacher", (req, res) => {
         const query = `DELETE FROM pre_adm_registered_teachers WHERE teacher_name = ? AND mobile_no = ? LIMIT 1`;
 
         // Execute the SQL query to delete the teacher from the database
-        connection.query(query, [teacherName, mobileNo], (err, result) => {
+        req.connectionPool.query(query, [teacherName, mobileNo], (err, result) => {
             if (err) {
                 console.error("Error removing teacher:", err);
                 return res.status(500).send("Error removing teacher");
@@ -79,7 +69,7 @@ router.get("/teachers/search", (req, res) => {
     const query = `SELECT * FROM pre_adm_registered_teachers WHERE teacher_name LIKE '%${searchTerm}%'`;
 
     // Execute the SQL query to search for teachers
-    connection.query(query, (err, results) => {
+    req.connectionPool.query(query, (err, results) => {
         if (err) {
             console.error("Error searching for teachers:", err);
             return res.status(500).send("Error searching for teachers");
@@ -99,7 +89,7 @@ router.delete("/remove-teacher", (req, res) => {
     const query = `DELETE FROM pre_adm_registered_teachers WHERE teacher_name = ? AND mobile_no = ? LIMIT 1`;
 
     // Execute the SQL query with the teacher's name and mobile number as parameters
-    connection.query(query, [teacherName, mobileNo], (err, result) => {
+    req.connectionPool.query(query, [teacherName, mobileNo], (err, result) => {
         if (err) {
             console.error("Error removing teacher:", err);
             return res.status(500).send("Error removing teacher");

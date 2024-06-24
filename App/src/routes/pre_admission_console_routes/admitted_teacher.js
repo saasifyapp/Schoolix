@@ -3,21 +3,10 @@ const router = express.Router();
 const mysql = require('mysql');
 
 
-// Define dbCredentials and connection outside the endpoint
-let dbCredentials;
-let connection;
+const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
 
-// Middleware to set dbCredentials and connection
-router.use((req, res, next) => {
-    dbCredentials = req.session.dbCredentials;
-    connection = mysql.createPool({
-        host: dbCredentials.host,
-        user: dbCredentials.user,
-        password: dbCredentials.password,
-        database: dbCredentials.database
-    });
-    next();
-});
+// Use the connection manager middleware
+router.use(connectionManager);
 
 
 // Display Admitted DATA
@@ -25,7 +14,7 @@ router.use((req, res, next) => {
 
 router.get('/admitted_teachers', (req, res) => {
     const query = 'SELECT * FROM pre_adm_admitted_teachers';
-    connection.query(query, (err, rows) => {
+    req.connectionPool .query(query, (err, rows) => {
         if (err) {
             console.error('Error fetching data: ' + err.stack);
             res.status(500).json({ error: 'Error fetching data' });
@@ -43,7 +32,7 @@ router.get("/admitted_teachers/search", (req, res) => {
     let query = `SELECT * FROM pre_adm_admitted_teachers WHERE teacher_name LIKE ?`;
 
     // Execute the SQL query
-    connection.query(query, [`%${searchQuery}%`], (err, rows) => {
+    req.connectionPool .query(query, [`%${searchQuery}%`], (err, rows) => {
         if (err) {
             console.error("Error fetching data: " + err.stack);
             res.status(500).json({ error: "Error fetching data" });
@@ -64,7 +53,7 @@ router.delete("/remove-adm-teacher", (req, res) => {
     const query = `DELETE FROM pre_adm_admitted_teachers WHERE teacher_name = ? AND mobile_no = ? LIMIT 1`;
 
     // Execute the SQL query with the teacher's name and mobile number as parameters
-    connection.query(query, [teacherName, mobileNo], (err, result) => {
+    req.connectionPool .query(query, [teacherName, mobileNo], (err, result) => {
         if (err) {
             console.error("Error removing teacher:", err);
             return res.status(500).send("Error removing teacher");

@@ -682,11 +682,6 @@ function populateInvoiceDetails(invoiceData) {
 
     // Populate buyer details
     const buyerDetailsList = document.querySelectorAll('ul li');
-    // buyerDetailsList.innerHTML = `
-    //     <li>${invoiceData.invoiceDetails.buyerName}</li>
-    //     <li>${invoiceData.invoiceDetails.buyerPhone}</li>
-    //     <li>${invoiceData.invoiceDetails.class_of_buyer}</li>
-    // `;
     buyerDetailsList[0].innerHTML = `<i class="fa-solid fa-user" style="color: #74C0FC;"></i><strong style="margin-left: 7px;">Name:</strong> ${invoiceData.invoiceDetails.buyerName}`;
     buyerDetailsList[1].innerHTML = `<i class="fa-solid fa-phone" style="color: #74C0FC;"></i> <strong>Phone:</strong> ${invoiceData.invoiceDetails.buyerPhone}`;
     buyerDetailsList[2].innerHTML = `<i class="fa-solid fa-graduation-cap" style="color: #74C0FC;"></i> <strong>Class:</strong> ${invoiceData.invoiceDetails.class_of_buyer}`;
@@ -694,7 +689,6 @@ function populateInvoiceDetails(invoiceData) {
     // Extract the date part (YYYY-MM-DD) from the full date-time string
     const fullDate = new Date(invoiceData.invoiceDetails.billDate);
     const billDateFormatted = fullDate.toLocaleDateString('en-GB');
-
 
     // Determine invoice status based on paid_amount and balance_amount
     let invoiceStatusText = '';
@@ -723,7 +717,7 @@ function populateInvoiceDetails(invoiceData) {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td style="padding: 8px; border: 1px solid #dee2e6;">${index + 1}</td>
-            <td style="padding: 8px; border: 1px solid #dee2e6;">${item.item_name || ''}</td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">${item.display_name || ''}</td>
             <td style="padding: 8px; border: 1px solid #dee2e6;">${(item.purchase_price != null ? item.purchase_price.toFixed(2) : '0.00')}</td>
             <td style="padding: 8px; border: 1px solid #dee2e6;">${item.quantity || 0}</td>
             <td style="padding: 8px; border: 1px solid #dee2e6;">${(item.total != null ? item.total.toFixed(2) : '0.00')}</td>
@@ -736,6 +730,7 @@ function populateInvoiceDetails(invoiceData) {
     document.getElementById('amountPaidDisplay').textContent = invoiceData.invoiceDetails.paid_amount.toFixed(2);
     document.getElementById('balanceAmountDisplay').textContent = invoiceData.invoiceDetails.balance_amount.toFixed(2);
 }
+
 
 
 // function printInvoiceWindow() {

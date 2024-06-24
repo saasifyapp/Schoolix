@@ -3,28 +3,16 @@ const router = express.Router();
 const mysql = require('mysql');
 
 
-// Define dbCredentials and connection outside the endpoint
-let dbCredentials;
-let connection;
+const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
 
-// Middleware to set dbCredentials and connection
-router.use((req, res, next) => {
-    dbCredentials = req.session.dbCredentials;
-    connection = mysql.createPool({
-        host: dbCredentials.host,
-        user: dbCredentials.user,
-        password: dbCredentials.password,
-        database: dbCredentials.database
-    });
-    next();
-});
-
+// Use the connection manager middleware
+router.use(connectionManager);
 
 
 // Fetching book data endpoint
 router.get('/inventory/uniform_vendor', (req, res) => {
     const sql = 'SELECT vendor_name FROM inventory_vendor_details WHERE vendorFor = "Uniform"';
-    connection.query(sql, (err, result) => {
+    req.connectionPool.query(sql, (err, result) => {
         if (err) {
             console.error('Error fetching books:', err);
             res.status(500).json({ error: 'Error fetching books' });
@@ -45,7 +33,7 @@ router.post('/inventory/purchase/add_uniforms', (req, res) => {
     // Check if the uniform_item and size_of_item already exists
     const checkSql = `SELECT * FROM inventory_uniform_details WHERE uniform_item = ? AND size_of_item = ?`;
 
-    connection.query(checkSql, [uniform_item, size_of_item], (err, result) => {
+    req.connectionPool.query(checkSql, [uniform_item, size_of_item], (err, result) => {
         if (err) {
             console.error('Error checking uniform item:', err);
             res.status(500).send('Error checking uniform item');
@@ -56,7 +44,7 @@ router.post('/inventory/purchase/add_uniforms', (req, res) => {
                 const sql = `INSERT INTO inventory_uniform_details (uniform_item, size_of_item, purchase_price, selling_price, vendor, ordered_quantity, remaining_quantity,returned_quantity)
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
-                connection.query(sql, [uniform_item, size_of_item, purchase_price, selling_price, vendor, ordered_quantity, remaining_quantity, returned_quantity], (err, result) => {
+                req.connectionPool.query(sql, [uniform_item, size_of_item, purchase_price, selling_price, vendor, ordered_quantity, remaining_quantity, returned_quantity], (err, result) => {
                     if (err) {
                         console.error('Error adding uniform item:', err);
                         res.status(500).send('Error adding uniform item');
@@ -73,7 +61,7 @@ router.post('/inventory/purchase/add_uniforms', (req, res) => {
 router.get('/inventory/uniforms', (req, res) => {
     const sql = 'SELECT * FROM inventory_uniform_details';
 
-    connection.query(sql, (err, results) => {
+    req.connectionPool.query(sql, (err, results) => {
         if (err) {
             console.error('Error fetching uniform items:', err);
             res.status(500).json({ error: 'Error fetching uniform items' });
@@ -88,7 +76,7 @@ router.delete('/inventory/uniforms/:uniformItem/:sizeOfItem', (req, res) => {
     const { uniformItem, sizeOfItem } = req.params;
     const sql = 'DELETE FROM inventory_uniform_details WHERE uniform_item = ? AND size_of_item = ?';
 
-    connection.query(sql, [uniformItem, sizeOfItem], (err, result) => {
+    req.connectionPool.query(sql, [uniformItem, sizeOfItem], (err, result) => {
         if (err) {
             console.error('Error deleting uniform item:', err);
             res.status(500).json({ error: 'Error deleting uniform item' });
@@ -104,7 +92,7 @@ router.route('/inventory/uniforms/:uniformItem/:sizeOfItem/quantity')
     .get((req, res) => {
         const { uniformItem, sizeOfItem } = req.params;
         const sql = 'SELECT ordered_quantity, remaining_quantity, returned_quantity FROM inventory_uniform_details WHERE uniform_item = ? AND size_of_item = ?';
-        connection.query(sql, [uniformItem, sizeOfItem], (err, result) => {
+        req.connectionPool.query(sql, [uniformItem, sizeOfItem], (err, result) => {
             if (err) {
                 console.error('Error fetching quantity:', err);
                 res.status(500).json({ error: 'Error fetching quantity' });
@@ -124,7 +112,7 @@ router.route('/inventory/uniforms/:uniformItem/:sizeOfItem/quantity')
         const newRemainingQuantity = req.body.remaining_quantity; // Get the new remaining quantity from the request body
     
         const sql = 'UPDATE inventory_uniform_details SET ordered_quantity = ?, remaining_quantity = ? WHERE uniform_item = ? AND size_of_item = ?';
-        connection.query(sql, [totalOrder, newRemainingQuantity, uniformItem, sizeOfItem], (err, result) => { // Include newRemainingQuantity in the query
+        req.connectionPool.query(sql, [totalOrder, newRemainingQuantity, uniformItem, sizeOfItem], (err, result) => { // Include newRemainingQuantity in the query
             if (err) {
                 console.error('Error updating quantity:', err);
                 res.status(500).json({ error: 'Error updating quantity' });
@@ -147,7 +135,7 @@ router.route('/inventory/return_uniform/:uniform_item/:size_of_item/quantity')
 
     
     const sql = 'UPDATE inventory_uniform_details SET returned_quantity = ?, remaining_quantity = ? WHERE uniform_item = ? AND size_of_item = ?';
-    connection.query(sql, [ returnedQuantity, remainingQuantity, uniform_item, size_of_item], (err, result) => {
+    req.connectionPool.query(sql, [ returnedQuantity, remainingQuantity, uniform_item, size_of_item], (err, result) => {
         if (err) {
             console.error('Error updating quantity:', err);
             res.status(500).json({ error: 'Error updating quantity' });
@@ -168,7 +156,7 @@ router.get('/inventory/uniforms/:uniformItem', (req, res) => {
     const { uniformItem } = req.params;
     const sql = 'SELECT * FROM inventory_uniform_details WHERE uniform_item = ?';
 
-    connection.query(sql, [uniformItem], (err, result) => {
+    req.connectionPool.query(sql, [uniformItem], (err, result) => {
         if (err) {
             console.error('Error fetching uniform item:', err);
             res.status(500).json({ error: 'Error fetching uniform item' });
@@ -188,7 +176,7 @@ router.put('/inventory/uniforms/edit', (req, res) => {
                  SET size_of_item = ?, purchase_price = ?, selling_price = ?, vendor = ?, ordered_quantity = ?, remaining_quantity = ? 
                  WHERE uniform_item = ?`;
 
-    connection.query(sql, [size_of_item, purchase_price, selling_price, vendor, ordered_quantity, remaining_quantity, uniform_item], (err, result) => {
+    req.connectionPool.query(sql, [size_of_item, purchase_price, selling_price, vendor, ordered_quantity, remaining_quantity, uniform_item], (err, result) => {
         if (err) {
             console.error('Error updating uniform item:', err);
             res.status(500).json({ error: 'Error updating uniform item' });
@@ -207,7 +195,7 @@ router.get("/inventory/uniforms/search", (req, res) => {
     let query = `SELECT * FROM inventory_uniform_details WHERE uniform_item LIKE ?`;
 
     // Execute the SQL query
-    connection.query(query, [`%${searchQuery}%`], (err, rows) => {
+    req.connectionPool.query(query, [`%${searchQuery}%`], (err, rows) => {
         if (err) {
             console.error("Error fetching data: " + err.stack);
             res.status(500).json({ error: "Error fetching data" });
@@ -226,7 +214,7 @@ router.route('/inventory/uniforms/:sr_no')
         const sr_no = req.params.sr_no;
         const sql = 'SELECT * FROM inventory_uniform_details WHERE sr_no = ?';
 
-        connection.query(sql, [sr_no], (err, result) => {
+        req.connectionPool.query(sql, [sr_no], (err, result) => {
             if (err) {
                 console.error('Error fetching uniform details:', err);
                 return res.status(500).json({ error: 'Failed to fetch uniform details' });
@@ -256,7 +244,7 @@ router.route('/inventory/uniforms/:sr_no')
             WHERE sr_no = ?;
         `;
 
-        connection.query(
+        req.connectionPool.query(
             sql,
             [uniform_item, size_of_item, purchase_price, selling_price, sr_no],
             (err, result) => {

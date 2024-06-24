@@ -561,7 +561,7 @@ function generateBill_test() {
     const formattedDate = currentDate.toLocaleDateString('en-GB'); // Format as 'DD/MM/YYYY'
 
     // Determine invoice status based on amount paid and balance amount
-    
+
     let statusIcon;
 
     if (amountPaid === 0) {
@@ -583,6 +583,7 @@ function generateBill_test() {
     // Populate Invoice Number in HTML
     document.getElementById('invoiceNumberDisplay').textContent = `Invoice No: #${invoiceNo}`;
     hideInventoryLoadingAnimation();
+    showToast("Invoice Generated Succesfully", false);
     return true;
 }
 
@@ -595,13 +596,12 @@ function generateBill_test() {
 /*****************************         PRINT BUTTON FUNCTIONALITY       ************************/
 
 
-
 document.getElementById("printButton").addEventListener("click", async function () {
-    // // Add validation to execute this only when the bill is generated i.e. displayed on the front-end
+    // Add validation to execute this only when the bill is generated i.e. displayed on the front-end
     if (invoiceStatus === '') {
-        //  showToast("Please generate the bill first", true);
-         return;
-     }
+        // showToast("Please generate the bill first", true);
+        return;
+    }
 
     showInventoryLoadingAnimation();
 
@@ -666,7 +666,7 @@ document.getElementById("printButton").addEventListener("click", async function 
         }).filter(item => item);
 
         // Create the request body
-        const requestBody = JSON.stringify({
+        const requestBody = {
             buyerName,
             buyerMobile,
             buyerClass,
@@ -678,49 +678,21 @@ document.getElementById("printButton").addEventListener("click", async function 
             bookDetails,
             uniformDetails,
             paymentMethod
-        });
+        };
 
-        // Send the data to the server for invoice details
-        const invoiceDetailsResponse = await fetch("/inventory/generate_invoice/invoice_details", {
+        // Send the data to the server for all operations in a single request
+        const response = await fetch("/inventory/generate_invoice/invoice_details", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: requestBody
+            body: JSON.stringify(requestBody)
         });
 
-        if (!invoiceDetailsResponse.ok) {
-            throw new Error("Error inserting invoice details");
+        if (!response.ok) {
+            throw new Error("Error processing invoice");
         }
-        showToast("Invoice details saved successfully");
-
-        // Send the data to the server for invoice items
-        const invoiceItemsResponse = await fetch("/inventory/generate_invoice/invoice_items", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: requestBody
-        });
-
-        if (!invoiceItemsResponse.ok) {
-            throw new Error("Error inserting invoice items");
-        }
-        showToast("Invoice items saved successfully");
-
-        // After successfully inserting invoice items, update the remaining quantities
-        const updateQuantitiesResponse = await fetch("/inventory/reduce_quantity", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ invoiceNo })
-        });
-
-        if (!updateQuantitiesResponse.ok) {
-            throw new Error("Error updating remaining quantities");
-        }
-        showToast("Stock updated successfully");
+        showToast("Invoice processed successfully");
 
         // Reload the page after showing the toast message
         setTimeout(() => {
@@ -740,55 +712,107 @@ function printInvoice() {
     if (invoiceStatus === '') {
         showToast("Please generate the bill first", true);
         return;
-    }else{
-    // Get the invoice details container
-    const invoiceDetails = document.getElementById('invoice');
+    } else {
+        // Get the invoice details container
+        const invoiceDetails = document.getElementById('invoice');
 
-    // Define the options for html2pdf
-    const opt = {
-        margin: 0,
-        filename: 'invoice.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
-    // Adjust the scaling factor to fit content to one page
-    const contentHeight = invoiceDetails.scrollHeight;
-    const a4Height = 297; // A4 height in mm
-    const scaleFactor = a4Height / (contentHeight * 0.264583); // Convert px to mm
-
-    // Apply CSS transform to scale the content
-    invoiceDetails.style.transform = `scale(${scaleFactor})`;
-    invoiceDetails.style.transformOrigin = 'top left';
-    invoiceDetails.style.width = `calc(210mm / ${scaleFactor})`;
-    invoiceDetails.style.height = `calc(297mm / ${scaleFactor})`;
-
-    // Generate the PDF
-    html2pdf().from(invoiceDetails).set(opt).outputPdf('blob').then(function (pdfBlob) {
-        // Reset the scaling after PDF generation
-        invoiceDetails.style.transform = '';
-        invoiceDetails.style.width = '';
-        invoiceDetails.style.height = '';
-
-        // Create a URL for the PDF blob
-        const pdfUrl = URL.createObjectURL(pdfBlob);
-
-        // Open the PDF in a new window
-        const pdfWindow = window.open(pdfUrl, '_blank');
-
-        // Add an event listener to trigger the print dialog once the PDF is loaded
-        pdfWindow.onload = function () {
-            pdfWindow.focus();
-            pdfWindow.print();
-
-            // If you want the print window to only show 1 page in print preview,
-            // you can customize the print window settings here.
-            // Some browsers might require a manual step for advanced settings.
+        // Define the options for html2pdf
+        const opt = {
+            margin: 0,
+            filename: 'invoice.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
-    });
+
+        // Adjust the scaling factor to fit content to one page
+        const contentHeight = invoiceDetails.scrollHeight;
+        const a4Height = 297; // A4 height in mm
+        const scaleFactor = a4Height / (contentHeight * 0.264583); // Convert px to mm
+
+        // Apply CSS transform to scale the content
+        invoiceDetails.style.transform = `scale(${scaleFactor})`;
+        invoiceDetails.style.transformOrigin = 'top left';
+        invoiceDetails.style.width = `calc(210mm / ${scaleFactor})`;
+        invoiceDetails.style.height = `calc(297mm / ${scaleFactor})`;
+
+        // Generate the PDF
+        html2pdf().from(invoiceDetails).set(opt).outputPdf('blob').then(function (pdfBlob) {
+            // Reset the scaling after PDF generation
+            invoiceDetails.style.transform = '';
+            invoiceDetails.style.width = '';
+            invoiceDetails.style.height = '';
+
+            // Create a URL for the PDF blob
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+
+            // Open the PDF in a new window
+            const pdfWindow = window.open(pdfUrl, '_blank');
+
+            // Add an event listener to trigger the print dialog once the PDF is loaded
+            pdfWindow.onload = function () {
+                pdfWindow.focus();
+                pdfWindow.print();
+                showToast("Invoice Printed Succesfully", false);
+                // If you want the print window to only show 1 page in print preview,
+                // you can customize the print window settings here.
+                // Some browsers might require a manual step for advanced settings.
+            };
+        });
+    }
 }
-}
+
+// function printInvoice() {
+//     if (invoiceStatus === '') {
+//         showToast("Please generate the bill first", true);
+//         return;
+//     } else {
+//         // Get the invoice details container
+//         const invoiceDetails = document.getElementById('invoice');
+
+//         // Define the options for html2pdf
+//         const opt = {
+//             margin: 0,
+//             filename: 'invoice.pdf',
+//             image: { type: 'jpeg', quality: 0.98 },
+//             html2canvas: { scale: 2 },
+//             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+//         };
+
+//         // Calculate the scaling factor to fit content to one page
+//         const contentHeight = invoiceDetails.scrollHeight;
+//         const a4Height = 297; // A4 height in mm
+//         const scaleFactor = a4Height / (contentHeight * 0.264583); // Convert px to mm
+
+//         // Apply CSS transform to scale the content
+//         invoiceDetails.style.transform = `scale(${scaleFactor})`;
+//         invoiceDetails.style.transformOrigin = 'top left';
+//         invoiceDetails.style.width = `calc(210mm / ${scaleFactor})`;
+//         invoiceDetails.style.height = `calc(297mm / ${scaleFactor})`;
+
+//         // Generate the PDF
+//         html2pdf().from(invoiceDetails).set(opt).outputPdf('blob').then(function (pdfBlob) {
+//             // Reset the scaling after PDF generation
+//             invoiceDetails.style.transform = '';
+//             invoiceDetails.style.width = '';
+//             invoiceDetails.style.height = '';
+
+//             // Create a URL for the PDF blob
+//             const pdfUrl = URL.createObjectURL(pdfBlob);
+
+//             // Open the PDF in a new window
+//             const pdfWindow = window.open(pdfUrl, '_blank');
+
+//             // Add an event listener to trigger the print dialog once the PDF is loaded
+//             pdfWindow.onload = function () {
+//                 pdfWindow.focus();
+//                 pdfWindow.print();
+//                 showToast("Invoice Printed Successfully", false);
+//             };
+//         });
+//     }
+// }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*****************************         RESET BUTTON FUNCTIONALITY       ************************/
