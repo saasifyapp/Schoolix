@@ -571,7 +571,7 @@ function exportToExcel() {
 
     const selectedClass = document.getElementById('classFilter').value;
 
-    var htmlTable = document.getElementById('invoiceTable');
+    var htmlTable = document.querySelector('.invoice-table-container table');
     var html = htmlTable.outerHTML;
 
     // Generate a temporary download link
@@ -580,13 +580,28 @@ function exportToExcel() {
 
     // CSV representation of the HTML table
     var csv = [];
-    var rows = htmlTable.rows;
-    for (var i = 0; i < rows.length; i++) {
-        var row = [], cols = rows[i].cells;
-        for (var j = 0; j < cols.length - 1; j++)
-            row.push(cols[j].innerText);
-        csv.push(row.join(","));
-    }
+
+    // Get the headers
+    var headerCells = htmlTable.querySelectorAll('thead th');
+    var headerRow = [];
+    headerCells.forEach(cell => {
+        headerRow.push(cell.innerText);
+    });
+    csv.push(headerRow.join(","));
+
+    // Get the rows from tbody
+    var rows = htmlTable.querySelectorAll('tbody tr');
+    rows.forEach(row => {
+        var rowData = [];
+        var cols = row.querySelectorAll('td');
+        cols.forEach((col, index) => {
+            // Exclude the last column (Action)
+            if (index < cols.length - 1) {
+                rowData.push(col.innerText);
+            }
+        });
+        csv.push(rowData.join(","));
+    });
 
     // Convert to CSV string
     var csvContent = csv.join("\n");
@@ -596,14 +611,17 @@ function exportToExcel() {
 
     if (selectedClass == '') {
         downloadLink.download = 'All Invoice Reports.csv';
-    }
-    else {
+    } else {
         downloadLink.download = selectedClass + ' Invoice Reports.csv';
     }
 
     // Trigger the download
     downloadLink.click();
+
+    // Remove the temporary download link
+    document.body.removeChild(downloadLink);
 }
+
 
 
 
