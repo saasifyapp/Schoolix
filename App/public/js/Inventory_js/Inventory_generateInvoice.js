@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     const row = document.createElement("tr");
                     row.innerHTML = `
                         <td>${book.title}</td>
-                        <td><input type="number" class="form-control-table" value="1" min="1"  style="width: 3rem"></td>
+                        <td><input type="number" class="form-control-table" value="1" min="1" name="Books"  style="width: 3rem"></td>
                         <td>${book.selling_price}</td>
                         <td class="total-price">${book.selling_price}</td>
                         <td class="class-of-title" style="display: none;">${book.class_of_title}</td>
@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 ${sizeOptions}
             </select>
         </td>
-        <td><input type="number" class="form-control-table" value="1" min="1" style="width: 3rem"></td>
+        <td><input type="number" class="form-control-table" value="1" min="1" name="Uniforms" style="width: 3rem"></td>
         <td class="price">${groupedUniforms[uniformName][0].price}</td>
         <td class="total-price">${groupedUniforms[uniformName][0].price}</td>
     `;
@@ -97,6 +97,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         updatePrice(this);
                     });
                 });
+
+                // After tables are populated, add event listeners
+                addEventListenersToTables();
 
                 // Update summary once tables are populated
                 updateSummary();
@@ -129,7 +132,32 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 });
 
+// Function to add event listeners after tables are populated
+function addEventListenersToTables() {
+    // Track changes in input fields for books
+    document.querySelectorAll('input[name="Books"]').forEach(element => {
+        element.addEventListener("input", () => {
+            isBillModified = true;
+            // showToast("Please regenerate the bill after making changes.", true);
+        });
+    });
 
+    // Track changes in input fields for uniforms
+    document.querySelectorAll('input[name="Uniforms"]').forEach(element => {
+        element.addEventListener("input", () => {
+            isBillModified = true;
+            // showToast("Please regenerate the bill after making changes.", true);
+        });
+    });
+
+    // Track changes in select elements for uniforms
+    document.querySelectorAll("#uniformsTable select").forEach(element => {
+        element.addEventListener("change", () => {
+            isBillModified = true;
+            // showToast("Please regenerate the bill after making changes.", true);
+        });
+    });
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -461,10 +489,38 @@ function showLowStockAlert(bookMessage, uniformMessage, insufficientBooksMessage
         }
     }
 }
+
+// Initialize a flag to track bill modification
+let isBillModified = false;
+
+// Add event listeners to input fields to track changes
+document.getElementById("buyerName").addEventListener("input", () => isBillModified = true);
+document.getElementById("buyerMobile").addEventListener("input", () => isBillModified = true);
+document.getElementById("buyerClass").addEventListener("input", () => isBillModified = true);
+document.getElementById("totalAmount").addEventListener("input", () => isBillModified = true);
+document.getElementById("amountPaid").addEventListener("input", () => isBillModified = true);
+document.getElementById("balanceAmount").addEventListener("input", () => isBillModified = true);
+document.querySelectorAll('input[name="paymentMethod"]').forEach(element => {
+    element.addEventListener("change", () => isBillModified = true);
+});
+document.querySelectorAll("#booksTable input[type='number']").forEach(element => {
+    element.addEventListener("input", () => isBillModified = true);
+});
+document.querySelectorAll("#uniformsTable input[type='number']").forEach(element => {
+    element.addEventListener("input", () => isBillModified = true);
+});
+document.querySelectorAll("#uniformsTable select").forEach(element => {
+    element.addEventListener("change", () => isBillModified = true);
+});
+
 // Call the function
 
 // FUNCTION TO GENERATE BILL //
 function generateBill_test() {
+
+    // Reset the modification flag
+    isBillModified = false;
+
     const initialImage = document.querySelector('dotlottie-player');
     const billContainer = document.getElementById('invoiceDetails');
     // Hide the initial image
@@ -603,6 +659,9 @@ document.getElementById("printButton").addEventListener("click", async function 
         return;
     }
 
+  
+
+
     showInventoryLoadingAnimation();
 
     // Function to get current date in local time (IST)
@@ -642,6 +701,12 @@ document.getElementById("printButton").addEventListener("click", async function 
             hideInventoryLoadingAnimation();
             return;
         }
+
+        if (isBillModified) {
+            showToast("Please regenerate the bill after making changes before printing.", true);
+            return;
+        } 
+        
 
         // Get book details, filtering out items with quantity 0 or null
         const bookRows = document.querySelectorAll("#booksTableBody tr");
@@ -698,7 +763,10 @@ document.getElementById("printButton").addEventListener("click", async function 
         setTimeout(() => {
             window.location.reload();
         }, 1000); // Match the duration of the toast message
+        
         printInvoice(); // PRINT THE BILL WHEN ALL OPERATIONS ARE SUCCESSFULLY COMPLETED //
+        
+        
 
     } catch (error) {
         console.error("Error:", error);
@@ -711,6 +779,10 @@ document.getElementById("printButton").addEventListener("click", async function 
 function printInvoice() {
     if (invoiceStatus === '') {
         showToast("Please generate the bill first", true);
+        return;
+    }
+    else if (isBillModified) {
+        // showToast("Please regenerate the bill after making changes before printing.", true);
         return;
     } else {
         // Get the invoice details container
@@ -735,6 +807,7 @@ function printInvoice() {
         invoiceDetails.style.transformOrigin = 'top left';
         invoiceDetails.style.width = `calc(210mm / ${scaleFactor})`;
         invoiceDetails.style.height = `calc(297mm / ${scaleFactor})`;
+        invoiceDetails.style.padding = `10mm`;
 
         // Generate the PDF
         html2pdf().from(invoiceDetails).set(opt).outputPdf('blob').then(function (pdfBlob) {

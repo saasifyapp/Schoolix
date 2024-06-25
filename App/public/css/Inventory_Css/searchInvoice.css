@@ -218,6 +218,8 @@ tr:hover td {
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.4);
+    /* Flexbox centering */
+    /* display: flex; */
 }
 
 .modal-content {
@@ -232,9 +234,10 @@ tr:hover td {
     align-items: center;
     background-color: rgba(0, 0, 0, 0.5);
     border-radius: 8px;
-    top: 9rem;
+    /* Removed top property */
     animation: fadeUp 0.3s ease-in-out;
 }
+
 
 h2,
 h3 {

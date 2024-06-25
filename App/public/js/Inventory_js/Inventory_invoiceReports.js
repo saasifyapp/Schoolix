@@ -14,6 +14,7 @@ $(function () {
     $("#datepicker").datepicker({
         dateFormat: "yy-mm-dd",
         onSelect: function (dateText) {
+            resetFiltersExcept('date');
             fetchDataByDate(dateText);
         }
     });
@@ -24,14 +25,19 @@ $(function () {
 
     $("#filter-class").change(function () {
         let selectedClass = $(this).val();
+        resetFiltersExcept('class');
         fetchDataByClass(selectedClass);
     });
 
     $("#defaulter-switch").change(function () {
         if ($(this).is(":checked")) {
+            resetFiltersExcept('defaulter');
             fetchDataByDefaulter(true);
         } else {
-            fetchDataByClass($("#filter-class").val());
+                 // Unchecked state - fetch data for today's date by default
+        let selectedDate = $("#datepicker").datepicker("getDate");
+        let formattedDate = $.datepicker.formatDate("yy-mm-dd", selectedDate);
+        fetchDataByDate(formattedDate);
         }
     });
 
@@ -156,6 +162,19 @@ $(function () {
                 $(this).text(Math.ceil(now));
             }
         });
+    }
+
+    function resetFiltersExcept(except) {
+        if (except !== 'date') {
+            let today = $.datepicker.formatDate("yy-mm-dd", new Date());
+            $("#datepicker").datepicker("setDate", today);
+        }
+        if (except !== 'class') {
+            $("#filter-class").val('');
+        }
+        if (except !== 'defaulter') {
+            $("#defaulter-switch").prop('checked', false);
+        }
     }
 
     function showToast(message, isError) {
