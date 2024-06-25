@@ -735,6 +735,7 @@ function printInvoice() {
         invoiceDetails.style.transformOrigin = 'top left';
         invoiceDetails.style.width = `calc(210mm / ${scaleFactor})`;
         invoiceDetails.style.height = `calc(297mm / ${scaleFactor})`;
+        invoiceDetails.style.padding = `10mm`;
 
         // Generate the PDF
         html2pdf().from(invoiceDetails).set(opt).outputPdf('blob').then(function (pdfBlob) {
