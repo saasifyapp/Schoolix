@@ -461,10 +461,38 @@ function showLowStockAlert(bookMessage, uniformMessage, insufficientBooksMessage
         }
     }
 }
+
+// Initialize a flag to track bill modification
+let isBillModified = false;
+
+// Add event listeners to input fields to track changes
+document.getElementById("buyerName").addEventListener("input", () => isBillModified = true);
+document.getElementById("buyerMobile").addEventListener("input", () => isBillModified = true);
+document.getElementById("buyerClass").addEventListener("input", () => isBillModified = true);
+document.getElementById("totalAmount").addEventListener("input", () => isBillModified = true);
+document.getElementById("amountPaid").addEventListener("input", () => isBillModified = true);
+document.getElementById("balanceAmount").addEventListener("input", () => isBillModified = true);
+document.querySelectorAll('input[name="paymentMethod"]').forEach(element => {
+    element.addEventListener("change", () => isBillModified = true);
+});
+document.querySelectorAll("#booksTable input[type='number']").forEach(element => {
+    element.addEventListener("input", () => isBillModified = true);
+});
+document.querySelectorAll("#uniformsTable input[type='number']").forEach(element => {
+    element.addEventListener("input", () => isBillModified = true);
+});
+document.querySelectorAll("#uniformsTable select").forEach(element => {
+    element.addEventListener("change", () => isBillModified = true);
+});
+
 // Call the function
 
 // FUNCTION TO GENERATE BILL //
 function generateBill_test() {
+
+    // Reset the modification flag
+    isBillModified = false;
+
     const initialImage = document.querySelector('dotlottie-player');
     const billContainer = document.getElementById('invoiceDetails');
     // Hide the initial image
@@ -603,6 +631,9 @@ document.getElementById("printButton").addEventListener("click", async function 
         return;
     }
 
+  
+
+
     showInventoryLoadingAnimation();
 
     // Function to get current date in local time (IST)
@@ -642,6 +673,12 @@ document.getElementById("printButton").addEventListener("click", async function 
             hideInventoryLoadingAnimation();
             return;
         }
+
+        if (isBillModified) {
+            showToast("Please regenerate the bill after making changes before printing.", true);
+            return;
+        } 
+        
 
         // Get book details, filtering out items with quantity 0 or null
         const bookRows = document.querySelectorAll("#booksTableBody tr");
@@ -698,7 +735,10 @@ document.getElementById("printButton").addEventListener("click", async function 
         setTimeout(() => {
             window.location.reload();
         }, 1000); // Match the duration of the toast message
+        
         printInvoice(); // PRINT THE BILL WHEN ALL OPERATIONS ARE SUCCESSFULLY COMPLETED //
+        
+        
 
     } catch (error) {
         console.error("Error:", error);
@@ -711,6 +751,10 @@ document.getElementById("printButton").addEventListener("click", async function 
 function printInvoice() {
     if (invoiceStatus === '') {
         showToast("Please generate the bill first", true);
+        return;
+    }
+    else if (isBillModified) {
+        // showToast("Please regenerate the bill after making changes before printing.", true);
         return;
     } else {
         // Get the invoice details container
