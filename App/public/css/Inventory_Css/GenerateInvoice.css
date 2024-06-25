@@ -1365,10 +1365,10 @@ tr:hover td {
 
 
 #invoice {
-  width: auto; /* A4 width */
-  min-height: auto; /* A4 height */
+  width: 210mm; /* A4 width */
+  min-height: 297mm; /* A4 height */
   overflow: hidden; /* Hide any content that overflows the page */
-  /* padding: 10mm;  */
+  padding: 10mm; /* Add padding for content */
   box-sizing: border-box; /* Include padding and border in the element's total width and height */
   display: flex;
   flex-direction: column;
