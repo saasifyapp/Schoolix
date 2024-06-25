@@ -438,7 +438,7 @@ async function showUpdateModal(invoiceNo, totalAmount, paidAmount, balanceAmount
     document.getElementById('modalBalanceAmount').value = balanceAmount;
 
     const modal = document.getElementById('updateModal');
-    modal.style.display = "block";
+    modal.style.display = "flex";
 }
 
 function calculateBalance() {
