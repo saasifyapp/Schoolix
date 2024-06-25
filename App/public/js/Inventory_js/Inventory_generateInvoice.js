@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     const row = document.createElement("tr");
                     row.innerHTML = `
                         <td>${book.title}</td>
-                        <td><input type="number" class="form-control-table" value="1" min="1"  style="width: 3rem"></td>
+                        <td><input type="number" class="form-control-table" value="1" min="1" name="Books"  style="width: 3rem"></td>
                         <td>${book.selling_price}</td>
                         <td class="total-price">${book.selling_price}</td>
                         <td class="class-of-title" style="display: none;">${book.class_of_title}</td>
@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 ${sizeOptions}
             </select>
         </td>
-        <td><input type="number" class="form-control-table" value="1" min="1" style="width: 3rem"></td>
+        <td><input type="number" class="form-control-table" value="1" min="1" name="Uniforms" style="width: 3rem"></td>
         <td class="price">${groupedUniforms[uniformName][0].price}</td>
         <td class="total-price">${groupedUniforms[uniformName][0].price}</td>
     `;
@@ -97,6 +97,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         updatePrice(this);
                     });
                 });
+
+                // After tables are populated, add event listeners
+                addEventListenersToTables();
 
                 // Update summary once tables are populated
                 updateSummary();
@@ -129,7 +132,32 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 });
 
+// Function to add event listeners after tables are populated
+function addEventListenersToTables() {
+    // Track changes in input fields for books
+    document.querySelectorAll('input[name="Books"]').forEach(element => {
+        element.addEventListener("input", () => {
+            isBillModified = true;
+            // showToast("Please regenerate the bill after making changes.", true);
+        });
+    });
 
+    // Track changes in input fields for uniforms
+    document.querySelectorAll('input[name="Uniforms"]').forEach(element => {
+        element.addEventListener("input", () => {
+            isBillModified = true;
+            // showToast("Please regenerate the bill after making changes.", true);
+        });
+    });
+
+    // Track changes in select elements for uniforms
+    document.querySelectorAll("#uniformsTable select").forEach(element => {
+        element.addEventListener("change", () => {
+            isBillModified = true;
+            // showToast("Please regenerate the bill after making changes.", true);
+        });
+    });
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
