@@ -120,7 +120,7 @@ $(function () {
 
         let tableHeading = filterValue === "Defaulter List" ? "Defaulter Details" :
             !isDate(filterValue) ? "Bills for Class - " + filterValue :
-                "Bills for " + filterValue;
+                "Transactions for " + filterValue;
         $("#table-heading").text(tableHeading);
 
 
