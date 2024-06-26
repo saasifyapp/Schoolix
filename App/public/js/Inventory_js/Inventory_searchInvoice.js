@@ -480,7 +480,12 @@ async function submitUpdatedAmount() {
     // Get current date in IST
     const invoiceDate = getCurrentDateInIST();
 
-
+     // Get selected payment method
+     const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
+     if (!paymentMethod) {
+         showToast('Please select a payment method.', true);
+         return;
+     }
 
     try {
         showSearchInventoryLoadingAnimation();
@@ -493,7 +498,9 @@ async function submitUpdatedAmount() {
                 invoiceNo: currentInvoice.invoiceNo,
                 paidAmount: newTotalPaidAmount,
                 balanceAmount: newBalanceAmount,
-                invoiceDate: invoiceDate // Include invoiceDate in the request body
+                invoiceDate: invoiceDate, // Include invoiceDate in the request body
+                modeOfPayment: paymentMethod.value, // Include paymentMethod in the request body
+                newPaidAmount:newPaidAmount // new entered amount to be paid
 
             })
         });

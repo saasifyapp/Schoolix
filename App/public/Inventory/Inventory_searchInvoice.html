@@ -123,47 +123,55 @@
     </div>
 
 
-    <!-- Update paid amount pop-up-->
-    <div id="updateModal" class="modal">
-        <div class="modal-content" style="position: relative; padding-top: 50px;">
-            <!-- Adjust padding to make space for the icon -->
-            <img src="/images/updatebill.png" alt="Icon"
-                style="width: 40px; height: 40px; position: absolute; top: 10px; left: 10px;">
-            <h2>Update Invoice</h2> <!-- Adjust margin to make space for the icon -->
-            <h3 id="modalHeading"></h3>
-            <div class="form-group">
-                <input type="number" class="form-control" id="modalTotalAmount" name="total_amount" placeholder=" "
-                    readonly style="width: 100%;">
-                <span class="form-control-placeholder">Net Payable</span>
-            </div>
-            <div class="form-group">
-                <input type="number" class="form-control" id="modalPaidAmount" name="paid_amount" placeholder=" "
-                    readonly style="width: 100%;">
-                <span class="form-control-placeholder">Paid Till Now</span>
-            </div>
-            <div class="form-group">
-                <input type="number" class="form-control" id="modalNewPaidAmount" name="new_paid_amount" placeholder=" "
-                    oninput="calculateBalance()" style="width: 100%;">
-                <span class="form-control-placeholder">New Paid Amount</span>
-            </div>
-            <div class="form-group">
-                <input type="number" class="form-control" id="modalBalanceAmount" name="balance_amount" placeholder=" "
-                    readonly style="width: 100%;">
-                <span class="form-control-placeholder">Balance</span>
-            </div>
-            <div class="button-group">
-                <button class="styled-button" onclick="submitUpdatedAmount()">
-                    <img src="/images/update.png" alt="Refresh Icon">
-                    Update
-                </button>
-                <button class="styled-button cancel-button" onclick="closeModal()">
-                    <img src="../images/cancel.png" alt="Edit"
-                        style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-                    Cancel
-                </button>
-            </div>
+   <!-- Update paid amount pop-up-->
+<div id="updateModal" class="modal">
+    <div class="modal-content" style="position: relative; padding-top: 50px;">
+        <!-- Adjust padding to make space for the icon -->
+        <img src="/images/updatebill.png" alt="Icon"
+            style="width: 40px; height: 40px; position: absolute; top: 10px; left: 10px;">
+        <h2>Update Invoice</h2> <!-- Adjust margin to make space for the icon -->
+        <h3 id="modalHeading"></h3>
+        <div class="form-group">
+            <input type="number" class="form-control" id="modalTotalAmount" name="total_amount" placeholder=" "
+                readonly style="width: 100%;">
+            <span class="form-control-placeholder">Net Payable</span>
+        </div>
+        <div class="form-group">
+            <input type="number" class="form-control" id="modalPaidAmount" name="paid_amount" placeholder=" "
+                readonly style="width: 100%;">
+            <span class="form-control-placeholder">Paid Till Now</span>
+        </div>
+        <div class="form-group">
+            <input type="number" class="form-control" id="modalNewPaidAmount" name="new_paid_amount" placeholder=" "
+                oninput="calculateBalance()" style="width: 100%;">
+            <span class="form-control-placeholder">New Paid Amount</span>
+        </div>
+        <div class="form-group">
+            <input type="number" class="form-control" id="modalBalanceAmount" name="balance_amount" placeholder=" "
+                readonly style="width: 100%;">
+            <span class="form-control-placeholder">Balance</span>
+        </div>
+        <!-- Add radio buttons here -->
+        <div class="form-group">
+            <label for="paymentMethod">Payment Method</label><br>
+            <input type="radio" id="cashPayment" name="payment_method" value="CASH">
+            <label for="cashPayment">CASH</label>
+            <input type="radio" id="upiPayment" name="payment_method" value="UPI" style="margin-left: 20px;">
+            <label for="upiPayment">UPI</label>
+        </div>
+        <div class="button-group">
+            <button class="styled-button" onclick="submitUpdatedAmount()">
+                <img src="/images/update.png" alt="Refresh Icon">
+                Update
+            </button>
+            <button class="styled-button cancel-button" onclick="closeModal()">
+                <img src="../images/cancel.png" alt="Edit"
+                    style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                Cancel
+            </button>
         </div>
     </div>
+</div>
     <bootstrap-container>
         <div class="section bill printableContainer" id="invoiceDetails"
             style="display: flex; border-radius: 10px; height: 95%; overflow-y: auto;">

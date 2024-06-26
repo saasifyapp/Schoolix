@@ -77,26 +77,68 @@ router.get("/inventory/class/:class", (req, res) => {
     });
 });
 
-// Update paid amount for an invoice
 router.put('/inventory/updatePaidAmount', (req, res) => {
-    const { invoiceNo, paidAmount, balanceAmount, invoiceDate } = req.body;
+    const { invoiceNo, paidAmount, balanceAmount, invoiceDate, modeOfPayment, newPaidAmount } = req.body;
 
-    const query = `
+    const updateQuery = `
         UPDATE inventory_invoice_details 
-        SET paid_amount = ?, balance_amount = ?, billDate = ? 
+        SET paid_amount = ?, balance_amount = ?
         WHERE invoiceNo = ?
     `;
 
-    req.connectionPool.query(query, [paidAmount, balanceAmount, invoiceDate, invoiceNo], (err, result) => {
+    const insertQuery = `
+        INSERT INTO inventory_payment_history (invoiceNo, paid_amount, mode_of_payment, updatedDate)
+        VALUES (?, ?, ?, ?)
+    `;
+
+    req.connectionPool.getConnection((err, connection) => {
         if (err) {
-            console.error('Error updating invoice:', err);
-            return res.status(500).send('Error updating invoice');
+            console.error('Error getting connection:', err);
+            return res.status(500).send('Error getting connection');
         }
-        res.status(200).send('Invoice updated successfully');
+
+        connection.beginTransaction(err => {
+            if (err) {
+                console.error('Error starting transaction:', err);
+                connection.release();
+                return res.status(500).send('Error starting transaction');
+            }
+
+            connection.query(updateQuery, [paidAmount, balanceAmount, invoiceNo], (err, result) => {
+                if (err) {
+                    console.error('Error updating invoice:', err);
+                    return connection.rollback(() => {
+                        connection.release();
+                        res.status(500).send('Error updating invoice');
+                    });
+                }
+
+                connection.query(insertQuery, [invoiceNo, newPaidAmount, modeOfPayment, invoiceDate], (err, result) => {
+                    if (err) {
+                        console.error('Error inserting payment history:', err);
+                        return connection.rollback(() => {
+                            connection.release();
+                            res.status(500).send('Error inserting payment history');
+                        });
+                    }
+
+                    connection.commit(err => {
+                        if (err) {
+                            console.error('Error committing transaction:', err);
+                            return connection.rollback(() => {
+                                connection.release();
+                                res.status(500).send('Error committing transaction');
+                            });
+                        }
+
+                        connection.release();
+                        res.status(200).send('Invoice updated and payment history inserted successfully');
+                    });
+                });
+            });
+        });
     });
 });
-
-// Delete invoice endpoint //
 
 router.delete("/inventory/deleteInvoice", (req, res) => {
     const invoiceNo = req.query.name;
@@ -104,6 +146,7 @@ router.delete("/inventory/deleteInvoice", (req, res) => {
     // SQL queries to delete related items first, then the invoice
     const selectItemsQuery = `SELECT item_name, quantity, type, class_size FROM inventory_invoice_items WHERE invoiceNo = ?`;
     const deleteItemsQuery = `DELETE FROM inventory_invoice_items WHERE invoiceNo = ?`;
+    const deleteHistoryQuery = `DELETE FROM inventory_payment_history WHERE invoiceNo = ?`;
     const deleteInvoiceQuery = `DELETE FROM inventory_invoice_details WHERE invoiceNo = ? LIMIT 1`;
 
     // Fetch related items
@@ -142,19 +185,28 @@ router.delete("/inventory/deleteInvoice", (req, res) => {
                 }
             });
 
-            // Delete the invoice
-            req.connectionPool.query(deleteInvoiceQuery, [invoiceNo], (err, result) => {
+            // Delete the payment history
+            req.connectionPool.query(deleteHistoryQuery, [invoiceNo], (err, result) => {
                 if (err) {
-                    console.error("Error deleting invoice:", err);
-                    res.status(500).send("Error deleting invoice");
+                    console.error("Error deleting payment history:", err);
+                    res.status(500).send("Error deleting payment history");
                     return;
                 }
 
-                if (result.affectedRows === 0) {
-                    res.status(404).send("Invoice not found");
-                    return;
-                }
-                res.status(200).send("Invoice deleted successfully");
+                // Delete the invoice
+                req.connectionPool.query(deleteInvoiceQuery, [invoiceNo], (err, result) => {
+                    if (err) {
+                        console.error("Error deleting invoice:", err);
+                        res.status(500).send("Error deleting invoice");
+                        return;
+                    }
+
+                    if (result.affectedRows === 0) {
+                        res.status(404).send("Invoice not found");
+                        return;
+                    }
+                    res.status(200).send("Invoice and related payment history deleted successfully");
+                });
             });
         });
     });
