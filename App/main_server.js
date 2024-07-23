@@ -373,6 +373,10 @@ app.get('/inventory/searchInvoice', authenticateToken, (req, res) => {
 app.get('/inventory/invoiceReports', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_invoiceReports.html'));
 });
+//Serve HTML form
+app.get('/Library/library_console', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Library', 'library_console.html'));
+});
 
 /////////////////////// ROUTES FOR MAIN DASHBOARD COMPONENTS ///////////////////////////////////////
 
