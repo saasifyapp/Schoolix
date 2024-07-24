@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function showOverlay(overlayId) {
-    document.getElementById(overlayId).style.display = "block";
+    document.getElementById(overlayId).style.display = "flex";
 }
 
 function hideOverlay(overlayId) {
