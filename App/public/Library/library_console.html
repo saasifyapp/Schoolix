@@ -2,113 +2,223 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Library Console</title>
-  <link rel="stylesheet" href="/css/Inventory_Css/InventoryAll.css">
-  <link rel="stylesheet" href="/css/Inventory_Css/Billing.css">
-  <link rel="stylesheet" href="/css/NavButtons.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Console</title>
+    <link rel="stylesheet" href="/css/Inventory_Css/InventoryAll.css">
+    <link rel="stylesheet" href="/css/Inventory_Css/Billing.css">
+    <link rel="stylesheet" href="/css/NavButtons.css">
+    <link rel="stylesheet" href="/css/Library_Css/Library_Console.css">
 </head>
 
 <body>
-  <div id="loadingOverlayinventory" class="loading-overlay-inventory">
-    <div class="loader2"></div>
-  </div>
-
-  <nav class="navbar">
-    <div class="logo_item">
-      <!-- <i class="bx bx-menu" id="sidebarOpen"></i> -->
-      <img id="logo" src="" alt="Logo">
-      <!-- <div class="user_name" id="user_name"></div> -->
+    <div id="loadingOverlayinventory" class="loading-overlay-inventory">
+        <div class="loader2"></div>
     </div>
 
-    <div class="navbar_center">
-      <button onclick="window.location.href='/dashboard'"> <i class='bx' id="backButton"> <img src="/images/back.png"
-            alt="Previous Icon"></i></button>
-      <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img src="/images/homeicon.png"
-            alt="Dashboard Icon"></i></button>
-      <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
-            alt="Signout Icon"></i></button>
-    </div>
+    <nav class="navbar">
+        <div class="logo_item">
+            <!-- <i class="bx bx-menu" id="sidebarOpen"></i> -->
+            <img id="logo" src="" alt="Logo">
+            <!-- <div class="user_name" id="user_name"></div> -->
+        </div>
 
-    <div class="navbar_content">
-      <!-- <i class="bi bi-grid"></i>
+        <div class="navbar_center">
+            <button onclick="window.location.href='/dashboard'"> <i class='bx' id="backButton"> <img
+                        src="/images/back.png" alt="Previous Icon"></i></button>
+            <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img
+                        src="/images/homeicon.png" alt="Dashboard Icon"></i></button>
+            <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
+                        alt="Signout Icon"></i></button>
+        </div>
+
+        <div class="navbar_content">
+            <!-- <i class="bi bi-grid"></i>
       <i class='bx bx-bell'></i> -->
-    </div>
-  </nav>span>
-  </button>
+        </div>
+    </nav>span>
+    </button>
 
-  <div class="adm-head">
-    <div class="button-container">
-      <h2>Library Console</h2>
-    </div>
-  </div>
-
-  <div class="cards-container">
-    <div class="card">
-      <a>
-        <button>
-          <div class="dotlottie-container">
-            
-          </div>
-          <h3>Book Vault</h3>
-        </button>
-      </a>
+    <div class="adm-head">
+        <div class="button-container">
+            <h2>Library Console</h2>
+        </div>
     </div>
 
-    <div class="card">
-      <a href="">
-        <button>
-          <div class="dotlottie-container">
-            
-          </div>
-          <h3>Manage Member</h3>
-        </button>
-      </a>
+    <div class="cards-container">
+        <div class="card">
+            <a>
+                <button id="bookVaultButton">
+                    <div class="dotlottie-container">
+
+                    </div>
+                    <h3>Book Vault</h3>
+                </button>
+            </a>
+        </div>
+
+        <div class="card">
+            <a>
+                <button id="manageMemberButton">
+                    <div class="dotlottie-container">
+
+                    </div>
+                    <h3>Manage Member</h3>
+                </button>
+            </a>
+        </div>
+
+        <div class="card">
+            <a href="">
+                <button>
+                    <div class="dotlottie-container">
+
+
+                    </div>
+                    <h3>Transaction Tracker</h3>
+                </button>
+            </a>
+        </div>
+
+        <div class="card">
+            <a href="">
+                <button>
+                    <div class="dotlottie-container">
+
+
+                    </div>
+                    <h3>Penalty Processor</h3>
+                </button>
+            </a>
+        </div>
+
+        <div class="card">
+            <a href="">
+                <button>
+                    <div class="dotlottie-container">
+
+
+                    </div>
+                    <h3>Report</h3>
+                </button>
+            </a>
+        </div>
+
     </div>
 
-    <div class="card">
-      <a href="">
-        <button>
-          <div class="dotlottie-container">
-
-            
-          </div>
-          <h3>Transaction Tracker</h3>
-        </button>
-      </a>
+    <!-- Overlay for selecting Add or Search Book -->
+    <div id="bookVaultOverlay" class="overlay">
+        <div class="overlay-content">
+            <button id="closeBookVaultOverlay" class="close-button">&times;</button>
+            <button id="addBookButton">Add Book</button>
+            <button id="searchBookButton">Search Book</button>
+        </div>
     </div>
 
-    <div class="card">
-        <a href="">
-          <button>
-            <div class="dotlottie-container">
-  
-              
-            </div>
-            <h3>Penalty Processor</h3>
-          </button>
-        </a>
-      </div>
+    <!-- Overlay for Add Book -->
+    <div id="addBookOverlay" class="overlay">
+        <div class="overlay-content">
+            <button id="closeAddBookOverlay" class="close-button">&times;</button>
+            <h2>Add Book</h2>
+            <form id="addBookForm">
+                <label for="bookName">Book Name:</label>
+                <input type="text" id="bookName" name="bookName" required><br>
+                <label for="authorName">Author Name:</label>
+                <input type="text" id="authorName" name="authorName" required><br>
+                <label for="bookPublication">Book Publication:</label>
+                <input type="text" id="bookPublication" name="bookPublication" required><br>
+                <label for="bookPurchaseDate">Book Purchase Date:</label>
+                <input type="date" id="bookPurchaseDate" name="bookPurchaseDate" required><br>
+                <label for="bookPrice">Book Price:</label>
+                <input type="number" id="bookPrice" name="bookPrice" required><br>
+                <label for="bookQuantity">Book Quantity:</label>
+                <input type="number" id="bookQuantity" name="bookQuantity" required><br>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
 
-      <div class="card">
-        <a href="">
-          <button>
-            <div class="dotlottie-container">
-  
-              
-            </div>
-            <h3>Report</h3>
-          </button>
-        </a>
-      </div>
+    <!-- Overlay for Search Book -->
+    <div id="searchBookOverlay" class="overlay">
+        <div class="overlay-content">
+            <button id="closeSearchBookOverlay" class="close-button">&times;</button>
+            <h2>Search Book</h2>
+            <input type="text" id="searchInput" placeholder="Search by book name">
+            <table id="booksTable">
+                <thead>
+                    <tr>
+                        <th>Book Name</th>
+                        <th>Author Name</th>
+                        <th>Book Publication</th>
+                        <th>Book Purchase Date</th>
+                        <th>Book Price</th>
+                        <th>Book Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Table rows will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-  </div>
+    <!-- Overlay for selecting Add or Search Member -->
+    <div id="manageMemberOverlay" class="overlay">
+        <div class="overlay-content">
+            <button id="closeManageMemberOverlay" class="close-button">&times;</button>
+            <button id="addMemberButton">Add Member</button>
+            <button id="searchMemberButton">Search Member</button>
+        </div>
+    </div>
+
+    <!-- Overlay for Add Member -->
+    <div id="addMemberOverlay" class="overlay">
+        <div class="overlay-content">
+            <button id="closeAddMemberOverlay" class="close-button">&times;</button>
+            <h2>Add Member</h2>
+            <form id="addMemberForm">
+                <label for="studentName">Student Name:</label>
+                <input type="text" id="studentName" name="studentName" required><br>
+                <label for="enrollmentNumber">Enrollment Number:</label>
+                <input type="text" id="enrollmentNumber" name="enrollmentNumber" required><br>
+                <label for="department">Department:</label>
+                <input type="text" id="department" name="department" required><br>
+                <label for="semester">Semester:</label>
+                <input type="text" id="semester" name="semester" required><br>
+                <label for="contact">Contact:</label>
+                <input type="text" id="contact" name="contact" required><br>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Overlay for Search Member -->
+    <div id="searchMemberOverlay" class="overlay">
+        <div class="overlay-content">
+            <button id="closeSearchMemberOverlay" class="close-button">&times;</button>
+            <h2>Search Member</h2>
+            <input type="text" id="searchMemberInput" placeholder="Search by student name">
+            <table id="membersTable">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Enrollment Number</th>
+                        <th>Department</th>
+                        <th>Semester</th>
+                        <th>Contact</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Table rows will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 
- 
-  <script src="/js/Inventory_js/All.js"></script>
-  
+    <script src="/js/Inventory_js/All.js"></script>
+    <script src="/js/Library_js/Library_Console.js"></script>
+
 </body>
 
 </html>
