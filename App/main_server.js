@@ -486,6 +486,10 @@ app.use('/', addlibrarybookRouter);
 const addlibrarymemberRouter = require('./src/routes/library_routes/add_library_members');
 app.use('/', addlibrarymemberRouter);
 
+////// ISSUE BOOKS ROUTE
+const issueBooksRouter = require('./src/routes/library_routes/issue_books');
+app.use('/', issueBooksRouter);
+
 // Start the server
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

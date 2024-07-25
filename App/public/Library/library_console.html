@@ -347,42 +347,41 @@
                             <input type="text" class="form-control" id="bookEnrollmentNo" required placeholder=" ">
                             <span class="form-control-placeholder">Book Enrollment No.</span>
                         </div>
+                        
+                        <button type="submit" class="submit-button">Get Details</button>
 
-                        <div class="form-group">
-                            <input type="date" class="form-control" id="issueDate" required placeholder=" ">
-                            <span class="form-control-placeholder">Issue Date</span>
-                        </div>
+
                     </form>
                 </div>
                 <div class="right-side">
                     <form id="additionalInfoForm">
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="studentName" required placeholder=" ">
+                                <input type="text" class="form-control" id="studentName" required placeholder=" " readonly>
                                 <span class="form-control-placeholder">Student Name</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="class" required placeholder=" ">
+                                <input type="text" class="form-control" id="class" required placeholder=" " readonly>
                                 <span class="form-control-placeholder">Class</span>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="contact" required placeholder=" ">
+                                <input type="text" class="form-control" id="contact" required placeholder=" " readonly>
                                 <span class="form-control-placeholder">Contact</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="bookName" required placeholder=" ">
+                                <input type="text" class="form-control" id="bookName" required placeholder=" " readonly>
                                 <span class="form-control-placeholder">Book Name</span>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="authorName" required placeholder=" ">
+                                <input type="text" class="form-control" id="authorName" required placeholder=" " readonly>
                                 <span class="form-control-placeholder">Author Name</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="bookPublication" required placeholder=" ">
+                                <input type="text" class="form-control" id="bookPublication" required placeholder=" " readonly>
                                 <span class="form-control-placeholder">Book Publication</span>
                             </div>
                         </div>
@@ -418,6 +417,7 @@
     <script src="/js/Library_js/Library_Console.js"></script>
     <script src="/js/Library_js/Library_books.js"></script>
     <script src="/js/Library_js/Library_members.js"></script>
+    <script src="/js/Library_js/Library_issueBook.js"></script>
 
     <script type="text/javascript">
         const btn = document.querySelector("#btn");
