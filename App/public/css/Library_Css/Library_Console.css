@@ -80,10 +80,16 @@ th, td {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    height: 170px;
+    width: 200px;
 }
 
 .bookvaltcard:hover {
     transform: scale(1.05);
+    background-color: #FFDEE9;
+    background-image: linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 100%);
+    box-shadow: 0 0 8px #023047;
+    outline: none;
 }
 
 .bookvaltcard::after {
@@ -106,8 +112,10 @@ th, td {
     position: relative;
     z-index: 1;
     /* background-color: #007bff; */
-    color: black;
+    /* color: black; */
     padding: 10px 20px;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 20px;
+    color: var(--grey-color);
+    font-weight: 500;
 }
