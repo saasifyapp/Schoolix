@@ -87,7 +87,7 @@ th, td {
 }
 
 .bookvaltcard::after {
-    content: "";
+    content: "";    
     position: absolute;
     background: inherit;
     inset: -10px;

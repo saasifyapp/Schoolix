@@ -478,6 +478,13 @@ app.use('/', searchInvoiceRouter);
 const invoiceReportRouter = require('./src/routes/Inventory_routes/invoice_reports');
 app.use('/', invoiceReportRouter);
 
+////// ADD LIBRARY BOOK ROUTE
+const addlibrarybookRouter = require('./src/routes/library_routes/add_library_books');
+app.use('/', addlibrarybookRouter);
+
+////// ADD LIBRARY MEMBER ROUTE
+const addlibrarymemberRouter = require('./src/routes/library_routes/add_library_members');
+app.use('/', addlibrarymemberRouter);
 
 // Start the server
 const PORT = process.env.PORT || 4000;

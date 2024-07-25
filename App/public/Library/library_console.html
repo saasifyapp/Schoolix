@@ -126,7 +126,10 @@
         <div class="overlay-content">
             <button id="closeAddBookOverlay" class="close-button">&times;</button>
             <h2>Add Book</h2>
+            <span id="previousBookNumber">Previous Book Number: </span><br>
             <form id="addBookForm">
+                <label for="bookName">Book Number:</label>
+                <input type="text" id="bookNumber" name="bookNumber" required><br>
                 <label for="bookName">Book Name:</label>
                 <input type="text" id="bookName" name="bookName" required><br>
                 <label for="authorName">Author Name:</label>
@@ -150,9 +153,11 @@
             <button id="closeSearchBookOverlay" class="close-button">&times;</button>
             <h2>Search Book</h2>
             <input type="text" id="searchInput" placeholder="Search by book name">
+            <button id="refreshBooksButton" onclick="refreshBooksData()">Refresh</button>
             <table id="booksTable">
                 <thead>
                     <tr>
+                        <th>Book Number</th>
                         <th>Book Name</th>
                         <th>Author Name</th>
                         <th>Book Publication</th>
@@ -161,7 +166,7 @@
                         <th>Book Quantity</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="booksTablebody">
                     <!-- Table rows will be populated here -->
                 </tbody>
             </table>
@@ -187,8 +192,8 @@
                 <input type="text" id="studentName" name="studentName" required><br>
                 <label for="enrollmentNumber">Enrollment Number:</label>
                 <input type="text" id="enrollmentNumber" name="enrollmentNumber" required><br>
-                <label for="department">Department:</label>
-                <input type="text" id="department" name="department" required><br>
+                <label for="department">Class:</label>
+                <input type="text" id="class" name="class" required><br>
                 <label for="semester">Semester:</label>
                 <input type="text" id="semester" name="semester" required><br>
                 <label for="contact">Contact:</label>
@@ -204,6 +209,7 @@
             <button id="closeSearchMemberOverlay" class="close-button">&times;</button>
             <h2>Search Member</h2>
             <input type="text" id="searchMemberInput" placeholder="Search by student name">
+            <button id="refreshMembersData" onclick="refreshMembersData()">Refresh</button>
             <table id="membersTable">
                 <thead>
                     <tr>
@@ -214,7 +220,7 @@
                         <th>Contact</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="membersTablebody">
                     <!-- Table rows will be populated here -->
                 </tbody>
             </table>
@@ -224,6 +230,8 @@
 
     <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Library_js/Library_Console.js"></script>
+    <script src="/js/Library_js/Library_books.js"></script>
+    <script src="/js/Library_js/Library_members.js"></script>
 
 </body>
 

@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const bookVaultButton = document.getElementById('bookVaultButton');
     const addBookButton = document.getElementById('addBookButton');
     const searchBookButton = document.getElementById('searchBookButton');
@@ -14,55 +14,57 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeSearchMemberOverlay = document.getElementById('closeSearchMemberOverlay');
 
 
-    bookVaultButton.addEventListener('click', function() {
+    bookVaultButton.addEventListener('click', function () {
         showOverlay('bookVaultOverlay');
+        refreshBooksData();
     });
 
-    addBookButton.addEventListener('click', function() {
+    addBookButton.addEventListener('click', function () {
         hideOverlay('bookVaultOverlay');
         showOverlay('addBookOverlay');
     });
 
-    searchBookButton.addEventListener('click', function() {
+    searchBookButton.addEventListener('click', function () {
         hideOverlay('bookVaultOverlay');
         showOverlay('searchBookOverlay');
     });
 
-    closeBookVaultOverlay.addEventListener('click', function() {
+    closeBookVaultOverlay.addEventListener('click', function () {
         hideOverlay('bookVaultOverlay');
     });
 
-    closeAddBookOverlay.addEventListener('click', function() {
+    closeAddBookOverlay.addEventListener('click', function () {
         hideOverlay('addBookOverlay');
     });
 
-    closeSearchBookOverlay.addEventListener('click', function() {
+    closeSearchBookOverlay.addEventListener('click', function () {
         hideOverlay('searchBookOverlay');
     });
 
-    manageMemberButton.addEventListener('click', function() {
+    manageMemberButton.addEventListener('click', function () {
         showOverlay('manageMemberOverlay');
+        refreshMembersData();
     });
 
-    addMemberButton.addEventListener('click', function() {
+    addMemberButton.addEventListener('click', function () {
         hideOverlay('manageMemberOverlay');
         showOverlay('addMemberOverlay');
     });
 
-    searchMemberButton.addEventListener('click', function() {
+    searchMemberButton.addEventListener('click', function () {
         hideOverlay('manageMemberOverlay');
         showOverlay('searchMemberOverlay');
     });
 
-    closeManageMemberOverlay.addEventListener('click', function() {
+    closeManageMemberOverlay.addEventListener('click', function () {
         hideOverlay('manageMemberOverlay');
     });
 
-    closeAddMemberOverlay.addEventListener('click', function() {
+    closeAddMemberOverlay.addEventListener('click', function () {
         hideOverlay('addMemberOverlay');
     });
 
-    closeSearchMemberOverlay.addEventListener('click', function() {
+    closeSearchMemberOverlay.addEventListener('click', function () {
         hideOverlay('searchMemberOverlay');
     });
 });
