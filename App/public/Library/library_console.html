@@ -112,14 +112,24 @@
             <button id="closeBookVaultOverlay" class="close-button">&times;</button>
             <div class="button-container">
                 <div class="bookvaltcard">
-                    <span id="addBookButton"><script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> 
+                    <span id="addBookButton">
+                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                            type="module"></script>
 
-                        <dotlottie-player src="https://lottie.host/1d6e040f-8bac-4d2f-a852-0ad55d1d3504/RW4RyJSpZz.json" background="transparent" speed="1" style="width: 170px; height: 170px;" loop autoplay></dotlottie-player>Add Book</span>
+                        <dotlottie-player src="https://lottie.host/1d6e040f-8bac-4d2f-a852-0ad55d1d3504/RW4RyJSpZz.json"
+                            background="transparent" speed="1" style="width: 170px; height: 170px;" loop
+                            autoplay></dotlottie-player>Add Book
+                    </span>
                 </div>
                 <div class="bookvaltcard">
-                    <span id="searchBookButton"><script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> 
+                    <span id="searchBookButton">
+                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                            type="module"></script>
 
-                        <dotlottie-player src="https://lottie.host/9001527e-468e-4f23-925a-8baf873ac559/oDfgDP4MIb.json" background="transparent" speed="1" style="width: 170px; height: 170px;" loop autoplay></dotlottie-player>Search Book</span>
+                        <dotlottie-player src="https://lottie.host/9001527e-468e-4f23-925a-8baf873ac559/oDfgDP4MIb.json"
+                            background="transparent" speed="1" style="width: 170px; height: 170px;" loop
+                            autoplay></dotlottie-player>Search Book
+                    </span>
                 </div>
             </div>
         </div>
@@ -127,24 +137,57 @@
 
     <!-- Overlay for Add Book -->
     <div id="addBookOverlay" class="overlay">
-        <div class="overlay-content">
+        <div class="overlay-content" style="width: 30%;">
+
             <button id="closeAddBookOverlay" class="close-button">&times;</button>
             <h2>Add Book</h2>
-            <form id="addBookForm">
-                <label for="bookName">Book Name:</label>
-                <input type="text" id="bookName" name="bookName" required><br>
-                <label for="authorName">Author Name:</label>
-                <input type="text" id="authorName" name="authorName" required><br>
-                <label for="bookPublication">Book Publication:</label>
-                <input type="text" id="bookPublication" name="bookPublication" required><br>
-                <label for="bookPurchaseDate">Book Purchase Date:</label>
-                <input type="date" id="bookPurchaseDate" name="bookPurchaseDate" required><br>
-                <label for="bookPrice">Book Price:</label>
-                <input type="number" id="bookPrice" name="bookPrice" required><br>
-                <label for="bookQuantity">Book Quantity:</label>
-                <input type="number" id="bookQuantity" name="bookQuantity" required><br>
-                <button type="submit">Submit</button>
-            </form>
+
+            <div class="form-group">
+                <input type="text" class="form-control" id="bookName" required style="width: 20rem; text-align: center;"
+                    placeholder=" ">
+                <span class="form-control-placeholder">Book Name</span>
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="form-control" id="authorName" required
+                    style="width: 20rem; text-align: center;" placeholder=" ">
+                <span class="form-control-placeholder">Author Name</span>
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="form-control" id="bookPublication" required
+                    style="width: 20rem; text-align: center;" placeholder=" ">
+                <span class="form-control-placeholder">Book Publication</span>
+            </div>
+
+            <div class="form-group">
+                <input type="date" class="form-control" id="bookPurchaseDate" required
+                    style="width: 20rem; text-align: center;" placeholder=" ">
+                <span class="form-control-placeholder">Book Purchase Date</span>
+            </div>
+
+            <div class="form-group">
+                <input type="number" class="form-control" id="bookPrice" required
+                    style="width: 20rem; text-align: center;" placeholder=" ">
+                <span class="form-control-placeholder">Book Price</span>
+            </div>
+
+            <div class="form-group">
+                <input type="number" class="form-control" id="bookQuantity" required
+                    style="width: 20rem; text-align: center;" placeholder=" ">
+                <span class="form-control-placeholder">Book Quantity</span>
+            </div>
+
+            <button id="btn" class="animatedBtn">
+                <p id="btnText">Submit</p>
+                <div class="check-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                        <path fill="transparent" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                    </svg>
+                </div>
+            </button>
+
+
         </div>
     </div>
 
@@ -228,6 +271,16 @@
 
     <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Library_js/Library_Console.js"></script>
+
+    <script type="text/javascript">
+        const btn = document.querySelector("#btn");
+        const btnText = document.querySelector("#btnText");
+
+        btn.onclick = () => {
+            btnText.innerHTML = "Saved";
+            btn.classList.add("active");
+        };
+    </script>
 
 </body>
 

@@ -621,7 +621,10 @@ async function returnBook(title) {
                         <h2>${title} (${class_of_title})</h2>
                         <p>Remaining Quantity : ${remainingQuantity}</p>
                         <p>Enter the return quantity:</p>                        
-                         <div class="form-group">
+                         <
+                         
+                         
+                         div class="form-group">
                         <input type="number" class="form-control wide" id="returnQuantityInput" min="0" placeholder=" " required>
                         <span class="form-control-placeholder">Return Quantity</span>
     </div>
