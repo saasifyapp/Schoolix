@@ -7,11 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         const memberDetails = {
-            student_name: document.getElementById('studentName').value,
+            member_name: document.getElementById('memberName').value,
             enrollment_number: document.getElementById('enrollmentNumber').value,
-            student_class: document.getElementById('class').value,
-            semester: document.getElementById('semester').value,
-            contact: document.getElementById('contact').value
+            member_class: document.getElementById('classFilter').value,
+            contact: document.getElementById('contact').value,
+            books_issued: document.getElementById('booksIssued').value
         };
 
         try {
@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 // Handle successful response
                 alert('Member added successfully');
+                addMemberForm.reset(); // Reset the form after successful submission
             } else {
                 throw new Error('Failed to add member');
             }
@@ -38,8 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Fetch and display members
 async function refreshMembersData() {
-    // showMemberLoadingAnimation();
-    document.getElementById('searchMemberInput').value = '';
     try {
         const response = await fetch('/library/members');
         if (!response.ok) {
@@ -49,7 +48,6 @@ async function refreshMembersData() {
         displayMembers(data);
     } catch (error) {
         console.error('Error fetching members:', error);
-        // hideMemberLoadingAnimation();
     }
 }
 
@@ -57,32 +55,22 @@ function displayMembers(data) {
     const memberTableBody = document.getElementById('membersTablebody');
     memberTableBody.innerHTML = ''; // Clear existing rows
 
-    try {
-        // Reverse the data array
-        // data.reverse();
-
-        if (data.length === 0) {
-            // hideMemberLoadingAnimation();
-            const noResultsRow = document.createElement('tr');
-            noResultsRow.innerHTML = '<td colspan="5">No results found</td>';
-            memberTableBody.appendChild(noResultsRow);
-        } else {
-            data.forEach(member => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${member.student_name}</td>
-                    <td>${member.enrollment_number}</td>
-                    <td>${member.student_class}</td>
-                    <td>${member.semester}</td>
-                    <td>${member.contact}</td>
-                `;
-                memberTableBody.appendChild(row);
-            });
-        }
-        // hideMemberLoadingAnimation();
-    } catch (error) {
-        console.error('Error displaying members:', error);
-        // hideMemberLoadingAnimation();
+    if (data.length === 0) {
+        const noResultsRow = document.createElement('tr');
+        noResultsRow.innerHTML = '<td colspan="5">No results found</td>';
+        memberTableBody.appendChild(noResultsRow);
+    } else {
+        data.forEach(member => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${member.member_name}</td>
+                <td>${member.enrollment_number}</td>
+                <td>${member.member_class}</td>
+                <td>${member.member_contact}</td>
+                <td>${member.books_issued}</td>
+            `;
+            memberTableBody.appendChild(row);
+        });
     }
 }
 

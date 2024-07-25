@@ -3,13 +3,13 @@ const router = express.Router();
 
 // Add Member Endpoint
 router.post('/library/add_member', (req, res) => {
-    const { student_name, enrollment_number, student_class, semester, contact } = req.body;
+    const { member_name, enrollment_number, member_class, contact, books_issued } = req.body;
 
-    const query = `INSERT INTO Library_member_details 
-                   (student_name, enrollment_number, class, semester, contact) 
+    const query = `INSERT INTO library_member_details 
+                   (member_name, enrollment_number, member_class, member_contact, books_issued) 
                    VALUES (?, ?, ?, ?, ?)`;
 
-    req.connectionPool.query(query, [student_name, enrollment_number, student_class, semester, contact], (err, result) => {
+    req.connectionPool.query(query, [member_name, enrollment_number, member_class, contact, books_issued], (err, result) => {
         if (err) {
             console.error('Error adding member:', err);
             return res.status(500).json({ error: 'Error adding member' });
@@ -20,7 +20,7 @@ router.post('/library/add_member', (req, res) => {
 
 // Display All Members
 router.get('/library/members', (req, res) => {
-    const query = `SELECT * FROM Library_member_details`;
+    const query = `SELECT * FROM library_member_details`;
 
     req.connectionPool.query(query, (err, results) => {
         if (err) {

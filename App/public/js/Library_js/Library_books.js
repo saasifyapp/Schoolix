@@ -1,19 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Form and overlay elements
     const addBookForm = document.getElementById('addBookForm');
 
-    // Add Book form submission
     addBookForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const bookDetails = {
+            book_number: document.getElementById('bookNumber').value,
             book_name: document.getElementById('bookName').value,
             author_name: document.getElementById('authorName').value,
             book_publication: document.getElementById('bookPublication').value,
-            book_purchase_date: document.getElementById('bookPurchaseDate').value,
             book_price: document.getElementById('bookPrice').value,
-            book_quantity: document.getElementById('bookQuantity').value,
-            book_number: document.getElementById('bookNumber').value
+            ordered_quantity: document.getElementById('orderedQuantity').value,
+            description: document.getElementById('description').value
         };
 
         try {
@@ -26,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
-                // Handle successful response
                 alert('Book added successfully');
             } else {
                 throw new Error('Failed to add book');
@@ -37,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
 
 // Fetch and display books
 async function refreshBooksData() {
@@ -76,9 +74,9 @@ function displayBooks(data) {
                     <td>${book.book_name}</td>
                     <td>${book.author_name}</td>
                     <td>${book.book_publication}</td>
-                    <td>${book.book_purchase_date}</td>
                     <td>${book.book_price}</td>
-                    <td>${book.book_quantity}</td>
+                    <td>${book.ordered_quantity}</td>
+                    <td>${book.description}</td>
                 `;
                 bookTableBody.appendChild(row);
             });

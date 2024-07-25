@@ -3,13 +3,13 @@ const router = express.Router();
 
 // Add Book Endpoint
 router.post('/library/add_book', (req, res) => {
-    const { book_name, author_name, book_publication, book_purchase_date, book_price, book_quantity, book_number } = req.body;
+    const { book_number, book_name, author_name, book_publication, book_price, ordered_quantity, description } = req.body;
 
-    const query = `INSERT INTO Library_book_details 
-                   (book_name, author_name, book_publication, book_purchase_date, book_price, book_quantity, book_number) 
+    const query = `INSERT INTO library_book_details 
+                   (book_number, book_name, author_name, book_publication, book_price, ordered_quantity, description) 
                    VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
-    req.connectionPool.query(query, [book_name, author_name, book_publication, book_purchase_date, book_price, book_quantity, book_number], (err, result) => {
+    req.connectionPool.query(query, [book_number, book_name, author_name, book_publication, book_price, ordered_quantity, description], (err, result) => {
         if (err) {
             console.error('Error adding book:', err);
             return res.status(500).json({ error: 'Error adding book' });
@@ -20,7 +20,7 @@ router.post('/library/add_book', (req, res) => {
 
 // Display All Books
 router.get('/library/books', (req, res) => {
-    const query = `SELECT * FROM Library_book_details`;
+    const query = `SELECT * FROM library_book_details`;
 
     req.connectionPool.query(query, (err, results) => {
         if (err) {
