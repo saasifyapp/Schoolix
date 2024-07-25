@@ -79,8 +79,8 @@
         </div>
 
         <div class="card">
-            <a href="">
-                <button>
+            <a>
+                <button id="transactionTrackerButton">
                     <div class="dotlottie-container">
                         <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
                             type="module"></script>
@@ -301,6 +301,113 @@
             </table>
         </div>
     </div>
+
+    <!-- Transaction Tracker Overlay -->
+<div id="transactionTrackerOverlay" class="overlay">
+    <div class="overlay-content">
+        <button id="closeTransactionTrackerOverlay" class="close-button">×</button>
+        <h2>Transaction Tracker</h2>
+        <div class="button-container">
+            <button id="issueBookButton">Issue Book</button>
+            <button id="returnBookButton">Return Book</button>
+        </div>
+    </div>
+</div>
+
+<!-- Issue Book Overlay -->
+<!-- Issue Book Overlay -->
+<div id="issueBookOverlay" class="overlay">
+    <div class="overlay-content" style="max-width: 700px;">
+        <button id="closeIssueBookOverlay" class="close-button">×</button>
+        <h2>Issue Book</h2>
+        <div class="overlay-inner">
+            <div class="left-side">
+                <form id="issueBookForm">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="studentEnrollmentNo" required
+                            placeholder=" ">
+                        <span class="form-control-placeholder">Student Enrollment No.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="bookEnrollmentNo" required
+                            placeholder=" ">
+                        <span class="form-control-placeholder">Book Enrollment No.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="date" class="form-control" id="issueDate" required
+                            placeholder=" ">
+                        <span class="form-control-placeholder">Issue Date</span>
+                    </div>
+                </form>
+            </div>
+            <div class="right-side">
+                <form id="additionalInfoForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="studentName" required
+                                placeholder=" ">
+                            <span class="form-control-placeholder">Student Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="class" required
+                                placeholder=" ">
+                            <span class="form-control-placeholder">Class</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="contact" required
+                                placeholder=" ">
+                            <span class="form-control-placeholder">Contact</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="bookName" required
+                                placeholder=" ">
+                            <span class="form-control-placeholder">Book Name</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="authorName" required
+                                placeholder=" ">
+                            <span class="form-control-placeholder">Author Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="bookPublication" required
+                                placeholder=" ">
+                            <span class="form-control-placeholder">Book Publication</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="date" class="form-control" id="issueDate" required
+                                placeholder=" ">
+                            <span class="form-control-placeholder">Issue Date</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="date" class="form-control" id="returnDate" required
+                                placeholder=" ">
+                            <span class="form-control-placeholder">Return Date</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-button">Issue Book</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Return Book Overlay -->
+<div id="returnBookOverlay" class="overlay">
+    <div class="overlay-content">
+        <button id="closeReturnBookOverlay" class="close-button">×</button>
+        <h2>Return Book</h2>
+        <!-- Return Book Form Content Here -->
+    </div>
+</div>
+
 
 
     <script src="/js/Inventory_js/All.js"></script>

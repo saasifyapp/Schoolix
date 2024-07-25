@@ -31,6 +31,34 @@
     color: #484b51;
 }
 
+
+.overlay-inner {
+    display: flex;
+}
+
+.left-side {
+    flex: 0 0 30%;
+    padding-right: 20px;
+}
+
+.right-side {
+    flex: 1;
+}
+
+.form-row {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.form-row .form-group {
+    flex: 1;
+    margin-right: 15px;
+}
+
+.form-row .form-group:last-child {
+    margin-right: 0;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;

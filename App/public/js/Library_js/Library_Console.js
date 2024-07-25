@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // Book Vault Overlays
     const bookVaultButton = document.getElementById('bookVaultButton');
     const addBookButton = document.getElementById('addBookButton');
     const searchBookButton = document.getElementById('searchBookButton');
@@ -6,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeAddBookOverlay = document.getElementById('closeAddBookOverlay');
     const closeSearchBookOverlay = document.getElementById('closeSearchBookOverlay');
 
+    // Manage Member Overlays
     const manageMemberButton = document.getElementById('manageMemberButton');
     const addMemberButton = document.getElementById('addMemberButton');
     const searchMemberButton = document.getElementById('searchMemberButton');
@@ -13,6 +15,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeAddMemberOverlay = document.getElementById('closeAddMemberOverlay');
     const closeSearchMemberOverlay = document.getElementById('closeSearchMemberOverlay');
 
+    // Transaction Tracker Overlays
+    const transactionTrackerButton = document.getElementById('transactionTrackerButton');
+    const issueBookButton = document.getElementById('issueBookButton');
+    const returnBookButton = document.getElementById('returnBookButton');
+    const closeTransactionTrackerOverlay = document.getElementById('closeTransactionTrackerOverlay');
+    const closeIssueBookOverlay = document.getElementById('closeIssueBookOverlay');
+    const closeReturnBookOverlay = document.getElementById('closeReturnBookOverlay');
 
     bookVaultButton.addEventListener('click', function () {
         showOverlay('bookVaultOverlay');
@@ -66,6 +75,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
     closeSearchMemberOverlay.addEventListener('click', function () {
         hideOverlay('searchMemberOverlay');
+    });
+
+    transactionTrackerButton.addEventListener('click', function () {
+        showOverlay('transactionTrackerOverlay');
+    });
+
+    issueBookButton.addEventListener('click', function () {
+        hideOverlay('transactionTrackerOverlay');
+        showOverlay('issueBookOverlay');
+    });
+
+    returnBookButton.addEventListener('click', function () {
+        hideOverlay('transactionTrackerOverlay');
+        showOverlay('returnBookOverlay');
+    });
+
+    closeTransactionTrackerOverlay.addEventListener('click', function () {
+        hideOverlay('transactionTrackerOverlay');
+    });
+
+    closeIssueBookOverlay.addEventListener('click', function () {
+        hideOverlay('issueBookOverlay');
+    });
+
+    closeReturnBookOverlay.addEventListener('click', function () {
+        hideOverlay('returnBookOverlay');
     });
 });
 
