@@ -286,8 +286,6 @@
             </select><br>
             <label for="contact">Contact:</label>
             <input type="text" id="contact" name="contact" required><br>
-            <label for="booksIssued">Books Issued:</label>
-            <input type="number" id="booksIssued" name="booksIssued" required><br>
             <button type="submit">Submit</button>
         </form>
     </div>
@@ -325,6 +323,7 @@
             <div class="button-container">
                 <button id="issueBookButton">Issue Book</button>
                 <button id="returnBookButton">Return Book</button>
+                <button id="searchTransactionButton">Search Transaction</button>
             </div>
         </div>
     </div>
@@ -402,14 +401,95 @@
         </div>
     </div>
 
-    <!-- Return Book Overlay -->
-    <div id="returnBookOverlay" class="overlay">
-        <div class="overlay-content">
-            <button id="closeReturnBookOverlay" class="close-button">×</button>
-            <h2>Return Book</h2>
-            <!-- Return Book Form Content Here -->
+<!-- Return Book Overlay -->
+<div id="returnBookOverlay" class="overlay">
+    <div class="overlay-content" style="max-width: 700px;">
+        <button id="closeReturnBookOverlay" class="close-button">×</button>
+        <h2>Return Book</h2>
+        <div class="overlay-inner">
+            <div class="left-side">
+                <form id="returnBookForm">
+                    <div class="form-group">
+                        <label>
+                            <input type="radio" name="inputType" id="studentRadio" value="student" required> Student Enrollment No.
+                        </label>
+                        <label>
+                            <input type="radio" name="inputType" id="bookRadio" value="book" required> Book No.
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="studentOrBookNo" required placeholder=" ">
+                        <span class="form-control-placeholder" id="formControlPlaceholder">Enter Student or Book No.</span>
+                    </div>
+                    <button type="submit" class="submit-button">Get Details</button>
+                    <div id="detailsContainer"></div> <!-- New container for details -->
+                </form>
+            </div>
+            <div class="right-side">
+                <table class="details-table">
+                    <thead>
+                        <tr id="tableHeaders">
+                            <!-- Headers will be dynamically populated here -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows will be dynamically populated here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+</div>
+
+<!-- Search Transaction Overlay -->
+<div id="searchTransactionOverlay" class="overlay">
+    <div class="overlay-content" style="max-width: 900px;">
+        <button id="closeSearchTransactionOverlay" class="close-button">×</button>
+        <h2>Search Transactions</h2>
+        <form id="searchTransactionForm">
+            <div class="form-group">
+                <input type="text" class="form-control" id="searchTransactionInput" required placeholder="Enter Student or Book No.">
+            </div>
+            <button type="submit" class="submit-button">Search</button>
+        </form>
+        <div class="overlay-inner">
+            <div class="left-side">
+                <h3>Issue Details</h3>
+                <table class="details-table">
+                    <thead>
+                        <tr id="issueTableHeaders">
+                            <th>Transaction ID</th>
+                            <th>Enrollment Number</th>
+                            <th>Book Number</th>
+                            <th>Transaction Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="issueTableBody">
+                        <!-- Issue rows will be dynamically populated here -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="right-side">
+                <h3>Return Details</h3>
+                <table class="details-table">
+                    <thead>
+                        <tr id="returnTableHeaders">
+                            <th>Transaction ID</th>
+                            <th>Enrollment Number</th>
+                            <th>Book Number</th>
+                            <th>Transaction Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="returnTableBody">
+                        <!-- Return rows will be dynamically populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -418,6 +498,8 @@
     <script src="/js/Library_js/Library_books.js"></script>
     <script src="/js/Library_js/Library_members.js"></script>
     <script src="/js/Library_js/Library_issueBook.js"></script>
+    <script src="/js/Library_js/Library_returnBook.js"></script>
+    <script src="/js/Library_js/Library_searchTransaction.js"></script>
 
     <script type="text/javascript">
         const btn = document.querySelector("#btn");

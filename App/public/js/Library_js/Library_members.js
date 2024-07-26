@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
             enrollment_number: document.getElementById('enrollmentNumber').value,
             member_class: document.getElementById('classFilter').value,
             contact: document.getElementById('contact').value,
-            books_issued: document.getElementById('booksIssued').value
         };
 
         try {

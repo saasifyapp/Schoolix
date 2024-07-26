@@ -1,6 +1,9 @@
 document.getElementById('issueBookForm').addEventListener('submit', function(event) {
     event.preventDefault();
 
+
+    // Get student enrollment no and book no from user to autofill the issue details //
+
     const studentEnrollmentNo = document.getElementById('studentEnrollmentNo').value;
     const bookEnrollmentNo = document.getElementById('bookEnrollmentNo').value;
 
@@ -13,14 +16,30 @@ document.getElementById('issueBookForm').addEventListener('submit', function(eve
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Response data:', data); // Log the response data to the console
+
+
+        // Validations to check if the student has taken maximum (3) books, if so dont allow further book issue.
+        // Also check if the book requested is available or not.
 
         if (data.error) {
-            alert(data.error);
+            if (data.error === 'Multiple issues found') {
+                let alertMessage = 'Multiple issues found:\n\n';
+                if (data.memberError) {
+                    alertMessage += `Student Issue:\nEnrollment No: ${data.memberError.details.studentEnrollmentNo}\nName: ${data.memberError.details.member_name}\nClass: ${data.memberError.details.member_class}\n\n`;
+                }
+                if (data.bookError) {
+                    alertMessage += `Book Issue:\nEnrollment No: ${data.bookError.details.bookEnrollmentNo}\nName: ${data.bookError.details.book_name}\nAuthor: ${data.bookError.details.author_name}\nPublication: ${data.bookError.details.book_publication}`;
+                }
+                alert(alertMessage);
+            } else if (data.error === 'Maximum books issued to this student') {
+                alert(`Student Issue:\n\nMaximum books issued to this student.\n\nEnrollment No: ${data.details.studentEnrollmentNo}\nName: ${data.details.member_name}\nClass: ${data.details.member_class}`);
+            } else if (data.error === 'Book currently unavailable!') {
+                alert(`Book Issue:\n\nBook currently unavailable!\n\nEnrollment No: ${data.details.bookEnrollmentNo}\nName: ${data.details.book_name}\nAuthor: ${data.details.author_name}\nPublication: ${data.details.book_publication}`);
+            } else {
+                alert(data.error);
+            }
         } else {
-            console.log('Member details:', data.member); // Log member details
-            console.log('Book details:', data.book); // Log book details
-
+            
             // Ensure the data is being assigned correctly
             document.getElementById('studentName').value = data.member.member_name || '';
             document.getElementById('class').value = data.member.member_class || '';
