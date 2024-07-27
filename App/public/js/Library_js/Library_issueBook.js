@@ -54,28 +54,38 @@ document.getElementById('issueBookForm').addEventListener('submit', function(eve
 });
 
 
-// Set issue date to today's date and return date to 5 days later
+// Display Date in Issue and Return Date fields in IST //
+
 document.addEventListener('DOMContentLoaded', (event) => {
     const issueDateInput = document.getElementById('issueDate');
     const returnDateInput = document.getElementById('returnDate');
 
     const today = new Date();
-    const todayFormatted = today.toISOString().split('T')[0];
+    const localOffset = today.getTimezoneOffset() * 60000; // Local offset in milliseconds
+    const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
+    const istToday = new Date(today.getTime() + localOffset + istOffset);
+   // console.log("IST Issue Date and Time (on load):", istToday.toLocaleString());
+    const todayFormatted = istToday.toISOString().split('T')[0];
     issueDateInput.value = todayFormatted;
 
-    const returnDate = new Date(today);
+    const returnDate = new Date(istToday);
     returnDate.setDate(returnDate.getDate() + 5);
+    //console.log("IST Return Date and Time (on load):", returnDate.toLocaleString());
     const returnDateFormatted = returnDate.toISOString().split('T')[0];
     returnDateInput.value = returnDateFormatted;
 
     issueDateInput.addEventListener('change', function() {
         const issueDate = new Date(issueDateInput.value);
-        const returnDate = new Date(issueDate);
+        const istIssueDate = new Date(issueDate.getTime() + localOffset + istOffset);
+        //console.log("IST Issue Date and Time (on change):", istIssueDate.toLocaleString());
+        const returnDate = new Date(istIssueDate);
         returnDate.setDate(returnDate.getDate() + 5);
+        //console.log("IST Return Date and Time (on change):", returnDate.toLocaleString());
         const returnDateFormatted = returnDate.toISOString().split('T')[0];
         returnDateInput.value = returnDateFormatted;
     });
 });
+
 
 // Handle the submission of the additional info form
 document.getElementById('additionalInfoForm').addEventListener('submit', function(event) {
