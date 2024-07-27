@@ -20,7 +20,7 @@ const formatDateToIST = (date) => {
     const year = istDate.getFullYear();
     const month = String(istDate.getMonth() + 1).padStart(2, '0');
     const day = String(istDate.getDate()).padStart(2, '0');
-    return `${day}-${month}-${year}`;
+    return `${year}-${month}-${day}`;
 };
 
 if (inputType === 'student') {
@@ -87,15 +87,24 @@ if (inputType === 'student') {
 });
 
 
+
+const formatDateToIST = (date) => {
+    const istDate = new Date(date);
+    const year = istDate.getFullYear();
+    const month = String(istDate.getMonth() + 1).padStart(2, '0');
+    const day = String(istDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
 // Return Book Endpoint
 router.post('/library/return_book', (req, res) => {
     const { id } = req.body;
 
     const getIssueQuery = `SELECT * FROM library_transactions WHERE id = ?`;
-    const updateIssueQuery = `DELETE FROM library_transactions WHERE id = ?`;
+    const deleteIssueQuery = `DELETE FROM library_transactions WHERE id = ?`;
     const updateMemberQuery = `UPDATE library_member_details SET books_issued = books_issued - 1 WHERE memberID = ?`;
     const updateBookQuery = `UPDATE library_book_details SET available_quantity = available_quantity + 1 WHERE bookID = ?`;
-    const logReturnTransactionQuery = `INSERT INTO library_transaction_log (transaction_type, memberID, bookID) VALUES ('return', ?, ?)`;
+    const logReturnTransactionQuery = `INSERT INTO library_transaction_log (transaction_type, memberID, bookID, transaction_date) VALUES ('return', ?, ?, ?)`;
 
     req.connectionPool.query(getIssueQuery, [id], (err, issueResult) => {
         if (err) {
@@ -109,10 +118,10 @@ router.post('/library/return_book', (req, res) => {
         }
 
         const issue = issueResult[0];
-        req.connectionPool.query(updateIssueQuery, [id], (err) => {
+        req.connectionPool.query(deleteIssueQuery, [id], (err) => {
             if (err) {
-                console.error('Error updating issue record:', err);
-                return res.status(500).json({ error: 'Error updating issue record' });
+                console.error('Error deleting issue record:', err);
+                return res.status(500).json({ error: 'Error deleting issue record' });
             }
 
             req.connectionPool.query(updateMemberQuery, [issue.memberID], (err) => {
@@ -127,7 +136,8 @@ router.post('/library/return_book', (req, res) => {
                         return res.status(500).json({ error: 'Error updating book details' });
                     }
 
-                    req.connectionPool.query(logReturnTransactionQuery, [issue.memberID, issue.bookID], (err) => {
+                    const transactionDate = formatDateToIST(new Date());
+                    req.connectionPool.query(logReturnTransactionQuery, [issue.memberID, issue.bookID, transactionDate], (err) => {
                         if (err) {
                             console.error('Error logging return transaction:', err);
                             return res.status(500).json({ error: 'Error logging return transaction' });
@@ -140,4 +150,5 @@ router.post('/library/return_book', (req, res) => {
         });
     });
 });
+
 module.exports = router;

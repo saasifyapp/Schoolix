@@ -1,6 +1,14 @@
 const express = require('express');
 const router = express.Router();
 
+const formatDateToIST = (date) => {
+    const istDate = new Date(date);
+    const year = istDate.getFullYear();
+    const month = String(istDate.getMonth() + 1).padStart(2, '0');
+    const day = String(istDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
 // Search Transactions Endpoint
 router.post('/library/search_transactions', (req, res) => {
     const { searchInput } = req.body;
@@ -15,10 +23,20 @@ router.post('/library/search_transactions', (req, res) => {
             return res.status(500).json({ error: 'Error fetching issue transactions' });
         }
 
+        // Format issue transaction dates to IST format
+        issueResult.forEach(transaction => {
+            transaction.transaction_date = formatDateToIST(transaction.transaction_date);
+        });
+
         req.connectionPool.query(returnQuery, [searchPattern, searchPattern], (err, returnResult) => {
             if (err) {
                 return res.status(500).json({ error: 'Error fetching return transactions' });
             }
+
+            // Format return transaction dates to IST format
+            returnResult.forEach(transaction => {
+                transaction.transaction_date = formatDateToIST(transaction.transaction_date);
+            });
 
             return res.status(200).json({
                 issueTransactions: issueResult,
@@ -27,6 +45,7 @@ router.post('/library/search_transactions', (req, res) => {
         });
     });
 });
+
 
 // Delete Transaction Endpoint
 router.post('/library/delete_transaction', (req, res) => {
@@ -41,6 +60,7 @@ router.post('/library/delete_transaction', (req, res) => {
     const getBookDetailsQuery = `SELECT * FROM library_book_details WHERE bookID = ?`;
     const addToTransactionsQuery = `INSERT INTO library_transactions (memberID, member_name, member_class, member_contact, bookID, book_name, book_author, book_publication, issue_date, return_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     const getReturnTransactionQuery = `SELECT * FROM library_transaction_log WHERE transaction_type = 'return' AND memberID = ? AND bookID = ?`;
+    const getIssueTransactionQuery = `SELECT * FROM library_transaction_log WHERE transaction_type = 'issue' AND memberID = ? AND bookID = ?`;
 
     req.connectionPool.query(getTransactionQuery, [transactionId], (err, transactionResult) => {
         if (err) {
@@ -90,6 +110,7 @@ function deleteTransaction(req, res, transactionId, transactionType, enrollmentN
     const getMemberDetailsQuery = `SELECT * FROM library_member_details WHERE memberID = ?`;
     const getBookDetailsQuery = `SELECT * FROM library_book_details WHERE bookID = ?`;
     const addToTransactionsQuery = `INSERT INTO library_transactions (memberID, member_name, member_class, member_contact, bookID, book_name, book_author, book_publication, issue_date, return_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const getIssueTransactionQuery = `SELECT * FROM library_transaction_log WHERE transaction_type = 'issue' AND memberID = ? AND bookID = ?`;
 
     req.connectionPool.query(deleteFromLogQuery, [transactionId], (err) => {
         if (err) {
@@ -135,28 +156,43 @@ function deleteTransaction(req, res, transactionId, transactionType, enrollmentN
                             }
 
                             const book = bookResult[0];
-                            const issueDate = new Date(transaction.transaction_date);
-                            const returnDate = new Date(issueDate);
-                            returnDate.setDate(returnDate.getDate() + 5); 
 
-                            req.connectionPool.query(addToTransactionsQuery, [
-                                enrollmentNumber,
-                                member.member_name,
-                                member.member_class,
-                                member.member_contact,
-                                bookNumber,
-                                book.book_name,
-                                book.book_author,
-                                book.book_publication,
-                                issueDate,
-                                returnDate
-                            ], (err) => {
+                            // Get the issue transaction date
+                            req.connectionPool.query(getIssueTransactionQuery, [enrollmentNumber, bookNumber], (err, issueResult) => {
                                 if (err) {
-                                    console.error('Error adding transaction to transactions:', err);
-                                    return res.status(500).json({ error: 'Error adding transaction to transactions' });
+                                    console.error('Error fetching issue transaction:', err);
+                                    return res.status(500).json({ error: 'Error fetching issue transaction' });
                                 }
 
-                                res.status(200).json({ message: 'Transaction reverted successfully' });
+                                if (issueResult.length === 0) {
+                                    console.error('Issue transaction not found');
+                                    return res.status(404).json({ error: 'Issue transaction not found' });
+                                }
+
+                                const issueTransaction = issueResult[0];
+                                const issueDate = new Date(issueTransaction.transaction_date);
+                                const returnDate = new Date(issueDate);
+                                returnDate.setDate(returnDate.getDate() + 5);
+
+                                req.connectionPool.query(addToTransactionsQuery, [
+                                    enrollmentNumber,
+                                    member.member_name,
+                                    member.member_class,
+                                    member.member_contact,
+                                    bookNumber,
+                                    book.book_name,
+                                    book.book_author,
+                                    book.book_publication,
+                                    formatDateToIST(issueDate),
+                                    formatDateToIST(returnDate)
+                                ], (err) => {
+                                    if (err) {
+                                        console.error('Error adding transaction to transactions:', err);
+                                        return res.status(500).json({ error: 'Error adding transaction to transactions' });
+                                    }
+
+                                    res.status(200).json({ message: 'Transaction reverted successfully' });
+                                });
                             });
                         });
                     });
