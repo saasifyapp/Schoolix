@@ -7,6 +7,7 @@ router.post('/library/get_details', (req, res) => {
 
     const memberQuery = `SELECT member_name, member_class, member_contact, books_issued FROM library_member_details WHERE memberID = ?`;
     const bookQuery = `SELECT book_name, book_author, book_publication, available_quantity FROM library_book_details WHERE bookID = ?`;
+    const transactionQuery = `SELECT * FROM library_transactions WHERE memberID = ? AND bookID = ?`;
 
     req.connectionPool.query(memberQuery, [studentEnrollmentNo], (err, memberResult) => {
         if (err) {
@@ -57,34 +58,56 @@ router.post('/library/get_details', (req, res) => {
                 };
             }
 
-            if (memberError && bookError) {
-                return res.status(400).json({
-                    error: 'Multiple issues found',
-                    memberError,
-                    bookError
-                });
-            } else if (memberError) {
-                return res.status(400).json(memberError);
-            } else if (bookError) {
-                return res.status(400).json(bookError);
-            } else {
-                res.status(200).json({
-                    member: {
-                        memberID: studentEnrollmentNo,
-                        member_name: member.member_name,
-                        member_class: member.member_class,
-                        member_contact: member.member_contact,
-                        books_issued: member.books_issued
-                    },
-                    book: {
-                        bookID: bookEnrollmentNo,
-                        book_name: book.book_name,
-                        book_author: book.book_author,
-                        book_publication: book.book_publication,
-                        available_quantity: book.available_quantity
-                    }
-                });
-            }
+            // Check if the member already has this book issued
+            req.connectionPool.query(transactionQuery, [studentEnrollmentNo, bookEnrollmentNo], (err, transactionResult) => {
+                if (err) {
+                    console.error('Error fetching transaction details:', err);
+                    return res.status(500).json({ error: 'Error fetching transaction details' });
+                }
+
+                if (transactionResult.length > 0) {
+                    return res.status(400).json({
+                        error: 'Book already issued to this member',
+                        details: {
+                            studentEnrollmentNo,
+                            member_name: member.member_name,
+                            member_class: member.member_class,
+                            bookEnrollmentNo,
+                            book_name: book.book_name,
+                            book_author: book.book_author
+                        }
+                    });
+                }
+
+                if (memberError && bookError) {
+                    return res.status(400).json({
+                        error: 'Multiple issues found',
+                        memberError,
+                        bookError
+                    });
+                } else if (memberError) {
+                    return res.status(400).json(memberError);
+                } else if (bookError) {
+                    return res.status(400).json(bookError);
+                } else {
+                    res.status(200).json({
+                        member: {
+                            memberID: studentEnrollmentNo,
+                            member_name: member.member_name,
+                            member_class: member.member_class,
+                            member_contact: member.member_contact,
+                            books_issued: member.books_issued
+                        },
+                        book: {
+                            bookID: bookEnrollmentNo,
+                            book_name: book.book_name,
+                            book_author: book.book_author,
+                            book_publication: book.book_publication,
+                            available_quantity: book.available_quantity
+                        }
+                    });
+                }
+            });
         });
     });
 });

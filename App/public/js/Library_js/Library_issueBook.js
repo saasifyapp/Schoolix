@@ -14,6 +14,7 @@ document.getElementById('issueBookForm').addEventListener('submit', function(eve
     })
     .then(response => response.json())
     .then(data => {
+        console.log('Response from /library/get_details:', data); // Debugging info
 
         // Validations to check if the student has taken maximum (3) books, if so dont allow further book issue.
         // Also check if the book requested is available or not.
@@ -31,6 +32,8 @@ document.getElementById('issueBookForm').addEventListener('submit', function(eve
                 alert(`Student Issue:\n\nMaximum books issued to this student.\n\nEnrollment No: ${data.details.studentEnrollmentNo}\nName: ${data.details.member_name}\nClass: ${data.details.member_class}`);
             } else if (data.error === 'Book currently unavailable!') {
                 alert(`Book Issue:\n\nBook currently unavailable!\n\nEnrollment No: ${data.details.bookEnrollmentNo}\nName: ${data.details.book_name}\nAuthor: ${data.details.book_author}\nPublication: ${data.details.book_publication}`);
+            } else if (data.error === 'Book already issued to this member') {
+                alert(`Member ID: ${data.details.studentEnrollmentNo}\nStudent Name: ${data.details.member_name}\nClass: ${data.details.member_class}\n\nBook ID: ${data.details.bookEnrollmentNo}\nBook Name: ${data.details.book_name}\nAuthor: ${data.details.book_author}\n\nThis member has already been issued with the above book. Please proceed with return to issue again.`);
             } else {
                 alert(data.error);
             }
@@ -49,6 +52,7 @@ document.getElementById('issueBookForm').addEventListener('submit', function(eve
         alert('Error fetching details');
     });
 });
+
 
 // Set issue date to today's date and return date to 5 days later
 document.addEventListener('DOMContentLoaded', (event) => {
