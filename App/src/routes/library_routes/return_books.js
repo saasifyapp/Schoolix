@@ -13,57 +13,77 @@ router.post('/library/get_return_details', (req, res) => {
     // If Book Number is entered - Search for the students who have taken that book
 
     const issueDetailsByStudentQuery = `SELECT id, bookID, book_name, book_author, book_publication, issue_date, return_date FROM library_transactions WHERE memberID = ?`;
-    const issueDetailsByBookQuery = `SELECT id, memberID, member_name, member_class, member_contact, issue_date, return_date FROM library_transactions WHERE bookID = ?`;
+const issueDetailsByBookQuery = `SELECT id, memberID, member_name, member_class, member_contact, issue_date, return_date FROM library_transactions WHERE bookID = ?`;
 
-    if (inputType === 'student') {
-        req.connectionPool.query(studentQuery, [studentOrBookNo], (err, studentResult) => {
-            if (err) {
-                return res.status(500).json({ error: 'Error fetching student details' });
-            }
+const formatDateToIST = (date) => {
+    const istDate = new Date(date);
+    const year = istDate.getFullYear();
+    const month = String(istDate.getMonth() + 1).padStart(2, '0');
+    const day = String(istDate.getDate()).padStart(2, '0');
+    return `${day}-${month}-${year}`;
+};
 
-            if (studentResult.length > 0) {
-                const student = studentResult[0];
-                req.connectionPool.query(issueDetailsByStudentQuery, [studentOrBookNo], (err, issueResult) => {
-                    if (err) {
-                        return res.status(500).json({ error: 'Error fetching issue details by student' });
-                    }
+if (inputType === 'student') {
+    req.connectionPool.query(studentQuery, [studentOrBookNo], (err, studentResult) => {
+        if (err) {
+            return res.status(500).json({ error: 'Error fetching student details' });
+        }
 
-                    return res.status(200).json({
-                        type: 'student',
-                        details: student,
-                        issues: issueResult
-                    });
+        if (studentResult.length > 0) {
+            const student = studentResult[0];
+            req.connectionPool.query(issueDetailsByStudentQuery, [studentOrBookNo], (err, issueResult) => {
+                if (err) {
+                    return res.status(500).json({ error: 'Error fetching issue details by student' });
+                }
+
+                // Format issue and return dates to IST format
+                issueResult.forEach(issue => {
+                    issue.issue_date = formatDateToIST(issue.issue_date);
+                    issue.return_date = formatDateToIST(issue.return_date);
                 });
-            } else {
-                return res.status(404).json({ error: 'No details found for the provided student enrollment number' });
-            }
-        });
-    } else if (inputType === 'book') {
-        req.connectionPool.query(bookQuery, [studentOrBookNo], (err, bookResult) => {
-            if (err) {
-                return res.status(500).json({ error: 'Error fetching book details' });
-            }
 
-            if (bookResult.length > 0) {
-                const book = bookResult[0];
-                req.connectionPool.query(issueDetailsByBookQuery, [studentOrBookNo], (err, issueResult) => {
-                    if (err) {
-                        return res.status(500).json({ error: 'Error fetching issue details by book' });
-                    }
-
-                    return res.status(200).json({
-                        type: 'book',
-                        details: book,
-                        issues: issueResult
-                    });
+                return res.status(200).json({
+                    type: 'student',
+                    details: student,
+                    issues: issueResult
                 });
-            } else {
-                return res.status(404).json({ error: 'No details found for the provided book number' });
-            }
-        });
-    } else {
-        return res.status(400).json({ error: 'Invalid input type' });
-    }
+            });
+        } else {
+            return res.status(404).json({ error: 'No details found for the provided student enrollment number' });
+        }
+    });
+} else if (inputType === 'book') {
+    req.connectionPool.query(bookQuery, [studentOrBookNo], (err, bookResult) => {
+        if (err) {
+            return res.status(500).json({ error: 'Error fetching book details' });
+        }
+
+        if (bookResult.length > 0) {
+            const book = bookResult[0];
+            req.connectionPool.query(issueDetailsByBookQuery, [studentOrBookNo], (err, issueResult) => {
+                if (err) {
+                    return res.status(500).json({ error: 'Error fetching issue details by book' });
+                }
+
+                // Format issue and return dates to IST format
+                issueResult.forEach(issue => {
+                    issue.issue_date = formatDateToIST(issue.issue_date);
+                    issue.return_date = formatDateToIST(issue.return_date);
+                });
+
+                return res.status(200).json({
+                    type: 'book',
+                    details: book,
+                    issues: issueResult
+                });
+            });
+        } else {
+            return res.status(404).json({ error: 'No details found for the provided book number' });
+        }
+    });
+} else {
+    return res.status(400).json({ error: 'Invalid input type' });
+}
 });
 
 
