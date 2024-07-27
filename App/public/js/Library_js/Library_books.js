@@ -5,9 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         const bookDetails = {
-            book_number: document.getElementById('bookNumber').value,
+            bookID: document.getElementById('bookID').value,
             book_name: document.getElementById('bookName').value,
-            author_name: document.getElementById('authorName').value,
+            book_author: document.getElementById('authorName').value,
             book_publication: document.getElementById('bookPublication').value,
             book_price: document.getElementById('bookPrice').value,
             ordered_quantity: document.getElementById('orderedQuantity').value,
@@ -70,9 +70,9 @@ function displayBooks(data) {
             data.forEach(book => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${book.book_number}</td>
+                    <td>${book.bookID}</td>
                     <td>${book.book_name}</td>
-                    <td>${book.author_name}</td>
+                    <td>${book.book_author}</td>
                     <td>${book.book_publication}</td>
                     <td>${book.book_price}</td>
                     <td>${book.ordered_quantity}</td>

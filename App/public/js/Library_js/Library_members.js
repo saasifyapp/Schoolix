@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const memberDetails = {
             member_name: document.getElementById('memberName').value,
-            enrollment_number: document.getElementById('enrollmentNumber').value,
+            memberID: document.getElementById('memberID').value,
             member_class: document.getElementById('classFilter').value,
             contact: document.getElementById('contact').value,
         };
@@ -62,8 +62,8 @@ function displayMembers(data) {
         data.forEach(member => {
             const row = document.createElement('tr');
             row.innerHTML = `
+                <td>${member.memberID}</td>
                 <td>${member.member_name}</td>
-                <td>${member.enrollment_number}</td>
                 <td>${member.member_class}</td>
                 <td>${member.member_contact}</td>
                 <td>${member.books_issued}</td>

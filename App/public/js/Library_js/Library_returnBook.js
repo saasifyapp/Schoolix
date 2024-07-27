@@ -44,7 +44,7 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
             } else if (data.type === 'book') {
                 newDetailsContainer.innerHTML = `
                     <p><strong>Book Name:</strong> ${data.details.book_name}</p>
-                    <p><strong>Author:</strong> ${data.details.author_name}</p>
+                    <p><strong>Author:</strong> ${data.details.book_author}</p>
                     <p><strong>Publication:</strong> ${data.details.book_publication}</p>
                     <p><strong>Available Quantity:</strong> ${data.details.available_quantity}</p>
                 `;
@@ -60,7 +60,7 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
 
             if (data.type === 'student') {
                 tableHeaders.innerHTML = `
-                    <th>Book Number</th>
+                    <th>Book ID</th>
                     <th>Book Name</th>
                     <th>Book Author</th>
                     <th>Book Publication</th>
@@ -73,7 +73,7 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
                     const row = document.createElement('tr');
                     row.dataset.id = issue.id; // Store the id in a data attribute
                     row.innerHTML = `
-                        <td>${issue.book_number}</td>
+                        <td>${issue.bookID}</td>
                         <td>${issue.book_name}</td>
                         <td>${issue.book_author}</td>
                         <td>${issue.book_publication}</td>
@@ -85,7 +85,7 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
                 });
             } else if (data.type === 'book') {
                 tableHeaders.innerHTML = `
-                    <th>Enrollment Number</th>
+                    <th>Member ID</th>
                     <th>Member Name</th>
                     <th>Member Class</th>
                     <th>Member Contact</th>
@@ -98,7 +98,7 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
                     const row = document.createElement('tr');
                     row.dataset.id = issue.id; // Store the id in a data attribute
                     row.innerHTML = `
-                        <td>${issue.enrollment_number}</td>
+                        <td>${issue.memberID}</td>
                         <td>${issue.member_name}</td>
                         <td>${issue.member_class}</td>
                         <td>${issue.member_contact}</td>

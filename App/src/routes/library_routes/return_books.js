@@ -5,15 +5,15 @@ const router = express.Router();
 router.post('/library/get_return_details', (req, res) => {
     const { inputType, studentOrBookNo } = req.body;
 
-    const studentQuery = `SELECT member_name, member_contact, member_class, books_issued FROM library_member_details WHERE enrollment_number = ?`;
-    const bookQuery = `SELECT book_name, author_name, book_publication, available_quantity FROM library_book_details WHERE book_number = ?`;
+    const studentQuery = `SELECT member_name, member_contact, member_class, books_issued FROM library_member_details WHERE memberID = ?`;
+    const bookQuery = `SELECT book_name, book_author, book_publication, available_quantity FROM library_book_details WHERE bookID = ?`;
 
     // This is a reverse scenario.
     // If Student Enrollment No is entered - Search for Books that the student has taken
     // If Book Number is entered - Search for the students who have taken that book
 
-    const issueDetailsByStudentQuery = `SELECT id, book_number, book_name, book_author, book_publication, issue_date, return_date FROM library_transactions WHERE enrollment_number = ?`;
-    const issueDetailsByBookQuery = `SELECT id, enrollment_number, member_name, member_class, member_contact, issue_date, return_date FROM library_transactions WHERE book_number = ?`;
+    const issueDetailsByStudentQuery = `SELECT id, bookID, book_name, book_author, book_publication, issue_date, return_date FROM library_transactions WHERE memberID = ?`;
+    const issueDetailsByBookQuery = `SELECT id, memberID, member_name, member_class, member_contact, issue_date, return_date FROM library_transactions WHERE bookID = ?`;
 
     if (inputType === 'student') {
         req.connectionPool.query(studentQuery, [studentOrBookNo], (err, studentResult) => {
@@ -73,9 +73,9 @@ router.post('/library/return_book', (req, res) => {
 
     const getIssueQuery = `SELECT * FROM library_transactions WHERE id = ?`;
     const updateIssueQuery = `DELETE FROM library_transactions WHERE id = ?`;
-    const updateMemberQuery = `UPDATE library_member_details SET books_issued = books_issued - 1 WHERE enrollment_number = ?`;
-    const updateBookQuery = `UPDATE library_book_details SET available_quantity = available_quantity + 1 WHERE book_number = ?`;
-    const logReturnTransactionQuery = `INSERT INTO library_transaction_log (transaction_type, enrollment_number, book_number) VALUES ('return', ?, ?)`;
+    const updateMemberQuery = `UPDATE library_member_details SET books_issued = books_issued - 1 WHERE memberID = ?`;
+    const updateBookQuery = `UPDATE library_book_details SET available_quantity = available_quantity + 1 WHERE bookID = ?`;
+    const logReturnTransactionQuery = `INSERT INTO library_transaction_log (transaction_type, memberID, bookID) VALUES ('return', ?, ?)`;
 
     req.connectionPool.query(getIssueQuery, [id], (err, issueResult) => {
         if (err) {
@@ -95,19 +95,19 @@ router.post('/library/return_book', (req, res) => {
                 return res.status(500).json({ error: 'Error updating issue record' });
             }
 
-            req.connectionPool.query(updateMemberQuery, [issue.enrollment_number], (err) => {
+            req.connectionPool.query(updateMemberQuery, [issue.memberID], (err) => {
                 if (err) {
                     console.error('Error updating member details:', err);
                     return res.status(500).json({ error: 'Error updating member details' });
                 }
 
-                req.connectionPool.query(updateBookQuery, [issue.book_number], (err) => {
+                req.connectionPool.query(updateBookQuery, [issue.bookID], (err) => {
                     if (err) {
                         console.error('Error updating book details:', err);
                         return res.status(500).json({ error: 'Error updating book details' });
                     }
 
-                    req.connectionPool.query(logReturnTransactionQuery, [issue.enrollment_number, issue.book_number], (err) => {
+                    req.connectionPool.query(logReturnTransactionQuery, [issue.memberID, issue.bookID], (err) => {
                         if (err) {
                             console.error('Error logging return transaction:', err);
                             return res.status(500).json({ error: 'Error logging return transaction' });

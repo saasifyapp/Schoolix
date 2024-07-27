@@ -167,9 +167,9 @@
             <h2>Add Book</h2>
             <form id="addBookForm">
                 <div class="form-group">
-                    <input type="text" class="form-control" id="bookNumber" required
+                    <input type="text" class="form-control" id="bookID" required
                         style="width: 20rem; text-align: center;" placeholder=" ">
-                    <span class="form-control-placeholder">Book Number</span>
+                    <span class="form-control-placeholder">Book ID</span>
                 </div>
 
                 <div class="form-group">
@@ -231,7 +231,7 @@
             <table id="booksTable">
                 <thead>
                     <tr>
-                        <th>Book Number</th>
+                        <th>Book ID</th>
                         <th>Book Name</th>
                         <th>Author Name</th>
                         <th>Book Publication</th>
@@ -265,8 +265,8 @@
         <form id="addMemberForm">
             <label for="memberName">Member Name:</label>
             <input type="text" id="memberName" name="memberName" required><br>
-            <label for="enrollmentNumber">Enrollment Number:</label>
-            <input type="number" id="enrollmentNumber" name="enrollmentNumber" required><br>
+            <label for="memberName">Member ID:</label>
+            <input type="text" id="memberID" name="memberID" required><br>
             <label for="classFilter">Class:</label>
             <select id="classFilter" name="classFilter" class="custom-select" required>
                 <option value="" disabled selected style="display:none;">Select Class</option>
@@ -301,8 +301,8 @@
             <table id="membersTable">
                 <thead>
                     <tr>
+                        <th>Member ID</th>
                         <th>Student Name</th>
-                        <th>Enrollment Number</th>
                         <th>Class</th>
                         <th>Contact</th>
                         <th>Books Issued</th>
@@ -315,20 +315,19 @@
         </div>
     </div>
 
-    <!-- Transaction Tracker Overlay -->
-    <div id="transactionTrackerOverlay" class="overlay">
-        <div class="overlay-content">
-            <button id="closeTransactionTrackerOverlay" class="close-button">×</button>
-            <h2>Transaction Tracker</h2>
-            <div class="button-container">
-                <button id="issueBookButton">Issue Book</button>
-                <button id="returnBookButton">Return Book</button>
-                <button id="searchTransactionButton">Search Transaction</button>
-            </div>
+<!-- Transaction Tracker Overlay -->
+<div id="transactionTrackerOverlay" class="overlay">
+    <div class="overlay-content">
+        <button id="closeTransactionTrackerOverlay" class="close-button">×</button>
+        <h2>Transaction Tracker</h2>
+        <div class="button-container">
+            <button id="issueBookButton">Issue Book</button>
+            <button id="returnBookButton">Return Book</button>
+            <button id="searchTransactionButton">Search Transaction</button>
         </div>
     </div>
+</div>
 
-    <!-- Issue Book Overlay -->
     <!-- Issue Book Overlay -->
     <div id="issueBookOverlay" class="overlay">
         <div class="overlay-content" style="max-width: 700px;">
@@ -339,12 +338,12 @@
                     <form id="issueBookForm">
                         <div class="form-group">
                             <input type="text" class="form-control" id="studentEnrollmentNo" required placeholder=" ">
-                            <span class="form-control-placeholder">Student Enrollment No.</span>
+                            <span class="form-control-placeholder">Member ID</span>
                         </div>
 
                         <div class="form-group">
                             <input type="text" class="form-control" id="bookEnrollmentNo" required placeholder=" ">
-                            <span class="form-control-placeholder">Book Enrollment No.</span>
+                            <span class="form-control-placeholder">Book ID</span>
                         </div>
                         
                         <button type="submit" class="submit-button">Get Details</button>
@@ -411,15 +410,15 @@
                 <form id="returnBookForm">
                     <div class="form-group">
                         <label>
-                            <input type="radio" name="inputType" id="studentRadio" value="student" required> Student Enrollment No.
+                            <input type="radio" name="inputType" id="studentRadio" value="student" required>Member ID
                         </label>
                         <label>
-                            <input type="radio" name="inputType" id="bookRadio" value="book" required> Book No.
+                            <input type="radio" name="inputType" id="bookRadio" value="book" required> Book ID
                         </label>
                     </div>
                     <div class="form-group">
                         <input type="text" class="form-control" id="studentOrBookNo" required placeholder=" ">
-                        <span class="form-control-placeholder" id="formControlPlaceholder">Enter Student or Book No.</span>
+                        <span class="form-control-placeholder" id="formControlPlaceholder">Enter Member or Book ID</span>
                     </div>
                     <button type="submit" class="submit-button">Get Details</button>
                     <div id="detailsContainer"></div> <!-- New container for details -->
@@ -441,17 +440,24 @@
     </div>
 </div>
 
+<!-- Transaction Tracker Overlay -->
+<div id="transactionTrackerOverlay" class="overlay">
+    <div class="overlay-content">
+        <button id="closeTransactionTrackerOverlay" class="close-button">×</button>
+        <h2>Transaction Tracker</h2>
+        <div class="button-container">
+            <button id="issueBookButton">Issue Book</button>
+            <button id="returnBookButton">Return Book</button>
+            <button id="searchTransactionButton">Search Transaction</button>
+        </div>
+    </div>
+</div>
+
 <!-- Search Transaction Overlay -->
 <div id="searchTransactionOverlay" class="overlay">
-    <div class="overlay-content" style="max-width: 900px;">
+    <div class="overlay-content">
         <button id="closeSearchTransactionOverlay" class="close-button">×</button>
         <h2>Search Transactions</h2>
-        <form id="searchTransactionForm">
-            <div class="form-group">
-                <input type="text" class="form-control" id="searchTransactionInput" required placeholder="Enter Student or Book No.">
-            </div>
-            <button type="submit" class="submit-button">Search</button>
-        </form>
         <div class="overlay-inner">
             <div class="left-side">
                 <h3>Issue Details</h3>
@@ -459,10 +465,11 @@
                     <thead>
                         <tr id="issueTableHeaders">
                             <th>Transaction ID</th>
-                            <th>Enrollment Number</th>
-                            <th>Book Number</th>
+                            <th>Member ID</th>
+                            <th>Book ID</th>
                             <th>Transaction Date</th>
                             <th>Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="issueTableBody">
@@ -476,10 +483,11 @@
                     <thead>
                         <tr id="returnTableHeaders">
                             <th>Transaction ID</th>
-                            <th>Enrollment Number</th>
-                            <th>Book Number</th>
+                            <th>Member ID</th>
+                            <th>Book ID</th>
                             <th>Transaction Date</th>
                             <th>Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="returnTableBody">
@@ -490,7 +498,6 @@
         </div>
     </div>
 </div>
-
 
 
     <script src="/js/Inventory_js/All.js"></script>

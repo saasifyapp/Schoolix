@@ -5,8 +5,8 @@ const router = express.Router();
 router.post('/library/get_details', (req, res) => {
     const { studentEnrollmentNo, bookEnrollmentNo } = req.body;
 
-    const memberQuery = `SELECT member_name, member_class, member_contact, books_issued FROM library_member_details WHERE enrollment_number = ?`;
-    const bookQuery = `SELECT book_name, author_name, book_publication, available_quantity FROM library_book_details WHERE book_number = ?`;
+    const memberQuery = `SELECT member_name, member_class, member_contact, books_issued FROM library_member_details WHERE memberID = ?`;
+    const bookQuery = `SELECT book_name, book_author, book_publication, available_quantity FROM library_book_details WHERE bookID = ?`;
 
     req.connectionPool.query(memberQuery, [studentEnrollmentNo], (err, memberResult) => {
         if (err) {
@@ -51,7 +51,7 @@ router.post('/library/get_details', (req, res) => {
                     details: {
                         bookEnrollmentNo,
                         book_name: book.book_name,
-                        author_name: book.author_name,
+                        book_author: book.book_author,
                         book_publication: book.book_publication
                     }
                 };
@@ -70,14 +70,18 @@ router.post('/library/get_details', (req, res) => {
             } else {
                 res.status(200).json({
                     member: {
+                        memberID: studentEnrollmentNo,
                         member_name: member.member_name,
                         member_class: member.member_class,
-                        member_contact: member.member_contact
+                        member_contact: member.member_contact,
+                        books_issued: member.books_issued
                     },
                     book: {
+                        bookID: bookEnrollmentNo,
                         book_name: book.book_name,
-                        author_name: book.author_name,
-                        book_publication: book.book_publication
+                        book_author: book.book_author,
+                        book_publication: book.book_publication,
+                        available_quantity: book.available_quantity
                     }
                 });
             }
@@ -89,11 +93,11 @@ router.post('/library/get_details', (req, res) => {
 // Issue Book Endpoint
 router.post('/library/issue_book', (req, res) => {
     const {
-        enrollment_number,
+        memberID,
         member_name,
         member_class,
         member_contact,
-        book_number,
+        bookID,
         book_name,
         book_author,
         book_publication,
@@ -102,28 +106,28 @@ router.post('/library/issue_book', (req, res) => {
     } = req.body;
 
     const issueBookQuery = `INSERT INTO library_transactions 
-                            (enrollment_number, member_name, member_class, member_contact, book_number, book_name, book_author, book_publication, issue_date, return_date) 
+                            (memberID, member_name, member_class, member_contact, bookID, book_name, book_author, book_publication, issue_date, return_date) 
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     const updateMemberQuery = `UPDATE library_member_details 
                                SET books_issued = books_issued + 1 
-                               WHERE enrollment_number = ?`;
+                               WHERE memberID = ?`;
 
     const updateBookQuery = `UPDATE library_book_details 
                              SET available_quantity = available_quantity - 1 
-                             WHERE book_number = ?`;
+                             WHERE bookID = ?`;
 
     const logTransactionQuery = `INSERT INTO library_transaction_log 
-                                 (transaction_type, enrollment_number, book_number, transaction_date, status) 
+                                 (transaction_type, memberID, bookID, transaction_date, status) 
                                  VALUES ('issue', ?, ?, ?, 'completed')`;
 
     // Insert the issue details
     req.connectionPool.query(issueBookQuery, [
-        enrollment_number,
+        memberID,
         member_name,
         member_class,
         member_contact,
-        book_number,
+        bookID,
         book_name,
         book_author,
         book_publication,
@@ -136,21 +140,21 @@ router.post('/library/issue_book', (req, res) => {
         }
 
         // Update the member's books_issued count
-        req.connectionPool.query(updateMemberQuery, [enrollment_number], (err, memberResult) => {
+        req.connectionPool.query(updateMemberQuery, [memberID], (err, memberResult) => {
             if (err) {
                 console.error('Error updating member details:', err);
                 return res.status(500).json({ error: 'Error updating member details' });
             }
 
             // Update the book's available_quantity
-            req.connectionPool.query(updateBookQuery, [book_number], (err, bookResult) => {
+            req.connectionPool.query(updateBookQuery, [bookID], (err, bookResult) => {
                 if (err) {
                     console.error('Error updating book details:', err);
                     return res.status(500).json({ error: 'Error updating book details' });
                 }
 
                 // Log the transaction
-                req.connectionPool.query(logTransactionQuery, [enrollment_number, book_number, issue_date], (err, logResult) => {
+                req.connectionPool.query(logTransactionQuery, [memberID, bookID, issue_date], (err, logResult) => {
                     if (err) {
                         console.error('Error logging transaction:', err);
                         return res.status(500).json({ error: 'Error logging transaction' });
@@ -162,6 +166,5 @@ router.post('/library/issue_book', (req, res) => {
         });
     });
 });
-
 
 module.exports = router;
