@@ -31,4 +31,62 @@ router.get('/library/members', (req, res) => {
     });
 });
 
+// Update Member Endpoint
+router.put('/library/member/:id', (req, res) => {
+    const memberID = req.params.id;
+    const { member_name, member_contact, member_class } = req.body;
+
+    const query = `
+        UPDATE library_member_details 
+        SET member_name = ?, member_contact = ?, member_class = ?
+        WHERE memberID = ?
+    `;
+
+    req.connectionPool.query(query, [member_name, member_contact, member_class, memberID], (err, result) => {
+        if (err) {
+            console.error('Error updating member details:', err);
+            return res.status(500).json({ error: 'Error updating member details' });
+        }
+        res.status(200).json({ message: 'Member details updated successfully' });
+    });
+});
+
+// Retrieve Member Info Endpoint
+router.get('/library/member/:id', (req, res) => {
+    const memberID = req.params.id;
+
+    const query = `
+        SELECT memberID, member_name, member_contact, member_class, books_issued 
+        FROM library_member_details 
+        WHERE memberID = ?
+    `;
+
+    req.connectionPool.query(query, [memberID], (err, results) => {
+        if (err) {
+            console.error('Error retrieving member details:', err);
+            return res.status(500).json({ error: 'Error retrieving member details' });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'Member not found' });
+        }
+        res.status(200).json({ member: results[0] });
+    });
+});
+
+
+// Delete Book Endpoint
+router.delete('/library/member/:memberID', (req, res) => {
+    const memberID = req.params.memberID;
+
+    const query = `DELETE FROM library_member_details WHERE memberID = ?`;
+
+    req.connectionPool.query(query, [memberID], (err, result) => {
+        if (err) {
+            console.error('Error deleting member:', err);
+            return res.status(500).json({ error: 'Error deleting member' });
+        }
+        res.status(200).json({ message: 'Member deleted successfully' });
+    });
+});
+
 module.exports = router;
