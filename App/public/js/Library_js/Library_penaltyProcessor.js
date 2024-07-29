@@ -1,10 +1,4 @@
-const formatDateToIST = (date) => {
-    const istDate = new Date(date);
-    const year = istDate.getFullYear();
-    const month = String(istDate.getMonth() + 1).padStart(2, '0');
-    const day = String(istDate.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-};
+
 
 document.getElementById('openPenaltyProcessorOverlay').addEventListener('click', function() {
     document.getElementById('penaltyProcessorOverlay').style.display = 'block';
