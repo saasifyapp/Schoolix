@@ -1,3 +1,11 @@
+const formatDateToIST = (date) => {
+    const istDate = new Date(date);
+    const year = istDate.getFullYear();
+    const month = String(istDate.getMonth() + 1).padStart(2, '0');
+    const day = String(istDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
 document.getElementById('studentRadio').addEventListener('change', function() {
     document.getElementById('formControlPlaceholder').textContent = 'Enter Student Enrollment No.';
     document.getElementById('studentOrBookNo').placeholder = 'Enter Student Enrollment No.';
@@ -72,6 +80,7 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
                 data.issues.forEach(issue => {
                     const row = document.createElement('tr');
                     row.dataset.id = issue.id; // Store the id in a data attribute
+                    row.dataset.returnDate = issue.return_date; // Store the return date in a data attribute
                     row.innerHTML = `
                         <td>${issue.bookID}</td>
                         <td>${issue.book_name}</td>
@@ -79,7 +88,7 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
                         <td>${issue.book_publication}</td>
                         <td>${issue.issue_date}</td>
                         <td>${issue.return_date}</td>
-                        <td><button class="return-button" data-id="${issue.id}">Return</button></td>
+                        <td><button class="return-button" data-id="${issue.id}" data-return-date="${issue.return_date}">Return</button></td>
                     `;
                     tableBody.appendChild(row);
                 });
@@ -97,6 +106,7 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
                 data.issues.forEach(issue => {
                     const row = document.createElement('tr');
                     row.dataset.id = issue.id; // Store the id in a data attribute
+                    row.dataset.returnDate = issue.return_date; // Store the return date in a data attribute
                     row.innerHTML = `
                         <td>${issue.memberID}</td>
                         <td>${issue.member_name}</td>
@@ -104,7 +114,7 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
                         <td>${issue.member_contact}</td>
                         <td>${issue.issue_date}</td>
                         <td>${issue.return_date}</td>
-                        <td><button class="return-button" data-id="${issue.id}">Return</button></td>
+                        <td><button class="return-button" data-id="${issue.id}" data-return-date="${issue.return_date}">Return</button></td>
                     `;
                     tableBody.appendChild(row);
                 });
@@ -114,7 +124,8 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
             document.querySelectorAll('.return-button').forEach(button => {
                 button.addEventListener('click', function() {
                     const id = this.dataset.id;
-                    handleReturn(id);
+                    const returnDate = this.dataset.returnDate;
+                    handleReturn(id, returnDate);
                 });
             });
         }
@@ -126,9 +137,19 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
 });
 
 // Handle returning a book
-function handleReturn(id) {
-    // Implement the logic to handle the return action
-    // For example, you can send a request to the server to process the return
+function handleReturn(id, returnDate) {
+    const currentDate = new Date();
+    const formattedCurrentDate = formatDateToIST(currentDate);
+    const formattedReturnDate = formatDateToIST(new Date(returnDate));
+
+
+    // Compare the formatted dates
+    if (formattedReturnDate < formattedCurrentDate) {
+        alert('You need to pay a penalty for returning this book late.');
+        return;
+    }
+    
+    // Proceed with the return action if no penalty is required
     fetch('/library/return_book', {
         method: 'POST',
         headers: {
