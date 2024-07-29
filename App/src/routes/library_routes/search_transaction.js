@@ -13,8 +13,8 @@ const formatDateToIST = (date) => {
 router.post('/library/search_transactions', (req, res) => {
     const { searchInput } = req.body;
 
-    const issueQuery = `SELECT transaction_id, memberID, bookID, transaction_date, status FROM library_transaction_log WHERE transaction_type = 'issue' AND (memberID LIKE ? OR bookID LIKE ?)`;
-    const returnQuery = `SELECT transaction_id, memberID, bookID, transaction_date, status FROM library_transaction_log WHERE transaction_type = 'return' AND (memberID LIKE ? OR bookID LIKE ?)`;
+    const issueQuery = `SELECT transaction_id, memberID, bookID, transaction_date FROM library_transaction_log WHERE transaction_type = 'issue' AND (memberID LIKE ? OR bookID LIKE ?)`;
+    const returnQuery = `SELECT transaction_id, memberID, bookID, transaction_date FROM library_transaction_log WHERE transaction_type = 'return' AND (memberID LIKE ? OR bookID LIKE ?)`;
 
     const searchPattern = `%${searchInput}%`;
 

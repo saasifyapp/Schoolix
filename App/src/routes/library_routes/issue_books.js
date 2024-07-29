@@ -141,8 +141,8 @@ router.post('/library/issue_book', (req, res) => {
                              WHERE bookID = ?`;
 
     const logTransactionQuery = `INSERT INTO library_transaction_log 
-                                 (transaction_type, memberID, bookID, transaction_date, status) 
-                                 VALUES ('issue', ?, ?, ?, 'completed')`;
+                                 (transaction_type, memberID, bookID, transaction_date) 
+                                 VALUES ('issue', ?, ?, ?)`;
 
     // Insert the issue details
     req.connectionPool.query(issueBookQuery, [

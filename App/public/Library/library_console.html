@@ -90,8 +90,8 @@
         </div>
 
         <div class="card">
-            <a href="">
-                <button>
+            <a>
+                <button id="openPenaltyProcessorOverlay">
                     <div class="dotlottie-container">
                         <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
                             type="module"></script>
@@ -439,18 +439,6 @@
     </div>
 </div>
 
-<!-- Transaction Tracker Overlay -->
-<div id="transactionTrackerOverlay" class="overlay">
-    <div class="overlay-content">
-        <button id="closeTransactionTrackerOverlay" class="close-button">×</button>
-        <h2>Transaction Tracker</h2>
-        <div class="button-container">
-            <button id="issueBookButton">Issue Book</button>
-            <button id="returnBookButton">Return Book</button>
-            <button id="searchTransactionButton">Search Transaction</button>
-        </div>
-    </div>
-</div>
 
 <!-- Search Transaction Overlay -->
 <div id="searchTransactionOverlay" class="overlay">
@@ -467,7 +455,6 @@
                             <th>Member ID</th>
                             <th>Book ID</th>
                             <th>Transaction Date</th>
-                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -485,12 +472,43 @@
                             <th>Member ID</th>
                             <th>Book ID</th>
                             <th>Transaction Date</th>
-                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="returnTableBody">
                         <!-- Return rows will be dynamically populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Penalty Processor Overlay -->
+<div id="penaltyProcessorOverlay" class="overlay">
+    <div class="overlay-content">
+        <button id="closePenaltyProcessorOverlay" class="close-button">×</button>
+        <h2>Penalty Processor</h2>
+        <div class="overlay-inner">
+            <div class="penalty-details">
+                <h3>Penalties</h3>
+                <div class="search-bar">
+                    <input type="text" id="penaltySearchInput" class="search-input" placeholder="Enter Member ID...">
+                    <button id="penaltySearchButton" class="search-button">Search</button>
+                </div>
+                <table class="details-table">
+                    <thead>
+                        <tr id="penaltyTableHeaders">
+                            <th>Member Details</th>
+                            <th>Contact</th>
+                            <th>Book Details</th>
+                            <th>Return/Due Date</th>
+                            <th>Penalty Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="penaltyTableBody">
+                        <!-- Penalty rows will be dynamically populated here -->
                     </tbody>
                 </table>
             </div>
@@ -506,6 +524,8 @@
     <script src="/js/Library_js/Library_issueBook.js"></script>
     <script src="/js/Library_js/Library_returnBook.js"></script>
     <script src="/js/Library_js/Library_searchTransaction.js"></script>
+    <script src="/js/Library_js/Library_penaltyProcessor.js"></script>
+
 
     <script type="text/javascript">
         const btn = document.querySelector("#btn");

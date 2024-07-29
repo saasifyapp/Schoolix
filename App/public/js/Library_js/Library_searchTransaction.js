@@ -30,7 +30,6 @@ document.getElementById('searchTransactionButton').addEventListener('click', fun
                     <td>${transaction.memberID}</td>
                     <td>${transaction.bookID}</td>
                     <td>${transaction.transaction_date}</td>
-                    <td>${transaction.status}</td>
                     <td><button class="delete-button" data-id="${transaction.transaction_id}" data-type="issue">Delete</button></td>
                 `;
                 issueTableBody.appendChild(row);
@@ -43,7 +42,6 @@ document.getElementById('searchTransactionButton').addEventListener('click', fun
                     <td>${transaction.memberID}</td>
                     <td>${transaction.bookID}</td>
                     <td>${transaction.transaction_date}</td>
-                    <td>${transaction.status}</td>
                     <td><button class="delete-button" data-id="${transaction.transaction_id}" data-type="return">Delete</button></td>
                 `;
                 returnTableBody.appendChild(row);

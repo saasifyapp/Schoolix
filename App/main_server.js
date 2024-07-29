@@ -498,6 +498,10 @@ app.use('/', returnBooksRouter);
 const searchTransactionRouter = require('./src/routes/library_routes/search_transaction');
 app.use('/', searchTransactionRouter);
 
+////// PENALTY PROCESSOR ROUTE
+const penaltyProcessorRouter = require('./src/routes/library_routes/penalty_processor');
+app.use('/', penaltyProcessorRouter);
+
 // Start the server
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
