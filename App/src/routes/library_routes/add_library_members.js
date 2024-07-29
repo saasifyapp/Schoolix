@@ -89,4 +89,25 @@ router.delete('/library/member/:memberID', (req, res) => {
     });
 });
 
+// Search Members Endpoint
+router.get('/library/members/search', (req, res) => {
+    const searchTerm = req.query.search;
+
+    const query = `
+        SELECT * FROM library_member_details
+        WHERE memberID LIKE ? OR member_name LIKE ?
+    `;
+
+    const values = [`%${searchTerm}%`, `%${searchTerm}%`];
+
+    req.connectionPool.query(query, values, (err, results) => {
+        if (err) {
+            console.error('Error searching members:', err);
+            return res.status(500).json({ error: 'Error searching members' });
+        }
+        res.status(200).json(results);
+    });
+});
+
+
 module.exports = router;

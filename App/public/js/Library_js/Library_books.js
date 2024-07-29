@@ -200,6 +200,73 @@ async function editBook(bookID) {
         });
 }
 
+async function searchLibraryBookDetails() {
+    const searchTerm = document.getElementById("searchInput").value.trim();
+
+    // Check if the search term is empty
+    if (!searchTerm) {
+        if (libraryBooksSearchField !== document.activeElement) {
+            showToast("Please enter a search term.", true);
+        }
+        refreshLibraryBooksData();
+        return;
+    }
+
+    // Fetch data from the server based on the search term
+    await fetch(
+        `/library/books/search?search=${encodeURIComponent(searchTerm)}`
+    )
+        .then((response) => response.json())
+        .then((data) => {
+            const libraryBooksTableBody = document.getElementById("booksTablebody");
+            libraryBooksTableBody.innerHTML = ""; // Clear previous data
+
+            if (data.length === 0) {
+                // If no results found, display a message
+                const noResultsRow = document.createElement("tr");
+                noResultsRow.innerHTML = '<td colspan="5">No results found</td>';
+                libraryBooksTableBody.appendChild(noResultsRow);
+            } else {
+                // Append book data to the table
+                data.forEach((book) => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+              <td>${book.bookID}</td>
+              <td>${book.book_name}</td>
+              <td>${book.book_author}</td>
+              <td>${book.book_publication}</td>
+              <td>${book.book_price}</td>
+              <td>${book.ordered_quantity}</td>
+              <td>${book.description}</td>
+              <td style="text-align: center;">
+                  <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+                            <button 
+                                onclick="editBook('${book.bookID}')"
+                                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                                    <img src="../images/edit.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                                    <span style="margin-right: 10px;">Edit</span>
+                            </button>
+                            <button
+                                onclick="deleteBook('${book.bookID}')"
+                                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                                    <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                                    <span style="margin-right: 10px;">Delete</span>
+                            </button>
+                </div>
+              </td>
+            `;
+                    libraryBooksTableBody.appendChild(row);
+                });
+            }
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+        });
+}
+
+
 
 function deleteBook(bookId) {
     const confirmation = confirm(
@@ -209,17 +276,56 @@ function deleteBook(bookId) {
         fetch(`/library/book/${bookId}`, {
             method: 'DELETE'
         })
-        .then(response => {
-            if (response.ok) {
-                alert('Book deleted successfully');
-                refreshBooksData(); // Refresh the books list
-            } else {
-                throw new Error('Failed to delete book');
-            }
-        })
-        .catch(error => console.error('Error deleting book:', error));
+            .then(response => {
+                if (response.ok) {
+                    alert('Book deleted successfully');
+                    refreshBooksData(); // Refresh the books list
+                } else {
+                    throw new Error('Failed to delete book');
+                }
+            })
+            .catch(error => console.error('Error deleting book:', error));
     }
 }
 
+function exportTableToCSV(tableId, filename) {
+    const table = document.getElementById(tableId);
+    const rows = table.querySelectorAll('tr');
+
+    let csvContent = '';
+    const headers = table.querySelectorAll('th');
+    const headerData = [];
+    headers.forEach((header) => {
+        headerData.push(`"${header.textContent}"`);
+    });
+    csvContent += headerData.join(',') + '\n';
+
+    rows.forEach((row) => {
+        const cells = row.querySelectorAll('td');
+        const rowData = [];
+        cells.forEach((cell) => {
+            rowData.push(`"${cell.textContent}"`);
+        });
+        csvContent += rowData.join(',') + '\n';
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(blob, filename);
+    } else {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+}
+
+function exportBooksTable() {
+    exportTableToCSV('booksTable', 'books.csv');
+}
 
 refreshBooksData();

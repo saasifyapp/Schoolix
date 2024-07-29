@@ -221,8 +221,9 @@
         <div class="overlay-content">
             <button id="closeSearchBookOverlay" class="close-button">&times;</button>
             <h2>Search Book</h2>
-            <input type="text" id="searchInput" placeholder="Search by book name">
+            <input type="text" id="searchInput" placeholder="Search by book name" oninput="searchLibraryBookDetails()">
             <button id="refreshBooksButton" onclick="refreshBooksData()">Refresh</button>
+            <button onclick="exportBooksTable()" class="export-button">Export Books Table</button>
             <table id="booksTable">
                 <thead>
                     <tr>
@@ -293,8 +294,9 @@
         <div class="overlay-content">
             <button id="closeSearchMemberOverlay" class="close-button">&times;</button>
             <h2>Search Member</h2>
-            <input type="text" id="searchMemberInput" placeholder="Search by student name">
+            <input type="text" id="searchMemberInput" placeholder="Search by student name" oninput="searchMemberDetails()">
             <button id="refreshMembersData" onclick="refreshMembersData()">Refresh</button>
+            <button onclick="exportMembersTable()" class="export-button">Export Members Table</button>
             <table id="membersTable">
                 <thead>
                     <tr>

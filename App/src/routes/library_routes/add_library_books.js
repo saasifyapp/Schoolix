@@ -92,5 +92,25 @@ router.put('/library/book/:bookID', (req, res) => {
     });
 });
 
+// Search Library Books Endpoint
+router.get('/library/books/search', (req, res) => {
+    const searchTerm = req.query.search;
+
+    const query = `
+        SELECT * FROM library_book_details
+        WHERE bookID LIKE ? OR book_name LIKE ?
+    `;
+
+    const values = [`%${searchTerm}%`, `%${searchTerm}%`];
+
+    req.connectionPool.query(query, values, (err, results) => {
+        if (err) {
+            console.error('Error searching books:', err);
+            return res.status(500).json({ error: 'Error searching books' });
+        }
+        res.status(200).json(results);
+    });
+});
+
 
 module.exports = router;
