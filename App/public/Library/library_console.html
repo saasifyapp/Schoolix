@@ -667,17 +667,19 @@
                 <!-- 2nd dropdown: Filter by Class -->
                 <select id="filterClassDropdown" class="input-dropdown">
                     <option value="">Filter by Class</option>
-                    <option value="nursary">Nursery</option>
-                    <option value="class1">Class 1</option>
-                    <option value="class2">Class 2</option>
-                    <option value="class3">Class 3</option>
-                    <option value="class4">Class 4</option>
-                    <option value="class5">Class 5</option>
-                    <option value="class6">Class 6</option>
-                    <option value="class7">Class 7</option>
-                    <option value="class8">Class 8</option>
-                    <option value="class9">Class 9</option>
-                    <option value="class10">Class 10</option>
+                    <option value="Nursery">Nursery</option>
+                    <option value="KG1">KG-1</option>
+                    <option value="KG2">KG-2</option>
+                    <option value="1st">1st</option>
+                    <option value="2nd">2nd</option>
+                    <option value="3rd">3rd</option>
+                    <option value="4th">4th</option>
+                    <option value="5th">5th</option>
+                    <option value="6th">6th</option>
+                    <option value="7th">7th</option>
+                    <option value="8th">8th</option>
+                    <option value="9th">9th</option>
+                    <option value="10th">10th</option>
                 </select>
     
                 <!-- 3rd input: Filter by Date -->
@@ -688,11 +690,13 @@
                 <table class="styled-table">
                     <thead>
                         <tr>
-                            <th>Report ID</th>
-                            <th>Report Name</th>
-                            <th>Description</th>
-                            <th>Date</th>
-                            <th>Action</th>
+                            <th>Member ID</th>
+                            <th>Member Name</th>
+                            <th>Member Class</th>
+                            <th>Book ID</th>
+                            <th>Book Name</th>
+                            <th>Transaction Date</th>
+                            <th>Transaction Type</th>
                         </tr>
                     </thead>
                     <tbody id="reportTableBody">
@@ -716,6 +720,8 @@
     <script src="/js/Library_js/Library_returnBook.js"></script>
     <script src="/js/Library_js/Library_searchTransaction.js"></script>
     <script src="/js/Library_js/Library_penaltyProcessor.js"></script>
+    <script src="/js/Library_js/Library_reports.js"></script>
+
 
 
     <!-- <script type="text/javascript">

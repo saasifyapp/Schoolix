@@ -502,6 +502,11 @@ app.use('/', searchTransactionRouter);
 const penaltyProcessorRouter = require('./src/routes/library_routes/penalty_processor');
 app.use('/', penaltyProcessorRouter);
 
+////// REPORTS ROUTE
+const libraryReportsRouter = require('./src/routes/library_routes/library_reports');
+app.use('/', libraryReportsRouter);
+
+
 // Start the server
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
