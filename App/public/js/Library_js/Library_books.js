@@ -1,17 +1,86 @@
+let booksData = {}; // Object to store books by ID
+let bookNamesSet = new Set(); // Set to store book names
+
+async function refreshBooksData() {
+    document.getElementById('searchBar').value = '';
+    try {
+        const response = await fetch('/library/books');
+        if (!response.ok) {
+            throw new Error('Failed to fetch books');
+        }
+        const data = await response.json();
+        storeBooksData(data);
+        displayBooks(data);
+    } catch (error) {
+        console.error('Error fetching books:', error);
+    }
+}
+
+function storeBooksData(data) {
+    booksData = {}; // Clear existing data
+    bookNamesSet.clear(); // Clear existing data
+
+    data.forEach(book => {
+        booksData[book.bookID] = book; // Store book by ID
+        bookNamesSet.add(book.book_name); // Store book name in Set
+    });
+}
+
+function isDuplicateBookID(bookID) {
+    return booksData.hasOwnProperty(bookID);
+}
+
+function isDuplicateBookName(bookName) {
+    return bookNamesSet.has(bookName);
+}
+
+function formatInput(input) {
+    return input.trim().replace(/\s+/g, ' ');
+}
+
+// Example usage
 document.addEventListener('DOMContentLoaded', () => {
     const addBookForm = document.getElementById('addBookForm');
 
     addBookForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        const bookID = formatInput(document.getElementById('bookID').value);
+        const bookName = formatInput(document.getElementById('bookName').value);
+        const authorName = formatInput(document.getElementById('authorName').value);
+        const bookPublication = formatInput(document.getElementById('bookPublication').value);
+        const bookPrice = formatInput(document.getElementById('bookPrice').value);
+        const orderedQuantity = formatInput(document.getElementById('orderedQuantity').value);
+        const description = formatInput(document.getElementById('description').value);
+
+        const btn = document.querySelector("#btn");
+        const btnText = document.querySelector("#btnText");
+
+        // Check if any field is empty
+        const fields = [bookID, bookName, authorName, bookPublication, bookPrice, orderedQuantity, description];
+        if (fields.some(field => field === '')) {
+            alert('All fields are required.');
+            return;
+        }
+
+        // Check for duplicate book ID or name
+        if (isDuplicateBookID(bookID)) {
+            alert('Book ID already exists.');
+            return;
+        }
+        if (isDuplicateBookName(bookName)) {
+            alert('Book name already exists.');
+            return;
+        }
+
         const bookDetails = {
-            bookID: document.getElementById('bookID').value,
-            book_name: document.getElementById('bookName').value,
-            book_author: document.getElementById('authorName').value,
-            book_publication: document.getElementById('bookPublication').value,
-            book_price: document.getElementById('bookPrice').value,
-            ordered_quantity: document.getElementById('orderedQuantity').value,
-            description: document.getElementById('description').value
+            bookID,
+            book_name: bookName,
+            book_author: authorName,
+            book_publication: bookPublication,
+            book_price: bookPrice,
+            ordered_quantity: orderedQuantity,
+            description
         };
 
         try {
@@ -24,7 +93,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
-                alert('Book added successfully');
+                // Trigger button animation
+                btnText.innerHTML = "Saved";
+                btn.classList.add("active");
+                addBookForm.reset();
+                refreshBooksData(); // Refresh data after adding book
             } else {
                 throw new Error('Failed to add book');
             }
@@ -36,22 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// Fetch and display books
-async function refreshBooksData() {
-    // showBookLoadingAnimation();
-    document.getElementById('searchBar').value = '';
-    try {
-        const response = await fetch('/library/books');
-        if (!response.ok) {
-            throw new Error('Failed to fetch books');
-        }
-        const data = await response.json();
-        displayBooks(data);
-    } catch (error) {
-        console.error('Error fetching books:', error);
-        // hideBookLoadingAnimation();
-    }
-}
 
 function displayBooks(data) {
     const bookTableBody = document.getElementById('booksTablebody');
