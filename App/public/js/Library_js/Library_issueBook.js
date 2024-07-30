@@ -97,11 +97,11 @@ document.getElementById('additionalInfoForm').addEventListener('submit', functio
     const memberID = document.getElementById('studentEnrollmentNo').value;
     const member_name = document.getElementById('studentName').value;
     const member_class = document.getElementById('class').value;
-    const member_contact = document.getElementById('contact').value;
+    const member_contact = document.getElementById('studentcontact').value;
     const bookID = document.getElementById('bookEnrollmentNo').value;
-    const book_name = document.getElementById('bookName').value;
-    const book_author = document.getElementById('authorName').value;
-    const book_publication = document.getElementById('bookPublication').value;
+    const book_name = document.getElementById('issuebookName').value;
+    const book_author = document.getElementById('bookauthorName').value;
+    const book_publication = document.getElementById('bookPublicationname').value;
     const issue_date = document.getElementById('issueDate').value;
     const return_date = document.getElementById('returnDate').value;
 
