@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Fetch and display books
 async function refreshBooksData() {
     // showBookLoadingAnimation();
-    document.getElementById('searchInput').value = '';
+    document.getElementById('searchBar').value = '';
     try {
         const response = await fetch('/library/books');
         if (!response.ok) {
@@ -79,21 +79,52 @@ function displayBooks(data) {
                     <td>${book.description}</td>
                    <td>
                         <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
-                            <button 
-                                onclick="editBook('${book.bookID}')"
-                                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                                    <img src="../images/edit.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-                                    <span style="margin-right: 10px;">Edit</span>
-                            </button>
-                            <button
-                                onclick="deleteBook('${book.bookID}')"
-                                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                                    <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-                                    <span style="margin-right: 10px;">Delete</span>
-                            </button>
-                        </div>
+    <button style="background-color: transparent;
+        border: none;
+        color: black;
+        padding: 0;
+        text-align: center;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        cursor: pointer;
+        max-height: 100%;
+        border-radius: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin-bottom: 10px;"
+        onclick="editBook('${book.bookID}')"
+        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+        <img src="../images/edit.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+        <span style="margin-right: 10px;">Edit</span>
+    </button>
+    <button style="background-color: transparent;
+        border: none;
+        color: black;
+        padding: 0;
+        text-align: center;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        cursor: pointer;
+        max-height: 100%;
+        border-radius: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin-bottom: 10px;"
+        onclick="deleteBook('${book.bookID}')"
+        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+        <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+        <span style="margin-right: 10px;">Delete</span>
+    </button>
+</div>
+
                     </td>
 
                 `;
