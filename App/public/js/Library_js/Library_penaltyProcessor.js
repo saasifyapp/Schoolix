@@ -1,7 +1,7 @@
 
 
 document.getElementById('openPenaltyProcessorOverlay').addEventListener('click', function() {
-    document.getElementById('penaltyProcessorOverlay').style.display = 'block';
+    document.getElementById('penaltyProcessorOverlay').style.display = 'flex';
     fetchPenaltyDetails();
 });
 

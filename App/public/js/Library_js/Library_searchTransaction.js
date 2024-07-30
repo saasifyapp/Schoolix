@@ -1,6 +1,6 @@
 document.getElementById('searchTransactionButton').addEventListener('click', function() {
     const overlay = document.getElementById('searchTransactionOverlay');
-    overlay.style.display = 'block';
+    overlay.style.display = 'flex';
 
     // Fetch transactions
     fetch('/library/search_transactions', {
