@@ -23,6 +23,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeIssueBookOverlay = document.getElementById('closeIssueBookOverlay');
     const closeReturnBookOverlay = document.getElementById('closeReturnBookOverlay');
 
+    // Report Overlay
+    const reportButton = document.getElementById('reportButton');
+    const closeReportOverlay = document.getElementById('closeReportOverlay');
+    const reportSearchButton = document.getElementById('reportSearchButton');
+    const refreshReportButton = document.getElementById('refreshReportButton');
+    const exportReportButton = document.getElementById('exportReport');
+
     bookVaultButton.addEventListener('click', function () {
         showOverlay('bookVaultOverlay');
         refreshBooksData();
@@ -102,6 +109,17 @@ document.addEventListener('DOMContentLoaded', function () {
     closeReturnBookOverlay.addEventListener('click', function () {
         hideOverlay('returnBookOverlay');
     });
+
+    // Report Overlay
+    reportButton.addEventListener('click', function () {
+        showOverlay('reportOverlay');
+    });
+
+    closeReportOverlay.addEventListener('click', function () {
+        hideOverlay('reportOverlay');
+    });
+
+    
 });
 
 function showOverlay(overlayId) {

@@ -523,3 +523,25 @@ svg path{
    
 
 }
+
+.input-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.input-dropdown, .input-date {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.input-dropdown {
+    width: 30%;
+}
+
+.input-date {
+    width: 30%;
+}

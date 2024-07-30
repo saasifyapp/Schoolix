@@ -110,8 +110,8 @@
         </div>
 
         <div class="card">
-            <a href="">
-                <button>
+            <a>
+                <button id="reportButton">
                     <div class="dotlottie-container">
                         <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
                             type="module"></script>
@@ -647,6 +647,64 @@
             </div>
         </div>
     </div>
+
+    <!-- Report Overlay -->
+    <div id="reportOverlay" class="overlay">
+        <div class="overlay-content">
+            <button id="closeReportOverlay" class="close-button">&times;</button>
+            <h2>Report</h2>
+            
+            <!-- Input elements -->
+            <div class="input-container">
+                <!-- 1st dropdown: Issue, Return, Penalty -->
+                <select id="reportTypeDropdown" class="input-dropdown">
+                    <option value="">Select Report Type</option>
+                    <option value="issue">Issue</option>
+                    <option value="return">Return</option>
+                    <option value="penalty">Penalty</option>
+                </select>
+    
+                <!-- 2nd dropdown: Filter by Class -->
+                <select id="filterClassDropdown" class="input-dropdown">
+                    <option value="">Filter by Class</option>
+                    <option value="nursary">Nursery</option>
+                    <option value="class1">Class 1</option>
+                    <option value="class2">Class 2</option>
+                    <option value="class3">Class 3</option>
+                    <option value="class4">Class 4</option>
+                    <option value="class5">Class 5</option>
+                    <option value="class6">Class 6</option>
+                    <option value="class7">Class 7</option>
+                    <option value="class8">Class 8</option>
+                    <option value="class9">Class 9</option>
+                    <option value="class10">Class 10</option>
+                </select>
+    
+                <!-- 3rd input: Filter by Date -->
+                <input type="date" id="filterDateInput" class="input-date" placeholder="Filter by Date">
+            </div>
+    
+            <div class="table-container">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Report ID</th>
+                            <th>Report Name</th>
+                            <th>Description</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportTableBody">
+                        <!-- Report rows will be dynamically populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+
+
 
 
 
