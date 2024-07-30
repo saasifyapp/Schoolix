@@ -25,7 +25,7 @@ document.getElementById('issueBookForm').addEventListener('submit', function(eve
             document.getElementById('studentcontact').value = data.member.member_contact || '';
             document.getElementById('issuebookName').value = data.book.book_name || '';
             document.getElementById('bookauthorName').value = data.book.book_author || '';
-            document.getElementById('bookPublicationname').value = data.book.book_publication || '';
+            document.getElementById('bookPublicationName').value = data.book.book_publication || '';
         }
     })
     .catch(error => {
@@ -101,7 +101,7 @@ document.getElementById('additionalInfoForm').addEventListener('submit', functio
     const bookID = document.getElementById('bookEnrollmentNo').value;
     const book_name = document.getElementById('issuebookName').value;
     const book_author = document.getElementById('bookauthorName').value;
-    const book_publication = document.getElementById('bookPublicationname').value;
+    const book_publication = document.getElementById('bookPublicationName').value;
     const issue_date = document.getElementById('issueDate').value;
     const return_date = document.getElementById('returnDate').value;
 
