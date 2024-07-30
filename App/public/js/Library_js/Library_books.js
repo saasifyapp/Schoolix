@@ -413,7 +413,7 @@ function exportTableToCSV(tableId, filename) {
 }
 
 function exportBooksTable() {
-  exportTableToCSV("booksTable", "books.csv");
+  exportTableToCSV("booksTable", "Library_Books.csv");
 }
 
 refreshBooksData();

@@ -343,7 +343,7 @@ function exportTableToCSV(tableId, filename) {
 }
 
 function exportMembersTable() {
-    exportTableToCSV('membersTable', 'members.csv');
+    exportTableToCSV('membersTable', 'Library_Members.csv');
 }
 
 refreshMembersData();
