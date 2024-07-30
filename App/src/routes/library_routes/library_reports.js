@@ -3,7 +3,8 @@ const router = express.Router();
 
 // Fetch Report Data Endpoint
 router.post('/library/get_report_data', (req, res) => {
-    const { reportType } = req.body;
+    const { reportType, filterClass, filterDate } = req.body;
+
     let query = `
         SELECT 
             ltl.memberID,
@@ -32,6 +33,16 @@ router.post('/library/get_report_data', (req, res) => {
             query += ` WHERE ltl.transaction_type = 'return' AND ltl.penalty_status IS NULL`;
         } else if (reportType === 'penalty') {
             query += ` WHERE ltl.penalty_status IS NOT NULL`;
+        }
+
+        if (filterClass) {
+            query += ` AND lmd.member_class = ?`;
+            queryParams.push(filterClass);
+        }
+
+        if (filterDate) {
+            query += ` AND ltl.transaction_date = ?`;
+            queryParams.push(filterDate);
         }
     }
 
