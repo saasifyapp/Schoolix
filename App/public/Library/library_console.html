@@ -110,8 +110,8 @@
         </div>
 
         <div class="card">
-            <a href="">
-                <button>
+            <a>
+                <button id="reportButton">
                     <div class="dotlottie-container">
                         <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
                             type="module"></script>
@@ -278,85 +278,174 @@
         <div class="overlay-content" style="max-width: 700px;">
             <h2>Manage Member</h2>
             <button id="closeManageMemberOverlay" class="close-button">&times;</button>
-            <button id="addMemberButton">Add Member</button>
-            <button id="searchMemberButton">Search Member</button>
+            <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+                <div class="bookvaltcard">
+                    <span id="addMemberButton"
+                        style="display: inline-flex; flex-direction: column; align-items: center; cursor: pointer;">
+
+                        Add Member
+                    </span>
+                </div>
+                <div class="bookvaltcard">
+                    <span id="searchMemberButton"
+                        style="display: inline-flex; flex-direction: column; align-items: center; cursor: pointer;">
+                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                            type="module"></script>
+                        <dotlottie-player src="https://lottie.host/9001527e-468e-4f23-925a-8baf873ac559/oDfgDP4MIb.json"
+                            background="transparent" speed="1" style="width: 170px; height: 170px;" loop
+                            autoplay></dotlottie-player>
+                        Search Member
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
+
 
     <!-- Overlay for Add Member -->
     <div id="addMemberOverlay" class="overlay">
         <div class="overlay-content">
             <button id="closeAddMemberOverlay" class="close-button">&times;</button>
-            <h2>Add Member</h2>
-            <form id="addMemberForm">
-                <label for="memberName">Member Name:</label>
-                <input type="text" id="memberName" name="memberName" required><br>
-                <label for="memberName">Member ID:</label>
-                <input type="text" id="memberID" name="memberID" required><br>
-                <label for="classFilter">Class:</label>
-                <select id="classFilter" name="classFilter" class="custom-select" required>
-                    <option value="" disabled selected style="display:none;">Select Class</option>
-                    <option value="Nursery">Nursery</option>
-                    <option value="KG1">KG-1</option>
-                    <option value="KG2">KG-2</option>
-                    <option value="1st">1st</option>
-                    <option value="2nd">2nd</option>
-                    <option value="3rd">3rd</option>
-                    <option value="4th">4th</option>
-                    <option value="5th">5th</option>
-                    <option value="6th">6th</option>
-                    <option value="7th">7th</option>
-                    <option value="8th">8th</option>
-                    <option value="9th">9th</option>
-                    <option value="10th">10th</option>
-                </select><br>
-                <label for="contact">Contact:</label>
-                <input type="text" id="contact" name="contact" required><br>
-                <button type="submit">Submit</button>
-            </form>
-        </div>
-    </div>
 
-    <!-- Overlay for Search Member -->
-    <div id="searchMemberOverlay" class="overlay">
-        <div class="overlay-content">
-            <button id="closeSearchMemberOverlay" class="close-button">&times;</button>
-            <h2>Search Member</h2>
-            <input type="text" id="searchMemberInput" placeholder="Search by student name"
-                oninput="searchMemberDetails()">
-            <button id="refreshMembersData" onclick="refreshMembersData()">Refresh</button>
-            <button onclick="exportMembersTable()" class="export-button">Export Members Table</button>
-            <table id="membersTable">
-                <thead>
-                    <tr>
-                        <!-- <th>Sr No</th> -->
-                        <th>Member ID</th>
-                        <th>Student Name</th>
-                        <th>Class</th>
-                        <th>Contact</th>
-                        <th>Books Issued</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="membersTablebody">
-                    <!-- Table rows will be populated here -->
-                </tbody>
-            </table>
-        </div>
-    </div>
+            <div class="overlay-inner">
+                <div class="left-side">
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                        type="module"></script>
 
-    <!-- Transaction Tracker Overlay -->
-    <div id="transactionTrackerOverlay" class="overlay">
-        <div class="overlay-content">
-            <button id="closeTransactionTrackerOverlay" class="close-button">×</button>
-            <h2>Transaction Tracker</h2>
-            <div class="button-container">
-                <button id="issueBookButton">Issue Book</button>
-                <button id="returnBookButton">Return Book</button>
-                <button id="searchTransactionButton">Search Transaction</button>
+                    <dotlottie-player src="https://lottie.host/431fa4d6-36ee-4442-a585-67378fae8a29/VkMGtmgh6m.json"
+                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                        autoplay></dotlottie-player>
+                </div>
+                <div class="right-side">
+                    <h2>Add Member</h2>
+                    <form id="addMemberForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="memberName" name="memberName" required
+                                    placeholder=" ">
+                                <span class="form-control-placeholder">Member Name</span>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="memberID" name="memberID" required
+                                    placeholder=" ">
+                                <span class="form-control-placeholder">Member ID</span>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <select id="classFilter" name="classFilter" class="form-control custom-select" required>
+                                    <option value="" disabled selected style="display:none;">Select Class</option>
+                                    <option value="Nursery">Nursery</option>
+                                    <option value="KG1">KG-1</option>
+                                    <option value="KG2">KG-2</option>
+                                    <option value="1st">1st</option>
+                                    <option value="2nd">2nd</option>
+                                    <option value="3rd">3rd</option>
+                                    <option value="4th">4th</option>
+                                    <option value="5th">5th</option>
+                                    <option value="6th">6th</option>
+                                    <option value="7th">7th</option>
+                                    <option value="8th">8th</option>
+                                    <option value="9th">9th</option>
+                                    <option value="10th">10th</option>
+                                </select>
+                                <span class="form-control-placeholder"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="contact" name="contact" required
+                                    placeholder=" ">
+                                <span class="form-control-placeholder">Contact</span>
+                            </div>
+                        </div>
+
+                        <button id="btn" type="submit" class="animatedBtn">
+                            <p id="btnText">Submit</p>
+                            <div class="check-box">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                                    <path fill="transparent" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                                </svg>
+                            </div>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+
+
+    <!-- Overlay for Search Member -->
+    <div id="searchMemberOverlay" class="overlay">
+        <div class="overlay-content-search">
+            <button id="closeSearchMemberOverlay" class="close-button">&times;</button>
+            <h2>Search Member</h2>
+            <div class="search-container">
+                <div class="form-Searchgroup">
+                    <div class="form-Searchgroup">
+                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon"
+                            style="right: 25px; left: 405px;">
+                        <input type="text" class="form-control" id="searchMemberInput" name="memberSearch"
+                            placeholder=" " oninput="searchMemberDetails()" style="width: 400px;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search by student name</span>
+                    </div>
+
+                    <button id="refreshButton" onclick="refreshMembersData()" style="margin-top: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
+                    <button id="export_registered_students" onclick="exportMembersTable()" style="margin-top: 10px;">
+                        <img src="/images/export.png" alt="Export Icon"> Export
+                    </button>
+                </div>
+            </div>
+            <div class="table-container">
+                <table id="membersTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Member ID</th>
+                            <th>Student Name</th>
+                            <th>Class</th>
+                            <th>Contact</th>
+                            <th>Books Issued</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="membersTablebody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Transaction Tracker Overlay -->
+    <div id="transactionTrackerOverlay" class="overlay">
+        <div class="overlay-content" style="max-width: 700px;">
+            <h2>Transaction Tracker</h2>
+            <button id="closeTransactionTrackerOverlay" class="close-button">&times;</button>
+            <div class="button-container">
+                <div class="bookvaltcard">
+                    <span id="issueBookButton">
+
+                        Issue Book
+                    </span>
+                </div>
+                <div class="bookvaltcard">
+                    <span id="returnBookButton">
+
+                        Return Book
+                    </span>
+                </div>
+                <div class="bookvaltcard">
+                    <span id="searchTransactionButton">
+
+                        Search Transaction
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Issue Book Overlay -->
     <div id="issueBookOverlay" class="overlay">
@@ -370,7 +459,7 @@
                             <input type="text" class="form-control" id="studentEnrollmentNo" required placeholder=" ">
                             <span class="form-control-placeholder">Member ID</span>
                         </div>
-        
+
                         <div class="form-group">
                             <input type="text" class="form-control" id="bookEnrollmentNo" required placeholder=" ">
                             <span class="form-control-placeholder">Book ID</span>
@@ -394,21 +483,24 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="studentcontact" required placeholder=" " readonly>
+                                <input type="text" class="form-control" id="studentcontact" required placeholder=" "
+                                    readonly>
                                 <span class="form-control-placeholder">Contact</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="issuebookName" required placeholder=" " readonly>
+                                <input type="text" class="form-control" id="issuebookName" required placeholder=" "
+                                    readonly>
                                 <span class="form-control-placeholder">Book Name</span>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="bookauthorName" required placeholder=" " readonly>
+                                <input type="text" class="form-control" id="bookauthorName" required placeholder=" "
+                                    readonly>
                                 <span class="form-control-placeholder">Author Name</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="bookPublicationname" required placeholder=" "
+                                <input type="text" class="form-control" id="bookPublication" required placeholder=" "
                                     readonly>
                                 <span class="form-control-placeholder">Book Publication</span>
                             </div>
@@ -519,36 +611,101 @@
 
     <!-- Penalty Processor Overlay -->
     <div id="penaltyProcessorOverlay" class="overlay">
-        <div class="overlay-content">
-            <button id="closePenaltyProcessorOverlay" class="close-button">×</button>
+        <div class="overlay-content-search">
+            <button id="closePenaltyProcessorOverlay" class="close-button">&times;</button>
             <h2>Penalty Processor</h2>
-            <div class="overlay-inner">
-                <div class="penalty-details">
-                    <h3>Penalties</h3>
-                    <div class="search-bar">
-                        <input type="text" id="penaltySearchInput" class="search-input"
-                            placeholder="Enter Member ID...">
+            <div class="search-container">
+                <div class="form-Searchgroup">
+                    <div class="form-Searchgroup">
+                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                        <input type="text" id="penaltySearchInput" class="form-control" placeholder="Enter Member ID..."
+                            style="width: 400px; height: 1.7rem !important;">
                         <button id="penaltySearchButton" class="search-button">Search</button>
                     </div>
-                    <table class="details-table">
-                        <thead>
-                            <tr id="penaltyTableHeaders">
-                                <th>Member Details</th>
-                                <th>Contact</th>
-                                <th>Book Details</th>
-                                <th>Return/Due Date</th>
-                                <th>Penalty Amount</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="penaltyTableBody">
-                            <!-- Penalty rows will be dynamically populated here -->
-                        </tbody>
-                    </table>
+                    <button id="refreshButton" onclick="refreshPenaltiesData()" style="margin-top: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
                 </div>
+
+            </div>
+            <div class="table-container">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Member Details</th>
+                            <th>Contact</th>
+                            <th>Book Details</th>
+                            <th>Return/Due Date</th>
+                            <th>Penalty Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="penaltyTableBody">
+                        <!-- Penalty rows will be dynamically populated here -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+
+    <!-- Report Overlay -->
+    <div id="reportOverlay" class="overlay">
+        <div class="overlay-content">
+            <button id="closeReportOverlay" class="close-button">&times;</button>
+            <h2>Report</h2>
+            
+            <!-- Input elements -->
+            <div class="input-container">
+                <!-- 1st dropdown: Issue, Return, Penalty -->
+                <select id="reportTypeDropdown" class="input-dropdown">
+                    <option value="">Select Report Type</option>
+                    <option value="issue">Issue</option>
+                    <option value="return">Return</option>
+                    <option value="penalty">Penalty</option>
+                </select>
+    
+                <!-- 2nd dropdown: Filter by Class -->
+                <select id="filterClassDropdown" class="input-dropdown">
+                    <option value="">Filter by Class</option>
+                    <option value="nursary">Nursery</option>
+                    <option value="class1">Class 1</option>
+                    <option value="class2">Class 2</option>
+                    <option value="class3">Class 3</option>
+                    <option value="class4">Class 4</option>
+                    <option value="class5">Class 5</option>
+                    <option value="class6">Class 6</option>
+                    <option value="class7">Class 7</option>
+                    <option value="class8">Class 8</option>
+                    <option value="class9">Class 9</option>
+                    <option value="class10">Class 10</option>
+                </select>
+    
+                <!-- 3rd input: Filter by Date -->
+                <input type="date" id="filterDateInput" class="input-date" placeholder="Filter by Date">
+            </div>
+    
+            <div class="table-container">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Report ID</th>
+                            <th>Report Name</th>
+                            <th>Description</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportTableBody">
+                        <!-- Report rows will be dynamically populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+
+
+
 
 
     <script src="/js/Inventory_js/All.js"></script>
