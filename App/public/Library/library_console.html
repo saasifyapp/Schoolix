@@ -6,10 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library Console</title>
     <!-- <link rel="stylesheet" href="/css/Inventory_Css/InventoryAll.css"> -->
-    <link rel="stylesheet" href="/css/Inventory_Css/Billing.css">
+    <!-- <link rel="stylesheet" href="/css/Inventory_Css/Billing.css"> -->
     <link rel="stylesheet" href="/css/NavButtons.css">
     <link rel="stylesheet" href="/css/Library_Css/Library_Console.css">
     <link rel="stylesheet" href="/css/Library_Css/All_Libary.css">
+    <link rel="stylesheet" href="/css/Library_Css/Library-form-control.css">
 </head>
 
 <body>
@@ -227,10 +228,10 @@
 
 
     <!-- Overlay for Search Book -->
-    <div id="searchBookOverlay" class="overlay">
+    <div id="searchBookOverlay" class="overlay-search">
         <div class="overlay-content-search">
             <button id="closeSearchBookOverlay" class="close-button">&times;</button>
-            <h2>Search Book</h2>
+            <h2 class="overlay-search-head ">Search Book</h2>
             <div class="search-container">
                 <div class="form-Searchgroup">
                     <div class="form-Searchgroup">
@@ -368,10 +369,10 @@
 
 
     <!-- Overlay for Search Member -->
-    <div id="searchMemberOverlay" class="overlay">
+    <div id="searchMemberOverlay" class="overlay-search">
         <div class="overlay-content-search">
             <button id="closeSearchMemberOverlay" class="close-button">&times;</button>
-            <h2>Search Member</h2>
+            <h2 class="overlay-search-head ">Search Member</h2>
             <div class="search-container">
                 <div class="form-Searchgroup">
                     <div class="form-Searchgroup">
@@ -445,70 +446,73 @@
 
     <!-- Issue Book Overlay -->
     <div id="issueBookOverlay" class="overlay">
-        <div class="overlay-content" style="max-width: 700px;">
+        <div class="overlay-content">
             <button id="closeIssueBookOverlay" class="close-button">×</button>
             <h2>Issue Book</h2>
             <div class="overlay-inner">
-                <div class="left-side">
+                <div class="left">
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+                    <dotlottie-player src="https://lottie.host/1d6e040f-8bac-4d2f-a852-0ad55d1d3504/RW4RyJSpZz.json"
+                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay>
+                    </dotlottie-player>
                     <form id="issueBookForm">
                         <div class="form-group">
                             <input type="text" class="form-control" id="studentEnrollmentNo" required placeholder=" ">
                             <span class="form-control-placeholder">Member ID</span>
                         </div>
-
                         <div class="form-group">
                             <input type="text" class="form-control" id="bookEnrollmentNo" required placeholder=" ">
                             <span class="form-control-placeholder">Book ID</span>
                         </div>
-
                         <button type="submit" class="submit-button">Get Details</button>
                     </form>
                 </div>
-                <div class="right-side">
+                <div class="right" style="flex: 1;">
                     <form id="additionalInfoForm">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="studentName" required placeholder=" "
-                                    readonly>
-                                <span class="form-control-placeholder">Student Name</span>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="class" required placeholder=" " readonly>
-                                <span class="form-control-placeholder">Class</span>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="studentcontact" required placeholder=" "
-                                    readonly>
-                                <span class="form-control-placeholder">Contact</span>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="issuebookName" required placeholder=" "
-                                    readonly>
-                                <span class="form-control-placeholder">Book Name</span>
+                        <div class="container">
+                            <!-- <h3 class="center-heading"> Student Details</h3> -->
+                            <div class="horizontal-group">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="studentName" required placeholder=" " readonly>
+                                    <span class="form-control-placeholder">Student Name</span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="studentcontact" required placeholder=" " readonly>
+                                    <span class="form-control-placeholder">Contact</span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="class" required placeholder=" " readonly>
+                                    <span class="form-control-placeholder">Class</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="bookauthorName" required placeholder=" "
-                                    readonly>
-                                <span class="form-control-placeholder">Author Name</span>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="bookPublicationName" required
-                                    placeholder=" " readonly>
-                                <span class="form-control-placeholder">Book Publication</span>
+                        <div class="container">
+                            <!-- <h3 class="center-heading">Book Details</h3> -->
+                            <div class="horizontal-group">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="issuebookName" required placeholder=" " readonly>
+                                    <span class="form-control-placeholder">Book Name</span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="bookauthorName" required placeholder=" " readonly>
+                                    <span class="form-control-placeholder">Author Name</span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="bookPublicationName" required placeholder=" " readonly>
+                                    <span class="form-control-placeholder">Publication Name</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <input type="date" class="form-control" id="issueDate" required placeholder=" ">
-                                <span class="form-control-placeholder">Issue Date</span>
-                            </div>
-                            <div class="form-group">
-                                <input type="date" class="form-control" id="returnDate" required placeholder=" ">
-                                <span class="form-control-placeholder">Return Date</span>
+                        <div class="container" style="width: 350px;margin-left: 200px;">
+                            <div class="horizontal-group" style="margin-top: 10px;">
+                                <div class="form-group">
+                                    <input type="date" class="form-control" id="issueDate" required placeholder=" " style="text-align: center;">
+                                    <span class="form-control-placeholder">Issue Date</span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="date" class="form-control" id="returnDate" required placeholder=" " style="text-align: center;">
+                                    <span class="form-control-placeholder">Return Date</span>
+                                </div>
                             </div>
                         </div>
                         <button type="submit" class="submit-button">Issue Book</button>
@@ -517,7 +521,9 @@
             </div>
         </div>
     </div>
-
+    
+    
+    
     <!-- Return Book Overlay -->
     <div id="returnBookOverlay" class="overlay">
         <div class="overlay-content" style="max-width: 700px;">
@@ -562,10 +568,10 @@
 
 
     <!-- Search Transaction Overlay -->
-    <div id="searchTransactionOverlay" class="overlay">
-        <div class="overlay-content">
+    <div id="searchTransactionOverlay" class="overlay-search">
+        <div class="overlay-content-search">
             <button id="closeSearchTransactionOverlay" class="close-button">×</button>
-            <h2>Search Transactions</h2>
+            <h2 class="overlay-search-head ">Search Transactions</h2>
             <div class="overlay-inner">
                 <div class="left-side">
                     <h3>Issue Details</h3>
@@ -606,10 +612,10 @@
     </div>
 
     <!-- Penalty Processor Overlay -->
-    <div id="penaltyProcessorOverlay" class="overlay">
+    <div id="penaltyProcessorOverlay" class="overlay-search">
         <div class="overlay-content-search">
             <button id="closePenaltyProcessorOverlay" class="close-button">&times;</button>
-            <h2>Penalty Processor</h2>
+            <h2 class="overlay-search-head ">Penalty Processor</h2>
             <div class="search-container">
                 <div class="form-Searchgroup">
                     <div class="form-Searchgroup">
@@ -645,10 +651,10 @@
     </div>
 
     <!-- Report Overlay -->
-    <div id="reportOverlay" class="overlay">
-        <div class="overlay-content">
+    <div id="reportOverlay" class="overlay-search">
+        <div class="overlay-content-search">
             <button id="closeReportOverlay" class="close-button">&times;</button>
-            <h2>Report</h2>
+            <h2 class="overlay-search-head ">Report</h2>
 
             <!-- Input elements -->
             <div class="input-container">
