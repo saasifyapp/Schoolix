@@ -5,10 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library Console</title>
-    <link rel="stylesheet" href="/css/Inventory_Css/InventoryAll.css">
+    <!-- <link rel="stylesheet" href="/css/Inventory_Css/InventoryAll.css"> -->
     <link rel="stylesheet" href="/css/Inventory_Css/Billing.css">
     <link rel="stylesheet" href="/css/NavButtons.css">
     <link rel="stylesheet" href="/css/Library_Css/Library_Console.css">
+    <link rel="stylesheet" href="/css/Library_Css/All_Libary.css">
 </head>
 
 <body>
@@ -54,7 +55,7 @@
                             type="module"></script>
 
                         <dotlottie-player src="https://lottie.host/447ebf8f-0a36-4f35-8c08-7459ef896dca/Yw65sJQaYM.json"
-                            background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                            background="transparent" speed="1" style="width: 269px; height: 247px;" loop
                             autoplay></dotlottie-player>
                     </div>
                     <h3>Book Vault</h3>
@@ -70,7 +71,7 @@
                             type="module"></script>
 
                         <dotlottie-player src="https://lottie.host/704c844e-b731-46e2-8c31-b24d8d427405/P6qMo1nlz5.json"
-                            background="transparent" speed="1" style="width: 280px; height: 280px;" loop
+                            background="transparent" speed="1" style="width: 270px; height: 220px;" loop
                             autoplay></dotlottie-player>
                     </div>
                     <h3>Manage Member</h3>
@@ -85,8 +86,9 @@
                         type="module"></script>
 
                     <dotlottie-player src="https://lottie.host/48862de0-8b44-4c46-8433-9e10ee667214/NVSBA2kUbM.json"
-                        background="transparent" speed="0.5" style="width: 300px; height: 300px;" loop
-                        autoplay></dotlottie-player>
+                        background="transparent" speed="0.8" style="width: 269px;
+                        height: 240px;
+                        margin-left: -39px;" loop autoplay></dotlottie-player>
                     <h3>Transaction Tracker</h3>
                 </button>
             </a>
@@ -100,7 +102,7 @@
                             type="module"></script>
 
                         <dotlottie-player src="https://lottie.host/8ad1333b-3920-4d20-97d7-28f35867934f/gBcLgACTfn.json"
-                            background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                            background="transparent" speed="1" style="width: 270px; height: 248px;" loop
                             autoplay></dotlottie-player>
 
                     </div>
@@ -117,7 +119,9 @@
                             type="module"></script>
 
                         <dotlottie-player src="https://lottie.host/ef533a2f-dd72-4975-9c7f-43415af3cd2d/8xsYamti04.json"
-                            background="transparent" speed="1" style="width: 250px; height: 250px;" loop
+                            background="transparent" speed="1" style="width: 269px;
+                            height: 192px;
+                            margin-bottom: 28px;" loop
                             autoplay></dotlottie-player>
 
                     </div>
@@ -130,28 +134,21 @@
 
     <!-- Overlay for selecting Add or Search Book -->
     <div id="bookVaultOverlay" class="overlay">
-        <div class="overlay-content" style="max-width: 700px;">
+        <div class="overlay-content-inner">
             <h2>Book Vault</h2>
             <button id="closeBookVaultOverlay" class="close-button">&times;</button>
             <div class="button-container">
                 <div class="bookvaltcard">
                     <span id="addBookButton">
-                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
-                            type="module"></script>
-
-                        <dotlottie-player src="https://lottie.host/1d6e040f-8bac-4d2f-a852-0ad55d1d3504/RW4RyJSpZz.json"
-                            background="transparent" speed="1" style="width: 170px; height: 170px;" loop
-                            autoplay></dotlottie-player>Add Book
+                        <img src="/images/searchBookLib.gif" alt="">
+                       Add Book
                     </span>
                 </div>
                 <div class="bookvaltcard">
                     <span id="searchBookButton">
-                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
-                            type="module"></script>
-
-                        <dotlottie-player src="https://lottie.host/9001527e-468e-4f23-925a-8baf873ac559/oDfgDP4MIb.json"
-                            background="transparent" speed="1" style="width: 170px; height: 170px;" loop
-                            autoplay></dotlottie-player>Search Book
+                        
+                        <img src="/images/addBookLib.gif" alt="">
+                        Search Book
                     </span>
                 </div>
             </div>
@@ -275,26 +272,22 @@
 
     <!-- Overlay for selecting Add or Search Member -->
     <div id="manageMemberOverlay" class="overlay">
-        <div class="overlay-content" style="max-width: 700px;">
+        <div class="overlay-content-inner">
             <h2>Manage Member</h2>
             <button id="closeManageMemberOverlay" class="close-button">&times;</button>
             <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
                 <div class="bookvaltcard">
-                    <span id="addMemberButton"
-                        style="display: inline-flex; flex-direction: column; align-items: center; cursor: pointer;">
+                    <span id="addMemberButton">
+                        <img src="/images/addMemberLib.gif" alt="">
 
                         Add Member
                     </span>
                 </div>
                 <div class="bookvaltcard">
-                    <span id="searchMemberButton"
-                        style="display: inline-flex; flex-direction: column; align-items: center; cursor: pointer;">
-                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
-                            type="module"></script>
-                        <dotlottie-player src="https://lottie.host/9001527e-468e-4f23-925a-8baf873ac559/oDfgDP4MIb.json"
-                            background="transparent" speed="1" style="width: 170px; height: 170px;" loop
-                            autoplay></dotlottie-player>
-                        Search Member
+                    <span id="searchMemberButton">
+                        <img src="/images/searchMemberLib.gif" alt="">
+                        
+                        Search
                     </span>
                 </div>
             </div>
@@ -420,26 +413,29 @@
 
     <!-- Transaction Tracker Overlay -->
     <div id="transactionTrackerOverlay" class="overlay">
-        <div class="overlay-content" style="max-width: 700px;">
+        <div class="overlay-content-inner" style="max-width: 700px;">
             <h2>Transaction Tracker</h2>
             <button id="closeTransactionTrackerOverlay" class="close-button">&times;</button>
             <div class="button-container">
                 <div class="bookvaltcard">
                     <span id="issueBookButton">
+                        <img src="/images/issueBook.gif" alt="">
 
                         Issue Book
                     </span>
                 </div>
                 <div class="bookvaltcard">
                     <span id="returnBookButton">
+                        <img src="/images/returnBook.gif" alt="">
 
                         Return Book
                     </span>
                 </div>
                 <div class="bookvaltcard">
                     <span id="searchTransactionButton">
+                        <img src="/images/searchTranLib.gif" alt="">
 
-                        Search Transaction
+                        Search
                     </span>
                 </div>
             </div>
@@ -500,8 +496,8 @@
                                 <span class="form-control-placeholder">Author Name</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="bookPublicationName" required placeholder=" "
-                                    readonly>
+                                <input type="text" class="form-control" id="bookPublicationName" required
+                                    placeholder=" " readonly>
                                 <span class="form-control-placeholder">Book Publication</span>
                             </div>
                         </div>
@@ -653,7 +649,7 @@
         <div class="overlay-content">
             <button id="closeReportOverlay" class="close-button">&times;</button>
             <h2>Report</h2>
-            
+
             <!-- Input elements -->
             <div class="input-container">
                 <!-- 1st dropdown: Issue, Return, Penalty -->
@@ -663,7 +659,7 @@
                     <option value="return">Return</option>
                     <option value="penalty">Return (With Penalty)</option>
                 </select>
-    
+
                 <!-- 2nd dropdown: Filter by Class -->
                 <select id="filterClassDropdown" class="input-dropdown">
                     <option value="">Filter by Class</option>
@@ -681,11 +677,11 @@
                     <option value="9th">9th</option>
                     <option value="10th">10th</option>
                 </select>
-    
+
                 <!-- 3rd input: Filter by Date -->
                 <input type="date" id="filterDateInput" class="input-date" placeholder="Filter by Date">
             </div>
-    
+
             <div class="table-container">
                 <table class="styled-table">
                     <thead>
@@ -706,7 +702,7 @@
             </div>
         </div>
     </div>
-    
+
 
 
 

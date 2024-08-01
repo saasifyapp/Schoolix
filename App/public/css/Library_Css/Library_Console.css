@@ -24,6 +24,20 @@
     bottom: 2rem;
 }
 
+.overlay-content-inner {
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 350px; /* Optional: maximum width for better control */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: shadow effect */
+    position: relative;
+    top: 2rem;
+    bottom: 2rem;
+    height: 200px;
+    border-radius: 15px;
+}
+
 .overlay-content-search {
     background-color: #fefefe;
     margin: 2rem auto; /* Add top and bottom margin */
@@ -55,6 +69,16 @@
     pointer-events: auto;
     color: var(--grey-color);
 }
+
+.overlay-content-inner h2{
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    pointer-events: auto;
+    color: var(--grey-color);
+}
+
 
 
 .overlay-inner {
@@ -291,7 +315,7 @@
     padding: 20px;
     background-color: #fff;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     overflow: hidden;
     transition: transform 0.3s ease;
     z-index: 1;
@@ -299,8 +323,8 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    height: 170px;
-    width: 200px;
+    height: 82px;
+    width: 100px;
 }
 
 .bookvaltcard:hover {
@@ -334,9 +358,16 @@
     /* color: black; */
     padding: 10px 20px;
     border-radius: 5px;
-    font-size: 20px;
+    font-size: 15px;
     color: var(--grey-color);
-    font-weight: 500;
+    font-weight: 700;
+    mix-blend-mode: multiply;
+}
+
+.bookvaltcard img{
+    height: 93px;
+    width: 100px;    
+    background-color: transparent
 }
 
 
