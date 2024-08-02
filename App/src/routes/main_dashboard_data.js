@@ -53,24 +53,23 @@ router.get('/main_dashboard_data', (req, res) => {
         });
 });
 
+
+
 router.get('/main_dashboard_library_data', (req, res) => {
     // Define an object to store counts for each category
     const counts = {};
 
+
     // Define queries for each count
     const queries = {
         totalBooks: 'SELECT COUNT(*) AS count FROM library_book_details',
-        booksIssued: `
-            SELECT COUNT(*) AS count 
-            FROM library_transactions 
-            WHERE return_date IS NOT NULL AND return_date <= CURDATE()
-        `,
+        booksIssued: `SELECT COUNT(*) AS count FROM library_transactions`,
         memberCount: 'SELECT COUNT(*) AS count FROM library_member_details',
-        outstandingBooks: `
-            SELECT COUNT(*) AS count 
-            FROM library_transactions 
-            WHERE return_date IS NULL OR return_date < CURDATE()
-        `
+        outstandingBooks: `SELECT COUNT(*) AS count FROM library_transactions WHERE return_date < CURDATE()`,
+        booksAvailable: `SELECT SUM(available_quantity) AS count FROM library_book_details`,
+        booksIssuedToday: `SELECT COUNT(*) AS count FROM library_transaction_log WHERE transaction_date = CURDATE() AND transaction_type = 'issue'`,
+        booksReturnedToday: `SELECT COUNT(*) AS count FROM library_transaction_log WHERE transaction_date = CURDATE() AND transaction_type = 'return'`,
+        penaltiesCollected: `SELECT SUM(penalty_paid) AS count FROM library_transaction_log WHERE penalty_status = 'paid'`
     };
 
     // Fetch counts for each category
@@ -84,10 +83,12 @@ router.get('/main_dashboard_library_data', (req, res) => {
                     if (results && results.length > 0 && results[0].count !== undefined) {
                         // Extract the count value using the alias 'count'
                         counts[key] = results[0].count;
+                        //console.log(`${key}: ${counts[key]}`); // Log the count value
                         resolve();
                     } else {
                         console.error(`No count found for ${key}`);
                         counts[key] = 0; // Assuming count is 0 if not found
+                        console.log(`${key}: ${counts[key]}`); // Log the count value
                         resolve();
                     }
                 }
@@ -104,5 +105,7 @@ router.get('/main_dashboard_library_data', (req, res) => {
             res.status(500).json({ error: 'Error fetching counts from MySQL' });
         });
 });
+
+
 
 module.exports = router;
