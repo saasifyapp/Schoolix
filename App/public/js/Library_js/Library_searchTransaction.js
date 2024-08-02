@@ -30,7 +30,29 @@ document.getElementById('searchTransactionButton').addEventListener('click', fun
                     <td>${transaction.memberID}</td>
                     <td>${transaction.bookID}</td>
                     <td>${transaction.transaction_date}</td>
-                    <td><button class="delete-button" data-id="${transaction.transaction_id}" data-type="issue">Delete</button></td>
+                    <td><button style="background-color: transparent;
+        border: none;
+        color: black;
+        padding: 0;
+        text-align: center;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        cursor: pointer;
+        max-height: 100%;
+        border-radius: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin-bottom: 10px;"
+        onclick="deleteTransaction('${transaction.transaction_id}', 'issue')"
+        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+    <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+    <span style="margin-right: 10px;">Delete</span>
+</button>
+</td>
                 `;
                 issueTableBody.appendChild(row);
             });
@@ -42,7 +64,29 @@ document.getElementById('searchTransactionButton').addEventListener('click', fun
                     <td>${transaction.memberID}</td>
                     <td>${transaction.bookID}</td>
                     <td>${transaction.transaction_date}</td>
-                    <td><button class="delete-button" data-id="${transaction.transaction_id}" data-type="return">Delete</button></td>
+                    <td><button style="background-color: transparent;
+        border: none;
+        color: black;
+        padding: 0;
+        text-align: center;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        cursor: pointer;
+        max-height: 100%;
+        border-radius: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin-bottom: 10px;"
+        onclick="deleteTransaction('${transaction.transaction_id}', 'issue')"
+        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+    <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+    <span style="margin-right: 10px;">Delete</span>
+</button>
+</td>
                 `;
                 returnTableBody.appendChild(row);
             });

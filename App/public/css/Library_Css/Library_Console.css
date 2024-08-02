@@ -243,6 +243,8 @@
         align-items: center;
         margin-bottom: 20px;
         margin-right: 300px;
+        width: 500px;
+        margin-left: 25%;
     }
 
     .form-Searchgroup {
@@ -295,8 +297,8 @@
         cursor: pointer;
     }
 
-    #refreshButton,
-    #export_registered_students {
+    .refreshButton,
+    .export_registered_students {
         margin-bottom: 15px; /* Add margin between the buttons */
         cursor: pointer;
         background-color: transparent;
@@ -316,16 +318,21 @@
         font-weight: bold;
     }
 
-    #refreshButton img,
-    #export_registered_students img {
+    .refreshButton img,
+    .export_registered_students img {
         height: 80%; /* Set image height to fit button */
         margin-right: 5px; /* Add a 5px margin to the right of the image */
     }
 
-    #refreshButton:hover,
-    #export_registered_students:hover {
+   
+    .export_registered_students:hover {
+        background-color: #27AE60; /* Change background color on hover */
+        transform: scale(1.05); /* Increase size on hover */
+    }
+    
+    .refreshButton:hover {
         background-color: #76D7C4; /* Change background color on hover */
-        transform: scale(1.09); /* Increase size on hover */
+        transform: scale(1.05); /* Increase size on hover */
     }
 
 
@@ -438,7 +445,7 @@
         padding: 20px;
         background-color: #fff;
         border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
         overflow: hidden;
         transition: transform 0.3s ease;
         z-index: 1;

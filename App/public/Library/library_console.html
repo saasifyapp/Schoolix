@@ -240,10 +240,10 @@
                             oninput="searchLibraryBookDetails()" style="width: 400px; height: 1.7rem !important;">
                         <span class="form-control-placeholder" style="left: 3.75rem;">Search Book...</span>
                     </div>
-                    <button id="refreshButton" onclick="refreshBooksData()" style="margin-top: 10px;">
+                    <button class="refreshButton" onclick="refreshBooksData()" style="margin-top: 10px;">
                         <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
                     </button>
-                    <button id="export_registered_students" onclick="exportBooksTable()" style="margin-top: 10px;">
+                    <button class="export_registered_students" onclick="exportBooksTable()" style="margin-top: 10px;">
                         <img src="/images/export.png" alt="Export Icon"> Export
                     </button>
                 </div>
@@ -383,10 +383,10 @@
                         <span class="form-control-placeholder" style="left: 3.75rem;">Search by student name</span>
                     </div>
 
-                    <button id="refreshButton" onclick="refreshMembersData()" style="margin-top: 10px;">
+                    <button class="refreshButton" onclick="refreshMembersData()" style="margin-top: 10px;">
                         <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
                     </button>
-                    <button id="export_registered_students" onclick="exportMembersTable()" style="margin-top: 10px;">
+                    <button class="export_registered_students" onclick="exportMembersTable()" style="margin-top: 10px;">
                         <img src="/images/export.png" alt="Export Icon"> Export
                     </button>
                 </div>
@@ -574,64 +574,92 @@
     <div id="searchTransactionOverlay" class="overlay-search">
         <div class="overlay-content-search">
             <button id="closeSearchTransactionOverlay" class="close-button">×</button>
-            <h2 class="overlay-search-head ">Search Transactions</h2>
-            <div class="overlay-inner">
-                <div class="left-side">
-                    <h3>Issue Details</h3>
-                    <table class="details-table">
-                        <thead>
-                            <tr id="issueTableHeaders">
-                                <th>Transaction ID</th>
-                                <th>Member ID</th>
-                                <th>Book ID</th>
-                                <th>Transaction Date</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="issueTableBody">
-                            <!-- Issue rows will be dynamically populated here -->
-                        </tbody>
-                    </table>
+            <h2 class="overlay-search-head" style="text-align: center;">Search Transactions</h2>
+            <div class="search-container" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                <div class="form-Searchgroup" style="display: flex; align-items: center;">
+                    <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="margin-right: 10px;">
+                    <input type="text" class="form-control" id="searchBar" name="transactionSearch" placeholder=" " oninput="searchTransactionDetails()" style="width: 400px; height: 1.7rem !important;">
+                    <span class="form-control-placeholder" style="left: 3.75rem;">Search Transactions...</span>
                 </div>
-                <div class="right-side">
+                <button class="refreshButton" onclick="refreshTransactionData()" style="margin-left: 10px; margin-top: 10px;">
+                    <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                </button>
+                <button class="export_registered_students" onclick="exportTransactionTable()" style="margin-left: 10px; margin-top: 10px;">
+                    <img src="/images/export.png" alt="Export Icon"> Export
+                </button>
+            </div>
+            <div class="overlay-inner" style="display: flex; justify-content: space-between;">
+                <div style="width: 48%;">
+                    <h3>Issue Details</h3>
+                    <div class="table-container" style=" max-height: calc(100% - 5rem);">
+                        <div class="">
+                            <table class="details-table styled-table">
+                                <thead>
+                                    <tr id="issueTableHeaders">
+                                        <th>Transaction ID</th>
+                                        <th>Member ID</th>
+                                        <th>Book ID</th>
+                                        <th>Transaction Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="issueTableBody">
+                                    <!-- Issue rows will be dynamically populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div style="width: 48%;">
                     <h3>Return Details</h3>
-                    <table class="details-table">
-                        <thead>
-                            <tr id="returnTableHeaders">
-                                <th>Transaction ID</th>
-                                <th>Member ID</th>
-                                <th>Book ID</th>
-                                <th>Transaction Date</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="returnTableBody">
-                            <!-- Return rows will be dynamically populated here -->
-                        </tbody>
-                    </table>
+                    <div class="table-container" style=" max-height: calc(100% - 5rem);">
+                        <div class="">
+                            <table class="details-table styled-table">
+                                <thead>
+                                    <tr id="returnTableHeaders">
+                                        <th>Transaction ID</th>
+                                        <th>Member ID</th>
+                                        <th>Book ID</th>
+                                        <th>Transaction Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="returnTableBody">
+                                    <!-- Return rows will be dynamically populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
+    
     <!-- Penalty Processor Overlay -->
     <div id="penaltyProcessorOverlay" class="overlay-search">
         <div class="overlay-content-search">
             <button id="closePenaltyProcessorOverlay" class="close-button">&times;</button>
-            <h2 class="overlay-search-head ">Penalty Processor</h2>
+            <h2 class="overlay-search-head">Penalty Processor</h2>
             <div class="search-container">
                 <div class="form-Searchgroup">
                     <div class="form-Searchgroup">
                         <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
-                        <input type="text" id="penaltySearchInput" class="form-control" placeholder="Enter Member ID..."
-                            style="width: 400px; height: 1.7rem !important;">
-                        <button id="penaltySearchButton" class="search-button">Search</button>
+                        <!-- <input type="text" id="penaltySearchInput" class="form-control" placeholder="Enter Member ID..." style="width: 400px; height: 1.7rem !important;"> -->
+
+                        <input type="text" class="form-control" id="searchBar" name="transactionSearch" placeholder=" " oninput="" style="width: 400px; height: 1.7rem !important;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search Penalty...</span>
+                        
+
+                        
+                        <!-- <button id="penaltySearchButton" class="search-button">Search</button> -->
                     </div>
-                    <button id="refreshButton" onclick="refreshPenaltiesData()" style="margin-top: 10px;">
+                    <button class="refreshButton" onclick="refreshPenaltiesData()" style="margin-top: 10px;">
                         <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
                     </button>
+                    <button class="export_registered_students" onclick="exportPenaltiesToExcel()" style="margin-top: 10px;">
+                        <img src="/images/export.png" alt="Export Icon"> Export
+                    </button>
                 </div>
-
             </div>
             <div class="table-container">
                 <table class="styled-table">
@@ -652,13 +680,18 @@
             </div>
         </div>
     </div>
+    
 
     <!-- Report Overlay -->
     <div id="reportOverlay" class="overlay-search">
         <div class="overlay-content-search">
             <button id="closeReportOverlay" class="close-button">&times;</button>
             <h2 class="overlay-search-head ">Report</h2>
-            <button id="exportButton" class="export-button">Export</button>
+            <!-- <button id="exportButton" class="export-button">Export</button> -->
+
+            <button class="export_registered_students" id="exportButton" onclick="exportTransactionTable()" style="margin-left: 10px;">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
             <!-- Input elements -->
             <div class="input-container">
                 <!-- 1st dropdown: Issue, Return, Penalty -->
