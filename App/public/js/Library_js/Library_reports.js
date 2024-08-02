@@ -49,6 +49,7 @@ function fetchReportData() {
     // Clear the table if "Select Report Type" is chosen
     if (!reportType) {
         document.getElementById('reportTableBody').innerHTML = '';
+        document.querySelector('.reports-table thead').innerHTML = getTableHeaders('');
         return;
     }
 
@@ -64,27 +65,63 @@ function fetchReportData() {
         const reportTableBody = document.getElementById('reportTableBody');
         reportTableBody.innerHTML = ''; // Clear existing rows
 
-        data.reports.forEach(report => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${report.memberID}</td>
-                <td>${report.member_name}</td>
-                <td>${report.member_class}</td>
-                <td>${report.bookID}</td>
-                <td>${report.book_name}</td>
-                <td>${convertDateToIST(report.transaction_date)}</td>
-                <td>${report.transaction_type}</td>
-                ${reportType === 'penalty' ? `<td>${report.penalty_status}</td>` : ''}
-                ${reportType === 'penalty' ? `<td>${report.penalty_paid}</td>` : ''}
-            `;
-            reportTableBody.appendChild(row);
-        });
+        // Update table headers based on report type
+        document.querySelector('.reports-table thead').innerHTML = getTableHeaders(reportType);
+
+        if (data.reports.length === 0) {
+            // Display a message when no results are found
+            reportTableBody.innerHTML = '<tr><td colspan="9">No results found</td></tr>';
+        } else {
+            data.reports.forEach(report => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${report.memberID}</td>
+                    <td>${report.member_name}</td>
+                    <td>${report.member_class}</td>
+                    <td>${report.bookID}</td>
+                    <td>${report.book_name}</td>
+                    <td>${convertDateToIST(report.transaction_date)}</td>
+                    <td>${report.transaction_type}</td>
+                `;
+
+                if (reportType === 'penalty') {
+                    row.innerHTML += `
+                        <td>${report.penalty_status}</td>
+                        <td>${report.penalty_paid}</td>
+                    `;
+                }
+
+                reportTableBody.appendChild(row);
+            });
+        }
     })
     .catch(error => {
         console.error('Error fetching report data:', error);
         alert('Error fetching report data');
     });
 }
+
+function getTableHeaders(reportType) {
+    let headers = `
+        <tr>
+            <th>Member ID</th>
+            <th>Member Name</th>
+            <th>Member Class</th>
+            <th>Book ID</th>
+            <th>Book Name</th>
+            <th>Transaction Date</th>
+            <th>Transaction Type</th>
+    `;
+    if (reportType === 'penalty') {
+        headers += `
+            <th>Penalty Status</th>
+            <th>Penalty Paid</th>
+        `;
+    }
+    headers += '</tr>';
+    return headers;
+}
+
 
 const convertDateToIST = (date) => {
     const istDate = new Date(date);
