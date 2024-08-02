@@ -24,6 +24,7 @@
         bottom: 2rem;
         border-radius: 1rem;
         transition: transform 0.3s ease-in-out;
+        animation: fadeUp 0.3s ease-in-out;
     }
 
     .overlay-content-inner {
@@ -39,6 +40,7 @@
         height: 200px;
         border-radius: 15px;
         transition: transform 0.3s ease-in-out;
+        animation: fadeUp 0.3s ease-in-out;
     }
 
 
