@@ -97,3 +97,52 @@ const convertDateToIST = (date) => {
 // Initially disable the filter fields
 document.getElementById('filterClassDropdown').disabled = true;
 document.getElementById('filterDateInput').disabled = true;
+
+document.getElementById('exportButton').addEventListener('click', exportTableToCSV);
+
+function exportTableToCSV() {
+    const reportType = document.getElementById('reportTypeDropdown').value;
+    const filterClass = document.getElementById('filterClassDropdown').value;
+    const filterDate = document.getElementById('filterDateInput').value;
+
+    const reportTable = document.querySelector('.styled-table');
+    const reportTableBody = document.getElementById('reportTableBody');
+
+    if (reportTableBody.rows.length === 0) {
+        alert('No data to export.');
+        return;
+    }
+
+    let csvContent = '';
+    const headers = Array.from(reportTable.querySelectorAll('thead th')).map(th => th.textContent);
+    csvContent += headers.join(',') + '\n';
+
+    const rows = Array.from(reportTableBody.querySelectorAll('tr'));
+    rows.forEach(row => {
+        const cols = Array.from(row.querySelectorAll('td')).map(col => col.textContent);
+        csvContent += cols.join(',') + '\n';
+    });
+
+    let fileName = `report_${reportType}`;
+    if (filterClass) {
+        fileName += `_class_${filterClass}`;
+    }
+    if (filterDate) {
+        fileName += `_date_${filterDate}`;
+    }
+    fileName += '.csv';
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', fileName);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+}
+
+

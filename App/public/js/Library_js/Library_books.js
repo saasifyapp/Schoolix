@@ -2,86 +2,86 @@ let booksData = {}; // Object to store books by ID
 let bookNamesSet = new Set(); // Set to store book names
 
 async function refreshBooksData() {
-    document.getElementById('searchBar').value = '';
-    try {
-        const response = await fetch('/library/books');
-        if (!response.ok) {
-            throw new Error('Failed to fetch books');
-        }
-        const data = await response.json();
-        storeBooksData(data);
-        displayBooks(data);
-    } catch (error) {
-        console.error('Error fetching books:', error);
+  document.getElementById('searchBar').value = '';
+  try {
+    const response = await fetch('/library/books');
+    if (!response.ok) {
+      throw new Error('Failed to fetch books');
     }
+    const data = await response.json();
+    storeBooksData(data);
+    displayBooks(data);
+  } catch (error) {
+    console.error('Error fetching books:', error);
+  }
 }
 
 function storeBooksData(data) {
-    booksData = {}; // Clear existing data
-    bookNamesSet.clear(); // Clear existing data
+  booksData = {}; // Clear existing data
+  bookNamesSet.clear(); // Clear existing data
 
-    data.forEach(book => {
-        booksData[book.bookID] = book; // Store book by ID
-        bookNamesSet.add(book.book_name); // Store book name in Set
-    });
+  data.forEach(book => {
+    booksData[book.bookID] = book; // Store book by ID
+    bookNamesSet.add(book.book_name); // Store book name in Set
+  });
 }
 
 function isDuplicateBookID(bookID) {
-    return booksData.hasOwnProperty(bookID);
+  return booksData.hasOwnProperty(bookID);
 }
 
 function isDuplicateBookName(bookName) {
-    return bookNamesSet.has(bookName);
+  return bookNamesSet.has(bookName);
 }
 
 function formatInput(input) {
-    return input.trim().replace(/\s+/g, ' ');
+  return input.trim().replace(/\s+/g, ' ');
 }
 
 // Example usage
 document.addEventListener('DOMContentLoaded', () => {
-    const addBookForm = document.getElementById('addBookForm');
+  const addBookForm = document.getElementById('addBookForm');
 
   addBookForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-        const bookID = formatInput(document.getElementById('bookID').value);
-        const bookName = formatInput(document.getElementById('bookName').value);
-        const authorName = formatInput(document.getElementById('authorName').value);
-        const bookPublication = formatInput(document.getElementById('bookPublication').value);
-        const bookPrice = formatInput(document.getElementById('bookPrice').value);
-        const orderedQuantity = formatInput(document.getElementById('orderedQuantity').value);
-        const description = formatInput(document.getElementById('description').value);
+    const bookID = formatInput(document.getElementById('bookID').value);
+    const bookName = formatInput(document.getElementById('bookName').value);
+    const authorName = formatInput(document.getElementById('authorName').value);
+    const bookPublication = formatInput(document.getElementById('bookPublication').value);
+    const bookPrice = formatInput(document.getElementById('bookPrice').value);
+    const orderedQuantity = formatInput(document.getElementById('orderedQuantity').value);
+    const description = formatInput(document.getElementById('description').value);
 
-        const btn = document.querySelector("#btn");
-        const btnText = document.querySelector("#btnText");
+    const btn = document.querySelector("#btn");
+    const btnText = document.querySelector("#btnText");
 
-        // Check if any field is empty
-        const fields = [bookID, bookName, authorName, bookPublication, bookPrice, orderedQuantity, description];
-        if (fields.some(field => field === '')) {
-            alert('All fields are required.');
-            return;
-        }
+    // Check if any field is empty
+    const fields = [bookID, bookName, authorName, bookPublication, bookPrice, orderedQuantity, description];
+    if (fields.some(field => field === '')) {
+      alert('All fields are required.');
+      return;
+    }
 
-        // Check for duplicate book ID or name
-        if (isDuplicateBookID(bookID)) {
-            alert('Book ID already exists.');
-            return;
-        }
-        if (isDuplicateBookName(bookName)) {
-            alert('Book name already exists.');
-            return;
-        }
+    // Check for duplicate book ID or name
+    if (isDuplicateBookID(bookID)) {
+      alert('Book ID already exists.');
+      return;
+    }
+    if (isDuplicateBookName(bookName)) {
+      alert('Book name already exists.');
+      return;
+    }
 
-        const bookDetails = {
-            bookID,
-            book_name: bookName,
-            book_author: authorName,
-            book_publication: bookPublication,
-            book_price: bookPrice,
-            ordered_quantity: orderedQuantity,
-            description
-        };
+    const bookDetails = {
+      bookID,
+      book_name: bookName,
+      book_author: authorName,
+      book_publication: bookPublication,
+      book_price: bookPrice,
+      ordered_quantity: orderedQuantity,
+      description
+    };
 
     try {
       const response = await fetch("/library/add_book", {
@@ -92,20 +92,20 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify(bookDetails),
       });
 
-            if (response.ok) {
-                // Trigger button animation
-                btnText.innerHTML = "Saved";
-                btn.classList.add("active");
-                addBookForm.reset();
-                refreshBooksData(); // Refresh data after adding book
-            } else {
-                throw new Error('Failed to add book');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred while adding the book.');
-        }
-    });
+      if (response.ok) {
+        // Trigger button animation
+        btnText.innerHTML = "Saved";
+        btn.classList.add("active");
+        addBookForm.reset();
+        refreshBooksData(); // Refresh data after adding book
+      } else {
+        throw new Error('Failed to add book');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while adding the book.');
+    }
+  });
 });
 
 
@@ -197,7 +197,6 @@ function displayBooks(data) {
 
 // Function to edit a book
 async function editBook(bookID) {
-  // showBooksLoadingAnimation();
   let newBookDetails = {};
 
   await fetch(`/library/book/${encodeURIComponent(bookID)}`)
@@ -209,7 +208,6 @@ async function editBook(bookID) {
     })
     .then((data) => {
       newBookDetails = data; // Initialize newBookDetails with fetched data
-      // hideBooksLoadingAnimation();
 
       // Create custom prompt
       const customPrompt = document.createElement("div");
@@ -217,28 +215,28 @@ async function editBook(bookID) {
 
       const editPromptContent = () => {
         customPrompt.innerHTML = `
-                    <div class="prompt-content">
-                        <button class="close-button" onclick="document.body.removeChild(this.parentElement.parentElement)">&times;</button>
-                        <h2>Edit Book: ${newBookDetails.book_name}</h2>
-                        <form id="editBookForm">
-                            <label for="editBookID">Book ID:</label>
-                            <input type="text" id="editBookID" name="editBookID" value="${newBookDetails.bookID}" readonly><br>
-                            <label for="editBookName">Book Name:</label>
-                            <input type="text" id="editBookName" name="editBookName" value="${newBookDetails.book_name}" required><br>
-                            <label for="editBookAuthor">Author:</label>
-                            <input type="text" id="editBookAuthor" name="editBookAuthor" value="${newBookDetails.book_author}" required><br>
-                            <label for="editBookPublication">Publication:</label>
-                            <input type="text" id="editBookPublication" name="editBookPublication" value="${newBookDetails.book_publication}" required><br>
-                            <label for="editBookPrice">Price:</label>
-                            <input type="number" id="editBookPrice" name="editBookPrice" value="${newBookDetails.book_price}" step="0.01" required><br>
-                            <label for="editOrderedQuantity">Ordered Quantity:</label>
-                            <input type="number" id="editOrderedQuantity" name="editOrderedQuantity" value="${newBookDetails.ordered_quantity}" required><br>
-                            <label for="editDescription">Description:</label>
-                            <textarea id="editDescription" name="editDescription" required>${newBookDetails.description}</textarea><br>
-                            <button type="submit">Update</button>
-                        </form>
-                    </div>
-                `;
+                  <div class="prompt-content">
+                      <button class="close-button" onclick="document.body.removeChild(this.parentElement.parentElement)">&times;</button>
+                      <h2>Edit Book: ${newBookDetails.book_name}</h2>
+                      <form id="editBookForm">
+                          <label for="editBookID">Book ID:</label>
+                          <input type="text" id="editBookID" name="editBookID" value="${newBookDetails.bookID}" readonly><br>
+                          <label for="editBookName">Book Name:</label>
+                          <input type="text" id="editBookName" name="editBookName" value="${newBookDetails.book_name}" required><br>
+                          <label for="editBookAuthor">Author:</label>
+                          <input type="text" id="editBookAuthor" name="editBookAuthor" value="${newBookDetails.book_author}" required><br>
+                          <label for="editBookPublication">Publication:</label>
+                          <input type="text" id="editBookPublication" name="editBookPublication" value="${newBookDetails.book_publication}" required><br>
+                          <label for="editBookPrice">Price:</label>
+                          <input type="number" id="editBookPrice" name="editBookPrice" value="${newBookDetails.book_price}" step="0.01" required><br>
+                          <label for="editOrderedQuantity">Ordered Quantity:</label>
+                          <input type="number" id="editOrderedQuantity" name="editOrderedQuantity" value="${newBookDetails.ordered_quantity}" required><br>
+                          <label for="editDescription">Description:</label>
+                          <textarea id="editDescription" name="editDescription" required>${newBookDetails.description}</textarea><br>
+                          <button type="submit">Update</button>
+                      </form>
+                  </div>
+              `;
       };
       editPromptContent();
       document.body.appendChild(customPrompt);
@@ -248,16 +246,41 @@ async function editBook(bookID) {
       editBookForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        // Collect updated book details
+        // Collect updated book details and format them
         const updatedBookDetails = {
           bookID: bookID,
-          book_name: editBookForm.editBookName.value,
-          book_author: editBookForm.editBookAuthor.value,
-          book_publication: editBookForm.editBookPublication.value,
-          book_price: editBookForm.editBookPrice.value,
-          ordered_quantity: editBookForm.editOrderedQuantity.value,
-          description: editBookForm.editDescription.value,
+          book_name: formatInput(editBookForm.editBookName.value),
+          book_author: formatInput(editBookForm.editBookAuthor.value),
+          book_publication: formatInput(editBookForm.editBookPublication.value),
+          book_price: formatInput(editBookForm.editBookPrice.value),
+          ordered_quantity: formatInput(editBookForm.editOrderedQuantity.value),
+          description: formatInput(editBookForm.editDescription.value),
         };
+
+        // Check if any field has been changed and log each comparison
+        const changesMade = Object.keys(updatedBookDetails).some((key) => {
+          const originalValue = newBookDetails[key]?.toString();
+          const updatedValue = updatedBookDetails[key]?.toString();
+
+          return updatedValue !== originalValue;
+        });
+
+        if (!changesMade) {
+          alert("No changes have been made.");
+          return;
+        }
+        // Validate that no fields are empty
+        const fields = Object.values(updatedBookDetails);
+        if (fields.some(field => field === '')) {
+          alert('All fields are required.');
+          return;
+        }
+
+        // Check for duplicate book name
+        if (isDuplicateBookName(updatedBookDetails.book_name) && updatedBookDetails.book_name !== newBookDetails.book_name) {
+          alert('Book name already exists.');
+          return;
+        }
 
         // Send updated book details to server
         try {
