@@ -242,7 +242,31 @@ fetch('/main_dashboard_data')
         updateCount('registeredTeachersCount', 'Error fetching count');
         updateCount('admittedTeachersCount', 'Error fetching count');
     });
-    
+
+
+fetch('/main_dashboard_library_data')
+    .then(response => response.json())
+    .then(data => {
+        // updateCountWithAnimation('totalBooksCount', () => data.totalBooks);
+        // updateCountWithAnimation('booksIssuedCount', () => data.booksIssued);
+        // updateCountWithAnimation('memberCount', () => data.memberCount);
+        // updateCountWithAnimation('outstandingBooksCount', () => data.outstandingBooks);
+
+        // document.getElementById('totalBooksCount').textContent = data.totalBooks;
+        // document.getElementById('booksIssuedCount').textContent = data.booksIssued;
+        // document.getElementById('memberCount').textContent = data.memberCount;
+        // document.getElementById('outstandingBooksCount').textContent = data.outstandingBooks;
+        console.log(data)
+    })
+    .catch(error => {
+        console.error('Error fetching counts:', error);
+        // Display error message
+        // updateCount('totalBooksCount', 'Error fetching count');
+        // updateCount('booksIssuedCount', 'Error fetching count');
+        // updateCount('memberCount', 'Error fetching count');
+        // updateCount('outstandingBooksCount', 'Error fetching count');
+    });
+
 function updateCountWithAnimation(elementId, valueCallback) {
     const element = document.getElementById(elementId);
     const currentValue = parseInt(element.textContent) || 0; // Parse as integer, default to 0 if NaN
@@ -300,15 +324,15 @@ document.addEventListener('visibilitychange', () => {
 // Function to handle password for PURCHASE console
 
 function handlePurchaseClick(event) {
-    event.preventDefault(); 
+    event.preventDefault();
 
     // Show custom prompt
     const overlay = document.getElementById('passwordPromptOverlay');
     overlay.style.display = 'flex';
 
-     // Focus the password input field automatically
-     const passwordInput = document.getElementById('passwordPromptInput');
-     passwordInput.focus();
+    // Focus the password input field automatically
+    const passwordInput = document.getElementById('passwordPromptInput');
+    passwordInput.focus();
 
     // Function to handle password verification
     function verifyPassword() {
@@ -327,21 +351,21 @@ function handlePurchaseClick(event) {
 
         // Hide custom prompt and clear the input
         // overlay.style.display = 'none';
-        
+
     }
 
     // Handle OK button click
     document.getElementById('passwordPromptOk').onclick = verifyPassword;
 
     // Handle Enter key press in the password input field
-    document.getElementById('passwordPromptInput').onkeypress = function(event) {
+    document.getElementById('passwordPromptInput').onkeypress = function (event) {
         if (event.key === 'Enter') {
             verifyPassword();
         }
     };
 
     // Handle Cancel button click
-    document.getElementById('passwordPromptCancel').onclick = function() {
+    document.getElementById('passwordPromptCancel').onclick = function () {
         // Hide custom prompt and clear the input
         overlay.style.display = 'none';
         document.getElementById('passwordPromptInput').value = '';
@@ -355,7 +379,7 @@ purchaseLink.addEventListener('click', handlePurchaseClick);
 // Function to display toast message
 function showToast(message, isError) {
     const toastContainer = document.getElementById("toast-container");
-  
+
     // Create a new toast element
     const toast = document.createElement("div");
     toast.classList.add("toast");
@@ -363,13 +387,13 @@ function showToast(message, isError) {
         toast.classList.add("error");
     }
     toast.textContent = message;
-  
+
     // Append the toast to the container
     toastContainer.appendChild(toast);
-  
+
     // Show the toast
     toast.style.display = 'block';
-  
+
     // Remove the toast after 4 seconds
     setTimeout(function () {
         toast.style.animation = 'slideOutRight 0.5s forwards';
@@ -377,4 +401,4 @@ function showToast(message, isError) {
             toast.remove();
         });
     }, 4000);
-  }
+}

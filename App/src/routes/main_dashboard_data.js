@@ -41,6 +41,60 @@ router.get('/main_dashboard_data', (req, res) => {
         });
     });
 
+    
+
+    // Once all counts are fetched, send them as a response
+    Promise.all(promises)
+        .then(() => {
+            res.json(counts);
+        })
+        .catch(error => {
+            res.status(500).json({ error: 'Error fetching counts from MySQL' });
+        });
+});
+
+router.get('/main_dashboard_library_data', (req, res) => {
+    // Define an object to store counts for each category
+    const counts = {};
+
+    // Define queries for each count
+    const queries = {
+        totalBooks: 'SELECT COUNT(*) AS count FROM library_book_details',
+        booksIssued: `
+            SELECT COUNT(*) AS count 
+            FROM library_transactions 
+            WHERE return_date IS NOT NULL AND return_date <= CURDATE()
+        `,
+        memberCount: 'SELECT COUNT(*) AS count FROM library_member_details',
+        outstandingBooks: `
+            SELECT COUNT(*) AS count 
+            FROM library_transactions 
+            WHERE return_date IS NULL OR return_date < CURDATE()
+        `
+    };
+
+    // Fetch counts for each category
+    const promises = Object.keys(queries).map(key => {
+        return new Promise((resolve, reject) => {
+            req.connectionPool.query(queries[key], (error, results) => {
+                if (error) {
+                    console.error(`Error querying MySQL for ${key}:`, error);
+                    reject(error);
+                } else {
+                    if (results && results.length > 0 && results[0].count !== undefined) {
+                        // Extract the count value using the alias 'count'
+                        counts[key] = results[0].count;
+                        resolve();
+                    } else {
+                        console.error(`No count found for ${key}`);
+                        counts[key] = 0; // Assuming count is 0 if not found
+                        resolve();
+                    }
+                }
+            });
+        });
+    });
+
     // Once all counts are fetched, send them as a response
     Promise.all(promises)
         .then(() => {
