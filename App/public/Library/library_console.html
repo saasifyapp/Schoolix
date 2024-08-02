@@ -207,7 +207,7 @@
                         </div>
 
                         <div class="form-group">
-                            <textarea class="form-control" id="description" required placeholder=" "></textarea>
+                            <textarea class="form-control" id="description" required placeholder=" " style="height: 80px;"></textarea>
                             <span class="form-control-placeholder">Description</span>
                         </div>
 
@@ -450,11 +450,10 @@
             <button id="closeIssueBookOverlay" class="close-button">×</button>
             <h2>Issue Book</h2>
             <div class="overlay-inner">
-                <div class="left">
-                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
-                    <dotlottie-player src="https://lottie.host/1d6e040f-8bac-4d2f-a852-0ad55d1d3504/RW4RyJSpZz.json"
-                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay>
-                    </dotlottie-player>
+                <div class="left" style="border-right: 1px solid;">
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> 
+
+                    <dotlottie-player src="https://lottie.host/d5bfcdc3-b558-4f5d-b0c0-e913c89b4a94/psXItXBbPl.json" background="transparent" speed="0.5" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
                     <form id="issueBookForm">
                         <div class="form-group">
                             <input type="text" class="form-control" id="studentEnrollmentNo" required placeholder=" ">
@@ -468,7 +467,7 @@
                     </form>
                 </div>
                 <div class="right" style="flex: 1;">
-                    <form id="additionalInfoForm">
+                    <form id="additionalInfoForm" style="margin-top: 50px;">
                         <div class="container">
                             <!-- <h3 class="center-heading"> Student Details</h3> -->
                             <div class="horizontal-group">
@@ -526,45 +525,49 @@
     
     <!-- Return Book Overlay -->
     <div id="returnBookOverlay" class="overlay">
-        <div class="overlay-content" style="max-width: 700px;">
+        <div class="overlay-content" style="max-width: 1000px;">
             <button id="closeReturnBookOverlay" class="close-button">×</button>
-            <h2>Return Book</h2>
-            <div class="overlay-inner">
-                <div class="left-side">
-                    <form id="returnBookForm">
-                        <div class="form-group">
-                            <label>
-                                <input type="radio" name="inputType" id="studentRadio" value="student" required>Member
-                                ID
-                            </label>
-                            <label>
-                                <input type="radio" name="inputType" id="bookRadio" value="book" required> Book ID
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="studentOrBookNo" required placeholder=" ">
-                            <span class="form-control-placeholder" id="formControlPlaceholder">Enter Member or Book
-                                ID</span>
-                        </div>
-                        <button type="submit" class="submit-button">Get Details</button>
-                        <div id="detailsContainer"></div> <!-- New container for details -->
-                    </form>
-                </div>
-                <div class="right-side">
-                    <table class="details-table">
-                        <thead>
-                            <tr id="tableHeaders">
-                                <!-- Headers will be dynamically populated here -->
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Rows will be dynamically populated here -->
-                        </tbody>
-                    </table>
+            <h2 style="text-align: center;">Return Book</h2>
+            <div class="overlay-inner" style=" display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;">
+                <form id="returnBookForm" class="form-inline">
+                    <div class="form-group">
+                        <label>
+                            <input type="radio" name="inputType" id="studentRadio" value="student" required> Member ID
+                        </label>
+                        <label>
+                            <input type="radio" name="inputType" id="bookRadio" value="book" required> Book ID
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="studentOrBookNo" required placeholder=" " style="width: 18rem;">
+                        <span class="form-control-placeholder" id="formControlPlaceholder">Enter Member or Book ID</span>
+                    </div>
+                    <button type="submit" class="submit-button">Get Details</button>
+                </form>
+                <div class="details-and-table-container">
+                    <div id="detailsContainer" class="details-container"></div> <!-- Container for details -->
+                    <div class="table-container" style="width: 64rem; margin-bottom: 10rem; margin-top: -2rem;">
+                        <table class="details-table styled-table">
+                            <thead>
+                                <tr id="tableHeaders">
+                                    <!-- Headers will be dynamically populated here -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows will be dynamically populated here -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    
+    
+    
 
 
     <!-- Search Transaction Overlay -->

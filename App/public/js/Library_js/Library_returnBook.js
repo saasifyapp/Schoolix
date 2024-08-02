@@ -6,16 +6,18 @@ const formatDateToIST = (date) => {
     return `${year}-${month}-${day}`;
 };
 
+// Update placeholder based on selected radio button
 document.getElementById('studentRadio').addEventListener('change', function() {
     document.getElementById('formControlPlaceholder').textContent = 'Enter Student Enrollment No.';
-    document.getElementById('studentOrBookNo').placeholder = 'Enter Student Enrollment No.';
+    document.getElementById('studentOrBookNo').placeholder = '';
 });
 
 document.getElementById('bookRadio').addEventListener('change', function() {
     document.getElementById('formControlPlaceholder').textContent = 'Enter Book No.';
-    document.getElementById('studentOrBookNo').placeholder = 'Enter Book No.';
+    document.getElementById('studentOrBookNo').placeholder = '';
 });
 
+// Handle form submission
 document.getElementById('returnBookForm').addEventListener('submit', function(event) {
     event.preventDefault();
 
@@ -142,7 +144,6 @@ function handleReturn(id, returnDate) {
     const formattedCurrentDate = formatDateToIST(currentDate);
     const formattedReturnDate = formatDateToIST(new Date(returnDate));
 
-
     // Compare the formatted dates
     if (formattedReturnDate < formattedCurrentDate) {
         alert('You need to pay a penalty for returning this book late.');
@@ -181,9 +182,9 @@ document.getElementById('closeReturnBookOverlay').addEventListener('click', func
     // Clear the form and table
     document.getElementById('returnBookForm').reset();
     const detailsContainer = document.getElementById('detailsContainer');
-    detailsContainer.innerHTML = ''; // Clear existing details
+    detailsContainer.innerHTML = '';
     const tableHeaders = document.getElementById('tableHeaders');
     const tableBody = document.querySelector('.details-table tbody');
-    tableHeaders.innerHTML = ''; // Clear existing headers
-    tableBody.innerHTML = ''; // Clear existing rows
+    tableHeaders.innerHTML = '';
+    tableBody.innerHTML = '';
 });
