@@ -59,7 +59,7 @@ router.post('/library/delete_transaction', (req, res) => {
     const getMemberDetailsQuery = `SELECT * FROM library_member_details WHERE memberID = ?`;
     const getBookDetailsQuery = `SELECT * FROM library_book_details WHERE bookID = ?`;
     const addToTransactionsQuery = `INSERT INTO library_transactions (memberID, member_name, member_class, member_contact, bookID, book_name, book_author, book_publication, issue_date, return_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    const getReturnTransactionQuery = `SELECT * FROM library_transaction_log WHERE transaction_type = 'return' AND memberID = ? AND bookID = ?`;
+    const getReturnTransactionQuery = `SELECT * FROM library_transaction_log WHERE transaction_type = 'return' AND memberID = ? AND bookID = ? AND transaction_date >= ?`;
     const getIssueTransactionQuery = `SELECT * FROM library_transaction_log WHERE transaction_type = 'issue' AND memberID = ? AND bookID = ?`;
 
     req.connectionPool.query(getTransactionQuery, [transactionId], (err, transactionResult) => {
@@ -80,15 +80,15 @@ router.post('/library/delete_transaction', (req, res) => {
         const revertValue = transactionType === 'issue' ? -1 : 1;
 
         if (transactionType === 'issue') {
-            // Check if there is a corresponding return transaction
-            req.connectionPool.query(getReturnTransactionQuery, [enrollmentNumber, bookNumber], (err, returnResult) => {
+            // Check if there is a corresponding return transaction for this specific issue date
+            req.connectionPool.query(getReturnTransactionQuery, [enrollmentNumber, bookNumber, issueDate], (err, returnResult) => {
                 if (err) {
                     console.error('Error fetching return transaction:', err);
                     return res.status(500).json({ error: 'Error fetching return transaction' });
                 }
 
                 if (returnResult.length > 0) {
-                    // Prevent deletion of issue transaction if return transaction exists
+                    // Prevent deletion of issue transaction if return transaction exists for the same issue date
                     return res.status(400).json({ error: 'Cannot delete issue transaction. Please delete the corresponding return transaction first.' });
                 }
 

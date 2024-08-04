@@ -1,3 +1,4 @@
+
 document.getElementById('searchTransactionButton').addEventListener('click', function() {
     const overlay = document.getElementById('searchTransactionOverlay');
     overlay.style.display = 'flex';
@@ -46,7 +47,8 @@ document.getElementById('searchTransactionButton').addEventListener('click', fun
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         transition: transform 0.2s, box-shadow 0.2s;
         margin-bottom: 10px;"
-        onclick="deleteTransaction('${transaction.transaction_id}', 'issue')"
+        data-id="${transaction.transaction_id}" data-type="issue"
+        onclick="deleteTransaction(event)"
         onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
     <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
@@ -80,7 +82,8 @@ document.getElementById('searchTransactionButton').addEventListener('click', fun
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         transition: transform 0.2s, box-shadow 0.2s;
         margin-bottom: 10px;"
-        onclick="deleteTransaction('${transaction.transaction_id}', 'issue')"
+        data-id="${transaction.transaction_id}" data-type="return"
+        onclick="deleteTransaction(event)"
         onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
     <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
@@ -90,11 +93,6 @@ document.getElementById('searchTransactionButton').addEventListener('click', fun
                 `;
                 returnTableBody.appendChild(row);
             });
-
-            // Add event listeners to delete buttons
-            document.querySelectorAll('.delete-button').forEach(button => {
-                button.addEventListener('click', handleDelete);
-            });
         }
     })
     .catch(error => {
@@ -103,8 +101,8 @@ document.getElementById('searchTransactionButton').addEventListener('click', fun
     });
 });
 
-function handleDelete(event) {
-    const button = event.target;
+function deleteTransaction(event) {
+    const button = event.currentTarget;
     const transactionId = button.getAttribute('data-id');
     const transactionType = button.getAttribute('data-type');
 
