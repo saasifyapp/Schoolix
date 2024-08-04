@@ -199,17 +199,26 @@ async function editMember(memberID) {
             customPrompt.classList.add("custom-prompt");
 
             customPrompt.innerHTML = `
-                <div class="prompt-content">
-                    <button class="close-button" onclick="this.parentElement.parentElement.remove();">&times;</button>
-                    <h2>Edit Member Details</h2>
-                    <label for="editMemberID">Member ID:</label>
-                    <input type="text" id="editMemberID" value="${member.memberID}" readonly>
-                    <label for="editMemberName">Name:</label>
-                    <input type="text" id="editMemberName" value="${member.member_name}" required>
-                    <label for="editMemberContact">Contact:</label>
-                    <input type="text" id="editMemberContact" value="${member.member_contact}" required>
-                    <label for="editMemberClass">Class:</label>
-                    <select id="editMemberClass" name="classFilter" class="custom-select" required>
+            <div class="prompt-content">                
+                <h2>Edit Member Details</h2>
+                
+                <div class="form-group">
+                    <input type="text" class="form-control" id="editMemberID" value="${member.memberID}" readonly style="width:6rem;text-align: center;" placeholder=" ">
+                    <span class="form-control-placeholder">Member ID</span>
+                </div>
+                
+                <div class="form-group">
+                    <input type="text" class="form-control" id="editMemberName" value="${member.member_name}" required style="width:6rem;text-align: center;" placeholder=" ">
+                    <span class="form-control-placeholder">Name</span>
+                </div>
+                
+                <div class="form-group">
+                    <input type="text" class="form-control" id="editMemberContact" value="${member.member_contact}" required style="width:6rem;text-align: center;" placeholder=" ">
+                    <span class="form-control-placeholder">Contact</span>
+                </div>
+                
+                <div class="form-group">
+                    <select id="editMemberClass" class="form-control" required style="width: 10rem; text-align: center;" placeholder=" ">
                         <option value="" disabled style="display:none;">Select Class</option>
                         <option value="Nursery">Nursery</option>
                         <option value="KG1">KG-1</option>
@@ -224,10 +233,28 @@ async function editMember(memberID) {
                         <option value="8th">8th</option>
                         <option value="9th">9th</option>
                         <option value="10th">10th</option>
-                    </select><br>
-                    <button id="confirmEditButton" onclick="updateMember('${memberID}')">Update</button>
+                    </select>
+                    <span class="form-control-placeholder">Class</span>
                 </div>
-            `;
+                
+                <button id="confirmEditButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+                        onclick="updateMember('${memberID}')"
+                        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                    <img src="../images/conform.png" alt="Update" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                    <span style="margin-right: 10px;">Update</span>
+                </button>
+        
+                <button id="cancelButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+                        onclick="this.parentElement.parentElement.remove();"
+                        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                    <img src="../images/cancel.png" alt="Cancel" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                    <span style="margin-right: 10px;">Cancel</span>
+                </button>
+            </div>
+        `;
+        
 
             // Set the selected value for the class dropdown
             const classFilter = customPrompt.querySelector("#editMemberClass");

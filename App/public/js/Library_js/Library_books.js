@@ -215,29 +215,59 @@ async function editBook(bookID) {
 
       const editPromptContent = () => {
         customPrompt.innerHTML = `
-                  <div class="prompt-content">
-                      <button class="close-button" onclick="document.body.removeChild(this.parentElement.parentElement)">&times;</button>
-                      <h2>Edit Book: ${newBookDetails.book_name}</h2>
-                      <form id="editBookForm">
-                          <label for="editBookID">Book ID:</label>
-                          <input type="text" id="editBookID" name="editBookID" value="${newBookDetails.bookID}" readonly><br>
-                          <label for="editBookName">Book Name:</label>
-                          <input type="text" id="editBookName" name="editBookName" value="${newBookDetails.book_name}" required><br>
-                          <label for="editBookAuthor">Author:</label>
-                          <input type="text" id="editBookAuthor" name="editBookAuthor" value="${newBookDetails.book_author}" required><br>
-                          <label for="editBookPublication">Publication:</label>
-                          <input type="text" id="editBookPublication" name="editBookPublication" value="${newBookDetails.book_publication}" required><br>
-                          <label for="editBookPrice">Price:</label>
-                          <input type="number" id="editBookPrice" name="editBookPrice" value="${newBookDetails.book_price}" step="0.01" required><br>
-                          <label for="editOrderedQuantity">Ordered Quantity:</label>
-                          <input type="number" id="editOrderedQuantity" name="editOrderedQuantity" value="${newBookDetails.ordered_quantity}" required><br>
-                          <label for="editDescription">Description:</label>
-                          <textarea id="editDescription" name="editDescription" required>${newBookDetails.description}</textarea><br>
-                          <button type="submit">Update</button>
-                      </form>
-                  </div>
-              `;
-      };
+            <div class="prompt-content">                
+                <h2>Edit Book: ${newBookDetails.book_name}</h2>
+                <form id="editBookForm">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="editBookID" name="editBookID" value="${newBookDetails.bookID}" readonly style="width:6rem; text-align: center;" placeholder=" ">
+                        <span class="form-control-placeholder">Book ID</span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="editBookName" name="editBookName" value="${newBookDetails.book_name}" required style="width:6rem; text-align: center;" placeholder=" ">
+                        <span class="form-control-placeholder">Book Name</span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="editBookAuthor" name="editBookAuthor" value="${newBookDetails.book_author}" required style="width:6rem; text-align: center;" placeholder=" ">
+                        <span class="form-control-placeholder">Author</span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="editBookPublication" name="editBookPublication" value="${newBookDetails.book_publication}" required style="width:6rem; text-align: center;" placeholder=" ">
+                        <span class="form-control-placeholder">Publication</span>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" id="editBookPrice" name="editBookPrice" value="${newBookDetails.book_price}" step="0.01" required style="width:6rem; text-align: center;" placeholder=" ">
+                        <span class="form-control-placeholder">Price</span>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" id="editOrderedQuantity" name="editOrderedQuantity" value="${newBookDetails.ordered_quantity}" required style="width:6rem; text-align: center;" placeholder=" ">
+                        <span class="form-control-placeholder">Ordered Quantity</span>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="editDescription" class="form-control" name="editDescription" required style="width:6rem; text-align: center;" placeholder=" ">${newBookDetails.description}</textarea>
+                        <span class="form-control-placeholder" style = "top:-0.7rem;">Description</span>
+                    </div>
+                    <div class="button-group">
+                        <button id="saveButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+                                onclick=""
+                                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                            <img src="../images/conform.png" alt="Save" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                            <span style="margin-right: 10px;">Save</span>
+                        </button>
+                        
+                        <button id="cancelButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+                                onclick=""
+                                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                            <img src="../images/cancel.png" alt="Cancel" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                            <span style="margin-right: 10px;">Cancel</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        `;
+    };
+    
       editPromptContent();
       document.body.appendChild(customPrompt);
 
