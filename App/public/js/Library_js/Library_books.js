@@ -239,12 +239,16 @@ async function editBook(bookID) {
                         <span class="form-control-placeholder">Price</span>
                     </div>
                     <div class="form-group">
-                        <input type="number" class="form-control" id="editOrderedQuantity" name="editOrderedQuantity" value="${newBookDetails.ordered_quantity}" required style="width:6rem; text-align: center;" placeholder=" ">
-                        <span class="form-control-placeholder">Ordered Quantity</span>
+                        <input type="number" class="form-control" id="editOrderedQuantity" name="editOrderedQuantity" value="${newBookDetails.ordered_quantity}" readonly style="width:6rem; text-align: center;" placeholder=" ">
+                        <span class="form-control-placeholder">Previously Ordered</span>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" id="editNewOrderedQuantity" name="editNewOrderedQuantity" required style="width:6rem; text-align: center;" placeholder=" ">
+                        <span class="form-control-placeholder">New Ordered</span>
                     </div>
                     <div class="form-group">
                         <textarea id="editDescription" class="form-control" name="editDescription" required style="width:6rem; text-align: center;" placeholder=" ">${newBookDetails.description}</textarea>
-                        <span class="form-control-placeholder" style = "top:-0.7rem;">Description</span>
+                        <span class="form-control-placeholder" style="top:-0.7rem;">Description</span>
                     </div>
                     <div class="button-group">
                         <button id="saveButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
@@ -266,8 +270,8 @@ async function editBook(bookID) {
                 </form>
             </div>
         `;
-    };
-    
+      };
+      
       editPromptContent();
       document.body.appendChild(customPrompt);
 
@@ -283,7 +287,8 @@ async function editBook(bookID) {
           book_author: formatInput(editBookForm.editBookAuthor.value),
           book_publication: formatInput(editBookForm.editBookPublication.value),
           book_price: formatInput(editBookForm.editBookPrice.value),
-          ordered_quantity: formatInput(editBookForm.editOrderedQuantity.value),
+          ordered_quantity: Number(editBookForm.editOrderedQuantity.value) + Number(editBookForm.editNewOrderedQuantity.value),
+          new_ordered_quantity: Number(editBookForm.editNewOrderedQuantity.value),
           description: formatInput(editBookForm.editDescription.value),
         };
 

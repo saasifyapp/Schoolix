@@ -74,21 +74,42 @@ router.put('/library/book/:bookID', (req, res) => {
         book_publication,
         book_price,
         ordered_quantity,
+        new_ordered_quantity,
         description
     } = req.body;
 
-    const query = `UPDATE library_book_details
-                   SET book_name = ?, book_author = ?, book_publication = ?, book_price = ?, ordered_quantity = ?, description = ?
-                   WHERE bookID = ?`;
+    // Query to fetch the current available quantity
+    const fetchAvailableQuantityQuery = `SELECT available_quantity FROM library_book_details WHERE bookID = ?`;
 
-    const values = [book_name, book_author, book_publication, book_price, ordered_quantity, description, bookId];
-
-    req.connectionPool.query(query, values, (err, result) => {
+    // First, fetch the current available quantity
+    req.connectionPool.query(fetchAvailableQuantityQuery, [bookId], (err, result) => {
         if (err) {
-            console.error('Error updating book:', err);
-            return res.status(500).json({ error: 'Error updating book' });
+            console.error('Error fetching available quantity:', err);
+            return res.status(500).json({ error: 'Error fetching available quantity' });
         }
-        res.status(200).json({ message: 'Book updated successfully' });
+
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Book not found' });
+        }
+
+        const currentAvailableQuantity = result[0].available_quantity || 0;
+        const newAvailableQuantity = currentAvailableQuantity + new_ordered_quantity;
+
+        // Query to update the book details
+        const updateBookQuery = `UPDATE library_book_details
+                                 SET book_name = ?, book_author = ?, book_publication = ?, book_price = ?, ordered_quantity = ?, description = ?, available_quantity = ?
+                                 WHERE bookID = ?`;
+
+        const values = [book_name, book_author, book_publication, book_price, ordered_quantity, description, newAvailableQuantity, bookId];
+
+        // Update the book details along with the new available quantity
+        req.connectionPool.query(updateBookQuery, values, (err, result) => {
+            if (err) {
+                console.error('Error updating book:', err);
+                return res.status(500).json({ error: 'Error updating book' });
+            }
+            res.status(200).json({ message: 'Book updated successfully' });
+        });
     });
 });
 
