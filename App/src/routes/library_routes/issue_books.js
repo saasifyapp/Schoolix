@@ -1,6 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
+const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
+
+// Use the connection manager middleware
+router.use(connectionManager);
+
+
 // Fetch Book and Member Details Endpoint
 router.post('/library/get_details', (req, res) => {
     const { studentEnrollmentNo, bookEnrollmentNo } = req.body;

@@ -1,6 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
+const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
+
+// Use the connection manager middleware
+router.use(connectionManager);
+
+
+
 const formatDateToIST = (date) => {
     const istDate = new Date(date);
     const year = istDate.getFullYear();

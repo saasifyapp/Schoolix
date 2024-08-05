@@ -2,6 +2,12 @@ const express = require('express');
 const router = express.Router();
 
 
+const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
+
+// Use the connection manager middleware
+router.use(connectionManager);
+
+
 // Fetch Penalties Endpoint
 router.post('/library/get_penalties', (req, res) => {
     const getPenaltiesQuery = `

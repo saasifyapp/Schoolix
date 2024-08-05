@@ -243,7 +243,7 @@ async function editBook(bookID) {
                         <span class="form-control-placeholder">Previously Ordered</span>
                     </div>
                     <div class="form-group">
-                        <input type="number" class="form-control" id="editNewOrderedQuantity" name="editNewOrderedQuantity" required style="width:6rem; text-align: center;" placeholder=" ">
+                        <input type="number" class="form-control" id="editNewOrderedQuantity" name="editNewOrderedQuantity" value="0" required style="width:6rem; text-align: center;" placeholder=" ">
                         <span class="form-control-placeholder">New Ordered</span>
                     </div>
                     <div class="form-group">

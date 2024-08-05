@@ -1,6 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
+const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
+
+// Use the connection manager middleware
+router.use(connectionManager);
+
+
 // Add Book Endpoint
 router.post('/library/add_book', (req, res) => {
     const { bookID, book_name, book_author, book_publication, book_price, ordered_quantity, description } = req.body;

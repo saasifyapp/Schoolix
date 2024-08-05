@@ -1,6 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
+const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
+
+// Use the connection manager middleware
+router.use(connectionManager);
+
+
 // Fetch Report Data Endpoint
 router.post('/library/get_report_data', (req, res) => {
     const { reportType, filterClass, filterDate } = req.body;

@@ -392,6 +392,14 @@ app.use((req, res, next) => {
     next();
 });
 
+
+/////////////////////// ROUTES FOR SEARCH STUDENT COMPONENTS ///////////////////////////////////////
+
+ const searchStudentRouter = require('./src/routes/universal_routes.js');
+ app.use('/', searchStudentRouter);
+
+
+
 ////////////////////////////////////ADMIN CONSOLE //////////////////////////////////
 //////////////////////Submit Credentials of Database ///////////////////////////////
 app.post('/submit-config', (req, res) => {

@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="/css/Library_Css/Library_Console.css">
     <link rel="stylesheet" href="/css/Library_Css/All_Libary.css">
     <link rel="stylesheet" href="/css/Library_Css/Library-form-control.css">
+    <link rel="stylesheet" href="/css/Universal_Components/search_students.css">
+
 </head>
 
 <body>
@@ -296,77 +298,70 @@
     </div>
 
 
-    <!-- Overlay for Add Member -->
-    <div id="addMemberOverlay" class="overlay">
-        <div class="overlay-content">
-            <button id="closeAddMemberOverlay" class="close-button">&times;</button>
+<!-- Overlay for Add Member -->
+<div id="addMemberOverlay" class="overlay">
+    <div class="overlay-content">
+        <button id="closeAddMemberOverlay" class="close-button">&times;</button>
 
-            <div class="overlay-inner">
-                <div class="left-side">
-                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
-                        type="module"></script>
-
-                    <dotlottie-player src="https://lottie.host/431fa4d6-36ee-4442-a585-67378fae8a29/VkMGtmgh6m.json"
-                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop
-                        autoplay></dotlottie-player>
-                </div>
-                <div class="right-side">
-                    <h2>Add Member</h2>
-                    <form id="addMemberForm">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="memberName" name="memberName" required
-                                    placeholder=" ">
-                                <span class="form-control-placeholder">Member Name</span>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="memberID" name="memberID" required
-                                    placeholder=" ">
-                                <span class="form-control-placeholder">Member ID</span>
-                            </div>
+        <div class="overlay-inner">
+            <div class="left-side">
+                <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+                <dotlottie-player src="https://lottie.host/431fa4d6-36ee-4442-a585-67378fae8a29/VkMGtmgh6m.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+            </div>
+            <div class="right-side">
+                <h2>Add Member</h2>
+                <form id="addMemberForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="memberName" name="memberName" required placeholder=" ">
+                            <span class="form-control-placeholder">Member Name</span>
+                            <div id="suggestions" class="suggestions"></div> <!-- Suggestions container -->
                         </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <select id="classFilter" name="classFilter" class="form-control custom-select" required>
-                                    <option value="" disabled selected style="display:none;">Select Class</option>
-                                    <option value="Nursery">Nursery</option>
-                                    <option value="KG1">KG-1</option>
-                                    <option value="KG2">KG-2</option>
-                                    <option value="1st">1st</option>
-                                    <option value="2nd">2nd</option>
-                                    <option value="3rd">3rd</option>
-                                    <option value="4th">4th</option>
-                                    <option value="5th">5th</option>
-                                    <option value="6th">6th</option>
-                                    <option value="7th">7th</option>
-                                    <option value="8th">8th</option>
-                                    <option value="9th">9th</option>
-                                    <option value="10th">10th</option>
-                                </select>
-                                <span class="form-control-placeholder"></span>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="contact" name="contact" required
-                                    placeholder=" ">
-                                <span class="form-control-placeholder">Contact</span>
-                            </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="memberID" name="memberID" required placeholder=" ">
+                            <span class="form-control-placeholder">Member ID</span>
                         </div>
+                    </div>
 
-                        <button id="btn" type="submit" class="animatedBtn">
-                            <p id="btnText">Submit</p>
-                            <div class="check-box">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
-                                    <path fill="transparent" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
-                                </svg>
-                            </div>
-                        </button>
-                    </form>
-                </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <select id="classFilter" name="classFilter" class="form-control custom-select" required>
+                                <option value="" disabled selected style="display:none;">Select Class</option>
+                                <option value="Nursery">Nursery</option>
+                                <option value="KG1">KG-1</option>
+                                <option value="KG2">KG-2</option>
+                                <option value="1st">1st</option>
+                                <option value="2nd">2nd</option>
+                                <option value="3rd">3rd</option>
+                                <option value="4th">4th</option>
+                                <option value="5th">5th</option>
+                                <option value="6th">6th</option>
+                                <option value="7th">7th</option>
+                                <option value="8th">8th</option>
+                                <option value="9th">9th</option>
+                                <option value="10th">10th</option>
+                            </select>
+                            <span class="form-control-placeholder"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="contact" name="contact" required placeholder=" ">
+                            <span class="form-control-placeholder">Contact</span>
+                        </div>
+                    </div>
+
+                    <button id="btn" type="submit" class="animatedBtn">
+                        <p id="btnText">Submit</p>
+                        <div class="check-box">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                                <path fill="transparent" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                            </svg>
+                        </div>
+                    </button>
+                </form>
             </div>
         </div>
     </div>
-
+</div>
 
     <!-- Overlay for Search Member -->
     <div id="searchMemberOverlay" class="overlay-search">
@@ -759,6 +754,8 @@
     <script src="/js/Library_js/Library_searchTransaction.js"></script>
     <script src="/js/Library_js/Library_penaltyProcessor.js"></script>
     <script src="/js/Library_js/Library_reports.js"></script>
+    <script src="/js/Universal_Components_JS/search_students.js"></script>
+
 
 
 
