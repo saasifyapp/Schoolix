@@ -213,13 +213,18 @@
                             <span class="form-control-placeholder">Description</span>
                         </div>
 
-                        <button id="btn" type="submit" class="animatedBtn">
+                        <!-- <button id="btn" type="submit" class="animatedBtn">
                             <p id="btnText">Submit</p>
                             <div class="check-box">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
                                     <path fill="transparent" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
                                 </svg>
                             </div>
+                        </button> -->
+
+                        <button class="getDetails-button" type="submit">
+                            <img src="../images/addbookbtn.png" alt="">
+                            <span>Add Book</span>
                         </button>
                     </form>
                 </div>
@@ -330,7 +335,7 @@
 
                         <div class="form-row">
                             <div class="form-group">
-                                <select id="classFilter" name="classFilter" class="form-control custom-select" required>
+                                <select id="classFilter" name="classFilter" class="form-control custom-select" style="text-align: center;" required>
                                     <option value="" disabled selected style="display:none;">Select Class</option>
                                     <option value="Nursery">Nursery</option>
                                     <option value="KG1">KG-1</option>
@@ -355,13 +360,19 @@
                             </div>
                         </div>
 
-                        <button id="btn" type="submit" class="animatedBtn">
+                        <!-- <button id="btn" type="submit" class="animatedBtn">
                             <p id="btnText">Submit</p>
                             <div class="check-box">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
                                     <path fill="transparent" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
                                 </svg>
                             </div>
+                        </button> -->
+
+                        
+                        <button class="getDetails-button" type="submit">
+                            <img src="../images/addmemberbtn.png" alt="">
+                            <span>Add Member</span>
                         </button>
                     </form>
                 </div>
@@ -467,7 +478,12 @@
                             <input type="text" class="form-control" id="bookEnrollmentNo" required placeholder=" ">
                             <span class="form-control-placeholder">Book ID</span>
                         </div>
-                        <button type="submit" class="submit-button">Get Details</button>
+                        <!-- <button type="submit" class="submit-button">Get Details</button> -->
+                        <button class="getDetails-button" type="submit">
+                            <img src="../images/conform.png" alt="">
+                            <span>Get Details</span>
+                        </button>
+                        
                     </form>
                 </div>
                 <div class="right" style="flex: 1;">
@@ -526,7 +542,11 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="submit-button">Issue Book</button>
+                        <!-- <button type="submit" class="submit-button">Issue Book</button> -->
+                        <button class="getDetails-button" type="submit">
+                            <img src="../images/issue book.png" alt="">
+                            <span>Issue Book</span>
+                        </button>
                     </form>
                 </div>
             </div>
@@ -559,7 +579,10 @@
                         <span class="form-control-placeholder" id="formControlPlaceholder">Enter Member or Book
                             ID</span>
                     </div>
-                    <button type="submit" class="submit-button">Get Details</button>
+                    <button class="getDetails-button" type="submit">
+                        <img src="../images/conform.png" alt="">
+                        <span>Get Details</span>
+                    </button>
                 </form>
                 <div class="details-and-table-container">
                     <div id="detailsContainer" class="details-container"></div> <!-- Container for details -->

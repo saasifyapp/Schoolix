@@ -314,6 +314,51 @@ body {
 }
 
 
+
+
+.getDetails-button {
+    background-color: transparent;
+    border: none;
+    color: black;
+    padding: 0;
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    max-height: 100%;
+    border-radius: 20px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 10px;
+    font-family: 'Open Sans', sans-serif;    
+    font-weight: bold;
+}
+
+.getDetails-button img {
+    width: 25px;
+    height: 25px;
+    border-radius: 0px;
+    margin: 5px;
+}
+
+.getDetails-button span {
+    margin-right: 10px;
+}
+
+.getDetails-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+}
+
+.getDetails-button:focus {
+    outline: none;
+}
+
+
+
  /* //////////////////////////////////Animations//////////////////////////// */
 
  @keyframes slideInFromDown {
