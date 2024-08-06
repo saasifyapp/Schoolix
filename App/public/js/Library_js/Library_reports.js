@@ -28,7 +28,7 @@ document.getElementById('reportTypeDropdown').addEventListener('change', functio
         filterClassDropdown.disabled = true;
         filterDateInput.disabled = true;
         // Show the Lottie animation and hide the table
-        document.getElementById('lottie-container').style.display = 'block';
+        document.getElementById('lottie-container').style.display = 'flex';
         document.querySelector('.reports-table').style.display = 'none';
     }
 
