@@ -21,9 +21,15 @@ document.getElementById('reportTypeDropdown').addEventListener('change', functio
     if (reportType) {
         filterClassDropdown.disabled = false;
         filterDateInput.disabled = false;
+        // Hide the Lottie animation and show the table
+        document.getElementById('lottie-container').style.display = 'none';
+        document.querySelector('.reports-table').style.display = 'table';
     } else {
         filterClassDropdown.disabled = true;
         filterDateInput.disabled = true;
+        // Show the Lottie animation and hide the table
+        document.getElementById('lottie-container').style.display = 'block';
+        document.querySelector('.reports-table').style.display = 'none';
     }
 
     fetchReportData();
@@ -70,7 +76,7 @@ function fetchReportData() {
 
         if (data.reports.length === 0) {
             // Display a message when no results are found
-            reportTableBody.innerHTML = '<tr><td colspan="9">No results found</td></tr>';
+            reportTableBody.innerHTML = '<tr><td colspan="7">No results found</td></tr>';
         } else {
             data.reports.forEach(report => {
                 const row = document.createElement('tr');
@@ -121,7 +127,6 @@ function getTableHeaders(reportType) {
     headers += '</tr>';
     return headers;
 }
-
 
 const convertDateToIST = (date) => {
     const istDate = new Date(date);
@@ -181,5 +186,3 @@ function exportTableToCSV() {
         document.body.removeChild(link);
     }
 }
-
-

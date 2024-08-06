@@ -87,15 +87,9 @@
   /* Add a 5px margin to the right of the image */
 }
 
-#exportButton:hover {
-  background-color: #27AE60;
-  /* Change background color on hover */
-  transform: scale(1.05);
-  /* Increase size on hover */
-}
 
 #exportButton:hover {
-  background-color: #76D7C4;
+  background-color: #27AE60;
   /* Change background color on hover */
   transform: scale(1.05);
   /* Increase size on hover */

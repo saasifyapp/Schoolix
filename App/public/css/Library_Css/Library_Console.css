@@ -390,9 +390,9 @@
         transition: background-color 0.3s ease;
     }
 
-    .styled-table tr:hover td {
-        font-weight: bold;
-    }
+    /* .styled-table tr:hover td {
+        font-weight: 500;
+    } */
 
     .tableFixHead {
         overflow-y: auto;
@@ -619,27 +619,6 @@
 
 
 
-    .input-container {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 20px;
-        align-items: center;
-    }
-
-    .input-dropdown, .input-date {
-        padding: 10px;
-        font-size: 1rem;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-
-    .input-dropdown {
-        width: 30%;
-    }
-
-    .input-date {
-        width: 30%;
-    }
 
 
     
@@ -792,4 +771,105 @@
 
 .prompt-content button span {
     margin-right: 10px;
+}
+
+
+
+/*------------------------ ___________ Report Css ______------------------------------------------------------------------------------------------*/
+.filter-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: -10px;
+    animation: fadeInFromUp 1s ease-out; /* Animation applied here */
+}
+
+
+.filter-container label{
+    color: var(--grey-color);
+}
+
+.dropdown {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dropdown label {
+    margin-bottom: 5px;
+    font-weight: bold;    
+}
+
+.custom-input-container,
+.custom-dropdown-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.common-height {
+    height: 2.8125rem; /* Adjust the height as needed */
+}
+
+.custom-input,
+.custom-dropdown {
+    padding-left: 2.5rem; /* Add padding to the left for the icon */
+    padding-right: 2.5rem; /* Add padding to the right for the right icon */
+    border: 0.0625rem solid #ccc; /* Adjust border as needed */
+    border-radius: 0.625rem; /* Adjust border-radius as needed */
+    font-size: 1rem; /* Adjust font size as needed */
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Add transition for smooth effect */
+}
+
+.custom-input:hover,
+.custom-input:focus,
+.custom-dropdown:hover,
+.custom-dropdown:focus {
+    box-shadow: 0 0 10px #5DADE2; /* Add shadow on hover and focus */   
+    border: 1px solid #85C1E9;
+    outline: none;
+}
+
+.custom-input-icon,
+.custom-dropdown-left-icon,
+.custom-dropdown-right-icon {
+    position: absolute;
+    width: 1.5rem; /* Adjust the size as needed */
+    height: 1.5rem; /* Adjust the size as needed */
+    pointer-events: none; /* Ensure the icon does not interfere with input */
+    border-radius: 15px;
+    mix-blend-mode: multiply; /* Add this property */
+}
+
+.custom-input-icon {
+    left: 0.75rem; /* Adjust the position as needed */
+}
+
+.custom-dropdown-left-icon {
+    left: 0.5rem; /* Adjust the position as needed */
+}
+
+.custom-dropdown-right-icon {
+    right: 0.5rem; /* Adjust the position as needed */
+}
+
+/* Hide the default dropdown arrow */
+.custom-dropdown {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: none; /* Remove the default background */
+    background-position: right 0.5rem center; /* Position the custom right icon */
+}
+
+/* Override default styles for dropdown arrow */
+.custom-dropdown::after {
+    content: '';
+}
+
+.report-lottie{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

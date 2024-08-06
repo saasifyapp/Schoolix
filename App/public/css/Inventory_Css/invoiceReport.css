@@ -643,10 +643,14 @@ body {
     /* Add a 5px margin to the right of the image */
 }
 
-#refreshButton:hover,
-#export_registered_students:hover {
+#refreshButton:hover{
     background-color: #76D7C4;
     /* Change background color on hover */
     transform: scale(1.09);
     /* Increase size on hover */
+}
+
+#export_registered_students:hover{
+    background-color: #27AE60 ;
+    transform: scale(1.09);
 }
