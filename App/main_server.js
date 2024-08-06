@@ -12,10 +12,13 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
-
+// Import path for device detection middleware
+const deviceDetection = require('./src/middleware/deviceDetection'); 
+  
+// Use the device detection middleware
+app.use(deviceDetection);
 
 const logoutManager = require('./src/middleware/logoutManager');
-
 
 
 
