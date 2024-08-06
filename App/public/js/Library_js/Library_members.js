@@ -399,7 +399,7 @@ function deleteMember(memberID) {
     }
 }
 
-function exportTableToCSV(tableId, filename) {
+function exportTmemberableToCSV(tableId, filename) {
     const table = document.getElementById(tableId);
     const rows = table.querySelectorAll('tr');
 
@@ -436,7 +436,7 @@ function exportTableToCSV(tableId, filename) {
 }
 
 function exportMembersTable() {
-    exportTableToCSV('membersTable', 'Library_Members.csv');
+    exportTmemberableToCSV('membersTable', 'Library_Members.csv');
 }
 
 refreshMembersData();

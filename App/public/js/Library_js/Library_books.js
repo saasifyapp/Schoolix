@@ -350,7 +350,7 @@ async function editBook(bookID) {
 }
 
 async function searchLibraryBookDetails() {
-  const searchTerm = document.getElementById("searchInput").value.trim();
+  const searchTerm = document.getElementById("searchBar").value.trim();
 
   // Check if the search term is empty
   if (!searchTerm) {
@@ -433,7 +433,7 @@ function deleteBook(bookId) {
   }
 }
 
-function exportTableToCSV(tableId, filename) {
+function exportbooksTableToCSV(tableId, filename) {
   const table = document.getElementById(tableId);
   const rows = table.querySelectorAll("tr");
 
@@ -471,7 +471,7 @@ function exportTableToCSV(tableId, filename) {
 }
 
 function exportBooksTable() {
-  exportTableToCSV("booksTable", "Library_Books.csv");
+  exportbooksTableToCSV("booksTable", "Library_Books.csv");
 }
 
 refreshBooksData();

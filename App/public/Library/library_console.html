@@ -641,23 +641,23 @@
                         <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
                         <!-- <input type="text" id="penaltySearchInput" class="form-control" placeholder="Enter Member ID..." style="width: 400px; height: 1.7rem !important;"> -->
 
-                        <input type="text" class="form-control" id="searchBar" name="transactionSearch" placeholder=" " oninput="" style="width: 400px; height: 1.7rem !important;">
+                        <input type="text" class="form-control penaltysearch" id="searchBar" name="transactionSearch" placeholder=" " oninput="searchPenaltyTransactions()" style="width: 400px; height: 1.7rem !important;">
                         <span class="form-control-placeholder" style="left: 3.75rem;">Search Penalty...</span>
                         
 
                         
                         <!-- <button id="penaltySearchButton" class="search-button">Search</button> -->
                     </div>
-                    <button class="refreshButton" onclick="refreshPenaltiesData()" style="margin-top: 10px;">
+                    <button class="refreshButton" onclick="fetchPenaltyDetails()" style="margin-top: 10px;">
                         <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
                     </button>
-                    <button class="export_registered_students" onclick="exportPenaltiesToExcel()" style="margin-top: 10px;">
+                    <button class="export_registered_students" onclick="exportPenaltiesToCSV()" style="margin-top: 10px;">
                         <img src="/images/export.png" alt="Export Icon"> Export
                     </button>
                 </div>
             </div>
             <div class="table-container">
-                <table class="styled-table">
+                <table class="styled-table penaltyuniquetable">
                     <thead>
                         <tr>
                             <th>Member Details</th>
@@ -684,7 +684,7 @@
             <h2 class="overlay-search-head ">Report</h2>
             <!-- <button id="exportButton" class="export-button">Export</button> -->
 
-            <button class="export_registered_students" id="exportButton" onclick="exportTransactionTable()" style="margin-left: 10px;">
+            <button class="export_registered_students" id="exportButton" style="margin-left: 10px;">
                 <img src="/images/export.png" alt="Export Icon"> Export
             </button>
             <!-- Input elements -->
