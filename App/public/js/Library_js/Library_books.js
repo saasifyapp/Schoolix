@@ -212,7 +212,6 @@ async function editBook(bookID) {
       // Create custom prompt
       const customPrompt = document.createElement("div");
       customPrompt.classList.add("custom-prompt");
-
       const editPromptContent = () => {
         customPrompt.innerHTML = `
             <div class="prompt-content">                
@@ -238,13 +237,15 @@ async function editBook(bookID) {
                         <input type="number" class="form-control" id="editBookPrice" name="editBookPrice" value="${newBookDetails.book_price}" step="0.01" required style="width:6rem; text-align: center;" placeholder=" ">
                         <span class="form-control-placeholder">Price</span>
                     </div>
-                    <div class="form-group">
-                        <input type="number" class="form-control" id="editOrderedQuantity" name="editOrderedQuantity" value="${newBookDetails.ordered_quantity}" readonly style="width:6rem; text-align: center;" placeholder=" ">
-                        <span class="form-control-placeholder">Previously Ordered</span>
-                    </div>
-                    <div class="form-group">
-                        <input type="number" class="form-control" id="editNewOrderedQuantity" name="editNewOrderedQuantity" value="0" required style="width:6rem; text-align: center;" placeholder=" ">
-                        <span class="form-control-placeholder">New Ordered</span>
+                    <div class="form-group-inline" >
+                        <div class="form-group">
+                            <input type="number" class="form-control" id="editOrderedQuantity" name="editOrderedQuantity" value="${newBookDetails.ordered_quantity}" readonly style="width:6rem; text-align: center;" placeholder=" ">
+                            <span class="form-control-placeholder">Previously Ordered</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" class="form-control" id="editNewOrderedQuantity" name="editNewOrderedQuantity" value="0" required style="width:6rem; text-align: center;" placeholder=" ">
+                            <span class="form-control-placeholder">New Ordered</span>
+                        </div>
                     </div>
                     <div class="form-group">
                         <textarea id="editDescription" class="form-control" name="editDescription" required style="width:6rem; text-align: center;" placeholder=" ">${newBookDetails.description}</textarea>
@@ -270,7 +271,8 @@ async function editBook(bookID) {
                 </form>
             </div>
         `;
-      };
+    };
+    
       
       editPromptContent();
       document.body.appendChild(customPrompt);

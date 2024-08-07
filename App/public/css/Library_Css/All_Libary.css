@@ -357,6 +357,11 @@ body {
     outline: none;
 }
 
+.getDetails-button:hover {
+    background-color: #76D7C4; /* Change background color on hover */
+    transform: scale(1.05); /* Increase size on hover */
+}
+
 
 
  /* //////////////////////////////////Animations//////////////////////////// */

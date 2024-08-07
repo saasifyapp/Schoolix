@@ -1,3 +1,4 @@
+// Format date to IST
 const formatDateToIST = (date) => {
     const istDate = new Date(date);
     const year = istDate.getFullYear();
@@ -8,12 +9,12 @@ const formatDateToIST = (date) => {
 
 // Update placeholder based on selected radio button
 document.getElementById('studentRadio').addEventListener('change', function() {
-    document.getElementById('formControlPlaceholder').textContent = 'Enter Student Enrollment No.';
+    document.getElementById('formControlPlaceholder').textContent = 'Enter Student Member Id';
     document.getElementById('studentOrBookNo').placeholder = '';
 });
 
 document.getElementById('bookRadio').addEventListener('change', function() {
-    document.getElementById('formControlPlaceholder').textContent = 'Enter Book No.';
+    document.getElementById('formControlPlaceholder').textContent = 'Enter Book Id';
     document.getElementById('studentOrBookNo').placeholder = '';
 });
 
@@ -38,7 +39,15 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
         if (data.error) {
             alert(data.error);
         } else {
+            const lottieContainer = document.getElementById('lottieContainer');
             const detailsContainer = document.getElementById('detailsContainer');
+            const tableContainer = document.getElementById('tableContainer');
+
+            // Hide Lottie animation and show details container and table
+            lottieContainer.style.display = 'none';
+            detailsContainer.style.display = 'block';
+            tableContainer.style.display = 'block';
+
             detailsContainer.innerHTML = ''; // Clear existing details
 
             const newDetailsContainer = document.createElement('div');
@@ -149,7 +158,7 @@ function handleReturn(id, returnDate) {
         alert('You need to pay a penalty for returning this book late.');
         return;
     }
-    
+
     // Proceed with the return action if no penalty is required
     fetch('/library/return_book', {
         method: 'POST',
@@ -187,4 +196,7 @@ document.getElementById('closeReturnBookOverlay').addEventListener('click', func
     const tableBody = document.querySelector('.details-table tbody');
     tableHeaders.innerHTML = '';
     tableBody.innerHTML = '';
+
+    // Show Lottie animation
+    document.getElementById('lottieContainer').style.display = 'block';
 });

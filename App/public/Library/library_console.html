@@ -238,7 +238,8 @@
     <div id="searchBookOverlay" class="overlay-search">
         <div class="overlay-content-search">
             <button id="closeSearchBookOverlay" class="close-button">&times;</button>
-            <h2 class="overlay-search-head ">Search Book</h2>
+            <img src="/images/searchBookLib.gif" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
+            <h2 class="overlay-search-head">Search Book</h2>
             <div class="search-container">
                 <div class="form-Searchgroup">
                     <div class="form-Searchgroup">
@@ -250,11 +251,11 @@
                     <button class="refreshButton" onclick="refreshBooksData()" style="margin-top: 10px;">
                         <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
                     </button>
-                    <button class="export_registered_students" onclick="exportBooksTable()" style="margin-top: 10px;">
-                        <img src="/images/export.png" alt="Export Icon"> Export
-                    </button>
                 </div>
             </div>
+            <button class="export_registered_students" onclick="exportBooksTable()">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
             <div class="table-container">
                 <table id="booksTable" class="styled-table">
                     <thead>
@@ -276,7 +277,7 @@
             </div>
         </div>
     </div>
-
+    
 
     <!-- Overlay for selecting Add or Search Member -->
     <div id="manageMemberOverlay" class="overlay">
@@ -384,25 +385,25 @@
     <div id="searchMemberOverlay" class="overlay-search">
         <div class="overlay-content-search">
             <button id="closeSearchMemberOverlay" class="close-button">&times;</button>
-            <h2 class="overlay-search-head ">Search Member</h2>
+            <img src="/images/searchMemberLib.gif" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
+            <h2 class="overlay-search-head">Search Member</h2>
             <div class="search-container">
                 <div class="form-Searchgroup">
                     <div class="form-Searchgroup">
-                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon"
-                            style="right: 25px; left: 405px;">
-                        <input type="text" class="form-control" id="searchMemberInput" name="memberSearch"
-                            placeholder=" " oninput="searchMemberDetails()" style="width: 400px;">
+                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px; left: 405px;">
+                        <input type="text" class="form-control" id="searchMemberInput" name="memberSearch" placeholder=" "
+                            oninput="searchMemberDetails()" style="width: 400px;">
                         <span class="form-control-placeholder" style="left: 3.75rem;">Search by student name</span>
                     </div>
-
+    
                     <button class="refreshButton" onclick="refreshMembersData()" style="margin-top: 10px;">
                         <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
                     </button>
-                    <button class="export_registered_students" onclick="exportMembersTable()" style="margin-top: 10px;">
-                        <img src="/images/export.png" alt="Export Icon"> Export
-                    </button>
                 </div>
             </div>
+            <button class="export_registered_students" onclick="exportMembersTable()">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
             <div class="table-container">
                 <table id="membersTable" class="styled-table">
                     <thead>
@@ -422,11 +423,12 @@
             </div>
         </div>
     </div>
+    
 
 
     <!-- Transaction Tracker Overlay -->
     <div id="transactionTrackerOverlay" class="overlay">
-        <div class="overlay-content-inner" style="max-width: 700px;">
+        <div class="overlay-content-inner" style="max-width:400px">
             <h2>Transaction Tracker</h2>
             <button id="closeTransactionTrackerOverlay" class="close-button">&times;</button>
             <div class="button-container">
@@ -556,14 +558,12 @@
 
 
     <!-- Return Book Overlay -->
-    <div id="returnBookOverlay" class="overlay">
-        <div class="overlay-content" style="max-width: 1000px;">
+    <div id="returnBookOverlay" class="overlay-search">
+        <div class="overlay-content-search">
             <button id="closeReturnBookOverlay" class="close-button">×</button>
-            <h2 style="text-align: center;">Return Book</h2>
-            <div class="overlay-inner" style=" display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;">
+            <img src="/images/returnbook.png" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
+            <h2 class="overlay-search-head">Return Book</h2>
+            <div class="overlay-inner" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
                 <form id="returnBookForm" class="form-inline">
                     <div class="form-group">
                         <label>
@@ -585,8 +585,11 @@
                     </button>
                 </form>
                 <div class="details-and-table-container">
-                    <div id="detailsContainer" class="details-container"></div> <!-- Container for details -->
-                    <div class="table-container" style="width: 64rem; margin-bottom: 10rem; margin-top: -2rem;">
+                    <div id="lottieContainer">
+                        <dotlottie-player src="https://lottie.host/e4077a4b-4ff4-4f20-ba86-8e18a37aefac/sN8rCK2edJ.json" background="transparent" speed="1" style="width: 500px; height: 400px;" loop autoplay></dotlottie-player>
+                    </div>
+                    <div id="detailsContainer" class="details-container" style="display: none;"></div> <!-- Container for details -->
+                    <div id="tableContainer" class="table-container" style="width: 100%; margin-bottom: 10rem; margin-top: -2rem; display: none;">
                         <table class="details-table styled-table">
                             <thead>
                                 <tr id="tableHeaders">
@@ -602,6 +605,7 @@
             </div>
         </div>
     </div>
+    
 
 
 
@@ -611,24 +615,21 @@
     <div id="searchTransactionOverlay" class="overlay-search">
         <div class="overlay-content-search">
             <button id="closeSearchTransactionOverlay" class="close-button">×</button>
+            <img src="/images/searchtransactionlib.png" alt="Overlay Icon" class="overlay-icon" style="height: 40px; width: 40px;"> <!-- Add your icon here -->
             <h2 class="overlay-search-head" style="text-align: center;">Search Transactions</h2>
-            <div class="search-container"
-                style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+            <div class="search-container" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
                 <div class="form-Searchgroup" style="display: flex; align-items: center;">
                     <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="margin-right: 10px;">
-                    <input type="text" class="form-control" id="searchTransactionInput" name="transactionSearch" placeholder=" "
-                       oninput="searchTransactionDetails()" style="width: 400px; height: 1.7rem !important;">
+                    <input type="text" class="form-control" id="searchTransactionInput" name="transactionSearch" placeholder=" " oninput="searchTransactionDetails()" style="width: 400px;">
                     <span class="form-control-placeholder" style="left: 3.75rem;">Search Transactions...</span>
                 </div>
-                <button class="refreshButton" onclick="refreshTransactionData()"
-                    style="margin-left: 10px; margin-top: 10px;">
+                <button class="refreshButton" onclick="refreshTransactionData()" style="margin-left: 10px; margin-top: 10px;">
                     <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
                 </button>
-                <button class="export_registered_students" onclick="exportTransactionTable()"
-                    style="margin-left: 10px; margin-top: 10px;">
-                    <img src="/images/export.png" alt="Export Icon"> Export
-                </button>
             </div>
+            <button class="export_registered_students" onclick="exportTransactionTable()">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
             <div class="overlay-inner" style="display: flex; justify-content: space-between;">
                 <div style="width: 48%;">
                     <h3>Issue Details</h3>
@@ -675,30 +676,26 @@
             </div>
         </div>
     </div>
+    
 
     <!-- Penalty Processor Overlay -->
     <div id="penaltyProcessorOverlay" class="overlay-search">
         <div class="overlay-content-search">
             <button id="closePenaltyProcessorOverlay" class="close-button">&times;</button>
+            <img src="/images/penalty.gif" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
             <h2 class="overlay-search-head">Penalty Processor</h2>
+            <button class="export_registered_students" onclick="exportPenaltiesToCSV()">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
             <div class="search-container">
                 <div class="form-Searchgroup">
                     <div class="form-Searchgroup">
                         <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
-                        <!-- <input type="text" id="penaltySearchInput" class="form-control" placeholder="Enter Member ID..." style="width: 400px; height: 1.7rem !important;"> -->
-
                         <input type="text" class="form-control penaltysearch" id="searchBar" name="transactionSearch" placeholder=" " oninput="searchPenaltyTransactions()" style="width: 400px; height: 1.7rem !important;">
                         <span class="form-control-placeholder" style="left: 3.75rem;">Search Penalty...</span>
-
-
-
-                        <!-- <button id="penaltySearchButton" class="search-button">Search</button> -->
                     </div>
                     <button class="refreshButton" onclick="fetchPenaltyDetails()" style="margin-top: 10px;">
                         <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
-                    </button>
-                    <button class="export_registered_students" onclick="exportPenaltiesToCSV()" style="margin-top: 10px;">
-                        <img src="/images/export.png" alt="Export Icon"> Export
                     </button>
                 </div>
             </div>
@@ -721,6 +718,7 @@
             </div>
         </div>
     </div>
+    
 
 
     <!-- Report Overlay -->
