@@ -15,7 +15,7 @@ router.get('/get_student_details', async (req, res) => {
 
         const searchTerm = req.query.q;
         const query = `SELECT * FROM student_details WHERE Name LIKE ?`;
-        const values = [`%${searchTerm}%`];
+        const values = [`${searchTerm}%`];
 
         req.connectionPool.query(query, values, (error, results) => {
             if (error) {

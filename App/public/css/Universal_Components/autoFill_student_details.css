@@ -7,7 +7,7 @@
     position: absolute;
     background: white;
     z-index: 1000;
-    margin-top: 5px; /* Space between input field and suggestions */
+    margin-top: 65%; /* Space between input field and suggestions */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
 }
 
@@ -15,7 +15,7 @@
 .suggestion-item {
     padding: 10px;
     cursor: pointer;
-    border-bottom: 1px solid #eee; /* Optional: Add a separator between items */
+    border-bottom: 1.5px solid #eee; /* Optional: Add a separator between items */
 }
 
 /* Style for the last suggestion item to remove the bottom border */
@@ -25,4 +25,5 @@
 
 .suggestion-item:hover {
     background: #D6EAF8;
+    font-weight: bold; /* Make text bold on hover */
 }
