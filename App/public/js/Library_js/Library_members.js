@@ -315,68 +315,92 @@ async function updateMember(memberID) {
         });
 }
 
-async function searchMemberDetails() {
-    const searchTerm = document.getElementById("searchMemberInput").value.trim();
+// async function searchMemberDetails() {
+//     const searchTerm = document.getElementById("searchMemberInput").value.trim();
+
+//     // Check if the search term is empty
+//     if (!searchTerm) {
+//         if (memberssearchField !== document.activeElement) {
+//             showToast("Please enter a search term.", true);
+//         }
+//         refreshMembersData();
+//         return;
+//     }
+
+//     // Fetch data from the server based on the search term
+//     await fetch(`/library/members/search?search=${encodeURIComponent(searchTerm)}`)
+//         .then((response) => response.json())
+//         .then((data) => {
+//             const membersTableBody = document.getElementById("membersTablebody");
+//             membersTableBody.innerHTML = ""; // Clear previous data
+
+//             if (data.length === 0) {
+//                 // If no results found, display a message
+//                 const noResultsRow = document.createElement("tr");
+//                 noResultsRow.innerHTML = '<td colspan="6">No results found</td>';
+//                 membersTableBody.appendChild(noResultsRow);
+//             } else {
+//                 // Append member data to the table
+//                 data.forEach((member) => {
+//                     const row = document.createElement("tr");
+//                     row.innerHTML = `
+//                         <td>${member.memberID}</td>
+//                         <td>${member.member_name}</td>
+//                         <td>${member.member_class}</td>
+//                         <td>${member.member_contact}</td>
+//                         <td>${member.books_issued}</td>
+//                         <td style="text-align: center;">
+//                             <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+//                                 <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+//                                     onclick="showMemberUpdateModal('${member.memberID}')"
+//                                     onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+//                                     onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+//                                     <img src="/images/edit.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+//                                     <span style="margin-right: 10px;">Edit</span>
+//                                 </button>
+//                                 <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+//                                     onclick="deleteMember('${member.memberID}')"
+//                                     onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+//                                     onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+//                                     <img src="/images/delete.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+//                                     <span style="margin-right: 10px;">Delete</span>
+//                                 </button>
+//                             </div>
+//                         </td>
+//                     `;
+//                     membersTableBody.appendChild(row);
+//                 });
+//             }
+//         })
+//         .catch((error) => {
+//             console.error("Error:", error);
+//         });
+// }
+
+  function searchMemberDetails() {
+    const searchTerm = document.getElementById("searchMemberInput").value.trim().toLowerCase();
 
     // Check if the search term is empty
     if (!searchTerm) {
-        if (memberssearchField !== document.activeElement) {
-            showToast("Please enter a search term.", true);
-        }
-        refreshMembersData();
+        // showToast("Please enter a search term.", true);
+        displayMembers(Object.values(membersData)); // Display all members if no search term
         return;
     }
 
-    // Fetch data from the server based on the search term
-    await fetch(`/library/members/search?search=${encodeURIComponent(searchTerm)}`)
-        .then((response) => response.json())
-        .then((data) => {
-            const membersTableBody = document.getElementById("membersTablebody");
-            membersTableBody.innerHTML = ""; // Clear previous data
+    // Filter membersData based on the search term
+    const filteredMembers = Object.values(membersData).filter(member =>
+        member.member_name.toLowerCase().includes(searchTerm) ||
+        member.memberID.toLowerCase().includes(searchTerm)
+    );
 
-            if (data.length === 0) {
-                // If no results found, display a message
-                const noResultsRow = document.createElement("tr");
-                noResultsRow.innerHTML = '<td colspan="6">No results found</td>';
-                membersTableBody.appendChild(noResultsRow);
-            } else {
-                // Append member data to the table
-                data.forEach((member) => {
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
-                        <td>${member.memberID}</td>
-                        <td>${member.member_name}</td>
-                        <td>${member.member_class}</td>
-                        <td>${member.member_contact}</td>
-                        <td>${member.books_issued}</td>
-                        <td style="text-align: center;">
-                            <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
-                                <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-                                    onclick="showMemberUpdateModal('${member.memberID}')"
-                                    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                                    <img src="/images/edit.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-                                    <span style="margin-right: 10px;">Edit</span>
-                                </button>
-                                <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-                                    onclick="deleteMember('${member.memberID}')"
-                                    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                                    <img src="/images/delete.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-                                    <span style="margin-right: 10px;">Delete</span>
-                                </button>
-                            </div>
-                        </td>
-                    `;
-                    membersTableBody.appendChild(row);
-                });
-            }
-        })
-        .catch((error) => {
-            console.error("Error:", error);
-        });
+    displayMembers(filteredMembers); // Display filtered members
+
+    // Check if no results were found
+    if (filteredMembers.length === 0) {
+        const membersTableBody = document.getElementById("membersTablebody");
+        membersTableBody.innerHTML = '<tr><td colspan="7">No results found</td></tr>';
+    }
 }
-
 
 
 function deleteMember(memberID) {
