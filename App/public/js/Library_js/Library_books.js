@@ -1,5 +1,5 @@
 let booksData = {}; // Object to store books by ID
-let bookNamesSet = new Set(); // Set to store book names
+let bookNamesSet = new Set(); 
 
 async function refreshBooksData() {
   document.getElementById('searchBar').value = '';
@@ -349,68 +349,93 @@ async function editBook(bookID) {
     });
 }
 
-async function searchLibraryBookDetails() {
-  const searchTerm = document.getElementById("searchBar").value.trim();
+// async function searchLibraryBookDetails() {
+//   const searchTerm = document.getElementById("searchBar").value.trim();
+
+//   // Check if the search term is empty
+//   if (!searchTerm) {
+//     if (libraryBooksSearchField !== document.activeElement) {
+//       showToast("Please enter a search term.", true);
+//     }
+//     refreshLibraryBooksData();
+//     return;
+//   }
+
+//   // Fetch data from the server based on the search term
+//   await fetch(`/library/books/search?search=${encodeURIComponent(searchTerm)}`)
+//     .then((response) => response.json())
+//     .then((data) => {
+//       const libraryBooksTableBody = document.getElementById("booksTablebody");
+//       libraryBooksTableBody.innerHTML = ""; // Clear previous data
+
+//       if (data.length === 0) {
+//         // If no results found, display a message
+//         const noResultsRow = document.createElement("tr");
+//         noResultsRow.innerHTML = '<td colspan="5">No results found</td>';
+//         libraryBooksTableBody.appendChild(noResultsRow);
+//       } else {
+//         // Append book data to the table
+//         data.forEach((book) => {
+//           const row = document.createElement("tr");
+//           row.innerHTML = `
+//               <td>${book.bookID}</td>
+//               <td>${book.book_name}</td>
+//               <td>${book.book_author}</td>
+//               <td>${book.book_publication}</td>
+//               <td>${book.book_price}</td>
+//               <td>${book.ordered_quantity}</td>
+//               <td>${book.description}</td>
+//               <td style="text-align: center;">
+//                   <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+//                             <button 
+//                                 onclick="editBook('${book.bookID}')"
+//                                 onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+//                                 onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+//                                     <img src="../images/edit.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+//                                     <span style="margin-right: 10px;">Edit</span>
+//                             </button>
+//                             <button
+//                                 onclick="deleteBook('${book.bookID}')"
+//                                 onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+//                                 onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+//                                     <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+//                                     <span style="margin-right: 10px;">Delete</span>
+//                             </button>
+//                 </div>
+//               </td>
+//             `;
+//           libraryBooksTableBody.appendChild(row);
+//         });
+//       }
+//     })
+//     .catch((error) => {
+//       console.error("Error:", error);
+//     });
+// }
+function searchLibraryBookDetails() {
+  const searchTerm = document.getElementById("searchBar").value.trim().toLowerCase();
 
   // Check if the search term is empty
   if (!searchTerm) {
-    if (libraryBooksSearchField !== document.activeElement) {
-      showToast("Please enter a search term.", true);
-    }
-    refreshLibraryBooksData();
-    return;
+      // showToast("Please enter a search term.", true);
+      displayBooks(Object.values(booksData)); // Display all books
+      return;
   }
 
-  // Fetch data from the server based on the search term
-  await fetch(`/library/books/search?search=${encodeURIComponent(searchTerm)}`)
-    .then((response) => response.json())
-    .then((data) => {
-      const libraryBooksTableBody = document.getElementById("booksTablebody");
-      libraryBooksTableBody.innerHTML = ""; // Clear previous data
+  // Filter the books data based on the search term
+  const filteredBooks = Object.values(booksData).filter(book =>
+      book.bookID.toLowerCase().includes(searchTerm) ||
+      book.book_name.toLowerCase().includes(searchTerm) 
+  );
 
-      if (data.length === 0) {
-        // If no results found, display a message
-        const noResultsRow = document.createElement("tr");
-        noResultsRow.innerHTML = '<td colspan="5">No results found</td>';
-        libraryBooksTableBody.appendChild(noResultsRow);
-      } else {
-        // Append book data to the table
-        data.forEach((book) => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-              <td>${book.bookID}</td>
-              <td>${book.book_name}</td>
-              <td>${book.book_author}</td>
-              <td>${book.book_publication}</td>
-              <td>${book.book_price}</td>
-              <td>${book.ordered_quantity}</td>
-              <td>${book.description}</td>
-              <td style="text-align: center;">
-                  <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
-                            <button 
-                                onclick="editBook('${book.bookID}')"
-                                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                                    <img src="../images/edit.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-                                    <span style="margin-right: 10px;">Edit</span>
-                            </button>
-                            <button
-                                onclick="deleteBook('${book.bookID}')"
-                                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                                    <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-                                    <span style="margin-right: 10px;">Delete</span>
-                            </button>
-                </div>
-              </td>
-            `;
-          libraryBooksTableBody.appendChild(row);
-        });
-      }
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+  // Display the filtered data
+  displayBooks(filteredBooks);
+
+  // Check if no results were found
+  if (filteredBooks.length === 0) {
+      const libraryBooksTableBody = document.getElementById("booksTablebody");
+      libraryBooksTableBody.innerHTML = '<tr><td colspan="8">No results found</td></tr>';
+  }
 }
 
 function deleteBook(bookId) {
