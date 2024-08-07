@@ -60,16 +60,100 @@
   <nav class="sidebar">
     <div class="menu_content">
       <ul class="menu_items">
-        <div class="menu_title menu_dahsboard"></div>
+
+        <div class="menu_title menu_dahsboard_1"></div>
         <!-- duplicate or remove this li tag if you want to add or remove navlink with submenu -->
         <!-- start -->
 
         <li class="item">
-          <a href="/pre_adm_dashboard" class="nav_link">
+          <div href="" class="nav_link submenu_item">
             <span class="navlink_icon">
-              <img src="/images/register.png" alt="Custom Icon" class="custom_icon">
+              <img src="/images/students.png" alt="Custom Icon" class="custom_icon">
             </span>
-            <span class="navlink" style="margin-top: -8px">Register</span>
+            <span class="navlink">Students</span>
+            <i class="bx bx-chevron-right arrow-left"></i>
+          </div>
+  
+          <ul class="menu_items submenu">
+            <a href="/inventory/purchase" id="purchaseLink" class="nav_link sublink">
+              <span class="navlink_icon">
+                <img src="/images/enroll.png" alt="Billing Icon" class="custom_icon">
+              </span>
+              Enroll
+            </a>
+            <!--<a href="/inventory/billing" class="nav_link sublink">
+              <span class="navlink_icon">
+                <img src="/images/invoice.png" alt="Store Icon" class="custom_icon">
+              </span>
+              Billing
+            </a> -->
+          </ul>
+        </li>
+
+
+        <li class="item">
+          <a href="" class="nav_link">
+            <span class="navlink_icon">
+              <img src="/images/teacher.png" alt="Custom Icon" class="custom_icon">
+            </span>
+            <span class="navlink" style="margin-top: -8px">Teachers</span>
+          </a>
+        </li>
+
+        <li class="item">
+          <a href="" class="nav_link">
+            <span class="navlink_icon">
+              <img src="/images/staff.png" alt="Custom Icon" class="custom_icon">
+            </span>
+            <span class="navlink" style="margin-top: -8px">Administrative Staff</span>
+          </a>
+        </li>
+
+        <div class="menu_title menu_dahsboard_2"></div>
+        <!-- duplicate or remove this li tag if you want to add or remove navlink with submenu -->
+        <!-- start -->
+
+        <li class="item">
+          <div href="" class="nav_link submenu_item">
+            <span class="navlink_icon">
+              <img src="/images/fees.png" alt="Custom Icon" class="custom_icon">
+            </span>
+            <span class="navlink">Fees</span>
+            <i class="bx bx-chevron-right arrow-left"></i>
+          </div>
+  
+          <ul class="menu_items submenu">
+            <a href="/inventory/purchase" id="purchaseLink" class="nav_link sublink">
+              <span class="navlink_icon">
+                <img src="/images/fee_structure.png" alt="Billing Icon" class="custom_icon">
+              </span>
+              Fee Structure
+            </a>
+            <a href="/inventory/billing" class="nav_link sublink">
+              <span class="navlink_icon">
+                <img src="/images/payments.png" alt="Store Icon" class="custom_icon">
+              </span>
+              Payments
+            </a>
+          </ul>
+        </li>
+
+
+        <li class="item">
+          <a href="" class="nav_link">
+            <span class="navlink_icon">
+              <img src="/images/exams.png" alt="Custom Icon" class="custom_icon">
+            </span>
+            <span class="navlink" style="margin-top: -8px">Exam</span>
+          </a>
+        </li>
+
+        <li class="item">
+          <a href="" class="nav_link">
+            <span class="navlink_icon">
+              <img src="/images/events.png" alt="Custom Icon" class="custom_icon">
+            </span>
+            <span class="navlink" style="margin-top: -8px">Events</span>
           </a>
         </li>
 
@@ -112,7 +196,7 @@
     </ul>
 
     <ul class="menu_items">
-      <div class="menu_title menu_editor"></div>
+      <div class="menu_title menu_dahsboard_3"></div>
       <!-- duplicate these li tag if you want to add or remove navlink only -->
       <!-- Start -->
       <li class="item">
@@ -160,9 +244,23 @@
           <span class="navlink_icon">
             <img src="/images/school_bus.png" alt="Custom Icon" class="custom_icon">
           </span>
-          <span class="navlink" style="margin-top: -8px">School Bus</span>
+          <span class="navlink" style="margin-top: -8px">Transport</span>
         </a>
       </li>
+
+
+      <div class="menu_title menu_dahsboard_4"></div>
+      <!-- duplicate or remove this li tag if you want to add or remove navlink with submenu -->
+      <!-- start -->
+      <li class="item">
+        <a href="/pre_adm_dashboard" class="nav_link">
+          <span class="navlink_icon">
+            <img src="/images/register.png" alt="Custom Icon" class="custom_icon">
+          </span>
+          <span class="navlink" style="margin-top: -8px">Pre Admission</span>
+        </a>
+      </li>
+
       <!--
           <li class="item">
             <a href="#" class="nav_link">
@@ -213,6 +311,8 @@
         </ul>
 
         -->
+
+      
 
       <!-- Sidebar Open / Close -->
       <div class="bottom_content" id="logoutButton">

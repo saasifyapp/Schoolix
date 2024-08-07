@@ -276,19 +276,24 @@ body.dark {
     white-space: nowrap;
 }
 
-.menu_dahsboard::before {
+.menu_dahsboard_1::before {
+    content: "User Management";
+    font-weight: 500;
+}
+
+.menu_dahsboard_2::before {
     content: "Academics";
     font-weight: 500;
 }
 
-.menu_editor::before {
+.menu_dahsboard_3::before {
     content: "Services";
     font-weight: 500;
 
 }
 
-.menu_setting::before {
-    content: "Setting";
+.menu_dahsboard_4::before {
+    content: "Others";
 }
 
 .sidebar.close .menu_title::before {
