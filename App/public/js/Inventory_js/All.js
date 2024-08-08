@@ -84,6 +84,27 @@ function showToast(message, isError) {
   }, 4000);
 }
 
+function showBigToast(message, isError = false) {
+  const toast = document.getElementById("bigToast");
+  const messageElement = document.getElementById("bigToastMessage");
+
+  // Set the message and type
+  messageElement.textContent = message;
+  toast.classList.remove("hidden");
+  toast.classList.remove("error", "success");
+  toast.classList.add(isError ? "error" : "success");
+}
+
+function hideBigToast() {
+  const toast = document.getElementById("bigToast");
+  toast.classList.add("hidden");
+}
+
+// Example usage
+// showBigToast("This is a big error message", true);
+// showBigToast("This is a big success message", false);
+
+
 document.getElementById("logoutButton").addEventListener("click", function () {
   // Make an AJAX request to logout route
   const confirmation = confirm(`Are you sure you want to logout ?`);

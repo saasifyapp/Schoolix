@@ -37,7 +37,7 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
         console.log('Response data:', data); // Log the response data to the console
 
         if (data.error) {
-            alert(data.error);
+            showToast(data.error);
         } else {
             const lottieContainer = document.getElementById('lottieContainer');
             const detailsContainer = document.getElementById('detailsContainer');
@@ -188,7 +188,7 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
     })
     .catch(error => {
         console.error('Error fetching details:', error);
-        alert('Error fetching details');
+        showToast('Error fetching details', true);
     });
 });
 
@@ -200,7 +200,7 @@ function handleReturn(id, returnDate) {
 
     // Compare the formatted dates
     if (formattedReturnDate < formattedCurrentDate) {
-        alert('You need to pay a penalty for returning this book late.');
+        showBigToast('You need to pay a penalty for returning this book late.');
         return;
     }
 
@@ -215,16 +215,16 @@ function handleReturn(id, returnDate) {
     .then(response => response.json())
     .then(data => {
         if (data.error) {
-            alert(data.error);
+            showToast(data.error);
         } else {
-            alert(data.message);
+            showToast(data.message);
             // Optionally, refresh the table or remove the returned book from the table
             document.querySelector(`tr[data-id="${id}"]`).remove();
         }
     })
     .catch(error => {
         console.error('Error returning book:', error);
-        alert('Error returning book');
+        showToast('Error returning book', true);
     });
 }
 

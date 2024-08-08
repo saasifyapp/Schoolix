@@ -48,6 +48,17 @@
             <h2>Library Console</h2>
         </div>
     </div>
+    <div id="toast-container" class="toast-container">
+        <div id="toast" class="toast"></div>
+    </div>
+
+    <div id="bigToast" class="big-toast hidden">
+        <div class="big-toast-content">
+            <button id="bigToastClose" onclick="hideBigToast()">X</button>
+            <span id="bigToastMessage"></span>
+        </div>
+    </div>
+
 
     <div class="cards-container">
         <div class="card">
@@ -277,7 +288,7 @@
             </div>
         </div>
     </div>
-    
+
 
     <!-- Overlay for selecting Add or Search Member -->
     <div id="manageMemberOverlay" class="overlay">
@@ -336,7 +347,8 @@
 
                         <div class="form-row">
                             <div class="form-group">
-                                <select id="classFilter" name="classFilter" class="form-control custom-select" style="text-align: center;" required>
+                                <select id="classFilter" name="classFilter" class="form-control custom-select"
+                                    style="text-align: center;" required>
                                     <option value="" disabled selected style="display:none;">Select Class</option>
                                     <option value="Nursery">Nursery</option>
                                     <option value="KG1">KG-1</option>
@@ -370,7 +382,7 @@
                             </div>
                         </button> -->
 
-                        
+
                         <button class="getDetails-button" type="submit">
                             <img src="../images/addmemberbtn.png" alt="">
                             <span>Add Member</span>
@@ -390,12 +402,13 @@
             <div class="search-container">
                 <div class="form-Searchgroup">
                     <div class="form-Searchgroup">
-                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px; left: 405px;">
-                        <input type="text" class="form-control" id="searchMemberInput" name="memberSearch" placeholder=" "
-                            oninput="searchMemberDetails()" style="width: 400px;">
+                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon"
+                            style="right: 25px; left: 405px;">
+                        <input type="text" class="form-control" id="searchMemberInput" name="memberSearch"
+                            placeholder=" " oninput="searchMemberDetails()" style="width: 400px;">
                         <span class="form-control-placeholder" style="left: 3.75rem;">Search by student name</span>
                     </div>
-    
+
                     <button class="refreshButton" onclick="refreshMembersData()" style="margin-top: 10px;">
                         <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
                     </button>
@@ -423,7 +436,7 @@
             </div>
         </div>
     </div>
-    
+
 
 
     <!-- Transaction Tracker Overlay -->
@@ -485,7 +498,7 @@
                             <img src="../images/conform.png" alt="">
                             <span>Get Details</span>
                         </button>
-                        
+
                     </form>
                 </div>
                 <div class="right" style="flex: 1;">
@@ -586,10 +599,14 @@
                 </form>
                 <div class="details-and-table-container">
                     <div id="lottieContainer">
-                        <dotlottie-player src="https://lottie.host/e4077a4b-4ff4-4f20-ba86-8e18a37aefac/sN8rCK2edJ.json" background="transparent" speed="1" style="width: 500px; height: 400px;" loop autoplay></dotlottie-player>
+                        <dotlottie-player src="https://lottie.host/e4077a4b-4ff4-4f20-ba86-8e18a37aefac/sN8rCK2edJ.json"
+                            background="transparent" speed="1" style="width: 500px; height: 400px;" loop
+                            autoplay></dotlottie-player>
                     </div>
-                    <div id="detailsContainer" class="details-container" style="display: none;"></div> <!-- Container for details -->
-                    <div id="tableContainer" class="table-container" style="width: 100%; margin-bottom: 10rem; margin-top: -2rem; display: none;">
+                    <div id="detailsContainer" class="details-container" style="display: none;"></div>
+                    <!-- Container for details -->
+                    <div id="tableContainer" class="table-container"
+                        style="width: 100%; margin-bottom: 10rem; margin-top: -2rem; display: none;">
                         <table class="details-table styled-table">
                             <thead>
                                 <tr id="tableHeaders">
@@ -605,7 +622,7 @@
             </div>
         </div>
     </div>
-    
+
 
 
 
@@ -615,15 +632,19 @@
     <div id="searchTransactionOverlay" class="overlay-search">
         <div class="overlay-content-search">
             <button id="closeSearchTransactionOverlay" class="close-button">×</button>
-            <img src="/images/searchtransactionlib.png" alt="Overlay Icon" class="overlay-icon" style="height: 40px; width: 40px;"> <!-- Add your icon here -->
+            <img src="/images/searchtransactionlib.png" alt="Overlay Icon" class="overlay-icon"
+                style="height: 40px; width: 40px;"> <!-- Add your icon here -->
             <h2 class="overlay-search-head" style="text-align: center;">Search Transactions</h2>
-            <div class="search-container" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+            <div class="search-container"
+                style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
                 <div class="form-Searchgroup" style="display: flex; align-items: center;">
                     <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="margin-right: 10px;">
-                    <input type="text" class="form-control" id="searchTransactionInput" name="transactionSearch" placeholder=" " oninput="searchTransactionDetails()" style="width: 400px;">
+                    <input type="text" class="form-control" id="searchTransactionInput" name="transactionSearch"
+                        placeholder=" " oninput="searchTransactionDetails()" style="width: 400px;">
                     <span class="form-control-placeholder" style="left: 3.75rem;">Search Transactions...</span>
                 </div>
-                <button class="refreshButton" onclick="refreshTransactionData()" style="margin-left: 10px; margin-top: 10px;">
+                <button class="refreshButton" onclick="refreshTransactionData()"
+                    style="margin-left: 10px; margin-top: 10px;">
                     <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
                 </button>
             </div>
@@ -676,7 +697,7 @@
             </div>
         </div>
     </div>
-    
+
 
     <!-- Penalty Processor Overlay -->
     <div id="penaltyProcessorOverlay" class="overlay-search">
@@ -691,7 +712,9 @@
                 <div class="form-Searchgroup">
                     <div class="form-Searchgroup">
                         <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
-                        <input type="text" class="form-control penaltysearch" id="searchBar" name="transactionSearch" placeholder=" " oninput="searchPenaltyTransactions()" style="width: 400px; height: 1.7rem !important;">
+                        <input type="text" class="form-control penaltysearch" id="searchBar" name="transactionSearch"
+                            placeholder=" " oninput="searchPenaltyTransactions()"
+                            style="width: 400px; height: 1.7rem !important;">
                         <span class="form-control-placeholder" style="left: 3.75rem;">Search Penalty...</span>
                     </div>
                     <button class="refreshButton" onclick="fetchPenaltyDetails()" style="margin-top: 10px;">
@@ -718,7 +741,7 @@
             </div>
         </div>
     </div>
-    
+
 
 
     <!-- Report Overlay -->

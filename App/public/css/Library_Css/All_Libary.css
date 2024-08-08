@@ -492,3 +492,97 @@ body {
         transform: translateY(0);
     }
 }
+
+/* Toast container to hold multiple toasts */
+.toast-container {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    z-index: 9999;
+}
+
+/* Toast CSS */
+.toast {
+    width: 15rem;
+    margin-bottom: 10px;
+    background-color: #4CAF50; /* Green background */
+    color: white;
+    padding: 16px;
+    border-radius: 8px;
+    display: none; 
+    animation: slideInRight 0.5s forwards; /* Slide in animation */
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+.toast.error {
+    background-color: #f44336; /* Red background for error */
+}
+
+/* Big Toast Styles */
+.big-toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #333;
+    color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 9999; /* High z-index to ensure it is on top of most elements */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 80%;
+    width: auto;
+    text-align: center;
+}
+
+.big-toast-content {
+    position: relative;
+}
+
+.big-toast-content #bigToastClose {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.big-toast.hidden {
+    display: none;
+}
+
+.big-toast.error {
+    background-color: #e74c3c; /* Red for errors */
+}
+
+.big-toast.success {
+    background-color: #2ecc71; /* Green for success */
+}
+

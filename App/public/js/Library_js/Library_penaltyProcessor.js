@@ -27,7 +27,7 @@ function fetchPenaltyDetails() {
     })
     .catch(error => {
         console.error('Error fetching penalties:', error);
-        alert('Error fetching penalties');
+        showToast('Error fetching penalties', true);
     });
 }
 
@@ -156,12 +156,12 @@ function payPenalty(transactionID, penaltyAmount) {
     })
     .then(response => response.json())
     .then(data => {
-        alert(data.message);
+        showBigToast(data.message);
         // Optionally, refresh the penalty list
         fetchPenaltyDetails();
     })
     .catch(error => {
         console.error('Error paying penalty:', error);
-        alert('Error paying penalty');
+        showToast('Error paying penalty', true);
     });
 }
