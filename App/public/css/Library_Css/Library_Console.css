@@ -900,4 +900,5 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    mix-blend-mode: multiply;
 }

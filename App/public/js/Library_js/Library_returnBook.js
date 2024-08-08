@@ -99,7 +99,17 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
                         <td>${issue.book_publication}</td>
                         <td>${issue.issue_date}</td>
                         <td>${issue.return_date}</td>
-                        <td><button class="return-button" data-id="${issue.id}" data-return-date="${issue.return_date}">Return</button></td>
+                        <td><button class="return-button" 
+        data-id="${issue.id}" 
+        data-return-date="${issue.return_date}"
+        style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s; margin-bottom: 10px;"
+        onclick="handleReturn('${issue.id}', '${issue.return_date}')"
+        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)'; this.style.backgroundColor='#76D7C4';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)'; this.style.backgroundColor='transparent';">
+    <img src="../images/returnbook.png" alt="Return" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+    <span style="margin-right: 10px;">Return</span>
+</button>
+</td>
                     `;
                     tableBody.appendChild(row);
                 });
@@ -125,7 +135,42 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
                         <td>${issue.member_contact}</td>
                         <td>${issue.issue_date}</td>
                         <td>${issue.return_date}</td>
-                        <td><button class="return-button" data-id="${issue.id}" data-return-date="${issue.return_date}">Return</button></td>
+                        <td><button class="return-button" 
+        data-id="${issue.id}" 
+        data-return-date="${issue.return_date}"
+        style="background-color: transparent; 
+               border: none; 
+               color: black; 
+               padding: 0; 
+               text-align: center; 
+               text-decoration: none; 
+               display: inline-flex; 
+               align-items: center; 
+               justify-content: center; 
+               font-size: 14px; 
+               cursor: pointer; 
+               max-height: 100%; 
+               border-radius: 20px; 
+               box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+               transition: transform 0.2s, 
+                           box-shadow 0.2s, 
+                           background-color 0.2s; 
+               margin-bottom: 10px;"
+        onclick="handleReturn('${issue.id}', '${issue.return_date}')"
+        onmouseover="this.style.transform='scale(1.05)'; 
+                     this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)'; 
+                     this.style.backgroundColor='#76D7C4';"
+        onmouseout="this.style.transform='scale(1)'; 
+                    this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)'; 
+                    this.style.backgroundColor='transparent';">
+    <img src="../images/returnbook.png" alt="Return" 
+         style="width: 25px; 
+                height: 25px; 
+                border-radius: 0px; 
+                margin: 5px;">
+    <span style="margin-right: 10px;">Return</span>
+</button>
+</td>
                     `;
                     tableBody.appendChild(row);
                 });
