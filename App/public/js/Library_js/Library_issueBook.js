@@ -30,28 +30,28 @@ document.getElementById('issueBookForm').addEventListener('submit', function(eve
     })
     .catch(error => {
         console.error('Error fetching details:', error);
-        alert('Error fetching details');
+        showToast('Error fetching details', true);
     });
 });
 
 function handleErrors(data) {
     if (data.error === 'Multiple issues found') {
-        let alertMessage = 'Multiple issues found:\n\n';
+        let showToastMessage = 'Multiple issues found:\n\n';
         if (data.memberError) {
-            alertMessage += `Student Issue:\nEnrollment No: ${data.memberError.details.studentEnrollmentNo}\nName: ${data.memberError.details.member_name}\nClass: ${data.memberError.details.member_class}\n\n`;
+            showToastMessage += `Student Issue:\nEnrollment No: ${data.memberError.details.studentEnrollmentNo}\nName: ${data.memberError.details.member_name}\nClass: ${data.memberError.details.member_class}\n\n`;
         }
         if (data.bookError) {
-            alertMessage += `Book Issue:\nEnrollment No: ${data.bookError.details.bookEnrollmentNo}\nName: ${data.bookError.details.book_name}\nAuthor: ${data.bookError.details.book_author}\nPublication: ${data.bookError.details.book_publication}`;
+            showToastMessage += `Book Issue:\nEnrollment No: ${data.bookError.details.bookEnrollmentNo}\nName: ${data.bookError.details.book_name}\nAuthor: ${data.bookError.details.book_author}\nPublication: ${data.bookError.details.book_publication}`;
         }
-        alert(alertMessage);
+        showBigToast(showToastMessage);
     } else if (data.error === 'Maximum books issued to this student') {
-        alert(`Student Issue:\n\nMaximum books issued to this student.\n\nEnrollment No: ${data.details.studentEnrollmentNo}\nName: ${data.details.member_name}\nClass: ${data.details.member_class}`);
+        showBigToast(`Student Issue:\n\nMaximum books issued to this student.\n\nEnrollment No: ${data.details.studentEnrollmentNo}\nName: ${data.details.member_name}\nClass: ${data.details.member_class}`);
     } else if (data.error === 'Book currently unavailable!') {
-        alert(`Book Issue:\n\nBook currently unavailable!\n\nEnrollment No: ${data.details.bookEnrollmentNo}\nName: ${data.details.book_name}\nAuthor: ${data.details.book_author}\nPublication: ${data.details.book_publication}`);
+        showBigToast(`Book Issue:\n\nBook currently unavailable!\n\nEnrollment No: ${data.details.bookEnrollmentNo}\nName: ${data.details.book_name}\nAuthor: ${data.details.book_author}\nPublication: ${data.details.book_publication}`);
     } else if (data.error === 'Book already issued to this member') {
-        alert(`Member ID: ${data.details.studentEnrollmentNo}\nStudent Name: ${data.details.member_name}\nClass: ${data.details.member_class}\n\nBook ID: ${data.details.bookEnrollmentNo}\nBook Name: ${data.details.book_name}\nAuthor: ${data.details.book_author}\n\nThis member has already been issued with the above book. Please proceed with return to issue again.`);
+        showBigToast(`Member ID: ${data.details.studentEnrollmentNo}\nStudent Name: ${data.details.member_name}\nClass: ${data.details.member_class}\n\nBook ID: ${data.details.bookEnrollmentNo}\nBook Name: ${data.details.book_name}\nAuthor: ${data.details.book_author}\n\nThis member has already been issued with the above book. Please proceed with return to issue again.`);
     } else {
-        alert(data.error);
+        showBigToast(data.error);
     }
 }
 
@@ -127,9 +127,9 @@ document.getElementById('additionalInfoForm').addEventListener('submit', functio
     .then(response => response.json())
     .then(data => {
         if (data.error) {
-            alert(data.error);
+            showToast(data.error, true);
         } else {
-            alert(data.message);
+            showToast(data.message, false);
 
             // Reset both forms
             document.getElementById('issueBookForm').reset();
@@ -152,6 +152,6 @@ document.getElementById('additionalInfoForm').addEventListener('submit', functio
     })
     .catch(error => {
         console.error('Error issuing book:', error);
-        alert('Error issuing book');
+        showToast('Error issuing book', true);
     });
 });

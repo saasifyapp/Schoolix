@@ -53,23 +53,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const orderedQuantity = formatInput(document.getElementById('orderedQuantity').value);
     const description = formatInput(document.getElementById('description').value);
 
-    const btn = document.querySelector("#btn");
-    const btnText = document.querySelector("#btnText");
+    // const btn = document.querySelector("#btn");
+    // const btnText = document.querySelector("#btnText");
 
     // Check if any field is empty
     const fields = [bookID, bookName, authorName, bookPublication, bookPrice, orderedQuantity, description];
     if (fields.some(field => field === '')) {
-      alert('All fields are required.');
+      showToast('All fields are required.', true);
       return;
     }
 
     // Check for duplicate book ID or name
     if (isDuplicateBookID(bookID)) {
-      alert('Book ID already exists.');
+      showToast('Book ID already exists.', true);
       return;
     }
     if (isDuplicateBookName(bookName)) {
-      alert('Book name already exists.');
+      showToast('Book name already exists.', true);
       return;
     }
 
@@ -94,16 +94,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (response.ok) {
         // Trigger button animation
-        btnText.innerHTML = "Saved";
-        btn.classList.add("active");
+        // btnText.innerHTML = "Saved";
+        // btn.classList.add("active");
         addBookForm.reset();
+        showToast("Book added Successfully.", false)
         refreshBooksData(); // Refresh data after adding book
       } else {
         throw new Error('Failed to add book');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred while adding the book.');
+      showToast('An error occurred while adding the book.', true);
     }
   });
 });
@@ -196,6 +197,167 @@ function displayBooks(data) {
 }
 
 // Function to edit a book
+// async function editBook(bookID) {
+//   let newBookDetails = {};
+
+//   await fetch(`/library/book/${encodeURIComponent(bookID)}`)
+//     .then((response) => {
+//       if (!response.ok) {
+//         throw new Error("Failed to retrieve book details.");
+//       }
+//       return response.json();
+//     })
+//     .then((data) => {
+//       newBookDetails = data; // Initialize newBookDetails with fetched data
+
+//       // Create custom prompt
+//       const customPrompt = document.createElement("div");
+//       customPrompt.classList.add("custom-prompt");
+      
+//         customPrompt.innerHTML = `
+//             <div class="prompt-content">                
+//                 <h2>Edit Book: ${newBookDetails.book_name}</h2>
+//                 <form id="editBookForm">
+//                     <div class="form-group">
+//                         <input type="text" class="form-control" id="editBookID" name="editBookID" value="${newBookDetails.bookID}" readonly style="width:6rem; text-align: center;" placeholder=" ">
+//                         <span class="form-control-placeholder">Book ID</span>
+//                     </div>
+//                     <div class="form-group">
+//                         <input type="text" class="form-control" id="editBookName" name="editBookName" value="${newBookDetails.book_name}" required style="width:6rem; text-align: center;" placeholder=" ">
+//                         <span class="form-control-placeholder">Book Name</span>
+//                     </div>
+//                     <div class="form-group">
+//                         <input type="text" class="form-control" id="editBookAuthor" name="editBookAuthor" value="${newBookDetails.book_author}" required style="width:6rem; text-align: center;" placeholder=" ">
+//                         <span class="form-control-placeholder">Author</span>
+//                     </div>
+//                     <div class="form-group">
+//                         <input type="text" class="form-control" id="editBookPublication" name="editBookPublication" value="${newBookDetails.book_publication}" required style="width:6rem; text-align: center;" placeholder=" ">
+//                         <span class="form-control-placeholder">Publication</span>
+//                     </div>
+//                     <div class="form-group">
+//                         <input type="number" class="form-control" id="editBookPrice" name="editBookPrice" value="${newBookDetails.book_price}" step="0.01" required style="width:6rem; text-align: center;" placeholder=" ">
+//                         <span class="form-control-placeholder">Price</span>
+//                     </div>
+//                     <div class="form-group-inline" >
+//                         <div class="form-group">
+//                             <input type="number" class="form-control" id="editOrderedQuantity" name="editOrderedQuantity" value="${newBookDetails.ordered_quantity}" readonly style="width:6rem; text-align: center;" placeholder=" ">
+//                             <span class="form-control-placeholder">Previously Ordered</span>
+//                         </div>
+//                         <div class="form-group">
+//                             <input type="number" class="form-control" id="editNewOrderedQuantity" name="editNewOrderedQuantity" value="0" required style="width:6rem; text-align: center;" placeholder=" ">
+//                             <span class="form-control-placeholder">New Ordered</span>
+//                         </div>
+//                     </div>
+//                     <div class="form-group">
+//                         <textarea id="editDescription" class="form-control" name="editDescription" required style="width:6rem; text-align: center;" placeholder=" ">${newBookDetails.description}</textarea>
+//                         <span class="form-control-placeholder" style="top:-0.7rem;">Description</span>
+//                     </div>
+//                     <div class="button-group">
+//                         <button id="saveButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+//                                 onclick=""
+//                                 onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+//                                 onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+//                             <img src="../images/conform.png" alt="Save" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+//                             <span style="margin-right: 10px;">Save</span>
+//                         </button>
+                        
+//                         <button id="cancelButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+//                                 onclick=""
+//                                 onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+//                                 onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+//                             <img src="../images/cancel.png" alt="Cancel" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+//                             <span style="margin-right: 10px;">Cancel</span>
+//                         </button>
+//                     </div>
+//                 </form>
+//             </div>
+//         `;
+    
+    
+      
+//       // editPromptContent();
+//       document.body.appendChild(customPrompt);
+
+//       // Add event listener to the cancel button
+//     customPrompt.querySelector("#cancelButton").addEventListener("click", () => {
+//       customPrompt.remove();
+//   });
+
+//       // Add event listener to form submission
+//       const editBookForm = customPrompt.querySelector("#editBookForm");
+//       editBookForm.addEventListener("submit", async (e) => {
+//         e.preventDefault();
+
+//         // Collect updated book details and format them
+//         const updatedBookDetails = {
+//           bookID: bookID,
+//           book_name: formatInput(editBookForm.editBookName.value),
+//           book_author: formatInput(editBookForm.editBookAuthor.value),
+//           book_publication: formatInput(editBookForm.editBookPublication.value),
+//           book_price: formatInput(editBookForm.editBookPrice.value),
+//           ordered_quantity: Number(editBookForm.editOrderedQuantity.value) + Number(editBookForm.editNewOrderedQuantity.value),
+//           new_ordered_quantity: Number(editBookForm.editNewOrderedQuantity.value),
+//           description: formatInput(editBookForm.editDescription.value),
+//         };
+
+//         // Check if any field has been changed and log each comparison
+//         const changesMade = Object.keys(updatedBookDetails).some((key) => {
+//           const originalValue = newBookDetails[key]?.toString();
+//           const updatedValue = updatedBookDetails[key]?.toString();
+
+//           return updatedValue !== originalValue;
+//         });
+
+//         if (!changesMade) {
+//           showToast("No changes have been made.", true);
+//           return;
+//         }
+//         // Validate that no fields are empty
+//         const fields = Object.values(updatedBookDetails);
+//         if (fields.some(field => field === '')) {
+//           showToast('All fields are required.', true);
+//           return;
+//         }
+
+//         // Check for duplicate book name
+//         if (isDuplicateBookName(updatedBookDetails.book_name) && updatedBookDetails.book_name !== newBookDetails.book_name) {
+//           showToast('Book name already exists.', true);
+//           return;
+//         }
+
+//         // Send updated book details to server
+//         try {
+//           const response = await fetch(
+//             `/library/book/${encodeURIComponent(bookID)}`,
+//             {
+//               method: "PUT",
+//               headers: {
+//                 "Content-Type": "application/json",
+//               },
+//               body: JSON.stringify(updatedBookDetails),
+//             }
+//           );
+
+//           if (response.ok) {
+//             showToast("Book updated successfully", false);
+//             customPrompt.remove();
+//             refreshBooksData(); // Refresh the books list
+//           } else {
+//             throw new Error("Failed to update book");
+//           }
+//         } catch (error) {
+//           console.error("Error updating book:", error);
+//           showToast("An error occurred while updating the book.", true);
+//         }
+//       });
+//     })
+//     .catch((error) => {
+//       console.error("Error retrieving book details:", error);
+//       // Handle error if needed
+//     });
+// }
+
+// Function to display the edit book form
 async function editBook(bookID) {
   let newBookDetails = {};
 
@@ -212,137 +374,78 @@ async function editBook(bookID) {
       // Create custom prompt
       const customPrompt = document.createElement("div");
       customPrompt.classList.add("custom-prompt");
-      const editPromptContent = () => {
-        customPrompt.innerHTML = `
-            <div class="prompt-content">                
-                <h2>Edit Book: ${newBookDetails.book_name}</h2>
-                <form id="editBookForm">
+
+      customPrompt.innerHTML = `
+        <div class="prompt-content">                
+            <h2>Edit Book: ${newBookDetails.book_name}</h2>
+            <form id="editBookForm">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="editBookID" name="editBookID" value="${newBookDetails.bookID}" readonly style="width:6rem; text-align: center;" placeholder=" ">
+                    <span class="form-control-placeholder">Book ID</span>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="editBookName" name="editBookName" value="${newBookDetails.book_name}" required style="width:6rem; text-align: center;" placeholder=" ">
+                    <span class="form-control-placeholder">Book Name</span>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="editBookAuthor" name="editBookAuthor" value="${newBookDetails.book_author}" required style="width:6rem; text-align: center;" placeholder=" ">
+                    <span class="form-control-placeholder">Author</span>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="editBookPublication" name="editBookPublication" value="${newBookDetails.book_publication}" required style="width:6rem; text-align: center;" placeholder=" ">
+                    <span class="form-control-placeholder">Publication</span>
+                </div>
+                <div class="form-group">
+                    <input type="number" class="form-control" id="editBookPrice" name="editBookPrice" value="${newBookDetails.book_price}" step="0.01" required style="width:6rem; text-align: center;" placeholder=" ">
+                    <span class="form-control-placeholder">Price</span>
+                </div>
+                <div class="form-group-inline" >
                     <div class="form-group">
-                        <input type="text" class="form-control" id="editBookID" name="editBookID" value="${newBookDetails.bookID}" readonly style="width:6rem; text-align: center;" placeholder=" ">
-                        <span class="form-control-placeholder">Book ID</span>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="editBookName" name="editBookName" value="${newBookDetails.book_name}" required style="width:6rem; text-align: center;" placeholder=" ">
-                        <span class="form-control-placeholder">Book Name</span>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="editBookAuthor" name="editBookAuthor" value="${newBookDetails.book_author}" required style="width:6rem; text-align: center;" placeholder=" ">
-                        <span class="form-control-placeholder">Author</span>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="editBookPublication" name="editBookPublication" value="${newBookDetails.book_publication}" required style="width:6rem; text-align: center;" placeholder=" ">
-                        <span class="form-control-placeholder">Publication</span>
-                    </div>
-                    <div class="form-group">
-                        <input type="number" class="form-control" id="editBookPrice" name="editBookPrice" value="${newBookDetails.book_price}" step="0.01" required style="width:6rem; text-align: center;" placeholder=" ">
-                        <span class="form-control-placeholder">Price</span>
-                    </div>
-                    <div class="form-group-inline" >
-                        <div class="form-group">
-                            <input type="number" class="form-control" id="editOrderedQuantity" name="editOrderedQuantity" value="${newBookDetails.ordered_quantity}" readonly style="width:6rem; text-align: center;" placeholder=" ">
-                            <span class="form-control-placeholder">Previously Ordered</span>
-                        </div>
-                        <div class="form-group">
-                            <input type="number" class="form-control" id="editNewOrderedQuantity" name="editNewOrderedQuantity" value="0" required style="width:6rem; text-align: center;" placeholder=" ">
-                            <span class="form-control-placeholder">New Ordered</span>
-                        </div>
+                        <input type="number" class="form-control" id="editOrderedQuantity" name="editOrderedQuantity" value="${newBookDetails.ordered_quantity}" readonly style="width:6rem; text-align: center;" placeholder=" ">
+                        <span class="form-control-placeholder">Previously Ordered</span>
                     </div>
                     <div class="form-group">
-                        <textarea id="editDescription" class="form-control" name="editDescription" required style="width:6rem; text-align: center;" placeholder=" ">${newBookDetails.description}</textarea>
-                        <span class="form-control-placeholder" style="top:-0.7rem;">Description</span>
+                        <input type="number" class="form-control" id="editNewOrderedQuantity" name="editNewOrderedQuantity" value="0" required style="width:6rem; text-align: center;" placeholder=" ">
+                        <span class="form-control-placeholder">New Ordered</span>
                     </div>
-                    <div class="button-group">
-                        <button id="saveButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-                                onclick=""
-                                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                            <img src="../images/conform.png" alt="Save" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-                            <span style="margin-right: 10px;">Save</span>
-                        </button>
-                        
-                        <button id="cancelButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-                                onclick=""
-                                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                            <img src="../images/cancel.png" alt="Cancel" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-                            <span style="margin-right: 10px;">Cancel</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        `;
-    };
-    
-      
-      editPromptContent();
+                </div>
+                <div class="form-group">
+                    <textarea id="editDescription" class="form-control" name="editDescription" required style="width:6rem; text-align: center;" placeholder=" ">${newBookDetails.description}</textarea>
+                    <span class="form-control-placeholder" style="top:-0.7rem;">Description</span>
+                </div>
+                <div class="button-group">
+                    <button id="saveButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+                            onclick=""
+                            onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                        <img src="../images/conform.png" alt="Save" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                        <span style="margin-right: 10px;">Save</span>
+                    </button>
+                    
+                    <button id="cancelButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+                            onclick=""
+                            onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                        <img src="../images/cancel.png" alt="Cancel" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                        <span style="margin-right: 10px;">Cancel</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+      `;
+
       document.body.appendChild(customPrompt);
+
+      // Add event listener to the cancel button
+      customPrompt.querySelector("#cancelButton").addEventListener("click", () => {
+        customPrompt.remove();
+      });
 
       // Add event listener to form submission
       const editBookForm = customPrompt.querySelector("#editBookForm");
-      editBookForm.addEventListener("submit", async (e) => {
+      editBookForm.addEventListener("submit", (e) => {
         e.preventDefault();
-
-        // Collect updated book details and format them
-        const updatedBookDetails = {
-          bookID: bookID,
-          book_name: formatInput(editBookForm.editBookName.value),
-          book_author: formatInput(editBookForm.editBookAuthor.value),
-          book_publication: formatInput(editBookForm.editBookPublication.value),
-          book_price: formatInput(editBookForm.editBookPrice.value),
-          ordered_quantity: Number(editBookForm.editOrderedQuantity.value) + Number(editBookForm.editNewOrderedQuantity.value),
-          new_ordered_quantity: Number(editBookForm.editNewOrderedQuantity.value),
-          description: formatInput(editBookForm.editDescription.value),
-        };
-
-        // Check if any field has been changed and log each comparison
-        const changesMade = Object.keys(updatedBookDetails).some((key) => {
-          const originalValue = newBookDetails[key]?.toString();
-          const updatedValue = updatedBookDetails[key]?.toString();
-
-          return updatedValue !== originalValue;
-        });
-
-        if (!changesMade) {
-          alert("No changes have been made.");
-          return;
-        }
-        // Validate that no fields are empty
-        const fields = Object.values(updatedBookDetails);
-        if (fields.some(field => field === '')) {
-          alert('All fields are required.');
-          return;
-        }
-
-        // Check for duplicate book name
-        if (isDuplicateBookName(updatedBookDetails.book_name) && updatedBookDetails.book_name !== newBookDetails.book_name) {
-          alert('Book name already exists.');
-          return;
-        }
-
-        // Send updated book details to server
-        try {
-          const response = await fetch(
-            `/library/book/${encodeURIComponent(bookID)}`,
-            {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(updatedBookDetails),
-            }
-          );
-
-          if (response.ok) {
-            alert("Book updated successfully");
-            customPrompt.remove();
-            refreshBooksData(); // Refresh the books list
-          } else {
-            throw new Error("Failed to update book");
-          }
-        } catch (error) {
-          console.error("Error updating book:", error);
-          alert("An error occurred while updating the book.");
-        }
+        submitEditBookForm(bookID, newBookDetails);
       });
     })
     .catch((error) => {
@@ -350,6 +453,75 @@ async function editBook(bookID) {
       // Handle error if needed
     });
 }
+
+// Function to submit the edit book form
+async function submitEditBookForm(bookID, originalBookDetails) {
+  const editBookForm = document.getElementById("editBookForm");
+  const updatedBookDetails = {
+    bookID: bookID,
+    book_name: formatInput(editBookForm.editBookName.value),
+    book_author: formatInput(editBookForm.editBookAuthor.value),
+    book_publication: formatInput(editBookForm.editBookPublication.value),
+    book_price: formatInput(editBookForm.editBookPrice.value),
+    ordered_quantity: Number(editBookForm.editOrderedQuantity.value) + Number(editBookForm.editNewOrderedQuantity.value),
+    new_ordered_quantity: Number(editBookForm.editNewOrderedQuantity.value),
+    description: formatInput(editBookForm.editDescription.value),
+  };
+
+  // Check if any field has been changed, ignoring new_ordered_quantity
+  const changesMade = Object.keys(updatedBookDetails).some((key) => {
+    if (key === 'new_ordered_quantity') {
+      return false; // Skip comparison for new_ordered_quantity
+    }
+    const originalValue = originalBookDetails[key]?.toString();
+    const updatedValue = updatedBookDetails[key]?.toString();
+    return updatedValue !== originalValue;
+  });
+
+  if (!changesMade) {
+    showToast("No changes have been made.", true);
+    return;
+  }
+
+  // Validate that no fields are empty
+  const fields = Object.values(updatedBookDetails);
+  if (fields.some(field => field === '')) {
+    showToast('All fields are required.', true);
+    return;
+  }
+
+  // Check for duplicate book name
+  if (isDuplicateBookName(updatedBookDetails.book_name) && updatedBookDetails.book_name !== originalBookDetails.book_name) {
+    showToast('Book name already exists.', true);
+    return;
+  }
+
+  // Send updated book details to server
+  try {
+    const response = await fetch(
+      `/library/book/${encodeURIComponent(bookID)}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedBookDetails),
+      }
+    );
+
+    if (response.ok) {
+      showToast("Book updated successfully", false);
+      document.querySelector(".custom-prompt").remove();
+      refreshBooksData(); // Refresh the books list
+    } else {
+      throw new Error("Failed to update book");
+    }
+  } catch (error) {
+    console.error("Error updating book:", error);
+    showToast("An error occurred while updating the book.", true);
+  }
+}
+
 
 // async function searchLibraryBookDetails() {
 //   const searchTerm = document.getElementById("searchBar").value.trim();
@@ -450,7 +622,7 @@ function deleteBook(bookId) {
     })
       .then((response) => {
         if (response.ok) {
-          alert("Book deleted successfully");
+          showToast("Book deleted successfully", false);
           refreshBooksData(); // Refresh the books list
         } else {
           throw new Error("Failed to delete book");

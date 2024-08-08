@@ -103,7 +103,7 @@ function fetchReportData() {
     })
     .catch(error => {
         console.error('Error fetching report data:', error);
-        alert('Error fetching report data');
+        showToast('Error fetching report data', true);
     });
 }
 
@@ -151,7 +151,7 @@ function exportTableToCSV() {
     const reportTableBody = document.getElementById('reportTableBody');
 
     if (reportTableBody.rows.length === 0) {
-        alert('No data to export.');
+        showToast('No data to export.', false);
         return;
     }
 

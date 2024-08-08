@@ -24,14 +24,14 @@ async function refreshTransactionData() {
         console.log('Response data:', data); // Log the response data to the console
 
         if (data.error) {
-            alert(data.error);
+            showBigToast(data.error);
         } else {
             storeTransactionData(data);
             displayTransactionData(transactionData);
         }
     } catch (error) {
         console.error('Error fetching transactions:', error);
-        alert('Error fetching transactions');
+        showToast('Error fetching transactions', true);
     }
 }
 
@@ -248,16 +248,16 @@ function deleteTransaction(event) {
             .then(response => response.json())
             .then(data => {
                 if (data.error) {
-                    alert(data.error);
+                    showBigToast(data.error);
                 } else {
-                    alert(data.message);
+                    showBigToast(data.message);
                     // Optionally, refresh the transaction list
                     document.getElementById('searchTransactionButton').click();
                 }
             })
             .catch(error => {
                 console.error('Error deleting transaction:', error);
-                alert('Error deleting transaction');
+                showToast('Error deleting transaction', true);
             });
     }
 }
@@ -282,7 +282,7 @@ function exportTransactionTable() {
 
     // Check if the tables are empty
     if (issueTableBody.children.length === 0 && returnTableBody.children.length === 0) {
-        alert("No results found to export.");
+        showToast("No results found to export.");
         return;
     }
 

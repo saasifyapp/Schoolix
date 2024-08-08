@@ -66,19 +66,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Validation for duplicate Member ID
         if (isDuplicateMemberID(memberDetails.memberID)) {
-            alert('Member ID already exists. Please use a different Member ID.');
+            showToast('Member ID already exists. Please use a different Member ID.', true);
             return;
         }
 
         // Validation for same member name in the same class
         if (isDuplicateMemberNameInClass(memberDetails.member_name, memberDetails.member_class)) {
-            alert('Member with the same name already exists in the same class. Please use a different name or class.');
+            showToast('Member with the same name already exists in the same class. Please use a different name or class.', true);
             return;
         }
 
         // Validate mobile number length
         if (!isValidMobileNumber(memberDetails.contact)) {
-            alert('Contact number must be exactly 10 digits.');
+            showToast('Contact number must be exactly 10 digits.', true);
             return;
         }
 
@@ -94,14 +94,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 // Handle successful response
-                alert('Member added successfully');
+                showToast('Member added successfully', false);
                 addMemberForm.reset(); // Reset the form after successful submission
             } else {
                 throw new Error('Failed to add member');
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred while adding the member.');
+            showToast('An error occurred while adding the member.', true);
         }
     });
 });
@@ -269,51 +269,72 @@ async function editMember(memberID) {
 
 // Function to update member details
 async function updateMember(memberID) {
-    const memberName = document.getElementById("editMemberName").value;
-    const memberContact = document.getElementById("editMemberContact").value;
-    const memberClass = document.getElementById("editMemberClass").value;
+    const editMemberName = document.getElementById("editMemberName");
+    const editMemberContact = document.getElementById("editMemberContact");
+    const editMemberClass = document.getElementById("editMemberClass");
 
-    // Validate for duplicate member name in the same class
-    if (isDuplicateMemberNameInClass(memberName, memberClass)) {
-        alert('A member with this name already exists in the selected class.');
+    // Fetch original member details
+    let originalMemberDetails;
+    try {
+        const response = await fetch(`/library/member/${encodeURIComponent(memberID)}`);
+        if (!response.ok) {
+            throw new Error('Failed to retrieve member details');
+        }
+        originalMemberDetails = await response.json();
+    } catch (error) {
+        console.error('Error retrieving member details:', error);
+        return;
+    }
+
+    // Extract original member details
+    const originalMemberName = originalMemberDetails.member.member_name;
+    const originalMemberClass = originalMemberDetails.member.member_class;
+
+    const updatedMemberName = editMemberName.value;
+    const updatedMemberContact = editMemberContact.value;
+    const updatedMemberClass = editMemberClass.value;
+
+    // Validate for duplicate member name or class changes
+    if ((updatedMemberName !== originalMemberName || updatedMemberClass !== originalMemberClass) &&
+        isDuplicateMemberNameInClass(updatedMemberName, updatedMemberClass)) {
+        showToast('A member with this name already exists in the selected class.', true);
         return;
     }
 
     // Validate mobile number length
-    if (!isValidMobileNumber(memberContact)) {
-        alert('Contact number must be exactly 10 digits.');
+    if (!isValidMobileNumber(updatedMemberContact)) {
+        showToast('Contact number must be exactly 10 digits.', true);
         return;
     }
-    // showMembersLoadingAnimation();
 
-    await fetch(`/library/member/${encodeURIComponent(memberID)}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            member_name: memberName,
-            member_contact: memberContact,
-            member_class: memberClass
-        })
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to update member details');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // hideMembersLoadingAnimation();
-            alert('Member details updated successfully');
-            refreshMembersData(); // Refresh the members list
-            document.querySelector(".custom-prompt").remove(); // Remove the prompt
-        })
-        .catch(error => {
-            console.error('Error updating member details:', error);
-            // hideMembersLoadingAnimation();
+    // Proceed with update
+    try {
+        const response = await fetch(`/library/member/${encodeURIComponent(memberID)}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                member_name: updatedMemberName,
+                member_contact: updatedMemberContact,
+                member_class: updatedMemberClass
+            })
         });
+
+        if (!response.ok) {
+            throw new Error('Failed to update member details');
+        }
+
+        showToast('Member details updated successfully', false);
+        refreshMembersData(); // Refresh the members list
+        document.querySelector(".custom-prompt").remove(); // Remove the prompt
+
+    } catch (error) {
+        console.error('Error updating member details:', error);
+    }
 }
+
+
 
 // async function searchMemberDetails() {
 //     const searchTerm = document.getElementById("searchMemberInput").value.trim();
@@ -413,7 +434,7 @@ function deleteMember(memberID) {
         })
             .then(response => {
                 if (response.ok) {
-                    alert('Member deleted successfully');
+                    showToast('Member deleted successfully', false);
                     refreshMembersData(); // Refresh the books list
                 } else {
                     throw new Error('Failed to delete member');
