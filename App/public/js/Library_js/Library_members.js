@@ -182,23 +182,19 @@ function displayMembers(data) {
 async function editMember(memberID) {
     // showMembersLoadingAnimation();
 
-    await fetch(`/library/member/${encodeURIComponent(memberID)}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Failed to retrieve member details.");
-            }
-            return response.json();
-        })
-        .then(data => {
-            // hideMembersLoadingAnimation();
+    let member = membersData[memberID];
 
-            const member = data.member;
+    if (!member) {
+        console.error("Member details not found locally.");
+        showToast("Member details not found.", true);
+        return;
+    }
 
-            // Create custom prompt
-            const customPrompt = document.createElement("div");
-            customPrompt.classList.add("custom-prompt");
+    // Create custom prompt
+    const customPrompt = document.createElement("div");
+    customPrompt.classList.add("custom-prompt");
 
-            customPrompt.innerHTML = `
+    customPrompt.innerHTML = `
             <div class="prompt-content">                
                 <h2>Edit Member Details</h2>
                 
@@ -246,7 +242,7 @@ async function editMember(memberID) {
                 </button>
         
                 <button id="cancelButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-                        onclick="this.parentElement.parentElement.remove();"
+                        onclick=""
                         onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
                         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
                     <img src="../images/cancel.png" alt="Cancel" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
@@ -254,17 +250,18 @@ async function editMember(memberID) {
                 </button>
             </div>
         `;
-        
 
-            // Set the selected value for the class dropdown
-            const classFilter = customPrompt.querySelector("#editMemberClass");
-            classFilter.value = member.member_class;
 
-            document.body.appendChild(customPrompt);
-        })
-        .catch(error => {
-            console.error("Error retrieving member details:", error);
-        });
+    // Set the selected value for the class dropdown
+    const classFilter = customPrompt.querySelector("#editMemberClass");
+    classFilter.value = member.member_class;
+
+    document.body.appendChild(customPrompt);
+
+    // Add event listener to the cancel button
+    customPrompt.querySelector("#cancelButton").addEventListener("click", () => {
+        customPrompt.remove();
+    });
 }
 
 // Function to update member details
@@ -325,7 +322,7 @@ async function updateMember(memberID) {
             throw new Error('Failed to update member details');
         }
 
-        showToast('Member details updated successfully', false);
+        showToast(`Member ${memberID} details updated successfully`, false);
         refreshMembersData(); // Refresh the members list
         document.querySelector(".custom-prompt").remove(); // Remove the prompt
 
@@ -398,7 +395,7 @@ async function updateMember(memberID) {
 //         });
 // }
 
-  function searchMemberDetails() {
+function searchMemberDetails() {
     const searchTerm = document.getElementById("searchMemberInput").value.trim().toLowerCase();
 
     // Check if the search term is empty

@@ -104,6 +104,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     closeIssueBookOverlay.addEventListener('click', function () {
         hideOverlay('issueBookOverlay');
+
+        //explicit
+        // Manually clear readonly fields
+        document.getElementById('studentName').value = '';
+        document.getElementById('class').value = '';
+        document.getElementById('studentcontact').value = '';
+        document.getElementById('issuebookName').value = '';
+        document.getElementById('bookauthorName').value = '';
+        document.getElementById('bookPublicationName').value = '';
     });
 
     closeReturnBookOverlay.addEventListener('click', function () {
@@ -119,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function () {
         hideOverlay('reportOverlay');
     });
 
-    
+
 });
 
 function showOverlay(overlayId) {
@@ -127,5 +136,12 @@ function showOverlay(overlayId) {
 }
 
 function hideOverlay(overlayId) {
-    document.getElementById(overlayId).style.display = "none";
+    const overlay = document.getElementById(overlayId);
+    overlay.style.display = "none";
+
+    // Reset form fields if the overlay contains a form
+    const form = overlay.querySelector('form');
+    if (form) {
+        form.reset();
+    }
 }

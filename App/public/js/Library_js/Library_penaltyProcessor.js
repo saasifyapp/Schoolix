@@ -12,6 +12,7 @@ document.getElementById('closePenaltyProcessorOverlay').addEventListener('click'
 let penaltyData = [];
 
 function fetchPenaltyDetails() {
+    document.getElementsByClassName('penaltysearch')[0].value = '';
     fetch('/library/get_penalties', {
         method: 'POST',
         headers: {
