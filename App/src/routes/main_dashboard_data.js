@@ -63,10 +63,10 @@ router.get('/main_dashboard_library_data', (req, res) => {
     // Define queries for each count
     const queries = {
         totalBooks: 'SELECT COUNT(*) AS count FROM library_book_details',
-        booksIssued: `SELECT COUNT(*) AS count FROM library_transactions`,
         memberCount: 'SELECT COUNT(*) AS count FROM library_member_details',
-        outstandingBooks: `SELECT COUNT(*) AS count FROM library_transactions WHERE return_date < CURDATE()`,
+        booksIssued: `SELECT COUNT(*) AS count FROM library_transactions`,
         booksAvailable: `SELECT SUM(available_quantity) AS count FROM library_book_details`,
+        outstandingBooks: `SELECT COUNT(*) AS count FROM library_transactions WHERE return_date < CURDATE()`,
         booksIssuedToday: `SELECT COUNT(*) AS count FROM library_transaction_log WHERE transaction_date = CURDATE() AND transaction_type = 'issue'`,
         booksReturnedToday: `SELECT COUNT(*) AS count FROM library_transaction_log WHERE transaction_date = CURDATE() AND transaction_type = 'return'`,
         penaltiesCollected: `SELECT SUM(penalty_paid) AS count FROM library_transaction_log WHERE penalty_status = 'paid'`
