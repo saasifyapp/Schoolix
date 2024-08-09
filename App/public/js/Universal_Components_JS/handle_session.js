@@ -33,6 +33,8 @@ document.addEventListener('click', handleInactive);
 // Start the initial timer
 handleInactive();
 
+
+// FUNCTION to LOGOUT from ALERT (5min) page inactive //
 function logout() {
     // Make an AJAX request to logout route
     const confirmation = confirm(`Are you sure you want to logout ?`);
@@ -53,10 +55,24 @@ function logout() {
     }
 }
 
+// FUNCTION to LOGOUT from PROMPT (2 hr JWT EXPIRATION) //
+function logout_fromPrompt() {
+    // Make an AJAX request to logout route
+    fetch('/logout', {
+        method: 'GET',
+        credentials: 'same-origin' // Send cookies with the request
+    })
+        .then(response => {
+            if (response.ok) {
+                // Redirect to homepage or login page
+                window.location.href = '/';
+            } else {
+                console.error('Logout failed');
+            }
+        })
+        .catch(error => console.error('Error during logout:', error));
 
-
-/////////////////////////////////////////////////////////////
-
+}
 
 // Flags to track whether alerts have been shown
 let alert30SecShown = localStorage.getItem('alert30SecShown') === 'false';
@@ -79,13 +95,13 @@ function getJWTExpiration() {
 }
 
 // Function to show a toast
-function showAlert(message, confirmButton = true) {
+function showAlert(message, confirmButton = true, singleButton = false) {
     return Swal.fire({
         text: message,
         icon: 'warning',
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'Yes',
-        showCancelButton: true, // Show cancel button
+        showCancelButton: !singleButton, // Show cancel button based on the parameter
         cancelButtonColor: '#d33',
         cancelButtonText: 'No', // Text for cancel button
         background: '#fff',
@@ -96,7 +112,7 @@ function showAlert(message, confirmButton = true) {
         toast: true
     });
 }
- 
+
 // Function to check JWT expiration periodically
 function checkJWTExpiration() {
     const expirationTime = getJWTExpiration();
@@ -105,52 +121,33 @@ function checkJWTExpiration() {
         const timeUntilExpiration = expirationTime - currentTime;
 
         // Use showAlert instead of alert and confirm
-        if (timeUntilExpiration <=30000 && !alert30SecShown) {
-            showAlert("Your session will expire in 30 Sec. Click Yes to sign in again!");
+        if (timeUntilExpiration <= 30000 && !alert30SecShown) {
+            showAlert("Your session will expire in 30 Sec. Click Yes to sign in again!", true, true)
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        logout_fromPrompt();
+                    }
+                });
             alert30SecShown = true;
             localStorage.setItem('alert30SecShown', 'true');
         }
 
-        if (timeUntilExpiration >= 300000   && timeUntilExpiration <= 310000   && !alert5MinShown) {
+        if (timeUntilExpiration >= 300000 && timeUntilExpiration <= 310000 && !alert5MinShown) {
             showAlert("Your session will expire in 5 Min. Do you want to sign in again?", true)
                 .then((result) => {
                     if (result.isConfirmed) {
-                        fetch('/logout', {
-                            method: 'GET',
-                            credentials: 'same-origin' // Send cookies with the request
-                        })
-                            .then(response => {
-                                if (response.ok) {
-                                    // Redirect to homepage or login page
-                                    window.location.href = '/';
-                                } else {
-                                    console.error('Logout failed');
-                                }
-                            })
-                            .catch(error => console.error('Error during logout:', error));
+                        logout_fromPrompt();
                     }
                 });
             alert5MinShown = true;
             localStorage.setItem('alert5MinShown', 'true');
         }
 
-        if (timeUntilExpiration >= 900000   && timeUntilExpiration <= 910000   && !alert15MinShown) {
+        if (timeUntilExpiration >= 900000 && timeUntilExpiration <= 910000 && !alert15MinShown) {
             showAlert("Your session will expire in 15 Min. Do you want to sign in again?", true)
                 .then((result) => {
                     if (result.isConfirmed) {
-                        fetch('/logout', {
-                            method: 'GET',
-                            credentials: 'same-origin' // Send cookies with the request
-                        })
-                            .then(response => {
-                                if (response.ok) {
-                                    // Redirect to homepage or login page
-                                    window.location.href = '/';
-                                } else {
-                                    console.error('Logout failed');
-                                }
-                            })
-                            .catch(error => console.error('Error during logout:', error));
+                        logout_fromPrompt();
                     }
                 });
             alert15MinShown = true;
@@ -158,20 +155,19 @@ function checkJWTExpiration() {
         }
 
         // At expiration
-        if (timeUntilExpiration < 100) {
+        if (timeUntilExpiration < 3000) {
             // Clear the interval when the JWT expires
             clearCheckInterval();
             // Clear the flags when the JWT expires
             localStorage.removeItem('alert30SecShown');
             localStorage.removeItem('alert5MinShown');
             localStorage.removeItem('alert15MinShown');
-            // Reload the page
-            window.location.reload();
+
+            // Redirect on login
+            logout_fromPrompt();
         }
     }
 }
 
 // Call checkJWTExpiration every second
 const intervalId = setInterval(checkJWTExpiration, 1000);
-
-

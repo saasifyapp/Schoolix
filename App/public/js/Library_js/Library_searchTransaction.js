@@ -11,6 +11,7 @@ document.getElementById('searchTransactionButton').addEventListener('click', fun
 });
 
 async function refreshTransactionData() {
+    document.getElementById("searchTransactionInput").value = '';
     try {
         const response = await fetch('/library/search_transactions', {
             method: 'POST',

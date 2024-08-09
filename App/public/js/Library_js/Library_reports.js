@@ -6,6 +6,12 @@ document.getElementById('reportButton').addEventListener('click', function() {
 document.getElementById('closeReportOverlay').addEventListener('click', function() {
     const overlay = document.getElementById('reportOverlay');
     overlay.style.display = 'none';
+    document.getElementById('reportTypeDropdown').value = '';
+    document.getElementById('filterClassDropdown').disabled = true;
+    document.getElementById('filterDateInput').disabled = true;
+     // Show the Lottie animation and hide the table
+     document.getElementById('lottie-container').style.display = 'flex';
+     document.querySelector('.reports-table').style.display = 'none';
 });
 
 document.getElementById('reportTypeDropdown').addEventListener('change', function() {
@@ -76,7 +82,7 @@ function fetchReportData() {
 
         if (data.reports.length === 0) {
             // Display a message when no results are found
-            reportTableBody.innerHTML = '<tr><td colspan="7">No results found</td></tr>';
+            reportTableBody.innerHTML = '<tr><td colspan="9">No results found</td></tr>';
         } else {
             data.reports.forEach(report => {
                 const row = document.createElement('tr');
