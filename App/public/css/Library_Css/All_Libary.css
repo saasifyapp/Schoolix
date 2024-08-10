@@ -134,12 +134,14 @@ body {
 .toast {
     width: 15rem;
     margin-bottom: 10px;
-    background-color: #4CAF50; /* Green background */
+    background-color: #4CAF50;
+    /* Green background */
     color: white;
     padding: 16px;
     border-radius: 8px;
-    display: none; 
-    animation: slideInRight 0.5s forwards; /* Slide in animation */
+    display: none;
+    animation: slideInRight 0.5s forwards;
+    /* Slide in animation */
 }
 
 @keyframes slideInRight {
@@ -147,6 +149,7 @@ body {
         opacity: 0;
         transform: translateX(100%);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -158,6 +161,7 @@ body {
         opacity: 1;
         transform: translateX(0);
     }
+
     to {
         opacity: 0;
         transform: translateX(100%);
@@ -165,7 +169,8 @@ body {
 }
 
 .toast.error {
-    background-color: #f44336; /* Red background for error */
+    background-color: #f44336;
+    /* Red background for error */
 }
 
 
@@ -198,9 +203,9 @@ body {
     height: 48px;
     margin: auto;
     position: relative;
-  }
-  
-  .loader:before {
+}
+
+.loader:before {
     content: '';
     width: 48px;
     height: 5px;
@@ -210,9 +215,9 @@ body {
     left: 0;
     border-radius: 50%;
     animation: shadow324 0.5s linear infinite;
-  }
-  
-  .loader:after {
+}
+
+.loader:after {
     content: '';
     width: 100%;
     height: 100%;
@@ -222,42 +227,42 @@ body {
     left: 0;
     border-radius: 4px;
     animation: jump7456 0.5s linear infinite;
-  }
-  
-  @keyframes jump7456 {
+}
+
+@keyframes jump7456 {
     15% {
-      border-bottom-right-radius: 3px;
+        border-bottom-right-radius: 3px;
     }
-  
+
     25% {
-      transform: translateY(9px) rotate(22.5deg);
+        transform: translateY(9px) rotate(22.5deg);
     }
-  
+
     50% {
-      transform: translateY(18px) scale(1, .9) rotate(45deg);
-      border-bottom-right-radius: 40px;
+        transform: translateY(18px) scale(1, .9) rotate(45deg);
+        border-bottom-right-radius: 40px;
     }
-  
+
     75% {
-      transform: translateY(9px) rotate(67.5deg);
+        transform: translateY(9px) rotate(67.5deg);
     }
-  
+
     100% {
-      transform: translateY(0) rotate(90deg);
+        transform: translateY(0) rotate(90deg);
     }
-  }
-  
-  @keyframes shadow324 {
-  
+}
+
+@keyframes shadow324 {
+
     0%,
-      100% {
-      transform: scale(1, 1);
+    100% {
+        transform: scale(1, 1);
     }
-  
+
     50% {
-      transform: scale(1.2, 1);
+        transform: scale(1.2, 1);
     }
-  }
+}
 
 /* Define thin and curved scrollbar */
 ::-webkit-scrollbar {
@@ -292,25 +297,35 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: 0.3rem; /* Adjust height as needed */
-    background-color: transparent; /* Initially transparent */
+    height: 0.3rem;
+    /* Adjust height as needed */
+    background-color: transparent;
+    /* Initially transparent */
     z-index: 9999;
 }
 
 .loader2 {
     width: 100%;
     height: 100%;
-    background-color: #25b09b; /* Green color */
-    animation: slide 2s linear infinite; /* Adjust animation duration as needed */
+    background-color: #25b09b;
+    /* Green color */
+    animation: slide 2s linear infinite;
+    /* Adjust animation duration as needed */
 }
 
 @keyframes slide {
-    0% { width: 0%; }
-    100% { width: 100%; }
+    0% {
+        width: 0%;
+    }
+
+    100% {
+        width: 100%;
+    }
 }
 
 .blur {
-    backdrop-filter: blur(10px); /* Adjust blur radius as needed */
+    backdrop-filter: blur(10px);
+    /* Adjust blur radius as needed */
 }
 
 
@@ -333,7 +348,7 @@ body {
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
     transition: transform 0.2s, box-shadow 0.2s;
     margin-bottom: 10px;
-    font-family: 'Open Sans', sans-serif;    
+    font-family: 'Open Sans', sans-serif;
     font-weight: bold;
 }
 
@@ -358,19 +373,22 @@ body {
 }
 
 .getDetails-button:hover {
-    background-color: #76D7C4; /* Change background color on hover */
-    transform: scale(1.05); /* Increase size on hover */
+    background-color: #76D7C4;
+    /* Change background color on hover */
+    transform: scale(1.05);
+    /* Increase size on hover */
 }
 
 
 
- /* //////////////////////////////////Animations//////////////////////////// */
+/* //////////////////////////////////Animations//////////////////////////// */
 
- @keyframes slideInFromDown {
+@keyframes slideInFromDown {
     from {
         opacity: 0;
         transform: translateY(50%);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -382,6 +400,7 @@ body {
         opacity: 0;
         transform: translateX(100%);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -393,6 +412,7 @@ body {
         opacity: 0;
         transform: translateY(-50%);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -417,6 +437,7 @@ body {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -452,6 +473,7 @@ body {
         opacity: 0;
         transform: translate(-50%, -100%);
     }
+
     to {
         opacity: 1;
         transform: translate(-50%, -50%);
@@ -476,6 +498,7 @@ body {
         opacity: 0;
         transform: translateX(-100%);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -487,6 +510,7 @@ body {
         opacity: 0;
         transform: translateY(-100%);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -505,12 +529,14 @@ body {
 .toast {
     width: 15rem;
     margin-bottom: 10px;
-    background-color: #4CAF50; /* Green background */
+    background-color: #4CAF50;
+    /* Green background */
     color: white;
     padding: 16px;
     border-radius: 8px;
-    display: none; 
-    animation: slideInRight 0.5s forwards; /* Slide in animation */
+    display: none;
+    animation: slideInRight 0.5s forwards;
+    /* Slide in animation */
 }
 
 @keyframes slideInRight {
@@ -518,6 +544,7 @@ body {
         opacity: 0;
         transform: translateX(100%);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -529,6 +556,7 @@ body {
         opacity: 1;
         transform: translateX(0);
     }
+
     to {
         opacity: 0;
         transform: translateX(100%);
@@ -536,7 +564,8 @@ body {
 }
 
 .toast.error {
-    background-color: #f44336; /* Red background for error */
+    background-color: #f44336;
+    /* Red background for error */
 }
 
 /* Big Toast Styles */
@@ -550,7 +579,8 @@ body {
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    z-index: 9999; /* High z-index to ensure it is on top of most elements */
+    z-index: 9999;
+    /* High z-index to ensure it is on top of most elements */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -579,10 +609,61 @@ body {
 }
 
 .big-toast.error {
-    background-color: #e74c3c; /* Red for errors */
+    background-color: #e74c3c;
+    /* Red for errors */
 }
 
 .big-toast.success {
-    background-color: #2ecc71; /* Green for success */
+    background-color: #2ecc71;
+    /* Green for success */
 }
 
+/* From Uiverse.io by AqFox */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: rgba(255, 255, 255, 0.7); */
+    /* Semi-transparent white background */
+    /* backdrop-filter: blur(5px); */
+    /* Adjust blur as needed */
+    z-index: 9999;
+    /* Ensure the overlay appears on top of other content */
+    display: none;
+}
+
+.spinner {
+    width: 56px;
+    height: 56px;
+    display: grid;
+    border: 4px solid #0000;
+    border-radius: 50%;
+    border-right-color: #3a977b;
+    animation: spinner-a4dj62 1s infinite linear;
+}
+
+.spinner::before,
+.spinner::after {
+    content: "";
+    grid-area: 1/1;
+    margin: 2px;
+    border: inherit;
+    border-radius: 50%;
+    animation: spinner-a4dj62 2s infinite;
+}
+
+.spinner::after {
+    margin: 8px;
+    animation-duration: 3s;
+}
+
+@keyframes spinner-a4dj62 {
+    100% {
+        transform: rotate(1turn);
+    }
+}

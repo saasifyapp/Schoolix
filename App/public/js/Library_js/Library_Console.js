@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     bookVaultButton.addEventListener('click', function () {
         showOverlay('bookVaultOverlay');
-        refreshBooksData();
     });
 
     addBookButton.addEventListener('click', function () {
@@ -43,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
     searchBookButton.addEventListener('click', function () {
         hideOverlay('bookVaultOverlay');
         showOverlay('searchBookOverlay');
+        refreshBooksData();
     });
 
     closeBookVaultOverlay.addEventListener('click', function () {
@@ -59,7 +59,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     manageMemberButton.addEventListener('click', function () {
         showOverlay('manageMemberOverlay');
-        refreshMembersData();
     });
 
     addMemberButton.addEventListener('click', function () {
@@ -70,6 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
     searchMemberButton.addEventListener('click', function () {
         hideOverlay('manageMemberOverlay');
         showOverlay('searchMemberOverlay');
+        refreshMembersData();
     });
 
     closeManageMemberOverlay.addEventListener('click', function () {
@@ -144,4 +144,16 @@ function hideOverlay(overlayId) {
     if (form) {
         form.reset();
     }
+}
+
+// Function to show the loading animation
+function showLibraryLoadingAnimation() {
+    var loadingOverlay = document.getElementById("loadingOverlaylibrary");
+    loadingOverlay.style.display = "flex";
+}
+
+// Function to hide the loading animation
+function hidelibraryLoadingAnimation() {
+    var loadingOverlay = document.getElementById("loadingOverlaylibrary");
+    loadingOverlay.style.display = "none"; // Hide the loading overlay
 }

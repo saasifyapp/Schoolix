@@ -20,6 +20,7 @@ document.getElementById('bookRadio').addEventListener('change', function() {
 
 // Handle form submission
 document.getElementById('returnBookForm').addEventListener('submit', function(event) {
+    showLibraryLoadingAnimation();
     event.preventDefault();
 
     const inputType = document.querySelector('input[name="inputType"]:checked').value;
@@ -34,11 +35,13 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Response data:', data); // Log the response data to the console
+        // console.log('Response data:', data); // Log the response data to the console
 
         if (data.error) {
-            showToast(data.error);
+            hidelibraryLoadingAnimation();
+            showToast(data.error, true);
         } else {
+            hidelibraryLoadingAnimation();
             const lottieContainer = document.getElementById('lottieContainer');
             const detailsContainer = document.getElementById('detailsContainer');
             const tableContainer = document.getElementById('tableContainer');
@@ -187,6 +190,7 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
         }
     })
     .catch(error => {
+        hidelibraryLoadingAnimation();
         console.error('Error fetching details:', error);
         showToast('Error fetching details', true);
     });
@@ -194,12 +198,14 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
 
 // Handle returning a book
 function handleReturn(id, returnDate) {
+    showLibraryLoadingAnimation();
     const currentDate = new Date();
     const formattedCurrentDate = formatDateToIST(currentDate);
     const formattedReturnDate = formatDateToIST(new Date(returnDate));
 
     // Compare the formatted dates
     if (formattedReturnDate < formattedCurrentDate) {
+        hidelibraryLoadingAnimation();
         showBigToast('You need to pay a penalty for returning this book late.');
         return;
     }
@@ -215,14 +221,17 @@ function handleReturn(id, returnDate) {
     .then(response => response.json())
     .then(data => {
         if (data.error) {
-            showToast(data.error);
+            hidelibraryLoadingAnimation();
+            showToast(data.error, true);
         } else {
+            hidelibraryLoadingAnimation();
             showToast(data.message);
             // Optionally, refresh the table or remove the returned book from the table
             document.querySelector(`tr[data-id="${id}"]`).remove();
         }
     })
     .catch(error => {
+        hidelibraryLoadingAnimation();
         console.error('Error returning book:', error);
         showToast('Error returning book', true);
     });

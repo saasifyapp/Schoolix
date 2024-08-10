@@ -13,6 +13,7 @@ document.getElementById('searchTransactionButton').addEventListener('click', fun
 async function refreshTransactionData() {
     document.getElementById("searchTransactionInput").value = '';
     try {
+        showLibraryLoadingAnimation();
         const response = await fetch('/library/search_transactions', {
             method: 'POST',
             headers: {
@@ -25,12 +26,15 @@ async function refreshTransactionData() {
         console.log('Response data:', data); // Log the response data to the console
 
         if (data.error) {
+            hidelibraryLoadingAnimation();
             showBigToast(data.error);
         } else {
+            hidelibraryLoadingAnimation();
             storeTransactionData(data);
             displayTransactionData(transactionData);
         }
     } catch (error) {
+        hidelibraryLoadingAnimation();
         console.error('Error fetching transactions:', error);
         showToast('Error fetching transactions', true);
     }
@@ -239,6 +243,7 @@ function deleteTransaction(event) {
     const transactionType = button.getAttribute('data-type');
 
     if (confirm('Are you sure you want to delete this transaction?')) {
+        showLibraryLoadingAnimation();
         fetch('/library/delete_transaction', {
             method: 'POST',
             headers: {
@@ -249,14 +254,17 @@ function deleteTransaction(event) {
             .then(response => response.json())
             .then(data => {
                 if (data.error) {
-                    showBigToast(data.error);
+                    hidelibraryLoadingAnimation();
+                    showToast(data.error, true);
                 } else {
-                    showBigToast(data.message);
+                    hidelibraryLoadingAnimation();
+                    showToast(data.message, false);
                     // Optionally, refresh the transaction list
                     document.getElementById('searchTransactionButton').click();
                 }
             })
             .catch(error => {
+                hidelibraryLoadingAnimation();
                 console.error('Error deleting transaction:', error);
                 showToast('Error deleting transaction', true);
             });

@@ -4,14 +4,17 @@ let memberNamesInClass = {}; // Object to store member names by class
 async function refreshMembersData() {
     document.getElementById('searchMemberInput').value = '';
     try {
+        showLibraryLoadingAnimation();
         const response = await fetch('/library/members');
         if (!response.ok) {
+            hidelibraryLoadingAnimation();
             throw new Error('Failed to fetch members');
         }
         const data = await response.json();
         storeMembersData(data);
         displayMembers(data);
     } catch (error) {
+        hidelibraryLoadingAnimation();
         console.error('Error fetching members:', error);
     }
 }
@@ -56,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add Member form submission
     addMemberForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-
+        showLibraryLoadingAnimation();
         const memberDetails = {
             member_name: formatInput(document.getElementById('memberName').value),
             memberID: formatInput(document.getElementById('memberID').value),
@@ -66,18 +69,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Validation for duplicate Member ID
         if (isDuplicateMemberID(memberDetails.memberID)) {
+            hidelibraryLoadingAnimation();
             showToast('Member ID already exists. Please use a different Member ID.', true);
             return;
         }
 
         // Validation for same member name in the same class
         if (isDuplicateMemberNameInClass(memberDetails.member_name, memberDetails.member_class)) {
+            hidelibraryLoadingAnimation();
             showToast('Member with the same name already exists in the same class. Please use a different name or class.', true);
             return;
         }
 
         // Validate mobile number length
         if (!isValidMobileNumber(memberDetails.contact)) {
+            hidelibraryLoadingAnimation();
             showToast('Contact number must be exactly 10 digits.', true);
             return;
         }
@@ -93,13 +99,16 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
+                hidelibraryLoadingAnimation();
                 // Handle successful response
                 showToast('Member added successfully', false);
                 addMemberForm.reset(); // Reset the form after successful submission
             } else {
+                hidelibraryLoadingAnimation();
                 throw new Error('Failed to add member');
             }
         } catch (error) {
+            hidelibraryLoadingAnimation();
             console.error('Error:', error);
             showToast('An error occurred while adding the member.', true);
         }
@@ -110,7 +119,11 @@ function displayMembers(data) {
     const memberTableBody = document.getElementById('membersTablebody');
     memberTableBody.innerHTML = ''; // Clear existing rows
 
+    // Reverse the data array
+    data.reverse();
+
     if (data.length === 0) {
+        hidelibraryLoadingAnimation();
         const noResultsRow = document.createElement('tr');
         noResultsRow.innerHTML = '<td colspan="5">No results found</td>';
         memberTableBody.appendChild(noResultsRow);
@@ -174,6 +187,7 @@ function displayMembers(data) {
                     </td>
             `;
             memberTableBody.appendChild(row);
+            hidelibraryLoadingAnimation();
         });
     }
 }
@@ -266,6 +280,7 @@ async function editMember(memberID) {
 
 // Function to update member details
 async function updateMember(memberID) {
+    showLibraryLoadingAnimation();
     const editMemberName = document.getElementById("editMemberName");
     const editMemberContact = document.getElementById("editMemberContact");
     const editMemberClass = document.getElementById("editMemberClass");
@@ -274,11 +289,12 @@ async function updateMember(memberID) {
     let originalMemberDetails;
     try {
         const response = await fetch(`/library/member/${encodeURIComponent(memberID)}`);
-        if (!response.ok) {
+        if (!response.ok) { 
             throw new Error('Failed to retrieve member details');
         }
         originalMemberDetails = await response.json();
     } catch (error) {
+        hidelibraryLoadingAnimation();
         console.error('Error retrieving member details:', error);
         return;
     }
@@ -294,12 +310,14 @@ async function updateMember(memberID) {
     // Validate for duplicate member name or class changes
     if ((updatedMemberName !== originalMemberName || updatedMemberClass !== originalMemberClass) &&
         isDuplicateMemberNameInClass(updatedMemberName, updatedMemberClass)) {
+            hidelibraryLoadingAnimation();
         showToast('A member with this name already exists in the selected class.', true);
         return;
     }
 
     // Validate mobile number length
     if (!isValidMobileNumber(updatedMemberContact)) {
+        hidelibraryLoadingAnimation();
         showToast('Contact number must be exactly 10 digits.', true);
         return;
     }
@@ -319,6 +337,7 @@ async function updateMember(memberID) {
         });
 
         if (!response.ok) {
+            hidelibraryLoadingAnimation();
             throw new Error('Failed to update member details');
         }
 
@@ -327,6 +346,7 @@ async function updateMember(memberID) {
         document.querySelector(".custom-prompt").remove(); // Remove the prompt
 
     } catch (error) {
+        hidelibraryLoadingAnimation();
         console.error('Error updating member details:', error);
     }
 }
@@ -426,14 +446,17 @@ function deleteMember(memberID) {
         `Are you sure you want to delete the book with ID "${memberID}"?`
     );
     if (confirmation) {
+        showLibraryLoadingAnimation();
         fetch(`/library/member/${memberID}`, {
             method: 'DELETE'
         })
             .then(response => {
                 if (response.ok) {
+                    hidelibraryLoadingAnimation();
                     showToast('Member deleted successfully', false);
                     refreshMembersData(); // Refresh the books list
                 } else {
+                    hidelibraryLoadingAnimation();
                     throw new Error('Failed to delete member');
                 }
             })
@@ -481,4 +504,4 @@ function exportMembersTable() {
     exportTmemberableToCSV('membersTable', 'Library_Members.csv');
 }
 
-refreshMembersData();
+// refreshMembersData();

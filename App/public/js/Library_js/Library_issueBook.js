@@ -1,6 +1,6 @@
 document.getElementById('issueBookForm').addEventListener('submit', function(event) {
     event.preventDefault();
-
+    showLibraryLoadingAnimation();
     // Get student enrollment no and book no from user to autofill the issue details
     const studentEnrollmentNo = document.getElementById('studentEnrollmentNo').value;
     const bookEnrollmentNo = document.getElementById('bookEnrollmentNo').value;
@@ -17,8 +17,10 @@ document.getElementById('issueBookForm').addEventListener('submit', function(eve
         console.log('Response from /library/get_details:', data); // Debugging info
 
         if (data.error) {
+            hidelibraryLoadingAnimation();
             handleErrors(data);
         } else {
+            hidelibraryLoadingAnimation();
             // Ensure the data is being assigned correctly
             document.getElementById('studentName').value = data.member.member_name || '';
             document.getElementById('class').value = data.member.member_class || '';
@@ -29,6 +31,7 @@ document.getElementById('issueBookForm').addEventListener('submit', function(eve
         }
     })
     .catch(error => {
+        hidelibraryLoadingAnimation();
         console.error('Error fetching details:', error);
         showToast('Error fetching details', true);
     });
@@ -92,6 +95,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 // Handle the submission of the additional info form
 document.getElementById('additionalInfoForm').addEventListener('submit', function(event) {
+    showLibraryLoadingAnimation();
     event.preventDefault();
 
     const memberID = document.getElementById('studentEnrollmentNo').value;
@@ -127,8 +131,10 @@ document.getElementById('additionalInfoForm').addEventListener('submit', functio
     .then(response => response.json())
     .then(data => {
         if (data.error) {
+            hidelibraryLoadingAnimation();
             showToast(data.error, true);
         } else {
+            hidelibraryLoadingAnimation();
             showToast(data.message, false);
 
             // Reset both forms
@@ -151,6 +157,7 @@ document.getElementById('additionalInfoForm').addEventListener('submit', functio
 
     })
     .catch(error => {
+        hidelibraryLoadingAnimation();
         console.error('Error issuing book:', error);
         showToast('Error issuing book', true);
     });

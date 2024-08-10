@@ -54,12 +54,14 @@ document.getElementById('filterDateInput').addEventListener('change', function()
 });
 
 function fetchReportData() {
+    showLibraryLoadingAnimation();
     const reportType = document.getElementById('reportTypeDropdown').value;
     const filterClass = document.getElementById('filterClassDropdown').value;
     const filterDate = document.getElementById('filterDateInput').value;
 
     // Clear the table if "Select Report Type" is chosen
     if (!reportType) {
+        hidelibraryLoadingAnimation();
         document.getElementById('reportTableBody').innerHTML = '';
         document.querySelector('.reports-table thead').innerHTML = getTableHeaders('');
         return;
@@ -81,9 +83,11 @@ function fetchReportData() {
         document.querySelector('.reports-table thead').innerHTML = getTableHeaders(reportType);
 
         if (data.reports.length === 0) {
+            hidelibraryLoadingAnimation();
             // Display a message when no results are found
             reportTableBody.innerHTML = '<tr><td colspan="9">No results found</td></tr>';
         } else {
+            hidelibraryLoadingAnimation();
             data.reports.forEach(report => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -108,6 +112,7 @@ function fetchReportData() {
         }
     })
     .catch(error => {
+        hidelibraryLoadingAnimation();
         console.error('Error fetching report data:', error);
         showToast('Error fetching report data', true);
     });

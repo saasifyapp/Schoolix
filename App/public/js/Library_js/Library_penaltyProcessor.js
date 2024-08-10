@@ -1,17 +1,18 @@
 
 
-document.getElementById('openPenaltyProcessorOverlay').addEventListener('click', function() {
+document.getElementById('openPenaltyProcessorOverlay').addEventListener('click', function () {
     document.getElementById('penaltyProcessorOverlay').style.display = 'flex';
     fetchPenaltyDetails();
 });
 
-document.getElementById('closePenaltyProcessorOverlay').addEventListener('click', function() {
+document.getElementById('closePenaltyProcessorOverlay').addEventListener('click', function () {
     document.getElementById('penaltyProcessorOverlay').style.display = 'none';
 });
 
 let penaltyData = [];
 
 function fetchPenaltyDetails() {
+    showLibraryLoadingAnimation();
     document.getElementsByClassName('penaltysearch')[0].value = '';
     fetch('/library/get_penalties', {
         method: 'POST',
@@ -20,16 +21,18 @@ function fetchPenaltyDetails() {
         },
         body: JSON.stringify({})
     })
-    .then(response => response.json())
-    .then(data => {
-        penaltyData = data.penalties; // Store the fetched data in the global object
-        console.log(penaltyData)
-        displayPenaltyData(penaltyData); // Call function to display data
-    })
-    .catch(error => {
-        console.error('Error fetching penalties:', error);
-        showToast('Error fetching penalties', true);
-    });
+        .then(response => response.json())
+        .then(data => {
+            hidelibraryLoadingAnimation();
+            penaltyData = data.penalties; // Store the fetched data in the global object
+            // console.log(penaltyData)
+            displayPenaltyData(penaltyData); // Call function to display data
+        })
+        .catch(error => {
+            hidelibraryLoadingAnimation();
+            console.error('Error fetching penalties:', error);
+            showToast('Error fetching penalties', true);
+        });
 }
 
 function displayPenaltyData(penalties) {
@@ -79,7 +82,7 @@ function displayPenaltyData(penalties) {
 
     // Add event listeners to pay penalty buttons
     document.querySelectorAll('.pay-penalty-button').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const transactionID = this.getAttribute('data-transaction-id');
             const penaltyAmount = this.getAttribute('data-penalty-amount');
             payPenalty(transactionID, penaltyAmount);
@@ -96,7 +99,7 @@ function searchPenaltyTransactions() {
 
     // Filter the penalty data based on the search query
     const filteredPenalties = penaltyData.filter(penalty =>
-        penalty.memberID.toLowerCase().includes(searchQuery) || 
+        penalty.memberID.toLowerCase().includes(searchQuery) ||
         penalty.member_name.toLowerCase().includes(searchQuery)
     );
 
@@ -148,6 +151,7 @@ function exportPenaltiesToCSV() {
 
 
 function payPenalty(transactionID, penaltyAmount) {
+    showLibraryLoadingAnimation();
     fetch('/library/pay_penalty', {
         method: 'POST',
         headers: {
@@ -155,14 +159,16 @@ function payPenalty(transactionID, penaltyAmount) {
         },
         body: JSON.stringify({ transactionID, penaltyAmount })
     })
-    .then(response => response.json())
-    .then(data => {
-        showBigToast(data.message);
-        // Optionally, refresh the penalty list
-        fetchPenaltyDetails();
-    })
-    .catch(error => {
-        console.error('Error paying penalty:', error);
-        showToast('Error paying penalty', true);
-    });
+        .then(response => response.json())
+        .then(data => {
+            hidelibraryLoadingAnimation();
+            showToast(data.message);
+            // Optionally, refresh the penalty list
+            fetchPenaltyDetails();
+        })
+        .catch(error => {
+            hidelibraryLoadingAnimation();
+            console.error('Error paying penalty:', error);
+            showToast('Error paying penalty', true);
+        });
 }

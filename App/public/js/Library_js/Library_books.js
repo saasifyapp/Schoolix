@@ -4,14 +4,17 @@ let bookNamesSet = new Set();
 async function refreshBooksData() {
   document.getElementById('searchBar').value = '';
   try {
+    showLibraryLoadingAnimation();
     const response = await fetch('/library/books');
     if (!response.ok) {
+      hidelibraryLoadingAnimation();
       throw new Error('Failed to fetch books');
     }
     const data = await response.json();
     storeBooksData(data);
     displayBooks(data);
   } catch (error) {
+    hidelibraryLoadingAnimation();
     console.error('Error fetching books:', error);
   }
 }
@@ -44,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   addBookForm.addEventListener("submit", async (e) => {
     e.preventDefault();
+    showLibraryLoadingAnimation();
 
     const bookID = formatInput(document.getElementById('bookID').value);
     const bookName = formatInput(document.getElementById('bookName').value);
@@ -59,16 +63,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check if any field is empty
     const fields = [bookID, bookName, authorName, bookPublication, bookPrice, orderedQuantity, description];
     if (fields.some(field => field === '')) {
+      hidelibraryLoadingAnimation();
       showToast('All fields are required.', true);
       return;
     }
 
     // Check for duplicate book ID or name
     if (isDuplicateBookID(bookID)) {
+      hidelibraryLoadingAnimation();
       showToast('Book ID already exists.', true);
       return;
     }
     if (isDuplicateBookName(bookName)) {
+      hidelibraryLoadingAnimation();
       showToast('Book name already exists.', true);
       return;
     }
@@ -99,10 +106,13 @@ document.addEventListener('DOMContentLoaded', () => {
         addBookForm.reset();
         showToast("Book added Successfully.", false)
         refreshBooksData(); // Refresh data after adding book
+        hidelibraryLoadingAnimation();
       } else {
+        hidelibraryLoadingAnimation();
         throw new Error('Failed to add book');
       }
     } catch (error) {
+      hidelibraryLoadingAnimation();
       console.error('Error:', error);
       showToast('An error occurred while adding the book.', true);
     }
@@ -117,10 +127,10 @@ function displayBooks(data) {
 
   try {
     // Reverse the data array
-    // data.reverse();
+    data.reverse();
 
     if (data.length === 0) {
-      // hideBookLoadingAnimation();
+      hidelibraryLoadingAnimation();
       const noResultsRow = document.createElement("tr");
       noResultsRow.innerHTML = '<td colspan="7">No results found</td>';
       bookTableBody.appendChild(noResultsRow);
@@ -187,12 +197,13 @@ function displayBooks(data) {
 
                 `;
         bookTableBody.appendChild(row);
+        hidelibraryLoadingAnimation();
       });
     }
     // hideBookLoadingAnimation();
   } catch (error) {
     console.error("Error displaying books:", error);
-    // hideBookLoadingAnimation();
+    hidelibraryLoadingAnimation();
   }
 }
 
@@ -448,6 +459,7 @@ async function editBook(bookID) {
 
 // Function to submit the edit book form
 async function submitEditBookForm(bookID, originalBookDetails) {
+  showLibraryLoadingAnimation();
   const editBookForm = document.getElementById("editBookForm");
   const updatedBookDetails = {
     bookID: bookID,
@@ -471,6 +483,7 @@ async function submitEditBookForm(bookID, originalBookDetails) {
   });
 
   if (!changesMade) {
+    hidelibraryLoadingAnimation();
     showToast("No changes have been made.", true);
     return;
   }
@@ -478,12 +491,14 @@ async function submitEditBookForm(bookID, originalBookDetails) {
   // Validate that no fields are empty
   const fields = Object.values(updatedBookDetails);
   if (fields.some(field => field === '')) {
+    hidelibraryLoadingAnimation();
     showToast('All fields are required.', true);
     return;
   }
 
   // Check for duplicate book name
   if (isDuplicateBookName(updatedBookDetails.book_name) && updatedBookDetails.book_name !== originalBookDetails.book_name) {
+    hidelibraryLoadingAnimation();
     showToast(`Book name ${updatedBookDetails.book_name} already exists.`, true);
     return;
   }
@@ -502,13 +517,16 @@ async function submitEditBookForm(bookID, originalBookDetails) {
     );
 
     if (response.ok) {
+      hidelibraryLoadingAnimation();
       showToast(`Book ${bookID} updated successfully`, false);
       document.querySelector(".custom-prompt").remove();
       refreshBooksData(); // Refresh the books list
     } else {
+      hidelibraryLoadingAnimation();
       throw new Error("Failed to update book");
     }
   } catch (error) {
+    hidelibraryLoadingAnimation();
     console.error("Error updating book:", error);
     showToast("An error occurred while updating the book.", true);
   }
@@ -609,14 +627,17 @@ function deleteBook(bookId) {
     `Are you sure you want to delete the book with ID "${bookId}"?`
   );
   if (confirmation) {
+    showLibraryLoadingAnimation();
     fetch(`/library/book/${bookId}`, {
       method: "DELETE",
     })
       .then((response) => {
         if (response.ok) {
+          hidelibraryLoadingAnimation();
           showToast("Book deleted successfully", false);
           refreshBooksData(); // Refresh the books list
         } else {
+          hidelibraryLoadingAnimation();
           throw new Error("Failed to delete book");
         }
       })
@@ -665,4 +686,4 @@ function exportBooksTable() {
   exportbooksTableToCSV("booksTable", "Library_Books.csv");
 }
 
-refreshBooksData();
+// refreshBooksData();
