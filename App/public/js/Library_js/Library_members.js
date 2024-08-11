@@ -248,7 +248,7 @@ async function editMember(memberID) {
                 </div>
                 
                 <button id="confirmEditButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-                        onclick="updateMember('${memberID}')"
+
                         onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
                         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
                     <img src="../images/conform.png" alt="Update" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
@@ -272,6 +272,13 @@ async function editMember(memberID) {
 
     document.body.appendChild(customPrompt);
 
+    // Add event listener to form submission
+    const confirmbuttonmember = customPrompt.querySelector("#confirmEditButton");
+    confirmbuttonmember.addEventListener("click", (e) => {
+        e.preventDefault();
+        updateMember(memberID, member);
+    });
+
     // Add event listener to the cancel button
     customPrompt.querySelector("#cancelButton").addEventListener("click", () => {
         customPrompt.remove();
@@ -279,38 +286,46 @@ async function editMember(memberID) {
 }
 
 // Function to update member details
-async function updateMember(memberID) {
-    showLibraryLoadingAnimation();
+async function updateMember(memberID, originalMemberDetails) {
+    // showLibraryLoadingAnimation();
     const editMemberName = document.getElementById("editMemberName");
     const editMemberContact = document.getElementById("editMemberContact");
     const editMemberClass = document.getElementById("editMemberClass");
 
-    // Fetch original member details
-    let originalMemberDetails;
-    try {
-        const response = await fetch(`/library/member/${encodeURIComponent(memberID)}`);
-        if (!response.ok) { 
-            throw new Error('Failed to retrieve member details');
-        }
-        originalMemberDetails = await response.json();
-    } catch (error) {
-        hidelibraryLoadingAnimation();
-        console.error('Error retrieving member details:', error);
-        return;
-    }
+    // // Fetch original member details
+    // let originalMemberDetails;
+    // try {
+    //     const response = await fetch(`/library/member/${encodeURIComponent(memberID)}`);
+    //     if (!response.ok) {
+    //         throw new Error('Failed to retrieve member details');
+    //     }
+    //     originalMemberDetails = await response.json();
+    // } catch (error) {
+    //     hidelibraryLoadingAnimation();
+    //     console.error('Error retrieving member details:', error);
+    //     return;
+    // }
+    // console.log(originalMemberDetails)
 
     // Extract original member details
-    const originalMemberName = originalMemberDetails.member.member_name;
-    const originalMemberClass = originalMemberDetails.member.member_class;
+    const originalMemberName = originalMemberDetails.member_name;
+    const originalMemberClass = originalMemberDetails.member_class;
+    const originalMembernumber = originalMemberDetails.member_contact;
 
     const updatedMemberName = editMemberName.value;
     const updatedMemberContact = editMemberContact.value;
     const updatedMemberClass = editMemberClass.value;
 
+    if (originalMemberName === updatedMemberName && originalMemberClass === updatedMemberClass && originalMembernumber === updatedMemberContact) {
+        hidelibraryLoadingAnimation();
+        showToast("No changes made", true);
+        return;
+    }
+
     // Validate for duplicate member name or class changes
     if ((updatedMemberName !== originalMemberName || updatedMemberClass !== originalMemberClass) &&
         isDuplicateMemberNameInClass(updatedMemberName, updatedMemberClass)) {
-            hidelibraryLoadingAnimation();
+        hidelibraryLoadingAnimation();
         showToast('A member with this name already exists in the selected class.', true);
         return;
     }
@@ -324,6 +339,7 @@ async function updateMember(memberID) {
 
     // Proceed with update
     try {
+        showLibraryLoadingAnimation();
         const response = await fetch(`/library/member/${encodeURIComponent(memberID)}`, {
             method: 'PUT',
             headers: {
@@ -340,7 +356,7 @@ async function updateMember(memberID) {
             hidelibraryLoadingAnimation();
             throw new Error('Failed to update member details');
         }
-
+        hidelibraryLoadingAnimation();
         showToast(`Member ${memberID} details updated successfully`, false);
         refreshMembersData(); // Refresh the members list
         document.querySelector(".custom-prompt").remove(); // Remove the prompt
