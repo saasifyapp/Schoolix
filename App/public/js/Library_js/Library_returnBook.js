@@ -179,14 +179,14 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
                 });
             }
 
-            // Add event listeners to the return buttons
-            document.querySelectorAll('.return-button').forEach(button => {
-                button.addEventListener('click', function() {
-                    const id = this.dataset.id;
-                    const returnDate = this.dataset.returnDate;
-                    handleReturn(id, returnDate);
-                });
-            });
+            // // Add event listeners to the return buttons
+            // document.querySelectorAll('.return-button').forEach(button => {
+            //     button.addEventListener('click', function() {
+            //         const id = this.dataset.id;
+            //         const returnDate = this.dataset.returnDate;
+            //         handleReturn(id, returnDate);
+            //     });
+            // });
         }
     })
     .catch(error => {

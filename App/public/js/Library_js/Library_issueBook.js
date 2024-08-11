@@ -109,6 +109,13 @@ document.getElementById('additionalInfoForm').addEventListener('submit', functio
     const issue_date = document.getElementById('issueDate').value;
     const return_date = document.getElementById('returnDate').value;
 
+    // Validate form fields
+    if (!memberID || !member_name || !member_class || !member_contact || !bookID || !book_name || !book_author || !book_publication || !issue_date || !return_date) {
+        hidelibraryLoadingAnimation();
+        showToast('Please fill out all fields before submitting.', true);
+        return; // Stop execution
+    }
+
 
     fetch('/library/issue_book', {
         method: 'POST',
