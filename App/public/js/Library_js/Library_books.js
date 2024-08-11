@@ -1,8 +1,9 @@
 let booksData = {}; // Object to store books by ID
-let bookNamesSet = new Set(); 
+let bookNamesSet = new Set();
 
 async function refreshBooksData() {
   document.getElementById('searchBar').value = '';
+
   try {
     showLibraryLoadingAnimation();
     const response = await fetch('/library/books');
@@ -41,7 +42,41 @@ function formatInput(input) {
   return input.trim().replace(/\s+/g, ' ');
 }
 
-// Example usage
+async function updateBookIDField() {
+  showLibraryLoadingAnimation();
+
+  try {
+    await refreshBooksData(); // Wait for books data to be refreshed
+
+    // Generate the new book ID after data is refreshed
+    const existingBookIDs = Object.keys(booksData);
+
+    let newBookID;
+    if (existingBookIDs.length === 0) {
+      // If there are no existing books, start with B001
+      newBookID = 'B001';
+    } else {
+      // Extract the numeric part from existing IDs and find the highest one
+      const maxID = existingBookIDs.reduce((max, id) => {
+        const numericPart = parseInt(id.substring(1), 10);
+        return numericPart > max ? numericPart : max;
+      }, 0);
+
+      // Increment the highest ID by 1 and pad it to 3 digits
+      newBookID = `B${String(maxID + 1).padStart(3, '0')}`;
+    }
+
+    // Set the new book ID to the form field
+    document.getElementById('bookID').value = newBookID;
+  } catch (error) {
+    console.error('Error updating book ID field:', error);
+  } finally {
+    hidelibraryLoadingAnimation(); // Ensure the loading animation is hidden
+  }
+}
+
+
+//func to add book 
 document.addEventListener('DOMContentLoaded', () => {
   const addBookForm = document.getElementById('addBookForm');
 
@@ -103,7 +138,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Trigger button animation
         // btnText.innerHTML = "Saved";
         // btn.classList.add("active");
+        // Generate the next book ID and set it to the bookID field
         addBookForm.reset();
+
+        await updateBookIDField(); // Update the book ID after resetting the form
         showToast("Book added Successfully.", false)
         refreshBooksData(); // Refresh data after adding book
         hidelibraryLoadingAnimation();
@@ -224,7 +262,7 @@ function displayBooks(data) {
 //       // Create custom prompt
 //       const customPrompt = document.createElement("div");
 //       customPrompt.classList.add("custom-prompt");
-      
+
 //         customPrompt.innerHTML = `
 //             <div class="prompt-content">                
 //                 <h2>Edit Book: ${newBookDetails.book_name}</h2>
@@ -271,7 +309,7 @@ function displayBooks(data) {
 //                             <img src="../images/conform.png" alt="Save" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
 //                             <span style="margin-right: 10px;">Save</span>
 //                         </button>
-                        
+
 //                         <button id="cancelButton" style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
 //                                 onclick=""
 //                                 onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
@@ -283,9 +321,9 @@ function displayBooks(data) {
 //                 </form>
 //             </div>
 //         `;
-    
-    
-      
+
+
+
 //       // editPromptContent();
 //       document.body.appendChild(customPrompt);
 
@@ -601,15 +639,15 @@ function searchLibraryBookDetails() {
 
   // Check if the search term is empty
   if (!searchTerm) {
-      // showToast("Please enter a search term.", true);
-      displayBooks(Object.values(booksData)); // Display all books
-      return;
+    // showToast("Please enter a search term.", true);
+    displayBooks(Object.values(booksData)); // Display all books
+    return;
   }
 
   // Filter the books data based on the search term
   const filteredBooks = Object.values(booksData).filter(book =>
-      book.bookID.toLowerCase().includes(searchTerm) ||
-      book.book_name.toLowerCase().includes(searchTerm) 
+    book.bookID.toLowerCase().includes(searchTerm) ||
+    book.book_name.toLowerCase().includes(searchTerm)
   );
 
   // Display the filtered data
@@ -617,8 +655,8 @@ function searchLibraryBookDetails() {
 
   // Check if no results were found
   if (filteredBooks.length === 0) {
-      const libraryBooksTableBody = document.getElementById("booksTablebody");
-      libraryBooksTableBody.innerHTML = '<tr><td colspan="8">No results found</td></tr>';
+    const libraryBooksTableBody = document.getElementById("booksTablebody");
+    libraryBooksTableBody.innerHTML = '<tr><td colspan="8">No results found</td></tr>';
   }
 }
 
