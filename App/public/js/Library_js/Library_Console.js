@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
     addBookButton.addEventListener('click', function () {
         hideOverlay('bookVaultOverlay');
         showOverlay('addBookOverlay');
-        updateBookIDField();
+        // updateBookIDField();
     });
 
     searchBookButton.addEventListener('click', function () {
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
     addMemberButton.addEventListener('click', function () {
         hideOverlay('manageMemberOverlay');
         showOverlay('addMemberOverlay');
-        updateMemberID();
+        // updateMemberID();
     });
 
     searchMemberButton.addEventListener('click', function () {

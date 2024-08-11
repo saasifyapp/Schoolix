@@ -42,38 +42,38 @@ function formatInput(input) {
   return input.trim().replace(/\s+/g, ' ');
 }
 
-async function updateBookIDField() {
-  showLibraryLoadingAnimation();
+// async function updateBookIDField() {
+//   showLibraryLoadingAnimation();
 
-  try {
-    await refreshBooksData(); // Wait for books data to be refreshed
+//   try {
+//     await refreshBooksData(); // Wait for books data to be refreshed
 
-    // Generate the new book ID after data is refreshed
-    const existingBookIDs = Object.keys(booksData);
+//     // Generate the new book ID after data is refreshed
+//     const existingBookIDs = Object.keys(booksData);
 
-    let newBookID;
-    if (existingBookIDs.length === 0) {
-      // If there are no existing books, start with B001
-      newBookID = 'B001';
-    } else {
-      // Extract the numeric part from existing IDs and find the highest one
-      const maxID = existingBookIDs.reduce((max, id) => {
-        const numericPart = parseInt(id.substring(1), 10);
-        return numericPart > max ? numericPart : max;
-      }, 0);
+//     let newBookID;
+//     if (existingBookIDs.length === 0) {
+//       // If there are no existing books, start with B001
+//       newBookID = 'B001';
+//     } else {
+//       // Extract the numeric part from existing IDs and find the highest one
+//       const maxID = existingBookIDs.reduce((max, id) => {
+//         const numericPart = parseInt(id.substring(1), 10);
+//         return numericPart > max ? numericPart : max;
+//       }, 0);
 
-      // Increment the highest ID by 1 and pad it to 3 digits
-      newBookID = `B${String(maxID + 1).padStart(3, '0')}`;
-    }
+//       // Increment the highest ID by 1 and pad it to 3 digits
+//       newBookID = `B${String(maxID + 1).padStart(3, '0')}`;
+//     }
 
-    // Set the new book ID to the form field
-    document.getElementById('bookID').value = newBookID;
-  } catch (error) {
-    console.error('Error updating book ID field:', error);
-  } finally {
-    hidelibraryLoadingAnimation(); // Ensure the loading animation is hidden
-  }
-}
+//     // Set the new book ID to the form field
+//     document.getElementById('bookID').value = newBookID;
+//   } catch (error) {
+//     console.error('Error updating book ID field:', error);
+//   } finally {
+//     hidelibraryLoadingAnimation(); // Ensure the loading animation is hidden
+//   }
+// }
 
 
 //func to add book 
@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Generate the next book ID and set it to the bookID field
         addBookForm.reset();
 
-        await updateBookIDField(); // Update the book ID after resetting the form
+        // await updateBookIDField(); // Update the book ID after resetting the form
         showToast("Book added Successfully.", false)
         refreshBooksData(); // Refresh data after adding book
         hidelibraryLoadingAnimation();

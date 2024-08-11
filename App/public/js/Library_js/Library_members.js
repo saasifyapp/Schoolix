@@ -52,38 +52,38 @@ function isValidMobileNumber(number) {
     return /^\d{10}$/.test(formattedNumber);
 }
 
-async function updateMemberID() {
-    showLibraryLoadingAnimation();
+// async function updateMemberID() {
+//     showLibraryLoadingAnimation();
     
-    try {
-        await refreshMembersData(); // Ensure data is up-to-date
+//     try {
+//         await refreshMembersData(); // Ensure data is up-to-date
 
-        const existingMemberIDs = Object.keys(membersData);
-        let newMemberID;
+//         const existingMemberIDs = Object.keys(membersData);
+//         let newMemberID;
 
-        if (existingMemberIDs.length === 0) {
-            // If there are no existing members, start with M001
-            newMemberID = 'M001';
-        } else {
-            // Extract the numeric part from existing IDs and find the highest one
-            const maxID = existingMemberIDs.reduce((max, id) => {
-                const numericPart = parseInt(id.substring(1), 10);
-                return numericPart > max ? numericPart : max;
-            }, 0);
+//         if (existingMemberIDs.length === 0) {
+//             // If there are no existing members, start with M001
+//             newMemberID = 'M001';
+//         } else {
+//             // Extract the numeric part from existing IDs and find the highest one
+//             const maxID = existingMemberIDs.reduce((max, id) => {
+//                 const numericPart = parseInt(id.substring(1), 10);
+//                 return numericPart > max ? numericPart : max;
+//             }, 0);
 
-            // Increment the highest ID by 1 and pad it to 3 digits
-            newMemberID = `M${String(maxID + 1).padStart(3, '0')}`;
-        }
+//             // Increment the highest ID by 1 and pad it to 3 digits
+//             newMemberID = `M${String(maxID + 1).padStart(3, '0')}`;
+//         }
 
-        // Set the new member ID to the form field
-        document.getElementById('memberID').value = newMemberID;
-        hidelibraryLoadingAnimation();
+//         // Set the new member ID to the form field
+//         document.getElementById('memberID').value = newMemberID;
+//         hidelibraryLoadingAnimation();
 
-    } catch (error) {
-        hidelibraryLoadingAnimation();
-        console.error('Error updating member ID:', error);
-    }
-}
+//     } catch (error) {
+//         hidelibraryLoadingAnimation();
+//         console.error('Error updating member ID:', error);
+//     }
+// }
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Handle successful response
                 showToast('Member added successfully', false);
                 addMemberForm.reset(); // Reset the form after successful submission
-                await updateMemberID();
+                // await updateMemberID();
             } else {
                 hidelibraryLoadingAnimation();
                 throw new Error('Failed to add member');
