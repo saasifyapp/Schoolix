@@ -222,40 +222,21 @@ function staytuned() {
 
 ///////////////////////////////////////// GET VALUES FOR PREADMISSION CONSOLE ON DASHBOARD ////////////////////////////
 
-let animationFrameId; // Declare a variable to store animation frame ID
 
-fetch('/main_dashboard_data')
-    .then(response => response.json())
-    .then(data => {
-        console.log(data); // Log fetched data to check if admittedTeachersCount is included
-        // Update HTML with counts for each table
-        updateCountWithAnimation('registeredStudentsCount', () => data.pre_adm_registered_students);
-        updateCountWithAnimation('admittedStudentsCount', () => data.pre_adm_admitted_students);
-        updateCountWithAnimation('registeredTeachersCount', () => data.pre_adm_registered_teachers);
-        updateCountWithAnimation('admittedTeachersCount', () => data.pre_adm_admitted_teachers);
-    })
-    .catch(error => {
-        console.error('Error fetching counts:', error);
-        // Display error message
-        updateCount('registeredStudentsCount', 'Error fetching count');
-        updateCount('admittedStudentsCount', 'Error fetching count');
-        updateCount('registeredTeachersCount', 'Error fetching count');
-        updateCount('admittedTeachersCount', 'Error fetching count');
-    });
-
+// Get Library Details //
 
 fetch('/main_dashboard_library_data')
     .then(response => response.json())
     .then(data => {
         // updateCountWithAnimation('totalBooksCount', () => data.totalBooks);
-        // updateCountWithAnimation('booksIssuedCount', () => data.booksIssued);
-        // updateCountWithAnimation('memberCount', () => data.memberCount);
-        // updateCountWithAnimation('outstandingBooksCount', () => data.outstandingBooks);
+        // updateCountWithAnimation('booksIssuedCount', () => data.memberCount);
+        // updateCountWithAnimation('memberCount', () => data.booksIssued);
+        // updateCountWithAnimation('outstandingBooksCount', () => data.booksAvailable);
 
-        // document.getElementById('totalBooksCount').textContent = data.totalBooks;
-        // document.getElementById('booksIssuedCount').textContent = data.booksIssued;
-        // document.getElementById('memberCount').textContent = data.memberCount;
-        // document.getElementById('outstandingBooksCount').textContent = data.outstandingBooks;
+        // document.getElementById('totalBooksCount').textContent = data.outstandingBooks;
+        // document.getElementById('booksIssuedCount').textContent = data.booksIssuedToday;
+        // document.getElementById('memberCount').textContent = data.booksReturnedToday;
+        // document.getElementById('outstandingBooksCount').textContent = data.penaltiesCollected;
         console.log(data)
     })
     .catch(error => {
@@ -267,59 +248,28 @@ fetch('/main_dashboard_library_data')
         // updateCount('outstandingBooksCount', 'Error fetching count');
     });
 
-function updateCountWithAnimation(elementId, valueCallback) {
-    const element = document.getElementById(elementId);
-    const currentValue = parseInt(element.textContent) || 0; // Parse as integer, default to 0 if NaN
 
-    let start;
+// Get Students COunts
 
-    function step(timestamp) {
-        if (!start) start = timestamp;
-        const elapsed = timestamp - start;
+fetch('/student_counts')
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
 
-        const newValue = valueCallback(); // Fetch updated value
+        // If you want to update the HTML elements with the counts, uncomment and use these lines:
+        // document.getElementById('totalStudentsCount').textContent = data.totalStudents;
+        // document.getElementById('maleStudentsCount').textContent = data.maleStudents;
+        // document.getElementById('femaleStudentsCount').textContent = data.femaleStudents;
+    })
+    .catch(error => {
+        console.error('Error fetching student counts:', error);
 
-        if (typeof newValue !== 'number' || isNaN(newValue)) {
-            // If the fetched value is not a number or NaN, stop animation
-            element.textContent = 'Error fetching count';
-            return;
-        }
+        // If you want to display error messages in the HTML elements, uncomment and use these lines:
+        // document.getElementById('totalStudentsCount').textContent = 'Error fetching count';
+        // document.getElementById('maleStudentsCount').textContent = 'Error fetching count';
+        // document.getElementById('femaleStudentsCount').textContent = 'Error fetching count';
+    });
 
-        const difference = newValue - currentValue;
-        const duration = 2000; // 2 seconds
-
-        // Update count value
-        const updatedValue = Math.floor(currentValue + (difference * elapsed) / duration);
-        element.textContent = updatedValue;
-
-        if (elapsed < duration) {
-            // Continue animation
-            animationFrameId = window.requestAnimationFrame(step);
-        } else {
-            // Animation complete, set final value
-            element.textContent = newValue;
-        }
-    }
-
-    // Start animation
-    animationFrameId = window.requestAnimationFrame(step);
-}
-
-// Pause animation when tab becomes hidden
-document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-        // Tab is hidden, cancel animation
-        if (animationFrameId) {
-            window.cancelAnimationFrame(animationFrameId);
-        }
-    } else {
-        // Tab is visible again, resume animation
-        updateCountWithAnimation('registeredStudentsCount', /* valueCallback */);
-        updateCountWithAnimation('admittedStudentsCount', /* valueCallback */);
-        updateCountWithAnimation('registeredTeachersCount', /* valueCallback */);
-        updateCountWithAnimation('admittedTeachersCount', /* valueCallback */);
-    }
-});
 
 // Function to handle password for PURCHASE console
 
@@ -402,3 +352,83 @@ function showToast(message, isError) {
         });
     }, 4000);
 }
+
+
+/*
+let animationFrameId; // Declare a variable to store animation frame ID
+
+fetch('/main_dashboard_data')
+    .then(response => response.json())
+    .then(data => {
+        console.log(data); // Log fetched data to check if admittedTeachersCount is included
+        // Update HTML with counts for each table
+        updateCountWithAnimation('registeredStudentsCount', () => data.pre_adm_registered_students);
+        updateCountWithAnimation('admittedStudentsCount', () => data.pre_adm_admitted_students);
+        updateCountWithAnimation('registeredTeachersCount', () => data.pre_adm_registered_teachers);
+        updateCountWithAnimation('admittedTeachersCount', () => data.pre_adm_admitted_teachers);
+    })
+    .catch(error => {
+        console.error('Error fetching counts:', error);
+        // Display error message
+        updateCount('registeredStudentsCount', 'Error fetching count');
+        updateCount('admittedStudentsCount', 'Error fetching count');
+        updateCount('registeredTeachersCount', 'Error fetching count');
+        updateCount('admittedTeachersCount', 'Error fetching count');
+    });
+*/
+
+/* Pause animation when tab becomes hidden
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        // Tab is hidden, cancel animation
+        if (animationFrameId) {
+            window.cancelAnimationFrame(animationFrameId);
+        }
+    } else {
+        // Tab is visible again, resume animation
+        updateCountWithAnimation('registeredStudentsCount', /* valueCallback );
+        updateCountWithAnimation('admittedStudentsCount', /* valueCallback );
+        updateCountWithAnimation('registeredTeachersCount', /* valueCallback );
+        updateCountWithAnimation('admittedTeachersCount', /* valueCallback );
+    }
+}); 
+*/
+
+/*
+function updateCountWithAnimation(elementId, valueCallback) {
+    const element = document.getElementById(elementId);
+    const currentValue = parseInt(element.textContent) || 0; // Parse as integer, default to 0 if NaN
+
+    let start;
+
+    function step(timestamp) {
+        if (!start) start = timestamp;
+        const elapsed = timestamp - start;
+
+        const newValue = valueCallback(); // Fetch updated value
+
+        if (typeof newValue !== 'number' || isNaN(newValue)) {
+            // If the fetched value is not a number or NaN, stop animation
+            element.textContent = 'Error fetching count';
+            return;
+        }
+
+        const difference = newValue - currentValue;
+        const duration = 2000; // 2 seconds
+
+        // Update count value
+        const updatedValue = Math.floor(currentValue + (difference * elapsed) / duration);
+        element.textContent = updatedValue;
+
+        if (elapsed < duration) {
+            // Continue animation
+            animationFrameId = window.requestAnimationFrame(step);
+        } else {
+            // Animation complete, set final value
+            element.textContent = newValue;
+        }
+    }
+
+    // Start animation
+    animationFrameId = window.requestAnimationFrame(step);
+}*/

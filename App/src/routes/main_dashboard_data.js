@@ -107,5 +107,49 @@ router.get('/main_dashboard_library_data', (req, res) => {
 });
 
 
+// Endpoint to get Student counts //
+
+router.get('/student_counts', (req, res) => {
+    // Define an object to store counts
+    const counts = {};
+
+    // Define queries for each count
+    const queries = {
+        totalStudents: 'SELECT COUNT(*) AS count FROM student_details',
+        maleStudents: "SELECT COUNT(*) AS count FROM student_details WHERE Gender = 'Male'",
+        femaleStudents: "SELECT COUNT(*) AS count FROM student_details WHERE Gender = 'Female'"
+    };
+
+    // Fetch counts for each category
+    const promises = Object.keys(queries).map(key => {
+        return new Promise((resolve, reject) => {
+            req.connectionPool.query(queries[key], (error, results) => {
+                if (error) {
+                    console.error(`Error querying MySQL for ${key}:`, error);
+                    reject(error);
+                } else {
+                    if (results && results.length > 0 && results[0].count !== undefined) {
+                        // Extract the count value using the alias 'count'
+                        counts[key] = results[0].count;
+                        resolve();
+                    } else {
+                        console.error(`No count found for ${key}`);
+                        counts[key] = 0; // Assuming count is 0 if not found
+                        resolve();
+                    }
+                }
+            });
+        });
+    });
+
+    // Once all counts are fetched, send them as a response
+    Promise.all(promises)
+        .then(() => {
+            res.json(counts);
+        })
+        .catch(error => {
+            res.status(500).json({ error: 'Error fetching counts from MySQL' });
+        });
+});
 
 module.exports = router;
