@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const suggestionsContainer = document.getElementById('suggestions');
 
     memberNameInput.addEventListener('input', function() {
+        suggestionsContainer.style.display = "flex";
         const query = this.value;
         if (query.length > 2) {
             fetch(`/get_student_details?q=${query}`)

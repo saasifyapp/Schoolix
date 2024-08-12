@@ -1,13 +1,17 @@
 /* Style for the suggestions container */
 .suggestions {
-    border: 1px solid #ccc;
-    border-radius: 15px; /* Rounded corners */
-    max-height: 150px;
+    /* border: 1px solid #ccc; */
+    border-radius: 5px 5px 5px 5px; /* Rounded corners */
+    max-height: 10rem;
+    width: 18.7rem;
     overflow-y: auto;
     position: absolute;
     background: white;
     z-index: 1000;
-    margin-top: 65%; /* Space between input field and suggestions */
+    /* /* margin-top: 65%;  */
+    top: 3.3rem;
+    display: none;
+    flex-direction: column;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
 }
 
@@ -26,4 +30,23 @@
 .suggestion-item:hover {
     background: #D6EAF8;
     font-weight: bold; /* Make text bold on hover */
+}
+
+
+/* Customize the scrollbar */
+.suggestions::-webkit-scrollbar {
+    width: 4px; /* Thin scrollbar width */
+}
+
+.suggestions::-webkit-scrollbar-thumb {
+    background-color: #ccc; /* Color of the scrollbar */
+    border-radius: 10px; /* Rounded scrollbar */
+}
+
+.suggestions::-webkit-scrollbar-thumb:hover {
+    background-color: #aaa; /* Darker on hover */
+}
+
+.suggestions::-webkit-scrollbar-track {
+    background: transparent; /* Transparent track */
 }
