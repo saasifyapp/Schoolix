@@ -100,12 +100,28 @@
         </li>
 
         <li class="item">
-          <a href="" class="nav_link">
+          <div href="" class="nav_link submenu_item">
             <span class="navlink_icon">
               <img src="/images/staff.png" alt="Custom Icon" class="custom_icon">
             </span>
-            <span class="navlink" style="margin-top: -8px">Administrative Staff</span>
-          </a>
+            <span class="navlink">Admin Staff</span>
+            <i class="bx bx-chevron-right arrow-left"></i>
+          </div>
+  
+          <ul class="menu_items submenu">
+            <a href="/inventory/purchase" id="purchaseLink" class="nav_link sublink">
+              <span class="navlink_icon">
+                <img src="/images/admins.png" alt="Billing Icon" class="custom_icon">
+              </span>
+              Office Admins
+            </a>
+            <a href="/inventory/billing" class="nav_link sublink">
+              <span class="navlink_icon">
+                <img src="/images/worker.png" alt="Store Icon" class="custom_icon">
+              </span>
+              Support Staff
+            </a>
+          </ul>
         </li>
 
         <div class="menu_title menu_dahsboard_2"></div>
@@ -323,9 +339,79 @@
       </div>
   </nav>
 
+<!-- Parent Container for Flexbox Layout -->
+<div class="flex-container">
+  <div class="user_details">
+    <div class="user_row_container">
+      <div class="user_row">
+        <div class="student_container">
+          <div class="count">0</div>
+          <div class="label">Students</div>
+        </div>
+        <div class="teacher_container">
+          <div class="count">0</div>
+          <div class="label">Teachers</div>
+        </div>
+        <div class="admin_container">
+          <div class="count">0</div>
+          <div class="label">Admin Staff</div>
+        </div>
+      </div>
+    </div>
+    <div class="user_row_container">
+      <div class="user_row">
+        <div class="male_container">
+          <div class="count">0</div>
+          <div class="label">Male</div>
+        </div>
+        <div class="female_container">
+          <div class="count">0</div>
+          <div class="label">Female</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="library_details">
+    <div class="library_row">
+      <div class="totalBooks">
+        <div class="count">0</div>
+        <div class="label">Total Books</div>
+      </div>
+      <div class="memberCount">
+        <div class="count">0</div>
+        <div class="label">Member Count</div>
+      </div>
+      <div class="booksIssued">
+        <div class="count">0</div>
+        <div class="label">Books Issued</div>
+      </div>
+      <div class="booksAvailable">
+        <div class="count">0</div>
+        <div class="label">Books Available</div>
+      </div>
+    </div>
+    <div class="library_row">
+      <div class="outstandingBooks">
+        <div class="count">0</div>
+        <div class="label">Outstanding Books</div>
+      </div>
+      <div class="booksIssuedToday">
+        <div class="count">0</div>
+        <div class="label">Books Issued Today</div>
+      </div>
+      <div class="booksReturnedToday">
+        <div class="count">0</div>
+        <div class="label">Books Returned Today</div>
+      </div>
+      <div class="penaltiesCollected">
+        <div class="count">0</div>
+        <div class="label">Penalties Collected</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-
-  <div class="main_container">
+ <!--- <div class="main_container">
     <div class="sub_container">
       <div class="count_details">
         <div class="title" id="registered_students_title">Registered Students</div>
@@ -362,7 +448,7 @@
         <img src="/images/admitted_teacher.gif" alt="Your Image" height="95%" width="95%">
       </div>
     </div>
-  </div>
+  </div> -->
 
   <!-- <div class="second_main_container">
 

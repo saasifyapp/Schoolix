@@ -16,7 +16,8 @@
 }
 
 body {
-    background-color: #e7f2fd;
+    background-color: #F7F9F9; 
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
     transition: all 0.5s ease;
 }
 
@@ -596,3 +597,127 @@ body.dark {
 .toast.error {
     background-color: #f44336; /* Red background for error */
 }
+
+
+
+/* Flex Container */
+.flex-container {
+    display: flex;
+    width: calc(100% - 260px); /* Adjust width based on the sidebar width */
+    margin-left: 260px; /* Adjust margin to place it next to the sidebar */
+    margin-top: 70px; /* Adjust margin to place it below the header */
+    height: auto; /* Set a flexible height for the flex container */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  }
+  
+  /* User Details and Library Details Containers */
+  .user_details, .library_details {
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for better visibility */
+    border-radius: 20px;
+    margin-top: 10px; /* Margin from the top */
+    margin-bottom: 10px; /* Margin from the bottom */
+    height: 100%; /* Full height of the parent container */
+  }
+  
+  /* Specific width for user_details */
+  .user_details {
+    background-color: transparent;
+    box-shadow:none; /* Optional: Add a shadow for better visibility */
+    flex: 0 0 35%; /* 35% width */
+    margin-left: 10px; /* Gap from the sidebar */
+    margin-right: 10px; /* Gap between user_details and library_details */
+    display: flex; /* Use flexbox for internal layout */
+    flex-direction: column; /* Align children in a column */
+    padding: 0; /* Remove padding inside the container */
+  }
+  
+  /* User Row Container */
+  .user_row_container {
+    background-color: transparent; /* Light gray background */
+    border-radius: 10px; /* Optional: Add border radius */
+    padding: 10px; /* Add padding inside the container */
+    margin-bottom: 10px; /* Margin between rows */
+  }
+  
+  /* User Row */
+  .user_row {
+    display: flex; /* Use flexbox for internal layout */
+    justify-content: space-between; /* Distribute space evenly between the containers */
+    width: 100%; /* Full width of the parent container */
+  }
+  
+  /* Common Styles for All User Sub-Containers */
+  .student_container, .teacher_container, .admin_container,
+  .male_container, .female_container {
+    background-color: #A3E4D7; /* Blue color */
+    flex: 1; /* Each container takes up equal width */
+    height: 70px; /* Adjust height as needed */
+    margin: 0 5px; /* Add margin between the containers */
+    border-radius: 10px; /* Optional: Add border radius */
+    display: flex; /* Use flexbox for internal layout */
+    flex-direction: column; /* Align children vertically */
+    justify-content: center; /* Center items vertically */
+    align-items: center; /* Center items horizontally */
+    color: white; /* Text color */
+  }
+
+  .student_container{
+    background-color: #cfceff;
+  }
+  
+  .teacher_container{
+    background-color: #fae27c;
+  }
+  .admin_container{
+    background-color: #D0ECE7;
+  }
+  .male_container{
+    background-color: #D6EAF8;
+  }
+  .female_container{
+    background-color: #F5B7B1;
+  }
+  /* Specific width for library_details */
+  .library_details {
+    flex: 0 0 65%; /* 65% width */
+    margin-right: 10px; /* Right margin */
+    display: flex; /* Use flexbox for internal layout */
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    align-items: center; /* Center items vertically */
+    padding: 10px; /* Add padding inside the container */
+  }
+  
+  /* Library Row */
+  .library_row {
+    display: flex; /* Use flexbox for internal layout */
+    justify-content: space-between; /* Distribute space evenly between the containers */
+    margin-bottom: 10px; /* Margin between rows */
+    width: 100%; /* Full width of the parent container */
+  }
+  
+  /* Common Styles for All Library Sub-Containers */
+  .totalBooks, .memberCount, .booksIssued, .booksAvailable,
+  .outstandingBooks, .booksIssuedToday, .booksReturnedToday, .penaltiesCollected {
+    background-color: #fae27c; /* Use the blue color from the root variables */
+    flex: 1; /* Each container takes up equal width */
+    height: calc(50% - 15px); /* Half the height of the parent container, accounting for margins */
+    margin: 5px; /* Add margin between the containers */
+    border-radius: 10px; /* Optional: Add border radius */
+    display: flex; /* Use flexbox for internal layout */
+    flex-direction: column; /* Align children vertically */
+    justify-content: center; /* Center items vertically */
+    align-items: center; /* Center items horizontally */
+    color: white; /* Text color */
+  }
+  
+  /* Count and Label Styles */
+  .count {
+    font-size: 1.5rem; /* Font size for the count */
+    font-weight: bold; /* Bold font weight */
+  }
+  
+  .label {
+    font-size: 1rem; /* Font size for the label */
+    margin-top: 5px; /* Margin above the label */
+  }
