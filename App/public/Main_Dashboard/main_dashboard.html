@@ -9,7 +9,10 @@
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <title>Dashboard</title>
   <link rel="stylesheet" href="/css/Main_Dashboard/main_dashboard.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   
+
+
 
 
 </head>
@@ -72,7 +75,7 @@
             <span class="navlink">Students</span>
             <i class="bx bx-chevron-right arrow-left"></i>
           </div>
-  
+
           <ul class="menu_items submenu">
             <a href="/inventory/purchase" id="purchaseLink" class="nav_link sublink">
               <span class="navlink_icon">
@@ -107,7 +110,7 @@
             <span class="navlink">Admin Staff</span>
             <i class="bx bx-chevron-right arrow-left"></i>
           </div>
-  
+
           <ul class="menu_items submenu">
             <a href="/inventory/purchase" id="purchaseLink" class="nav_link sublink">
               <span class="navlink_icon">
@@ -136,7 +139,7 @@
             <span class="navlink">Fees</span>
             <i class="bx bx-chevron-right arrow-left"></i>
           </div>
-  
+
           <ul class="menu_items submenu">
             <a href="/inventory/purchase" id="purchaseLink" class="nav_link sublink">
               <span class="navlink_icon">
@@ -327,7 +330,7 @@
 
         -->
 
-      
+
 
       <!-- Sidebar Open / Close -->
       <div class="bottom_content" id="logoutButton">
@@ -341,87 +344,136 @@
 
   <div class="dashboard_contents">
     <!-- Existing sub_containers here -->
-  
+
     <!-- New user_details container -->
     <div class="user_details">
       <div class="user_detail_item">
-        <span class="detail_count">0</span>
         <span class="detail_title">Students</span>
-      </div>
-      <div class="user_detail_item">
         <span class="detail_count">0</span>
+        <i class="user_detail_icon fas fa-user-graduate"></i> <!-- Example icon -->
+      </div>
+      <div class="user_detail_item" style="background-color: #fae27c;">
         <span class="detail_title">Teachers</span>
+        <span class="detail_count">0</span>
+        <i class="user_detail_icon fas fa-chalkboard-teacher"></i> <!-- Example icon -->
       </div>
       <div class="user_detail_item">
-        <span class="detail_count">0</span>
         <span class="detail_title">Admins</span>
+        <span class="detail_count">0</span>
+        <i class="user_detail_icon fas fa-user-shield"></i> <!-- Example icon -->
+      </div>
+      <div class="user_detail_item" style="background-color: #fae27c;">
+        <span class="detail_title">Staff</span>
+        <span class="detail_count">0</span>
+        <i class="user_detail_icon fas fa-users-cog"></i> <!-- Example icon -->
       </div>
       <div class="user_detail_item">
+        <span class="detail_title">Employees</span>
         <span class="detail_count">0</span>
-        <span class="detail_title">Support Staff</span>
-      </div>
-      <div class="user_detail_item">
-        <span class="detail_count">0</span>
-        <span class="detail_title">Total Employees</span>
+        <i class="user_detail_icon fas fa-users"></i> <!-- Example icon -->
       </div>
     </div>
-  
-<!-- New containers below user_details -->
-<div class="graph_and_library_container">
-  <div class="graph">
-    <div class="male_female_graph">
-      <span class="detail_title">Male/Female Graph</span>
-      <svg class="pie_chart" viewBox="0 0 32 32">
-        <circle r="16" cx="16" cy="16" class="slice" style="stroke-dasharray: 60 40;"></circle>
-      </svg>
-    </div>
-    <div class="fee_status">
-      <span class="detail_title">Fee Status</span>
-      <svg class="pie_chart" viewBox="0 0 32 32">
-        <circle r="16" cx="16" cy="16" class="slice" style="stroke-dasharray: 75 25;"></circle>
-      </svg>
-    </div>
-  </div>
-  <div class="library_details">
-   <!-- <h2 class="container_heading">Library Overview</h2> -->
-    <div class="library_item">
-      <span class="detail_count">0</span>
-      <span class="detail_title">Total Books</span>
-    </div>
-    <div class="library_item">
-      <span class="detail_count">0</span>
-      <span class="detail_title">Member Count</span>
-    </div>
-    <div class="library_item">
-      <span class="detail_count">0</span>
-      <span class="detail_title">Books Issued</span>
-    </div>
-    <div class="library_item">
-      <span class="detail_count">0</span>
-      <span class="detail_title">Books Available</span>
-    </div>
-    <div class="library_item">
-      <span class="detail_count">0</span>
-      <span class="detail_title">Outstanding Books</span>
-    </div>
-    <div class="library_item">
-      <span class="detail_count">0</span>
-      <span class="detail_title">Books Issued Today</span>
-    </div>
-    <div class="library_item">
-      <span class="detail_count">0</span>
-      <span class="detail_title">Books Returned Today</span>
-    </div>
-    <div class="library_item">
-      <span class="detail_count">0</span>
-      <span class="detail_title">Penalties Collected</span>
-    </div>
-  </div>
-</div>
-</div>
 
-  
- <!--- <div class="main_container">
+
+    <!-- New containers below user_details -->
+    <div class="graph_and_library_container">
+      <div class="graph">
+        <div class="male_female_graph">
+          <div class="chart-container">
+            <div class="chart">
+              <div class="total_students" id="totalStudents">
+                2500
+              </div>
+            </div>
+            <div class="legend">
+              <div><span class="male"></span>Male: <span id="maleCount">1500</span></div>
+              <div><span class="female"></span>Female: <span id="femaleCount">1000</span></div>
+            </div>
+            <h3>Male/Female Graph</h3>
+          </div>
+        </div>
+    
+        <div class="fee_status">
+          <div class="chart-container">
+            <div class="chart">
+              <div class="total_students" id="feeStatusTotal">
+                1500
+              </div>
+            </div>
+            <div class="legend">
+              <div><span class="paid"></span>Paid: <span id="paidCount">1200</span></div>
+              <div><span class="unpaid"></span>Unpaid: <span id="unpaidCount">300</span></div>
+            </div>
+            <h3>Fee Status</h3>
+          </div>
+        </div>
+      </div>
+      <div class="library_details">
+        <div class="library_item" style="background-color: #fdf6d8;">
+          <div class="count_icon_container">
+            <span id="totalBooksCount" class="details_count_lib">0</span>
+            <span class="library_icon">📚</span>
+          </div>
+          <span id="totalBooksTitle" class="detail_title_lib">Total Books</span>
+        </div>
+        <div class="library_item" style="background-color: #f1f0ff;">
+          <div class="count_icon_container">
+            <span id="memberCount" class="details_count_lib">0</span>
+            <span class="library_icon">👤</span>
+          </div>
+          <span id="memberCountTitle" class="detail_title_lib">Member Count</span>
+        </div>
+        <div class="library_item" style="background-color: #fdf6d8;">
+          <div class="count_icon_container">
+            <span id="booksIssuedCount" class="details_count_lib">0</span>
+            <span class="library_icon">📖</span>
+          </div>
+          <span id="booksIssuedTitle" class="detail_title_lib">Books Issued</span>
+        </div>
+        <div class="library_item" style="background-color: #f1f0ff;">
+          <div class="count_icon_container">
+            <span id="booksAvailableCount" class="details_count_lib">0</span>
+            <span class="library_icon">📚</span>
+          </div>
+          <span id="booksAvailableTitle" class="detail_title_lib">Books Available</span>
+        </div>
+        <div class="library_item" style="background-color: #f1f0ff;">
+          <div class="count_icon_container">
+            <span id="outstandingBooksCount" class="details_count_lib">0</span>
+            <span class="library_icon">📚</span>
+          </div>
+          <span id="outstandingBooksTitle" class="detail_title_lib">Outstanding Books</span>
+        </div>
+        <div class="library_item" style="background-color: #fdf6d8;">
+          <div class="count_icon_container">
+            <span id="booksIssuedTodayCount" class="details_count_lib">0</span>
+            <span class="library_icon">📅</span>
+          </div>
+          <span id="booksIssuedTodayTitle" class="detail_title_lib">Books Issued Today</span>
+        </div>
+        <div class="library_item" style="background-color: #f1f0ff;">
+          <div class="count_icon_container">
+            <span id="booksReturnedTodayCount" class="details_count_lib">0</span>
+            <span class="library_icon">📅</span>
+          </div>
+          <span id="booksReturnedTodayTitle" class="detail_title_lib">Books Returned Today</span>
+        </div>
+        <div class="library_item" style="background-color: #fdf6d8;">
+          <div class="count_icon_container">
+            <span id="penaltiesCollectedCount" class="details_count_lib">0</span>
+            <span class="library_icon">💰</span>
+          </div>
+          <span id="penaltiesCollectedTitle" class="detail_title_lib">Penalties Collected</span>
+        </div>
+      </div>
+      
+
+
+    </div>
+  </div>
+
+
+  <!--- <div class="main_container">
     <div class="sub_container">
       <div class="count_details">
         <div class="title" id="registered_students_title">Registered Students</div>
@@ -505,12 +557,14 @@
       </div>
     </div>
   </div> -->
-  
+
 
   <!-- JavaScript -->
   <script src="/js/Main_Dashboard/main_dashboard.js"></script>
   <script src="/js/Universal_Components_JS/handle_session.js"></script>
 
+
+ 
 </body>
 
 </html>
