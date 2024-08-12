@@ -639,74 +639,67 @@
 
 
     <!-- Search Transaction Overlay -->
-    <div id="searchTransactionOverlay" class="overlay-search">
-        <div class="overlay-content-search">
+    <div id="searchTransactionOverlay" class="overlay-search" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; backdrop-filter: blur(5px); background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center; overflow: hidden; z-index: 1000; display: none; transition: opacity 0.3s ease-in-out; animation: fadeUp 0.3s ease-in-out;">
+        <div class="overlay-content-search" style="position: absolute; top: 2rem; left: 2rem; right: 2rem; bottom: 2rem; padding: 1rem; background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%); border-radius: 1rem; box-shadow: 0 0 1.2rem rgba(0, 0, 0, 0.2); display: flex; flex-direction: column; max-height: calc(100% - 4rem);">
             <button id="closeSearchTransactionOverlay" class="close-button">×</button>
-            <img src="/images/searchtransactionlib.png" alt="Overlay Icon" class="overlay-icon"
-                style="height: 40px; width: 40px;"> <!-- Add your icon here -->
-            <h2 class="overlay-search-head" style="text-align: center;">Search Transactions</h2>
-            <div class="search-container"
-                style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+            <img src="/images/searchtransactionlib.png" alt="Overlay Icon" class="overlay-icon" style="height: 40px; width: 40px;">
+            <h2 class="overlay-search-head" style="text-align: center; font-size: 30px; color: var(--grey-color); animation: slideInFromUp 0.3s ease-in-out;">Search Transactions</h2>
+            <div class="search-container" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
                 <div class="form-Searchgroup" style="display: flex; align-items: center;">
                     <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="margin-right: 10px;">
-                    <input type="text" class="form-control" id="searchTransactionInput" name="transactionSearch"
-                        placeholder=" " oninput="searchTransactionDetails()" style="width: 400px;">
+                    <input type="text" class="form-control" id="searchTransactionInput" name="transactionSearch" placeholder=" " oninput="searchTransactionDetails()" style="width: 400px;">
                     <span class="form-control-placeholder" style="left: 3.75rem;">Search Transactions...</span>
                 </div>
-                <button class="refreshButton" onclick="refreshTransactionData()"
-                    style="margin-left: 10px; margin-top: 10px;">
+                <button class="refreshButton" onclick="refreshTransactionData()" style="margin-left: 10px; margin-top: 10px;">
                     <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
                 </button>
             </div>
             <button class="export_registered_students" onclick="exportTransactionTable()">
                 <img src="/images/export.png" alt="Export Icon"> Export
             </button>
-            <div class="overlay-inner" style="display: flex; justify-content: space-between;">
-                <div style="width: 48%;">
+            <div class="overlay-inner" style="display: flex; justify-content: space-between; flex-grow: 1; gap: 1rem; height: calc(100% - 5rem);">
+                <div class="table-section" style="width: 48%; display: flex; flex-direction: column; max-height: 100%;">
                     <h3>Issue Details</h3>
-                    <div class="table-container" style=" max-height: calc(100% - 42rem);">
-                        <div class="">
-                            <table class="details-table styled-table">
-                                <thead>
-                                    <tr id="issueTableHeaders">
-                                        <th>Transaction ID</th>
-                                        <th>Member ID</th>
-                                        <th>Book ID</th>
-                                        <th>Transaction Date</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="issueTableBody">
-                                    <!-- Issue rows will be dynamically populated here -->
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="table-container" style="flex-grow: 1; overflow-y: auto; border-radius: 10px 10px 0 0;">
+                        <table class="details-table styled-table" style="border-collapse: collapse; width: 100%; box-shadow: 0 0 0 1px #dddddd;">
+                            <thead>
+                                <tr id="issueTableHeaders">
+                                    <th>Transaction ID</th>
+                                    <th>Member ID</th>
+                                    <th>Book ID</th>
+                                    <th>Transaction Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="issueTableBody">
+                                <!-- Issue rows will be dynamically populated here -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div style="width: 48%;">
+                <div class="table-section" style="width: 48%; display: flex; flex-direction: column; max-height: 100%;">
                     <h3>Return Details</h3>
-                    <div class="table-container" style=" max-height: calc(100% - 42rem);">
-                        <div class="">
-                            <table class="details-table styled-table">
-                                <thead>
-                                    <tr id="returnTableHeaders">
-                                        <th>Transaction ID</th>
-                                        <th>Member ID</th>
-                                        <th>Book ID</th>
-                                        <th>Transaction Date</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="returnTableBody">
-                                    <!-- Return rows will be dynamically populated here -->
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="table-container" style="flex-grow: 1; overflow-y: auto; border-radius: 10px 10px 0 0;">
+                        <table class="details-table styled-table" style="border-collapse: collapse; width: 100%; box-shadow: 0 0 0 1px #dddddd;">
+                            <thead>
+                                <tr id="returnTableHeaders">
+                                    <th >Transaction ID</th>
+                                    <th >Member ID</th>
+                                    <th >Book ID</th>
+                                    <th >Transaction Date</th>
+                                    <th >Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="returnTableBody">
+                                <!-- Return rows will be dynamically populated here -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
 
 
     <!-- Penalty Processor Overlay -->
