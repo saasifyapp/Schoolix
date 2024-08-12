@@ -58,12 +58,14 @@
         <div id="toast" class="toast"></div>
     </div>
 
+    <div id="bigToastOverlay" class="toast-overlay hidden"></div>
     <div id="bigToast" class="big-toast hidden">
         <div class="big-toast-content">
-            <button id="bigToastClose" onclick="hideBigToast()">X</button>
+            <button id="bigToastClose" onclick="hideBigToast()">✖</button>
             <span id="bigToastMessage"></span>
         </div>
     </div>
+
 
 
     <div class="cards-container">
@@ -192,39 +194,39 @@
                     <form id="addBookForm">
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="bookID" required placeholder=" ">
+                                <input type="text" class="form-control" id="bookID" placeholder=" ">
                                 <span class="form-control-placeholder">Book ID</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="bookName" required placeholder=" ">
+                                <input type="text" class="form-control" id="bookName" placeholder=" ">
                                 <span class="form-control-placeholder">Book Name</span>
                             </div>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="authorName" required placeholder=" ">
+                                <input type="text" class="form-control" id="authorName" placeholder=" ">
                                 <span class="form-control-placeholder">Author Name</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="bookPublication" required placeholder=" ">
+                                <input type="text" class="form-control" id="bookPublication" placeholder=" ">
                                 <span class="form-control-placeholder">Book Publication</span>
                             </div>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="number" class="form-control" id="bookPrice" required placeholder=" ">
+                                <input type="number" class="form-control" id="bookPrice" placeholder=" ">
                                 <span class="form-control-placeholder">Book Price</span>
                             </div>
                             <div class="form-group">
-                                <input type="number" class="form-control" id="orderedQuantity" required placeholder=" ">
+                                <input type="number" class="form-control" id="orderedQuantity" placeholder=" ">
                                 <span class="form-control-placeholder">Ordered Quantity</span>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <input class="form-control" id="description" required placeholder=" "
+                            <input class="form-control" id="description" placeholder=" "
                                 style="height: 80px;"></input>
                             <span class="form-control-placeholder">Description</span>
                         </div>
@@ -341,13 +343,13 @@
                     <form id="addMemberForm">
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="memberName" name="memberName" required
+                                <input type="text" class="form-control" id="memberName" name="memberName" 
                                     placeholder=" ">
                                 <span class="form-control-placeholder">Member Name</span>
                                 <div id="suggestions" class="suggestions"></div> <!-- Suggestions container -->
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="memberID" name="memberID" required
+                                <input type="text" class="form-control" id="memberID" name="memberID" 
                                     placeholder=" ">
                                 <span class="form-control-placeholder">Member ID</span>
                             </div>
@@ -356,7 +358,7 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <select id="classFilter" name="classFilter" class="form-control custom-select"
-                                    style="text-align: center;" required>
+                                    style="text-align: center;" >
                                     <option value="" disabled selected style="display:none;">Select Class</option>
                                     <option value="Nursery">Nursery</option>
                                     <option value="KG1">KG-1</option>
@@ -375,7 +377,7 @@
                                 <span class="form-control-placeholder"></span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="contact" name="contact" required
+                                <input type="text" class="form-control" id="contact" name="contact" 
                                     placeholder=" ">
                                 <span class="form-control-placeholder">Contact</span>
                             </div>
@@ -588,14 +590,14 @@
                 <form id="returnBookForm" class="form-inline">
                     <div class="form-group">
                         <label>
-                            <input type="radio" name="inputType" id="studentRadio" value="student" required> Member ID
+                            <input type="radio" name="inputType" id="studentRadio" required value="student"> Member ID
                         </label>
                         <label>
-                            <input type="radio" name="inputType" id="bookRadio" value="book" required> Book ID
+                            <input type="radio" name="inputType" id="bookRadio" required value="book"> Book ID
                         </label>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="studentOrBookNo" required placeholder=" "
+                        <input type="text" class="form-control" id="studentOrBookNo" placeholder=" "
                             style="width: 18rem;">
                         <span class="form-control-placeholder" id="formControlPlaceholder">Enter Member or Book
                             ID</span>
@@ -826,7 +828,7 @@
                         background="transparent" speed="1" style="width: 400px; height: 450px;" loop
                         autoplay></dotlottie-player>
                 </div>
-                <table class="styled-table reports-table" style="display: none;">
+                <table id="reportsTable" class="styled-table reports-table" style="display: none;">
                     <thead>
                         <tr>
                             <th>Member ID</th>

@@ -32,6 +32,14 @@
     font-weight: bold; /* Make text bold on hover */
 }
 
+.no-results {
+    color: #999; /* Grey color for "No results found" text */
+    font-style: italic; /* Italic to differentiate from normal items */
+    pointer-events: none; /* Prevent clicks */
+    text-align: center; /* Center the text */
+}
+
+
 
 /* Customize the scrollbar */
 .suggestions::-webkit-scrollbar {

@@ -1,9 +1,9 @@
 // FOR LIBRARY >> ADD MEMBERS //
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const memberNameInput = document.getElementById('memberName');
     const suggestionsContainer = document.getElementById('suggestions');
 
-    memberNameInput.addEventListener('input', function() {
+    memberNameInput.addEventListener('input', function () {
         suggestionsContainer.style.display = "flex";
         const query = this.value;
         if (query.length > 2) {
@@ -12,15 +12,24 @@ document.addEventListener("DOMContentLoaded", function() {
                 .then(data => {
                     console.log('Fetched data:', data); // Log the fetched data
                     suggestionsContainer.innerHTML = '';
-                    data.forEach(student => {
-                        const suggestionItem = document.createElement('div');
-                        suggestionItem.classList.add('suggestion-item');
-                        suggestionItem.textContent = `${student.Name} | ${student.Standard}`;
-                        suggestionItem.dataset.name = student.Name;
-                        suggestionItem.dataset.standard = student.Standard; // Assuming standard field exists
-                        suggestionItem.dataset.contact = student.Contact; // Assuming contact field exists
-                        suggestionsContainer.appendChild(suggestionItem);
-                    });
+
+                    if (data.length === 0) {
+                        // If no results are found
+                        const noResultsItem = document.createElement('div');
+                        noResultsItem.classList.add('suggestion-item', 'no-results');
+                        noResultsItem.textContent = 'No results found';
+                        suggestionsContainer.appendChild(noResultsItem);
+                    } else {
+                        data.forEach(student => {
+                            const suggestionItem = document.createElement('div');
+                            suggestionItem.classList.add('suggestion-item');
+                            suggestionItem.textContent = `${student.Name} | ${student.Standard}`;
+                            suggestionItem.dataset.name = student.Name;
+                            suggestionItem.dataset.standard = student.Standard; // Assuming standard field exists
+                            suggestionItem.dataset.contact = student.Contact; // Assuming contact field exists
+                            suggestionsContainer.appendChild(suggestionItem);
+                        });
+                    }
                 })
                 .catch(error => console.error('Error:', error));
         } else {
@@ -28,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    suggestionsContainer.addEventListener('click', function(event) {
+    suggestionsContainer.addEventListener('click', function (event) {
         if (event.target.classList.contains('suggestion-item')) {
             const selectedStudent = event.target;
             console.log('Selected student details:', {
@@ -44,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    document.addEventListener('click', function(event) {
+    document.addEventListener('click', function (event) {
         if (!suggestionsContainer.contains(event.target) && !memberNameInput.contains(event.target)) {
             suggestionsContainer.innerHTML = '';
         }
@@ -52,11 +61,12 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 // FOR INVENTORY >> GENERATE INVOICE //
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const buyerNameInput = document.getElementById('buyerName');
     const suggestionsContainer = document.getElementById('suggestions');
 
-    buyerNameInput.addEventListener('input', function() {
+    buyerNameInput.addEventListener('input', function () {
+        suggestionsContainer.style.display = "flex";
         const query = this.value;
         if (query.length > 2) {
             fetch(`/get_student_details?q=${query}`)
@@ -64,6 +74,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 .then(data => {
                     console.log('Fetched data:', data); // Log the fetched data
                     suggestionsContainer.innerHTML = '';
+                    if (data.length === 0) {
+                        // If no results are found
+                        const noResultsItem = document.createElement('div');
+                        noResultsItem.classList.add('suggestion-item', 'no-results');
+                        noResultsItem.textContent = 'No results found';
+                        suggestionsContainer.appendChild(noResultsItem);
+                    } else {
                     data.forEach(student => {
                         const suggestionItem = document.createElement('div');
                         suggestionItem.classList.add('suggestion-item');
@@ -73,6 +90,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         suggestionItem.dataset.contact = student.Contact; // Assuming contact field exists
                         suggestionsContainer.appendChild(suggestionItem);
                     });
+                }
                 })
                 .catch(error => console.error('Error:', error));
         } else {
@@ -80,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    suggestionsContainer.addEventListener('click', function(event) {
+    suggestionsContainer.addEventListener('click', function (event) {
         if (event.target.classList.contains('suggestion-item')) {
             const selectedStudent = event.target;
             console.log('Selected student details:', {
@@ -96,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    document.addEventListener('click', function(event) {
+    document.addEventListener('click', function (event) {
         if (!suggestionsContainer.contains(event.target) && !buyerNameInput.contains(event.target)) {
             suggestionsContainer.innerHTML = '';
         }

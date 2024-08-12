@@ -158,8 +158,14 @@ function exportTableToCSV() {
     const filterClass = document.getElementById('filterClassDropdown').value;
     const filterDate = document.getElementById('filterDateInput').value;
 
-    const reportTable = document.querySelector('.styled-table');
+    // Use a unique ID for the table instead of class
+    const reportTable = document.getElementById('reportsTable'); // Ensure this ID matches your table's ID
     const reportTableBody = document.getElementById('reportTableBody');
+
+    if (!reportTable || !reportTableBody) {
+        showToast('Table or Table Body not found.', false);
+        return;
+    }
 
     if (reportTableBody.rows.length === 0) {
         showToast('No data to export.', false);

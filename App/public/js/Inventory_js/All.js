@@ -85,20 +85,33 @@ function showToast(message, isError) {
 }
 
 function showBigToast(message, isError = false) {
-  const toast = document.getElementById("bigToast");
-  const messageElement = document.getElementById("bigToastMessage");
+  const overlay = document.getElementById('bigToastOverlay');
+  const toast = document.getElementById('bigToast');
+  const messageElement = document.getElementById('bigToastMessage');
 
-  // Set the message and type
+  // Set message and error styling
   messageElement.textContent = message;
-  toast.classList.remove("hidden");
-  toast.classList.remove("error", "success");
-  toast.classList.add(isError ? "error" : "success");
+  toast.classList.toggle('error', isError);
+
+  // Show the overlay and toast with animation
+  overlay.classList.remove('hidden');
+  toast.classList.remove('hidden');
+  setTimeout(() => {
+      toast.classList.add('show');
+  }, 10); // Delay to trigger the CSS transition
 }
 
 function hideBigToast() {
-  const toast = document.getElementById("bigToast");
-  toast.classList.add("hidden");
+  const overlay = document.getElementById('bigToastOverlay');
+  const toast = document.getElementById('bigToast');
+
+  // Hide the toast immediately without animation
+  toast.classList.remove('show');
+  toast.classList.add('hidden');
+  overlay.classList.add('hidden');
 }
+
+
 
 // Example usage
 // showBigToast("This is a big error message", true);

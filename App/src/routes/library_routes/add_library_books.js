@@ -11,18 +11,47 @@ router.use(connectionManager);
 router.post('/library/add_book', (req, res) => {
     const { bookID, book_name, book_author, book_publication, book_price, ordered_quantity, description } = req.body;
 
-    const query = `INSERT INTO library_book_details 
-                   (bookID, book_name, book_author, book_publication, book_price, ordered_quantity, description, available_quantity) 
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-
-    req.connectionPool.query(query, [bookID, book_name, book_author, book_publication, book_price, ordered_quantity, description, ordered_quantity], (err, result) => {
+    // Check if bookID already exists
+    const checkBookIDQuery = 'SELECT COUNT(*) AS count FROM library_book_details WHERE bookID = ?';
+    req.connectionPool.query(checkBookIDQuery, [bookID], (err, results) => {
         if (err) {
-            console.error('Error adding book:', err);
-            return res.status(500).json({ error: 'Error adding book' });
+            console.error('Error checking existing bookID:', err);
+            return res.status(500).json({ error: 'Error checking existing bookID' });
         }
-        res.status(201).json({ message: 'Book added successfully', bookId: result.insertId });
+
+        if (results[0].count > 0) {
+            return res.status(400).json({ error: 'Book ID already exists' });
+        }
+
+        // Check if book_name already exists
+        const checkBookNameQuery = 'SELECT COUNT(*) AS count FROM library_book_details WHERE book_name = ?';
+        req.connectionPool.query(checkBookNameQuery, [book_name], (err, results) => {
+            if (err) {
+                console.error('Error checking existing book name:', err);
+                return res.status(500).json({ error: 'Error checking existing book name' });
+            }
+
+            if (results[0].count > 0) {
+                return res.status(400).json({ error: 'Book name already exists' });
+            }
+
+            // Proceed with adding the new book
+            const insertQuery = `
+                INSERT INTO library_book_details 
+                (bookID, book_name, book_author, book_publication, book_price, ordered_quantity, description, available_quantity) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            `;
+            req.connectionPool.query(insertQuery, [bookID, book_name, book_author, book_publication, book_price, ordered_quantity, description, ordered_quantity], (err, result) => {
+                if (err) {
+                    console.error('Error adding book:', err);
+                    return res.status(500).json({ error: 'Error adding book' });
+                }
+                res.status(201).json({ message: 'Book added successfully', bookId: result.insertId });
+            });
+        });
     });
 });
+
 
 
 // Display All Books

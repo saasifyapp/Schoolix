@@ -54,7 +54,7 @@ function isValidMobileNumber(number) {
 
 // async function updateMemberID() {
 //     showLibraryLoadingAnimation();
-    
+
 //     try {
 //         await refreshMembersData(); // Ensure data is up-to-date
 
@@ -101,6 +101,16 @@ document.addEventListener('DOMContentLoaded', () => {
             contact: formatInput(document.getElementById('contact').value),
         };
 
+        // Check if any field is empty
+        const fields = [memberDetails.member_name, memberDetails.memberID, memberDetails.member_class, memberDetails.contact];
+        if (fields.some(field => field === '')) {
+            hidelibraryLoadingAnimation();
+            showToast('All fields are required.', true);
+            return;
+        }
+
+
+
         // Validation for duplicate Member ID
         if (isDuplicateMemberID(memberDetails.memberID)) {
             hidelibraryLoadingAnimation();
@@ -131,16 +141,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify(memberDetails)
             });
-
+        
             if (response.ok) {
+                const result = await response.json();
                 hidelibraryLoadingAnimation();
                 // Handle successful response
-                showToast('Member added successfully', false);
+                showToast(result.message, false);
                 addMemberForm.reset(); // Reset the form after successful submission
+                // Optionally update memberID if needed
                 // await updateMemberID();
             } else {
+                const errorData = await response.json();
                 hidelibraryLoadingAnimation();
-                throw new Error('Failed to add member');
+                showToast(errorData.error || 'Failed to add member', true);
             }
         } catch (error) {
             hidelibraryLoadingAnimation();

@@ -11,18 +11,52 @@ router.use(connectionManager);
 router.post('/library/add_member', (req, res) => {
     const { member_name, memberID, member_class, contact } = req.body;
 
-    const query = `INSERT INTO library_member_details 
-                   (member_name, memberID, member_class, member_contact, books_issued) 
-                   VALUES (?, ?, ?, ?, 0)`;
-
-    req.connectionPool.query(query, [member_name, memberID, member_class, contact], (err, result) => {
+    // Check if memberID already exists
+    const checkMemberIDQuery = 'SELECT COUNT(*) AS count FROM library_member_details WHERE memberID = ?';
+    req.connectionPool.query(checkMemberIDQuery, [memberID], (err, results) => {
         if (err) {
-            console.error('Error adding member:', err);
-            return res.status(500).json({ error: 'Error adding member' });
+            console.error('Error checking existing memberID:', err);
+            return res.status(500).json({ error: 'Error checking existing memberID' });
         }
-        res.status(201).json({ message: 'Member added successfully', memberId: result.insertId });
+
+        if (results[0].count > 0) {
+            return res.status(400).json({ error: 'Member ID already exists' });
+        }
+
+        // Check if member_name already exists in the same class
+        const checkMemberNameQuery = `
+            SELECT COUNT(*) AS count
+            FROM library_member_details
+            WHERE member_name = ? AND member_class = ?
+        `;
+        req.connectionPool.query(checkMemberNameQuery, [member_name, member_class], (err, results) => {
+            if (err) {
+                console.error('Error checking existing member name in the same class:', err);
+                return res.status(500).json({ error: 'Error checking existing member name' });
+            }
+
+            if (results[0].count > 0) {
+                return res.status(400).json({ error: 'Member name already exists in the same class' });
+            }
+
+            // Proceed with adding the new member
+            const insertQuery = `
+                INSERT INTO library_member_details 
+                (member_name, memberID, member_class, member_contact, books_issued) 
+                VALUES (?, ?, ?, ?, 0)
+            `;
+            req.connectionPool.query(insertQuery, [member_name, memberID, member_class, contact], (err, result) => {
+                if (err) {
+                    console.error('Error adding member:', err);
+                    return res.status(500).json({ error: 'Error adding member' });
+                }
+                res.status(201).json({ message: 'Member added successfully', memberId: result.insertId });
+            });
+        });
     });
 });
+
+
 
 // Display All Members
 router.get('/library/members', (req, res) => {
