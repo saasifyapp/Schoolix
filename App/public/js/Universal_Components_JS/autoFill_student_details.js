@@ -66,6 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const suggestionsContainer = document.getElementById('suggestions');
 
     buyerNameInput.addEventListener('input', function () {
+        suggestionsContainer.style.display = "flex";
         const query = this.value;
         if (query.length > 2) {
             fetch(`/get_student_details?q=${query}`)
@@ -73,6 +74,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then(data => {
                     console.log('Fetched data:', data); // Log the fetched data
                     suggestionsContainer.innerHTML = '';
+                    if (data.length === 0) {
+                        // If no results are found
+                        const noResultsItem = document.createElement('div');
+                        noResultsItem.classList.add('suggestion-item', 'no-results');
+                        noResultsItem.textContent = 'No results found';
+                        suggestionsContainer.appendChild(noResultsItem);
+                    } else {
                     data.forEach(student => {
                         const suggestionItem = document.createElement('div');
                         suggestionItem.classList.add('suggestion-item');
@@ -82,6 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         suggestionItem.dataset.contact = student.Contact; // Assuming contact field exists
                         suggestionsContainer.appendChild(suggestionItem);
                     });
+                }
                 })
                 .catch(error => console.error('Error:', error));
         } else {
