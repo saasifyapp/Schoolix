@@ -339,78 +339,88 @@
       </div>
   </nav>
 
-<!-- Parent Container for Flexbox Layout -->
-<div class="flex-container">
-  <div class="user_details">
-    <div class="user_row_container">
-      <div class="user_row">
-        <div class="student_container">
-          <div class="count">0</div>
-          <div class="label">Students</div>
-        </div>
-        <div class="teacher_container">
-          <div class="count">0</div>
-          <div class="label">Teachers</div>
-        </div>
-        <div class="admin_container">
-          <div class="count">0</div>
-          <div class="label">Admin Staff</div>
-        </div>
+  <div class="dashboard_contents">
+    <!-- Existing sub_containers here -->
+  
+    <!-- New user_details container -->
+    <div class="user_details">
+      <div class="user_detail_item">
+        <span class="detail_count">0</span>
+        <span class="detail_title">Students</span>
+      </div>
+      <div class="user_detail_item">
+        <span class="detail_count">0</span>
+        <span class="detail_title">Teachers</span>
+      </div>
+      <div class="user_detail_item">
+        <span class="detail_count">0</span>
+        <span class="detail_title">Admins</span>
+      </div>
+      <div class="user_detail_item">
+        <span class="detail_count">0</span>
+        <span class="detail_title">Support Staff</span>
+      </div>
+      <div class="user_detail_item">
+        <span class="detail_count">0</span>
+        <span class="detail_title">Total Employees</span>
       </div>
     </div>
-    <div class="user_row_container">
-      <div class="user_row">
-        <div class="male_container">
-          <div class="count">0</div>
-          <div class="label">Male</div>
-        </div>
-        <div class="female_container">
-          <div class="count">0</div>
-          <div class="label">Female</div>
-        </div>
-      </div>
+  
+<!-- New containers below user_details -->
+<div class="graph_and_library_container">
+  <div class="graph">
+    <div class="male_female_graph">
+      <span class="detail_title">Male/Female Graph</span>
+      <svg class="pie_chart" viewBox="0 0 32 32">
+        <circle r="16" cx="16" cy="16" class="slice" style="stroke-dasharray: 60 40;"></circle>
+      </svg>
+    </div>
+    <div class="fee_status">
+      <span class="detail_title">Fee Status</span>
+      <svg class="pie_chart" viewBox="0 0 32 32">
+        <circle r="16" cx="16" cy="16" class="slice" style="stroke-dasharray: 75 25;"></circle>
+      </svg>
     </div>
   </div>
   <div class="library_details">
-    <div class="library_row">
-      <div class="totalBooks">
-        <div class="count">0</div>
-        <div class="label">Total Books</div>
-      </div>
-      <div class="memberCount">
-        <div class="count">0</div>
-        <div class="label">Member Count</div>
-      </div>
-      <div class="booksIssued">
-        <div class="count">0</div>
-        <div class="label">Books Issued</div>
-      </div>
-      <div class="booksAvailable">
-        <div class="count">0</div>
-        <div class="label">Books Available</div>
-      </div>
+   <!-- <h2 class="container_heading">Library Overview</h2> -->
+    <div class="library_item">
+      <span class="detail_count">0</span>
+      <span class="detail_title">Total Books</span>
     </div>
-    <div class="library_row">
-      <div class="outstandingBooks">
-        <div class="count">0</div>
-        <div class="label">Outstanding Books</div>
-      </div>
-      <div class="booksIssuedToday">
-        <div class="count">0</div>
-        <div class="label">Books Issued Today</div>
-      </div>
-      <div class="booksReturnedToday">
-        <div class="count">0</div>
-        <div class="label">Books Returned Today</div>
-      </div>
-      <div class="penaltiesCollected">
-        <div class="count">0</div>
-        <div class="label">Penalties Collected</div>
-      </div>
+    <div class="library_item">
+      <span class="detail_count">0</span>
+      <span class="detail_title">Member Count</span>
+    </div>
+    <div class="library_item">
+      <span class="detail_count">0</span>
+      <span class="detail_title">Books Issued</span>
+    </div>
+    <div class="library_item">
+      <span class="detail_count">0</span>
+      <span class="detail_title">Books Available</span>
+    </div>
+    <div class="library_item">
+      <span class="detail_count">0</span>
+      <span class="detail_title">Outstanding Books</span>
+    </div>
+    <div class="library_item">
+      <span class="detail_count">0</span>
+      <span class="detail_title">Books Issued Today</span>
+    </div>
+    <div class="library_item">
+      <span class="detail_count">0</span>
+      <span class="detail_title">Books Returned Today</span>
+    </div>
+    <div class="library_item">
+      <span class="detail_count">0</span>
+      <span class="detail_title">Penalties Collected</span>
     </div>
   </div>
 </div>
+</div>
 
+  
  <!--- <div class="main_container">
     <div class="sub_container">
       <div class="count_details">
