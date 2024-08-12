@@ -127,33 +127,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       const response = await fetch("/library/add_book", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(bookDetails),
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify(bookDetails),
       });
-
+  
       if (response.ok) {
-        // Trigger button animation
-        // btnText.innerHTML = "Saved";
-        // btn.classList.add("active");
-        // Generate the next book ID and set it to the bookID field
-        addBookForm.reset();
-
-        // await updateBookIDField(); // Update the book ID after resetting the form
-        showToast("Book added Successfully.", false)
-        refreshBooksData(); // Refresh data after adding book
-        hidelibraryLoadingAnimation();
+          const result = await response.json();
+          hidelibraryLoadingAnimation();
+          showToast(result.message, false); // Display success message
+          addBookForm.reset(); // Reset the form after successful submission
+          // await updateBookIDField(); // Optionally update book ID
+          refreshBooksData(); // Refresh data after adding book
       } else {
-        hidelibraryLoadingAnimation();
-        throw new Error('Failed to add book');
+          const errorData = await response.json();
+          hidelibraryLoadingAnimation();
+          showToast(errorData.error || 'Failed to add book', true); // Display error message from server
       }
-    } catch (error) {
+  } catch (error) {
       hidelibraryLoadingAnimation();
       console.error('Error:', error);
-      showToast('An error occurred while adding the book.', true);
-    }
+      showToast('An error occurred while adding the book.', true); // Display generic error message
+  }
   });
 });
 

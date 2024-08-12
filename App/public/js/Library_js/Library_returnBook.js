@@ -8,23 +8,32 @@ const formatDateToIST = (date) => {
 };
 
 // Update placeholder based on selected radio button
-document.getElementById('studentRadio').addEventListener('change', function() {
+document.getElementById('studentRadio').addEventListener('change', function () {
     document.getElementById('formControlPlaceholder').textContent = 'Enter Student Member Id';
     document.getElementById('studentOrBookNo').placeholder = '';
 });
 
-document.getElementById('bookRadio').addEventListener('change', function() {
+document.getElementById('bookRadio').addEventListener('change', function () {
     document.getElementById('formControlPlaceholder').textContent = 'Enter Book Id';
     document.getElementById('studentOrBookNo').placeholder = '';
 });
 
 // Handle form submission
-document.getElementById('returnBookForm').addEventListener('submit', function(event) {
+document.getElementById('returnBookForm').addEventListener('submit', function (event) {
     showLibraryLoadingAnimation();
     event.preventDefault();
 
     const inputType = document.querySelector('input[name="inputType"]:checked').value;
     const studentOrBookNo = document.getElementById('studentOrBookNo').value;
+
+
+    // Validate the student or book number
+    if (studentOrBookNo === '') {
+        hidelibraryLoadingAnimation();
+        showToast('Student ID or Book ID is required.', true);
+        return; // Stop further execution
+    }
+
 
     fetch('/library/get_return_details', {
         method: 'POST',
@@ -33,55 +42,55 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
         },
         body: JSON.stringify({ inputType, studentOrBookNo })
     })
-    .then(response => response.json())
-    .then(data => {
-        // console.log('Response data:', data); // Log the response data to the console
+        .then(response => response.json())
+        .then(data => {
+            // console.log('Response data:', data); // Log the response data to the console
 
-        if (data.error) {
-            hidelibraryLoadingAnimation();
-            showToast(data.error, true);
-        } else {
-            hidelibraryLoadingAnimation();
-            const lottieContainer = document.getElementById('lottieContainer');
-            const detailsContainer = document.getElementById('detailsContainer');
-            const tableContainer = document.getElementById('tableContainer');
+            if (data.error) {
+                hidelibraryLoadingAnimation();
+                showToast(data.error, true);
+            } else {
+                hidelibraryLoadingAnimation();
+                const lottieContainer = document.getElementById('lottieContainer');
+                const detailsContainer = document.getElementById('detailsContainer');
+                const tableContainer = document.getElementById('tableContainer');
 
-            // Hide Lottie animation and show details container and table
-            lottieContainer.style.display = 'none';
-            detailsContainer.style.display = 'block';
-            tableContainer.style.display = 'block';
+                // Hide Lottie animation and show details container and table
+                lottieContainer.style.display = 'none';
+                detailsContainer.style.display = 'block';
+                tableContainer.style.display = 'block';
 
-            detailsContainer.innerHTML = ''; // Clear existing details
+                detailsContainer.innerHTML = ''; // Clear existing details
 
-            const newDetailsContainer = document.createElement('div');
-            newDetailsContainer.classList.add('details-container');
+                const newDetailsContainer = document.createElement('div');
+                newDetailsContainer.classList.add('details-container');
 
-            if (data.type === 'student') {
-                newDetailsContainer.innerHTML = `
+                if (data.type === 'student') {
+                    newDetailsContainer.innerHTML = `
                     <p><strong>Member Name:</strong> ${data.details.member_name}</p>
                     <p><strong>Contact:</strong> ${data.details.member_contact}</p>
                     <p><strong>Class:</strong> ${data.details.member_class}</p>
                     <p><strong>Books Issued:</strong> ${data.details.books_issued}</p>
                 `;
-            } else if (data.type === 'book') {
-                newDetailsContainer.innerHTML = `
+                } else if (data.type === 'book') {
+                    newDetailsContainer.innerHTML = `
                     <p><strong>Book Name:</strong> ${data.details.book_name}</p>
                     <p><strong>Author:</strong> ${data.details.book_author}</p>
                     <p><strong>Publication:</strong> ${data.details.book_publication}</p>
                     <p><strong>Available Quantity:</strong> ${data.details.available_quantity}</p>
                 `;
-            }
+                }
 
-            detailsContainer.appendChild(newDetailsContainer);
+                detailsContainer.appendChild(newDetailsContainer);
 
-            const tableHeaders = document.getElementById('tableHeaders');
-            const tableBody = document.querySelector('.details-table tbody');
+                const tableHeaders = document.getElementById('tableHeaders');
+                const tableBody = document.querySelector('.details-table tbody');
 
-            tableHeaders.innerHTML = ''; // Clear existing headers
-            tableBody.innerHTML = ''; // Clear existing rows
+                tableHeaders.innerHTML = ''; // Clear existing headers
+                tableBody.innerHTML = ''; // Clear existing rows
 
-            if (data.type === 'student') {
-                tableHeaders.innerHTML = `
+                if (data.type === 'student') {
+                    tableHeaders.innerHTML = `
                     <th>Book ID</th>
                     <th>Book Name</th>
                     <th>Book Author</th>
@@ -91,11 +100,11 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
                     <th>Action</th>
                 `;
 
-                data.issues.forEach(issue => {
-                    const row = document.createElement('tr');
-                    row.dataset.id = issue.id; // Store the id in a data attribute
-                    row.dataset.returnDate = issue.return_date; // Store the return date in a data attribute
-                    row.innerHTML = `
+                    data.issues.forEach(issue => {
+                        const row = document.createElement('tr');
+                        row.dataset.id = issue.id; // Store the id in a data attribute
+                        row.dataset.returnDate = issue.return_date; // Store the return date in a data attribute
+                        row.innerHTML = `
                         <td>${issue.bookID}</td>
                         <td>${issue.book_name}</td>
                         <td>${issue.book_author}</td>
@@ -114,10 +123,10 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
 </button>
 </td>
                     `;
-                    tableBody.appendChild(row);
-                });
-            } else if (data.type === 'book') {
-                tableHeaders.innerHTML = `
+                        tableBody.appendChild(row);
+                    });
+                } else if (data.type === 'book') {
+                    tableHeaders.innerHTML = `
                     <th>Member ID</th>
                     <th>Member Name</th>
                     <th>Member Class</th>
@@ -127,11 +136,11 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
                     <th>Action</th>
                 `;
 
-                data.issues.forEach(issue => {
-                    const row = document.createElement('tr');
-                    row.dataset.id = issue.id; // Store the id in a data attribute
-                    row.dataset.returnDate = issue.return_date; // Store the return date in a data attribute
-                    row.innerHTML = `
+                    data.issues.forEach(issue => {
+                        const row = document.createElement('tr');
+                        row.dataset.id = issue.id; // Store the id in a data attribute
+                        row.dataset.returnDate = issue.return_date; // Store the return date in a data attribute
+                        row.innerHTML = `
                         <td>${issue.memberID}</td>
                         <td>${issue.member_name}</td>
                         <td>${issue.member_class}</td>
@@ -175,25 +184,25 @@ document.getElementById('returnBookForm').addEventListener('submit', function(ev
 </button>
 </td>
                     `;
-                    tableBody.appendChild(row);
-                });
-            }
+                        tableBody.appendChild(row);
+                    });
+                }
 
-            // // Add event listeners to the return buttons
-            // document.querySelectorAll('.return-button').forEach(button => {
-            //     button.addEventListener('click', function() {
-            //         const id = this.dataset.id;
-            //         const returnDate = this.dataset.returnDate;
-            //         handleReturn(id, returnDate);
-            //     });
-            // });
-        }
-    })
-    .catch(error => {
-        hidelibraryLoadingAnimation();
-        console.error('Error fetching details:', error);
-        showToast('Error fetching details', true);
-    });
+                // // Add event listeners to the return buttons
+                // document.querySelectorAll('.return-button').forEach(button => {
+                //     button.addEventListener('click', function() {
+                //         const id = this.dataset.id;
+                //         const returnDate = this.dataset.returnDate;
+                //         handleReturn(id, returnDate);
+                //     });
+                // });
+            }
+        })
+        .catch(error => {
+            hidelibraryLoadingAnimation();
+            console.error('Error fetching details:', error);
+            showToast('Error fetching details', true);
+        });
 });
 
 // Handle returning a book
@@ -218,27 +227,27 @@ function handleReturn(id, returnDate) {
         },
         body: JSON.stringify({ id })
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                hidelibraryLoadingAnimation();
+                showToast(data.error, true);
+            } else {
+                hidelibraryLoadingAnimation();
+                showToast(data.message);
+                // Optionally, refresh the table or remove the returned book from the table
+                document.querySelector(`tr[data-id="${id}"]`).remove();
+            }
+        })
+        .catch(error => {
             hidelibraryLoadingAnimation();
-            showToast(data.error, true);
-        } else {
-            hidelibraryLoadingAnimation();
-            showToast(data.message);
-            // Optionally, refresh the table or remove the returned book from the table
-            document.querySelector(`tr[data-id="${id}"]`).remove();
-        }
-    })
-    .catch(error => {
-        hidelibraryLoadingAnimation();
-        console.error('Error returning book:', error);
-        showToast('Error returning book', true);
-    });
+            console.error('Error returning book:', error);
+            showToast('Error returning book', true);
+        });
 }
 
 // Handle closing the overlay
-document.getElementById('closeReturnBookOverlay').addEventListener('click', function() {
+document.getElementById('closeReturnBookOverlay').addEventListener('click', function () {
     const overlay = document.getElementById('returnBookOverlay');
     overlay.style.display = 'none';
 

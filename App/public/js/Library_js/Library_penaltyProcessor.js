@@ -115,23 +115,27 @@ function searchPenaltyTransactions() {
 
 function exportPenaltiesToCSV() {
     // Define the table headers
-    const headers = ["Member Details", "Contact", "Book Details", "Return/Due Date", "Penalty Amount", "Action"];
+    const headers = ["Member Details", "Contact", "Book Details", "Return/Due Date", "Penalty Amount"];
     const table = document.querySelector('.penaltyuniquetable');
     const rows = table.querySelectorAll('tbody tr');
 
-    // Prepare CSV data
-    let csvContent = headers.join(',') + '\n'; // Add headers
+  // Prepare CSV data
+  let csvContent = headers.join(',') + '\n'; // Add headers
 
-    rows.forEach(row => {
-        const cells = row.querySelectorAll('td');
-        const rowData = [];
-        cells.forEach(cell => {
-            // Escape quotes and commas
-            const cellText = cell.innerText.replace(/"/g, '""');
-            rowData.push(`"${cellText}"`);
-        });
-        csvContent += rowData.join(',') + '\n'; // Add row data
-    });
+  rows.forEach(row => {
+      const cells = row.querySelectorAll('td');
+      const rowData = [];
+      
+      // Process each cell, excluding the last one (Action column)
+      for (let i = 0; i < cells.length - 1; i++) {
+          const cell = cells[i];
+          // Escape quotes and commas
+          const cellText = cell.innerText.replace(/"/g, '""');
+          rowData.push(`"${cellText}"`);
+      }
+
+      csvContent += rowData.join(',') + '\n'; // Add row data
+  });
 
     // Create a Blob with CSV data
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
