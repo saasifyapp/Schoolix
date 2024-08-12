@@ -54,7 +54,7 @@ function handleErrors(data) {
     } else if (data.error === 'Book already issued to this member') {
         showBigToast(`Member ID: ${data.details.studentEnrollmentNo}\nStudent Name: ${data.details.member_name}\nClass: ${data.details.member_class}\n\nBook ID: ${data.details.bookEnrollmentNo}\nBook Name: ${data.details.book_name}\nAuthor: ${data.details.book_author}\n\nThis member has already been issued with the above book. Please proceed with return to issue again.`);
     } else {
-        showBigToast(data.error);
+        showToast(data.error, true);
     }
 }
 
