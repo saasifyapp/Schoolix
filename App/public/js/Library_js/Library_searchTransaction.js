@@ -346,7 +346,7 @@ function exportTransactionTable() {
     if (link.download !== undefined) { // feature detection
         const url = URL.createObjectURL(blob);
         link.setAttribute("href", url);
-        link.setAttribute("download", "transactions_export.csv");
+        link.setAttribute("download", "Library_transactions.csv");
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

@@ -167,21 +167,21 @@ function exportTableToCSV() {
     }
 
     let csvContent = '';
-    const headers = Array.from(reportTable.querySelectorAll('thead th')).map(th => th.textContent);
+    const headers = Array.from(reportTable.querySelectorAll('thead th')).map(th => th.textContent.trim());
     csvContent += headers.join(',') + '\n';
 
     const rows = Array.from(reportTableBody.querySelectorAll('tr'));
     rows.forEach(row => {
-        const cols = Array.from(row.querySelectorAll('td')).map(col => col.textContent);
+        const cols = Array.from(row.querySelectorAll('td')).map(col => col.textContent.trim());
         csvContent += cols.join(',') + '\n';
     });
 
-    let fileName = `report_${reportType}`;
+    let fileName = `Library_${reportType}`;
     if (filterClass) {
-        fileName += `_class_${filterClass}`;
+        fileName += `_Class_${filterClass}`;
     }
     if (filterDate) {
-        fileName += `_date_${filterDate}`;
+        fileName += `_Date_${filterDate}`;
     }
     fileName += '.csv';
 
