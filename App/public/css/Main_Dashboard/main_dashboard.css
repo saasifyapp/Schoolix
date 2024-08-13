@@ -699,6 +699,9 @@ body.dark {
     font-size: 24px;
     font-weight: bold;
     color: #000;
+    background-color: white;
+    padding: 54px;
+    border-radius: 100px;
   }
   
   .legend {
