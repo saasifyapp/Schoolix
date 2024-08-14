@@ -607,7 +607,7 @@ body.dark {
   .user_details {
     background-color: transparent;
     width: 100%;
-    height: 80px;
+    height: 70px;
     grid-column: 1 / -1; /* Span across all columns */
     border-radius: 20px; /* Optional: Add border radius */
     display: grid;
@@ -652,7 +652,7 @@ body.dark {
     font-weight: 600; /* Make the title bold */
     font-family: 'Poppins', sans-serif; /* Apply font-family */
     color: #5d6d7e;
-    margin-top: -5px; /* Reduce gap between count and title */
+    margin-top: -8px; /* Reduce gap between count and title */
   }
   
   .user_detail_icon {
@@ -686,8 +686,7 @@ body.dark {
     justify-content: center; /* Center content */
     box-sizing: border-box; /* Include padding in the element's total width and height */
     overflow: hidden; /* Hide any overflow content */
-    border: 2px solid #ccc; /* Add border */
-    border-radius: 8px; /* Optional: Add border radius */    
+    border-radius: 15px; /* Optional: Add border radius */    
   }
   
   .chart-container {
@@ -775,8 +774,7 @@ body.dark {
     box-sizing: border-box; /* Include padding in the element's total width and height */
     overflow: hidden; /* Hide any overflow content */
     position: relative; /* For positioning the heading */
-    border: 2px solid #ccc; /* Add border */
-    border-radius: 10px; /* Optional: Add border radius */
+    border-radius: 15px; /* Optional: Add border radius */
     display: flex;
     flex-direction: column; /* Stack heading and items vertically */
     align-items: center; /* Center align the content horizontally */
@@ -805,7 +803,7 @@ body.dark {
     display: flex;
     flex-direction: column; /* Stack icon and title vertically */
     justify-content: center;
-    align-items: center; /* Center horizontally */
+    align-items: flex-start; /* Align items to the left */
     padding: 10px; /* Add padding inside each item */
     box-sizing: border-box; /* Include padding in the element's total width and height */
     overflow: hidden; /* Hide any overflow content */
@@ -814,25 +812,38 @@ body.dark {
   .count_icon_container {
     display: flex;
     align-items: center; /* Align items vertically in the center */
-    justify-content: center; /* Center items horizontally */
+    justify-content: space-between; /* Distribute space between count/text and icon */
+    width: 100%; /* Full width for the container */
     margin-bottom: 5px; /* Space between count/icon and title */
   }
   
-  .details_count_lib {
-    font-size: 24px; /* Adjust font size as needed */
-    font-weight: bold; /* Make the count bold */
-    margin-right: 5px; /* Space between count and icon */
+  .detail_text_lib {
+    display: flex;
+    flex-direction: column; /* Align count and title vertically */
+    align-items: center; /* Center align the count and text horizontally */
+    justify-content: center; /* Center align the count and text vertically */
   }
   
-  .library_icon {
-    font-size: 20px; /* Adjust font size as needed */
+  .details_count_lib {
+    font-size: 30px; /* Match font size as user containers */
+    font-weight: 600; /* Match font weight as user containers */
+    font-family: 'Poppins', sans-serif; /* Apply font-family */
+    color: #2c3e50; /* Match color as user containers */
+    margin-bottom: 0; /* Remove bottom margin */
   }
   
   .detail_title_lib {
-    font-weight: bold; /* Make the title bold */
-    text-align: center;
+    font-size: 13px; /* Match font size as user containers */
+    font-weight: 600; /* Match font weight as user containers */
+    font-family: 'Poppins', sans-serif; /* Apply font-family */
+    color: #5d6d7e; /* Match color as user containers */
+    margin-top: -5px; /* Reduce gap between count and title */
   }
   
+  .library_icon {
+    font-size: 32px; /* Increase icon size to match user containers */
+    margin-left: auto; /* Push the icon to the right */
+  }
   
   /*.container_heading {
     position: absolute;
