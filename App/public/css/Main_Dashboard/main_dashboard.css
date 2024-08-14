@@ -622,35 +622,46 @@ body.dark {
     background-color: #D6EAF8; /* Background color for each item */
     border-radius: 10px; /* Add border radius */
     display: flex;
-    flex-direction: column; /* Stack title at the top, count in the center */
     justify-content: space-between; /* Distribute space between elements */
-    align-items: center; /* Center align the content horizontally */
+    align-items: center; /* Center align the content vertically */
     padding: 10px; /* Add padding inside each item */
     box-sizing: border-box; /* Include padding in the element's total width and height */
     position: relative; /* Allows positioning the icon */
     overflow: hidden; /* Hide any overflow content */
     height: 100%; /* Ensures full height usage */
-}
-
-.detail_title {
-    font-weight: bold; /* Make the title bold */
-    margin-bottom: 5px; /* Space between title and count */
-    align-self: center; /* Align the title to the top */
-}
-
-.detail_count {
-    font-size: 20px; /* Increase font size for count */
-    font-weight: bold; /* Make the count bold */
-}
-
-.user_detail_icon {
+  }
+  
+  .detail_text {
+    display: flex;
+    flex-direction: column; /* Align count and title vertically */
+    align-items: center; /* Align text to the left */
+    justify-content: center; /* Center align the count and text vertically */
+    margin-left: 10px; /* Margin from the left */
+  }
+  
+  .detail_count {
+    font-size: 30px; /* Increase font size for count */
+    font-weight: 600; /* Make the count bold */
+    font-family: 'Poppins', sans-serif; /* Apply font-family */
+    color: #2c3e50;
+    margin-bottom: 0; /* Remove bottom margin */
+  }
+  
+  .detail_title {
+    font-size: 15px; /* Smaller font size for the title */
+    font-weight: 600; /* Make the title bold */
+    font-family: 'Poppins', sans-serif; /* Apply font-family */
+    color: #5d6d7e;
+    margin-top: -5px; /* Reduce gap between count and title */
+  }
+  
+  .user_detail_icon {
     position: absolute;
-    right: 10px;
+    right: 20px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 24px; /* Adjust the icon size */
-}
-
+    font-size: 30px; /* Increase the icon size */
+  }
   
 .graph_and_library_container {
     display: flex;
