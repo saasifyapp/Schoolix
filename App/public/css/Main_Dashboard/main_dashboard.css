@@ -678,6 +678,7 @@ body.dark {
   }
   
   .male_female_graph, .fee_status {
+    background-color: white;
     width: 100%; /* Full width for each graph */
     display: flex;
     flex-direction: column; /* Stack title and chart vertically */
@@ -686,7 +687,7 @@ body.dark {
     box-sizing: border-box; /* Include padding in the element's total width and height */
     overflow: hidden; /* Hide any overflow content */
     border: 2px solid #ccc; /* Add border */
-    border-radius: 10px; /* Optional: Add border radius */    
+    border-radius: 8px; /* Optional: Add border radius */    
   }
   
   .chart-container {
@@ -770,16 +771,32 @@ body.dark {
   .library_details {
     background-color: white; /* Background color for the new container */
     width: 60%; /* Set width to 60% */
-    height: 300px; /* Set height to 300px */
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 equal-width containers per row */
-    gap: 10px; /* Add gap between containers */
     padding: 10px; /* Add padding inside the library_details container */
     box-sizing: border-box; /* Include padding in the element's total width and height */
     overflow: hidden; /* Hide any overflow content */
     position: relative; /* For positioning the heading */
     border: 2px solid #ccc; /* Add border */
     border-radius: 10px; /* Optional: Add border radius */
+    display: flex;
+    flex-direction: column; /* Stack heading and items vertically */
+    align-items: center; /* Center align the content horizontally */
+  }
+  
+  .container_heading_lib {
+    text-align: center; /* Center align the heading */
+    font-size: 20px; /* Set font size for the heading */
+    font-weight: 600; /* Make the heading bold */
+    margin: 0; /* Remove default margin */
+    font-family: 'Poppins', sans-serif; /* Apply font-family */
+    color: #5d6d7e;
+  }
+  
+  .library_items_container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 equal-width containers per row */
+    gap: 10px; /* Add gap between containers */
+    width: 100%; /* Full width for the items container */
+    margin-top: 10px; /* Space between heading and items */
   }
   
   .library_item {
