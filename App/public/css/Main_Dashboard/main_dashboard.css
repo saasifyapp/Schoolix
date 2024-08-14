@@ -833,7 +833,7 @@ body.dark {
   }
   
   .detail_title_lib {
-    font-size: 13px; /* Match font size as user containers */
+    font-size: 14px; /* Match font size as user containers */
     font-weight: 600; /* Match font weight as user containers */
     font-family: 'Poppins', sans-serif; /* Apply font-family */
     color: #5d6d7e; /* Match color as user containers */
