@@ -115,9 +115,13 @@ router.get('/student_counts', (req, res) => {
 
     // Define queries for each count
     const queries = {
-        totalStudents: 'SELECT COUNT(*) AS count FROM student_details',
-        maleStudents: "SELECT COUNT(*) AS count FROM student_details WHERE Gender = 'Male'",
-        femaleStudents: "SELECT COUNT(*) AS count FROM student_details WHERE Gender = 'Female'"
+        primary_totalStudents: 'SELECT COUNT(*) AS count FROM primary_student_details',
+        primary_maleStudents: "SELECT COUNT(*) AS count FROM primary_student_details WHERE Gender = 'Male'",
+        primary_femaleStudents: "SELECT COUNT(*) AS count FROM primary_student_details WHERE Gender = 'Female'",
+
+        pre_primary_totalStudents: 'SELECT COUNT(*) AS count FROM pre_primary_student_details',
+        pre_primary_maleStudents: "SELECT COUNT(*) AS count FROM pre_primary_student_details WHERE Gender = 'Male'",
+        pre_primary_femaleStudents: "SELECT COUNT(*) AS count FROM pre_primary_student_details WHERE Gender = 'Female'"
     };
 
     // Fetch counts for each category

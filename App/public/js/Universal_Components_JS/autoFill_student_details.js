@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             suggestionItem.textContent = `${student.Name} | ${student.Standard}`;
                             suggestionItem.dataset.name = student.Name;
                             suggestionItem.dataset.standard = student.Standard; // Assuming standard field exists
-                            suggestionItem.dataset.contact = student.Contact; // Assuming contact field exists
+                            suggestionItem.dataset.contact = student.f_mobile_no; // Assuming contact field exists
                             suggestionsContainer.appendChild(suggestionItem);
                         });
                     }
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         suggestionItem.textContent = `${student.Name} | ${student.Standard}`;
                         suggestionItem.dataset.name = student.Name;
                         suggestionItem.dataset.standard = student.Standard; // Assuming standard field exists
-                        suggestionItem.dataset.contact = student.Contact; // Assuming contact field exists
+                        suggestionItem.dataset.contact = student.f_mobile_no; // Assuming contact field exists
                         suggestionsContainer.appendChild(suggestionItem);
                     });
                 }

@@ -248,9 +248,15 @@ fetch("/student_counts")
     console.log(data);
 
     // Extract values from the data
-    const totalStudents = data.totalStudents;
-    const maleStudents = data.maleStudents;
-    const femaleStudents = data.femaleStudents;
+    const totalStudents = data.primary_totalStudents;
+    const maleStudents = data.primary_maleStudents;
+    const femaleStudents = data.primary_femaleStudents;
+
+    const  pre_primary_totalStudents = data. pre_primary_totalStudents;
+    const  pre_primary_maleStudents = data. pre_primary_maleStudents;
+    const  pre_primary_femaleStudents = data. pre_primary_femaleStudents;
+
+    console.log(pre_primary_totalStudents,pre_primary_maleStudents,pre_primary_femaleStudents)
 
     // Calculate percentages
     const malePercentage = (maleStudents / totalStudents) * 100;
