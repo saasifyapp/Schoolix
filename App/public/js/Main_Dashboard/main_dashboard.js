@@ -243,63 +243,56 @@ fetch("/main_dashboard_library_data")
 
 // Get Students COunts
 fetch("/student_counts")
-  .then((response) => response.json())
-  .then((data) => {
-    console.log(data);
+    .then((response) => response.json())
+    .then((data) => {
+        // Primary Data
+        const totalStudents = data.primary_totalStudents;
+        const maleStudents = data.primary_maleStudents;
+        const femaleStudents = data.primary_femaleStudents;
 
-    // Extract values from the data
-    const totalStudents = data.primary_totalStudents;
-    const maleStudents = data.primary_maleStudents;
-    const femaleStudents = data.primary_femaleStudents;
+        // Calculate percentages for primary
+        const malePercentage = (maleStudents / totalStudents) * 100;
+        const femalePercentage = 100 - malePercentage;
 
-    const  pre_primary_totalStudents = data. pre_primary_totalStudents;
-    const  pre_primary_maleStudents = data. pre_primary_maleStudents;
-    const  pre_primary_femaleStudents = data. pre_primary_femaleStudents;
+        // Update Primary Pie Chart
+        document.querySelector('.male_female_graph .chart').style.background = 
+          `conic-gradient(#82afe3 ${malePercentage}%, #8cefda ${malePercentage}%)`;
 
-    console.log(pre_primary_totalStudents,pre_primary_maleStudents,pre_primary_femaleStudents)
+        // Update Primary Labels
+        document.getElementById('totalStudents').textContent = totalStudents;
+        document.getElementById('maleCount').textContent = maleStudents;
+        document.getElementById('femaleCount').textContent = femaleStudents;
 
-    // Calculate percentages
-    const malePercentage = (maleStudents / totalStudents) * 100;
-    const femalePercentage = 100 - malePercentage;
+        // Pre-Primary Data
+        const prePrimaryTotalStudents = data.pre_primary_totalStudents;
+        const prePrimaryMaleStudents = data.pre_primary_maleStudents;
+        const prePrimaryFemaleStudents = data.pre_primary_femaleStudents;
 
-    // Update the Male/Female pie chart
-    document.querySelector('.male_female_graph .chart').style.background = 
-      `conic-gradient(#82afe3 ${malePercentage}%, #8cefda ${malePercentage}%)`;
+        // Calculate percentages for pre-primary
+        const prePrimaryMalePercentage = (prePrimaryMaleStudents / prePrimaryTotalStudents) * 100;
+        const prePrimaryFemalePercentage = 100 - prePrimaryMalePercentage;
 
-    // Update the labels
-    document.getElementById('totalStudents').textContent = totalStudents;
-    document.getElementById('maleCount').textContent = maleStudents;
-    document.getElementById('femaleCount').textContent = femaleStudents;
+        // Update Pre-Primary Pie Chart
+        document.querySelector('.fee_status .chart').style.background = 
+          `conic-gradient(#c3ebfa ${prePrimaryMalePercentage}%, #fae27c ${prePrimaryMalePercentage}%)`;
 
-    // For the Fee Status chart (assuming similar data structure for demonstration)
-    // Replace with actual fee data if available
-    const paidFees = data.paidFees;
-    const unpaidFees = data.unpaidFees;
-    const totalFees = paidFees + unpaidFees;
-    const paidPercentage = (paidFees / totalFees) * 100;
-    const unpaidPercentage = 100 - paidPercentage;
+        // Update Pre-Primary Labels
+        document.getElementById('prePrimaryTotal').textContent = prePrimaryTotalStudents;
+        document.getElementById('prePrimaryMaleCount').textContent = prePrimaryMaleStudents;
+        document.getElementById('prePrimaryFemaleCount').textContent = prePrimaryFemaleStudents;
+    })
+    .catch((error) => {
+        console.error("Error fetching student counts:", error);
 
-    // Update the Fee Status pie chart
-    document.querySelector('.fee_status .chart').style.background = 
-      `conic-gradient(#4CAF50 ${paidPercentage}%, #F44336 ${paidPercentage}%)`;
+        // Update UI to show error message for both charts
+        document.getElementById('totalStudents').textContent = 'Error';
+        document.getElementById('maleCount').textContent = 'Error';
+        document.getElementById('femaleCount').textContent = 'Error';
 
-    // Update the labels
-    document.getElementById('feeStatusTotal').textContent = totalFees;
-    document.getElementById('paidCount').textContent = paidFees;
-    document.getElementById('unpaidCount').textContent = unpaidFees;
-
-  })
-  .catch((error) => {
-    console.error("Error fetching student counts:", error);
-
-    // Update UI to show error message
-    document.getElementById('totalStudents').textContent = 'Error';
-    document.getElementById('maleCount').textContent = 'Error';
-    document.getElementById('femaleCount').textContent = 'Error';
-    document.getElementById('feeStatusTotal').textContent = 'Error';
-    document.getElementById('paidCount').textContent = 'Error';
-    document.getElementById('unpaidCount').textContent = 'Error';
-  });
+        document.getElementById('prePrimaryTotal').textContent = 'Error';
+        document.getElementById('prePrimaryMaleCount').textContent = 'Error';
+        document.getElementById('prePrimaryFemaleCount').textContent = 'Error';
+    });
 
 
 // Function to handle password for PURCHASE console
