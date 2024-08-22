@@ -48,6 +48,10 @@ function storeTransactionData(data) {
 function displayTransactionData(data) {
     const issueTableBody = document.getElementById('issueTableBody');
     const returnTableBody = document.getElementById('returnTableBody');
+    
+
+    data.issueTransactions.reverse();
+    data.returnTransactions.reverse();
 
     // Clear existing rows
     issueTableBody.innerHTML = '';
