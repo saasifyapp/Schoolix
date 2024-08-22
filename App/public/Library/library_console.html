@@ -49,21 +49,33 @@
     </nav>
     </button>
 
-    <div class="settings-icon" onclick="togglePopup()">⚙️</div>
-    <div class="settings-popup" id="settingsPopup">
-        <label for="bookReturnInterval">Book Return Interval (days):</label>
-        <div class="input-group">
-            <input type="number" id="bookReturnInterval" placeholder="Enter interval" class="short-input">
-        </div>
+    <div class="settings-navigation">
+        <input type="checkbox" class="settings__checkbox" id="settings-toggle">
+        <label for="settings-toggle" class="settings__button">
+            <span class="settings__icon" aria-label="toggle settings menu"></span>
+        </label>
+        <div class="settings__background"></div>
     
-        <label for="penaltyInterval">Penalty Amount (Rs):</label>
-        <div class="input-group">
-            <input type="number" id="penaltyInterval" placeholder="Enter amount" class="short-input">
-            <span>/ Day</span>
-        </div>
-    
-        <button id="saveSettingsButton">Save</button>
+        <nav class="settings__nav" role="navigation">
+            <ul class="settings__list">
+                <li class="settings__item">
+                    <label for="bookReturnInterval">Book Return Interval (days):</label>
+                    <input type="number" id="bookReturnInterval" placeholder="Enter interval" class="short-input">
+                </li>
+                <li class="settings__item">
+                    <label for="penaltyInterval">Penalty Amount (Rs):</label>
+                    <div class="input-group">
+                        <input type="number" id="penaltyInterval" placeholder="Enter amount" class="short-input">
+                        <span>/ Day</span>
+                    </div>
+                </li>
+                <li class="settings__item">
+                    <button id="saveSettingsButton">Save</button>
+                </li>
+            </ul>
+        </nav>
     </div>
+    
 
     <div class="adm-head">
         <div class="button-container">

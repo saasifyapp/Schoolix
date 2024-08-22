@@ -161,7 +161,6 @@ function hidelibraryLoadingAnimation() {
 }
 
 
-
 function togglePopup() {
     const popup = document.getElementById('settingsPopup');
     
@@ -221,6 +220,7 @@ document.getElementById('saveSettingsButton').addEventListener('click', async fu
         showToast('No username found in cookies.', true);
     }
 });
+
 
 function getCookie(name) {
     const value = `; ${document.cookie}`;
