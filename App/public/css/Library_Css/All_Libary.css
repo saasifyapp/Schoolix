@@ -678,3 +678,50 @@ body {
         transform: rotate(1turn);
     }
 }
+
+
+
+
+
+.settings-icon {
+    position: fixed;
+    right: 1rem;
+    top: 5rem;
+    cursor: pointer;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.settings-popup {
+    display: none;
+    position: absolute;
+    right: 1rem;
+    top: 7rem;
+    width: 250px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.settings-popup input {
+    width: 80%;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.settings-popup button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+.settings-popup button:hover {
+    background-color: #0056b3;
+}

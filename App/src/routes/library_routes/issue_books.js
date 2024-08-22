@@ -196,4 +196,52 @@ router.post('/library/issue_book', (req, res) => {
     });
 });
 
+// Endpoint to fetch library settings
+router.get('/settings', (req, res) => {
+    // Get username from cookie
+    const username = req.cookies.username; // Assuming you are using cookie-parser middleware
+
+    if (!username) {
+        return res.status(401).json({ error: 'User not authenticated' });
+    }
+
+    const query = `SELECT library_interval, library_penalty FROM user_details WHERE LoginName = ?`;
+
+    req.connectionPool.query(query, [username], (err, results) => {
+        if (err) {
+            console.error('Error fetching settings:', err);
+            return res.status(500).json({ error: 'Error fetching settings' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'Settings not found' });
+        }
+
+        res.json(results[0]);
+    });
+});
+
+// Assuming you have already set up Express and a connection pool
+router.post('/update-settings', (req, res) => {
+    const { username, bookReturnInterval, penaltyInterval } = req.body;
+
+    if (!username || !bookReturnInterval || !penaltyInterval) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    const query = `UPDATE user_details SET 
+                   library_interval = ?, 
+                   library_penalty = ? 
+                   WHERE LoginName = ?`;
+
+    req.connectionPool.query(query, [bookReturnInterval, penaltyInterval, username], (err, result) => {
+        if (err) {
+            console.error('Error updating settings:', err);
+            return res.status(500).json({ error: 'Error updating settings' });
+        }
+        res.status(200).json({ message: 'Settings updated successfully' });
+    });
+});
+
+
 module.exports = router;

@@ -159,3 +159,68 @@ function hidelibraryLoadingAnimation() {
     var loadingOverlay = document.getElementById("loadingOverlaylibrary");
     loadingOverlay.style.display = "none"; // Hide the loading overlay
 }
+
+
+
+function togglePopup() {
+    const popup = document.getElementById('settingsPopup');
+    
+    // Toggle popup visibility
+    popup.style.display = (popup.style.display === 'block') ? 'none' : 'block';
+
+    // Fetch settings data if popup is being shown
+    if (popup.style.display === 'block') {
+        fetch('/settings')
+            .then(response => response.json())
+            .then(data => {
+                // Display fetched data in the popup
+                document.getElementById('bookReturnInterval').value = data.library_interval || 5;
+                document.getElementById('penaltyInterval').value = data.library_penalty || 5;
+            })
+            .catch(error => {
+                console.error('Error fetching settings:', error);
+            });
+    }
+}
+
+document.getElementById('saveSettingsButton').addEventListener('click', async function() {
+    const bookReturnInterval = parseInt(document.getElementById('bookReturnInterval').value, 10);
+    const penaltyInterval = parseInt(document.getElementById('penaltyInterval').value, 10);
+
+    // Get the username from cookies
+    const username = getCookie('username'); // Assume you have a function to get cookies
+
+    if (username) {
+        try {
+            const response = await fetch('/update-settings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,
+                    bookReturnInterval: bookReturnInterval,
+                    penaltyInterval: penaltyInterval
+                })
+            });
+
+            if (response.ok) {
+                showToast('Settings updated successfully.', false);
+                document.getElementById('settingsPopup').style.display = 'none';
+            } else {
+                throw new Error('Failed to update settings');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showToast('An error occurred while updating settings.', true);
+        }
+    } else {
+        showToast('No username found in cookies.', true);
+    }
+});
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
