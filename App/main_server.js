@@ -409,8 +409,8 @@ app.post('/submit-config', (req, res) => {
     const { loginName, loginPassword, serverName, databaseUser, databasePassword, databaseName, schoolName } = req.body;
 
     const query = `
-        INSERT INTO user_details (loginName, loginPassword, serverName, databaseUser, databasePassword, databaseName, schoolName)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO user_details (loginName, loginPassword, serverName, databaseUser, databasePassword, databaseName, schoolName, library_interval, library_penalty)
+        VALUES (?, ?, ?, ?, ?, ?, ?, 5, 10)
     `;
     
     connection_auth.query(query, [loginName, loginPassword, serverName, databaseUser, databasePassword, databaseName, schoolName], (err, result) => {
