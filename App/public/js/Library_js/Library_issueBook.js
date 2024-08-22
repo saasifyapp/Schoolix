@@ -59,37 +59,56 @@ function handleErrors(data) {
 }
 
 
+// Call Settings endpoint to get issue-return interval //
 
-// Display Date in Issue and Return Date fields in IST //
+document.addEventListener('DOMContentLoaded', () => {
+    let libraryInterval = 5; // Default value in case the fetch fails
 
-document.addEventListener('DOMContentLoaded', (event) => {
-    const issueDateInput = document.getElementById('issueDate');
-    const returnDateInput = document.getElementById('returnDate');
+    // Call Settings endpoint to get issue-return interval
+    fetch('/settings', {
+        method: 'GET',
+        credentials: 'include' // Include cookies in the request
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            console.error('Error fetching settings:', data.error);
+            return;
+        }
+        libraryInterval = data.library_interval;
+        setInitialDates(libraryInterval);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        setInitialDates(libraryInterval); // Use default value in case of error
+    });
 
-    const today = new Date();
-    const localOffset = today.getTimezoneOffset() * 60000; // Local offset in milliseconds
-    const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
-    const istToday = new Date(today.getTime() + localOffset + istOffset);
-   // console.log("IST Issue Date and Time (on load):", istToday.toLocaleString());
-    const todayFormatted = istToday.toISOString().split('T')[0];
-    issueDateInput.value = todayFormatted;
+    // Function to set initial issue and return dates
+    function setInitialDates(interval) {
+        const issueDateInput = document.getElementById('issueDate');
+        const returnDateInput = document.getElementById('returnDate');
 
-    const returnDate = new Date(istToday);
-    returnDate.setDate(returnDate.getDate() + 5);
-    //console.log("IST Return Date and Time (on load):", returnDate.toLocaleString());
-    const returnDateFormatted = returnDate.toISOString().split('T')[0];
-    returnDateInput.value = returnDateFormatted;
+        const today = new Date();
+        const localOffset = today.getTimezoneOffset() * 60000; // Local offset in milliseconds
+        const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
+        const istToday = new Date(today.getTime() + localOffset + istOffset);
+        const todayFormatted = istToday.toISOString().split('T')[0];
+        issueDateInput.value = todayFormatted;
 
-    issueDateInput.addEventListener('change', function() {
-        const issueDate = new Date(issueDateInput.value);
-        const istIssueDate = new Date(issueDate.getTime() + localOffset + istOffset);
-        //console.log("IST Issue Date and Time (on change):", istIssueDate.toLocaleString());
-        const returnDate = new Date(istIssueDate);
-        returnDate.setDate(returnDate.getDate() + 5);
-        //console.log("IST Return Date and Time (on change):", returnDate.toLocaleString());
+        const returnDate = new Date(istToday);
+        returnDate.setDate(returnDate.getDate() + interval);
         const returnDateFormatted = returnDate.toISOString().split('T')[0];
         returnDateInput.value = returnDateFormatted;
-    });
+
+        issueDateInput.addEventListener('change', function() {
+            const issueDate = new Date(issueDateInput.value);
+            const istIssueDate = new Date(issueDate.getTime() + localOffset + istOffset);
+            const returnDate = new Date(istIssueDate);
+            returnDate.setDate(returnDate.getDate() + interval);
+            const returnDateFormatted = returnDate.toISOString().split('T')[0];
+            returnDateInput.value = returnDateFormatted;
+        });
+    }
 });
 
 

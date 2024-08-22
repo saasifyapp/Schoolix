@@ -207,6 +207,9 @@ document.getElementById('saveSettingsButton').addEventListener('click', async fu
             if (response.ok) {
                 showToast('Settings updated successfully.', false);
                 document.getElementById('settingsPopup').style.display = 'none';
+                setTimeout(() => {
+                    location.reload();
+                }, 1200); // Delay of 1.2 seconds before reloading
             } else {
                 throw new Error('Failed to update settings');
             }

@@ -52,11 +52,16 @@
     <div class="settings-icon" onclick="togglePopup()">⚙️</div>
     <div class="settings-popup" id="settingsPopup">
         <label for="bookReturnInterval">Book Return Interval (days):</label>
-        <input type="number" id="bookReturnInterval" placeholder="Enter interval">
-
-        <label for="penaltyInterval">Penalty Amount:</label>
-        <input type="number" id="penaltyInterval" placeholder="Enter amount">
-
+        <div class="input-group">
+            <input type="number" id="bookReturnInterval" placeholder="Enter interval" class="short-input">
+        </div>
+    
+        <label for="penaltyInterval">Penalty Amount (Rs):</label>
+        <div class="input-group">
+            <input type="number" id="penaltyInterval" placeholder="Enter amount" class="short-input">
+            <span>/ Day</span>
+        </div>
+    
         <button id="saveSettingsButton">Save</button>
     </div>
 
