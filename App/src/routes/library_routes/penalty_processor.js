@@ -10,30 +10,53 @@ router.use(connectionManager);
 
 // Fetch Penalties Endpoint
 router.post('/library/get_penalties', (req, res) => {
-    const getPenaltiesQuery = `
-        SELECT 
-            lt.id,
-            lt.memberID, 
-            lt.member_name,
-            lt.member_contact, 
-            lt.bookID, 
-            lt.book_name, 
-            lt.return_date, 
-            DATEDIFF(CURDATE(), lt.return_date) * 10 AS penalty_amount
-            
-        FROM 
-            library_transactions lt
-        WHERE 
-            lt.return_date < CURDATE();
-    `;
+    // Get username from cookie
+    const username = req.cookies.username; // Assuming you are using cookie-parser middleware
 
-    req.connectionPool.query(getPenaltiesQuery, (err, penaltyResult) => {
+    if (!username) {
+        return res.status(401).json({ error: 'User not authenticated' });
+    }
+
+    // First, fetch the library settings
+    const settingsQuery = `SELECT library_penalty FROM user_details WHERE LoginName = ?`;
+
+    req.connectionPool.query(settingsQuery, [username], (err, settingsResult) => {
         if (err) {
-            console.error('Error fetching penalties:', err);
-            return res.status(500).json({ error: 'Error fetching penalties' });
+            console.error('Error fetching settings:', err);
+            return res.status(500).json({ error: 'Error fetching settings' });
         }
 
-        return res.status(200).json({ penalties: penaltyResult });
+        if (settingsResult.length === 0) {
+            return res.status(404).json({ error: 'Settings not found' });
+        }
+
+        const libraryPenalty = settingsResult[0].library_penalty;
+
+        // Now, use the fetched library_penalty to calculate the penalties
+        const getPenaltiesQuery = `
+            SELECT 
+                lt.id,
+                lt.memberID, 
+                lt.member_name,
+                lt.member_contact, 
+                lt.bookID, 
+                lt.book_name, 
+                lt.return_date, 
+                DATEDIFF(CURDATE(), lt.return_date) * ? AS penalty_amount
+            FROM 
+                library_transactions lt
+            WHERE 
+                lt.return_date < CURDATE();
+        `;
+
+        req.connectionPool.query(getPenaltiesQuery, [libraryPenalty], (err, penaltyResult) => {
+            if (err) {
+                console.error('Error fetching penalties:', err);
+                return res.status(500).json({ error: 'Error fetching penalties' });
+            }
+
+            return res.status(200).json({ penalties: penaltyResult });
+        });
     });
 });
 
