@@ -231,7 +231,7 @@ function initial_setup_alert(bookReturnIntervalValue, penaltyIntervalValue) {
     Swal.fire({
         title: 'Welcome to Schoolix Library',
         html: `
-            <p style="color: red;">The below values should not be zero</p>
+            <p style="color: #f1948a;">The below values should not be zero</p>
             <div style="display: flex; align-items: center; margin-bottom: 5px;">
                 <label for="swal-bookReturnInterval" style="flex: 1; margin-right: 0;">Issue-Return Interval (in Days):</label>
                 <input type="number" id="swal-bookReturnInterval" class="swal2-input" value="${bookReturnIntervalValue}" style="width: 60px; height: 35px; text-align: center;">
