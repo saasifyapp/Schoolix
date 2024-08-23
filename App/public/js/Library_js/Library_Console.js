@@ -160,18 +160,20 @@ function hidelibraryLoadingAnimation() {
     loadingOverlay.style.display = "none"; // Hide the loading overlay
 }
 
-
 function togglePopup() {
-        fetch('/settings')
-            .then(response => response.json())
-            .then(data => {
-                // Display fetched data in the popup
-                document.getElementById('bookReturnInterval').value = data.library_interval;
-                document.getElementById('penaltyInterval').value = data.library_penalty;
-            })
-            .catch(error => {
-                console.error('Error fetching settings:', error);
-            });
+    fetch('/settings')
+        .then(response => response.json())
+        .then(data => {
+            // Display fetched data in the popup
+            document.getElementById('bookReturnInterval').value = data.library_interval;
+            document.getElementById('penaltyInterval').value = data.library_penalty;
+
+            // Check the values and display the alert if conditions are met
+            checkAndDisplayAlert(data.library_interval, data.library_penalty);
+        })
+        .catch(error => {
+            console.error('Error fetching settings:', error);
+        });
 }
 togglePopup();
 
@@ -214,9 +216,80 @@ document.getElementById('saveSettingsButton').addEventListener('click', async fu
     }
 });
 
-
 function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+// Initial Setup Alert
+function initial_setup_alert(bookReturnIntervalValue, penaltyIntervalValue) {
+    // Ensure the values are not empty and default to 0 if they are
+    bookReturnIntervalValue = bookReturnIntervalValue !== undefined ? bookReturnIntervalValue : 0;
+    penaltyIntervalValue = penaltyIntervalValue !== undefined ? penaltyIntervalValue : 0;
+
+    Swal.fire({
+        title: 'Welcome to Schoolix Library',
+        html: `
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <label for="swal-bookReturnInterval" style="flex: 1; margin-right: 5px;">Set Issue-Return Interval:</label>
+                <input type="number" id="swal-bookReturnInterval" class="swal2-input" value="${bookReturnIntervalValue}" style="width: 60px; height: 30px; text-align: center;">
+            </div>
+            <div style="display: flex; align-items: center;">
+                <label for="swal-penaltyInterval" style="flex: 1; margin-right: 5px;">Set Penalty per Day:</label>
+                <input type="number" id="swal-penaltyInterval" class="swal2-input" value="${penaltyIntervalValue}" style="width: 60px; height: 30px; text-align: center;">
+            </div>
+        `,
+        icon: 'info',
+        confirmButtonText: 'OK',
+        preConfirm: () => {
+            const bookReturnInterval = Swal.getPopup().querySelector('#swal-bookReturnInterval').value;
+            const penaltyInterval = Swal.getPopup().querySelector('#swal-penaltyInterval').value;
+            return { bookReturnInterval: bookReturnInterval, penaltyInterval: penaltyInterval };
+        }
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            //console.log('Issue-Return Interval:', result.value.bookReturnInterval);
+            //console.log('Penalty per Day:', result.value.penaltyInterval);
+
+            // Get the username from cookies
+            const username = getCookie('username'); // Assume you have a function to get cookies
+
+            if (username) {
+                try {
+                    const response = await fetch('/update-settings', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            username: username,
+                            bookReturnInterval: parseInt(result.value.bookReturnInterval, 10),
+                            penaltyInterval: parseInt(result.value.penaltyInterval, 10)
+                        })
+                    });
+
+                    if (response.ok) {
+                        showToast('Settings updated successfully.', false);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1200); // Delay of 1.2 seconds before reloading
+                    } else {
+                        throw new Error('Failed to update settings');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showToast('An error occurred while updating settings.', true);
+                }
+            } else {
+                showToast('No username found in cookies.', true);
+            }
+        }
+    });
+}
+// Function to check the values and display the alert
+function checkAndDisplayAlert(bookReturnInterval, penaltyInterval) {
+    if (bookReturnInterval === 0 && penaltyInterval === 0) {
+        initial_setup_alert(bookReturnInterval, penaltyInterval);
+    }
 }

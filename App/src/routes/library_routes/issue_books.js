@@ -225,7 +225,10 @@ router.get('/settings', (req, res) => {
 router.post('/update-settings', (req, res) => {
     const { username, bookReturnInterval, penaltyInterval } = req.body;
 
-    if (!username || !bookReturnInterval || !penaltyInterval) {
+    // Explicitly check for undefined or null values
+    if (username === undefined || username === null ||
+        bookReturnInterval === undefined || bookReturnInterval === null ||
+        penaltyInterval === undefined || penaltyInterval === null) {
         return res.status(400).json({ error: 'All fields are required' });
     }
 
