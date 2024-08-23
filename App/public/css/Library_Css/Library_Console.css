@@ -904,3 +904,19 @@
 }
 
 
+/* Custom styles for SweetAlert2 popup */
+.library_setup_popup {
+    border-radius: 20px; /* More rounded border radius */
+}
+
+/* Custom styles for SweetAlert2 button */
+.library_setup_button {
+    width: 100px; /* Wider button */
+    border-radius: 20px; /* Rounder button */
+    padding: 10px 20px; /* Increase padding for a larger button */
+}
+
+/* Custom styles for SweetAlert2 title */
+.library_setup_title {
+    margin-bottom: 10px; /* Reduce the gap between title and input fields */
+}

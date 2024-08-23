@@ -231,17 +231,22 @@ function initial_setup_alert(bookReturnIntervalValue, penaltyIntervalValue) {
     Swal.fire({
         title: 'Welcome to Schoolix Library',
         html: `
-            <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                <label for="swal-bookReturnInterval" style="flex: 1; margin-right: 5px;">Set Issue-Return Interval:</label>
-                <input type="number" id="swal-bookReturnInterval" class="swal2-input" value="${bookReturnIntervalValue}" style="width: 60px; height: 30px; text-align: center;">
+            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                <label for="swal-bookReturnInterval" style="flex: 1; margin-right: 0;">Issue-Return Interval (in Days):</label>
+                <input type="number" id="swal-bookReturnInterval" class="swal2-input" value="${bookReturnIntervalValue}" style="width: 60px; height: 35px; text-align: center;">
             </div>
             <div style="display: flex; align-items: center;">
-                <label for="swal-penaltyInterval" style="flex: 1; margin-right: 5px;">Set Penalty per Day:</label>
-                <input type="number" id="swal-penaltyInterval" class="swal2-input" value="${penaltyIntervalValue}" style="width: 60px; height: 30px; text-align: center;">
+                <label for="swal-penaltyInterval" style="flex: 1; margin-right: 0;">Penalty per Day (in Rs):</label>
+                <input type="number" id="swal-penaltyInterval" class="swal2-input" value="${penaltyIntervalValue}" style="width: 60px; height: 35px; text-align: center;">
             </div>
         `,
         icon: 'info',
         confirmButtonText: 'OK',
+        customClass: {
+            popup: 'library_setup_popup',
+            confirmButton: 'library_setup_button',
+            title: 'library_setup_title'
+        },
         preConfirm: () => {
             const bookReturnInterval = Swal.getPopup().querySelector('#swal-bookReturnInterval').value;
             const penaltyInterval = Swal.getPopup().querySelector('#swal-penaltyInterval').value;
@@ -249,9 +254,6 @@ function initial_setup_alert(bookReturnIntervalValue, penaltyIntervalValue) {
         }
     }).then(async (result) => {
         if (result.isConfirmed) {
-            //console.log('Issue-Return Interval:', result.value.bookReturnInterval);
-            //console.log('Penalty per Day:', result.value.penaltyInterval);
-
             // Get the username from cookies
             const username = getCookie('username'); // Assume you have a function to get cookies
 
@@ -287,6 +289,8 @@ function initial_setup_alert(bookReturnIntervalValue, penaltyIntervalValue) {
         }
     });
 }
+
+
 // Function to check the values and display the alert
 function checkAndDisplayAlert(bookReturnInterval, penaltyInterval) {
     if (bookReturnInterval === 0 && penaltyInterval === 0) {
