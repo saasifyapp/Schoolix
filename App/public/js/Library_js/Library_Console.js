@@ -162,25 +162,18 @@ function hidelibraryLoadingAnimation() {
 
 
 function togglePopup() {
-    const popup = document.getElementById('settingsPopup');
-    
-    // Toggle popup visibility
-    popup.style.display = (popup.style.display === 'block') ? 'none' : 'block';
-
-    // Fetch settings data if popup is being shown
-    if (popup.style.display === 'block') {
         fetch('/settings')
             .then(response => response.json())
             .then(data => {
                 // Display fetched data in the popup
-                document.getElementById('bookReturnInterval').value = data.library_interval || 5;
-                document.getElementById('penaltyInterval').value = data.library_penalty || 5;
+                document.getElementById('bookReturnInterval').value = data.library_interval;
+                document.getElementById('penaltyInterval').value = data.library_penalty;
             })
             .catch(error => {
                 console.error('Error fetching settings:', error);
             });
-    }
 }
+togglePopup();
 
 document.getElementById('saveSettingsButton').addEventListener('click', async function() {
     const bookReturnInterval = parseInt(document.getElementById('bookReturnInterval').value, 10);
@@ -205,7 +198,7 @@ document.getElementById('saveSettingsButton').addEventListener('click', async fu
 
             if (response.ok) {
                 showToast('Settings updated successfully.', false);
-                document.getElementById('settingsPopup').style.display = 'none';
+                // document.getElementById('settingsPopup').style.display = 'none';
                 setTimeout(() => {
                     location.reload();
                 }, 1200); // Delay of 1.2 seconds before reloading
