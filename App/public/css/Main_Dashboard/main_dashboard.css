@@ -616,7 +616,20 @@ body.dark {
     padding: 4px; /* Optional: Add padding inside the user_details container */
     box-sizing: border-box; /* Include padding in the element's total width and height */
     overflow: hidden; /* Hide any overflow content */
+    animation: slideInFromTop 0.7s ease-out;
   }
+
+  @keyframes slideInFromTop {
+    0% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
   
   .user_detail_item {
     background-color: #D6EAF8; /* Background color for each item */
@@ -671,11 +684,26 @@ body.dark {
     gap: 10px;
   }
   
-  .graph {
+ /* Define the slide-in animation from the left */
+@keyframes slideInFromLeft {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Apply the animation to the container */
+.graph {
     display: flex;
     width: 48%; /* Adjust width for better spacing */
     gap: 10px;
-  }
+    animation: slideInFromLeft 0.9s ease-out; /* Add the slide-in animation */
+}
+
   
   .male_female_graph, .fee_status {
     background-color: white;
@@ -766,8 +794,20 @@ body.dark {
     font-weight: normal;
   }
   
-  
-  .library_details {
+  /* Define the slide-in animation from the right */
+@keyframes slideInFromRight {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Apply the animation to the container */
+.library_details {
     background-color: white; /* Background color for the new container */
     width: 60%; /* Set width to 60% */
     padding: 10px; /* Add padding inside the library_details container */
@@ -778,7 +818,9 @@ body.dark {
     display: flex;
     flex-direction: column; /* Stack heading and items vertically */
     align-items: center; /* Center align the content horizontally */
-  }
+    animation: slideInFromRight 0.9s ease-out; /* Add the slide-in animation */
+}
+
   
   .container_heading_lib {
     text-align: center; /* Center align the heading */
