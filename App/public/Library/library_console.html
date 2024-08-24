@@ -59,14 +59,14 @@
         <nav class="settings__nav" role="navigation">
             <ul class="settings__list">
                 <li class="settings__item">
-                    <label for="bookReturnInterval">Book Return Interval (days):</label>
+                    <label for="bookReturnInterval">Book Return Interval (Days)</label>
                     <input type="number" id="bookReturnInterval" placeholder="Enter interval" class="short-input">
                 </li>
                 <li class="settings__item">
-                    <label for="penaltyInterval">Penalty Amount (Rs):</label>
+                    <label for="penaltyInterval">Penalty Amount (Rs)/Day</label>
                     <div class="input-group">
                         <input type="number" id="penaltyInterval" placeholder="Enter amount" class="short-input">
-                        <span>/ Day</span>
+                        
                     </div>
                 </li>
                 <li class="settings__item">
@@ -89,10 +89,14 @@
     <div id="bigToastOverlay" class="toast-overlay hidden"></div>
     <div id="bigToast" class="big-toast hidden">
         <div class="big-toast-content">
-            <button id="bigToastClose" onclick="hideBigToast()">✖</button>
-            <span id="bigToastMessage"></span>
+            <img src="/images/closec.png" alt="Icon" class="big-toast-icon">
+            <h4 class="big-toast-title">Issue Found!</h4>
+            <div id="bigToastMessage" class="big-toast-message"></div>
+            <button id="bigToastClose" class="big-toast-close" onclick="hideBigToast()">OK</button>
         </div>
     </div>
+    
+    
 
 
 

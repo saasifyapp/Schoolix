@@ -585,41 +585,63 @@ body {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(0.5); /* Start small for animation */
+    transform: translate(-50%, -50%);
     padding: 20px;
-    width: 300px;
-    background: #f44336;
+    width: 325px;
+    background: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 9999;
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-    opacity: 0;
+    text-align: center;
 }
 
-/* Show the toast with animation */
-.big-toast.show {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
+.big-toast-icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 20px;
 }
 
-/* Style for the close button */
-.big-toast-content #bigToastClose {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
+.big-toast-title {
+    font-size: 26px;
+    margin: 0 0 15px;
+    color: #ef513a;
+}
+
+.big-toast-message {
+    font-size: 16px;
+    color: #636363;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    text-align: left; /* Align text to the left for better readability */
+}
+
+.big-toast-message div {
+    margin-bottom: 10px; /* Add space between each line */
+}
+
+.big-toast-close {
+    background: #ef513a;
     color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
 
-/* Style for the message content */
+.big-toast-close:hover {
+    background: #da2c12;
+}
+
+/* Message text styling */
 .big-toast-content #bigToastMessage {
-    display: block;
     margin-top: 30px; /* Space between the close button and the message */
     font-size: 16px;
-    color: white;
+    color: #333333; /* Darker text color for readability */
+    white-space: pre-line; /* Preserve line breaks */
+    line-height: 1.5; /* Add spacing between lines */
+    text-align: center;
 }
 
 /* Utility classes for showing and hiding */
@@ -679,8 +701,6 @@ body {
     }
 }
 
-
-
 /* Settings navigation styles */
 .settings__checkbox {
     display: none;
@@ -707,8 +727,7 @@ body {
         height: 3rem;
         width: 3rem;
     }
-    }
-
+}
 
 .settings__background {
     position: fixed;
@@ -741,22 +760,65 @@ body {
     visibility: hidden;
     z-index: 200;
     transition: all 800ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+/* Card styling for the settings list */
 .settings__list {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    width: 100%;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
+    padding: 20px;
     list-style: none;
+    width: 300px;
+    max-width: 90%;
+    text-align: center;
 }
 
 .settings__item {
-    margin: 1rem;
+    margin-bottom: 15px;
 }
 
+.settings__item:last-child {
+    margin-bottom: 0;
+}
+
+.short-input {
+    width: 90%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+}
+
+.input-group span {
+    margin-left: 5px;
+    font-size: 14px;
+    color: #555;
+}
+
+#saveSettingsButton {
+    width: 100%;
+    padding: 10px;
+    background-color: #4A676A;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#saveSettingsButton:hover {
+    background-color: #3a5353;
+}
+
+/* Adjusted icon sizes */
 .settings__button:hover .settings__icon::before {
     top: -0.6rem;  /* Adjusted spacing for smaller icon */
 }

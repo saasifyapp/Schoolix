@@ -59,6 +59,7 @@ function handleErrors(data) {
 }
 
 
+
 // Call Settings endpoint to get issue-return interval //
 
 document.addEventListener('DOMContentLoaded', () => {
