@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
+const { connection_auth } = require('../../../main_server'); // Adjust the path as needed
+
 
 // Use the connection manager middleware
 router.use(connectionManager);
@@ -9,7 +11,9 @@ router.use(connectionManager);
 
 
 const formatDateToIST = (date) => {
-    const istDate = new Date(date);
+    const utcDate = new Date(date);
+    const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
+    const istDate = new Date(utcDate.getTime() + istOffset);
     const year = istDate.getFullYear();
     const month = String(istDate.getMonth() + 1).padStart(2, '0');
     const day = String(istDate.getDate()).padStart(2, '0');
@@ -58,6 +62,12 @@ router.post('/library/search_transactions', (req, res) => {
 router.post('/library/delete_transaction', (req, res) => {
     const { transactionId, transactionType } = req.body;
 
+    const username = req.cookies.username; // Get username from cookie
+
+    if (!username) {
+        return res.status(401).json({ error: 'User not authenticated' });
+    }
+
     const getTransactionQuery = `SELECT * FROM library_transaction_log WHERE transaction_id = ?`;
     const deleteFromLogQuery = `DELETE FROM library_transaction_log WHERE transaction_id = ?`;
     const deleteFromTransactionsQuery = `DELETE FROM library_transactions WHERE memberID = ? AND bookID = ? AND issue_date = ?`;
@@ -68,6 +78,7 @@ router.post('/library/delete_transaction', (req, res) => {
     const addToTransactionsQuery = `INSERT INTO library_transactions (memberID, member_name, member_class, member_contact, bookID, book_name, book_author, book_publication, issue_date, return_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     const getReturnTransactionQuery = `SELECT * FROM library_transaction_log WHERE transaction_type = 'return' AND memberID = ? AND bookID = ? AND transaction_date >= ?`;
     const getIssueTransactionQuery = `SELECT * FROM library_transaction_log WHERE transaction_type = 'issue' AND memberID = ? AND bookID = ?`;
+    const getIntervalQuery = `SELECT library_interval FROM user_details WHERE LoginName = ?`; // Get the interval from master DB (demo database)
 
     req.connectionPool.query(getTransactionQuery, [transactionId], (err, transactionResult) => {
         if (err) {
@@ -85,6 +96,8 @@ router.post('/library/delete_transaction', (req, res) => {
         const bookNumber = transaction.bookID;
         const issueDate = transaction.transaction_date;
         const revertValue = transactionType === 'issue' ? -1 : 1;
+
+       // console.log('Issue Date Fetched:', issueDate); // Log the fetched issue date
 
         if (transactionType === 'issue') {
             // Check if there is a corresponding return transaction for this specific issue date
@@ -110,6 +123,8 @@ router.post('/library/delete_transaction', (req, res) => {
 });
 
 function deleteTransaction(req, res, transactionId, transactionType, enrollmentNumber, bookNumber, revertValue, issueDate, transaction) {
+    const username = req.cookies.username; // Get username from cookie
+
     const deleteFromLogQuery = `DELETE FROM library_transaction_log WHERE transaction_id = ?`;
     const deleteFromTransactionsQuery = `DELETE FROM library_transactions WHERE memberID = ? AND bookID = ? AND issue_date = ?`;
     const updateMemberQuery = `UPDATE library_member_details SET books_issued = books_issued + ? WHERE memberID = ?`;
@@ -118,6 +133,9 @@ function deleteTransaction(req, res, transactionId, transactionType, enrollmentN
     const getBookDetailsQuery = `SELECT * FROM library_book_details WHERE bookID = ?`;
     const addToTransactionsQuery = `INSERT INTO library_transactions (memberID, member_name, member_class, member_contact, bookID, book_name, book_author, book_publication, issue_date, return_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     const getIssueTransactionQuery = `SELECT * FROM library_transaction_log WHERE transaction_type = 'issue' AND memberID = ? AND bookID = ?`;
+    const getIntervalQuery = `SELECT library_interval FROM user_details WHERE LoginName = ?`;
+
+   // console.log('Username passed to deleteTransaction:', username); // Debugging statement
 
     req.connectionPool.query(deleteFromLogQuery, [transactionId], (err) => {
         if (err) {
@@ -178,27 +196,50 @@ function deleteTransaction(req, res, transactionId, transactionType, enrollmentN
 
                                 const issueTransaction = issueResult[0];
                                 const issueDate = new Date(issueTransaction.transaction_date);
-                                const returnDate = new Date(issueDate);
-                                returnDate.setDate(returnDate.getDate() + 5);
 
-                                req.connectionPool.query(addToTransactionsQuery, [
-                                    enrollmentNumber,
-                                    member.member_name,
-                                    member.member_class,
-                                    member.member_contact,
-                                    bookNumber,
-                                    book.book_name,
-                                    book.book_author,
-                                    book.book_publication,
-                                    formatDateToIST(issueDate),
-                                    formatDateToIST(returnDate)
-                                ], (err) => {
+                                // Fetch the interval from the user_details table using connection_auth
+                                //console.log('Executing query:', getIntervalQuery);
+                               // console.log('With parameters:', [username]);
+
+                                connection_auth.query(getIntervalQuery, [username], (err, intervalResult) => {
                                     if (err) {
-                                        console.error('Error adding transaction to transactions:', err);
-                                        return res.status(500).json({ error: 'Error adding transaction to transactions' });
+                                        console.error('Error fetching interval:', err);
+                                        return res.status(500).json({ error: 'Error fetching interval' });
                                     }
 
-                                    res.status(200).json({ message: 'Transaction reverted successfully' });
+                                  //  console.log('Interval query result:', intervalResult);
+
+                                    if (intervalResult.length === 0) {
+                                        console.error('Interval not found');
+                                        return res.status(404).json({ error: 'Interval not found' });
+                                    }
+
+                                    const libraryInterval = intervalResult[0].library_interval;
+                                    const returnDate = new Date(issueDate);
+                                    returnDate.setDate(returnDate.getDate() + libraryInterval);
+
+                                    //console.log('Issue Date:', issueDate); // Log the issue date
+                                   // console.log('Return Date:', returnDate); // Log the return date
+
+                                    req.connectionPool.query(addToTransactionsQuery, [
+                                        enrollmentNumber,
+                                        member.member_name,
+                                        member.member_class,
+                                        member.member_contact,
+                                        bookNumber,
+                                        book.book_name,
+                                        book.book_author,
+                                        book.book_publication,
+                                        formatDateToIST(issueDate),
+                                        formatDateToIST(returnDate)
+                                    ], (err) => {
+                                        if (err) {
+                                            console.error('Error adding transaction to transactions:', err);
+                                            return res.status(500).json({ error: 'Error adding transaction to transactions' });
+                                        }
+
+                                        res.status(200).json({ message: 'Transaction reverted successfully' });
+                                    });
                                 });
                             });
                         });

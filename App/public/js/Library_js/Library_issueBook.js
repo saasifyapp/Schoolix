@@ -14,7 +14,7 @@ document.getElementById('issueBookForm').addEventListener('submit', function(eve
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Response from /library/get_details:', data); // Debugging info
+        //console.log('Response from /library/get_details:', data); // Debugging info
 
         if (data.error) {
             hidelibraryLoadingAnimation();
@@ -58,12 +58,9 @@ function handleErrors(data) {
     }
 }
 
-
-
-// Call Settings endpoint to get issue-return interval //
-
+// Call Settings endpoint to get issue-return interval
 document.addEventListener('DOMContentLoaded', () => {
-    let libraryInterval = 5; // Default value in case the fetch fails
+    let libraryInterval = 3; // Default value in case the fetch fails
 
     // Call Settings endpoint to get issue-return interval
     fetch('/settings', {
@@ -112,7 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-
 // Handle the submission of the additional info form
 document.getElementById('additionalInfoForm').addEventListener('submit', function(event) {
     showLibraryLoadingAnimation();
@@ -135,7 +131,6 @@ document.getElementById('additionalInfoForm').addEventListener('submit', functio
         showToast('Please fill out all fields before submitting.', true);
         return; // Stop execution
     }
-
 
     fetch('/library/issue_book', {
         method: 'POST',
@@ -168,20 +163,38 @@ document.getElementById('additionalInfoForm').addEventListener('submit', functio
             document.getElementById('issueBookForm').reset();
             document.getElementById('additionalInfoForm').reset();
 
-            // Reset issue and return dates to default values
-            const issueDateInput = document.getElementById('issueDate');
-            const returnDateInput = document.getElementById('returnDate');
+            // Fetch the interval and set the return date dynamically
+            fetch('/settings', {
+                method: 'GET',
+                credentials: 'include' // Include cookies in the request
+            })
+            .then(response => response.json())
+            .then(intervalData => {
+                if (intervalData.error) {
+                    console.error('Error fetching interval:', intervalData.error);
+                    showToast('Error fetching interval', true);
+                } else {
+                    const libraryInterval = intervalData.library_interval; // Get the interval from DB and set the date fields on reset //
 
-            const today = new Date();
-            const todayFormatted = today.toISOString().split('T')[0];
-            issueDateInput.value = todayFormatted;
+                    // Reset issue and return dates to default values
+                    const issueDateInput = document.getElementById('issueDate');
+                    const returnDateInput = document.getElementById('returnDate');
 
-            const returnDate = new Date(today);
-            returnDate.setDate(returnDate.getDate() + 5);
-            const returnDateFormatted = returnDate.toISOString().split('T')[0];
-            returnDateInput.value = returnDateFormatted;
+                    const today = new Date();
+                    const todayFormatted = today.toISOString().split('T')[0];
+                    issueDateInput.value = todayFormatted;
+
+                    const returnDate = new Date(today);
+                    returnDate.setDate(returnDate.getDate() + libraryInterval);
+                    const returnDateFormatted = returnDate.toISOString().split('T')[0];
+                    returnDateInput.value = returnDateFormatted;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching interval:', error);
+                showToast('Error fetching interval', true);
+            });
         }
-
     })
     .catch(error => {
         hidelibraryLoadingAnimation();

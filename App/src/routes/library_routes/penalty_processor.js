@@ -3,6 +3,8 @@ const router = express.Router();
 
 
 const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
+const { connection_auth } = require('../../../main_server'); // Adjust the path as needed
+
 
 // Use the connection manager middleware
 router.use(connectionManager);
@@ -20,7 +22,7 @@ router.post('/library/get_penalties', (req, res) => {
     // First, fetch the library settings
     const settingsQuery = `SELECT library_penalty FROM user_details WHERE LoginName = ?`;
 
-    req.connectionPool.query(settingsQuery, [username], (err, settingsResult) => {
+    connection_auth.query(settingsQuery, [username], (err, settingsResult) => {
         if (err) {
             console.error('Error fetching settings:', err);
             return res.status(500).json({ error: 'Error fetching settings' });
