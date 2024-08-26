@@ -1,0 +1,896 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+* {
+
+    font-family: "Poppins", sans-serif;
+}
+
+:root {
+    --white-color: #fff;
+    --blue-color: #4070f4;
+    --grey-color: #707070;
+    --grey-color-light: #aaa;
+}
+
+body {
+    font-family: american typewriter, sans-serif;
+    text-align: center;
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    /* Prevent scrolling */
+}
+
+
+
+.cards-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* Center vertically */
+}
+
+.card {
+    background-color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 0px 25px;
+    font-size: 0.8rem;
+    animation: slideIn 0.8s forwards;
+    transition: all 0.5s ease;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    width: 220px;
+    height: 260px;
+    /* Adjust height as needed */
+    outline: none;
+    margin: 0 15px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+}
+
+.card a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.card button {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    outline: none;
+    padding: 15px;
+}
+
+.card:hover {
+    background-color: #FFDEE9;
+    background-image: linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 100%);
+    box-shadow: 0 0 8px #023047;
+    outline: none;
+}
+
+
+
+.button {
+    position: relative;
+    /* Set button position to relative */
+}
+
+.dotlottie-container {
+    position: absolute;
+    bottom: 2rem;
+    /* Adjust the value to move it slightly up */
+    left: 0;
+    right: 0;
+    margin: auto;
+    /* Center horizontally */
+}
+
+
+.card h3 {
+    position: absolute;
+    bottom: 10px;
+    /* Adjust as needed */
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 1rem;
+    /* Adjust font size as needed */
+    color: var(--grey-color);
+    /* Apply color as needed */
+    transition: transform 0.5s ease, font-size 0.5s ease;
+    /* Apply specified properties */
+}
+
+
+
+.adm-head {
+    position: absolute;
+    top: 18%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 20px;
+    color: var(--grey-color);
+
+}
+
+
+
+/* Toast container to hold multiple toasts */
+.toast-container {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    z-index: 9999;
+}
+
+/* Toast CSS */
+.toast {
+    width: 15rem;
+    margin-bottom: 10px;
+    background-color: #4CAF50;
+    /* Green background */
+    color: white;
+    padding: 16px;
+    border-radius: 8px;
+    display: none;
+    animation: slideInRight 0.5s forwards;
+    /* Slide in animation */
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+.toast.error {
+    background-color: #f44336;
+    /* Red background for error */
+}
+
+
+
+
+
+
+/* loading aniamtion */
+/* HTML: <div class="loader"></div> */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    /* Semi-transparent white background */
+    backdrop-filter: blur(5px);
+    /* Adjust blur as needed */
+    z-index: 9999;
+    /* Ensure the overlay appears on top of other content */
+    display: none;
+}
+
+.loader {
+    width: 48px;
+    height: 48px;
+    margin: auto;
+    position: relative;
+}
+
+.loader:before {
+    content: '';
+    width: 48px;
+    height: 5px;
+    background: #f0808050;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    border-radius: 50%;
+    animation: shadow324 0.5s linear infinite;
+}
+
+.loader:after {
+    content: '';
+    width: 100%;
+    height: 100%;
+    background: #f06767;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 4px;
+    animation: jump7456 0.5s linear infinite;
+}
+
+@keyframes jump7456 {
+    15% {
+        border-bottom-right-radius: 3px;
+    }
+
+    25% {
+        transform: translateY(9px) rotate(22.5deg);
+    }
+
+    50% {
+        transform: translateY(18px) scale(1, .9) rotate(45deg);
+        border-bottom-right-radius: 40px;
+    }
+
+    75% {
+        transform: translateY(9px) rotate(67.5deg);
+    }
+
+    100% {
+        transform: translateY(0) rotate(90deg);
+    }
+}
+
+@keyframes shadow324 {
+
+    0%,
+    100% {
+        transform: scale(1, 1);
+    }
+
+    50% {
+        transform: scale(1.2, 1);
+    }
+}
+
+/* Define thin and curved scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    /* Set the width of the scrollbar */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    /* Color of the scrollbar track */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    /* Color of the scrollbar handle */
+    border-radius: 10px;
+    /* Make the scrollbar handle curved */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+    /* Color of the scrollbar handle on hover */
+}
+
+
+/* Upward loading */
+.loading-overlay-inventory {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0.3rem;
+    /* Adjust height as needed */
+    background-color: transparent;
+    /* Initially transparent */
+    z-index: 9999;
+}
+
+.loader2 {
+    width: 100%;
+    height: 100%;
+    background-color: #25b09b;
+    /* Green color */
+    animation: slide 2s linear infinite;
+    /* Adjust animation duration as needed */
+}
+
+@keyframes slide {
+    0% {
+        width: 0%;
+    }
+
+    100% {
+        width: 100%;
+    }
+}
+
+.blur {
+    backdrop-filter: blur(10px);
+    /* Adjust blur radius as needed */
+}
+
+
+
+
+.getDetails-button {
+    background-color: transparent;
+    border: none;
+    color: black;
+    padding: 0;
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    max-height: 100%;
+    border-radius: 20px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 10px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
+}
+
+.getDetails-button img {
+    width: 25px;
+    height: 25px;
+    border-radius: 0px;
+    margin: 5px;
+}
+
+.getDetails-button span {
+    margin-right: 10px;
+}
+
+.getDetails-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+}
+
+.getDetails-button:focus {
+    outline: none;
+}
+
+.getDetails-button:hover {
+    background-color: #76D7C4;
+    /* Change background color on hover */
+    transform: scale(1.05);
+    /* Increase size on hover */
+}
+
+
+
+/* //////////////////////////////////Animations//////////////////////////// */
+
+@keyframes slideInFromDown {
+    from {
+        opacity: 0;
+        transform: translateY(50%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInFromUp {
+    from {
+        opacity: 0;
+        transform: translateY(-50%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Slide-out to bottom animation */
+@keyframes slideOutToBottom {
+    0% {
+        opacity: 1;
+        transform: translateY(0rem);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(5rem);
+    }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        transform: translateY(100%) scale(0.9);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+
+@keyframes slide-in {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+
+@keyframes slideInFromUp {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* Slide-in from bottom animation */
+@keyframes slideInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(5rem);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0rem);
+    }
+}
+
+@keyframes slideInFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideDownFromUp {
+    from {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Toast container to hold multiple toasts */
+.toast-container {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    z-index: 9999;
+}
+
+/* Toast CSS */
+.toast {
+    width: 15rem;
+    margin-bottom: 10px;
+    background-color: #4CAF50;
+    /* Green background */
+    color: white;
+    padding: 16px;
+    border-radius: 8px;
+    display: none;
+    animation: slideInRight 0.5s forwards;
+    /* Slide in animation */
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+.toast.error {
+    background-color: #f44336;
+    /* Red background for error */
+}
+
+/* Style for the toast overlay to create a blurred background */
+.toast-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px); /* Creates the blurred background */
+    z-index: 9998;
+}
+
+/* Style for the toast container */
+.big-toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    width: 325px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    text-align: center;
+}
+
+.big-toast-icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 20px;
+}
+
+.big-toast-title {
+    font-size: 26px;
+    margin: 0 0 15px;
+    color: #ef513a;
+}
+
+.big-toast-message {
+    font-size: 16px;
+    color: #636363;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    text-align: left; /* Align text to the left for better readability */
+}
+
+.big-toast-message div {
+    margin-bottom: 10px; /* Add space between each line */
+}
+
+.big-toast-close {
+    background: #ef513a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.big-toast-close:hover {
+    background: #da2c12;
+}
+
+/* Message text styling */
+.big-toast-content #bigToastMessage {
+    margin-top: 30px; /* Space between the close button and the message */
+    font-size: 16px;
+    color: #333333; /* Darker text color for readability */
+    white-space: pre-line; /* Preserve line breaks */
+    line-height: 1.5; /* Add spacing between lines */
+    text-align: center;
+}
+
+/* Utility classes for showing and hiding */
+.hidden {
+    display: none;
+}
+
+
+
+/* From Uiverse.io by AqFox */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: rgba(255, 255, 255, 0.7); */
+    /* Semi-transparent white background */
+    /* backdrop-filter: blur(5px); */
+    /* Adjust blur as needed */
+    z-index: 9999;
+    /* Ensure the overlay appears on top of other content */
+    display: none;
+}
+
+.spinner {
+    width: 56px;
+    height: 56px;
+    display: grid;
+    border: 4px solid #0000;
+    border-radius: 50%;
+    border-right-color: #3a977b;
+    animation: spinner-a4dj62 1s infinite linear;
+}
+
+.spinner::before,
+.spinner::after {
+    content: "";
+    grid-area: 1/1;
+    margin: 2px;
+    border: inherit;
+    border-radius: 50%;
+    animation: spinner-a4dj62 2s infinite;
+}
+
+.spinner::after {
+    margin: 8px;
+    animation-duration: 3s;
+}
+
+@keyframes spinner-a4dj62 {
+    100% {
+        transform: rotate(1turn);
+    }
+}
+
+/* Settings navigation styles */
+.settings__checkbox {
+    display: none;
+}
+
+.settings__button {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    height: 3rem;  /* Smaller height */
+    width: 3rem;   /* Smaller width */
+    text-align: center;
+    background-color: #fff;
+    border-radius: 50%;
+    z-index: 300;
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+@media screen and (min-width: 768px) {
+    .settings__button {
+        top: 5rem;
+        right: 4rem;
+        height: 3rem;
+        width: 3rem;
+    }
+}
+
+.settings__background {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    height: 2rem;  /* Smaller background */
+    width: 2rem;   /* Smaller background */
+    border-radius: 50%;
+    background: #4A676A;
+    z-index: 100;
+    transition: all 800ms cubic-bezier(0.86, 0, 0.07, 1);
+}
+
+@media screen and (min-width: 768px) {
+    .settings__background {
+        top: 5rem;
+        right: 4rem;
+        height: 3rem;
+        width: 3rem;
+    }
+}
+
+.settings__nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    opacity: 0;
+    width: 0;
+    visibility: hidden;
+    z-index: 200;
+    transition: all 800ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Card styling for the settings list */
+.settings__list {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    list-style: none;
+    width: 300px;
+    max-width: 90%;
+    text-align: center;
+}
+
+.settings__item {
+    margin-bottom: 15px;
+}
+
+.settings__item:last-child {
+    margin-bottom: 0;
+}
+
+.short-input {
+    width: 90%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+}
+
+.input-group span {
+    margin-left: 5px;
+    font-size: 14px;
+    color: #555;
+}
+
+#saveSettingsButton {
+    width: 100%;
+    padding: 10px;
+    background-color: #4A676A;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#saveSettingsButton:hover {
+    background-color: #3a5353;
+}
+
+/* Adjusted icon sizes */
+.settings__button:hover .settings__icon::before {
+    top: -0.6rem;  /* Adjusted spacing for smaller icon */
+}
+
+.settings__button:hover .settings__icon::after {
+    top: 0.6rem;   /* Adjusted spacing for smaller icon */
+}
+
+.settings__checkbox:checked~.settings__background {
+    transform: scale(80);
+}
+
+.settings__checkbox:checked~.settings__nav {
+    width: 100%;
+    visibility: visible;
+    opacity: 1;
+}
+
+.settings__icon {
+    position: relative;
+    margin-top: 1.5rem;  /* Adjusted top margin for smaller icon */
+}
+
+@media screen and (min-width: 768px) {
+    .settings__icon {
+        margin-top: 1.5rem;
+    }
+}
+
+.settings__icon,
+.settings__icon::before,
+.settings__icon::after {
+    display: inline-block;
+    width: 1.2rem;  /* Smaller icon width */
+    height: 1px;    /* Smaller icon height */
+    background-color: #4A676A;
+}
+
+@media (min-width: 768px) {
+    .settings__icon,
+    .settings__icon::before,
+    .settings__icon::after {
+        width: 1.8rem;  /* Adjusted icon size for larger screens */
+    }
+}
+
+.settings__icon::before,
+.settings__icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    transition: all 200ms;
+}
+
+.settings__icon::before {
+    top: -.4rem;  /* Adjusted spacing for smaller icon */
+}
+
+.settings__icon::after {
+    top: .4rem;   /* Adjusted spacing for smaller icon */
+}
+
+.settings__checkbox:checked+.settings__button .settings__icon {
+    background-color: transparent;
+}
+
+.settings__checkbox:checked+.settings__button .settings__icon::before {
+    top: 0;
+    transform: rotate(135deg);
+}
+
+.settings__checkbox:checked+.settings__button .settings__icon::after {
+    top: 0;
+    transform: rotate(-135deg);
+}

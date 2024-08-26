@@ -41,6 +41,111 @@ router.get('/main_dashboard_data', (req, res) => {
         });
     });
 
+    
+
+    // Once all counts are fetched, send them as a response
+    Promise.all(promises)
+        .then(() => {
+            res.json(counts);
+        })
+        .catch(error => {
+            res.status(500).json({ error: 'Error fetching counts from MySQL' });
+        });
+});
+
+
+
+router.get('/main_dashboard_library_data', (req, res) => {
+    // Define an object to store counts for each category
+    const counts = {};
+
+
+    // Define queries for each count
+    const queries = {
+        totalBooks: 'SELECT COUNT(*) AS count FROM library_book_details',
+        memberCount: 'SELECT COUNT(*) AS count FROM library_member_details',
+        booksIssued: `SELECT COUNT(*) AS count FROM library_transactions`,
+        booksAvailable: `SELECT SUM(available_quantity) AS count FROM library_book_details`,
+        outstandingBooks: `SELECT COUNT(*) AS count FROM library_transactions WHERE return_date < CURDATE()`,
+        booksIssuedToday: `SELECT COUNT(*) AS count FROM library_transaction_log WHERE transaction_date = CURDATE() AND transaction_type = 'issue'`,
+        booksReturnedToday: `SELECT COUNT(*) AS count FROM library_transaction_log WHERE transaction_date = CURDATE() AND transaction_type = 'return'`,
+        penaltiesCollected: `SELECT SUM(penalty_paid) AS count FROM library_transaction_log WHERE penalty_status = 'paid'`
+    };
+
+    // Fetch counts for each category
+    const promises = Object.keys(queries).map(key => {
+        return new Promise((resolve, reject) => {
+            req.connectionPool.query(queries[key], (error, results) => {
+                if (error) {
+                    console.error(`Error querying MySQL for ${key}:`, error);
+                    reject(error);
+                } else {
+                    if (results && results.length > 0 && results[0].count !== undefined) {
+                        // Extract the count value using the alias 'count'
+                        counts[key] = results[0].count;
+                        //console.log(`${key}: ${counts[key]}`); // Log the count value
+                        resolve();
+                    } else {
+                        console.error(`No count found for ${key}`);
+                        counts[key] = 0; // Assuming count is 0 if not found
+                        console.log(`${key}: ${counts[key]}`); // Log the count value
+                        resolve();
+                    }
+                }
+            });
+        });
+    });
+
+    // Once all counts are fetched, send them as a response
+    Promise.all(promises)
+        .then(() => {
+            res.json(counts);
+        })
+        .catch(error => {
+            res.status(500).json({ error: 'Error fetching counts from MySQL' });
+        });
+});
+
+
+// Endpoint to get Student counts //
+
+router.get('/student_counts', (req, res) => {
+    // Define an object to store counts
+    const counts = {};
+
+    // Define queries for each count
+    const queries = {
+        primary_totalStudents: 'SELECT COUNT(*) AS count FROM primary_student_details',
+        primary_maleStudents: "SELECT COUNT(*) AS count FROM primary_student_details WHERE Gender = 'Male'",
+        primary_femaleStudents: "SELECT COUNT(*) AS count FROM primary_student_details WHERE Gender = 'Female'",
+
+        pre_primary_totalStudents: 'SELECT COUNT(*) AS count FROM pre_primary_student_details',
+        pre_primary_maleStudents: "SELECT COUNT(*) AS count FROM pre_primary_student_details WHERE Gender = 'Male'",
+        pre_primary_femaleStudents: "SELECT COUNT(*) AS count FROM pre_primary_student_details WHERE Gender = 'Female'"
+    };
+
+    // Fetch counts for each category
+    const promises = Object.keys(queries).map(key => {
+        return new Promise((resolve, reject) => {
+            req.connectionPool.query(queries[key], (error, results) => {
+                if (error) {
+                    console.error(`Error querying MySQL for ${key}:`, error);
+                    reject(error);
+                } else {
+                    if (results && results.length > 0 && results[0].count !== undefined) {
+                        // Extract the count value using the alias 'count'
+                        counts[key] = results[0].count;
+                        resolve();
+                    } else {
+                        console.error(`No count found for ${key}`);
+                        counts[key] = 0; // Assuming count is 0 if not found
+                        resolve();
+                    }
+                }
+            });
+        });
+    });
+
     // Once all counts are fetched, send them as a response
     Promise.all(promises)
         .then(() => {

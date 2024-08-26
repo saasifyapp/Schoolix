@@ -12,10 +12,13 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
-
+// Import path for device detection middleware
+const deviceDetection = require('./src/middleware/deviceDetection'); 
+  
+// Use the device detection middleware
+app.use(deviceDetection);
 
 const logoutManager = require('./src/middleware/logoutManager');
-
 
 
 
@@ -373,6 +376,10 @@ app.get('/inventory/searchInvoice', authenticateToken, (req, res) => {
 app.get('/inventory/invoiceReports', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Inventory', 'Inventory_invoiceReports.html'));
 });
+//Serve HTML form
+app.get('/Library/library_console', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Library', 'library_console.html'));
+});
 
 /////////////////////// ROUTES FOR MAIN DASHBOARD COMPONENTS ///////////////////////////////////////
 
@@ -388,14 +395,22 @@ app.use((req, res, next) => {
     next();
 });
 
+
+/////////////////////// ROUTES FOR SEARCH STUDENT COMPONENTS ///////////////////////////////////////
+
+ const searchStudentRouter = require('./src/routes/universal_routes.js');
+ app.use('/', searchStudentRouter);
+
+
+
 ////////////////////////////////////ADMIN CONSOLE //////////////////////////////////
 //////////////////////Submit Credentials of Database ///////////////////////////////
 app.post('/submit-config', (req, res) => {
     const { loginName, loginPassword, serverName, databaseUser, databasePassword, databaseName, schoolName } = req.body;
 
     const query = `
-        INSERT INTO user_details (loginName, loginPassword, serverName, databaseUser, databasePassword, databaseName, schoolName)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO user_details (loginName, loginPassword, serverName, databaseUser, databasePassword, databaseName, schoolName, library_interval, library_penalty)
+        VALUES (?, ?, ?, ?, ?, ?, ?, 0, 0)
     `;
     
     connection_auth.query(query, [loginName, loginPassword, serverName, databaseUser, databasePassword, databaseName, schoolName], (err, result) => {
@@ -473,6 +488,34 @@ app.use('/', searchInvoiceRouter);
 ////// INVOICE REPORT ROUTE
 const invoiceReportRouter = require('./src/routes/Inventory_routes/invoice_reports');
 app.use('/', invoiceReportRouter);
+
+////// ADD LIBRARY BOOK ROUTE
+const addlibrarybookRouter = require('./src/routes/library_routes/add_library_books');
+app.use('/', addlibrarybookRouter);
+
+////// ADD LIBRARY MEMBER ROUTE
+const addlibrarymemberRouter = require('./src/routes/library_routes/add_library_members');
+app.use('/', addlibrarymemberRouter);
+
+////// ISSUE BOOKS ROUTE
+const issueBooksRouter = require('./src/routes/library_routes/issue_books');
+app.use('/', issueBooksRouter);
+
+////// RETURN BOOKS ROUTE
+const returnBooksRouter = require('./src/routes/library_routes/return_books');
+app.use('/', returnBooksRouter);
+
+////// SEARCH TRANSACTION ROUTE
+const searchTransactionRouter = require('./src/routes/library_routes/search_transaction');
+app.use('/', searchTransactionRouter);
+
+////// PENALTY PROCESSOR ROUTE
+const penaltyProcessorRouter = require('./src/routes/library_routes/penalty_processor');
+app.use('/', penaltyProcessorRouter);
+
+////// REPORTS ROUTE
+const libraryReportsRouter = require('./src/routes/library_routes/library_reports');
+app.use('/', libraryReportsRouter);
 
 
 // Start the server

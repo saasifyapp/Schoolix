@@ -15,6 +15,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <title>Search Invoice</title>
     <script src="/js/Inventory_js/bootstrap-container.js" defer></script> <!-- Adjust the path accordingly -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body>
@@ -152,14 +154,36 @@
             <span class="form-control-placeholder">Balance</span>
         </div>
         <!-- Add radio buttons here -->
-        <div class="form-group">
-            <label for="paymentMethod">Payment Method</label><br>
+        
+            <!-- <label for="paymentMethod">Payment Method</label><br>
             <input type="radio" id="cashPayment" name="payment_method" value="CASH">
             <label for="cashPayment">CASH</label>
             <input type="radio" id="upiPayment" name="payment_method" value="UPI" style="margin-left: 20px;">
-            <label for="upiPayment">UPI</label>
-        </div>
-        <div class="button-group">
+            <label for="upiPayment">UPI</label> -->
+
+            
+            <div class="radio-inputs">
+               <!-- <label for="paymentMethod">Payment Method</label><br> -->
+                                    
+                <label for="cashPayment"> 
+                    <input class="radio-input" type="radio" name="payment_method" id="cashPayment" value="CASH">
+                    <span class="radio-tile">
+                        <span class="radio-icon"> <img src="/images/cash.gif" alt="Invoice Icon"
+                            style="width: 25px; height: 25px; margin-right: 4px;"></i></span>
+                        <span class="radio-label">Cash</span>
+                    </span>
+                </label>
+                <label for="upiPayment">
+                    <input  class="radio-input" type="radio" name="payment_method"  id="upiPayment" value="UPI">
+                    <span class="radio-tile">
+                        <span class="radio-icon"> <img src="/images/upimoney.gif" alt="Invoice Icon"
+                            style="width: 32px; height: 30px; margin-right: 4px;"></span>
+                        <span class="radio-label">UPI</span>
+                    </span>
+                </label>                                   
+            </div>
+        
+        <div class="button-group" style="margin-top: 15px;">
             <button class="styled-button" onclick="submitUpdatedAmount()">
                 <img src="/images/update.png" alt="Refresh Icon">
                 Update
@@ -263,6 +287,10 @@
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+
+    <script src="/js/Universal_Components_JS/handle_session.js"></script>
+
+    
 </body>
 
 </html>
