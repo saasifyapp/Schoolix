@@ -255,6 +255,9 @@ function initial_setup_alert(bookReturnIntervalValue, penaltyIntervalValue) {
         }
     }).then(async (result) => {
         if (result.isConfirmed) {
+
+            showLibraryLoadingAnimation(); // Show loading animation
+
             // Get the username from cookies
             const username = getCookie('username'); // Assume you have a function to get cookies
 
@@ -283,9 +286,14 @@ function initial_setup_alert(bookReturnIntervalValue, penaltyIntervalValue) {
                 } catch (error) {
                     console.error('Error:', error);
                     showToast('An error occurred while updating settings.', true);
+                }finally {
+                    hidelibraryLoadingAnimation(); // Hide loading animation
                 }
+                
             } else {
                 showToast('No username found in cookies.', true);
+                hidelibraryLoadingAnimation(); // Hide loading animation
+
             }
         }
     });
