@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
+const { connection_auth } = require('../../../main_server'); // Adjust the path as needed
+
 
 // Use the connection manager middleware
 router.use(connectionManager);
@@ -207,7 +209,8 @@ router.get('/settings', (req, res) => {
 
     const query = `SELECT library_interval, library_penalty FROM user_details WHERE LoginName = ?`;
 
-    req.connectionPool.query(query, [username], (err, results) => {
+    // Use connection_auth to query the master database (to get details from Demo Database >> User_details)
+    connection_auth.query(query, [username], (err, results) => {
         if (err) {
             console.error('Error fetching settings:', err);
             return res.status(500).json({ error: 'Error fetching settings' });
@@ -237,7 +240,8 @@ router.post('/update-settings', (req, res) => {
                    library_penalty = ? 
                    WHERE LoginName = ?`;
 
-    req.connectionPool.query(query, [bookReturnInterval, penaltyInterval, username], (err, result) => {
+    // Use connection_auth to query the master database
+    connection_auth.query(query, [bookReturnInterval, penaltyInterval, username], (err, result) => {
         if (err) {
             console.error('Error updating settings:', err);
             return res.status(500).json({ error: 'Error updating settings' });

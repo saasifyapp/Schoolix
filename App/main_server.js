@@ -44,6 +44,9 @@ const connection_auth = mysql.createPool({
     //idleTimeoutMillis: 30000 // 30 seconds
 });
 
+// Export connection_auth
+module.exports = { connection_auth };
+
 // Session configuration
 const sessionStore = new MySQLStore({
     host: process.env.DB_HOST,
