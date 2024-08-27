@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transport Console</title>
+    <link rel="stylesheet" href="/css/NavButtons.css">
+    <link rel="stylesheet" href="/css/Transport_css/Transport_console.css">
+    <link rel="stylesheet" href="/css/Transport_css/All_Transport.css">
+    <link rel="stylesheet" href="/css/Transport_css/Transport-form-control.css">
+
+</head>
+
+<body>
+
+
+
+    <nav class="navbar">
+        <div class="logo_item">
+            <!-- <i class="bx bx-menu" id="sidebarOpen"></i> -->
+            <img id="logo" src="" alt="Logo">
+            <!-- <div class="user_name" id="user_name"></div> -->
+        </div>
+
+        <div class="navbar_center">
+            <button onclick="window.location.href='/dashboard'"> <i class='bx' id="backButton"> <img
+                        src="/images/back.png" alt="Previous Icon"></i></button>
+            <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img
+                        src="/images/homeicon.png" alt="Dashboard Icon"></i></button>
+            <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
+                        alt="Signout Icon"></i></button>
+        </div>
+
+        <div class="navbar_content">
+            <!-- <i class="bi bi-grid"></i>
+      <i class='bx bx-bell'></i> -->
+        </div>
+    </nav>
+    </button>
+
+
+
+    <div class="adm-head">
+        <div class="button-container">
+            <h2>Transport Console</h2>
+        </div>
+    </div>
+
+
+
+
+
+    <div class="cards-container">
+        <div class="card">
+            <a>
+                <button id="driverConductorButton">
+                    <div class="dotlottie-container">
+
+                    </div>
+                    <h3>Driver and Conductor</h3>
+                </button>
+            </a>
+        </div>
+
+        <div class="card">
+            <a>
+                <button id="">
+                    <div class="dotlottie-container">
+
+                    </div>
+                    <h3>Routes and Shifts</h3>
+                </button>
+            </a>
+        </div>
+
+        <div class="card">
+            <a>
+                <button id="">
+
+                    <h3>Scheduling</h3>
+                </button>
+            </a>
+        </div>
+
+        <div class="card">
+            <a>
+                <button id="">
+                    <div class="dotlottie-container">
+
+
+                    </div>
+                    <h3>Tracking and Monitoring</h3>
+                </button>
+            </a>
+        </div>
+
+        <div class="card">
+            <a>
+                <button id="">
+                    <div class="dotlottie-container">
+
+                    </div>
+                    <h3>Reports</h3>
+                </button>
+            </a>
+        </div>
+
+    </div>
+
+
+
+    <!-- Overlay for selecting Add or Search Driver/Conductor -->
+    <div id="driverConductorOverlay" class="overlay">
+        <div class="overlay-content-inner">
+            <h2>Driver and Conductor</h2>
+            <button id="closeDriverConductorOverlay" class="close-button">&times;</button>
+            <div class="button-container">
+                <div class="option-card bookvaltcard">
+                    <span id="addDriverButton">
+                        <img src="" alt="">
+                        Add Driver/Conductor
+                    </span>
+                </div>
+                <div class="option-card bookvaltcard">
+                    <span id="searchDriverButton">
+                        <img src="" alt="">
+                        Search Driver/Conductor
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay for Adding Driver/Conductor -->
+    <div id="addDriverOverlay" class="overlay">
+        <div class="overlay-content">
+            <button id="closeAddDriverOverlay" class="close-button">&times;</button>
+            <div class="overlay-inner">
+                <div class="left-side">
+                    <dotlottie-player src="https://lottie.host/f1ef15f0-e5ab-415a-8f01-9cfdf4c36034/TwCFf8dsdN.json"
+                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay>
+                    </dotlottie-player>
+                </div>
+                <div class="right-side">
+                    <h2>Add Driver/Conductor</h2>
+                    <form id="addDriverForm">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="name" placeholder=" ">
+                            <span class="form-control-placeholder">Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="contact" placeholder=" ">
+                            <span class="form-control-placeholder">Contact</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="address" placeholder=" ">
+                            <span class="form-control-placeholder">Address</span>
+                        </div>
+                        <div class="form-group">
+                            <select id="type" class="form-control">
+                                <option value="">Select Type</option>
+                                <option value="driver">Driver</option>
+                                <option value="conductor">Conductor</option>
+                            </select>
+                            <span class="form-control-placeholder">Type</span>
+                        </div>
+
+                        <!-- Dynamic Fields -->
+                        <div id="dynamicFields"></div>
+
+                        <button class="getDetails-button" type="submit">
+                            <img src="../images/addbookbtn.png" alt="">
+                            <span>Submit</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>      
+        
+    </div>
+
+    <div id="searchDriverConductorOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <div class="loading-overlay" id="loadingOverlayDriverConductor">
+                <div class="spinner"></div>
+            </div>
+            <button id="closeSearchDriverConductorOverlay" class="close-button">&times;</button>
+            <img src="/images/searchDriverConductor.gif" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
+            <h2 class="overlay-search-head">Search Driver/Conductor</h2>
+            <div class="search-container">
+                <div class="form-Searchgroup">
+                    <div class="form-Searchgroup">
+                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                        <input type="text" class="form-control" id="searchBar" name="driverConductorSearch" placeholder=" "
+                            oninput="searchDriverConductorDetails()" style="width: 400px; height: 1.7rem !important;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search Driver/Conductor...</span>
+                    </div>
+                    <div class="form-Searchgroup">
+                        <select id="type" class="form-control" onchange="filterDriverConductorByType()" style="width: 400px; height: 1.7rem !important;">
+                            <option value="">Select Type</option>
+                            <option value="driver">Driver</option>
+                            <option value="conductor">Conductor</option>
+                        </select>
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Type...</span>
+                    </div>
+                    <button class="refreshButton" onclick="refreshDriverConductorData()" style="margin-top: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
+                </div>
+            </div>
+            <button class="export_registered_students" onclick="exportDriverConductorTable()">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+            <div class="table-container">
+                <table id="driverConductorTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Contact</th>
+                            <th>Address</th>
+                            <th>Type</th>
+                            <th>Vehicle Number</th>
+                            <th>Vehicle Type</th>
+                            <th>Capacity</th>
+                            <th>Conductor for</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="driverConductorTableBody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    <script src="/js/Inventory_js/All.js"></script>
+    <script src="/js/Transport_js/Transport_console.js"></script>
+    <script src="/js/Transport_js/Transport_dynamicfields.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
