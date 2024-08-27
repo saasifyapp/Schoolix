@@ -14,7 +14,7 @@ router.get('/getDriverDetails', (req, res) => {
     const sql = `
         SELECT name, vehicle_no 
         FROM transport_driver_conductor_details 
-        WHERE type = 'driver' AND (name LIKE ? OR vehicle_no LIKE ?)
+        WHERE driver_conductor_type = 'driver' AND (name LIKE ? OR vehicle_no LIKE ?)
     `;
     const values = [`%${query}%`, `%${query}%`];
 
@@ -38,7 +38,7 @@ router.post('/addDriverConductor', (req, res) => {
 
     // Insert data into the table
     const sql = `
-        INSERT INTO transport_driver_conductor_details (name, contact, address, type, vehicle_no, vehicle_type, vehicle_capacity)
+        INSERT INTO transport_driver_conductor_details (name, contact, address, driver_conductor_type, vehicle_no, vehicle_type, vehicle_capacity)
         VALUES (?, ?, ?, ?, ?, ?, ?)
     `;
     const values = [name, contact, address, type, vehicle_no, vehicle_type, vehicle_capacity];
