@@ -496,6 +496,9 @@ app.use('/', searchInvoiceRouter);
 const invoiceReportRouter = require('./src/routes/Inventory_routes/invoice_reports');
 app.use('/', invoiceReportRouter);
 
+
+////////////////////////////////// LIBRARY ROUTES ///////////////////////////////////
+
 ////// ADD LIBRARY BOOK ROUTE
 const addlibrarybookRouter = require('./src/routes/library_routes/add_library_books');
 app.use('/', addlibrarybookRouter);
@@ -523,6 +526,13 @@ app.use('/', penaltyProcessorRouter);
 ////// REPORTS ROUTE
 const libraryReportsRouter = require('./src/routes/library_routes/library_reports');
 app.use('/', libraryReportsRouter);
+
+
+///////////////////////////////// TRANSPORT ROUTES /////////////////////////////
+
+////// DRIVER CONDUCTOR ROUTE
+const transportDriverConductorRouter = require('./src/routes/transport_routes/add_driver_conductor');
+app.use('/', transportDriverConductorRouter);
 
 
 // Start the server

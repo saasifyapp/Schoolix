@@ -56,6 +56,12 @@
             <a>
                 <button id="driverConductorButton">
                     <div class="dotlottie-container">
+                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                            type="module"></script>
+
+                        <dotlottie-player src="https://lottie.host/6677d476-6639-4a84-b644-53243d90a051/uBEkhs71Xu.json"
+                            background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                            autoplay></dotlottie-player>
 
                     </div>
                     <h3>Driver and Conductor</h3>
@@ -67,6 +73,12 @@
             <a>
                 <button id="">
                     <div class="dotlottie-container">
+                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                            type="module"></script>
+
+                        <dotlottie-player src="https://lottie.host/7220b63b-4f7e-4f32-98a3-f51a035d9326/Y61N34EPoH.json"
+                            background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                            autoplay></dotlottie-player>
 
                     </div>
                     <h3>Routes and Shifts</h3>
@@ -78,6 +90,15 @@
             <a>
                 <button id="">
 
+                    <div class="dotlottie-container">
+                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                            type="module"></script>
+
+                        <dotlottie-player src="https://lottie.host/45a23584-8de0-465d-8cd7-33a6e602efbf/InuHWSRFF8.json"
+                            background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                            autoplay></dotlottie-player>
+                    </div>
+
                     <h3>Scheduling</h3>
                 </button>
             </a>
@@ -87,6 +108,12 @@
             <a>
                 <button id="">
                     <div class="dotlottie-container">
+                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                            type="module"></script>
+
+                        <dotlottie-player src="https://lottie.host/0ecdc1d6-aa73-4d04-8792-18e7889cb4ab/qEPEOPXW7E.json"
+                            background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                            autoplay></dotlottie-player>
 
 
                     </div>
@@ -99,6 +126,10 @@
             <a>
                 <button id="">
                     <div class="dotlottie-container">
+                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+              type="module"></script>
+            <dotlottie-player src="https://lottie.host/827bd400-04f7-49c4-862c-fb38dae3a901/JuXmNj8LPG.json"
+              background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
 
                     </div>
                     <h3>Reports</h3>
@@ -118,13 +149,13 @@
             <div class="button-container">
                 <div class="option-card bookvaltcard">
                     <span id="addDriverButton">
-                        <img src="" alt="">
+                        <img src="/images/driver.gif" alt="">
                         Add Driver/Conductor
                     </span>
                 </div>
                 <div class="option-card bookvaltcard">
                     <span id="searchDriverButton">
-                        <img src="" alt="">
+                        <img src="/images/search.gif" alt="">
                         Search Driver/Conductor
                     </span>
                 </div>
@@ -169,6 +200,9 @@
                         <!-- Dynamic Fields -->
                         <div id="dynamicFields"></div>
 
+                        <div id="suggestions" class="suggestions"></div>
+
+
                         <button class="getDetails-button" type="submit">
                             <img src="../images/addbookbtn.png" alt="">
                             <span>Submit</span>
@@ -176,8 +210,8 @@
                     </form>
                 </div>
             </div>
-        </div>      
-        
+        </div>
+
     </div>
 
     <div id="searchDriverConductorOverlay" class="overlay-search">
@@ -186,18 +220,21 @@
                 <div class="spinner"></div>
             </div>
             <button id="closeSearchDriverConductorOverlay" class="close-button">&times;</button>
-            <img src="/images/searchDriverConductor.gif" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
+            <img src="/images/searchDriverConductor.gif" alt="Overlay Icon" class="overlay-icon">
+            <!-- Add your icon here -->
             <h2 class="overlay-search-head">Search Driver/Conductor</h2>
             <div class="search-container">
                 <div class="form-Searchgroup">
                     <div class="form-Searchgroup">
                         <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
-                        <input type="text" class="form-control" id="searchBar" name="driverConductorSearch" placeholder=" "
-                            oninput="searchDriverConductorDetails()" style="width: 400px; height: 1.7rem !important;">
+                        <input type="text" class="form-control" id="searchBar" name="driverConductorSearch"
+                            placeholder=" " oninput="searchDriverConductorDetails()"
+                            style="width: 400px; height: 1.7rem !important;">
                         <span class="form-control-placeholder" style="left: 3.75rem;">Search Driver/Conductor...</span>
                     </div>
                     <div class="form-Searchgroup">
-                        <select id="type" class="form-control" onchange="filterDriverConductorByType()" style="width: 400px; height: 1.7rem !important;">
+                        <select id="type" class="form-control" onchange="filterDriverConductorByType()"
+                            style="width: 400px; height: 1.7rem !important;">
                             <option value="">Select Type</option>
                             <option value="driver">Driver</option>
                             <option value="conductor">Conductor</option>
@@ -245,7 +282,8 @@
 
     <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Transport_js/Transport_console.js"></script>
-    <script src="/js/Transport_js/Transport_dynamicfields.js"></script>
+    <script src="/js/Transport_js/Transport_addDriverConductor.js"></script>
+
 
 
 
