@@ -71,7 +71,7 @@
 
         <div class="card">
             <a>
-                <button id="">
+                <button id="routesShiftsButton">
                     <div class="dotlottie-container">
                         <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
                             type="module"></script>
@@ -176,6 +176,7 @@
                 <div class="right-side">
                     <h2>Add Driver/Conductor</h2>
                     <form id="addDriverForm">
+                       <div class="form-row">
                         <div class="form-group">
                             <input type="text" class="form-control" id="name" placeholder=" ">
                             <span class="form-control-placeholder">Name</span>
@@ -184,17 +185,20 @@
                             <input type="text" class="form-control" id="contact" placeholder=" ">
                             <span class="form-control-placeholder">Contact</span>
                         </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="address" placeholder=" ">
-                            <span class="form-control-placeholder">Address</span>
-                        </div>
-                        <div class="form-group">
-                            <select id="type" class="form-control">
-                                <option value="">Select Type</option>
-                                <option value="driver">Driver</option>
-                                <option value="conductor">Conductor</option>
-                            </select>
-                            <span class="form-control-placeholder">Type</span>
+                       </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="address" placeholder=" ">
+                                <span class="form-control-placeholder">Address</span>
+                            </div>
+                            <div class="form-group">
+                                <select id="type" class="form-control">
+                                    <option value="">Select Type</option>
+                                    <option value="driver">Driver</option>
+                                    <option value="conductor">Conductor</option>
+                                </select>
+                                <span class="form-control-placeholder">Type</span>
+                            </div>
                         </div>
 
                         <!-- Dynamic Fields -->
@@ -269,6 +273,137 @@
                         <!-- Table rows will be populated here -->
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+       <!-- Overlay for Routes and Shifts -->
+       <div id="routesShiftsOverlay" class="overlay">
+        <div class="overlay-content-inner">
+            <h2>Routes and Shifts</h2>
+            <button id="closeRoutesShiftsOverlay" class="close-button">&times;</button>
+            <div class="button-container">
+                <div class="option-card bookvaltcard">
+                    <span id="manageRoutesButton">
+                        <img src="" alt="">
+                        Manage Routes
+                    </span>
+                </div>
+                <div class="option-card bookvaltcard">
+                    <span id="manageShiftsButton">
+                        <img src="" alt="">
+                        Manage Shifts
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Overlay for Manage Routes -->
+    <div id="manageRoutesOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeManageRoutesOverlay" class="close-button">&times;</button>
+            <div class="overlay-inner">
+                <div class="left-side">
+                    <!-- //add lotti here  -->
+                </div>
+                <div class="right-side">
+                    <h2>Manage Routes</h2>
+                    <form id="manageRoutesForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="routeName" placeholder=" ">
+                                <span class="form-control-placeholder">Route Name</span>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="citiesAddress" placeholder=" ">
+                                <span class="form-control-placeholder">Cities/Address</span>
+                            </div>
+
+
+                        </div>
+                        <button class="getDetails-button" type="submit">
+                            <img src="../images/addbookbtn.png" alt="">
+                            <span>Add Route</span>
+                        </button>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="searchRoute" placeholder=" ">
+                            <span class="form-control-placeholder">Search Route</span>
+                        </div>
+                    </form>
+
+                    <div class="table-container">
+                        <table id="routesTable" class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Route ID</th>
+                                    <th>Route Name</th>
+                                    <th>Cities/Address</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="routesTableBody">
+                                <!-- Table rows will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay for Manage Shifts -->
+    <div id="manageShiftsOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeManageShiftsOverlay" class="close-button">&times;</button>
+            <div class="overlay-inner">
+                <div class="left-side">
+                  <!-- //add lotti here  -->
+                </div>
+                <div class="right-side">
+                    <h2>Manage Shifts</h2>
+                    <form id="manageShiftsForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="shiftName" placeholder=" ">
+                                <span class="form-control-placeholder">Shift Name</span>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="shiftType" placeholder=" ">
+                                <span class="form-control-placeholder">Shift Type</span>
+                            </div>
+                        </div>
+                        <button class="getDetails-button" type="submit">
+                            <img src="../images/addbookbtn.png" alt="">
+                            <span>Add Shift</span>
+                        </button>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="searchShift" placeholder=" ">
+                            <span class="form-control-placeholder">Search Shift</span>
+                        </div>
+                    </form>
+
+                    <div class="table-container">
+                        <table id="shiftsTable" class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Shift ID</th>
+                                    <th>Shift Name</th>
+                                    <th>Shift Type</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="shiftsTableBody">
+                                <!-- Table rows will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
