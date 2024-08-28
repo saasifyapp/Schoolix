@@ -225,7 +225,6 @@
             </div>
             <button id="closeSearchDriverConductorOverlay" class="close-button">&times;</button>
             <img src="/images/searchDriverConductor.gif" alt="Overlay Icon" class="overlay-icon">
-            <!-- Add your icon here -->
             <h2 class="overlay-search-head">Search Driver/Conductor</h2>
             <div class="search-container">
                 <div class="form-Searchgroup">
@@ -240,8 +239,8 @@
                         <select id="type" class="form-control" onchange="filterDriverConductorByType()"
                             style="width: 400px; height: 1.7rem !important;">
                             <option value="">Select Type</option>
-                            <option value="driver">Driver</option>
-                            <option value="conductor">Conductor</option>
+                            <option value="Driver">Driver</option>
+                            <option value="Conductor">Conductor</option>
                         </select>
                         <span class="form-control-placeholder" style="left: 3.75rem;">Type...</span>
                     </div>
@@ -255,19 +254,8 @@
             </button>
             <div class="table-container">
                 <table id="driverConductorTable" class="styled-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Contact</th>
-                            <th>Address</th>
-                            <th>Type</th>
-                            <th>Vehicle Number</th>
-                            <th>Vehicle Type</th>
-                            <th>Capacity</th>
-                            <th>Conductor for</th>
-                            <th>Action</th>
-                        </tr>
+                    <thead id="driverConductorTableHead">
+                        <!-- Table headers will be populated here -->
                     </thead>
                     <tbody id="driverConductorTableBody">
                         <!-- Table rows will be populated here -->

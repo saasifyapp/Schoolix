@@ -51,6 +51,16 @@ router.post('/addDriverConductor', (req, res) => {
     });
 });
 
+// Endpoint to fetch all driver and conductor details
+router.get('/displayDriverConductors', (req, res) => {
+    const sql = 'SELECT * FROM transport_driver_conductor_details';
+    req.connectionPool.query(sql, (error, results) => {
+        if (error) {
+            return res.status(500).json({ error: 'Database query failed' });
+        }
+        res.status(200).json(results);
+    });
+});
 
 
 module.exports = router;

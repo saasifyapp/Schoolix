@@ -2,36 +2,35 @@ document.addEventListener("DOMContentLoaded", function () {
   const typeSelect = document.getElementById("type");
   const dynamicFields = document.getElementById("dynamicFields");
   const addDriverForm = document.getElementById("addDriverForm");
+  const driverConductorTableHead = document.getElementById("driverConductorTableHead");
+  const driverConductorTableBody = document.getElementById("driverConductorTableBody");
 
   typeSelect.addEventListener("change", function () {
     dynamicFields.innerHTML = ""; // Clear existing fields
 
     if (this.value === "driver") {
       dynamicFields.innerHTML = `
-               
-<div class="form-row">
-    <div class="form-group">
-        <input type="text" class="form-control" id="vehicle_no" placeholder=" " maxlength="13">
-        <span class="form-control-placeholder">Vehicle Number</span>
-    </div>
-    <div class="form-group">
-        <select id="vehicle_type" class="form-control">
-            <option value="">Select Vehicle Type</option>
-            <option value="bus">Bus</option>
-            <option value="van">Van</option>
-            <option value="car">Car</option>
-            <option value="other">Other</option>
-        </select>
-        <span class="form-control-placeholder">Vehicle Type</span>
-    </div>
-    <div class="form-group">
-        <input type="number" class="form-control" id="vehicle_capacity" placeholder=" ">
-        <span class="form-control-placeholder">Capacity</span>
-    </div>
-</div>
-
-
-            `;
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" class="form-control" id="vehicle_no" placeholder=" " maxlength="13">
+            <span class="form-control-placeholder">Vehicle Number</span>
+          </div>
+          <div class="form-group">
+            <select id="vehicle_type" class="form-control">
+              <option value="">Select Vehicle Type</option>
+              <option value="Bus">Bus</option>
+              <option value="Van">Van</option>
+              <option value="Car">Car</option>
+              <option value="Other">Other</option>
+            </select>
+            <span class="form-control-placeholder">Vehicle Type</span>
+          </div>
+          <div class="form-group">
+            <input type="number" class="form-control" id="vehicle_capacity" placeholder=" ">
+            <span class="form-control-placeholder">Capacity</span>
+          </div>
+        </div>
+      `;
 
       const vehicleNoInput = document.getElementById("vehicle_no");
       vehicleNoInput.addEventListener("input", function () {
@@ -39,12 +38,12 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     } else if (this.value === "conductor") {
       dynamicFields.innerHTML = `
-                <div class="form-group">
-                    <input type="text" class="form-control" id="vehicle_no" placeholder=" " maxlength="13">
-                    <span class="form-control-placeholder">Vehicle Number</span>
-                </div>
-                <div id="suggestions" class="suggestions"></div>
-            `;
+        <div class="form-group">
+          <input type="text" class="form-control" id="vehicle_no" placeholder=" " maxlength="13">
+          <span class="form-control-placeholder">Vehicle Number</span>
+        </div>
+        <div id="suggestions" class="suggestions"></div>
+      `;
 
       const vehicleNoInput = document.getElementById("vehicle_no");
       const suggestionsContainer = document.getElementById("suggestions");
@@ -141,6 +140,7 @@ document.addEventListener("DOMContentLoaded", function () {
           alert(data.message);
           resetForm();
           //hideOverlay('addDriverOverlay');
+          displayDriverConductors(); // Refresh the table after adding a new entry
         }
       })
       .catch((error) => {
@@ -171,4 +171,88 @@ document.addEventListener("DOMContentLoaded", function () {
 
     return value.toUpperCase();
   }
+
+  // Function to fetch and display driver/conductor details
+  function displayDriverConductors() {
+    fetch("/displayDriverConductors")
+      .then((response) => response.json())
+      .then((data) => {
+        driverConductorTableHead.innerHTML = ""; // Clear existing table headers
+        driverConductorTableBody.innerHTML = ""; // Clear existing table rows
+
+        if (data.length === 0) {
+          const noResultsRow = document.createElement("tr");
+          noResultsRow.innerHTML = '<td colspan="8">No results found</td>';
+          driverConductorTableBody.appendChild(noResultsRow);
+        } else {
+          // Define custom column names
+          const customColumnNames = {
+            name: "Name",
+            contact: "Contact",
+            address: "Address",
+            driver_conductor_type: "Type",
+            vehicle_no: "Vehicle Number",
+            vehicle_type: "Vehicle Type",
+            vehicle_capacity: "Capacity",
+            conductor_for: "Conductor For"
+          };
+
+          // Dynamically create table headers
+          const headers = Object.keys(data[0]).filter(header => header !== 'id'); // Exclude 'id' column
+          const headerRow = document.createElement("tr");
+          headers.forEach((header) => {
+            const th = document.createElement("th");
+            th.textContent = customColumnNames[header] || header.replace(/_/g, " "); // Use custom column name or replace underscores with spaces
+            headerRow.appendChild(th);
+          });
+
+          // Add an Action column
+          const actionTh = document.createElement("th");
+          actionTh.textContent = "Action";
+          headerRow.appendChild(actionTh);
+          driverConductorTableHead.appendChild(headerRow);
+
+          // Reverse the data array
+          data.reverse();
+
+          // Dynamically create table rows
+          data.forEach((item) => {
+            const row = document.createElement("tr");
+            headers.forEach((header) => {
+              const td = document.createElement("td");
+              td.textContent = item[header];
+              row.appendChild(td);
+            });
+
+            // Add Edit and Delete buttons to the Action column
+            const actionTd = document.createElement("td");
+            actionTd.innerHTML = `
+              <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+                <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+                  onclick="editDriverConductor('${item.id}')"
+                  onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                  onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                  <img src="../images/edit.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                  <span style="margin-right: 10px;">Edit</span>
+                </button>
+                <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+                  onclick="deleteDriverConductor('${item.id}')"
+                  onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                  onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                  <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                  <span style="margin-right: 10px;">Delete</span>
+                </button>
+              </div>
+            `;
+            row.appendChild(actionTd);
+
+            driverConductorTableBody.appendChild(row);
+          });
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  }
+
+  // Initial fetch and display of driver/conductor details
+  displayDriverConductors();
 });
