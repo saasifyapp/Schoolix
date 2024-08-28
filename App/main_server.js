@@ -535,6 +535,9 @@ const transportDriverConductorRouter = require('./src/routes/transport_routes/ad
 app.use('/', transportDriverConductorRouter);
 
 
+const transportManageRouteRouter = require('./src/routes/transport_routes/manage_route');
+app.use('/', transportManageRouteRouter);
+
 // Start the server
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
