@@ -239,8 +239,8 @@
                         <select id="type" class="form-control" onchange="filterDriverConductorByType()"
                             style="width: 400px; height: 1.7rem !important;">
                             <option value="">Select Type</option>
-                            <option value="Driver">Driver</option>
-                            <option value="Conductor">Conductor</option>
+                            <option value="driver">Driver</option>
+                            <option value="conductor">Conductor</option>
                         </select>
                         <span class="form-control-placeholder" style="left: 3.75rem;">Type...</span>
                     </div>
@@ -255,7 +255,16 @@
             <div class="table-container">
                 <table id="driverConductorTable" class="styled-table">
                     <thead id="driverConductorTableHead">
-                        <!-- Table headers will be populated here -->
+                        <tr>
+                            <th>Name</th>
+                            <th>Contact</th>
+                            <th>Address</th>
+                            <th>Type</th>
+                            <th>Vehicle Number</th>
+                            <th>Vehicle Type</th>
+                            <th>Capacity</th>
+                            <th>Action</th>
+                        </tr>
                     </thead>
                     <tbody id="driverConductorTableBody">
                         <!-- Table rows will be populated here -->
@@ -264,7 +273,7 @@
             </div>
         </div>
     </div>
-
+    
        <!-- Overlay for Routes and Shifts -->
        <div id="routesShiftsOverlay" class="overlay">
         <div class="overlay-content-inner">

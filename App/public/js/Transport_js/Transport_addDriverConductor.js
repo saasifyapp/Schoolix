@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const typeSelect = document.getElementById("type");
   const dynamicFields = document.getElementById("dynamicFields");
   const addDriverForm = document.getElementById("addDriverForm");
-  const driverConductorTableHead = document.getElementById("driverConductorTableHead");
   const driverConductorTableBody = document.getElementById("driverConductorTableBody");
 
   typeSelect.addEventListener("change", function () {
@@ -177,7 +176,6 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch("/displayDriverConductors")
       .then((response) => response.json())
       .then((data) => {
-        driverConductorTableHead.innerHTML = ""; // Clear existing table headers
         driverConductorTableBody.innerHTML = ""; // Clear existing table rows
 
         if (data.length === 0) {
@@ -185,67 +183,39 @@ document.addEventListener("DOMContentLoaded", function () {
           noResultsRow.innerHTML = '<td colspan="8">No results found</td>';
           driverConductorTableBody.appendChild(noResultsRow);
         } else {
-          // Define custom column names
-          const customColumnNames = {
-            name: "Name",
-            contact: "Contact",
-            address: "Address",
-            driver_conductor_type: "Type",
-            vehicle_no: "Vehicle Number",
-            vehicle_type: "Vehicle Type",
-            vehicle_capacity: "Capacity",
-            conductor_for: "Conductor For"
-          };
-
-          // Dynamically create table headers
-          const headers = Object.keys(data[0]).filter(header => header !== 'id'); // Exclude 'id' column
-          const headerRow = document.createElement("tr");
-          headers.forEach((header) => {
-            const th = document.createElement("th");
-            th.textContent = customColumnNames[header] || header.replace(/_/g, " "); // Use custom column name or replace underscores with spaces
-            headerRow.appendChild(th);
-          });
-
-          // Add an Action column
-          const actionTh = document.createElement("th");
-          actionTh.textContent = "Action";
-          headerRow.appendChild(actionTh);
-          driverConductorTableHead.appendChild(headerRow);
-
           // Reverse the data array
           data.reverse();
 
           // Dynamically create table rows
           data.forEach((item) => {
             const row = document.createElement("tr");
-            headers.forEach((header) => {
-              const td = document.createElement("td");
-              td.textContent = item[header];
-              row.appendChild(td);
-            });
-
-            // Add Edit and Delete buttons to the Action column
-            const actionTd = document.createElement("td");
-            actionTd.innerHTML = `
-              <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
-                <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-                  onclick="editDriverConductor('${item.id}')"
-                  onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                  onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                  <img src="../images/edit.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-                  <span style="margin-right: 10px;">Edit</span>
-                </button>
-                <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-                  onclick="deleteDriverConductor('${item.id}')"
-                  onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                  onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                  <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-                  <span style="margin-right: 10px;">Delete</span>
-                </button>
-              </div>
+            row.innerHTML = `
+              <td>${item.name || ""}</td>
+              <td>${item.contact || ""}</td>
+              <td>${item.address || ""}</td>
+              <td>${item.driver_conductor_type || ""}</td>
+              <td>${item.vehicle_no || ""}</td>
+              <td>${item.vehicle_type || ""}</td>
+              <td>${item.vehicle_capacity || ""}</td>
+              <td>
+                <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+                  <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+                    onclick="editDriverConductor('${item.id}')"
+                    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                    <img src="../images/edit.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                    <span style="margin-right: 10px;">Edit</span>
+                  </button>
+                  <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+                    onclick="deleteDriverConductor('${item.id}')"
+                    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                    <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                    <span style="margin-right: 10px;">Delete</span>
+                  </button>
+                </div>
+              </td>
             `;
-            row.appendChild(actionTd);
-
             driverConductorTableBody.appendChild(row);
           });
         }
