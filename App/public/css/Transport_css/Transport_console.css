@@ -979,3 +979,78 @@ margin-bottom: 10px; /* Reduce the gap between title and input fields */
 .suggestions::-webkit-scrollbar-track {
     background: transparent; /* Transparent track */
 }
+
+
+/* Style for the input group containing the input field and the selected tags */
+.input-with-tags {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    background: white;
+    box-sizing: border-box;
+}
+
+/* Style for the input field */
+.input-with-tags input {
+    border: none;
+    outline: none;
+    flex: 1;
+    min-width: 200px;  /* Ensures minimum width */
+    max-width: 100%;  /* Ensures it doesn't overflow */
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+/* Style for the suggestions container */
+.address_suggestionBox {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-height: 200px;
+    width: 100%;
+    overflow-y: auto;
+    position: absolute;
+    top: 45px; /* Adjust based on the height of the input field and padding */
+    background: white;
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for each suggestion item */
+.suggestion-item {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+/* Style for the last suggestion item to remove the bottom border */
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+/* Style for suggestion item on hover */
+.suggestion-item:hover {
+    background: #f0f0f0;
+}
+
+/* Styles for the selected city tags inside the input */
+.tag {
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+}
+
+.remove-tag {
+    margin-left: 5px;
+    cursor: pointer;
+    color: #ff0000;
+}

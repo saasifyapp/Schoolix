@@ -1,6 +1,11 @@
+
 document.addEventListener("DOMContentLoaded", function () {
     const manageRoutesForm = document.getElementById("manageRoutesForm");
     const routesTableBody = document.getElementById("routesTableBody");
+    const citiesAddressInput = document.getElementById("citiesAddress");
+    const citiesAddressContainer = document.getElementById("citiesAddressContainer");
+    const suggestionsContainer = document.getElementById("address_suggestionBox");
+    let selectedCities = [];
 
     // Form submission handler
     manageRoutesForm.addEventListener("submit", function (e) {
@@ -8,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const formData = {
             routeName: document.getElementById("routeName").value,
-            citiesAddress: document.getElementById("citiesAddress").value
+            citiesAddress: selectedCities.join(", ") // Join selected cities into a single string
         };
 
         fetch("/addRoute", {
@@ -37,6 +42,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // Function to reset the form
     function resetForm() {
         manageRoutesForm.reset(); // Reset the form fields
+        selectedCities = []; // Clear selected cities
+        renderSelectedCities(); // Update the input field and tags
     }
 
     // Function to fetch and display route details
@@ -85,6 +92,84 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch((error) => console.error("Error:", error));
     }
+
+    // Function to fetch distinct addresses and display suggestions
+    function fetchAndDisplaySuggestions(query) {
+        fetch("/distinctAddresses")
+        .then((response) => response.json())
+        .then((data) => {
+            suggestionsContainer.innerHTML = ""; // Clear existing suggestions
+
+            const filteredData = data.filter(item => item.Address.toLowerCase().includes(query.toLowerCase()));
+
+            if (filteredData.length === 0) {
+                suggestionsContainer.style.display = "none"; // Hide suggestions container
+            } else {
+                filteredData.forEach((item) => {
+                    const suggestionItem = document.createElement("div");
+                    suggestionItem.classList.add("suggestion-item");
+                    suggestionItem.textContent = item.Address;
+                    suggestionItem.addEventListener("click", function () {
+                        addCityToSelected(item.Address);
+                    });
+                    suggestionsContainer.appendChild(suggestionItem);
+                });
+                suggestionsContainer.style.display = "flex"; // Show suggestions container
+            }
+        })
+        .catch((error) => console.error("Error:", error));
+    }
+
+    // Function to add a city to the selected cities
+    function addCityToSelected(city) {
+        if (!selectedCities.includes(city)) {
+            selectedCities.push(city);
+            renderSelectedCities();
+        }
+        suggestionsContainer.style.display = "none"; // Hide suggestions container
+    }
+
+    // Function to remove a city from the selected cities
+    function removeCityFromSelected(city) {
+        selectedCities = selectedCities.filter(c => c !== city);
+        renderSelectedCities();
+    }
+
+    // Function to render selected cities
+    function renderSelectedCities() {
+        // Remove all tags except the input field
+        Array.from(citiesAddressContainer.childNodes).forEach(child => {
+            if (child !== citiesAddressInput && child !== suggestionsContainer) {
+                citiesAddressContainer.removeChild(child);
+            }
+        });
+
+        selectedCities.forEach(city => {
+            const cityElem = document.createElement("div");
+            cityElem.classList.add("tag");
+            cityElem.textContent = city;
+
+            const removeButton = document.createElement("span");
+            removeButton.classList.add("remove-tag");
+            removeButton.textContent = "×";
+            removeButton.addEventListener("click", () => removeCityFromSelected(city));
+
+            cityElem.appendChild(removeButton);
+            citiesAddressContainer.insertBefore(cityElem, citiesAddressInput);
+        });
+
+        citiesAddressInput.value = "";
+    }
+
+    // Event listener for the citiesAddress input field
+    citiesAddressInput.addEventListener("input", function () {
+        const query = this.value;
+        if (query.length > 1) {
+            fetchAndDisplaySuggestions(query);
+        } else {
+            suggestionsContainer.style.display = "none"; // Hide suggestions container
+        }
+    });
 
     // Initial fetch and display of route details
     displayRoutes();
