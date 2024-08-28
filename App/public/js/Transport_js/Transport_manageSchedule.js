@@ -35,14 +35,36 @@ document.addEventListener('DOMContentLoaded', function () {
                             noResultsItem.textContent = "No results found";
                             vehicleNoSuggestionBox.appendChild(noResultsItem);
                         } else {
-                            data.forEach((driver) => {
+                            const driverConductorMap = new Map();
+                            data.forEach((person) => {
                                 const suggestionItem = document.createElement("div");
                                 suggestionItem.classList.add("suggestion-item");
-                                suggestionItem.textContent = `${driver.vehicle_no} | ${driver.name}`;
-                                suggestionItem.dataset.id = driver.vehicle_no; // Use vehicle_no as ID
-                                vehicleDetailsMap.set(driver.vehicle_no, driver);
+                                suggestionItem.textContent = `${person.vehicle_no} | ${person.name}`;
+                                suggestionItem.dataset.id = person.vehicle_no; // Use vehicle_no as ID
+
+                                // Store driver and conductor details in a map
+                                if (!driverConductorMap.has(person.vehicle_no)) {
+                                    driverConductorMap.set(person.vehicle_no, { driver: null, conductor: null });
+                                }
+                                if (person.driver_conductor_type === 'Driver') {
+                                    driverConductorMap.get(person.vehicle_no).driver = person.name;
+                                } else if (person.driver_conductor_type === 'Conductor') {
+                                    driverConductorMap.get(person.vehicle_no).conductor = person.name;
+                                }
+
                                 vehicleNoSuggestionBox.appendChild(suggestionItem);
                             });
+
+                            // Log the driverConductorMap for debugging
+                            console.log('Driver-Conductor Map:', driverConductorMap);
+
+                            // Store the combined driver and conductor details
+                            driverConductorMap.forEach((value, key) => {
+                                vehicleDetailsMap.set(key, value);
+                            });
+
+                            // Log the vehicleDetailsMap for debugging
+                            console.log('Vehicle Details Map:', vehicleDetailsMap);
                         }
                     })
                     .catch((error) => console.error("Error:", error));
@@ -124,18 +146,15 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.target.classList.contains("suggestion-item")) {
             const selectedId = event.target.dataset.id;
             const selectedDetails = vehicleDetailsMap.get(selectedId);
-            vehicleNoInput.value = selectedDetails.vehicle_no;
+            vehicleNoInput.value = selectedId;
 
             // Check and log the properties of the selectedDetails object
-            console.log('Selected driver details properties:', Object.keys(selectedDetails));
+            console.log('Selected driver and conductor details:', selectedDetails);
 
             vehicleInformationBox.innerHTML = `
-                <p>Driver: ${selectedDetails.name || 'N/A'}</p>
-                <p>Vehicle No: ${selectedDetails.vehicle_no || 'N/A'}</p>
-                <p>Vehicle Type: ${selectedDetails.vehicle_type || 'N/A'}</p>
-                <p>Vehicle Capacity: ${selectedDetails.vehicle_capacity || 'N/A'}</p>
-                <p>Contact: ${selectedDetails.contact || 'N/A'}</p>
-                <p>Address: ${selectedDetails.address || 'N/A'}</p>
+                <p>Vehicle No: ${selectedId || 'N/A'}</p>
+                <p>Driver: ${selectedDetails.driver || 'N/A'}</p>
+                <p>Conductor: ${selectedDetails.conductor || 'N/A'}</p>
             `;
             vehicleInformationBox.style.display = "block"; // Show information box
             vehicleNoSuggestionBox.style.display = "none"; // Hide suggestions container
@@ -149,6 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const selectedDetails = routeDetailsMap.get(selectedId);
             routeInput.value = selectedDetails.route_shift_name;
             routeInformationBox.innerHTML = `
+                <p>Route: ${selectedDetails.route_shift_name}</p>
                 <p>Stops: ${selectedDetails.route_shift_detail}</p>
             `;
             routeInformationBox.style.display = "block"; // Show information box
@@ -163,6 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const selectedDetails = shiftDetailsMap.get(selectedId);
             shiftInput.value = selectedDetails.route_shift_name;
             shiftInformationBox.innerHTML = `
+                <p>Shift: ${selectedDetails.route_shift_name}</p>
                 <p>Classes: ${selectedDetails.route_shift_detail}</p>
             `;
             shiftInformationBox.style.display = "block"; // Show information box
@@ -189,4 +210,120 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Fetch and populate suggestions on page load
     fetchAndPopulateSuggestions();
+
+    // Handle form submission
+    const manageScheduleForm = document.getElementById('manageScheduleForm');
+    manageScheduleForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const vehicleNo = vehicleNoInput.value;
+        const driver = vehicleDetailsMap.get(vehicleNo).driver || 'N/A';
+        const conductor = vehicleDetailsMap.get(vehicleNo).conductor || 'N/A';
+        const route = routeInput.value;
+        const shift = shiftInput.value;
+
+        const routeDetails = routeDetailsMap.get(route) || { route_shift_detail: 'N/A' };
+        const shiftDetails = shiftDetailsMap.get(shift) || { route_shift_detail: 'N/A' };
+
+        const data = {
+            vehicle_no: vehicleNo,
+            driver_name: driver,
+            conductor_name: conductor,
+            route_name: route,
+            route_stops: routeDetails.route_shift_detail,
+            shift_name: shift,
+            classes_alloted: shiftDetails.route_shift_detail
+        };
+
+        fetch('/addSchedule', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(result => {
+                if (result.error) {
+                    alert(result.error);
+                } else {
+                    alert(result.message);
+                    manageScheduleForm.reset();
+                    vehicleInformationBox.style.display = 'none';
+                    routeInformationBox.style.display = 'none';
+                    shiftInformationBox.style.display = 'none';
+                    fetchAndDisplayScheduleDetails(); // Refresh the table after adding a new entry
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    });
+
+    // Fetch and display schedule details in the table
+    function fetchAndDisplayScheduleDetails() {
+        fetch('/getScheduleDetails')
+            .then(response => response.json())
+            .then(data => {
+                const scheduleTableBody = document.getElementById('scheduleTableBody');
+                scheduleTableBody.innerHTML = ''; // Clear existing table rows
+
+                // Reverse the array
+                data.reverse();
+
+                data.forEach((item) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.vehicle_no}</td>
+                        <td>${item.driver_name}</td>
+                        <td>${item.conductor_name}</td>
+                        <td>${item.route_name}</td>
+                        <td>${item.route_stops}</td>
+                        <td>${item.shift_name}</td>
+                        <td>${item.classes_alloted}</td>
+                        <td>
+                            <button class="edit-button" data-id="${item.id}">Edit</button>
+                            <button class="delete-button" data-id="${item.id}">Delete</button>
+                        </td>
+                    `;
+                    scheduleTableBody.appendChild(row);
+                });
+
+                // Add event listeners for edit and delete buttons
+                document.querySelectorAll('.edit-button').forEach(button => {
+                    button.addEventListener('click', handleEdit);
+                });
+
+                document.querySelectorAll('.delete-button').forEach(button => {
+                    button.addEventListener('click', handleDelete);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Handle edit button click
+    function handleEdit(event) {
+        const id = event.target.dataset.id;
+        // Implement edit functionality here
+        console.log('Edit button clicked for ID:', id);
+    }
+
+    // Handle delete button click
+    function handleDelete(event) {
+        const id = event.target.dataset.id;
+        fetch(`/deleteSchedule/${id}`, {
+            method: 'DELETE'
+        })
+            .then(response => response.json())
+            .then(result => {
+                if (result.error) {
+                    alert(result.error);
+                } else {
+                    alert(result.message);
+                    fetchAndDisplayScheduleDetails(); // Refresh the table after deletion
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Initial fetch and display of schedule details
+    fetchAndDisplayScheduleDetails();
 });
