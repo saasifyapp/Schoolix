@@ -1036,7 +1036,8 @@ margin-bottom: 10px; /* Reduce the gap between title and input fields */
 
 /* Style for suggestion item on hover */
 .suggestion-item:hover {
-    background: #f0f0f0;
+    background: #D6EAF8;
+    font-weight: bold; /* Make text bold on hover */
 }
 
 /* Styles for the selected city tags inside the input */
@@ -1053,4 +1054,17 @@ margin-bottom: 10px; /* Reduce the gap between title and input fields */
     margin-left: 5px;
     cursor: pointer;
     color: #ff0000;
+}
+
+
+.information-box {
+    display: none;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative; /* Ensure it stays within the flow of the document */
+    width: 100%; /* Match the width of the input field */
 }

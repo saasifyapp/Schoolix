@@ -5,7 +5,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const searchDriverConductorOverlay = document.getElementById('searchDriverConductorOverlay');
     const routesShiftsOverlay = document.getElementById('routesShiftsOverlay');
     const manageRoutesOverlay = document.getElementById('manageRoutesOverlay');
-    const manageShiftsOverlay = document.getElementById('manageShiftsOverlay'); // Add for Manage Shifts
+    const manageShiftsOverlay = document.getElementById('manageShiftsOverlay'); 
+    const schedulingOverlay = document.getElementById('schedulingOverlay'); 
+    const manageScheduleOverlay = document.getElementById('manageScheduleOverlay'); // Add for Manage Schedule
 
     // Buttons
     const driverConductorButton = document.getElementById('driverConductorButton');
@@ -18,8 +20,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeRoutesShiftsOverlay = document.getElementById('closeRoutesShiftsOverlay');
     const manageRoutesButton = document.getElementById('manageRoutesButton');
     const closeManageRoutesOverlay = document.getElementById('closeManageRoutesOverlay');
-    const manageShiftsButton = document.getElementById('manageShiftsButton'); // Add for Manage Shifts
-    const closeManageShiftsOverlay = document.getElementById('closeManageShiftsOverlay'); // Add for Manage Shifts
+    const manageShiftsButton = document.getElementById('manageShiftsButton'); 
+    const closeManageShiftsOverlay = document.getElementById('closeManageShiftsOverlay'); 
+    const schedulingButton = document.getElementById('schedulingButton'); 
+    const closeSchedulingOverlay = document.getElementById('closeSchedulingOverlay'); 
+    const createScheduleButton = document.getElementById('createScheduleButton'); // Add for Manage Schedule
+    const closeManageScheduleOverlay = document.getElementById('closeManageScheduleOverlay'); // Add for Manage Schedule
 
     // Show Driver/Conductor Selection Overlay
     driverConductorButton.addEventListener('click', function () {
@@ -27,7 +33,9 @@ document.addEventListener('DOMContentLoaded', function () {
         hideOverlay('searchDriverConductorOverlay');
         hideOverlay('routesShiftsOverlay');
         hideOverlay('manageRoutesOverlay');
-        hideOverlay('manageShiftsOverlay'); // Hide Manage Shifts
+        hideOverlay('manageShiftsOverlay');
+        hideOverlay('schedulingOverlay'); 
+        hideOverlay('manageScheduleOverlay'); // Hide Manage Schedule
         showOverlay('driverConductorOverlay');
     });
 
@@ -37,7 +45,9 @@ document.addEventListener('DOMContentLoaded', function () {
         hideOverlay('searchDriverConductorOverlay');
         hideOverlay('routesShiftsOverlay');
         hideOverlay('manageRoutesOverlay');
-        hideOverlay('manageShiftsOverlay'); // Hide Manage Shifts
+        hideOverlay('manageShiftsOverlay'); 
+        hideOverlay('schedulingOverlay'); 
+        hideOverlay('manageScheduleOverlay'); // Hide Manage Schedule
         showOverlay('addDriverOverlay');
     });
 
@@ -47,7 +57,9 @@ document.addEventListener('DOMContentLoaded', function () {
         hideOverlay('addDriverOverlay');
         hideOverlay('routesShiftsOverlay');
         hideOverlay('manageRoutesOverlay');
-        hideOverlay('manageShiftsOverlay'); // Hide Manage Shifts
+        hideOverlay('manageShiftsOverlay'); 
+        hideOverlay('schedulingOverlay'); 
+        hideOverlay('manageScheduleOverlay'); // Hide Manage Schedule
         showOverlay('searchDriverConductorOverlay');
     });
 
@@ -57,7 +69,9 @@ document.addEventListener('DOMContentLoaded', function () {
         hideOverlay('addDriverOverlay');
         hideOverlay('searchDriverConductorOverlay');
         hideOverlay('manageRoutesOverlay');
-        hideOverlay('manageShiftsOverlay'); // Hide Manage Shifts
+        hideOverlay('manageShiftsOverlay'); 
+        hideOverlay('schedulingOverlay'); 
+        hideOverlay('manageScheduleOverlay'); // Hide Manage Schedule
         showOverlay('routesShiftsOverlay');
     });
 
@@ -67,7 +81,9 @@ document.addEventListener('DOMContentLoaded', function () {
         hideOverlay('addDriverOverlay');
         hideOverlay('searchDriverConductorOverlay');
         hideOverlay('routesShiftsOverlay');
-        hideOverlay('manageShiftsOverlay'); // Hide Manage Shifts
+        hideOverlay('manageShiftsOverlay'); 
+        hideOverlay('schedulingOverlay'); 
+        hideOverlay('manageScheduleOverlay'); // Hide Manage Schedule
         showOverlay('manageRoutesOverlay');
     });
 
@@ -77,8 +93,34 @@ document.addEventListener('DOMContentLoaded', function () {
         hideOverlay('addDriverOverlay');
         hideOverlay('searchDriverConductorOverlay');
         hideOverlay('routesShiftsOverlay');
-        hideOverlay('manageRoutesOverlay'); // Hide Manage Routes
+        hideOverlay('manageRoutesOverlay'); 
+        hideOverlay('schedulingOverlay'); 
+        hideOverlay('manageScheduleOverlay'); // Hide Manage Schedule
         showOverlay('manageShiftsOverlay');
+    });
+
+    // Show Scheduling Overlay
+    schedulingButton.addEventListener('click', function () {
+        hideOverlay('driverConductorOverlay');
+        hideOverlay('addDriverOverlay');
+        hideOverlay('searchDriverConductorOverlay');
+        hideOverlay('routesShiftsOverlay');
+        hideOverlay('manageRoutesOverlay');
+        hideOverlay('manageShiftsOverlay'); 
+        hideOverlay('manageScheduleOverlay'); // Hide Manage Schedule
+        showOverlay('schedulingOverlay');
+    });
+
+    // Show Manage Schedule Overlay
+    createScheduleButton.addEventListener('click', function () {
+        hideOverlay('driverConductorOverlay');
+        hideOverlay('addDriverOverlay');
+        hideOverlay('searchDriverConductorOverlay');
+        hideOverlay('routesShiftsOverlay');
+        hideOverlay('manageRoutesOverlay');
+        hideOverlay('manageShiftsOverlay'); 
+        hideOverlay('schedulingOverlay'); // Hide Scheduling
+        showOverlay('manageScheduleOverlay');
     });
 
     // Close Driver/Conductor Overlay
@@ -109,6 +151,16 @@ document.addEventListener('DOMContentLoaded', function () {
     // Close Manage Shifts Overlay
     closeManageShiftsOverlay.addEventListener('click', function () {
         hideOverlay('manageShiftsOverlay');
+    });
+
+    // Close Scheduling Overlay
+    closeSchedulingOverlay.addEventListener('click', function () {
+        hideOverlay('schedulingOverlay');
+    });
+
+    // Close Manage Schedule Overlay
+    closeManageScheduleOverlay.addEventListener('click', function () {
+        hideOverlay('manageScheduleOverlay');
     });
 
     // Utility Functions to Show/Hide Overlays

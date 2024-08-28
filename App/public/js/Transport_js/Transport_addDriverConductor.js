@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
       vehicleNoInput.addEventListener("input", function () {
         this.value = formatVehicleNumber(this.value);
         const query = this.value;
-        if (query.length > 1) {
+        if (query.length >= 0) {
           fetch(`/getDriverDetails?q=${query}`)
             .then((response) => response.json())
             .then((data) => {

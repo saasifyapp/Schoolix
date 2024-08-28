@@ -88,7 +88,7 @@
 
         <div class="card">
             <a>
-                <button id="">
+                <button id="schedulingButton">
 
                     <div class="dotlottie-container">
                         <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
@@ -283,13 +283,13 @@
             <div class="button-container">
                 <div class="option-card bookvaltcard">
                     <span id="manageRoutesButton">
-                        <img src="" alt="">
+                        <img src="../images/manage_route.gif" alt="">
                         Manage Routes
                     </span>
                 </div>
                 <div class="option-card bookvaltcard">
                     <span id="manageShiftsButton">
-                        <img src="" alt="">
+                        <img src="../images/manage_shift.gif" alt="">
                         Manage Shifts
                     </span>
                 </div>
@@ -410,26 +410,84 @@
         </div>
     </div>
 
+    <!-- Overlay for Scheduling -->
+    <div id="schedulingOverlay" class="overlay">
+        <div class="overlay-content-inner">
+            <h2>Scheduling</h2>
+            <button id="closeSchedulingOverlay" class="close-button">&times;</button>
+            <div class="button-container">
+                <div class="option-card bookvaltcard">
+                    <span id="createScheduleButton">
+                        <img src="../images/create_schedule.gif" alt="">
+                        Manage Schedule
+                    </span>
+                </div>
+                <div class="option-card bookvaltcard">
+                    <span id="listStudentsButton">
+                        <img src="../images/manage_schedule.gif" alt="">
+                        List Students
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
-
-
-
-
+<!-- Overlay for Manage Schedule -->
+<div id="manageScheduleOverlay" class="overlay-search">
+    <div class="overlay-content-search">
+        <button id="closeManageScheduleOverlay" class="close-button">&times;</button>
+        <h2>Manage Schedule</h2>
+        <form id="manageScheduleForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="vehicleNo" placeholder=" ">
+                    <span class="form-control-placeholder">Vehicle No</span>
+                    <div id="vehicle_no_suggestionbox" class="suggestions"></div>
+                    <div id="vehicle_information_box" class="information-box"></div>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="route" placeholder=" ">
+                    <span class="form-control-placeholder">Route</span>
+                    <div id="route_suggestionbox" class="suggestions"></div>
+                    <div id="route_information_box" class="information-box"></div>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="shift" placeholder=" ">
+                    <span class="form-control-placeholder">Shift</span>
+                    <div id="shift_suggestionbox" class="suggestions"></div>
+                    <div id="shift_information_box" class="information-box"></div>
+                </div>
+            </div>
+            <button class="getDetails-button" type="submit">
+                <img src="../images/schedule.png" alt="">
+                <span>Create Schedule</span>
+            </button>
+        </form>
+        <div class="table-container">
+            <table id="scheduleTable" class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Vehicle No</th>
+                        <th>Route</th>
+                        <th>Shift</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="scheduleTableBody">
+                    <!-- Table rows will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
     <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Transport_js/Transport_console.js"></script>
     <script src="/js/Transport_js/Transport_addDriverConductor.js"></script>
     <script src="/js/Transport_js/Transport_manageRoute.js"></script>
     <script src="/js/Transport_js/Transport_manageShift.js"></script>
-
-
-
-
-
-
-
-
+    <script src="/js/Transport_js/Transport_manageSchedule.js"></script>
 
 
 

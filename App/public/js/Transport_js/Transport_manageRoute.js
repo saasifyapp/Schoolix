@@ -164,7 +164,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Event listener for the citiesAddress input field
     citiesAddressInput.addEventListener("input", function () {
         const query = this.value;
-        if (query.length > 1) {
+        if (query.length >= 1) {
             fetchAndDisplaySuggestions(query);
         } else {
             suggestionsContainer.style.display = "none"; // Hide suggestions container

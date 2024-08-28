@@ -534,12 +534,19 @@ app.use('/', libraryReportsRouter);
 const transportDriverConductorRouter = require('./src/routes/transport_routes/add_driver_conductor');
 app.use('/', transportDriverConductorRouter);
 
-
+////// Create/Manage Bus Route ROUTE
 const transportManageRouteRouter = require('./src/routes/transport_routes/manage_route');
 app.use('/', transportManageRouteRouter);
 
+////// Create/Manage Shift ROUTE
 const transportManageShiftRouter = require('./src/routes/transport_routes/manage_shift');
 app.use('/', transportManageShiftRouter);
+
+////// Manage Schedule ROUTE
+const transportManageScheduleRouter = require('./src/routes/transport_routes/manage_schedule');
+app.use('/', transportManageScheduleRouter);
+
+
 
 // Start the server
 const PORT = process.env.PORT || 4000;
