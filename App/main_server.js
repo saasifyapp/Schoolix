@@ -538,6 +538,9 @@ app.use('/', transportDriverConductorRouter);
 const transportManageRouteRouter = require('./src/routes/transport_routes/manage_route');
 app.use('/', transportManageRouteRouter);
 
+const transportManageShiftRouter = require('./src/routes/transport_routes/manage_shift');
+app.use('/', transportManageShiftRouter);
+
 // Start the server
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
