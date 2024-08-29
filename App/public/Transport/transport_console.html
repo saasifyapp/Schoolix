@@ -276,54 +276,54 @@
     </div>
 
     <!-- Background Blur Overlay -->
-<div id="editPopupOverlay" class="popup-overlay" style="display: none;"></div>
+    <div id="editPopupOverlay" class="popup-overlay" style="display: none;"></div>
 
-<!-- Edit Popup Window -->
-<div id="editPopup" class="popup-window" style="display: none;">
-    <form id="editDriverConductorForm">
-        <h3>Edit Driver/Conductor Details</h3>
-        <div>
-            <label for="editName">Name:</label>
-            <input type="text" id="editName" name="name" class="form-control">
-        </div>
-        <div>
-            <label for="editContact">Contact:</label>
-            <input type="text" id="editContact" name="contact" class="form-control">
-        </div>
-        <div>
-            <label for="editAddress">Address:</label>
-            <input type="text" id="editAddress" name="address" class="form-control">
-        </div>
-        <div>
-            <label for="editType">Type:</label>
-            <select id="editType" name="type" class="form-control">
-                <option value="Driver">Driver</option>
-                <option value="Conductor">Conductor</option>
-            </select>
-        </div>
-        <div>
-            <label for="editVehicleNo">Vehicle Number:</label>
-            <input type="text" id="editVehicleNo" name="vehicleNo" class="form-control">
-        </div>
-        <div>
-            <label for="editVehicleType">Vehicle Type:</label>
-            <select id="editVehicleType" name="vehicleType" class="form-control">
-                <option value="Bus">Bus</option>
-                <option value="Van">Van</option>
-                <option value="Car">Car</option>
-                <option value="Other">Other</option>
-            </select>
-        </div>
-        <div>
-            <label for="editVehicleCapacity">Vehicle Capacity:</label>
-            <input type="number" id="editVehicleCapacity" name="vehicleCapacity" class="form-control">
-        </div>
-        <div class="popup-buttons">
-            <button type="button" onclick="saveDriverConductorDetails()">Save</button>
-            <button type="button" onclick="closeEditPopup()">Cancel</button>
-        </div>
-    </form>
-</div>
+    <!-- Edit Popup Window -->
+    <div id="editPopup" class="popup-window" style="display: none;">
+        <form id="editDriverConductorForm">
+            <h3>Edit Driver/Conductor Details</h3>
+            <div>
+                <label for="editName">Name:</label>
+                <input type="text" id="editName" name="name" class="form-control">
+            </div>
+            <div>
+                <label for="editContact">Contact:</label>
+                <input type="text" id="editContact" name="contact" class="form-control">
+            </div>
+            <div>
+                <label for="editAddress">Address:</label>
+                <input type="text" id="editAddress" name="address" class="form-control">
+            </div>
+            <div>
+                <label for="editType">Type:</label>
+                <select id="editType" name="type" class="form-control">
+                    <option value="Driver">Driver</option>
+                    <option value="Conductor">Conductor</option>
+                </select>
+            </div>
+            <div>
+                <label for="editVehicleNo">Vehicle Number:</label>
+                <input type="text" id="editVehicleNo" name="vehicleNo" class="form-control">
+            </div>
+            <div>
+                <label for="editVehicleType">Vehicle Type:</label>
+                <select id="editVehicleType" name="vehicleType" class="form-control">
+                    <option value="Bus">Bus</option>
+                    <option value="Van">Van</option>
+                    <option value="Car">Car</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div>
+                <label for="editVehicleCapacity">Vehicle Capacity:</label>
+                <input type="number" id="editVehicleCapacity" name="vehicleCapacity" class="form-control">
+            </div>
+            <div class="popup-buttons">
+                <button type="button" onclick="saveDriverConductorDetails()">Save</button>
+                <button type="button" onclick="closeEditPopup()">Cancel</button>
+            </div>
+        </form>
+    </div>
 
 
     <!-- Overlay for Routes and Shifts -->
@@ -484,58 +484,158 @@
     </div>
 
 
-<!-- Overlay for Manage Schedule -->
-<div id="manageScheduleOverlay" class="overlay-search">
-    <div class="overlay-content-search">
-        <button id="closeManageScheduleOverlay" class="close-button">&times;</button>
-        <h2>Manage Schedule</h2>
-        <form id="manageScheduleForm">
-            <div class="form-row">
-                <div class="form-group">
-                    <input type="text" class="form-control" id="vehicleNo" placeholder=" ">
-                    <span class="form-control-placeholder">Vehicle No</span>
-                    <div id="vehicle_no_suggestionbox" class="suggestions"></div>
-                    <div id="vehicle_information_box" class="information-box"></div>
+    <!-- Overlay for Manage Schedule -->
+    <div id="manageScheduleOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeManageScheduleOverlay" class="close-button">&times;</button>
+            <h2>Manage Schedule</h2>
+            <form id="manageScheduleForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="vehicleNo" placeholder=" ">
+                        <span class="form-control-placeholder">Vehicle No</span>
+                        <div id="vehicle_no_suggestionbox" class="suggestions"></div>
+                        <div id="vehicle_information_box" class="information-box"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="route" placeholder=" ">
+                        <span class="form-control-placeholder">Route</span>
+                        <div id="route_suggestionbox" class="suggestions"></div>
+                        <div id="route_information_box" class="information-box"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="shift" placeholder=" ">
+                        <span class="form-control-placeholder">Shift</span>
+                        <div id="shift_suggestionbox" class="suggestions"></div>
+                        <div id="shift_information_box" class="information-box"></div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" id="route" placeholder=" ">
-                    <span class="form-control-placeholder">Route</span>
-                    <div id="route_suggestionbox" class="suggestions"></div>
-                    <div id="route_information_box" class="information-box"></div>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" id="shift" placeholder=" ">
-                    <span class="form-control-placeholder">Shift</span>
-                    <div id="shift_suggestionbox" class="suggestions"></div>
-                    <div id="shift_information_box" class="information-box"></div>
-                </div>
+                <button class="getDetails-button" type="submit">
+                    <img src="../images/schedule.png" alt="">
+                    <span>Create Schedule</span>
+                </button>
+            </form>
+            <div class="table-container">
+                <table id="scheduleTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Vehicle No</th>
+                            <th>Driver</th>
+                            <th>Conductor</th>
+                            <th>Route Name</th>
+                            <th>Route Stops</th>
+                            <th>Shift Name</th>
+                            <th>Classes Alloted</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scheduleTableBody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
             </div>
-            <button class="getDetails-button" type="submit">
-                <img src="../images/schedule.png" alt="">
-                <span>Create Schedule</span>
-            </button>
-        </form>
-        <div class="table-container">
-            <table id="scheduleTable" class="styled-table">
-                <thead>
-                    <tr>
-                        <th>Vehicle No</th>
-                        <th>Driver</th>
-                        <th>Conductor</th>
-                        <th>Route Name</th>
-                        <th>Route Stops</th>
-                        <th>Shift Name</th>
-                        <th>Classes Alloted</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="scheduleTableBody">
-                    <!-- Table rows will be populated here -->
-                </tbody>
-            </table>
         </div>
     </div>
-</div>
+
+
+    <!-- Overlay for List Scheduling -->
+    <div id="listSchedulingOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeListSchedulingOverlay" class="close-button">&times;</button>
+            <div class="overlay-inner">
+                <!-- Left Side -->
+                <div class="left-side" style="display: flex; flex-direction: column;">
+                    <dotlottie-player src="https://lottie.host/f1ef15f0-e5ab-415a-8f01-9cfdf4c36034/TwCFf8dsdN.json"
+                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay>
+                    </dotlottie-player>
+
+                    <div class="form-group">
+                        <select class="form-control" id="vehicleType">
+                            <option value="" disabled selected>Select Vehicle Type</option>
+                            <option value="bus">Bus</option>
+                            <option value="van">Van</option>
+                        </select>
+                        <span class="form-control-placeholder"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <select class="form-control" id="shiftType">
+                            <option value="" disabled selected>Select Shift</option>
+                            <option value="morning">Morning</option>
+                            <option value="afternoon">Afternoon</option>
+                        </select>
+                        <span class="form-control-placeholder"></span>
+                    </div>
+
+                    <!-- Input Fields Below Dropdowns -->
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="routeName" placeholder="Route Name">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="stops" placeholder="Stops">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="classes" placeholder="Classes">
+                    </div>
+
+                    <!-- Get Details Button -->
+                    <button class="getDetails-button" type="submit">
+                        <img src="../images/driver.png" alt="">
+                        <span>Get Students</span>
+                    </button>
+                </div>
+
+                <!-- Right Side -->
+                <div class="right-side">
+                    <h2>View Students</h2>
+                   <div class="form-row">
+                    <div class="form-group">
+                        <select class="form-control" id="stops">
+                            <option value="" disabled selected>Select Stop</option>
+                            <!-- Populate this dropdown with stop options -->
+                        </select>
+                        <span class="form-control-placeholder"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <select class="form-control" id="classes">
+                            <option value="" disabled selected>Select Class</option>
+                            <!-- Populate this dropdown with class options -->
+                        </select>
+                        <span class="form-control-placeholder"></span>
+                    </div>
+
+                    <button class="export_registered_students">
+                        <img src="/images/export.png" alt="Export Icon"> Export
+                    </button>
+                   </div>
+
+                    <div class="table-container">
+                        <table id="scheduleTable" class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Stop</th>
+                                    <th>Class</th>
+                                    <th>Vehicle</th>
+                                    <th>Shift</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scheduleTableBody">
+                                <!-- Table rows will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 
     <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Transport_js/Transport_console.js"></script>

@@ -174,3 +174,42 @@ document.addEventListener('DOMContentLoaded', function () {
         overlay.style.display = "none";
     }
 });
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Main Overlay Elements
+    const listSchedulingOverlay = document.getElementById('listSchedulingOverlay'); // New overlay element
+
+    // Buttons
+    const listStudentsButton = document.getElementById('listStudentsButton');
+    const closeListSchedulingOverlay = document.getElementById('closeListSchedulingOverlay');
+
+    // Show List Scheduling Overlay
+    listStudentsButton.addEventListener('click', function () {
+        hideOverlay('driverConductorOverlay');
+        hideOverlay('addDriverOverlay');
+        hideOverlay('searchDriverConductorOverlay');
+        hideOverlay('routesShiftsOverlay');
+        hideOverlay('manageRoutesOverlay');
+        hideOverlay('manageShiftsOverlay');
+        hideOverlay('schedulingOverlay');
+        hideOverlay('manageScheduleOverlay');
+        showOverlay('listSchedulingOverlay'); // Show the new overlay
+    });
+
+    // Close List Scheduling Overlay
+    closeListSchedulingOverlay.addEventListener('click', function () {
+        hideOverlay('listSchedulingOverlay');
+    });
+
+    // Utility Functions to Show/Hide Overlays
+    function showOverlay(overlayId) {
+        document.getElementById(overlayId).style.display = "flex";
+    }
+
+    function hideOverlay(overlayId) {
+        const overlay = document.getElementById(overlayId);
+        overlay.style.display = "none";
+    }
+});
+
