@@ -62,5 +62,43 @@ router.get('/displayDriverConductors', (req, res) => {
     });
 });
 
+// Endpoint to delete a driver/conductor by ID
+router.delete('/deleteDriverConductor/:id', (req, res) => {
+    const id = req.params.id;
+
+    const query = 'DELETE FROM transport_driver_conductor_details WHERE id = ?';
+    req.connectionPool.query(query, [id], (error, results) => {
+        if (error) {
+            console.error('Error deleting driver/conductor:', error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ error: 'Driver/Conductor not found' });
+        }
+
+        res.status(200).json({ message: 'Driver/Conductor deleted successfully' });
+    });
+});
+
+router.put('/editDriverConductor', async (req, res) => {
+    const { id, name, contact, address, driver_conductor_type, vehicle_no, vehicle_type, vehicle_capacity } = req.body;
+
+    try {
+        const sql = `
+            UPDATE transport_driver_conductor_details
+            SET name = ?, contact = ?, address = ?, driver_conductor_type = ?, vehicle_no = ?, vehicle_type = ?, vehicle_capacity = ?
+            WHERE id = ?
+        `;
+        const params = [name, contact, address, driver_conductor_type, vehicle_no, vehicle_type, vehicle_capacity, id];
+
+        await req.connectionPool.query(sql, params);
+        res.status(200).json({ message: 'Details updated successfully' });
+    } catch (error) {
+        console.error('Error updating driver/conductor details:', error);
+        res.status(500).json({ message: 'Failed to update details' });
+    }
+});
+
 
 module.exports = router;
