@@ -12,7 +12,7 @@ function refreshRoutesData() {
             });
 
             // After refreshing data, display it
-            displayRoutes(Object.values(routeData));
+            displayRoutes(data);
         })
         .catch((error) => console.error("Error refreshing routes:", error));
 }
@@ -58,6 +58,20 @@ function displayRoutes(data) {
         });
     }
 }
+
+document.getElementById('searchRoute').addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+
+    // Filter routes based on the search query
+    const filteredRoutes = Object.values(routeData).filter(route => {
+        return route.route_shift_name.toLowerCase().includes(query) ||
+               route.route_shift_detail.toLowerCase().includes(query);
+    });
+
+    // Display the filtered routes
+    displayRoutes(filteredRoutes);
+});
+
 
 function deleteRoute(route_shift_id) {
     if (confirm("Are you sure you want to delete this route?")) {
@@ -256,3 +270,6 @@ citiesAddressInput.addEventListener("input", function () {
 
 // Initial fetch and display of route details
 // displayRoutes();
+
+
+
