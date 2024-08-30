@@ -425,3 +425,36 @@ body {
     justify-content: space-between;
     margin-top: 20px;
 }
+
+
+
+
+/* Edit Suggestions Box */
+.edit-suggestions {
+    position: absolute;
+    z-index: 1000;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%;
+    display: none;
+    flex-direction: column;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.edit-suggestion-item {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.edit-suggestion-item:hover {
+    background-color: #f0f0f0;
+}
+
+.edit-suggestion-item.no-results {
+    color: #999;
+    cursor: default;
+}
+

@@ -85,12 +85,48 @@ router.put('/editDriverConductor', async (req, res) => {
     const { id, name, contact, address, driver_conductor_type, vehicle_no, vehicle_type, vehicle_capacity } = req.body;
 
     try {
+        // Prepare SQL query parts
+        const updates = [];
+        const params = [];
+
+        if (name !== undefined) {
+            updates.push('name = ?');
+            params.push(name);
+        }
+        if (contact !== undefined) {
+            updates.push('contact = ?');
+            params.push(contact);
+        }
+        if (address !== undefined) {
+            updates.push('address = ?');
+            params.push(address);
+        }
+        if (driver_conductor_type !== undefined) {
+            updates.push('driver_conductor_type = ?');
+            params.push(driver_conductor_type);
+        }
+        if (vehicle_no !== undefined) {
+            updates.push('vehicle_no = ?');
+            params.push(vehicle_no);
+        }
+        if (vehicle_type !== undefined) {
+            updates.push('vehicle_type = ?');
+            params.push(vehicle_type);
+        }
+        if (vehicle_capacity !== undefined) {
+            updates.push('vehicle_capacity = ?');
+            params.push(vehicle_capacity);
+        }
+
+        // Add the ID as the last parameter
+        params.push(id);
+
+        // Construct the SQL query
         const sql = `
             UPDATE transport_driver_conductor_details
-            SET name = ?, contact = ?, address = ?, driver_conductor_type = ?, vehicle_no = ?, vehicle_type = ?, vehicle_capacity = ?
+            SET ${updates.join(', ')}
             WHERE id = ?
         `;
-        const params = [name, contact, address, driver_conductor_type, vehicle_no, vehicle_type, vehicle_capacity, id];
 
         await req.connectionPool.query(sql, params);
         res.status(200).json({ message: 'Details updated successfully' });

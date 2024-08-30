@@ -369,14 +369,129 @@ function editDriverConductor(id) {
     return;
   }
 
-  // Populate the form fields with the existing data
-  document.getElementById('editName').value = driverConductorDetails.name || '';
-  document.getElementById('editContact').value = driverConductorDetails.contact || '';
-  document.getElementById('editAddress').value = driverConductorDetails.address || '';
-  document.getElementById('editType').value = driverConductorDetails.driver_conductor_type || '';
-  document.getElementById('editVehicleNo').value = driverConductorDetails.vehicle_no || '';
-  document.getElementById('editVehicleType').value = driverConductorDetails.vehicle_type || '';
-  document.getElementById('editVehicleCapacity').value = driverConductorDetails.vehicle_capacity || '';
+  const editFieldsContainer = document.getElementById('editFields');
+
+  // Display the type as a span element
+  document.getElementById('editTypeDisplay').textContent = driverConductorDetails.driver_conductor_type;
+
+  // Clear previous fields
+  editFieldsContainer.innerHTML = '';
+
+  // Populate the form fields based on type
+  if (driverConductorDetails.driver_conductor_type === 'Driver') {
+    editFieldsContainer.innerHTML = `
+          <div>
+              <label for="editName">Name:</label>
+              <input type="text" id="editName" name="name" class="form-control" value="${driverConductorDetails.name || ''}">
+          </div>
+          <div>
+              <label for="editContact">Contact:</label>
+              <input type="text" id="editContact" name="contact" class="form-control" value="${driverConductorDetails.contact || ''}">
+          </div>
+          <div>
+              <label for="editAddress">Address:</label>
+              <input type="text" id="editAddress" name="address" class="form-control" value="${driverConductorDetails.address || ''}">
+          </div>
+          <div>
+              <label for="editVehicleNo">Vehicle Number:</label>
+              <input type="text" id="editVehicleNo" name="vehicleNo" class="form-control" value="${driverConductorDetails.vehicle_no || ''}">
+          </div>
+          <div>
+              <label for="editVehicleType">Vehicle Type:</label>
+              <select id="editVehicleType" name="vehicleType" class="form-control">
+                  <option value="Bus" ${driverConductorDetails.vehicle_type === 'Bus' ? 'selected' : ''}>Bus</option>
+                  <option value="Van" ${driverConductorDetails.vehicle_type === 'Van' ? 'selected' : ''}>Van</option>
+                  <option value="Car" ${driverConductorDetails.vehicle_type === 'Car' ? 'selected' : ''}>Car</option>
+                  <option value="Other" ${driverConductorDetails.vehicle_type === 'Other' ? 'selected' : ''}>Other</option>
+              </select>
+          </div>
+          <div>
+              <label for="editVehicleCapacity">Vehicle Capacity:</label>
+              <input type="number" id="editVehicleCapacity" name="vehicleCapacity" class="form-control" value="${driverConductorDetails.vehicle_capacity || ''}">
+          </div>
+      `;
+
+    const vehicleNoInput = document.getElementById('editVehicleNo');
+    vehicleNoInput.addEventListener('input', function () {
+      this.value = formatVehicleNumber(this.value);
+    });
+
+  } else if (driverConductorDetails.driver_conductor_type === 'Conductor') {
+    editFieldsContainer.innerHTML = `
+          <div>
+              <label for="editName">Name:</label>
+              <input type="text" id="editName" name="name" class="form-control" value="${driverConductorDetails.name || ''}">
+          </div>
+          <div>
+              <label for="editContact">Contact:</label>
+              <input type="text" id="editContact" name="contact" class="form-control" value="${driverConductorDetails.contact || ''}">
+          </div>
+          <div>
+              <label for="editAddress">Address:</label>
+              <input type="text" id="editAddress" name="address" class="form-control" value="${driverConductorDetails.address || ''}">
+          </div>
+          <div>
+              <label for="editVehicleNo">Vehicle Number:</label>
+              <input type="text" id="editVehicleNo" name="vehicleNo" class="form-control" value="${driverConductorDetails.vehicle_no || ''}">
+
+              <div id="editSuggestions" class="edit-suggestions"></div>
+          </div>
+      `;
+
+    const vehicleNoInput = document.getElementById('editVehicleNo');
+    const suggestionsContainer = document.getElementById('editSuggestions');
+
+    vehicleNoInput.addEventListener('input', function () {
+      this.value = formatVehicleNumber(this.value);
+      const query = this.value;
+      if (query.length >= 0) {
+        fetch(`/getDriverDetails?q=${query}`)
+          .then((response) => response.json())
+          .then((data) => {
+            suggestionsContainer.style.display = 'flex'; // Show suggestions container
+            suggestionsContainer.innerHTML = '';
+
+            if (data.length === 0) {
+              const noResultsItem = document.createElement('div');
+              noResultsItem.classList.add('edit-suggestion-item', 'no-results');
+              noResultsItem.textContent = 'No results found';
+              suggestionsContainer.appendChild(noResultsItem);
+            } else {
+              data.forEach((driver) => {
+                const suggestionItem = document.createElement('div');
+                suggestionItem.classList.add('edit-suggestion-item');
+                suggestionItem.textContent = `${driver.vehicle_no} | ${driver.name}`;
+                suggestionItem.dataset.vehicleNo = driver.vehicle_no;
+                suggestionItem.dataset.name = driver.name;
+                suggestionsContainer.appendChild(suggestionItem);
+              });
+            }
+          })
+          .catch((error) => console.error('Error:', error));
+      } else {
+        suggestionsContainer.style.display = 'none'; // Hide suggestions container
+        suggestionsContainer.innerHTML = '';
+      }
+    });
+
+    suggestionsContainer.addEventListener('click', function (event) {
+      if (event.target.classList.contains('edit-suggestion-item')) {
+        const selectedDriver = event.target;
+        vehicleNoInput.value = selectedDriver.dataset.vehicleNo;
+        suggestionsContainer.style.display = 'none'; // Hide suggestions container
+        suggestionsContainer.innerHTML = '';
+      }
+    });
+
+    document.addEventListener('click', function (event) {
+      if (!suggestionsContainer.contains(event.target) && !vehicleNoInput.contains(event.target)) {
+        suggestionsContainer.style.display = 'none'; // Hide suggestions container
+        suggestionsContainer.innerHTML = '';
+      }
+    });
+
+    
+  }
 
   // Show the popup
   document.getElementById('editPopupOverlay').style.display = 'block';
@@ -395,40 +510,41 @@ function closeEditPopup() {
 // Function to save the edited details
 async function saveDriverConductorDetails() {
   const id = document.getElementById('editDriverConductorForm').dataset.currentId;
+
+  // Retrieve the type from the span element, which is non-editable
+  // const driverConductorType = document.getElementById('editType').textContent;
+
   const updatedDetails = {
-    name: document.getElementById('editName').value,
-    contact: document.getElementById('editContact').value,
-    address: document.getElementById('editAddress').value,
-    driver_conductor_type: document.getElementById('editType').value,
-    vehicle_no: document.getElementById('editVehicleNo').value,
-    vehicle_type: document.getElementById('editVehicleType').value,
-    vehicle_capacity: parseInt(document.getElementById('editVehicleCapacity').value, 10),
+      name: document.getElementById('editName').value,
+      contact: document.getElementById('editContact').value,
+      address: document.getElementById('editAddress').value,
+      vehicle_no: document.getElementById('editVehicleNo') ? document.getElementById('editVehicleNo').value : '',
+      vehicle_type: document.getElementById('editVehicleType') ? document.getElementById('editVehicleType').value : '',
+      vehicle_capacity: document.getElementById('editVehicleCapacity') ? parseInt(document.getElementById('editVehicleCapacity').value, 10) : ''
   };
 
   try {
-    // Send the updated details to the server
-    const response = await fetch('/editDriverConductor', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id, ...updatedDetails }),
-    });
+      const response = await fetch('/editDriverConductor', {
+          method: 'PUT',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id, ...updatedDetails }),
+      });
 
-    if (!response.ok) {
-      throw new Error('Failed to update details');
-    }
-    alert("Details Updated Successfully")
-    // // Update the local data
-    // driverConductorData[id] = { id, ...updatedDetails };
+      if (!response.ok) {
+          throw new Error('Failed to update details');
+      }
 
-    // // Refresh the displayed data
-    // displayDriverConductors(Object.values(driverConductorData));
+      alert("Details Updated Successfully");
 
-    refreshDriverConductorData();
-    // Close the popup
-    closeEditPopup();
+      // Refresh the displayed data
+      refreshDriverConductorData();
+
+      // Close the popup
+      closeEditPopup();
   } catch (error) {
-    console.error('Error saving driver/conductor details:', error);
+      console.error('Error saving driver/conductor details:', error);
   }
 }
+
