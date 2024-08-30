@@ -68,4 +68,22 @@ router.get('/displayRoutes', (req, res) => {
     });
 });
 
+router.delete('/deleteRoute/:route_shift_id', async (req, res) => {
+    const { route_shift_id } = req.params;
+
+    try {
+        const [result] = await req.connectionPool.query('DELETE FROM transport_route_shift_details WHERE route_shift_id = ?', [route_shift_id]);
+
+        if (result.affectedRows > 0) {
+            res.json({ success: true, message: 'Route deleted successfully' });
+        } else {
+            res.status(404).json({ success: false, message: 'Route not found' });
+        }
+    } catch (error) {
+        console.error('Error deleting route:', error);
+        res.status(500).json({ success: false, message: 'Error deleting route' });
+    }
+});
+
+
 module.exports = router;

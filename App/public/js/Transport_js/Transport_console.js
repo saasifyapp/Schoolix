@@ -86,6 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
         hideOverlay('schedulingOverlay'); 
         hideOverlay('manageScheduleOverlay'); // Hide Manage Schedule
         showOverlay('manageRoutesOverlay');
+        refreshRoutesData();
     });
 
     // Show Manage Shifts Overlay
