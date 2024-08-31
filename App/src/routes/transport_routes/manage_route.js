@@ -16,7 +16,7 @@ router.get('/distinctAddresses', (req, res) => {
             UNION
             SELECT Address FROM primary_student_details
         ) AS combined_addresses;
-    `;
+    `; 
 
     req.connectionPool.query(sql, (error, results) => {
         if (error) {

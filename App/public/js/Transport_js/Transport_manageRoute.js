@@ -197,7 +197,7 @@ function fetchAndDisplaySuggestions(query) {
         .then((data) => {
             suggestionsContainer.innerHTML = ""; // Clear existing suggestions
 
-            const filteredData = data.filter(item => item.Address.toLowerCase().includes(query.toLowerCase()));
+            const filteredData = data.filter(item => item.Address.toLowerCase().startsWith(query.toLowerCase()));
 
             if (filteredData.length === 0) {
                 suggestionsContainer.style.display = "none"; // Hide suggestions container
