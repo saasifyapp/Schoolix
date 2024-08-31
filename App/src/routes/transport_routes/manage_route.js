@@ -10,13 +10,13 @@ router.use(connectionManager);
 // New endpoint to get distinct addresses for route assignment
 router.get('/distinctAddresses', (req, res) => {
     const sql = `
-        SELECT DISTINCT Address
+        SELECT DISTINCT transport_pickup_drop
         FROM (
-            SELECT Address FROM pre_primary_student_details
+            SELECT transport_pickup_drop FROM pre_primary_student_details WHERE transport_pickup_drop IS NOT NULL
             UNION
-            SELECT Address FROM primary_student_details
+            SELECT transport_pickup_drop FROM primary_student_details WHERE transport_pickup_drop IS NOT NULL
         ) AS combined_addresses;
-    `; 
+    `;
 
     req.connectionPool.query(sql, (error, results) => {
         if (error) {
@@ -25,7 +25,6 @@ router.get('/distinctAddresses', (req, res) => {
         res.status(200).json(results);
     });
 });
-
 // Endpoint to add a new route
 router.post('/addRoute', (req, res) => {
     const { routeName, citiesAddress } = req.body;

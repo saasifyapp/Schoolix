@@ -466,58 +466,39 @@
         <button id="closeManageScheduleOverlay" class="close-button">&times;</button>
         <h2>Manage Schedule</h2>
         
-        <!-- Form for selecting Route, Shift, and Vehicle -->
+        <!-- Form for entering Route, Shift, and Vehicle -->
         <form id="manageScheduleForm">
             <div class="form-row">
                 <div class="form-group">
-                    <select id="selectRoute" class="form-control">
-                        <option value="" disabled selected>Select Route</option>
-                        <!-- Populate this dropdown with route options -->
-                    </select>
-                    <span class="form-control-placeholder">Select Route</span>
+                    <input type="text" id="inputRoute" class="form-control" placeholder=" ">
+                    <span class="form-control-placeholder">Enter Route</span>
+                    <div id="routeSuggestions" class="suggestions"></div>
+                    <div id="routeDetail" class="info-container"></div>
                 </div>
                 <div class="form-group">
-                    <select id="selectShift" class="form-control">
-                        <option value="" disabled selected>Select Shift</option>
-                        <!-- Populate this dropdown with shift options -->
-                    </select>
-                    <span class="form-control-placeholder">Select Shift</span>
+                    <input type="text" id="inputShift" class="form-control" placeholder=" ">
+                    <span class="form-control-placeholder">Enter Shift</span>
+                    <div id="shiftSuggestions" class="suggestions"></div>
+                    <div id="shiftDetail" class="info-container"></div>
+                </div>
+                <!-- New Student Details Container -->
+                <div class="form-group">
+                    <div id="studentDetails" class="info-container"></div>
                 </div>
                 <div class="form-group">
-                    <select id="selectVehicle" class="form-control">
-                        <option value="" disabled selected>Select Vehicle</option>
-                        <!-- Populate this dropdown with vehicle options -->
-                    </select>
-                    <span class="form-control-placeholder">Select Vehicle</span>
+                    <input type="text" id="inputVehicle" class="form-control" placeholder=" " maxlength="13">
+                    <span class="form-control-placeholder">Enter Vehicle</span>
+                    <div id="vehicleSuggestions" class="suggestions"></div>
+                    <div id="vehicleDetail" class="info-container"></div>
                 </div>
             </div>
-            <button class="getDetails-button" type="submit">
+            <button id="getDetailsButton" class="getDetails-button" type="submit">
                 <img src="../images/driver.png" alt="">
                 <span>Get Details</span>
             </button>
         </form>
-
-        <!-- Table to show the details -->
-        <div class="table-container">
-            <table id="scheduleDetailsTable" class="styled-table">
-                <thead>
-                    <tr>
-                        <th>Route</th>
-                        <th>Shift</th>
-                        <th>Vehicle</th>
-                        <th>Driver</th>
-                        <th>Conductor</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="scheduleDetailsTableBody">
-                    <!-- Table rows will be populated here -->
-                </tbody>
-            </table>
-        </div>
     </div>
 </div>
-
 
     <!-- Overlay for List Scheduling -->
     <div id="listSchedulingOverlay" class="overlay-search">

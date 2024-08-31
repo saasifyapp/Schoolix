@@ -197,7 +197,7 @@ function fetchAndDisplaySuggestions(query) {
         .then((data) => {
             suggestionsContainer.innerHTML = ""; // Clear existing suggestions
 
-            const filteredData = data.filter(item => item.Address.toLowerCase().startsWith(query.toLowerCase()));
+            const filteredData = data.filter(item => item.transport_pickup_drop.toLowerCase().startsWith(query.toLowerCase()));
 
             if (filteredData.length === 0) {
                 suggestionsContainer.style.display = "none"; // Hide suggestions container
@@ -205,9 +205,9 @@ function fetchAndDisplaySuggestions(query) {
                 filteredData.forEach((item) => {
                     const suggestionItem = document.createElement("div");
                     suggestionItem.classList.add("suggestion-item");
-                    suggestionItem.textContent = item.Address;
+                    suggestionItem.textContent = item.transport_pickup_drop;
                     suggestionItem.addEventListener("click", function () {
-                        addCityToSelected(item.Address);
+                        addCityToSelected(item.transport_pickup_drop);
                     });
                     suggestionsContainer.appendChild(suggestionItem);
                 });
@@ -267,6 +267,7 @@ citiesAddressInput.addEventListener("input", function () {
         suggestionsContainer.style.display = "none"; // Hide suggestions container
     }
 });
+
 
 // Initial fetch and display of route details
 // displayRoutes();
