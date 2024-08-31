@@ -212,6 +212,12 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        // Ensure student count is not zero
+        if (studentCount === 0) {
+            alert('No students found!');
+            return;
+        }
+        
         // Check if student count exceeds vehicle capacity
         if (studentCount > selectedVehicleDetail.vehicleCapacity) {
             alert('Student count exceeds vehicle capacity!');
@@ -230,7 +236,9 @@ document.addEventListener('DOMContentLoaded', function () {
             route_name: routeName,
             route_stops: selectedRouteDetail,
             shift_name: shiftName,
-            classes_alloted: selectedShiftDetail
+            classes_alloted: selectedShiftDetail,
+            student_count: studentCount,
+            vehicle_capacity: vehicleCapacity
         };
 
         // Send data to the server

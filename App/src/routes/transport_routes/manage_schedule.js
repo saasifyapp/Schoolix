@@ -143,24 +143,108 @@ router.get('/getStudentCountforTransport', (req, res) => {
 
 
 
-// Endpoint to populate transport schedule details
+// Endpoint to populate transport schedule details and update student records
 router.post('/populateTransportSchedule', (req, res) => {
-    const { vehicle_no, driver_name, conductor_name, route_name, route_stops, shift_name, classes_alloted } = req.body;
+    const { vehicle_no, driver_name, conductor_name, route_name, route_stops, shift_name, classes_alloted, student_count, vehicle_capacity } = req.body;
 
-    const sql = `
-        INSERT INTO transport_schedule_details (vehicle_no, driver_name, conductor_name, route_name, route_stops, shift_name, classes_alloted)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    `;
-    const values = [vehicle_no, driver_name, conductor_name, route_name, route_stops, shift_name, classes_alloted];
+    if (student_count <= vehicle_capacity) {
+        const stopsArray = route_stops.split(',').map(stop => stop.trim());
+        const classesAllotedArray = classes_alloted.split(',').map(cls => cls.trim());
 
-    req.connectionPool.query(sql, values, (error, results) => {
-        if (error) {
-            return res.status(500).json({ success: false, error: 'Database insertion failed' });
-        }
+        // SQL query to fetch student names based on the criteria
+        const sqlFetchPrePrimaryStudents = `
+            SELECT Name
+            FROM pre_primary_student_details
+            WHERE transport_needed = 1 AND transport_pickup_drop IN (?) AND CONCAT(Standard, ' ', Division) IN (?)
+            LIMIT ?
+        `;
+        const sqlFetchPrimaryStudents = `
+            SELECT Name
+            FROM primary_student_details
+            WHERE transport_needed = 1 AND transport_pickup_drop IN (?) AND CONCAT(Standard, ' ', Division) IN (?)
+            LIMIT ?
+        `;
+        const valuesFetchPrePrimaryStudents = [stopsArray, classesAllotedArray, student_count];
+        const valuesFetchPrimaryStudents = [stopsArray, classesAllotedArray, student_count];
 
-        res.status(200).json({ success: true });
-    });
+        req.connectionPool.query(sqlFetchPrePrimaryStudents, valuesFetchPrePrimaryStudents, (fetchErrorPrePrimary, fetchResultsPrePrimary) => {
+            if (fetchErrorPrePrimary) {
+                console.error('Database fetch failed for pre_primary_student_details:', fetchErrorPrePrimary);
+                return res.status(500).json({ success: false, error: 'Database fetch failed for pre_primary_student_details' });
+            }
+
+            req.connectionPool.query(sqlFetchPrimaryStudents, valuesFetchPrimaryStudents, (fetchErrorPrimary, fetchResultsPrimary) => {
+                if (fetchErrorPrimary) {
+                    console.error('Database fetch failed for primary_student_details:', fetchErrorPrimary);
+                    return res.status(500).json({ success: false, error: 'Database fetch failed for primary_student_details' });
+                }
+
+                const studentNamesPrePrimary = fetchResultsPrePrimary.map(student => student.Name);
+                const studentNamesPrimary = fetchResultsPrimary.map(student => student.Name);
+
+                // Only proceed if there are student names to update
+                if (studentNamesPrePrimary.length > 0 || studentNamesPrimary.length > 0) {
+                    const sqlUpdatePrePrimary = studentNamesPrePrimary.length > 0 ? `
+                        UPDATE pre_primary_student_details
+                        SET transport_tagged = ?
+                        WHERE Name IN (?) AND transport_needed = 1 AND transport_pickup_drop IN (?) AND CONCAT(Standard, ' ', Division) IN (?);
+                    ` : null;
+
+                    const sqlUpdatePrimary = studentNamesPrimary.length > 0 ? `
+                        UPDATE primary_student_details
+                        SET transport_tagged = ?
+                        WHERE Name IN (?) AND transport_needed = 1 AND transport_pickup_drop IN (?) AND CONCAT(Standard, ' ', Division) IN (?);
+                    ` : null;
+
+                    const valuesUpdatePrePrimary = [vehicle_no, studentNamesPrePrimary, stopsArray, classesAllotedArray];
+                    const valuesUpdatePrimary = [vehicle_no, studentNamesPrimary, stopsArray, classesAllotedArray];
+
+                    const updatePrePrimary = sqlUpdatePrePrimary ? new Promise((resolve, reject) => {
+                        req.connectionPool.query(sqlUpdatePrePrimary, valuesUpdatePrePrimary, (updateErrorPrePrimary, updateResultsPrePrimary) => {
+                            if (updateErrorPrePrimary) {
+                                console.error('Database update failed for pre_primary_student_details:', updateErrorPrePrimary);
+                                return reject('Database update failed for pre_primary_student_details');
+                            }
+                            resolve();
+                        });
+                    }) : Promise.resolve();
+
+                    const updatePrimary = sqlUpdatePrimary ? new Promise((resolve, reject) => {
+                        req.connectionPool.query(sqlUpdatePrimary, valuesUpdatePrimary, (updateErrorPrimary, updateResultsPrimary) => {
+                            if (updateErrorPrimary) {
+                                console.error('Database update failed for primary_student_details:', updateErrorPrimary);
+                                return reject('Database update failed for primary_student_details');
+                            }
+                            resolve();
+                        });
+                    }) : Promise.resolve();
+
+                    Promise.all([updatePrePrimary, updatePrimary])
+                        .then(() => {
+                            const sqlInsert = `
+                                INSERT INTO transport_schedule_details (vehicle_no, driver_name, conductor_name, route_name, route_stops, shift_name, classes_alloted)
+                                VALUES (?, ?, ?, ?, ?, ?, ?)
+                            `;
+                            const valuesInsert = [vehicle_no, driver_name, conductor_name, route_name, route_stops, shift_name, classes_alloted];
+
+                            req.connectionPool.query(sqlInsert, valuesInsert, (insertError, insertResults) => {
+                                if (insertError) {
+                                    console.error('Database insertion failed:', insertError);
+                                    return res.status(500).json({ success: false, error: 'Database insertion failed' });
+                                }
+
+                                res.status(200).json({ success: true });
+                            });
+                        })
+                        .catch(error => res.status(500).json({ success: false, error }));
+                } else {
+                    res.status(400).json({ success: false, error: 'No students found to update' });
+                }
+            });
+        });
+    } else {
+        res.status(400).json({ success: false, error: 'Student count exceeds vehicle capacity' });
+    }
 });
-
 
 module.exports = router;
