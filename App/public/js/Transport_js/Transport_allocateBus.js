@@ -252,30 +252,73 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         
     });
-    // Fetch and display the schedule details in the table
-    function fetchAndDisplayScheduleDetails() {
-        fetch('/allocate_getScheduleDetails')
-            .then(response => response.json())
-            .then(data => {
-                scheduleTableBody.innerHTML = ''; // Clear existing data
-                data.forEach(item => {
-                    const newRow = document.createElement('tr');
-                    newRow.innerHTML = `
-                        <td>${item.vehicle_no}</td>
-                        <td>${item.driver_name}</td>
-                        <td>${item.route_name}</td>
-                        <td>${item.route_stops}</td>
-                        <td>${item.shift_name}</td>
-                        <td>${item.classes_alloted}</td>
-                        <td>${item.available_seats}</td>
-                        <td>${item.students_tagged}</td>
-                    `;
-                    scheduleTableBody.appendChild(newRow);
-                });
-            })
-            .catch(error => console.error('Error fetching schedule details:', error));
-    }
+// Fetch and display the schedule details in the table
+function fetchAndDisplayScheduleDetails() {
+    fetch('/allocate_getScheduleDetails')
+        .then(response => response.json())
+        .then(data => {
+            scheduleTableBody.innerHTML = ''; // Clear existing data
+            data.forEach(item => {
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>${item.vehicle_no}</td>
+                    <td>${item.driver_name}</td>
+                    <td>${item.route_name}</td>
+                    <td>${item.route_stops}</td>
+                    <td>${item.shift_name}</td>
+                    <td>${item.classes_alloted}</td>
+                    <td>${item.available_seats}</td>
+                    <td>${item.students_tagged}</td>
+                    <td><button class="detag-button" data-vehicle-no="${item.vehicle_no}" data-route-name="${item.route_name}" data-shift-name="${item.shift_name}" data-classes-alloted="${item.classes_alloted}">Detag</button></td>
+                `;
+                scheduleTableBody.appendChild(newRow);
+            });
 
+            // Add event listeners to the Detag buttons
+            document.querySelectorAll('.detag-button').forEach(button => {
+                button.addEventListener('click', function () {
+                    const vehicleNo = this.dataset.vehicleNo;
+                    const routeName = this.dataset.routeName;
+                    const shiftName = this.dataset.shiftName;
+                    const classesAlloted = this.dataset.classesAlloted;
+
+                    // Call the detag endpoint
+                    detagBus(vehicleNo, routeName, shiftName, classesAlloted);
+                });
+            });
+        })
+        .catch(error => console.error('Error fetching schedule details:', error));
+}
+
+// Function to detag a bus
+function detagBus(vehicleNo, routeName, shiftName, classesAlloted) {
+    // Split the classesAlloted string into an array
+    const classesArray = classesAlloted.split(',').map(cls => cls.trim());
+
+    const requestData = { vehicleNo, routeName, shiftName, classesAlloted: classesArray };
+
+    // Log the data being sent to the server
+    console.log('Data sent to server:', requestData);
+
+    fetch('/allocate_detagBus', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestData)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            alert('Success: Bus detagged successfully!');
+            // Refresh the schedule details table
+            fetchAndDisplayScheduleDetails();
+        } else {
+            alert('Error: Failed to detag bus.');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
     // Initial data fetch for schedule details
     fetchAndDisplayScheduleDetails();
 });

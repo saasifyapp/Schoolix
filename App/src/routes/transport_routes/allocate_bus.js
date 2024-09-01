@@ -174,6 +174,7 @@ router.post('/allocate_tagStudentsToBus', (req, res) => {
 router.get('/allocate_getScheduleDetails', (req, res) => {
     const sql = `
         SELECT 
+            id,
             vehicle_no, 
             driver_name, 
             route_name, 
@@ -196,5 +197,65 @@ router.get('/allocate_getScheduleDetails', (req, res) => {
     });
 });
 
+// Endpoint to detag a bus
+router.post('/allocate_detagBus', (req, res) => {
+    const { vehicleNo, routeName, shiftName, classesAlloted } = req.body;
+    console.log(classesAlloted)
+
+    // Split the classesAlloted array into Standard and Division
+    const classesArray = classesAlloted.map(cls => {
+        const [standard, ...divisionParts] = cls.split(' ');
+        const division = divisionParts.join(' ');
+        return { standard, division };
+    });
+
+    // Generate the SQL WHERE clause for Standard and Division pairs
+    const whereClause = classesArray.map(({ standard, division }) => `(Standard = '${standard}' AND Division = '${division}')`).join(' OR ');
+
+    // SQL query to update transport_tagged to NULL for specific students in pre_primary_student_details
+    const sqlUpdateStudentsPrePrimary = `
+        UPDATE pre_primary_student_details
+        SET transport_tagged = NULL
+        WHERE transport_tagged = ? AND (${whereClause})
+    `;
+    const sqlUpdateStudentsPrimary = `
+        UPDATE primary_student_details
+        SET transport_tagged = NULL
+        WHERE transport_tagged = ? AND (${whereClause})
+    `;
+    const valuesUpdateStudents = [vehicleNo];
+
+    // Execute the queries
+    req.connectionPool.query(sqlUpdateStudentsPrePrimary, valuesUpdateStudents, (updateErrorPrePrimary, updateResultsPrePrimary) => {
+        if (updateErrorPrePrimary) {
+            console.error('Database update failed for pre_primary_student_details:', updateErrorPrePrimary);
+            return res.status(500).json({ success: false, error: 'Database update failed for pre_primary_student_details' });
+        }
+
+        req.connectionPool.query(sqlUpdateStudentsPrimary, valuesUpdateStudents, (updateErrorPrimary, updateResultsPrimary) => {
+            if (updateErrorPrimary) {
+                console.error('Database update failed for primary_student_details:', updateErrorPrimary);
+                return res.status(500).json({ success: false, error: 'Database update failed for primary_student_details' });
+            }
+
+            // SQL query to update transport_schedule_details
+            const sqlUpdateSchedule = `
+                UPDATE transport_schedule_details
+                SET available_seats = NULL, students_tagged = NULL
+                WHERE vehicle_no = ? AND route_name = ? AND shift_name = ?
+            `;
+            const valuesUpdateSchedule = [vehicleNo, routeName, shiftName];
+
+            req.connectionPool.query(sqlUpdateSchedule, valuesUpdateSchedule, (updateErrorSchedule, updateResultsSchedule) => {
+                if (updateErrorSchedule) {
+                    console.error('Database update failed for transport_schedule_details:', updateErrorSchedule);
+                    return res.status(500).json({ success: false, error: 'Database update failed for transport_schedule_details' });
+                }
+
+                res.status(200).json({ success: true });
+            });
+        });
+    });
+});
 
 module.exports = router;
