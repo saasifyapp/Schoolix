@@ -6,8 +6,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const routesShiftsOverlay = document.getElementById('routesShiftsOverlay');
     const manageRoutesOverlay = document.getElementById('manageRoutesOverlay');
     const manageShiftsOverlay = document.getElementById('manageShiftsOverlay'); 
-    const schedulingOverlay = document.getElementById('schedulingOverlay'); 
-    const manageScheduleOverlay = document.getElementById('manageScheduleOverlay'); // Add for Manage Schedule
+    const busAllocationOverlay = document.getElementById('busAllocationOverlay'); 
+    const allocateBusOverlay = document.getElementById('allocateBusOverlay'); // Changed from manageScheduleOverlay
+    const tagRouteShiftOverlay = document.getElementById('tagRouteShiftOverlay');
+    const listSchedulingOverlay = document.getElementById('listSchedulingOverlay'); // New overlay element
 
     // Buttons
     const driverConductorButton = document.getElementById('driverConductorButton');
@@ -23,106 +25,74 @@ document.addEventListener('DOMContentLoaded', function () {
     const manageShiftsButton = document.getElementById('manageShiftsButton'); 
     const closeManageShiftsOverlay = document.getElementById('closeManageShiftsOverlay'); 
     const schedulingButton = document.getElementById('schedulingButton'); 
-    const closeSchedulingOverlay = document.getElementById('closeSchedulingOverlay'); 
-    const createScheduleButton = document.getElementById('createScheduleButton'); // Add for Manage Schedule
-    const closeManageScheduleOverlay = document.getElementById('closeManageScheduleOverlay'); // Add for Manage Schedule
+    const closeBusAllocationOverlay = document.getElementById('closeBusAllocationOverlay'); 
+    const allocateBus = document.getElementById('allocateBus'); // Add for Manage Schedule
+    const closeAllocateBusOverlay = document.getElementById('closeAllocateBusOverlay'); // Changed from closeManageScheduleOverlay
+    const tagRouteShiftButton = document.getElementById('tagRouteShiftButton');
+    const closeTagRouteShiftOverlay = document.getElementById('closeTagRouteShiftOverlay');
+    const listStudentsButton = document.getElementById('listStudentsButton');
+    const closeListSchedulingOverlay = document.getElementById('closeListSchedulingOverlay');
 
     // Show Driver/Conductor Selection Overlay
     driverConductorButton.addEventListener('click', function () {
-        hideOverlay('addDriverOverlay');
-        hideOverlay('searchDriverConductorOverlay');
-        hideOverlay('routesShiftsOverlay');
-        hideOverlay('manageRoutesOverlay');
-        hideOverlay('manageShiftsOverlay');
-        hideOverlay('schedulingOverlay'); 
-        hideOverlay('manageScheduleOverlay'); // Hide Manage Schedule
+        hideAllOverlays();
         showOverlay('driverConductorOverlay');
     });
 
     // Show Add Driver/Conductor Overlay
     addDriverButton.addEventListener('click', function () {
-        hideOverlay('driverConductorOverlay');
-        hideOverlay('searchDriverConductorOverlay');
-        hideOverlay('routesShiftsOverlay');
-        hideOverlay('manageRoutesOverlay');
-        hideOverlay('manageShiftsOverlay'); 
-        hideOverlay('schedulingOverlay'); 
-        hideOverlay('manageScheduleOverlay'); // Hide Manage Schedule
+        hideAllOverlays();
         showOverlay('addDriverOverlay');
     });
 
     // Show Search Driver/Conductor Overlay
     searchDriverButton.addEventListener('click', function () {
-        hideOverlay('driverConductorOverlay');
-        hideOverlay('addDriverOverlay');
-        hideOverlay('routesShiftsOverlay');
-        hideOverlay('manageRoutesOverlay');
-        hideOverlay('manageShiftsOverlay'); 
-        hideOverlay('schedulingOverlay'); 
-        hideOverlay('manageScheduleOverlay'); // Hide Manage Schedule
+        hideAllOverlays();
         showOverlay('searchDriverConductorOverlay');
         refreshDriverConductorData();
     });
 
     // Show Routes and Shifts Overlay
     routesShiftsButton.addEventListener('click', function () {
-        hideOverlay('driverConductorOverlay');
-        hideOverlay('addDriverOverlay');
-        hideOverlay('searchDriverConductorOverlay');
-        hideOverlay('manageRoutesOverlay');
-        hideOverlay('manageShiftsOverlay'); 
-        hideOverlay('schedulingOverlay'); 
-        hideOverlay('manageScheduleOverlay'); // Hide Manage Schedule
+        hideAllOverlays();
         showOverlay('routesShiftsOverlay');
     });
 
     // Show Manage Routes Overlay
     manageRoutesButton.addEventListener('click', function () {
-        hideOverlay('driverConductorOverlay');
-        hideOverlay('addDriverOverlay');
-        hideOverlay('searchDriverConductorOverlay');
-        hideOverlay('routesShiftsOverlay');
-        hideOverlay('manageShiftsOverlay'); 
-        hideOverlay('schedulingOverlay'); 
-        hideOverlay('manageScheduleOverlay'); // Hide Manage Schedule
+        hideAllOverlays();
         showOverlay('manageRoutesOverlay');
         refreshRoutesData();
     });
 
     // Show Manage Shifts Overlay
     manageShiftsButton.addEventListener('click', function () {
-        hideOverlay('driverConductorOverlay');
-        hideOverlay('addDriverOverlay');
-        hideOverlay('searchDriverConductorOverlay');
-        hideOverlay('routesShiftsOverlay');
-        hideOverlay('manageRoutesOverlay'); 
-        hideOverlay('schedulingOverlay'); 
-        hideOverlay('manageScheduleOverlay'); // Hide Manage Schedule
+        hideAllOverlays();
         showOverlay('manageShiftsOverlay');
     });
 
-    // Show Scheduling Overlay
+    // Show Bus Allocation Overlay
     schedulingButton.addEventListener('click', function () {
-        hideOverlay('driverConductorOverlay');
-        hideOverlay('addDriverOverlay');
-        hideOverlay('searchDriverConductorOverlay');
-        hideOverlay('routesShiftsOverlay');
-        hideOverlay('manageRoutesOverlay');
-        hideOverlay('manageShiftsOverlay'); 
-        hideOverlay('manageScheduleOverlay'); // Hide Manage Schedule
-        showOverlay('schedulingOverlay');
+        hideAllOverlays();
+        showOverlay('busAllocationOverlay');
     });
 
-    // Show Manage Schedule Overlay
-    createScheduleButton.addEventListener('click', function () {
-        hideOverlay('driverConductorOverlay');
-        hideOverlay('addDriverOverlay');
-        hideOverlay('searchDriverConductorOverlay');
-        hideOverlay('routesShiftsOverlay');
-        hideOverlay('manageRoutesOverlay');
-        hideOverlay('manageShiftsOverlay'); 
-        hideOverlay('schedulingOverlay'); // Hide Scheduling
-        showOverlay('manageScheduleOverlay');
+    // Show Allocate Bus Overlay
+    allocateBus.addEventListener('click', function () {
+        hideAllOverlays();
+        showOverlay('allocateBusOverlay');
+    });
+
+    // Show Tag Route Shift Overlay
+    tagRouteShiftButton.addEventListener('click', function () {
+        hideAllOverlays();
+        showOverlay('tagRouteShiftOverlay');
+    });
+
+    // Show List Scheduling Overlay
+    listStudentsButton.addEventListener('click', function () {
+        hideAllOverlays();
+        showOverlay('listSchedulingOverlay');
     });
 
     // Close Driver/Conductor Overlay
@@ -155,47 +125,19 @@ document.addEventListener('DOMContentLoaded', function () {
         hideOverlay('manageShiftsOverlay');
     });
 
-    // Close Scheduling Overlay
-    closeSchedulingOverlay.addEventListener('click', function () {
-        hideOverlay('schedulingOverlay');
+    // Close Bus Allocation Overlay
+    closeBusAllocationOverlay.addEventListener('click', function () {
+        hideOverlay('busAllocationOverlay');
     });
 
-    // Close Manage Schedule Overlay
-    closeManageScheduleOverlay.addEventListener('click', function () {
-        hideOverlay('manageScheduleOverlay');
+    // Close Allocate Bus Overlay
+    closeAllocateBusOverlay.addEventListener('click', function () {
+        hideOverlay('allocateBusOverlay');
     });
 
-    // Utility Functions to Show/Hide Overlays
-    function showOverlay(overlayId) {
-        document.getElementById(overlayId).style.display = "flex";
-    }
-
-    function hideOverlay(overlayId) {
-        const overlay = document.getElementById(overlayId);
-        overlay.style.display = "none";
-    }
-});
-
-
-document.addEventListener('DOMContentLoaded', function () {
-    // Main Overlay Elements
-    const listSchedulingOverlay = document.getElementById('listSchedulingOverlay'); // New overlay element
-
-    // Buttons
-    const listStudentsButton = document.getElementById('listStudentsButton');
-    const closeListSchedulingOverlay = document.getElementById('closeListSchedulingOverlay');
-
-    // Show List Scheduling Overlay
-    listStudentsButton.addEventListener('click', function () {
-        hideOverlay('driverConductorOverlay');
-        hideOverlay('addDriverOverlay');
-        hideOverlay('searchDriverConductorOverlay');
-        hideOverlay('routesShiftsOverlay');
-        hideOverlay('manageRoutesOverlay');
-        hideOverlay('manageShiftsOverlay');
-        hideOverlay('schedulingOverlay');
-        hideOverlay('manageScheduleOverlay');
-        showOverlay('listSchedulingOverlay'); // Show the new overlay
+    // Close Tag Route Shift Overlay
+    closeTagRouteShiftOverlay.addEventListener('click', function () {
+        hideOverlay('tagRouteShiftOverlay');
     });
 
     // Close List Scheduling Overlay
@@ -205,12 +147,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Utility Functions to Show/Hide Overlays
     function showOverlay(overlayId) {
+        console.log(`Showing overlay: ${overlayId}`);
         document.getElementById(overlayId).style.display = "flex";
     }
 
     function hideOverlay(overlayId) {
+        console.log(`Hiding overlay: ${overlayId}`);
         const overlay = document.getElementById(overlayId);
         overlay.style.display = "none";
     }
-});
 
+    function hideAllOverlays() {
+        const overlays = [
+            'driverConductorOverlay', 'addDriverOverlay', 'searchDriverConductorOverlay',
+            'routesShiftsOverlay', 'manageRoutesOverlay', 'manageShiftsOverlay',
+            'busAllocationOverlay', 'allocateBusOverlay', 'tagRouteShiftOverlay',
+            'listSchedulingOverlay'
+        ];
+        overlays.forEach(hideOverlay);
+    }
+});

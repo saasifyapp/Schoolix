@@ -1,29 +1,27 @@
-
 document.addEventListener('DOMContentLoaded', function () {
-    const routeInput = document.getElementById('inputRoute');
-    const routeSuggestionsContainer = document.getElementById('routeSuggestions');
-    const routeDetailContainer = document.getElementById('routeDetail');
+    const routeInput = document.getElementById('tag_tag_route_name');
+    const routeSuggestionsContainer = document.getElementById('tag_routeSuggestions');
+    const routeDetailContainer = document.getElementById('tag_routeDetail');
 
-    const shiftInput = document.getElementById('inputShift');
-    const shiftSuggestionsContainer = document.getElementById('shiftSuggestions');
-    const shiftDetailContainer = document.getElementById('shiftDetail');
+    const shiftInput = document.getElementById('tag_tag_shift_name');
+    const shiftSuggestionsContainer = document.getElementById('tag_shiftSuggestions');
+    const shiftDetailContainer = document.getElementById('tag_shiftDetail');
 
-    const vehicleInput = document.getElementById('inputVehicle');
-    const vehicleSuggestionsContainer = document.getElementById('vehicleSuggestions');
-    const vehicleDetailContainer = document.getElementById('vehicleDetail');
+    const vehicleInput = document.getElementById('tag_tag_vehicle_no');
+    const vehicleSuggestionsContainer = document.getElementById('tag_vehicleSuggestions');
+    const vehicleDetailContainer = document.getElementById('tag_vehicleDetail');
 
-    const studentDetailsContainer = document.getElementById('studentDetails');
-    const getDetailsButton = document.getElementById('getDetailsButton');
+    const getDetailsButton = document.getElementById('tag_getDetailsButton');
+    const submittedDataBody = document.getElementById('submittedDataBody');
 
     let selectedRouteDetail = '';
     let selectedShiftDetail = '';
     let selectedVehicleDetail = {};
-    let studentCount = 0;
 
     routeInput.addEventListener('input', function () {
         const query = this.value;
         if (query.length >= 0) {
-            fetch(`/getRouteDetails`)
+            fetch(`/tag_getRouteDetails`)
                 .then((response) => response.json())
                 .then((data) => {
                     routeSuggestionsContainer.style.display = 'flex'; // Show suggestions container
@@ -59,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
     shiftInput.addEventListener('input', function () {
         const query = this.value;
         if (query.length >= 0) {
-            fetch(`/getShiftDetails`)
+            fetch(`/tag_getShiftDetails`)
                 .then((response) => response.json())
                 .then((data) => {
                     shiftSuggestionsContainer.style.display = 'flex'; // Show suggestions container
@@ -95,12 +93,12 @@ document.addEventListener('DOMContentLoaded', function () {
     vehicleInput.addEventListener('input', function () {
         const query = this.value;
         if (query.length >= 0) {
-            fetch(`/getVehicleDetails?q=${query}`)
+            fetch(`/tag_getVehicleDetails?q=${query}`)
                 .then((response) => response.json())
                 .then((data) => {
                     vehicleSuggestionsContainer.style.display = 'flex'; // Show suggestions container
                     vehicleSuggestionsContainer.innerHTML = '';
-
+    
                     if (data.length === 0) {
                         const noResultsItem = document.createElement('div');
                         noResultsItem.classList.add('suggestion-item', 'no-results');
@@ -110,12 +108,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         data.forEach((driver) => {
                             const suggestionItem = document.createElement('div');
                             suggestionItem.classList.add('suggestion-item');
-                            suggestionItem.textContent = `${driver.vehicle_no} | ${driver.name}`;
-                            suggestionItem.dataset.driverName = driver.name;
-                            suggestionItem.dataset.vehicleNo = driver.vehicle_no;
-                            suggestionItem.dataset.vehicleType = driver.vehicle_type;
-                            suggestionItem.dataset.vehicleCapacity = driver.vehicle_capacity;
-                            suggestionItem.dataset.conductorName = driver.conductor_name;
+                            suggestionItem.textContent = `${driver.vehicle_no || 'N/A'} | ${driver.driver_name || 'N/A'}`;
+                            suggestionItem.dataset.driverName = driver.driver_name || 'N/A';
+                            suggestionItem.dataset.vehicleNo = driver.vehicle_no || 'N/A';
+                            suggestionItem.dataset.conductorName = driver.conductor_name || 'N/A';
+                            suggestionItem.dataset.vehicleCapacity = driver.vehicle_capacity || 'N/A';
                             vehicleSuggestionsContainer.appendChild(suggestionItem);
                         });
                     }
@@ -138,11 +135,6 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
             routeSuggestionsContainer.style.display = 'none'; // Hide suggestions container
             routeSuggestionsContainer.innerHTML = '';
-
-            // Fetch student count if both details are available
-            if (selectedRouteDetail && selectedShiftDetail) {
-                fetchStudentCount(selectedRouteDetail, selectedShiftDetail);
-            }
         }
     });
 
@@ -157,11 +149,6 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
             shiftSuggestionsContainer.style.display = 'none'; // Hide suggestions container
             shiftSuggestionsContainer.innerHTML = '';
-
-            // Fetch student count if both details are available
-            if (selectedRouteDetail && selectedShiftDetail) {
-                fetchStudentCount(selectedRouteDetail, selectedShiftDetail);
-            }
         }
     });
 
@@ -170,18 +157,16 @@ document.addEventListener('DOMContentLoaded', function () {
             const selectedDriver = event.target;
             vehicleInput.value = selectedDriver.dataset.vehicleNo;
             selectedVehicleDetail = {
-                driverName: selectedDriver.dataset.driverName,
-                vehicleNo: selectedDriver.dataset.vehicleNo,
-                vehicleType: selectedDriver.dataset.vehicleType,
-                vehicleCapacity: selectedDriver.dataset.vehicleCapacity,
-                conductorName: selectedDriver.dataset.conductorName
+                driverName: selectedDriver.dataset.driverName || 'N/A',
+                vehicleNo: selectedDriver.dataset.vehicleNo || 'N/A',
+                conductorName: selectedDriver.dataset.conductorName || 'N/A',
+                vehicleCapacity: selectedDriver.dataset.vehicleCapacity || 'N/A'
             };
             vehicleDetailContainer.innerHTML = `
                 <strong>Driver Name:</strong> ${selectedDriver.dataset.driverName}<br>
                 <strong>Vehicle No:</strong> ${selectedDriver.dataset.vehicleNo}<br>
-                <strong>Vehicle Type:</strong> ${selectedDriver.dataset.vehicleType}<br>
-                <strong>Vehicle Capacity:</strong> ${selectedDriver.dataset.vehicleCapacity}<br>
-                <strong>Conductor Name:</strong> ${selectedDriver.dataset.conductorName}
+                <strong>Conductor Name:</strong> ${selectedDriver.dataset.conductorName}<br>
+                <strong>Vehicle Capacity:</strong> ${selectedDriver.dataset.vehicleCapacity}
             `;
             vehicleSuggestionsContainer.style.display = 'none'; // Hide suggestions container
             vehicleSuggestionsContainer.innerHTML = '';
@@ -205,30 +190,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     getDetailsButton.addEventListener('click', function (event) {
         event.preventDefault();
-
+    
         // Ensure all details are selected
         if (!selectedRouteDetail || !selectedShiftDetail || !selectedVehicleDetail.vehicleNo) {
             alert('Please select all details before proceeding.');
             return;
         }
-
-        // Ensure student count is not zero
-        if (studentCount === 0) {
-            alert('No students found!');
-            return;
-        }
-        
-        // Check if student count exceeds vehicle capacity
-        if (studentCount > selectedVehicleDetail.vehicleCapacity) {
-            alert('Student count exceeds vehicle capacity!');
-            return;
-        }
-
+    
         // Prepare data to be sent to the server
         const routeName = routeInput.value;
         const shiftName = shiftInput.value;
-        const { driverName, vehicleNo, vehicleType, vehicleCapacity, conductorName } = selectedVehicleDetail;
-
+        const { driverName, vehicleNo, conductorName, vehicleCapacity } = selectedVehicleDetail;
+    
         const data = {
             vehicle_no: vehicleNo,
             driver_name: driverName,
@@ -237,12 +210,11 @@ document.addEventListener('DOMContentLoaded', function () {
             route_stops: selectedRouteDetail,
             shift_name: shiftName,
             classes_alloted: selectedShiftDetail,
-            student_count: studentCount,
             vehicle_capacity: vehicleCapacity
         };
-
+    
         // Send data to the server
-        fetch('/populateTransportSchedule', {
+        fetch('/tag_populateTransportSchedule', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -253,6 +225,18 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(result => {
                 if (result.success) {
                     alert('Transport schedule details added successfully!');
+                    // Add the submitted data to the table
+                    const newRow = document.createElement('tr');
+                    newRow.innerHTML = `
+                        <td>${vehicleNo}</td>
+                        <td>${driverName}</td>
+                        <td>${conductorName}</td>
+                        <td>${routeName}</td>
+                        <td>${selectedRouteDetail}</td>
+                        <td>${shiftName}</td>
+                        <td>${selectedShiftDetail}</td>
+                    `;
+                    submittedDataBody.appendChild(newRow);
                 } else {
                     alert('Failed to add transport schedule details.');
                 }
@@ -260,24 +244,30 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error:', error));
     });
 
-    function fetchStudentCount(stops, classesAlloted) {
-        const stopsArray = stops.split(',').map(stop => stop.trim());
-        const classesAllotedArray = classesAlloted.split(',').map(cls => cls.trim());
-
-        // Join the stops array into a comma-separated string
-        const stopsString = stopsArray.map(stop => `'${stop}'`).join(',');
-
-        // Join the classesAlloted array into a comma-separated string
-        const classesAllotedString = classesAllotedArray.map(cls => `'${cls}'`).join(',');
-
-        fetch(`/getStudentCountforTransport?stops=${encodeURIComponent(stopsString)}&classesAlloted=${encodeURIComponent(classesAllotedString)}`)
-            .then(response => response.json())
-            .then(data => {
-                studentCount = data.studentCount; // Save student count
-                studentDetailsContainer.innerHTML = `
-                    <strong>Student Count:</strong> ${data.studentCount}
+    // Fetch and display the initial data for the table
+function fetchAndDisplayData() {
+    fetch('/tag_display_route_shift_allocation_data')
+        .then(response => response.json())
+        .then(data => {
+            submittedDataBody.innerHTML = ''; // Clear existing data
+            data.forEach(item => {
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>${item.vehicle_no}</td>
+                    <td>${item.driver_name}</td>
+                    <td>${item.conductor_name}</td>
+                    <td>${item.route_name}</td>
+                    <td>${item.route_stops}</td>
+                    <td>${item.shift_name}</td>
+                    <td>${item.classes_alloted}</td>
                 `;
-            })
-            .catch(error => console.error('Error fetching student count:', error));
-    }
+                submittedDataBody.appendChild(newRow);
+            });
+        })
+        .catch(error => console.error('Error fetching data:', error));
+}
+
+
+    // Initial data fetch
+    fetchAndDisplayData();
 });

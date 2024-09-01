@@ -101,7 +101,7 @@
                             autoplay></dotlottie-player>
                     </div>
 
-                    <h3>Scheduling</h3>
+                    <h3>Bus Allocation</h3>
                 </button>
             </a>
         </div>
@@ -153,7 +153,7 @@
                 <div class="option-card bookvaltcard">
                     <span id="addDriverButton">
                         <img src="/images/driver.gif" alt="">
-                        Add 
+                        Add
                     </span>
                 </div>
                 <div class="option-card bookvaltcard">
@@ -277,30 +277,30 @@
         </div>
     </div>
 
-      <!-- Background Blur Overlay -->
-      <div id="editPopupOverlay" class="popup-overlay" style="display: none;"></div>
+    <!-- Background Blur Overlay -->
+    <div id="editPopupOverlay" class="popup-overlay" style="display: none;"></div>
 
-      <!-- Edit Popup Window -->
-      <div id="editPopup" class="popup-window" style="display: none;">
-          <form id="editDriverConductorForm">
-              <h3>Edit Driver/Conductor Details</h3>
-  
-              <!-- Type Display -->
-              <div>
-                  <label>Type:</label>
-                  <span id="editTypeDisplay" class="form-control"></span>
-              </div>
-  
-              <div id="editFields">
-                  <!-- The fields will be dynamically inserted here -->
-              </div>
-  
-              <div class="popup-buttons">
-                  <button type="button" onclick="saveDriverConductorDetails()">Save</button>
-                  <button type="button" onclick="closeEditPopup()">Cancel</button>
-              </div>
-          </form>
-      </div>
+    <!-- Edit Popup Window -->
+    <div id="editPopup" class="popup-window" style="display: none;">
+        <form id="editDriverConductorForm">
+            <h3>Edit Driver/Conductor Details</h3>
+
+            <!-- Type Display -->
+            <div>
+                <label>Type:</label>
+                <span id="editTypeDisplay" class="form-control"></span>
+            </div>
+
+            <div id="editFields">
+                <!-- The fields will be dynamically inserted here -->
+            </div>
+
+            <div class="popup-buttons">
+                <button type="button" onclick="saveDriverConductorDetails()">Save</button>
+                <button type="button" onclick="closeEditPopup()">Cancel</button>
+            </div>
+        </form>
+    </div>
 
 
 
@@ -322,10 +322,15 @@
                         Manage&nbsp;Shifts
                     </span>
                 </div>
+                <div class="option-card bookvaltcard">
+                    <span id="tagRouteShiftButton">
+                        <img src="../images/tag_route_shift.gif" alt="">
+                        Tag&nbsp;Route&nbsp;Shift
+                    </span>
+                </div>
             </div>
         </div>
     </div>
-
 
     <!-- Overlay for Manage Routes -->
     <div id="manageRoutesOverlay" class="overlay-search">
@@ -439,66 +444,141 @@
         </div>
     </div>
 
-    <!-- Overlay for Scheduling -->
-    <div id="schedulingOverlay" class="overlay">
-        <div class="overlay-content-inner">
-            <h2>Scheduling</h2>
-            <button id="closeSchedulingOverlay" class="close-button">&times;</button>
-            <div class="button-container">
-                <div class="option-card bookvaltcard">
-                    <span id="createScheduleButton">
-                        <img src="../images/create_schedule.gif" alt="">
-                        Manage&nbsp;Schedule
-                    </span>
+<!-- Overlay for Tag Route Shift -->
+<div id="tagRouteShiftOverlay" class="overlay-search">
+    <div class="overlay-content-search">
+        <button id="closeTagRouteShiftOverlay" class="close-button">&times;</button>
+        <h2>Vehicle Route and Shift Allocation</h2>
+
+        <!-- Form for entering Route, Shift, and Vehicle -->
+        <form id="tag_tagRouteShiftForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <input type="text" id="tag_tag_vehicle_no" class="form-control" placeholder=" ">
+                    <span class="form-control-placeholder">Enter Vehicle No</span>
+                    <div id="tag_vehicleSuggestions" class="suggestions"></div>
+                    <div id="tag_vehicleDetail" class="info-container"></div>
                 </div>
-                <div class="option-card bookvaltcard">
-                    <span id="listStudentsButton">
-                        <img src="../images/manage_schedule.gif" alt="">
-                        List&nbsp;Students
-                    </span>
+                <div class="form-group">
+                    <input type="text" id="tag_tag_route_name" class="form-control" placeholder=" ">
+                    <span class="form-control-placeholder">Enter Route Name</span>
+                    <div id="tag_routeSuggestions" class="suggestions"></div>
+                    <div id="tag_routeDetail" class="info-container"></div>
                 </div>
+                <div class="form-group">
+                    <input type="text" id="tag_tag_shift_name" class="form-control" placeholder=" ">
+                    <span class="form-control-placeholder">Enter Shift Name</span>
+                    <div id="tag_shiftSuggestions" class="suggestions"></div>
+                    <div id="tag_shiftDetail" class="info-container"></div>
+                </div>
+            </div>
+            <button id="tag_getDetailsButton" class="getDetails-button" type="submit">
+                <img src="../images/shift.png" alt="">
+                <span>Create Route/Shift</span>
+            </button>
+        </form>
+
+        <!-- Table to display submitted data -->
+        <div class="table-container">
+            <table id="submittedDataTable" class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Vehicle No</th>
+                        <th>Driver Name</th>
+                        <th>Conductor Name</th>
+                        <th>Route Name</th>
+                        <th>Route Stops</th>
+                        <th>Shift Name</th>
+                        <th>Classes Alloted</th>
+                    </tr>
+                </thead>
+                <tbody id="submittedDataBody">
+                    <!-- Table rows will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Overlay for Bus Allocation -->
+<div id="busAllocationOverlay" class="overlay">
+    <div class="overlay-content-inner">
+        <h2>Bus Allocation</h2>
+        <button id="closeBusAllocationOverlay" class="close-button">&times;</button>
+        <div class="button-container">
+            <div class="option-card bookvaltcard">
+                <span id="allocateBus">
+                    <img src="../images/create_schedule.gif" alt="">
+                    Allocate&nbsp;Bus
+                </span>
+            </div>
+            <div class="option-card bookvaltcard">
+                <span id="listStudentsButton">
+                    <img src="../images/manage_schedule.gif" alt="">
+                    List&nbsp;Students
+                </span>
             </div>
         </div>
     </div>
+</div>
 
 
-<!-- Overlay for Manage Schedule -->
-<div id="manageScheduleOverlay" class="overlay-search">
+<!-- Overlay for Allocate Bus -->
+<div id="allocateBusOverlay" class="overlay-search">
     <div class="overlay-content-search">
-        <button id="closeManageScheduleOverlay" class="close-button">&times;</button>
-        <h2>Manage Schedule</h2>
-        
+        <button id="closeAllocateBusOverlay" class="close-button">&times;</button>
+        <h2>Allocate Bus</h2>
+
         <!-- Form for entering Route, Shift, and Vehicle -->
-        <form id="manageScheduleForm">
+        <form id="allocate_manageScheduleForm">
             <div class="form-row">
                 <div class="form-group">
-                    <input type="text" id="inputRoute" class="form-control" placeholder=" ">
+                    <input type="text" id="allocate_inputRoute" class="form-control" placeholder=" ">
                     <span class="form-control-placeholder">Enter Route</span>
-                    <div id="routeSuggestions" class="suggestions"></div>
-                    <div id="routeDetail" class="info-container"></div>
+                    <div id="allocate_routeSuggestions" class="suggestions"></div>
+                    <div id="allocate_routeDetail" class="info-container"></div>
                 </div>
                 <div class="form-group">
-                    <input type="text" id="inputShift" class="form-control" placeholder=" ">
+                    <input type="text" id="allocate_inputShift" class="form-control" placeholder=" ">
                     <span class="form-control-placeholder">Enter Shift</span>
-                    <div id="shiftSuggestions" class="suggestions"></div>
-                    <div id="shiftDetail" class="info-container"></div>
+                    <div id="allocate_shiftSuggestions" class="suggestions"></div>
+                    <div id="allocate_shiftDetail" class="info-container"></div>
                 </div>
                 <!-- New Student Details Container -->
                 <div class="form-group">
-                    <div id="studentDetails" class="info-container"></div>
+                    <div id="allocate_studentDetails" class="info-container"></div>
                 </div>
                 <div class="form-group">
-                    <input type="text" id="inputVehicle" class="form-control" placeholder=" " maxlength="13">
+                    <input type="text" id="allocate_inputVehicle" class="form-control" placeholder=" " maxlength="13">
                     <span class="form-control-placeholder">Enter Vehicle</span>
-                    <div id="vehicleSuggestions" class="suggestions"></div>
-                    <div id="vehicleDetail" class="info-container"></div>
+                    <div id="allocate_vehicleSuggestions" class="suggestions"></div>
+                    <div id="allocate_vehicleDetail" class="info-container"></div>
                 </div>
             </div>
-            <button id="getDetailsButton" class="getDetails-button" type="submit">
+            <button id="allocate_getDetailsButton" class="getDetails-button" type="button">
                 <img src="../images/driver.png" alt="">
-                <span>Get Details</span>
+                <span>Allocate Bus</span>
             </button>
         </form>
+
+        <!-- Table to show the details -->
+        <table id="allocate_scheduleTable" class="styled-table">
+            <thead>
+                <tr>
+                    <th>Vehicle No</th>
+                    <th>Driver Name</th>
+                    <th>Route Name</th>
+                    <th>Route Stops</th>
+                    <th>Shift Name</th>
+                    <th>Classes Alloted</th>
+                    <th>Available Seats</th>
+                    <th>Students Tagged</th>
+                </tr>
+            </thead>
+            <tbody id="allocate_scheduleTableBody">
+                <!-- Data will be populated here -->
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -554,27 +634,27 @@
                 <!-- Right Side -->
                 <div class="right-side">
                     <h2>View Students</h2>
-                   <div class="form-row">
-                    <div class="form-group">
-                        <select class="form-control" id="stops">
-                            <option value="" disabled selected>Select Stop</option>
-                            <!-- Populate this dropdown with stop options -->
-                        </select>
-                        <span class="form-control-placeholder"></span>
-                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <select class="form-control" id="stops">
+                                <option value="" disabled selected>Select Stop</option>
+                                <!-- Populate this dropdown with stop options -->
+                            </select>
+                            <span class="form-control-placeholder"></span>
+                        </div>
 
-                    <div class="form-group">
-                        <select class="form-control" id="classes">
-                            <option value="" disabled selected>Select Class</option>
-                            <!-- Populate this dropdown with class options -->
-                        </select>
-                        <span class="form-control-placeholder"></span>
-                    </div>
+                        <div class="form-group">
+                            <select class="form-control" id="classes">
+                                <option value="" disabled selected>Select Class</option>
+                                <!-- Populate this dropdown with class options -->
+                            </select>
+                            <span class="form-control-placeholder"></span>
+                        </div>
 
-                    <button class="export_registered_students">
-                        <img src="/images/export.png" alt="Export Icon"> Export
-                    </button>
-                   </div>
+                        <button class="export_registered_students">
+                            <img src="/images/export.png" alt="Export Icon"> Export
+                        </button>
+                    </div>
 
                     <div class="table-container">
                         <table id="scheduleTable" class="styled-table">
@@ -592,7 +672,7 @@
                         </table>
                     </div>
 
-                   
+
                 </div>
             </div>
         </div>
@@ -606,7 +686,8 @@
     <script src="/js/Transport_js/Transport_addDriverConductor.js"></script>
     <script src="/js/Transport_js/Transport_manageRoute.js"></script>
     <script src="/js/Transport_js/Transport_manageShift.js"></script>
-    <script src="/js/Transport_js/Transport_manageSchedule.js"></script>
+    <script src="/js/Transport_js/Transport_tagRouteShiftVehicle.js"></script>
+    <script src="/js/Transport_js/Transport_allocateBus.js"></script>
 
 
     <script src="/js/Universal_Components_JS/handle_session.js"></script>

@@ -542,8 +542,12 @@ app.use('/', transportManageRouteRouter);
 const transportManageShiftRouter = require('./src/routes/transport_routes/manage_shift');
 app.use('/', transportManageShiftRouter);
 
+////// Manage TAG ROUTE SHIFT VEHICLE ROUTE
+const transporttagRouteSHiftVehicle = require('./src/routes/transport_routes/tag_route_shift_vehicle');
+app.use('/', transporttagRouteSHiftVehicle);
+
 ////// Manage Schedule ROUTE
-const transportManageScheduleRouter = require('./src/routes/transport_routes/manage_schedule');
+const transportManageScheduleRouter = require('./src/routes/transport_routes/allocate_bus.js');
 app.use('/', transportManageScheduleRouter);
 
 
