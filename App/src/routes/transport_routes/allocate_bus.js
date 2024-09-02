@@ -97,9 +97,6 @@ router.get('/allocate_getStudentCount', (req, res) => {
 router.post('/allocate_tagStudentsToBus', (req, res) => {
     const { vehicleNo, routeStops, shiftClasses, vehicleCapacity, routeName, shiftName } = req.body;
 
-    //console.log('Data received by server:', req.body);
-
-
     const stopsArray = routeStops.split(',').map(stop => stop.trim());
     const classesArray = shiftClasses.split(',').map(cls => cls.trim());
 
@@ -116,13 +113,11 @@ router.post('/allocate_tagStudentsToBus', (req, res) => {
 
     req.connectionPool.query(sqlUpdatePrePrimary, [vehicleNo, stopsArray, classesArray], (updateErrorPrePrimary, updateResultsPrePrimary) => {
         if (updateErrorPrePrimary) {
-            console.error('Database update failed for pre_primary_student_details:', updateErrorPrePrimary);
             return res.status(500).json({ success: false, error: 'Database update failed for pre_primary_student_details' });
         }
 
         req.connectionPool.query(sqlUpdatePrimary, [vehicleNo, stopsArray, classesArray], (updateErrorPrimary, updateResultsPrimary) => {
             if (updateErrorPrimary) {
-                console.error('Database update failed for primary_student_details:', updateErrorPrimary);
                 return res.status(500).json({ success: false, error: 'Database update failed for primary_student_details' });
             }
 
@@ -142,7 +137,6 @@ router.post('/allocate_tagStudentsToBus', (req, res) => {
             `;
             req.connectionPool.query(studentCountSql, [vehicleNo, vehicleNo, stopsArray, classesArray], (studentCountError, studentCountResults) => {
                 if (studentCountError) {
-                    console.error('Database query failed for student count:', studentCountError);
                     return res.status(500).json({ success: false, error: 'Database query failed for student count' });
                 }
 
@@ -157,7 +151,6 @@ router.post('/allocate_tagStudentsToBus', (req, res) => {
                 `;
                 req.connectionPool.query(updateScheduleSql, [availableSeats, studentCount, vehicleNo, routeName, shiftName], (scheduleError, scheduleResults) => {
                     if (scheduleError) {
-                        console.error('Database update failed for transport_schedule_details:', scheduleError);
                         return res.status(500).json({ success: false, error: 'Database update failed for transport_schedule_details' });
                     }
 
@@ -167,7 +160,6 @@ router.post('/allocate_tagStudentsToBus', (req, res) => {
         });
     });
 });
-
 
 
 // Endpoint to fetch transport schedule details

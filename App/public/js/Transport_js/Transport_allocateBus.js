@@ -208,50 +208,51 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error fetching student count:', error));
     }
 
-    // BUS TAGGING FUNCTIONALITY //
-    allocateButton.addEventListener('click', function () {
-        if (!selectedRouteDetail || !selectedShiftDetail || !vehicleInput.value) {
-            alert('Please select all fields: route, shift, and vehicle.');
-            return;
-        }
+// BUS TAGGING FUNCTIONALITY
+allocateButton.addEventListener('click', function () {
+    if (!selectedRouteDetail || !selectedShiftDetail || !vehicleInput.value) {
+        alert('Please select all fields: route, shift, and vehicle.');
+        return;
+    }
 
-        if (studentCount <= selectedVehicleCapacity) {
-            const requestData = {
-                vehicleNo: vehicleInput.value,
-                routeStops: selectedRouteDetail,
-                shiftClasses: selectedShiftDetail,
-                vehicleCapacity: selectedVehicleCapacity,
-                routeName: routeInput.value, // Assuming routeInput contains the route name
-                shiftName: shiftInput.value  // Assuming shiftInput contains the shift name
-            };
+    if (studentCount <= selectedVehicleCapacity) {
+        const requestData = {
+            vehicleNo: vehicleInput.value,
+            routeStops: selectedRouteDetail,
+            shiftClasses: selectedShiftDetail,
+            vehicleCapacity: selectedVehicleCapacity,
+            routeName: routeInput.value, // Assuming routeInput contains the route name
+            shiftName: shiftInput.value  // Assuming shiftInput contains the shift name
+        };
 
-            // Log the data being sent to the server
-            //console.log('Data sent to server:', requestData);
+        // Log the data being sent to the server
+        console.log('Data sent to server:', requestData);
 
-            // Call the new endpoint to tag the bus to all the listed students
-            fetch('/allocate_tagStudentsToBus', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestData)
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    alert('Success: Bus allocated successfully!');
-                    fetchAndDisplayScheduleDetails();
-                } else {
-                    alert('Error: Failed to allocate bus.');
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        } else {
-            alert('Error: Student count exceeds vehicle capacity!');
-            fetchAndDisplayScheduleDetails();
-        }
-        
-    });
+        // Call the new endpoint to tag the bus to all the listed students
+        fetch('/allocate_tagStudentsToBus', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                alert('Success: Bus allocated successfully!');
+                fetchAndDisplayScheduleDetails();
+            } else {
+                alert('Error: Failed to allocate bus.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    } else {
+        alert('Error: Student count exceeds vehicle capacity!');
+        fetchAndDisplayScheduleDetails();
+    }
+});
+
+
 // Fetch and display the schedule details in the table
 function fetchAndDisplayScheduleDetails() {
     fetch('/allocate_getScheduleDetails')
@@ -298,7 +299,7 @@ function detagBus(vehicleNo, routeName, shiftName, classesAlloted) {
     const requestData = { vehicleNo, routeName, shiftName, classesAlloted: classesArray };
 
     // Log the data being sent to the server
-    console.log('Data sent to server:', requestData);
+    //console.log('Data sent to server:', requestData);
 
     fetch('/allocate_detagBus', {
         method: 'POST',
