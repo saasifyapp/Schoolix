@@ -69,10 +69,10 @@ router.post('/tag_populateTransportSchedule', (req, res) => {
     const { vehicle_no, driver_name, conductor_name, route_name, route_stops, shift_name, classes_alloted, vehicle_capacity } = req.body;
 
     const sqlInsert = `
-        INSERT INTO transport_schedule_details (vehicle_no, driver_name, conductor_name, route_name, route_stops, shift_name, classes_alloted, vehicle_capacity)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO transport_schedule_details (vehicle_no, driver_name, conductor_name, route_name, route_stops, shift_name, classes_alloted,available_seats, vehicle_capacity)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-    const valuesInsert = [vehicle_no, driver_name, conductor_name, route_name, route_stops, shift_name, classes_alloted, vehicle_capacity];
+    const valuesInsert = [vehicle_no, driver_name, conductor_name, route_name, route_stops, shift_name, classes_alloted,vehicle_capacity, vehicle_capacity];
 
     req.connectionPool.query(sqlInsert, valuesInsert, (insertError, insertResults) => {
         if (insertError) {
