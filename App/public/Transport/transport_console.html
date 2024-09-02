@@ -444,144 +444,164 @@
         </div>
     </div>
 
-<!-- Overlay for Tag Route Shift -->
-<div id="tagRouteShiftOverlay" class="overlay-search">
-    <div class="overlay-content-search">
-        <button id="closeTagRouteShiftOverlay" class="close-button">&times;</button>
-        <h2>Vehicle Route and Shift Allocation</h2>
+    <!-- Overlay for Tag Route Shift -->
+    <div id="tagRouteShiftOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeTagRouteShiftOverlay" class="close-button">&times;</button>
+            <h2 class="tag-head">Vehicle Route and Shift Allocation</h2>
 
-        <!-- Form for entering Route, Shift, and Vehicle -->
-        <form id="tag_tagRouteShiftForm">
-            <div class="form-row">
-                <div class="form-group">
-                    <input type="text" id="tag_tag_vehicle_no" class="form-control" placeholder=" ">
-                    <span class="form-control-placeholder">Enter Vehicle No</span>
-                    <div id="tag_vehicleSuggestions" class="suggestions"></div>
-                    <div id="tag_vehicleDetail" class="info-container"></div>
+            <!-- Flex container for left (form) and right (table) sections -->
+            <div class="tag-flex-container">
+                <!-- Left Section: Form -->
+                <div class="tag-left">
+                    <!-- Form for entering Route, Shift, and Vehicle -->
+                    <div class="input-section">
+                        <form class="input-form">
+                            <div class="form-group">
+                                <input id="tag_tag_route_name" type="text" class="form-control"
+                                    placeholder="">
+                                    <span class="form-control-placeholder">Enter Vehicle No</span>
+                                <div id="tag_routeSuggestions" class="suggestions"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <input id="tag_tag_shift_name" type="text" class="form-control"
+                                    placeholder="">
+                                    <span class="form-control-placeholder">Enter Shift</span>
+                                <div id="tag_shiftSuggestions" class="suggestions"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <input id="tag_tag_vehicle_no" type="text" class="form-control"
+                                    placeholder="">
+                                    <span class="form-control-placeholder">Enter Vehicle</span>
+                                <div id="tag_vehicleSuggestions" class="suggestions"></div>
+                            </div>
+
+                            <button id="tag_getDetailsButton" class="getDetails-button" type="submit">
+                                <img src="../images/shift.png" alt="">
+                                <span>Create Route/Shift</span>
+                            </button>
+                        </form>
+
+                        <div class="info-containers">
+                            <div id="tag_routeDetail" class="info-container"></div>
+                            <div id="tag_shiftDetail" class="info-container"></div>
+                            <div id="tag_vehicleDetail" class="info-container"></div>
+                        </div>
+                    </div>
+
                 </div>
-                <div class="form-group">
-                    <input type="text" id="tag_tag_route_name" class="form-control" placeholder=" ">
-                    <span class="form-control-placeholder">Enter Route Name</span>
-                    <div id="tag_routeSuggestions" class="suggestions"></div>
-                    <div id="tag_routeDetail" class="info-container"></div>
-                </div>
-                <div class="form-group">
-                    <input type="text" id="tag_tag_shift_name" class="form-control" placeholder=" ">
-                    <span class="form-control-placeholder">Enter Shift Name</span>
-                    <div id="tag_shiftSuggestions" class="suggestions"></div>
-                    <div id="tag_shiftDetail" class="info-container"></div>
+
+                <!-- Right Section: Table -->
+                <div class="tag-right">
+                    <div class="table-container">
+                        <table id="submittedDataTable" class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Vehicle No</th>
+                                    <th>Driver Name</th>
+                                    <th>Conductor Name</th>
+                                    <th>Route Name</th>
+                                    <th>Route Stops</th>
+                                    <th>Shift Name</th>
+                                    <th>Classes Allotted</th>
+                                </tr>
+                            </thead>
+                            <tbody id="submittedDataBody">
+                                <!-- Table rows will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-            <button id="tag_getDetailsButton" class="getDetails-button" type="submit">
-                <img src="../images/shift.png" alt="">
-                <span>Create Route/Shift</span>
-            </button>
-        </form>
+        </div>
+    </div>
 
-        <!-- Table to display submitted data -->
-        <div class="table-container">
-            <table id="submittedDataTable" class="styled-table">
+
+    <!-- Overlay for Bus Allocation -->
+    <div id="busAllocationOverlay" class="overlay">
+        <div class="overlay-content-inner">
+            <h2>Bus Allocation</h2>
+            <button id="closeBusAllocationOverlay" class="close-button">&times;</button>
+            <div class="button-container">
+                <div class="option-card bookvaltcard">
+                    <span id="allocateBus">
+                        <img src="../images/create_schedule.gif" alt="">
+                        Allocate&nbsp;Bus
+                    </span>
+                </div>
+                <div class="option-card bookvaltcard">
+                    <span id="listStudentsButton">
+                        <img src="../images/manage_schedule.gif" alt="">
+                        List&nbsp;Students
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Overlay for Allocate Bus -->
+    <div id="allocateBusOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeAllocateBusOverlay" class="close-button">&times;</button>
+            <h2>Allocate Bus</h2>
+
+            <!-- Form for entering Route, Shift, and Vehicle -->
+            <form id="allocate_manageScheduleForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" id="allocate_inputRoute" class="form-control" placeholder=" ">
+                        <span class="form-control-placeholder">Enter Route</span>
+                        <div id="allocate_routeSuggestions" class="suggestions"></div>
+                        <div id="allocate_routeDetail" class="info-container"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="allocate_inputShift" class="form-control" placeholder=" ">
+                        <span class="form-control-placeholder">Enter Shift</span>
+                        <div id="allocate_shiftSuggestions" class="suggestions"></div>
+                        <div id="allocate_shiftDetail" class="info-container"></div>
+                    </div>
+                    <!-- New Student Details Container -->
+                    <div class="form-group">
+                        <div id="allocate_studentDetails" class="info-container"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="allocate_inputVehicle" class="form-control" placeholder=" "
+                            maxlength="13">
+                        <span class="form-control-placeholder">Enter Vehicle</span>
+                        <div id="allocate_vehicleSuggestions" class="suggestions"></div>
+                        <div id="allocate_vehicleDetail" class="info-container"></div>
+                    </div>
+                </div>
+                <button id="allocate_getDetailsButton" class="getDetails-button" type="button">
+                    <img src="../images/driver.png" alt="">
+                    <span>Allocate Bus</span>
+                </button>
+            </form>
+
+            <!-- Table to show the details -->
+            <table id="allocate_scheduleTable" class="styled-table">
                 <thead>
                     <tr>
                         <th>Vehicle No</th>
                         <th>Driver Name</th>
-                        <th>Conductor Name</th>
                         <th>Route Name</th>
                         <th>Route Stops</th>
                         <th>Shift Name</th>
                         <th>Classes Alloted</th>
+                        <th>Available Seats</th>
+                        <th>Students Tagged</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
-                <tbody id="submittedDataBody">
-                    <!-- Table rows will be populated here -->
+                <tbody id="allocate_scheduleTableBody">
+                    <!-- Data will be populated here -->
                 </tbody>
             </table>
         </div>
     </div>
-</div>
-
-<!-- Overlay for Bus Allocation -->
-<div id="busAllocationOverlay" class="overlay">
-    <div class="overlay-content-inner">
-        <h2>Bus Allocation</h2>
-        <button id="closeBusAllocationOverlay" class="close-button">&times;</button>
-        <div class="button-container">
-            <div class="option-card bookvaltcard">
-                <span id="allocateBus">
-                    <img src="../images/create_schedule.gif" alt="">
-                    Allocate&nbsp;Bus
-                </span>
-            </div>
-            <div class="option-card bookvaltcard">
-                <span id="listStudentsButton">
-                    <img src="../images/manage_schedule.gif" alt="">
-                    List&nbsp;Students
-                </span>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Overlay for Allocate Bus -->
-<div id="allocateBusOverlay" class="overlay-search">
-    <div class="overlay-content-search">
-        <button id="closeAllocateBusOverlay" class="close-button">&times;</button>
-        <h2>Allocate Bus</h2>
-
-        <!-- Form for entering Route, Shift, and Vehicle -->
-        <form id="allocate_manageScheduleForm">
-            <div class="form-row">
-                <div class="form-group">
-                    <input type="text" id="allocate_inputRoute" class="form-control" placeholder=" ">
-                    <span class="form-control-placeholder">Enter Route</span>
-                    <div id="allocate_routeSuggestions" class="suggestions"></div>
-                    <div id="allocate_routeDetail" class="info-container"></div>
-                </div>
-                <div class="form-group">
-                    <input type="text" id="allocate_inputShift" class="form-control" placeholder=" ">
-                    <span class="form-control-placeholder">Enter Shift</span>
-                    <div id="allocate_shiftSuggestions" class="suggestions"></div>
-                    <div id="allocate_shiftDetail" class="info-container"></div>
-                </div>
-                <!-- New Student Details Container -->
-                <div class="form-group">
-                    <div id="allocate_studentDetails" class="info-container"></div>
-                </div>
-                <div class="form-group">
-                    <input type="text" id="allocate_inputVehicle" class="form-control" placeholder=" " maxlength="13">
-                    <span class="form-control-placeholder">Enter Vehicle</span>
-                    <div id="allocate_vehicleSuggestions" class="suggestions"></div>
-                    <div id="allocate_vehicleDetail" class="info-container"></div>
-                </div>
-            </div>
-            <button id="allocate_getDetailsButton" class="getDetails-button" type="button">
-                <img src="../images/driver.png" alt="">
-                <span>Allocate Bus</span>
-            </button>
-        </form>
-
-        <!-- Table to show the details -->
-        <table id="allocate_scheduleTable" class="styled-table">
-            <thead>
-                <tr>
-                    <th>Vehicle No</th>
-                    <th>Driver Name</th>
-                    <th>Route Name</th>
-                    <th>Route Stops</th>
-                    <th>Shift Name</th>
-                    <th>Classes Alloted</th>
-                    <th>Available Seats</th>
-                    <th>Students Tagged</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="allocate_scheduleTableBody">
-                <!-- Data will be populated here -->
-            </tbody>
-        </table>
-    </div>
-</div>
 
     <!-- Overlay for List Scheduling -->
     <div id="listSchedulingOverlay" class="overlay-search">

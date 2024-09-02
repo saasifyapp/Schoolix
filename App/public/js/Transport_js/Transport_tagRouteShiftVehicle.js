@@ -271,3 +271,67 @@ function fetchAndDisplayData() {
     // Initial data fetch
     fetchAndDisplayData();
 });
+
+
+const routeSuggestionsContainer = document.getElementById('tag_routeSuggestions');
+const routeInput = document.getElementById('tag_tag_route_name');
+const routeDetailContainer = document.getElementById('tag_routeDetail');
+
+const shiftSuggestionsContainer = document.getElementById('tag_shiftSuggestions');
+const shiftInput = document.getElementById('tag_tag_shift_name');
+const shiftDetailContainer = document.getElementById('tag_shiftDetail');
+
+const vehicleSuggestionsContainer = document.getElementById('tag_vehicleSuggestions');
+const vehicleInput = document.getElementById('tag_tag_vehicle_no');
+const vehicleDetailContainer = document.getElementById('tag_vehicleDetail');
+
+// Function to display the info container with fade-up animation
+function displayInfoContainer(container, content) {
+    container.innerHTML = content;
+    container.style.display = 'block';
+    container.style.opacity = '0';
+    container.style.transform = 'translateY(20px)';
+
+    setTimeout(() => {
+        container.style.animation = 'fadeUp 0.5s ease-in-out forwards';
+    }, 10); // Small delay to trigger the CSS animation
+}
+
+// Event listener for selecting a route
+routeSuggestionsContainer.addEventListener('click', function (event) {
+    if (event.target.classList.contains('suggestion-item')) {
+        const selectedRoute = event.target;
+        routeInput.value = selectedRoute.dataset.routeName;
+
+        displayInfoContainer(routeDetailContainer, `
+            <strong>Route Name:</strong> ${selectedRoute.dataset.routeName}<br>
+            <strong>Details:</strong> ${selectedRoute.dataset.details}
+        `);
+    }
+});
+
+// Event listener for selecting a shift
+shiftSuggestionsContainer.addEventListener('click', function (event) {
+    if (event.target.classList.contains('suggestion-item')) {
+        const selectedShift = event.target;
+        shiftInput.value = selectedShift.dataset.shiftName;
+
+        displayInfoContainer(shiftDetailContainer, `
+            <strong>Shift Name:</strong> ${selectedShift.dataset.shiftName}<br>
+            <strong>Details:</strong> ${selectedShift.dataset.details}
+        `);
+    }
+});
+
+// Event listener for selecting a vehicle
+vehicleSuggestionsContainer.addEventListener('click', function (event) {
+    if (event.target.classList.contains('suggestion-item')) {
+        const selectedVehicle = event.target;
+        vehicleInput.value = selectedVehicle.dataset.vehicleName;
+
+        displayInfoContainer(vehicleDetailContainer, `
+            <strong>Vehicle No:</strong> ${selectedVehicle.dataset.vehicleName}<br>
+            <strong>Details:</strong> ${selectedVehicle.dataset.details}
+        `);
+    }
+});
