@@ -208,60 +208,77 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error fetching student count:', error));
     }
 
-// BUS TAGGING FUNCTIONALITY
-allocateButton.addEventListener('click', function () {
-    if (!selectedRouteDetail || !selectedShiftDetail || !vehicleInput.value) {
-        alert('Please select all fields: route, shift, and vehicle.');
-        return;
-    }
+    // BUS TAGGING FUNCTIONALITY
+    allocateButton.addEventListener('click', function () {
+        if (!selectedRouteDetail || !selectedShiftDetail || !vehicleInput.value) {
+            alert('Please select all fields: route, shift, and vehicle.');
+            return;
+        }
 
-    if (studentCount <= selectedVehicleCapacity) {
         const requestData = {
-            vehicleNo: vehicleInput.value,
             routeStops: selectedRouteDetail,
             shiftClasses: selectedShiftDetail,
+            vehicleNo: vehicleInput.value,
             vehicleCapacity: selectedVehicleCapacity,
             routeName: routeInput.value, // Assuming routeInput contains the route name
             shiftName: shiftInput.value  // Assuming shiftInput contains the shift name
         };
 
-        // Log the data being sent to the server
-        console.log('Data sent to server:', requestData);
+        if (studentCount <= selectedVehicleCapacity) {
+            // Log the data being sent to the server
+            //console.log('Data sent to server:', requestData);
 
-        // Call the new endpoint to tag the bus to all the listed students
-        fetch('/allocate_tagStudentsToBus', {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestData)
-        })
-        .then(response => response.json())
-        .then(result => {
-            if (result.success) {
-                alert('Success: Bus allocated successfully!');
-                fetchAndDisplayScheduleDetails();
-            } else {
-                alert('Error: Failed to allocate bus.');
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    } else {
-        alert('Error: Student count exceeds vehicle capacity!');
-        fetchAndDisplayScheduleDetails();
-    }
-});
+            // Call the new endpoint to tag the bus to all the listed students
+            fetch('/allocate_tagStudentsToBus', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        alert('Success: Bus allocated successfully!');
+                        fetchAndDisplayScheduleDetails();
+                    } else {
+                        alert('Error: Failed to allocate bus.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        } else {
+            // Log the data being sent to the server
+            //console.log('Data sent to server:', requestData);
 
-
-// Fetch and display the schedule details in the table
-function fetchAndDisplayScheduleDetails() {
-    fetch('/allocate_getScheduleDetails')
-        .then(response => response.json())
-        .then(data => {
-            scheduleTableBody.innerHTML = ''; // Clear existing data
-            data.forEach(item => {
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `
+            // Call the new endpoint to handle overflow
+            fetch('/handle_overflow_students', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        console.log('Overflow students:', result.students);
+                        fetchAndDisplayScheduleDetails();
+                    } else {
+                        console.error('Error: Failed to fetch overflow students.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    });
+    // Fetch and display the schedule details in the table
+    function fetchAndDisplayScheduleDetails() {
+        fetch('/allocate_getScheduleDetails')
+            .then(response => response.json())
+            .then(data => {
+                scheduleTableBody.innerHTML = ''; // Clear existing data
+                data.forEach(item => {
+                    const newRow = document.createElement('tr');
+                    newRow.innerHTML = `
                     <td>${item.vehicle_no}</td>
                     <td>${item.driver_name}</td>
                     <td>${item.route_name}</td>
@@ -272,54 +289,54 @@ function fetchAndDisplayScheduleDetails() {
                     <td>${item.students_tagged}</td>
                     <td><button class="detag-button" data-vehicle-no="${item.vehicle_no}" data-route-name="${item.route_name}" data-shift-name="${item.shift_name}" data-classes-alloted="${item.classes_alloted}">Detag</button></td>
                 `;
-                scheduleTableBody.appendChild(newRow);
-            });
-
-            // Add event listeners to the Detag buttons
-            document.querySelectorAll('.detag-button').forEach(button => {
-                button.addEventListener('click', function () {
-                    const vehicleNo = this.dataset.vehicleNo;
-                    const routeName = this.dataset.routeName;
-                    const shiftName = this.dataset.shiftName;
-                    const classesAlloted = this.dataset.classesAlloted;
-
-                    // Call the detag endpoint
-                    detagBus(vehicleNo, routeName, shiftName, classesAlloted);
+                    scheduleTableBody.appendChild(newRow);
                 });
-            });
+
+                // Add event listeners to the Detag buttons
+                document.querySelectorAll('.detag-button').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const vehicleNo = this.dataset.vehicleNo;
+                        const routeName = this.dataset.routeName;
+                        const shiftName = this.dataset.shiftName;
+                        const classesAlloted = this.dataset.classesAlloted;
+
+                        // Call the detag endpoint
+                        detagBus(vehicleNo, routeName, shiftName, classesAlloted);
+                    });
+                });
+            })
+            .catch(error => console.error('Error fetching schedule details:', error));
+    }
+
+    // Function to detag a bus
+    function detagBus(vehicleNo, routeName, shiftName, classesAlloted) {
+        // Split the classesAlloted string into an array
+        const classesArray = classesAlloted.split(',').map(cls => cls.trim());
+
+        const requestData = { vehicleNo, routeName, shiftName, classesAlloted: classesArray };
+
+        // Log the data being sent to the server
+        //console.log('Data sent to server:', requestData);
+
+        fetch('/allocate_detagBus', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
         })
-        .catch(error => console.error('Error fetching schedule details:', error));
-}
-
-// Function to detag a bus
-function detagBus(vehicleNo, routeName, shiftName, classesAlloted) {
-    // Split the classesAlloted string into an array
-    const classesArray = classesAlloted.split(',').map(cls => cls.trim());
-
-    const requestData = { vehicleNo, routeName, shiftName, classesAlloted: classesArray };
-
-    // Log the data being sent to the server
-    //console.log('Data sent to server:', requestData);
-
-    fetch('/allocate_detagBus', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestData)
-    })
-    .then(response => response.json())
-    .then(result => {
-        if (result.success) {
-            alert('Success: Bus detagged successfully!');
-            // Refresh the schedule details table
-            fetchAndDisplayScheduleDetails();
-        } else {
-            alert('Error: Failed to detag bus.');
-        }
-    })
-    .catch(error => console.error('Error:', error));
-}
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert('Success: Bus detagged successfully!');
+                    // Refresh the schedule details table
+                    fetchAndDisplayScheduleDetails();
+                } else {
+                    alert('Error: Failed to detag bus.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
     // Initial data fetch for schedule details
     fetchAndDisplayScheduleDetails();
 });
