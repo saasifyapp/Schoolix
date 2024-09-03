@@ -96,12 +96,12 @@ document.addEventListener('DOMContentLoaded', function () {
     vehicleInput.addEventListener('input', function () {
         const query = this.value;
         if (query.length > 0) {
-            fetch(`/allocate_getVehicleDetails?q=${query}`)
+            fetch(`/allocate_getVehicleDetails?q=${encodeURIComponent(query)}`)
                 .then((response) => response.json())
                 .then((data) => {
                     vehicleSuggestionsContainer.style.display = 'flex'; // Show suggestions container
                     vehicleSuggestionsContainer.innerHTML = '';
-
+    
                     if (data.length === 0) {
                         const noResultsItem = document.createElement('div');
                         noResultsItem.classList.add('suggestion-item', 'no-results');
@@ -115,6 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             suggestionItem.dataset.driverName = driver.driver_name || 'N/A';
                             suggestionItem.dataset.vehicleNo = driver.vehicle_no || 'N/A';
                             suggestionItem.dataset.vehicleCapacity = driver.vehicle_capacity || 'N/A';
+                            suggestionItem.dataset.availableSeats = driver.available_seats || 0; // Fallback to 0 if null or 0
                             suggestionItem.dataset.conductorName = driver.conductor_name || 'N/A';
                             vehicleSuggestionsContainer.appendChild(suggestionItem);
                         });
@@ -174,6 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <strong>Driver Name:</strong> ${selectedDriver.dataset.driverName}<br>
                 <strong>Vehicle No:</strong> ${selectedDriver.dataset.vehicleNo}<br>
                 <strong>Vehicle Capacity:</strong> ${selectedDriver.dataset.vehicleCapacity}<br>
+                <strong>Available Seats:</strong> ${selectedDriver.dataset.availableSeats}<br>
                 <strong>Conductor Name:</strong> ${selectedDriver.dataset.conductorName}
             `;
             vehicleSuggestionsContainer.style.display = 'none'; // Hide suggestions container
@@ -224,6 +226,12 @@ document.addEventListener('DOMContentLoaded', function () {
             shiftName: shiftInput.value  // Assuming shiftInput contains the shift name
         };
 
+        if (studentCount == 0) {
+
+            alert('No students to tag.');
+            return;
+        }
+
         if (studentCount <= selectedVehicleCapacity) {
             // Log the data being sent to the server
             //console.log('Data sent to server:', requestData);
@@ -270,6 +278,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 .catch(error => console.error('Error:', error));
         }
     });
+
+
     // Fetch and display the schedule details in the table
     function fetchAndDisplayScheduleDetails() {
         fetch('/allocate_getScheduleDetails')
