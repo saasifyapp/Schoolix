@@ -193,7 +193,11 @@ document.addEventListener('DOMContentLoaded', function () {
     
         // Ensure all details are selected
         if (!selectedRouteDetail || !selectedShiftDetail || !selectedVehicleDetail.vehicleNo) {
-            alert('Please select all details before proceeding.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Missing Details',
+                text: 'Please select all details before proceeding.'
+            });
             return;
         }
     
@@ -224,7 +228,15 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(result => {
                 if (result.success) {
-                    alert('Transport schedule details added successfully!');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Tag Successful',
+                        html: `
+                        <strong>Route:</strong> ${routeName}<br>
+                        <strong>Shift:</strong> ${shiftName}<br>
+                        <strong>Vehicle:</strong> ${vehicleNo} |  ${driverName}
+                    `
+                    });
                     // Add the submitted data to the table
                     const newRow = document.createElement('tr');
                     newRow.innerHTML = `
