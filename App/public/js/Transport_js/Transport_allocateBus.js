@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then((data) => {
                     vehicleSuggestionsContainer.style.display = 'flex'; // Show suggestions container
                     vehicleSuggestionsContainer.innerHTML = '';
-    
+
                     if (data.length === 0) {
                         const noResultsItem = document.createElement('div');
                         noResultsItem.classList.add('suggestion-item', 'no-results');
@@ -210,7 +210,8 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error fetching student count:', error));
     }
 
-    // BUS TAGGING FUNCTIONALITY
+    // BUS TAGGING FUNCTIONALITY //
+    
     allocateButton.addEventListener('click', function () {
         if (!selectedRouteDetail || !selectedShiftDetail || !vehicleInput.value) {
             alert('Please select all fields: route, shift, and vehicle.');
@@ -222,61 +223,79 @@ document.addEventListener('DOMContentLoaded', function () {
             shiftClasses: selectedShiftDetail,
             vehicleNo: vehicleInput.value,
             vehicleCapacity: selectedVehicleCapacity,
-            routeName: routeInput.value, // Assuming routeInput contains the route name
-            shiftName: shiftInput.value  // Assuming shiftInput contains the shift name
+            routeName: routeInput.value, 
+            shiftName: shiftInput.value  
         };
 
-        if (studentCount == 0) {
-
+        if (studentCount === 0) {
             alert('No students to tag.');
             return;
         }
 
-        if (studentCount <= selectedVehicleCapacity) {
-            // Log the data being sent to the server
-            //console.log('Data sent to server:', requestData);
+        // Validate if the selected route, shift, and vehicle exist in one row
+        fetch('/validate_tagged_routeShiftVehicle', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        })
+            .then(response => response.json())
+            .then(result => {
+                if (!result.success) {
+                    alert('The selected route, shift, and vehicle combination does not exist.');
+                    return;
+                }
 
-            // Call the new endpoint to tag the bus to all the listed students
-            fetch('/allocate_tagStudentsToBus', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestData)
-            })
-                .then(response => response.json())
-                .then(result => {
-                    if (result.success) {
-                        alert('Success: Bus allocated successfully!');
-                        fetchAndDisplayScheduleDetails();
-                    } else {
-                        alert('Error: Failed to allocate bus.');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        } else {
-            // Log the data being sent to the server
-            //console.log('Data sent to server:', requestData);
+                // Proceed with the existing logic if validation passes
+                
+                if (studentCount <= selectedVehicleCapacity) {
+                    // Log the data being sent to the server
+                    //console.log('Data sent to server:', requestData);
 
-            // Call the new endpoint to handle overflow
-            fetch('/handle_overflow_students', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestData)
+                    // Call the new endpoint to tag the bus to all the listed students
+                    fetch('/allocate_tagStudentsToBus', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(requestData)
+                    })
+                        .then(response => response.json())
+                        .then(result => {
+                            if (result.success) {
+                                alert('Success: Bus allocated successfully!');
+                                fetchAndDisplayScheduleDetails();
+                            } else {
+                                alert('Error: Failed to allocate bus.');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                } else {
+                    // Log the data being sent to the server
+                    //console.log('Data sent to server:', requestData);
+
+                    // Call the new endpoint to handle overflow
+                    fetch('/handle_overflow_students', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(requestData)
+                    })
+                        .then(response => response.json())
+                        .then(result => {
+                            if (result.success) {
+                                console.log('Overflow students:', result.students);
+                                fetchAndDisplayScheduleDetails();
+                            } else {
+                                console.error('Error: Failed to fetch overflow students.');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
             })
-                .then(response => response.json())
-                .then(result => {
-                    if (result.success) {
-                        console.log('Overflow students:', result.students);
-                        fetchAndDisplayScheduleDetails();
-                    } else {
-                        console.error('Error: Failed to fetch overflow students.');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        }
+            .catch(error => console.error('Error:', error));
     });
 
 

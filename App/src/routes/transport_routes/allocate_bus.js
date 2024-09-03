@@ -94,6 +94,34 @@ router.get('/allocate_getStudentCount', (req, res) => {
     });
 });
 
+
+// Endpoint to validate if the selected route, shift, and vehicle exist in one row
+router.post('/validate_tagged_routeShiftVehicle', (req, res) => {
+    const { routeName, shiftName, vehicleNo } = req.body;
+
+    const sql = `
+        SELECT COUNT(*) AS count
+        FROM transport_schedule_details
+        WHERE route_name = ? AND shift_name = ? AND vehicle_no = ?
+    `;
+
+    req.connectionPool.query(sql, [routeName, shiftName, vehicleNo], (error, results) => {
+        if (error) {
+            console.error('Database query failed:', error);
+            return res.status(500).json({ success: false, error: 'Database query failed' });
+        }
+
+        const count = results[0].count;
+        if (count > 0) {
+            res.status(200).json({ success: true });
+        } else {
+            res.status(200).json({ success: false });
+        }
+    });
+});
+
+
+
 // New endpoint to tag students to the selected bus and update transport_schedule_details
 router.post('/allocate_tagStudentsToBus', (req, res) => {
     const { vehicleNo, routeStops, shiftClasses, vehicleCapacity, routeName, shiftName } = req.body;
