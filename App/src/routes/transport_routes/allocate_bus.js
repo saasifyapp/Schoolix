@@ -95,12 +95,12 @@ router.get('/allocate_getStudentCount', (req, res) => {
 });
 
 
-// Endpoint to validate if the selected route, shift, and vehicle exist in one row
+// Endpoint to validate if the selected route, shift, and vehicle exist in one row and fetch the driver name
 router.post('/validate_tagged_routeShiftVehicle', (req, res) => {
     const { routeName, shiftName, vehicleNo } = req.body;
 
     const sql = `
-        SELECT COUNT(*) AS count
+        SELECT driver_name
         FROM transport_schedule_details
         WHERE route_name = ? AND shift_name = ? AND vehicle_no = ?
     `;
@@ -111,15 +111,14 @@ router.post('/validate_tagged_routeShiftVehicle', (req, res) => {
             return res.status(500).json({ success: false, error: 'Database query failed' });
         }
 
-        const count = results[0].count;
-        if (count > 0) {
-            res.status(200).json({ success: true });
+        if (results.length > 0) {
+            const driverName = results[0].driver_name;
+            res.status(200).json({ success: true, driverName });
         } else {
             res.status(200).json({ success: false });
         }
     });
 });
-
 
 
 // New endpoint to tag students to the selected bus and update transport_schedule_details
@@ -365,7 +364,7 @@ router.post('/handle_overflow_students', (req, res) => {
                 return res.status(500).json({ success: false, error: 'Failed to allocate students to the bus' });
             }
 
-            const { unallocatedStudents } = result;
+            const { unallocatedStudents, allocatedStudents } = result;
 
             if (unallocatedStudents.length > 0) {
                 // Allocate remaining students to the secondary bus
@@ -374,10 +373,10 @@ router.post('/handle_overflow_students', (req, res) => {
                         return res.status(500).json({ success: false, error: 'Failed to allocate students to the secondary bus' });
                     }
 
-                    res.status(200).json({ success: true, secondaryResult });
+                    res.status(200).json({ success: true, primaryBus: allocatedStudents, secondaryResult });
                 });
             } else {
-                res.status(200).json({ success: true, message: 'All students allocated to the primary bus' });
+                res.status(200).json({ success: true, primaryBus: allocatedStudents, message: 'All students allocated to the primary bus' });
             }
         });
     });

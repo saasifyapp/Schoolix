@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // BUS TAGGING FUNCTIONALITY //
-    
+
     allocateButton.addEventListener('click', function () {
         if (!selectedRouteDetail || !selectedShiftDetail || !vehicleInput.value) {
             alert('Please select all fields: route, shift, and vehicle.');
@@ -223,12 +223,18 @@ document.addEventListener('DOMContentLoaded', function () {
             shiftClasses: selectedShiftDetail,
             vehicleNo: vehicleInput.value,
             vehicleCapacity: selectedVehicleCapacity,
-            routeName: routeInput.value, 
-            shiftName: shiftInput.value  
+            routeName: routeInput.value,
+            shiftName: shiftInput.value
         };
 
         if (studentCount === 0) {
-            alert('No students to tag.');
+            Swal.fire({
+                icon: 'info',
+                title: 'No Students Found',
+                html: `
+                All the students on <strong>${routeInput.value}</strong> route in <strong>${shiftInput.value}</strong> shift are allocated with a vehicle.
+            `
+            });
             return;
         }
 
@@ -243,12 +249,21 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(result => {
                 if (!result.success) {
-                    alert('The selected route, shift, and vehicle combination does not exist.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Selection',
+                        html: `
+                        The selected <strong>Route</strong>, <strong>Shift</strong> and <strong>Vehicle</strong> combination does not exist.
+                    `
+                    });
                     return;
                 }
 
+                const driverName = result.driverName;  // Is only found when above validation succeeds //
+
+
                 // Proceed with the existing logic if validation passes
-                
+
                 if (studentCount <= selectedVehicleCapacity) {
                     // Log the data being sent to the server
                     //console.log('Data sent to server:', requestData);
@@ -264,7 +279,14 @@ document.addEventListener('DOMContentLoaded', function () {
                         .then(response => response.json())
                         .then(result => {
                             if (result.success) {
-                                alert('Success: Bus allocated successfully!');
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Allocation Successful',
+                                    html: `
+                                        <strong>Vehicle:</strong> ${vehicleInput.value} | [ ${driverName} ]<br>
+                                        is successfully tagged to <strong>${studentCount}</strong> students.
+                                    `,
+                                });
                                 fetchAndDisplayScheduleDetails();
                             } else {
                                 alert('Error: Failed to allocate bus.');
@@ -286,7 +308,21 @@ document.addEventListener('DOMContentLoaded', function () {
                         .then(response => response.json())
                         .then(result => {
                             if (result.success) {
-                                console.log('Overflow students:', result.students);
+                                const primaryBusDetails = result.primaryBus.map(student => student.name).join(', ');
+                                const secondaryBusDetails = result.secondaryResult ? result.secondaryResult.allocatedStudents.map(student => student.name).join(', ') : 'None';
+                                const tertiaryBusDetails = result.secondaryResult && result.secondaryResult.remainingStudents ? result.secondaryResult.remainingStudents.map(student => student.name).join(', ') : 'None';
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Allocation Successful',
+                                    html: `
+                    <strong>Total Students:</strong> ${studentCount}<br>
+                    <strong>Primary Bus (${vehicleInput.value}):</strong> ${primaryBusDetails}<br>
+                    <strong>Secondary Bus:</strong> ${secondaryBusDetails}<br>
+                    <strong>Tertiary Bus:</strong> ${tertiaryBusDetails}<br>
+                `,
+                                });
+
                                 fetchAndDisplayScheduleDetails();
                             } else {
                                 console.error('Error: Failed to fetch overflow students.');
