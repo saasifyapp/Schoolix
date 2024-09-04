@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     icon: 'success',
                                     title: 'Allocation Successful',
                                     html: `
-                                        <strong>Vehicle:</strong> ${vehicleInput.value} | [ ${driverName} ]<br>
+                                        <strong>Vehicle:</strong> ${vehicleInput.value} [ ${driverName} ]<br>
                                         is successfully tagged to <strong>${studentCount}</strong> students.
                                     `,
                                 });
@@ -352,7 +352,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <td>${item.classes_alloted}</td>
                     <td>${item.available_seats}</td>
                     <td>${item.students_tagged}</td>
-                    <td><button class="detag-button" data-vehicle-no="${item.vehicle_no}" data-route-name="${item.route_name}" data-shift-name="${item.shift_name}" data-classes-alloted="${item.classes_alloted}">Detag</button></td>
+                    <td><button class="detag-button" data-vehicle-no="${item.vehicle_no}" data-route-name="${item.route_name}" data-shift-name="${item.shift_name}" data-classes-alloted="${item.classes_alloted}">Unallocate</button></td>
                 `;
                     scheduleTableBody.appendChild(newRow);
                 });
@@ -373,8 +373,13 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error fetching schedule details:', error));
     }
 
-    // Function to detag a bus
-    function detagBus(vehicleNo, routeName, shiftName, classesAlloted) {
+// Function to detag/unallocate a vehicle 
+
+function detagBus(vehicleNo, routeName, shiftName, classesAlloted) {
+    // Show a confirmation dialog
+    const userConfirmed = window.confirm('Do you really want to detag this bus? This process cannot be undone.');
+
+    if (userConfirmed) {
         // Split the classesAlloted string into an array
         const classesArray = classesAlloted.split(',').map(cls => cls.trim());
 
@@ -390,18 +395,27 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify(requestData)
         })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    alert('Success: Bus detagged successfully!');
-                    // Refresh the schedule details table
-                    fetchAndDisplayScheduleDetails();
-                } else {
-                    alert('Error: Failed to detag bus.');
-                }
-            })
-            .catch(error => console.error('Error:', error));
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Unallocation Successful',
+                    html: `<strong>Vehicle No:</strong> ${result.vehicle_no} [${result.driver_name}] <br> has been successfully unallocated for <strong>${result.students_detagged}</strong> students.`
+                });
+                // Refresh the schedule details table
+                fetchAndDisplayScheduleDetails();
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Detag Failed',
+                    text: 'Error: Failed to detag bus.'
+                });
+            }
+        })
+        .catch(error => console.error('Error:', error));
     }
+}
     // Initial data fetch for schedule details
     fetchAndDisplayScheduleDetails();
 });

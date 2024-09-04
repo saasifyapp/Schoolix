@@ -88,7 +88,7 @@ router.post('/tag_populateTransportSchedule', (req, res) => {
 // Endpoint to display route and shift allocation data
 router.get('/tag_display_route_shift_allocation_data', (req, res) => {
     const sql = `
-        SELECT vehicle_no, driver_name, conductor_name, route_name, route_stops, shift_name, classes_alloted
+        SELECT id, vehicle_no, driver_name, conductor_name, route_name, route_stops, shift_name, classes_alloted
         FROM transport_schedule_details
     `;
 
@@ -100,6 +100,69 @@ router.get('/tag_display_route_shift_allocation_data', (req, res) => {
         res.status(200).json(results);
     });
 });
+
+// Endpoint to delete a transport schedule record
+router.delete('/delete_transport_schedule/:id', (req, res) => {
+    const { id } = req.params;
+
+    // First, check if students_tagged is NULL for the given id
+    const checkSql = `
+        SELECT vehicle_no, students_tagged, driver_name, route_name, shift_name
+        FROM transport_schedule_details
+        WHERE id = ?
+    `;
+
+    req.connectionPool.query(checkSql, [id], (checkError, checkResults) => {
+        if (checkError) {
+            console.error('Database query failed:', checkError);
+            return res.status(500).json({ error: 'Database query failed' });
+        }
+
+        if (checkResults.length === 0) {
+            return res.status(404).json({ error: 'Record not found' });
+        }
+
+        const { vehicle_no, students_tagged, driver_name, route_name, shift_name } = checkResults[0];
+
+        if (students_tagged !== null) {
+            return res.status(400).json({ 
+                error: 'Cannot delete record with students tagged', 
+                vehicle_no: vehicle_no, 
+                students_tagged: students_tagged,
+                driver_name:  driver_name,
+                route_name: route_name,
+                shift_name: shift_name
+            });
+        }
+
+        // Proceed with deletion if students_tagged is NULL
+        const deleteSql = `
+            DELETE FROM transport_schedule_details
+            WHERE id = ?
+        `;
+
+        req.connectionPool.query(deleteSql, [id], (deleteError, deleteResults) => {
+            if (deleteError) {
+                console.error('Database query failed:', deleteError);
+                return res.status(500).json({ error: 'Database query failed' });
+            }
+
+            if (deleteResults.affectedRows === 0) {
+                return res.status(404).json({ error: 'Record not found' });
+            }
+
+            res.status(200).json({ 
+                success: true,
+                vehicle_no: vehicle_no,
+                route_name: route_name,
+                shift_name: shift_name,
+                driver_name:  driver_name
+
+            });
+        });
+    });
+});
+
 
 module.exports = router;
 

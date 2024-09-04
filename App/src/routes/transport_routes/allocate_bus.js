@@ -173,12 +173,12 @@ router.post('/allocate_tagStudentsToBus', (req, res) => {
         const sqlUpdateStudentsPrePrimary = `
             UPDATE pre_primary_student_details
             SET transport_tagged = ?
-            WHERE transport_pickup_drop IN (?) AND (${whereClause})
+            WHERE transport_pickup_drop IN (?) AND (${whereClause}) AND transport_needed = 1
         `;
         const sqlUpdateStudentsPrimary = `
             UPDATE primary_student_details
             SET transport_tagged = ?
-            WHERE transport_pickup_drop IN (?) AND (${whereClause})
+            WHERE transport_pickup_drop IN (?) AND (${whereClause}) AND transport_needed = 1
         `;
         const valuesUpdateStudents = [vehicleNo, routeStops];
 
@@ -264,12 +264,12 @@ router.post('/allocate_detagBus', (req, res) => {
     const sqlUpdateStudentsPrePrimary = `
         UPDATE pre_primary_student_details
         SET transport_tagged = NULL
-        WHERE transport_tagged = ? AND (${whereClause})
+        WHERE transport_tagged = ? AND (${whereClause}) AND transport_needed = 1
     `;
     const sqlUpdateStudentsPrimary = `
         UPDATE primary_student_details
         SET transport_tagged = NULL
-        WHERE transport_tagged = ? AND (${whereClause})
+        WHERE transport_tagged = ? AND (${whereClause}) AND transport_needed = 1
     `;
     const valuesUpdateStudents = [vehicleNo];
 
@@ -286,19 +286,22 @@ router.post('/allocate_detagBus', (req, res) => {
                 return res.status(500).json({ success: false, error: 'Database update failed for primary_student_details' });
             }
 
-            // Fetch vehicle capacity
-            const fetchVehicleCapacitySql = `
-                SELECT vehicle_capacity
+            // Calculate the total number of students detagged
+            const totalStudentsDetagged = updateResultsPrePrimary.affectedRows + updateResultsPrimary.affectedRows;
+
+            // Fetch vehicle capacity and driver name
+            const fetchVehicleDetailsSql = `
+                SELECT vehicle_capacity, driver_name
                 FROM transport_schedule_details
                 WHERE vehicle_no = ? AND route_name = ? AND shift_name = ?
             `;
-            req.connectionPool.query(fetchVehicleCapacitySql, [vehicleNo, routeName, shiftName], (fetchError, fetchResults) => {
+            req.connectionPool.query(fetchVehicleDetailsSql, [vehicleNo, routeName, shiftName], (fetchError, fetchResults) => {
                 if (fetchError || fetchResults.length === 0) {
-                    console.error('Database query failed for fetching vehicle capacity:', fetchError);
-                    return res.status(500).json({ success: false, error: 'Database query failed for fetching vehicle capacity' });
+                    console.error('Database query failed for fetching vehicle details:', fetchError);
+                    return res.status(500).json({ success: false, error: 'Database query failed for fetching vehicle details' });
                 }
 
-                const vehicleCapacity = fetchResults[0].vehicle_capacity;
+                const { vehicle_capacity: vehicleCapacity, driver_name: driverName } = fetchResults[0];
 
                 // SQL query to update transport_schedule_details
                 const sqlUpdateSchedule = `
@@ -314,13 +317,17 @@ router.post('/allocate_detagBus', (req, res) => {
                         return res.status(500).json({ success: false, error: 'Database update failed for transport_schedule_details' });
                     }
 
-                    res.status(200).json({ success: true });
+                    res.status(200).json({ 
+                        success: true,
+                        vehicle_no: vehicleNo,
+                        driver_name: driverName,
+                        students_detagged: totalStudentsDetagged
+                    });
                 });
             });
         });
     });
 });
-
 
 
 // OVERFLOW HANDLING //
@@ -405,12 +412,12 @@ const allocatePrimaryBus = (students, vehicleNo, busCapacity, routeName, shiftNa
     const sqlUpdateStudentsPrePrimary = `
         UPDATE pre_primary_student_details
         SET transport_tagged = ?
-        WHERE transport_pickup_drop IN (?) AND (${whereClause})
+        WHERE transport_pickup_drop IN (?) AND (${whereClause}) AND transport_needed = 1
     `;
     const sqlUpdateStudentsPrimary = `
         UPDATE primary_student_details
         SET transport_tagged = ?
-        WHERE transport_pickup_drop IN (?) AND (${whereClause})
+        WHERE transport_pickup_drop IN (?) AND (${whereClause}) AND transport_needed = 1
     `;
     const valuesUpdateStudents = [vehicleNo, routeStops];
 
@@ -496,12 +503,12 @@ const allocateSecondaryBus = async (unallocatedStudents, primaryVehicleNo, route
             const sqlUpdateStudentsPrePrimary = `
                 UPDATE pre_primary_student_details
                 SET transport_tagged = ?
-                WHERE Student_id IN (${studentIds.join(',')})
+                WHERE Student_id IN (${studentIds.join(',')}) AND transport_needed = 1
             `;
             const sqlUpdateStudentsPrimary = `
                 UPDATE primary_student_details
                 SET transport_tagged = ?
-                WHERE Student_id IN (${studentIds.join(',')})
+                WHERE Student_id IN (${studentIds.join(',')}) AND transport_needed = 1
             `;
 
             await new Promise((resolve, reject) => {
