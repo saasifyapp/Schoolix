@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function () {
     // Input Elements
     const vehicleInput = document.getElementById('listStudents_vehicleNo');
@@ -16,6 +17,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let selectedVehicleNo = '';
     let selectedShiftName = '';
+
+    // Function to update the read-only attribute of stop and class inputs
+    function updateInputReadOnlyStatus() {
+        if (selectedVehicleNo && selectedShiftName) {
+            stopInput.readOnly = false;
+            classInput.readOnly = false;
+        } else {
+            stopInput.readOnly = true;
+            classInput.readOnly = true;
+        }
+    }
 
     // Fetch vehicle suggestions
     vehicleInput.addEventListener('input', function () {
@@ -67,6 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
             vehicleSuggestionsContainer.style.display = 'none'; // Hide suggestions container
             vehicleSuggestionsContainer.innerHTML = '';
+            updateInputReadOnlyStatus(); // Update read-only status
         }
     });
 
@@ -112,6 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
             shiftSuggestionsContainer.style.display = 'none'; // Hide suggestions container
             shiftSuggestionsContainer.innerHTML = '';
+            updateInputReadOnlyStatus(); // Update read-only status
         }
     });
 
@@ -223,6 +237,9 @@ document.addEventListener('DOMContentLoaded', function () {
             stopInput.disabled = false;
         }
     });
+
+    // Initial call to set read-only status
+    updateInputReadOnlyStatus();
 
     // Hide suggestions when clicking outside
     document.addEventListener('click', function (event) {
