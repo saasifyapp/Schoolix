@@ -603,104 +603,75 @@
         </div>
     </div>
 
-    <!-- Overlay for List Scheduling -->
-    <div id="listSchedulingOverlay" class="overlay-search">
-        <div class="overlay-content-search">
-            <button id="closeListSchedulingOverlay" class="close-button">&times;</button>
-            <div class="overlay-inner">
-                <!-- Left Side -->
-                <div class="left-side" style="display: flex; flex-direction: column;">
-                    <dotlottie-player src="https://lottie.host/f1ef15f0-e5ab-415a-8f01-9cfdf4c36034/TwCFf8dsdN.json"
-                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay>
-                    </dotlottie-player>
+<!-- Overlay for List Scheduling -->
+<div id="listStudentsOverlay" class="overlay-search">
+    <div class="overlay-content-search">
+        <button id="closeListStudentsOverlay" class="close-button">&times;</button>
+        <div class="overlay-inner">
+            <!-- Left Side -->
+            <div class="left-side" style="display: flex; flex-direction: column;">
+                <dotlottie-player src="https://lottie.host/f1ef15f0-e5ab-415a-8f01-9cfdf4c36034/TwCFf8dsdN.json"
+                    background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay>
+                </dotlottie-player>
 
+                <!-- Input Fields -->
+                <div class="form-group">
+                    <input type="text" class="form-control" id="listStudents_vehicleNo" placeholder="Vehicle No">
+                    <div id="listStudents_vehicleSuggestions" class="suggestions"></div>
+                    <div id="listStudents_vehicleDetail" class="info-container"></div>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" class="form-control" id="listStudents_shiftType" placeholder="Shift">
+                    <div id="listStudents_shiftSuggestions" class="suggestions"></div>
+                    <div id="listStudents_shiftDetail" class="info-container"></div>
+                </div>
+
+                <!-- Get Details Button -->
+                <button class="getDetails-button" type="submit">
+                    <img src="../images/driver.png" alt="">
+                    <span>Get Students</span>
+                </button>
+            </div>
+
+            <!-- Right Side -->
+            <div class="right-side">
+                <h2>List Students</h2>
+                <div class="form-row">
                     <div class="form-group">
-                        <select class="form-control" id="vehicleType">
-                            <option value="" disabled selected>Select Vehicle Type</option>
-                            <option value="bus">Bus</option>
-                            <option value="van">Van</option>
-                        </select>
-                        <span class="form-control-placeholder"></span>
+                        <input type="text" class="form-control" id="listStudents_stops" placeholder="Filter by Vehicle Route">
+                        <div id="listStudents_stopSuggestions" class="suggestions"></div>
                     </div>
 
                     <div class="form-group">
-                        <select class="form-control" id="shiftType">
-                            <option value="" disabled selected>Select Shift</option>
-                            <option value="morning">Morning</option>
-                            <option value="afternoon">Afternoon</option>
-                        </select>
-                        <span class="form-control-placeholder"></span>
+                        <input type="text" class="form-control" id="listStudents_classes" placeholder="Filter by Class">
+                        <div id="listStudents_classSuggestions" class="suggestions"></div>
                     </div>
 
-                    <!-- Input Fields Below Dropdowns -->
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="routeName" placeholder="Route Name">
-                    </div>
-
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="stops" placeholder="Stops">
-                    </div>
-
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="classes" placeholder="Classes">
-                    </div>
-
-                    <!-- Get Details Button -->
-                    <button class="getDetails-button" type="submit">
-                        <img src="../images/driver.png" alt="">
-                        <span>Get Students</span>
+                    <button class="export_registered_students">
+                        <img src="/images/export.png" alt="Export Icon"> Export
                     </button>
                 </div>
 
-                <!-- Right Side -->
-                <div class="right-side">
-                    <h2>View Students</h2>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <select class="form-control" id="stops">
-                                <option value="" disabled selected>Select Stop</option>
-                                <!-- Populate this dropdown with stop options -->
-                            </select>
-                            <span class="form-control-placeholder"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <select class="form-control" id="classes">
-                                <option value="" disabled selected>Select Class</option>
-                                <!-- Populate this dropdown with class options -->
-                            </select>
-                            <span class="form-control-placeholder"></span>
-                        </div>
-
-                        <button class="export_registered_students">
-                            <img src="/images/export.png" alt="Export Icon"> Export
-                        </button>
-                    </div>
-
-                    <div class="table-container">
-                        <table id="scheduleTable" class="styled-table">
-                            <thead>
-                                <tr>
-                                    <th>Stop</th>
-                                    <th>Class</th>
-                                    <th>Vehicle</th>
-                                    <th>Shift</th>
-                                </tr>
-                            </thead>
-                            <tbody id="scheduleTableBody">
-                                <!-- Table rows will be populated here -->
-                            </tbody>
-                        </table>
-                    </div>
-
-
+                <div class="table-container">
+                    <table id="listStudents_scheduleTable" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Stop</th>
+                                <th>Class</th>
+                                <th>Vehicle</th>
+                                <th>Shift</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listStudents_scheduleTableBody">
+                            <!-- Table rows will be populated here -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-
-
-
+</div>
 
     <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Transport_js/Transport_console.js"></script>
@@ -708,7 +679,9 @@
     <script src="/js/Transport_js/Transport_manageRoute.js"></script>
     <script src="/js/Transport_js/Transport_manageShift.js"></script>
     <script src="/js/Transport_js/Transport_tagRouteShiftVehicle.js"></script>
-    <script src="/js/Transport_js/Transport_allocateBus.js"></script>
+    <script src="/js/Transport_js/Transport_allocateVehicle.js"></script>
+    <script src="/js/Transport_js/Transport_getStudentDetails.js"></script>
+
 
 
     <script src="/js/Universal_Components_JS/handle_session.js"></script>

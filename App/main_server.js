@@ -546,10 +546,14 @@ app.use('/', transportManageShiftRouter);
 const transporttagRouteSHiftVehicle = require('./src/routes/transport_routes/tag_route_shift_vehicle');
 app.use('/', transporttagRouteSHiftVehicle);
 
-////// Manage Schedule ROUTE
-const transportManageScheduleRouter = require('./src/routes/transport_routes/allocate_bus.js');
-app.use('/', transportManageScheduleRouter);
+////// ALLOCATE VEHICLE ROUTE 
+const transportAllocateVehicle = require('./src/routes/transport_routes/allocate_vehicle.js');
+app.use('/', transportAllocateVehicle);
 
+
+////// LIST STUDENTS ROUTE
+const transportGetStudentsDetails = require('./src/routes/transport_routes/get_student_details.js');
+app.use('/', transportGetStudentsDetails);
 
 
 // Start the server

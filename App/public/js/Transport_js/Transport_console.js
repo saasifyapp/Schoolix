@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const busAllocationOverlay = document.getElementById('busAllocationOverlay'); 
     const allocateBusOverlay = document.getElementById('allocateBusOverlay'); // Changed from manageScheduleOverlay
     const tagRouteShiftOverlay = document.getElementById('tagRouteShiftOverlay');
-    const listSchedulingOverlay = document.getElementById('listSchedulingOverlay'); // New overlay element
+    const listStudentsOverlay = document.getElementById('listStudentsOverlay'); // Changed from listSchedulingOverlay
+
 
     // Buttons
     const driverConductorButton = document.getElementById('driverConductorButton');
@@ -30,8 +31,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeAllocateBusOverlay = document.getElementById('closeAllocateBusOverlay'); // Changed from closeManageScheduleOverlay
     const tagRouteShiftButton = document.getElementById('tagRouteShiftButton');
     const closeTagRouteShiftOverlay = document.getElementById('closeTagRouteShiftOverlay');
-    const listStudentsButton = document.getElementById('listStudentsButton');
-    const closeListSchedulingOverlay = document.getElementById('closeListSchedulingOverlay');
+    const closeListStudentsOverlay = document.getElementById('closeListStudentsOverlay'); // Changed from closeListSchedulingOverlay
+
 
     // Show Driver/Conductor Selection Overlay
     driverConductorButton.addEventListener('click', function () {
@@ -89,11 +90,12 @@ document.addEventListener('DOMContentLoaded', function () {
         showOverlay('tagRouteShiftOverlay');
     });
 
-    // Show List Scheduling Overlay
+
     listStudentsButton.addEventListener('click', function () {
         hideAllOverlays();
-        showOverlay('listSchedulingOverlay');
+        showOverlay('listStudentsOverlay'); // Changed from listSchedulingOverlay
     });
+    
 
     // Close Driver/Conductor Overlay
     closeDriverConductorOverlay.addEventListener('click', function () {
@@ -140,10 +142,11 @@ document.addEventListener('DOMContentLoaded', function () {
         hideOverlay('tagRouteShiftOverlay');
     });
 
-    // Close List Scheduling Overlay
-    closeListSchedulingOverlay.addEventListener('click', function () {
-        hideOverlay('listSchedulingOverlay');
+    // Close List Students Overlay
+    closeListStudentsOverlay.addEventListener('click', function () {
+        hideOverlay('listStudentsOverlay'); // Changed from listSchedulingOverlay
     });
+
 
     // Utility Functions to Show/Hide Overlays
     function showOverlay(overlayId) {
@@ -162,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function () {
             'driverConductorOverlay', 'addDriverOverlay', 'searchDriverConductorOverlay',
             'routesShiftsOverlay', 'manageRoutesOverlay', 'manageShiftsOverlay',
             'busAllocationOverlay', 'allocateBusOverlay', 'tagRouteShiftOverlay',
-            'listSchedulingOverlay'
+            'listStudentsOverlay' // Changed from listSchedulingOverlay
         ];
         overlays.forEach(hideOverlay);
     }
