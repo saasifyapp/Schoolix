@@ -448,31 +448,31 @@ const allocatePrimaryBus = (students, vehicleNo, busCapacity, routeName, shiftNa
     });
 };
 
-const allocateSecondaryBus = (unallocatedStudents, primaryVehicleNo, routeName, shiftName, connectionPool, callback) => {
-    // Get distinct transport_pickup_drop and count of unallocated students
-    const distinctPickupDrop = [...new Set(unallocatedStudents.map(student => student.pickupDrop))];
-    const unallocatedStudentCount = unallocatedStudents.length;
+const allocateSecondaryBus = async (unallocatedStudents, primaryVehicleNo, routeName, shiftName, connectionPool, callback) => {
+    try {
+        // Get distinct transport_pickup_drop and count of unallocated students
+        const distinctPickupDrop = [...new Set(unallocatedStudents.map(student => student.pickupDrop))];
+        const unallocatedStudentCount = unallocatedStudents.length;
 
-    // Log the details
-   // console.log('Distinct transport_pickup_drop:', distinctPickupDrop);
-   // console.log('Unallocated Student Count:', unallocatedStudentCount);
+        // Generate the SQL WHERE clause for route stops
+        const whereClause = distinctPickupDrop.map(stop => `route_stops LIKE ?`).join(' OR ');
+        const values = distinctPickupDrop.map(stop => `%${stop}%`);
 
-    // Generate the SQL WHERE clause for route stops
-    const whereClause = distinctPickupDrop.map(stop => `route_stops LIKE ?`).join(' OR ');
-    const values = distinctPickupDrop.map(stop => `%${stop}%`);
+        // SQL query to get list of vehicles that stop at the unallocated students' addresses and exclude the primary bus
+        const sqlFetchVehicles = `
+            SELECT vehicle_no, route_name, available_seats
+            FROM transport_schedule_details
+            WHERE (${whereClause}) AND vehicle_no != ? AND shift_name = ?
+        `;
 
-    // SQL query to get list of vehicles that stop at the unallocated students' addresses and exclude the primary bus
-    const sqlFetchVehicles = `
-        SELECT vehicle_no, route_name, available_seats
-        FROM transport_schedule_details
-        WHERE (${whereClause}) AND vehicle_no != ? AND shift_name = ?
-    `;
-
-    connectionPool.query(sqlFetchVehicles, [...values, primaryVehicleNo, shiftName], (fetchVehiclesError, fetchVehiclesResults) => {
-        if (fetchVehiclesError) {
-            console.error('Failed to fetch vehicles:', fetchVehiclesError);
-            return callback(fetchVehiclesError);
-        }
+        const fetchVehiclesResults = await new Promise((resolve, reject) => {
+            connectionPool.query(sqlFetchVehicles, [...values, primaryVehicleNo, shiftName], (fetchVehiclesError, results) => {
+                if (fetchVehiclesError) {
+                    return reject(fetchVehiclesError);
+                }
+                resolve(results);
+            });
+        });
 
         const vehicles = fetchVehiclesResults.map(row => ({
             vehicleNo: row.vehicle_no,
@@ -480,22 +480,16 @@ const allocateSecondaryBus = (unallocatedStudents, primaryVehicleNo, routeName, 
             availableSeats: row.available_seats
         }));
 
-        // Log the vehicles
-        //console.log('Vehicles that stop at unallocated students\' addresses:', vehicles);
-
         // Allocate students to secondary buses
         let remainingStudents = unallocatedStudents;
         let allocatedStudents = [];
 
-        vehicles.forEach(vehicle => {
-            if (remainingStudents.length === 0) return;
+        for (const vehicle of vehicles) {
+            if (remainingStudents.length === 0) break;
 
             const { vehicleNo, routeName, availableSeats } = vehicle;
             const studentsToAllocate = remainingStudents.slice(0, availableSeats);
             remainingStudents = remainingStudents.slice(availableSeats);
-
-            // Log allocation
-           // console.log(`Allocating ${studentsToAllocate.length} students to bus ${vehicleNo}`);
 
             // SQL query to update transport_tagged for specific students in pre_primary_student_details and primary_student_details
             const studentIds = studentsToAllocate.map(student => student.id);
@@ -510,51 +504,48 @@ const allocateSecondaryBus = (unallocatedStudents, primaryVehicleNo, routeName, 
                 WHERE Student_id IN (${studentIds.join(',')})
             `;
 
-            connectionPool.query(sqlUpdateStudentsPrePrimary, [vehicleNo], (updateErrorPrePrimary, updateResultsPrePrimary) => {
-                if (updateErrorPrePrimary) {
-                    console.error('Failed to update pre_primary_student_details:', updateErrorPrePrimary);
-                    return callback(updateErrorPrePrimary);
-                }
-
-                connectionPool.query(sqlUpdateStudentsPrimary, [vehicleNo], (updateErrorPrimary, updateResultsPrimary) => {
-                    if (updateErrorPrimary) {
-                        console.error('Failed to update primary_student_details:', updateErrorPrimary);
-                        return callback(updateErrorPrimary);
+            await new Promise((resolve, reject) => {
+                connectionPool.query(sqlUpdateStudentsPrePrimary, [vehicleNo], (updateErrorPrePrimary) => {
+                    if (updateErrorPrePrimary) {
+                        return reject(updateErrorPrePrimary);
                     }
-
-                    // Log the update details before executing the query
-                    //console.log(`Updating schedule for bus ${vehicleNo}: available_seats = available_seats - ${studentsToAllocate.length}, students_tagged = COALESCE(students_tagged, 0) + ${studentsToAllocate.length}`);
-                    //console.log(`Parameters: ${studentsToAllocate.length}, ${studentsToAllocate.length}, ${vehicleNo}, ${routeName}, ${shiftName}`);
-
-                    // Update the transport_schedule_details table
-                    const sqlUpdateScheduleDetails = `
-                       UPDATE transport_schedule_details
-                    SET available_seats = available_seats - ?, students_tagged = COALESCE(students_tagged, 0) + ?
-                    WHERE vehicle_no = ? AND route_name = ? AND shift_name = ?
-                `;
-                    connectionPool.query(sqlUpdateScheduleDetails, [studentsToAllocate.length, studentsToAllocate.length, vehicleNo, routeName, shiftName], (updateScheduleError, updateScheduleResults) => {
-                        if (updateScheduleError) {
-                            console.error('Failed to update transport_schedule_details:', updateScheduleError);
-                            return callback(updateScheduleError);
+                    connectionPool.query(sqlUpdateStudentsPrimary, [vehicleNo], (updateErrorPrimary) => {
+                        if (updateErrorPrimary) {
+                            return reject(updateErrorPrimary);
                         }
-
-                        allocatedStudents = allocatedStudents.concat(studentsToAllocate);
-
-                        // If all students are allocated, return the result
-                        if (remainingStudents.length === 0) {
-                            callback(null, { allocatedStudents });
-                        }
+                        resolve();
                     });
                 });
             });
-        });
+
+            // Update the transport_schedule_details table
+            const sqlUpdateScheduleDetails = `
+                UPDATE transport_schedule_details
+                SET available_seats = available_seats - ?, students_tagged = COALESCE(students_tagged, 0) + ?
+                WHERE vehicle_no = ? AND route_name = ? AND shift_name = ?
+            `;
+            await new Promise((resolve, reject) => {
+                connectionPool.query(sqlUpdateScheduleDetails, [studentsToAllocate.length, studentsToAllocate.length, vehicleNo, routeName, shiftName], (updateScheduleError) => {
+                    if (updateScheduleError) {
+                        return reject(updateScheduleError);
+                    }
+                    resolve();
+                });
+            });
+
+            allocatedStudents = allocatedStudents.concat(studentsToAllocate);
+        }
 
         // If there are still remaining students after all available buses have been used
         if (remainingStudents.length > 0) {
             console.error('Not enough buses to allocate all students');
-            callback(null, { allocatedStudents, remainingStudents });
+            return callback(null, { allocatedStudents, remainingStudents });
         }
-    });
+
+        callback(null, { allocatedStudents });
+    } catch (error) {
+        callback(error);
+    }
 };
 
 module.exports = router;
