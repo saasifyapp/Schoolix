@@ -123,7 +123,7 @@ router.post('/validate_tagged_routeShiftVehicle', (req, res) => {
 
 // New endpoint to tag students to the selected bus and update transport_schedule_details
 router.post('/allocate_tagStudentsToBus', (req, res) => {
-    const { vehicleNo, routeStops, shiftClasses, vehicleCapacity, routeName, shiftName } = req.body;
+    const { vehicleNo, routeStops, shiftClasses, availableSeats, routeName, shiftName } = req.body;
 
     const stopsArray = routeStops.split(',').map(stop => stop.trim());
     const classesArray = shiftClasses.split(',').map(cls => cls.trim());
@@ -193,17 +193,17 @@ router.post('/allocate_tagStudentsToBus', (req, res) => {
                     return res.status(500).json({ success: false, error: 'Database update failed for primary_student_details' });
                 }
 
-                // Calculate the number of allocated students and available seats
+                // Calculate the number of allocated students and update available seats
                 const allocatedStudentCount = students.length;
-                const availableSeats = vehicleCapacity - allocatedStudentCount;
+                const updatedAvailableSeats = availableSeats - allocatedStudentCount;
 
                 // SQL query to update the transport_schedule_details
                 const sqlUpdateScheduleDetails = `
                     UPDATE transport_schedule_details
-                    SET available_seats = available_seats - ?, students_tagged = COALESCE(students_tagged, 0) + ?
+                    SET available_seats = ?,  students_tagged = COALESCE(students_tagged, 0) + ?
                     WHERE vehicle_no = ? AND route_name = ? AND shift_name = ?
                 `;
-                const valuesUpdateScheduleDetails = [allocatedStudentCount, allocatedStudentCount, vehicleNo, routeName, shiftName];
+                const valuesUpdateScheduleDetails = [updatedAvailableSeats, allocatedStudentCount, vehicleNo, routeName, shiftName];
 
                 req.connectionPool.query(sqlUpdateScheduleDetails, valuesUpdateScheduleDetails, (updateScheduleError, updateScheduleResults) => {
                     if (updateScheduleError) {
@@ -286,12 +286,10 @@ router.post('/allocate_detagBus', (req, res) => {
                 return res.status(500).json({ success: false, error: 'Database update failed for primary_student_details' });
             }
 
-            // Calculate the total number of students detagged
-            const totalStudentsDetagged = updateResultsPrePrimary.affectedRows + updateResultsPrimary.affectedRows;
-
-            // Fetch vehicle capacity and driver name
+          
+            // Fetch vehicle capacity, driver name, and current students tagged
             const fetchVehicleDetailsSql = `
-                SELECT vehicle_capacity, driver_name
+                SELECT vehicle_capacity, driver_name, students_tagged
                 FROM transport_schedule_details
                 WHERE vehicle_no = ? AND route_name = ? AND shift_name = ?
             `;
@@ -301,7 +299,7 @@ router.post('/allocate_detagBus', (req, res) => {
                     return res.status(500).json({ success: false, error: 'Database query failed for fetching vehicle details' });
                 }
 
-                const { vehicle_capacity: vehicleCapacity, driver_name: driverName } = fetchResults[0];
+                const { vehicle_capacity: vehicleCapacity, driver_name: driverName, students_tagged: currentStudentsTagged } = fetchResults[0];
 
                 // SQL query to update transport_schedule_details
                 const sqlUpdateSchedule = `
@@ -321,7 +319,7 @@ router.post('/allocate_detagBus', (req, res) => {
                         success: true,
                         vehicle_no: vehicleNo,
                         driver_name: driverName,
-                        students_detagged: totalStudentsDetagged
+                        students_detagged: currentStudentsTagged
                     });
                 });
             });
@@ -334,7 +332,7 @@ router.post('/allocate_detagBus', (req, res) => {
 
 // New endpoint to handle overflow students
 router.post('/handle_overflow_students', (req, res) => {
-    const { routeStops, shiftClasses, vehicleNo, vehicleCapacity, routeName, shiftName } = req.body;
+    const { routeStops, shiftClasses, vehicleNo, availableSeats, routeName, shiftName } = req.body;
 
     const stopsArray = routeStops.split(',').map(stop => stop.trim());
     const classesArray = shiftClasses.split(',').map(cls => cls.trim());
@@ -366,7 +364,7 @@ router.post('/handle_overflow_students', (req, res) => {
         }));
 
         // Allocate students to the primary bus
-        allocatePrimaryBus(students, vehicleNo, vehicleCapacity, routeName, shiftName, req.connectionPool, (allocateError, result) => {
+        allocatePrimaryBus(students, vehicleNo, availableSeats, routeName, shiftName, req.connectionPool, (allocateError, result) => {
             if (allocateError) {
                 return res.status(500).json({ success: false, error: 'Failed to allocate students to the bus' });
             }
@@ -389,10 +387,10 @@ router.post('/handle_overflow_students', (req, res) => {
     });
 });
 
-const allocatePrimaryBus = (students, vehicleNo, busCapacity, routeName, shiftName, connectionPool, callback) => {
-    // Select the number of students equal to the bus capacity
-    const studentsToAllocate = students.slice(0, busCapacity);
-    const unallocatedStudents = students.slice(busCapacity);
+const allocatePrimaryBus = (students, vehicleNo, availableSeats, routeName, shiftName, connectionPool, callback) => {
+    // Select the number of students equal to the available seats
+    const studentsToAllocate = students.slice(0, availableSeats);
+    const unallocatedStudents = students.slice(availableSeats);
 
     // Extract the route stops and class details from the students
     const routeStops = [...new Set(studentsToAllocate.map(student => student.pickupDrop))];
@@ -467,7 +465,7 @@ const allocateSecondaryBus = async (unallocatedStudents, primaryVehicleNo, route
 
         // SQL query to get list of vehicles that stop at the unallocated students' addresses and exclude the primary bus
         const sqlFetchVehicles = `
-            SELECT vehicle_no, route_name, available_seats
+            SELECT vehicle_no, route_name, available_seats, driver_name
             FROM transport_schedule_details
             WHERE (${whereClause}) AND vehicle_no != ? AND shift_name = ?
         `;
@@ -484,17 +482,19 @@ const allocateSecondaryBus = async (unallocatedStudents, primaryVehicleNo, route
         const vehicles = fetchVehiclesResults.map(row => ({
             vehicleNo: row.vehicle_no,
             routeName: row.route_name,
-            availableSeats: row.available_seats
+            availableSeats: row.available_seats,
+            driverName: row.driver_name
         }));
 
         // Allocate students to secondary buses
         let remainingStudents = unallocatedStudents;
         let allocatedStudents = [];
+        let secondaryBusDetails = [];
 
         for (const vehicle of vehicles) {
             if (remainingStudents.length === 0) break;
 
-            const { vehicleNo, routeName, availableSeats } = vehicle;
+            const { vehicleNo, routeName, availableSeats, driverName } = vehicle;
             const studentsToAllocate = remainingStudents.slice(0, availableSeats);
             remainingStudents = remainingStudents.slice(availableSeats);
 
@@ -541,15 +541,16 @@ const allocateSecondaryBus = async (unallocatedStudents, primaryVehicleNo, route
             });
 
             allocatedStudents = allocatedStudents.concat(studentsToAllocate);
+            secondaryBusDetails.push({ vehicleNo, driverName, studentCount: studentsToAllocate.length });
         }
 
         // If there are still remaining students after all available buses have been used
         if (remainingStudents.length > 0) {
             console.error('Not enough buses to allocate all students');
-            return callback(null, { allocatedStudents, remainingStudents });
+            return callback(null, { allocatedStudents, remainingStudents, secondaryBusDetails });
         }
 
-        callback(null, { allocatedStudents });
+        callback(null, { allocatedStudents, secondaryBusDetails });
     } catch (error) {
         callback(error);
     }

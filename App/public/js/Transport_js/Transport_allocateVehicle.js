@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.target.classList.contains('suggestion-item')) {
             const selectedDriver = event.target;
             vehicleInput.value = selectedDriver.dataset.vehicleNo;
-            selectedVehicleCapacity = parseInt(selectedDriver.dataset.vehicleCapacity, 10);
+            const availableSeats = parseInt(selectedDriver.dataset.availableSeats, 10);
             vehicleDetailContainer.innerHTML = `
                 <strong>Driver Name:</strong> ${selectedDriver.dataset.driverName}<br>
                 <strong>Vehicle No:</strong> ${selectedDriver.dataset.vehicleNo}<br>
@@ -180,6 +180,9 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
             vehicleSuggestionsContainer.style.display = 'none'; // Hide suggestions container
             vehicleSuggestionsContainer.innerHTML = '';
+            
+            // Store available seats in a global variable
+            selectedVehicleCapacity = availableSeats;
         }
     });
 
@@ -217,16 +220,16 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Please select all fields: route, shift, and vehicle.');
             return;
         }
-
+    
         const requestData = {
             routeStops: selectedRouteDetail,
             shiftClasses: selectedShiftDetail,
             vehicleNo: vehicleInput.value,
-            vehicleCapacity: selectedVehicleCapacity,
+            availableSeats: selectedVehicleCapacity,
             routeName: routeInput.value,
-            shiftName: shiftInput.value
+            shiftName: shiftInput.value,
         };
-
+    
         if (studentCount === 0) {
             Swal.fire({
                 icon: 'info',
@@ -237,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             return;
         }
-
+    
         // Validate if the selected route, shift, and vehicle exist in one row
         fetch('/validate_tagged_routeShiftVehicle', {
             method: 'POST',
@@ -258,16 +261,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                     return;
                 }
-
+    
                 const driverName = result.driverName;  // Is only found when above validation succeeds //
-
-
+    
                 // Proceed with the existing logic if validation passes
-
+    
                 if (studentCount <= selectedVehicleCapacity) {
                     // Log the data being sent to the server
                     //console.log('Data sent to server:', requestData);
-
+    
                     // Call the new endpoint to tag the bus to all the listed students
                     fetch('/allocate_tagStudentsToBus', {
                         method: 'POST',
@@ -293,10 +295,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                         })
                         .catch(error => console.error('Error:', error));
-                } else {
-                    // Log the data being sent to the server
-                    //console.log('Data sent to server:', requestData);
-
+                }  else {
                     // Call the new endpoint to handle overflow
                     fetch('/handle_overflow_students', {
                         method: 'POST',
@@ -308,21 +307,29 @@ document.addEventListener('DOMContentLoaded', function () {
                         .then(response => response.json())
                         .then(result => {
                             if (result.success) {
-                                const primaryBusDetails = result.primaryBus.map(student => student.name).join(', ');
-                                const secondaryBusDetails = result.secondaryResult ? result.secondaryResult.allocatedStudents.map(student => student.name).join(', ') : 'None';
-                                const tertiaryBusDetails = result.secondaryResult && result.secondaryResult.remainingStudents ? result.secondaryResult.remainingStudents.map(student => student.name).join(', ') : 'None';
-
+                                const primaryBusCount = result.primaryBus.length;
+                                const secondaryBusDetails = result.secondaryResult ? result.secondaryResult.secondaryBusDetails : [];
+    
+                                const primaryBusDetails = `${vehicleInput.value} (${driverName}) - ${primaryBusCount} students`;
+                                let alertHtml = `
+                                Due to insufficient availability of seats in <strong>${vehicleInput.value} (${driverName})</strong>, we allocated
+                                other vehicles running on same route to certain students<br><br>
+                                    <strong>Total Students:</strong> ${studentCount}<br>
+                                    ${primaryBusDetails}<br>
+                                `;
+    
+                                secondaryBusDetails.forEach(bus => {
+                                    if (bus.studentCount > 0) {
+                                        alertHtml += `${bus.vehicleNo} (${bus.driverName}) - ${bus.studentCount} students<br>`;
+                                    }
+                                });
+    
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Allocation Successful',
-                                    html: `
-                    <strong>Total Students:</strong> ${studentCount}<br>
-                    <strong>Primary Bus (${vehicleInput.value}):</strong> ${primaryBusDetails}<br>
-                    <strong>Secondary Bus:</strong> ${secondaryBusDetails}<br>
-                    <strong>Tertiary Bus:</strong> ${tertiaryBusDetails}<br>
-                `,
+                                    html: alertHtml,
                                 });
-
+    
                                 fetchAndDisplayScheduleDetails();
                             } else {
                                 console.error('Error: Failed to fetch overflow students.');
@@ -333,7 +340,6 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => console.error('Error:', error));
     });
-
 
     // Fetch and display the schedule details in the table
     function fetchAndDisplayScheduleDetails() {
