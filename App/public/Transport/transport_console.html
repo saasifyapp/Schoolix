@@ -338,7 +338,12 @@
             <button id="closeManageRoutesOverlay" class="close-button">&times;</button>
             <div class="overlay-inner">
                 <div class="left-side">
-                    <!-- //add lotti here  -->
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                        type="module"></script>
+
+                    <dotlottie-player src="https://lottie.host/9085a2af-7df0-468b-b0c0-059e0eca82b6/zN60LritoN.json"
+                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                        autoplay></dotlottie-player>
                 </div>
                 <div class="right-side">
                     <h2>Manage Routes</h2>
@@ -395,7 +400,12 @@
             <button id="closeManageShiftsOverlay" class="close-button">&times;</button>
             <div class="overlay-inner">
                 <div class="left-side">
-                    <!-- //add lotti here  -->
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                        type="module"></script>
+
+                    <dotlottie-player src="https://lottie.host/1d619a4d-bd00-4b60-95ac-2e2859866ec1/REwvaSqKpK.json"
+                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                        autoplay></dotlottie-player>
                 </div>
                 <div class="right-side">
                     <h2>Manage Shifts</h2>
@@ -458,25 +468,22 @@
                     <div class="input-section">
                         <form class="input-form">
                             <div class="form-group">
-                                <input id="tag_tag_route_name" type="text" class="form-control"
-                                    placeholder="">
-                                    <span class="form-control-placeholder">Enter Route</span>
+                                <input id="tag_tag_route_name" type="text" class="form-control" placeholder="">
+                                <span class="form-control-placeholder">Enter Route</span>
                                 <div id="tag_routeSuggestions" class="suggestions"></div>
                             </div>
                             <div id="tag_routeDetail" class="info-container"></div>
 
                             <div class="form-group">
-                                <input id="tag_tag_shift_name" type="text" class="form-control"
-                                    placeholder="">
-                                    <span class="form-control-placeholder">Enter Shift</span>
+                                <input id="tag_tag_shift_name" type="text" class="form-control" placeholder="">
+                                <span class="form-control-placeholder">Enter Shift</span>
                                 <div id="tag_shiftSuggestions" class="suggestions"></div>
                             </div>
                             <div id="tag_shiftDetail" class="info-container"></div>
 
                             <div class="form-group">
-                                <input id="tag_tag_vehicle_no" type="text" class="form-control"
-                                    placeholder="">
-                                    <span class="form-control-placeholder">Enter Vehicle</span>
+                                <input id="tag_tag_vehicle_no" type="text" class="form-control" placeholder="">
+                                <span class="form-control-placeholder">Enter Vehicle</span>
                                 <div id="tag_vehicleSuggestions" class="suggestions"></div>
                             </div>
                             <div id="tag_vehicleDetail" class="info-container"></div>
@@ -487,7 +494,7 @@
                             </button>
                         </form>
 
-                      
+
                     </div>
 
                 </div>
@@ -603,75 +610,80 @@
         </div>
     </div>
 
-<!-- Overlay for List Scheduling -->
-<div id="listStudentsOverlay" class="overlay-search">
-    <div class="overlay-content-search">
-        <button id="closeListStudentsOverlay" class="close-button">&times;</button>
-        <div class="overlay-inner">
-            <!-- Left Side -->
-            <div class="left-side" style="display: flex; flex-direction: column;">
-                <dotlottie-player src="https://lottie.host/f1ef15f0-e5ab-415a-8f01-9cfdf4c36034/TwCFf8dsdN.json"
-                    background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay>
-                </dotlottie-player>
+    <!-- Overlay for List Scheduling -->
+    <div id="listStudentsOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeListStudentsOverlay" class="close-button">&times;</button>
+            <div class="overlay-inner">
+                <!-- Left Side -->
+                <div class="left-side" style="display: flex; flex-direction: column;">
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                        type="module"></script>
 
-                <!-- Input Fields -->
-                <div class="form-group">
-                    <input type="text" class="form-control" id="listStudents_vehicleNo" placeholder="Vehicle No">
-                    <div id="listStudents_vehicleSuggestions" class="suggestions"></div>
-                    <div id="listStudents_vehicleDetail" class="info-containe"></div>
-                </div>
+                    <dotlottie-player src="https://lottie.host/9c718d68-ba48-4d8e-a0c8-40afe1b833fe/sxmNRw9ZoN.json"
+                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                        autoplay></dotlottie-player>
 
-                <div class="form-group">
-                    <input type="text" class="form-control" id="listStudents_shiftType" placeholder="Shift">
-                    <div id="listStudents_shiftSuggestions" class="suggestions"></div>
-                    <div id="listStudents_shiftDetail" class="info-containe"></div>
-                </div>
-            </div>
-
-            <!-- Right Side -->
-            <div class="right-side">
-                <h2>List Students</h2>
-                <div class="form-row">
+                    <!-- Input Fields -->
                     <div class="form-group">
-                        <input type="text" class="form-control" id="listStudents_stops" placeholder="Filter by Vehicle Route">
-                        <div id="listStudents_stopSuggestions" class="suggestions"></div>
+                        <input type="text" class="form-control" id="listStudents_vehicleNo" placeholder="Vehicle No">
+                        <div id="listStudents_vehicleSuggestions" class="suggestions"></div>
+                        <div id="listStudents_vehicleDetail" class="info-containe"></div>
                     </div>
 
                     <div class="form-group">
-                        <input type="text" class="form-control" id="listStudents_classes" placeholder="Filter by Class">
-                        <div id="listStudents_classSuggestions" class="suggestions"></div>
+                        <input type="text" class="form-control" id="listStudents_shiftType" placeholder="Shift">
+                        <div id="listStudents_shiftSuggestions" class="suggestions"></div>
+                        <div id="listStudents_shiftDetail" class="info-containe"></div>
+                    </div>
+                </div>
+
+                <!-- Right Side -->
+                <div class="right-side">
+                    <h2>List Students</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="listStudents_stops"
+                                placeholder="Filter by Vehicle Route">
+                            <div id="listStudents_stopSuggestions" class="suggestions"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="listStudents_classes"
+                                placeholder="Filter by Class">
+                            <div id="listStudents_classSuggestions" class="suggestions"></div>
+                        </div>
+
+                        <button class="export_registered_students">
+                            <img src="/images/export.png" alt="Export Icon"> Export
+                        </button>
                     </div>
 
-                    <button class="export_registered_students">
-                        <img src="/images/export.png" alt="Export Icon"> Export
-                    </button>
-                </div>
+                    <!-- Student Count -->
+                    <div class="student-count">
+                        <h3>Students Count: <span id="studentCount">0</span></h3>
+                    </div>
 
-                <!-- Student Count -->
-                <div class="student-count">
-                    <h3>Students Count: <span id="studentCount">0</span></h3>
-                </div>
-
-                <div class="table-container">
-                    <table id="listStudents_scheduleTable" class="styled-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Class</th>
-                                <th>Division</th>
-                                <th>Contact</th>
-                                <th>Pickup-Drop</th>
-                            </tr>
-                        </thead>
-                        <tbody id="listStudents_scheduleTableBody">
-                            <!-- Table rows will be populated here -->
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="listStudents_scheduleTable" class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Class</th>
+                                    <th>Division</th>
+                                    <th>Contact</th>
+                                    <th>Pickup-Drop</th>
+                                </tr>
+                            </thead>
+                            <tbody id="listStudents_scheduleTableBody">
+                                <!-- Table rows will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
     <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Transport_js/Transport_console.js"></script>
