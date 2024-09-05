@@ -303,6 +303,67 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initial call to set read-only status
     updateInputReadOnlyStatus();
 
+
+// Function to export table to CSV
+// Function to export table to CSV
+function export_getStudentListTable() {
+    const reportTable = document.getElementById('listStudents_scheduleTable');
+    const reportTableBody = document.getElementById('listStudents_scheduleTableBody');
+
+    if (!reportTable || !reportTableBody) {
+        alert('Table or Table Body not found.');
+        return;
+    }
+
+    if (reportTableBody.rows.length === 0) {
+        alert('No data to export.');
+        return;
+    }
+
+    let csvContent = '';
+    const headers = Array.from(reportTable.querySelectorAll('thead th')).map(th => th.textContent.trim());
+    csvContent += headers.join(',') + '\n';
+
+    const rows = Array.from(reportTableBody.querySelectorAll('tr'));
+    rows.forEach(row => {
+        const cols = Array.from(row.querySelectorAll('td')).map(col => col.textContent.trim());
+        csvContent += cols.join(',') + '\n';
+    });
+
+    let fileName = 'Students_List.csv';
+    const vehicleNo = document.getElementById('listStudents_vehicleNo').value.trim();
+    const shift = document.getElementById('listStudents_shiftType').value.trim();
+    const route = document.getElementById('listStudents_stops').value.trim();
+    const classFilter = document.getElementById('listStudents_classes').value.trim();
+
+    if (vehicleNo && shift) {
+        fileName = `${vehicleNo}_${shift}`;
+        if (route) {
+            fileName += `_Route_${route}`;
+        } else if (classFilter) {
+            fileName += `_Class_${classFilter}`;
+        }
+        fileName += '.csv';
+    }
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', fileName);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+}
+
+// Add event listener for the export button
+document.getElementById('exportStudentListButton').addEventListener('click', export_getStudentListTable);
+
+    
+
     // Hide suggestions when clicking outside
     document.addEventListener('click', function (event) {
         if (!vehicleSuggestionsContainer.contains(event.target) && !vehicleInput.contains(event.target)) {
