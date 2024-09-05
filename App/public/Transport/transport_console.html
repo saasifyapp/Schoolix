@@ -618,20 +618,14 @@
                 <div class="form-group">
                     <input type="text" class="form-control" id="listStudents_vehicleNo" placeholder="Vehicle No">
                     <div id="listStudents_vehicleSuggestions" class="suggestions"></div>
-                    <div id="listStudents_vehicleDetail" class="info-container"></div>
+                    <div id="listStudents_vehicleDetail" class="info-containe"></div>
                 </div>
 
                 <div class="form-group">
                     <input type="text" class="form-control" id="listStudents_shiftType" placeholder="Shift">
                     <div id="listStudents_shiftSuggestions" class="suggestions"></div>
-                    <div id="listStudents_shiftDetail" class="info-container"></div>
+                    <div id="listStudents_shiftDetail" class="info-containe"></div>
                 </div>
-
-                <!-- Get Details Button -->
-                <button class="getDetails-button" type="submit">
-                    <img src="../images/driver.png" alt="">
-                    <span>Get Students</span>
-                </button>
             </div>
 
             <!-- Right Side -->
@@ -653,14 +647,20 @@
                     </button>
                 </div>
 
+                <!-- Student Count -->
+                <div class="student-count">
+                    <h3>Students Count: <span id="studentCount">0</span></h3>
+                </div>
+
                 <div class="table-container">
                     <table id="listStudents_scheduleTable" class="styled-table">
                         <thead>
                             <tr>
-                                <th>Stop</th>
+                                <th>Name</th>
                                 <th>Class</th>
-                                <th>Vehicle</th>
-                                <th>Shift</th>
+                                <th>Division</th>
+                                <th>Contact</th>
+                                <th>Pickup-Drop</th>
                             </tr>
                         </thead>
                         <tbody id="listStudents_scheduleTableBody">

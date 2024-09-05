@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function () {
     // Input Elements
     const vehicleInput = document.getElementById('listStudents_vehicleNo');
@@ -15,14 +14,19 @@ document.addEventListener('DOMContentLoaded', function () {
     const classInput = document.getElementById('listStudents_classes');
     const classSuggestionsContainer = document.getElementById('listStudents_classSuggestions');
 
+    const scheduleTableBody = document.getElementById('listStudents_scheduleTableBody');
+    const studentCountElement = document.getElementById('studentCount');
+
     let selectedVehicleNo = '';
     let selectedShiftName = '';
+    let studentData = [];
 
     // Function to update the read-only attribute of stop and class inputs
     function updateInputReadOnlyStatus() {
         if (selectedVehicleNo && selectedShiftName) {
             stopInput.readOnly = false;
             classInput.readOnly = false;
+            fetchAndDisplayStudentDetails(); // Fetch and display student details
         } else {
             stopInput.readOnly = true;
             classInput.readOnly = true;
@@ -36,7 +40,6 @@ document.addEventListener('DOMContentLoaded', function () {
             fetch(`/listStudents_getVehicleDetails?q=${encodeURIComponent(query)}`)
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log('Vehicle Data:', data); // Log the response data
                     vehicleSuggestionsContainer.style.display = 'flex'; // Show suggestions container
                     vehicleSuggestionsContainer.innerHTML = '';
 
@@ -89,7 +92,6 @@ document.addEventListener('DOMContentLoaded', function () {
             fetch(`/listStudents_shiftDetails?vehicleNo=${encodeURIComponent(selectedVehicleNo)}`)
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log('Shift Data:', data); // Log the response data
                     shiftSuggestionsContainer.style.display = 'flex'; // Show suggestions container
                     shiftSuggestionsContainer.innerHTML = '';
 
@@ -135,7 +137,6 @@ document.addEventListener('DOMContentLoaded', function () {
             fetch(`/listStudents_getStops?vehicleNo=${encodeURIComponent(selectedVehicleNo)}&shiftName=${encodeURIComponent(selectedShiftName)}`)
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log('Stop Data:', data); // Log the response data
                     stopSuggestionsContainer.style.display = 'flex'; // Show suggestions container
                     stopSuggestionsContainer.innerHTML = '';
 
@@ -167,6 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
             stopInput.dispatchEvent(new Event('input')); // Trigger input event to disable class input
             stopSuggestionsContainer.style.display = 'none'; // Hide suggestions container
             stopSuggestionsContainer.innerHTML = '';
+            filterAndDisplayStudentDetails(); // Filter and display student details
         }
     });
 
@@ -176,7 +178,6 @@ document.addEventListener('DOMContentLoaded', function () {
             fetch(`/listStudents_getClass?vehicleNo=${encodeURIComponent(selectedVehicleNo)}&shiftName=${encodeURIComponent(selectedShiftName)}`)
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log('Class Data:', data); // Log the response data
                     classSuggestionsContainer.style.display = 'flex'; // Show suggestions container
                     classSuggestionsContainer.innerHTML = '';
 
@@ -218,6 +219,7 @@ document.addEventListener('DOMContentLoaded', function () {
             classInput.dispatchEvent(new Event('input')); // Trigger input event to disable stop input
             classSuggestionsContainer.style.display = 'none'; // Hide suggestions container
             classSuggestionsContainer.innerHTML = '';
+            filterAndDisplayStudentDetails(); // Filter and display student details
         }
     });
 
@@ -228,6 +230,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             classInput.disabled = false;
         }
+        filterAndDisplayStudentDetails(); // Filter and display student details
     });
 
     classInput.addEventListener('input', function () {
@@ -236,7 +239,66 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             stopInput.disabled = false;
         }
+        filterAndDisplayStudentDetails(); // Filter and display student details
     });
+
+    // Function to fetch and display student details
+    function fetchAndDisplayStudentDetails() {
+        if (selectedVehicleNo && selectedShiftName) {
+            fetch(`/fetch_getStudentsList?vehicleNo=${encodeURIComponent(selectedVehicleNo)}&shiftName=${encodeURIComponent(selectedShiftName)}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    studentData = data; // Store the fetched data
+                    displayStudentDetails(data); // Display the fetched data
+                })
+                .catch((error) => console.error('Error:', error));
+        }
+    }
+
+    // Function to filter and display student details based on route or class
+    function filterAndDisplayStudentDetails() {
+        let filteredData = studentData;
+
+        const selectedRoute = stopInput.value.trim();
+        const selectedClass = classInput.value.trim();
+
+        if (selectedRoute !== '') {
+            filteredData = filteredData.filter(student => student.transport_pickup_drop === selectedRoute);
+        }
+
+        if (selectedClass !== '') {
+            const [standard, divisions] = selectedClass.split(' (');
+            const divisionArray = divisions.replace(')', '').split(', ');
+            filteredData = filteredData.filter(student => student.standard === standard && divisionArray.includes(student.division));
+        }
+
+        displayStudentDetails(filteredData);
+    }
+
+    // Function to display student details in the table
+    function displayStudentDetails(data) {
+        scheduleTableBody.innerHTML = ''; // Clear existing table data
+
+        if (Array.isArray(data) && data.length > 0) {
+            data.forEach((student) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.name}</td>
+                    <td>${student.standard}</td>
+                    <td>${student.division}</td>
+                    <td>${student.f_mobile_no}</td>
+                    <td>${student.transport_pickup_drop}</td>
+                `;
+                scheduleTableBody.appendChild(row);
+            });
+            studentCountElement.textContent = data.length; // Update student count
+        } else {
+            const noResultsRow = document.createElement('tr');
+            noResultsRow.innerHTML = '<td colspan="5">No students found</td>';
+            scheduleTableBody.appendChild(noResultsRow);
+            studentCountElement.textContent = 0; // Update student count
+        }
+    }
 
     // Initial call to set read-only status
     updateInputReadOnlyStatus();
