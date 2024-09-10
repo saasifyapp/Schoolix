@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
     manageShiftsButton.addEventListener('click', function () {
         hideAllOverlays();
         showOverlay('manageShiftsOverlay');
+        refreshShiftsData();
     });
 
     // Show Bus Allocation Overlay

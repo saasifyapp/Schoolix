@@ -481,6 +481,40 @@
         </div>
     </div>
 
+    <!-- Edit Shift Popup -->
+    <div id="editShiftPopup" class="popup-container" style="display: none;">
+        <div class="popup-content">
+            <span class="close-popup" onclick="closeEditShiftPopup()">×</span>
+            <h2>Edit Shift</h2>
+
+            <!-- Form Group for Shift Name -->
+            <div class="form-group">
+                <label for="editShiftName">Shift Name</label>
+                <input type="text" id="editShiftName" class="form-control" placeholder="Enter shift name">
+            </div>
+
+            <!-- Form Group for Classes Allotted -->
+            <div class="form-group">
+                <label for="editShiftClasses">Classes Allotted</label>
+                <div id="shiftClassesContainer" class="tags-container">
+                    <!-- Dynamically added class tags will appear here -->
+                    <input type="text" id="classInput" placeholder="Add a class" class="class-input">
+                </div>
+                <!-- Container for class suggestions -->
+                <div id="classSuggestionsContainer" class="suggestions-container" style="display: none;"></div>
+            </div>
+
+            <!-- Save Button -->
+            <button class="save-button" onclick="saveShiftDetails()">Save</button>
+        </div>
+    </div>
+
+    <!-- Background Blur -->
+    <div id="popupBg" class="popup-bg" style="display: none;"></div>
+
+
+
+
     <!-- Overlay for Tag Route Shift -->
     <div id="tagRouteShiftOverlay" class="overlay-search">
         <div class="overlay-content-search">

@@ -101,7 +101,7 @@ const manageRoutesForm = document.getElementById("manageRoutesForm");
 const routesTableBody = document.getElementById("routesTableBody");
 const citiesAddressInput = document.getElementById("citiesAddress");
 const citiesAddressContainer = document.getElementById("citiesAddressContainer");
-const suggestionsContainer = document.getElementById("address_suggestionBox");
+const addresssuggestionsContainer = document.getElementById("address_suggestionBox");
 const editsuggestionsContainer = document.getElementById("suggestionsContainer");
 let selectedCities = [];
 
@@ -128,7 +128,7 @@ manageRoutesForm.addEventListener("submit", function (e) {
             } else {
                 alert(data.message);
                 resetForm();
-                displayRoutes(); // Refresh the table after adding a new route
+                refreshRoutesData(); // Refresh the table after adding a new route
             }
         })
         .catch((error) => {
@@ -196,12 +196,12 @@ function fetchAndDisplaySuggestions(query) {
     fetch("/distinctAddresses")
         .then((response) => response.json())
         .then((data) => {
-            suggestionsContainer.innerHTML = ""; // Clear existing suggestions
+            addresssuggestionsContainer.innerHTML = ""; // Clear existing suggestions
 
             const filteredData = data.filter(item => item.transport_pickup_drop.toLowerCase().startsWith(query.toLowerCase()));
 
             if (filteredData.length === 0) {
-                suggestionsContainer.style.display = "none"; // Hide suggestions container
+                addresssuggestionsContainer.style.display = "none"; // Hide suggestions container
             } else {
                 filteredData.forEach((item) => {
                     const suggestionItem = document.createElement("div");
@@ -210,9 +210,9 @@ function fetchAndDisplaySuggestions(query) {
                     suggestionItem.addEventListener("click", function () {
                         addCityToSelected(item.transport_pickup_drop);
                     });
-                    suggestionsContainer.appendChild(suggestionItem);
+                    addresssuggestionsContainer.appendChild(suggestionItem);
                 });
-                suggestionsContainer.style.display = "flex"; // Show suggestions container
+                addresssuggestionsContainer.style.display = "flex"; // Show suggestions container
             }
         })
         .catch((error) => console.error("Error:", error));
@@ -226,7 +226,7 @@ function addCityToSelected(city) {
         selectedCities.push(city);
         renderSelectedCities();
     }
-    suggestionsContainer.style.display = "none"; // Hide suggestions container
+    addresssuggestionsContainer.style.display = "none"; // Hide suggestions container
 }
 
 // Function to remove a city from the selected cities
@@ -239,7 +239,7 @@ function removeCityFromSelected(city) {
 function renderSelectedCities() {
     // Remove all tags except the input field
     Array.from(citiesAddressContainer.childNodes).forEach(child => {
-        if (child !== citiesAddressInput && child !== suggestionsContainer) {
+        if (child !== citiesAddressInput && child !== addresssuggestionsContainer) {
             citiesAddressContainer.removeChild(child);
         }
     });
@@ -267,7 +267,7 @@ citiesAddressInput.addEventListener("input", function () {
     if (query.length >= 1) {
         fetchAndDisplaySuggestions(query);
     } else {
-        suggestionsContainer.style.display = "none"; // Hide suggestions container
+        addresssuggestionsContainer.style.display = "none"; // Hide suggestions container
     }
 });
 
