@@ -102,6 +102,7 @@ const routesTableBody = document.getElementById("routesTableBody");
 const citiesAddressInput = document.getElementById("citiesAddress");
 const citiesAddressContainer = document.getElementById("citiesAddressContainer");
 const suggestionsContainer = document.getElementById("address_suggestionBox");
+const editsuggestionsContainer = document.getElementById("suggestionsContainer");
 let selectedCities = [];
 
 // Form submission handler
@@ -215,6 +216,8 @@ function fetchAndDisplaySuggestions(query) {
             }
         })
         .catch((error) => console.error("Error:", error));
+
+        
 }
 
 // Function to add a city to the selected cities
@@ -273,4 +276,143 @@ citiesAddressInput.addEventListener("input", function () {
 // displayRoutes();
 
 
+// function to edit route
+let editedSelectedCities = []; // Stores cities selected during editing
 
+// Function to fetch distinct addresses and display suggestions (for the edit route popup)
+function fetchAndDisplayCitySuggestionsForEdit(query) {
+    fetch("/distinctAddresses")
+        .then((response) => response.json())
+        .then((data) => {
+            const suggestionsContainer = document.getElementById("suggestionsContainer");
+            suggestionsContainer.innerHTML = ""; // Clear existing suggestions
+
+            const filteredData = data.filter(item =>
+                item.transport_pickup_drop.toLowerCase().startsWith(query.toLowerCase())
+            );
+
+            if (filteredData.length === 0) {
+                suggestionsContainer.style.display = "none"; // Hide suggestions container if no match
+            } else {
+                filteredData.forEach((item) => {
+                    const suggestionItem = document.createElement("div");
+                    suggestionItem.classList.add("suggestion-item");
+                    suggestionItem.textContent = item.transport_pickup_drop;
+
+                    // Add click event for selecting a suggestion
+                    suggestionItem.addEventListener("click", function () {
+                        addCityToEditedSelected(item.transport_pickup_drop);
+                    });
+
+                    suggestionsContainer.appendChild(suggestionItem);
+                });
+                suggestionsContainer.style.display = "flex"; // Show suggestions
+            }
+        })
+        .catch((error) => console.error("Error fetching suggestions:", error));
+}
+
+// Function to add a city to the edited selected cities list
+function addCityToEditedSelected(city) {
+    if (!editedSelectedCities.includes(city)) {
+        editedSelectedCities.push(city);
+        renderEditedSelectedCities();
+    }
+    document.getElementById("cityInput").value = ""; // Clear input after selection
+    document.getElementById("suggestionsContainer").style.display = "none"; // Hide suggestions
+}
+
+// Function to render the selected cities as tags in the cities container (for edit popup)
+function renderEditedSelectedCities() {
+    const citiesContainer = document.getElementById("citiesContainer");
+
+    // Remove all previous city tags (except the input field)
+    Array.from(citiesContainer.childNodes).forEach(child => {
+        if (child !== document.getElementById("cityInput")) {
+            citiesContainer.removeChild(child);
+        }
+    });
+
+    // Add each selected city as a tag with a remove button
+    editedSelectedCities.forEach(city => {
+        const cityElem = document.createElement("div");
+        cityElem.classList.add("tag");
+        cityElem.textContent = city;
+
+        const removeButton = document.createElement("span");
+        removeButton.classList.add("remove-tag");
+        removeButton.textContent = "×";
+        removeButton.addEventListener("click", () => removeCityFromEditedSelected(city));
+
+        cityElem.appendChild(removeButton);
+        citiesContainer.insertBefore(cityElem, document.getElementById("cityInput")); // Insert before input
+    });
+}
+
+// Function to remove a city from the edited selected list
+function removeCityFromEditedSelected(city) {
+    editedSelectedCities = editedSelectedCities.filter(c => c !== city);
+    renderEditedSelectedCities(); // Re-render after removing
+}
+
+// Event listener for the city input field to trigger suggestions (for edit popup)
+document.getElementById("cityInput").addEventListener("input", function () {
+    const query = this.value;
+    if (query.length >= 1) {
+        fetchAndDisplayCitySuggestionsForEdit(query); // Using the renamed function
+    } else {
+        document.getElementById("suggestionsContainer").style.display = "none"; // Hide suggestions if input is cleared
+    }
+});
+
+// Function to save route details (you'll need to send edited selected cities as a comma-separated string)
+function saveRouteDetails() {
+    const routeName = document.getElementById("editRouteName").value;
+    const routeCities = editedSelectedCities.join(", "); // Convert array to comma-separated string
+
+    // Call the API to save route details (implement the backend for this)
+    fetch('/updateRoute', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            routeShiftId: selectedRouteId, // Assume you store this somewhere on edit
+            routeName: routeName,
+            routeCities: routeCities,
+            routeType: 'route' // Example type
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message === 'Route updated successfully') {
+            alert('Route updated successfully!');
+            closeEditRoutePopup(); // Close popup on success
+            refreshRoutesData(); // Refresh the routes data to reflect changes
+        }
+    })
+    .catch(error => console.error('Error updating route:', error));
+}
+
+// Function to open the edit route popup
+function editRoute(routeShiftId) {
+    const route = routeData[routeShiftId];
+    document.getElementById("editRouteName").value = route.route_shift_name;
+
+    // Populate edited selected cities from the route details (comma-separated)
+    editedSelectedCities = route.route_shift_detail.split(", ").map(city => city.trim());
+    renderEditedSelectedCities();
+
+    // Show popup and blur background
+    document.getElementById("editRoutePopup").style.display = "block";
+    document.getElementById("popupBg").style.display = "block";
+
+    // Store the current routeShiftId for saving later
+    selectedRouteId = routeShiftId;
+}
+
+// Function to close the edit route popup
+function closeEditRoutePopup() {
+    document.getElementById("editRoutePopup").style.display = "none";
+    document.getElementById("popupBg").style.display = "none";
+}

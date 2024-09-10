@@ -394,6 +394,33 @@
         </div>
     </div>
 
+    <!-- Edit popup for manage routes -->
+    <div id="editRoutePopup" class="popup-container" style="display: none;">
+        <div class="popup-content">
+            <span class="close-popup" onclick="closeEditRoutePopup()">×</span>
+            <h2>Edit Route</h2>
+            <div class="form-group">
+                <label for="editRouteName">Route Name</label>
+                <input type="text" id="editRouteName" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="editRouteCities">Route Cities</label>
+                <div id="citiesContainer" class="cities-container">
+                    <!-- Dynamically added city tags will appear here -->
+                    <input type="text" id="cityInput" placeholder="Add a city" class="city-input">
+                </div>
+                <!-- Container for city suggestions -->
+                <div id="suggestionsContainer" class="suggestions-container" style="display: none;"></div>
+            </div>
+            <button onclick="saveRouteDetails()">Save</button>
+        </div>
+    </div>
+
+    <!-- Background Blur -->
+    <div id="popupBg" class="popup-bg" style="display: none;"></div>
+
+
+
     <!-- Overlay for Manage Shifts -->
     <div id="manageShiftsOverlay" class="overlay-search">
         <div class="overlay-content-search">

@@ -84,5 +84,33 @@ router.delete('/deleteRoute/:route_shift_id', async (req, res) => {
     }
 });
 
+// Route to handle updating the transport route shift details
+router.post('/updateRoute', (req, res) => {
+    const { routeShiftId, routeName, routeCities, routeType } = req.body;
+    
+    if (!routeShiftId || !routeName || !routeCities || !routeType) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    const query = `
+        UPDATE transport_route_shift_details
+        SET route_shift_name = ?, 
+            route_shift_detail = ?, 
+            route_shift_type = ?
+        WHERE route_shift_id = ?`;
+
+        req.connectionPool.query(
+        query, 
+        [routeName, routeCities, routeType, routeShiftId], 
+        (error, results) => {
+            if (error) {
+                console.error('Error updating route shift details:', error);
+                return res.status(500).json({ error: 'Database update failed' });
+            }
+            res.status(200).json({ message: 'Route updated successfully' });
+        }
+    );
+});
+
 
 module.exports = router;
