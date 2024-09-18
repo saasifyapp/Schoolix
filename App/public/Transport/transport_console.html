@@ -306,7 +306,7 @@
 
     <!-- Overlay for Routes and Shifts -->
     <div id="routesShiftsOverlay" class="overlay">
-        <div class="overlay-content-inner">
+        <div class="overlay-content-inner" style="max-width: 450px;">
             <h2>Routes, Shifts, Tags</h2>
             <button id="closeRoutesShiftsOverlay" class="close-button">&times;</button>
             <div class="button-container">
@@ -335,47 +335,68 @@
     <!-- Overlay for Manage Routes -->
     <div id="manageRoutesOverlay" class="overlay-search">
         <div class="overlay-content-search">
+            <img src="/images/route.gif" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
             <button id="closeManageRoutesOverlay" class="close-button">&times;</button>
+            <h2 class="overlay-search-head">Manage Routes</h2>
+
             <div class="overlay-inner">
-                <div class="left-side">
+                <!-- Lottie Animation and Form Section -->
+                <div class="tag-left">
                     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
                         type="module"></script>
 
+                    <!-- Lottie Animation Player -->
                     <dotlottie-player src="https://lottie.host/9085a2af-7df0-468b-b0c0-059e0eca82b6/zN60LritoN.json"
                         background="transparent" speed="1" style="width: 300px; height: 300px;" loop
                         autoplay></dotlottie-player>
-                </div>
-                <div class="right-side">
-                    <h2>Manage Routes</h2>
-                    <form id="manageRoutesForm">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="routeName" placeholder=" ">
-                                <span class="form-control-placeholder">Route Name</span>
-                            </div>
 
-                            <div class="form-group">
-                                <div class="input-with-tags" id="citiesAddressContainer">
-                                    <input type="text" class="form-control" id="citiesAddress" placeholder=" ">
-                                    <div id="address_suggestionBox" class="address_suggestionBox"></div>
-                                </div>
-                                <span class="form-control-placeholder"></span>
-                            </div>
+                    <!-- Form Section Below the Animation -->
+                    <form id="manageRoutesForm" class="form-section">
 
-
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="routeName" placeholder=" ">
+                            <span class="form-control-placeholder">Route Name</span>
                         </div>
+
+                        <div class="form-group">
+                            <div class="input-with-tags" id="citiesAddressContainer">
+                                <input type="text" class="form-control" id="citiesAddress" placeholder=" ">
+                                <div id="address_suggestionBox" class="address_suggestionBox"></div>
+                            </div>
+                            <span class="form-control-placeholder">Cities/Address</span>
+                        </div>
+
+                        <!-- Create Route Button -->
                         <button class="getDetails-button" type="submit">
                             <img src="../images/route.png" alt="">
                             <span>Create Route</span>
                         </button>
-
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="searchRoute" placeholder=" ">
-                            <span class="form-control-placeholder">Search Route</span>
-                        </div>
                     </form>
+                </div>
+
+                <div class="tag-right" style="height: 100%;">
+                    <!-- Search Input and Table Section -->
+                    <!-- Search Route Input Section -->
+                    <button class="export_routes" onclick="">
+                        <img src="/images/export.png" alt="Export Icon"> Export
+                    </button>
+
+                    <div class="search-container">
+                        <div class="form-Searchgroup">
+                            <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                            <input type="text" class="form-control" id="searchBar" name="routeSearch" placeholder=" "
+                                oninput="searchRouteDetails()" style="width: 400px; height: 1.7rem !important;">
+                            <span class="form-control-placeholder" style="left: 3.75rem;">Search Route...</span>
+                        </div>
+                        <button class="refreshButton" onclick="refreshRoutesData()" style="margin-top: 10px;">
+                            <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                        </button>
+                    </div>
+
 
                     <div class="table-container">
+
+                        <!-- Table for Routes -->
                         <table id="routesTable" class="styled-table">
                             <thead>
                                 <tr>
@@ -393,6 +414,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- Edit popup for manage routes -->
     <div id="editRoutePopup" class="popup-container" style="display: none;">
@@ -424,50 +446,72 @@
     <!-- Overlay for Manage Shifts -->
     <div id="manageShiftsOverlay" class="overlay-search">
         <div class="overlay-content-search">
+            <img src="/images/manageshift.png" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
             <button id="closeManageShiftsOverlay" class="close-button">&times;</button>
+            <h2 class="overlay-search-head">Manage Shifts</h2>
+
             <div class="overlay-inner">
-                <div class="left-side">
+                <!-- Lottie Animation and Form Section -->
+                <div class="tag-left">
                     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
                         type="module"></script>
 
+                    <!-- Lottie Animation Player -->
                     <dotlottie-player src="https://lottie.host/1d619a4d-bd00-4b60-95ac-2e2859866ec1/REwvaSqKpK.json"
                         background="transparent" speed="1" style="width: 300px; height: 300px;" loop
                         autoplay></dotlottie-player>
-                </div>
-                <div class="right-side">
-                    <h2>Manage Shifts</h2>
-                    <form id="manageShiftsForm">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="shiftName" placeholder=" ">
-                                <span class="form-control-placeholder">Shift Name</span>
-                            </div>
 
-                            <div class="form-group">
-                                <div class="input-with-tags" id="shiftTypeContainer">
-                                    <input type="text" class="form-control" id="shiftType" placeholder=" ">
-                                    <div id="standardsDivisionsSuggestionBox" class="address_suggestionBox"></div>
-                                </div>
-                                <span class="form-control-placeholder"></span>
-                            </div>
+                    <!-- Form Section Below the Animation -->
+                    <form id="manageShiftsForm" class="form-section">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="shiftName" placeholder=" ">
+                            <span class="form-control-placeholder">Shift Name</span>
                         </div>
+
+                        <div class="form-group">
+                            <div class="input-with-tags" id="shiftTypeContainer">
+                                <input type="text" class="form-control" id="shiftType" placeholder=" ">
+                                <div id="shiftTypeSuggestionBox" class="address_suggestionBox"></div>
+                            </div>
+                            <span class="form-control-placeholder">Shift Type</span>
+                        </div>
+
+                        <!-- Create Shift Button -->
                         <button class="getDetails-button" type="submit">
                             <img src="../images/shift.png" alt="">
                             <span>Create Shift</span>
                         </button>
-
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="searchShift" placeholder=" ">
-                            <span class="form-control-placeholder">Search Shift</span>
-                        </div>
                     </form>
+                </div>
 
+                <div class="tag-right" style="height: 100%;">
+                    <!-- Search Input and Table Section -->
+                    <button class="export_routes" onclick="">
+                        <img src="/images/export.png" alt="Export Icon"> Export
+                    </button>
+
+                    <!-- Search Shift Input Section -->
+                    <div class="search-container">
+                        <div class="form-Searchgroup">
+                            <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                            <input type="text" class="form-control" id="searchBar" name="shiftSearch"
+                                placeholder=" " oninput="searchShiftDetails()"
+                                style="width: 400px; height: 1.7rem !important;">
+                            <span class="form-control-placeholder" style="left: 3.75rem;">Search Shift...</span>
+                        </div>
+                        <button class="refreshButton" onclick="refreshShiftsData()" style="margin-top: 10px;">
+                            <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                        </button>
+                    </div>
+
+
+                    <!-- Table for Shifts -->
                     <div class="table-container">
                         <table id="shiftsTable" class="styled-table">
                             <thead>
                                 <tr>
                                     <th>Shift Name</th>
-                                    <th>Classes Alloted</th>
+                                    <th>Shift Type</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>

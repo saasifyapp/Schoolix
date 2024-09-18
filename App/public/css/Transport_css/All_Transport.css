@@ -612,10 +612,17 @@ body {
     color: #333;
 }
 
-/* Form Group */
-.form-group {
-    margin-bottom: 15px;
+.center-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
 }
+
+/* Form Group */
+/* .form-group {
+    margin-bottom: 15px;
+} */
 
 .form-group label {
     display: block;
@@ -623,12 +630,12 @@ body {
     margin-bottom: 5px;
 }
 
-.form-control {
+/* .form-control {
     width: 100%;
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
-}
+} */
 
 .tags-container {
     display: flex;

@@ -259,7 +259,7 @@ box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     margin-bottom: 20px;
     margin-right: 300px;
     width: 500px;
-    margin-left: 30%;
+    margin-left: 20%;
 }
 
 .form-Searchgroup {
@@ -313,7 +313,8 @@ box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
 
 .refreshButton,
-.export_registered_students {
+.export_registered_students,
+.export_routes{
     margin-bottom: 15px; /* Add margin between the buttons */
     cursor: pointer;
     background-color: transparent;
@@ -334,13 +335,15 @@ box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
 
 .refreshButton img,
-.export_registered_students img {
+.export_registered_students img,
+.export_routes img {
     height: 80%; /* Set image height to fit button */
     margin-right: 5px; /* Add a 5px margin to the right of the image */
 }
 
 
-.export_registered_students:hover {
+.export_registered_students:hover,
+.export_routes:hover {
     background-color: #27AE60; /* Change background color on hover */
     transform: scale(1.05); /* Increase size on hover */
 }
@@ -350,7 +353,8 @@ box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     transform: scale(1.05); /* Increase size on hover */
 }
 
-.export_registered_students {
+.export_registered_students,
+.export_routes {
     position: absolute;
     top: 10px;
     right: 60px;
@@ -1082,7 +1086,7 @@ margin-bottom: 10px; /* Reduce the gap between title and input fields */
 }
 
 .tag-left {
-    flex: 1;
+    flex: 0;
     margin-right: 50px;
 }
 
