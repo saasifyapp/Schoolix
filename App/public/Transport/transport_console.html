@@ -227,7 +227,7 @@
                 <div class="spinner"></div>
             </div>
             <button id="closeSearchDriverConductorOverlay" class="close-button">&times;</button>
-            <img src="/images/searchDriverConductor.gif" alt="Overlay Icon" class="overlay-icon">
+            <img src="/images/conductor.png" alt="Overlay Icon" class="overlay-icon">
             <h2 class="overlay-search-head">Search Vehicle Operator</h2>
             <div class="search-container">
                 <div class="form-Searchgroup">
@@ -240,12 +240,11 @@
                     </div>
                     <div class="form-Searchgroup">
                         <select id="filtertype" class="form-control" onchange="filterDriverConductorByType()"
-                            style="width: 400px; height: 1.7rem !important;">
+                            style="height:3rem  ;">
                             <option value="">Select Type</option>
                             <option value="Driver">Driver</option>
                             <option value="Conductor">Conductor</option>
-                        </select>
-                        <span class="form-control-placeholder" style="left: 3.75rem;">Type...</span>
+                        </select>                           
                     </div>
                     <button class="refreshButton" onclick="refreshDriverConductorData()" style="margin-top: 10px;">
                         <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
@@ -306,7 +305,7 @@
 
     <!-- Overlay for Routes and Shifts -->
     <div id="routesShiftsOverlay" class="overlay">
-        <div class="overlay-content-inner" style="max-width: 450px;">
+        <div class="overlay-content-inner" style="max-width: 420px;">
             <h2>Routes, Shifts, Tags</h2>
             <button id="closeRoutesShiftsOverlay" class="close-button">&times;</button>
             <div class="button-container">
