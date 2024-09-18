@@ -15,116 +15,129 @@ document.addEventListener('DOMContentLoaded', function () {
     const allocateButton = document.getElementById('allocate_getDetailsButton');
     const scheduleTableBody = document.getElementById('allocate_scheduleTableBody');
 
-
     let selectedRouteDetail = '';
     let selectedShiftDetail = '';
     let studentCount = 0;
     let selectedVehicleCapacity = 0;
 
+    function fetchRouteDetails(query = '') {
+        fetch(`/allocate_getRouteDetails`)
+            .then((response) => response.json())
+            .then((data) => {
+                routeSuggestionsContainer.style.display = 'flex'; // Show suggestions container
+                routeSuggestionsContainer.innerHTML = '';
+
+                const filteredData = query
+                    ? data.filter(route => route.route_shift_name.toLowerCase().includes(query.toLowerCase()))
+                    : data;
+
+                if (filteredData.length === 0) {
+                    const noResultsItem = document.createElement('div');
+                    noResultsItem.classList.add('suggestion-item', 'no-results');
+                    noResultsItem.textContent = 'No results found';
+                    routeSuggestionsContainer.appendChild(noResultsItem);
+                } else {
+                    filteredData.forEach((route) => {
+                        const suggestionItem = document.createElement('div');
+                        suggestionItem.classList.add('suggestion-item');
+                        suggestionItem.textContent = route.route_shift_name;
+                        suggestionItem.dataset.routeName = route.route_shift_name;
+                        suggestionItem.dataset.routeDetail = route.route_shift_detail;
+                        routeSuggestionsContainer.appendChild(suggestionItem);
+                    });
+                }
+            })
+            .catch((error) => console.error('Error:', error));
+    }
+
+    routeInput.addEventListener('focus', function () {
+        fetchRouteDetails();
+    });
+
     routeInput.addEventListener('input', function () {
-        const query = this.value;
-        if (query.length > 0) {
-            fetch(`/allocate_getRouteDetails`)
-                .then((response) => response.json())
-                .then((data) => {
-                    routeSuggestionsContainer.style.display = 'flex'; // Show suggestions container
-                    routeSuggestionsContainer.innerHTML = '';
+        fetchRouteDetails(this.value);
+    });
 
-                    const filteredData = data.filter(route =>
-                        route.route_shift_name.toLowerCase().includes(query.toLowerCase())
-                    );
+    function fetchShiftDetails(routeName, query = '') {
+        fetch(`/allocate_getShiftDetails?routeName=${encodeURIComponent(routeName)}`)
+            .then((response) => response.json())
+            .then((data) => {
+                shiftSuggestionsContainer.style.display = 'flex'; // Show suggestions container
+                shiftSuggestionsContainer.innerHTML = '';
 
-                    if (filteredData.length === 0) {
-                        const noResultsItem = document.createElement('div');
-                        noResultsItem.classList.add('suggestion-item', 'no-results');
-                        noResultsItem.textContent = 'No results found';
-                        routeSuggestionsContainer.appendChild(noResultsItem);
-                    } else {
-                        filteredData.forEach((route) => {
-                            const suggestionItem = document.createElement('div');
-                            suggestionItem.classList.add('suggestion-item');
-                            suggestionItem.textContent = route.route_shift_name;
-                            suggestionItem.dataset.routeName = route.route_shift_name;
-                            suggestionItem.dataset.routeDetail = route.route_shift_detail;
-                            routeSuggestionsContainer.appendChild(suggestionItem);
-                        });
-                    }
-                })
-                .catch((error) => console.error('Error:', error));
-        } else {
-            routeSuggestionsContainer.style.display = 'none'; // Hide suggestions container
-            routeSuggestionsContainer.innerHTML = '';
+                const filteredData = query
+                    ? data.filter(shift => shift.route_shift_name.toLowerCase().includes(query.toLowerCase()))
+                    : data;
+
+                if (filteredData.length === 0) {
+                    const noResultsItem = document.createElement('div');
+                    noResultsItem.classList.add('suggestion-item', 'no-results');
+                    noResultsItem.textContent = 'No results found';
+                    shiftSuggestionsContainer.appendChild(noResultsItem);
+                } else {
+                    filteredData.forEach((shift) => {
+                        const suggestionItem = document.createElement('div');
+                        suggestionItem.classList.add('suggestion-item');
+                        suggestionItem.textContent = shift.route_shift_name;
+                        suggestionItem.dataset.shiftName = shift.route_shift_name;
+                        suggestionItem.dataset.shiftDetail = shift.route_shift_detail;
+                        shiftSuggestionsContainer.appendChild(suggestionItem);
+                    });
+                }
+            })
+            .catch((error) => console.error('Error:', error));
+    }
+
+    shiftInput.addEventListener('focus', function () {
+        if (routeInput.value) {
+            fetchShiftDetails(routeInput.value);
         }
     });
 
     shiftInput.addEventListener('input', function () {
-        const query = this.value;
-        if (query.length > 0) {
-            fetch(`/allocate_getShiftDetails`)
-                .then((response) => response.json())
-                .then((data) => {
-                    shiftSuggestionsContainer.style.display = 'flex'; // Show suggestions container
-                    shiftSuggestionsContainer.innerHTML = '';
+        if (routeInput.value) {
+            fetchShiftDetails(routeInput.value, this.value);
+        }
+    });
 
-                    const filteredData = data.filter(shift =>
-                        shift.route_shift_name.toLowerCase().includes(query.toLowerCase())
-                    );
+    function fetchVehicleDetails(routeName, shiftName, query = '') {
+        fetch(`/allocate_getVehicleDetails?q=${encodeURIComponent(query)}&routeName=${encodeURIComponent(routeName)}&shiftName=${encodeURIComponent(shiftName)}`)
+            .then((response) => response.json())
+            .then((data) => {
+                vehicleSuggestionsContainer.style.display = 'flex'; // Show suggestions container
+                vehicleSuggestionsContainer.innerHTML = '';
 
-                    if (filteredData.length === 0) {
-                        const noResultsItem = document.createElement('div');
-                        noResultsItem.classList.add('suggestion-item', 'no-results');
-                        noResultsItem.textContent = 'No results found';
-                        shiftSuggestionsContainer.appendChild(noResultsItem);
-                    } else {
-                        filteredData.forEach((shift) => {
-                            const suggestionItem = document.createElement('div');
-                            suggestionItem.classList.add('suggestion-item');
-                            suggestionItem.textContent = shift.route_shift_name;
-                            suggestionItem.dataset.shiftName = shift.route_shift_name;
-                            suggestionItem.dataset.shiftDetail = shift.route_shift_detail;
-                            shiftSuggestionsContainer.appendChild(suggestionItem);
-                        });
-                    }
-                })
-                .catch((error) => console.error('Error:', error));
-        } else {
-            shiftSuggestionsContainer.style.display = 'none'; // Hide suggestions container
-            shiftSuggestionsContainer.innerHTML = '';
+                if (data.length === 0) {
+                    const noResultsItem = document.createElement('div');
+                    noResultsItem.classList.add('suggestion-item', 'no-results');
+                    noResultsItem.textContent = 'No results found';
+                    vehicleSuggestionsContainer.appendChild(noResultsItem);
+                } else {
+                    data.forEach((driver) => {
+                        const suggestionItem = document.createElement('div');
+                        suggestionItem.classList.add('suggestion-item');
+                        suggestionItem.textContent = `${driver.vehicle_no} | ${driver.driver_name}`;
+                        suggestionItem.dataset.driverName = driver.driver_name || 'N/A';
+                        suggestionItem.dataset.vehicleNo = driver.vehicle_no || 'N/A';
+                        suggestionItem.dataset.vehicleCapacity = driver.vehicle_capacity || 'N/A';
+                        suggestionItem.dataset.availableSeats = driver.available_seats || 0; // Fallback to 0 if null or 0
+                        suggestionItem.dataset.conductorName = driver.conductor_name || 'N/A';
+                        vehicleSuggestionsContainer.appendChild(suggestionItem);
+                    });
+                }
+            })
+            .catch((error) => console.error('Error:', error));
+    }
+
+    vehicleInput.addEventListener('focus', function () {
+        if (routeInput.value && shiftInput.value) {
+            fetchVehicleDetails(routeInput.value, shiftInput.value);
         }
     });
 
     vehicleInput.addEventListener('input', function () {
-        const query = this.value;
-        if (query.length > 0) {
-            fetch(`/allocate_getVehicleDetails?q=${encodeURIComponent(query)}`)
-                .then((response) => response.json())
-                .then((data) => {
-                    vehicleSuggestionsContainer.style.display = 'flex'; // Show suggestions container
-                    vehicleSuggestionsContainer.innerHTML = '';
-
-                    if (data.length === 0) {
-                        const noResultsItem = document.createElement('div');
-                        noResultsItem.classList.add('suggestion-item', 'no-results');
-                        noResultsItem.textContent = 'No results found';
-                        vehicleSuggestionsContainer.appendChild(noResultsItem);
-                    } else {
-                        data.forEach((driver) => {
-                            const suggestionItem = document.createElement('div');
-                            suggestionItem.classList.add('suggestion-item');
-                            suggestionItem.textContent = `${driver.vehicle_no} | ${driver.driver_name}`;
-                            suggestionItem.dataset.driverName = driver.driver_name || 'N/A';
-                            suggestionItem.dataset.vehicleNo = driver.vehicle_no || 'N/A';
-                            suggestionItem.dataset.vehicleCapacity = driver.vehicle_capacity || 'N/A';
-                            suggestionItem.dataset.availableSeats = driver.available_seats || 0; // Fallback to 0 if null or 0
-                            suggestionItem.dataset.conductorName = driver.conductor_name || 'N/A';
-                            vehicleSuggestionsContainer.appendChild(suggestionItem);
-                        });
-                    }
-                })
-                .catch((error) => console.error('Error:', error));
-        } else {
-            vehicleSuggestionsContainer.style.display = 'none'; // Hide suggestions container
-            vehicleSuggestionsContainer.innerHTML = '';
+        if (routeInput.value && shiftInput.value) {
+            fetchVehicleDetails(routeInput.value, shiftInput.value, this.value);
         }
     });
 
@@ -139,6 +152,13 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
             routeSuggestionsContainer.style.display = 'none'; // Hide suggestions container
             routeSuggestionsContainer.innerHTML = '';
+
+            // Clear shift input and suggestions when a new route is selected
+            shiftInput.value = '';
+            shiftSuggestionsContainer.innerHTML = '';
+            shiftDetailContainer.innerHTML = '';
+            selectedShiftDetail = '';
+            studentDetailsContainer.innerHTML = '';
 
             // Fetch student count if both details are available
             if (selectedShiftDetail) {

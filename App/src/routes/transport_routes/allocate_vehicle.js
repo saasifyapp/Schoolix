@@ -10,6 +10,8 @@ router.use(connectionManager);
 // Endpoint to fetch driver and conductor details for dynamic dropdown of Conductor-For
 router.get('/allocate_getVehicleDetails', (req, res) => {
     const query = req.query.q;
+    const routeName = req.query.routeName;
+    const shiftName = req.query.shiftName;
 
     // SQL query to fetch vehicle details
     const vehicleSql = `
@@ -20,9 +22,11 @@ router.get('/allocate_getVehicleDetails', (req, res) => {
             vehicle_capacity,
             available_seats 
         FROM transport_schedule_details 
-        WHERE driver_name LIKE ? OR vehicle_no LIKE ?
+        WHERE (driver_name LIKE ? OR vehicle_no LIKE ?)
+        AND route_name = ? 
+        AND shift_name = ?
     `;
-    const vehicleValues = [`%${query}%`, `%${query}%`];
+    const vehicleValues = [`%${query}%`, `%${query}%`, routeName, shiftName];
 
     req.connectionPool.query(vehicleSql, vehicleValues, (vehicleError, vehicleResults) => {
         if (vehicleError) {
@@ -50,12 +54,14 @@ router.get('/allocate_getRouteDetails', (req, res) => {
 
 // Endpoint to fetch all shift details where route_shift_type is 'shift'
 router.get('/allocate_getShiftDetails', (req, res) => {
+    const routeName = req.query.routeName;
     const sql = `
         SELECT DISTINCT shift_name AS route_shift_name, classes_alloted AS route_shift_detail
         FROM transport_schedule_details
+        WHERE route_name = ?
     `;
 
-    req.connectionPool.query(sql, (error, results) => {
+    req.connectionPool.query(sql, [routeName], (error, results) => {
         if (error) {
             return res.status(500).json({ error: 'Database query failed' });
         }
