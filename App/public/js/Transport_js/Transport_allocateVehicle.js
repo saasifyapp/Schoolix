@@ -233,6 +233,32 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error fetching student count:', error));
     }
 
+
+        // Function to reset all inputs
+        function resetInputs() {
+            routeInput.value = '';
+            routeSuggestionsContainer.innerHTML = '';
+            routeDetailContainer.innerHTML = '';
+    
+            shiftInput.value = '';
+            shiftSuggestionsContainer.innerHTML = '';
+            shiftDetailContainer.innerHTML = '';
+    
+            vehicleInput.value = '';
+            vehicleSuggestionsContainer.innerHTML = '';
+            vehicleDetailContainer.innerHTML = '';
+    
+            studentDetailsContainer.innerHTML = '';
+    
+            selectedRouteDetail = '';
+            selectedShiftDetail = '';
+            studentCount = 0;
+            selectedVehicleCapacity = 0;
+        }
+
+        
+
+
     // BUS TAGGING FUNCTIONALITY //
 
     allocateButton.addEventListener('click', function () {
@@ -308,6 +334,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                         <strong>Vehicle:</strong> ${vehicleInput.value} [ ${driverName} ]<br>
                                         is successfully tagged to <strong>${studentCount}</strong> students.
                                     `,
+                                }).then(() => {
+                                    resetInputs(); // Clear all inputs when user clicks OK
                                 });
                                 fetchAndDisplayScheduleDetails();
                             } else {
@@ -348,6 +376,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                     icon: 'success',
                                     title: 'Allocation Successful',
                                     html: alertHtml,
+                                }).then(() => {
+                                    resetInputs(); // Clear all inputs when user clicks OK
                                 });
     
                                 fetchAndDisplayScheduleDetails();
