@@ -1095,6 +1095,20 @@ margin-bottom: 10px; /* Reduce the gap between title and input fields */
     overflow-x: auto;
 }
 
+.left-manageroute ,
+.left-manageshift {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-sizing: border-box;
+    color: white;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+
 
 .input-section {
     display: flex;
