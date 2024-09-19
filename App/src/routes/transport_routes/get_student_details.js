@@ -111,6 +111,32 @@ router.get('/listStudents_getClass', (req, res) => {
     });
 });
 
+// Endpoint to fetch vehicle info based on vehicle number and shift
+router.get('/listStudents_getVehicleInfo', (req, res) => {
+    const vehicleNo = req.query.vehicleNo;
+    const shiftName = req.query.shiftName;
+
+    // SQL query to fetch vehicle info
+    const vehicleInfoSql = `
+        SELECT DISTINCT
+            vehicle_no, 
+            driver_name,
+            vehicle_capacity,
+            available_seats
+        FROM transport_schedule_details 
+        WHERE vehicle_no = ? AND shift_name = ?
+    `;
+    const vehicleInfoValues = [vehicleNo, shiftName];
+
+    req.connectionPool.query(vehicleInfoSql, vehicleInfoValues, (vehicleInfoError, vehicleInfoResults) => {
+        if (vehicleInfoError) {
+            return res.status(500).json({ error: 'Database query failed' });
+        }
+
+        res.status(200).json(vehicleInfoResults);
+    });
+});
+
 
 
 // Endpoint to fetch student details based on vehicle number, shift name, route, and class

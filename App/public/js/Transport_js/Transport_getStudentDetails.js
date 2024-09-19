@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const scheduleTableBody = document.getElementById('listStudents_scheduleTableBody');
     const studentCountElement = document.getElementById('studentCount');
+    const vehicleInfoContainer = document.getElementById('listStudents_vehicleInfo');
 
     let selectedVehicleNo = '';
     let selectedShiftName = '';
@@ -25,9 +26,11 @@ document.addEventListener('DOMContentLoaded', function () {
             stopInput.readOnly = false;
             classInput.readOnly = false;
             fetchAndDisplayStudentDetails(); // Fetch and display student details
+            fetchVehicleInfo(); // Fetch and display vehicle info
         } else {
             stopInput.readOnly = true;
             classInput.readOnly = true;
+            vehicleInfoContainer.innerHTML = ''; // Clear vehicle info container
         }
     }
 
@@ -120,6 +123,28 @@ document.addEventListener('DOMContentLoaded', function () {
             updateInputReadOnlyStatus(); // Update read-only status
         }
     });
+
+    // Function to fetch vehicle info
+    function fetchVehicleInfo() {
+        if (selectedVehicleNo && selectedShiftName) {
+            fetch(`/listStudents_getVehicleInfo?vehicleNo=${encodeURIComponent(selectedVehicleNo)}&shiftName=${encodeURIComponent(selectedShiftName)}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.length > 0) {
+                        const vehicleInfo = data[0];
+                        vehicleInfoContainer.innerHTML = `
+                            <strong>Vehicle No:</strong> ${vehicleInfo.vehicle_no}<br>
+                            <strong>Driver Name:</strong> ${vehicleInfo.driver_name}<br>
+                            <strong>Total Capacity:</strong> ${vehicleInfo.vehicle_capacity}<br>
+                            <strong>Available Seats:</strong> ${vehicleInfo.available_seats}<br>
+                        `;
+                    } else {
+                        vehicleInfoContainer.innerHTML = 'No vehicle info found';
+                    }
+                })
+                .catch((error) => console.error('Error:', error));
+        }
+    }
 
     // Fetch stop suggestions when stop input is focused
     stopInput.addEventListener('focus', function () {
