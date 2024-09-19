@@ -2,11 +2,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // Input Elements
     const vehicleInput = document.getElementById('listStudents_vehicleNo');
     const vehicleSuggestionsContainer = document.getElementById('listStudents_vehicleSuggestions');
-    const vehicleDetailContainer = document.getElementById('listStudents_vehicleDetail');
 
     const shiftInput = document.getElementById('listStudents_shiftType');
     const shiftSuggestionsContainer = document.getElementById('listStudents_shiftSuggestions');
-    const shiftDetailContainer = document.getElementById('listStudents_shiftDetail');
 
     const stopInput = document.getElementById('listStudents_stops');
     const stopSuggestionsContainer = document.getElementById('listStudents_stopSuggestions');
@@ -33,39 +31,41 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Fetch vehicle suggestions
-    vehicleInput.addEventListener('input', function () {
-        const query = this.value;
-        if (query.length > 0) {
-            fetch(`/listStudents_getVehicleDetails?q=${encodeURIComponent(query)}`)
-                .then((response) => response.json())
-                .then((data) => {
-                    vehicleSuggestionsContainer.style.display = 'flex'; // Show suggestions container
-                    vehicleSuggestionsContainer.innerHTML = '';
+    // Function to fetch vehicle suggestions
+    function fetchVehicleSuggestions(query) {
+        fetch(`/listStudents_getVehicleDetails?q=${encodeURIComponent(query)}`)
+            .then((response) => response.json())
+            .then((data) => {
+                vehicleSuggestionsContainer.style.display = 'flex'; // Show suggestions container
+                vehicleSuggestionsContainer.innerHTML = '';
 
-                    if (!Array.isArray(data) || data.length === 0) {
-                        const noResultsItem = document.createElement('div');
-                        noResultsItem.classList.add('suggestion-item', 'no-results');
-                        noResultsItem.textContent = 'No results found';
-                        vehicleSuggestionsContainer.appendChild(noResultsItem);
-                    } else {
-                        data.forEach((driver) => {
-                            const suggestionItem = document.createElement('div');
-                            suggestionItem.classList.add('suggestion-item');
-                            suggestionItem.textContent = `${driver.vehicle_no} | ${driver.driver_name}`;
-                            suggestionItem.dataset.driverName = driver.driver_name || 'N/A';
-                            suggestionItem.dataset.vehicleNo = driver.vehicle_no || 'N/A';
-                            suggestionItem.dataset.availableSeats = driver.available_seats || 0; // Fallback to 0 if null or 0
-                            suggestionItem.dataset.studentsTagged = driver.students_tagged || 'N/A';
-                            vehicleSuggestionsContainer.appendChild(suggestionItem);
-                        });
-                    }
-                })
-                .catch((error) => console.error('Error:', error));
-        } else {
-            vehicleSuggestionsContainer.style.display = 'none'; // Hide suggestions container
-            vehicleSuggestionsContainer.innerHTML = '';
-        }
+                if (!Array.isArray(data) || data.length === 0) {
+                    const noResultsItem = document.createElement('div');
+                    noResultsItem.classList.add('suggestion-item', 'no-results');
+                    noResultsItem.textContent = 'No results found';
+                    vehicleSuggestionsContainer.appendChild(noResultsItem);
+                } else {
+                    data.forEach((driver) => {
+                        const suggestionItem = document.createElement('div');
+                        suggestionItem.classList.add('suggestion-item');
+                        suggestionItem.textContent = `${driver.vehicle_no} | ${driver.driver_name}`;
+                        suggestionItem.dataset.driverName = driver.driver_name || 'N/A';
+                        suggestionItem.dataset.vehicleNo = driver.vehicle_no || 'N/A';
+                        vehicleSuggestionsContainer.appendChild(suggestionItem);
+                    });
+                }
+            })
+            .catch((error) => console.error('Error:', error));
+    }
+
+    // Show vehicle suggestions when input is focused
+    vehicleInput.addEventListener('focus', function () {
+        fetchVehicleSuggestions(this.value);
+    });
+
+    // Update vehicle suggestions when user types
+    vehicleInput.addEventListener('input', function () {
+        fetchVehicleSuggestions(this.value);
     });
 
     // Handle vehicle suggestion click
@@ -74,12 +74,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const selectedDriver = event.target;
             vehicleInput.value = selectedDriver.dataset.vehicleNo;
             selectedVehicleNo = selectedDriver.dataset.vehicleNo;
-            vehicleDetailContainer.innerHTML = `
-                <strong>Vehicle No:</strong> ${selectedDriver.dataset.vehicleNo}<br>
-                <strong>Driver Name:</strong> ${selectedDriver.dataset.driverName}<br>
-                <strong>Available Seats:</strong> ${selectedDriver.dataset.availableSeats}<br>
-                <strong>Students Allocated:</strong> ${selectedDriver.dataset.studentsTagged}<br>
-            `;
             vehicleSuggestionsContainer.style.display = 'none'; // Hide suggestions container
             vehicleSuggestionsContainer.innerHTML = '';
             updateInputReadOnlyStatus(); // Update read-only status
@@ -121,10 +115,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const selectedShift = event.target;
             shiftInput.value = selectedShift.dataset.shiftName;
             selectedShiftName = selectedShift.dataset.shiftName;
-            shiftDetailContainer.innerHTML = `
-                <strong>Shift Name:</strong> ${selectedShift.dataset.shiftName}<br>
-                <strong>Classes Alloted:</strong> ${selectedShift.dataset.classesAlloted}
-            `;
             shiftSuggestionsContainer.style.display = 'none'; // Hide suggestions container
             shiftSuggestionsContainer.innerHTML = '';
             updateInputReadOnlyStatus(); // Update read-only status
@@ -303,66 +293,62 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initial call to set read-only status
     updateInputReadOnlyStatus();
 
+    // Function to export table to CSV
+    function export_getStudentListTable() {
+        const reportTable = document.getElementById('listStudents_scheduleTable');
+        const reportTableBody = document.getElementById('listStudents_scheduleTableBody');
 
-// Function to export table to CSV
-// Function to export table to CSV
-function export_getStudentListTable() {
-    const reportTable = document.getElementById('listStudents_scheduleTable');
-    const reportTableBody = document.getElementById('listStudents_scheduleTableBody');
-
-    if (!reportTable || !reportTableBody) {
-        alert('Table or Table Body not found.');
-        return;
-    }
-
-    if (reportTableBody.rows.length === 0) {
-        alert('No data to export.');
-        return;
-    }
-
-    let csvContent = '';
-    const headers = Array.from(reportTable.querySelectorAll('thead th')).map(th => th.textContent.trim());
-    csvContent += headers.join(',') + '\n';
-
-    const rows = Array.from(reportTableBody.querySelectorAll('tr'));
-    rows.forEach(row => {
-        const cols = Array.from(row.querySelectorAll('td')).map(col => col.textContent.trim());
-        csvContent += cols.join(',') + '\n';
-    });
-
-    let fileName = 'Students_List.csv';
-    const vehicleNo = document.getElementById('listStudents_vehicleNo').value.trim();
-    const shift = document.getElementById('listStudents_shiftType').value.trim();
-    const route = document.getElementById('listStudents_stops').value.trim();
-    const classFilter = document.getElementById('listStudents_classes').value.trim();
-
-    if (vehicleNo && shift) {
-        fileName = `${vehicleNo}_${shift}`;
-        if (route) {
-            fileName += `_Route_${route}`;
-        } else if (classFilter) {
-            fileName += `_Class_${classFilter}`;
+        if (!reportTable || !reportTableBody) {
+            alert('Table or Table Body not found.');
+            return;
         }
-        fileName += '.csv';
+
+        if (reportTableBody.rows.length === 0) {
+            alert('No data to export.');
+            return;
+        }
+
+        let csvContent = '';
+        const headers = Array.from(reportTable.querySelectorAll('thead th')).map(th => th.textContent.trim());
+        csvContent += headers.join(',') + '\n';
+
+        const rows = Array.from(reportTableBody.querySelectorAll('tr'));
+        rows.forEach(row => {
+            const cols = Array.from(row.querySelectorAll('td')). map(col => col.textContent.trim());
+            csvContent += cols.join(',') + '\n';
+        });
+
+        let fileName = 'Students_List.csv';
+        const vehicleNo = document.getElementById('listStudents_vehicleNo').value.trim();
+        const shift = document.getElementById('listStudents_shiftType').value.trim();
+        const route = document.getElementById('listStudents_stops').value.trim();
+        const classFilter = document.getElementById('listStudents_classes').value.trim();
+
+        if (vehicleNo && shift) {
+            fileName = `${vehicleNo}_${shift}`;
+            if (route) {
+                fileName += `_Route_${route}`;
+            } else if (classFilter) {
+                fileName += `_Class_${classFilter}`;
+            }
+            fileName += '.csv';
+        }
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        if (link.download !== undefined) {
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', fileName);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
     }
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    if (link.download !== undefined) {
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', fileName);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-}
-
-// Add event listener for the export button
-document.getElementById('exportStudentListButton').addEventListener('click', export_getStudentListTable);
-
-    
+    // Add event listener for the export button
+    document.getElementById('exportStudentListButton').addEventListener('click', export_getStudentListTable);
 
     // Hide suggestions when clicking outside
     document.addEventListener('click', function (event) {

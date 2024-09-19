@@ -15,13 +15,9 @@ router.get('/listStudents_getVehicleDetails', (req, res) => {
     const vehicleSql = `
         SELECT DISTINCT
             vehicle_no, 
-            driver_name, 
-            conductor_name, 
-            vehicle_capacity,
-            available_seats,
-            students_tagged 
+            driver_name
         FROM transport_schedule_details 
-        WHERE driver_name LIKE ? OR vehicle_no LIKE ? AND students_tagged IS NOT NULL
+        WHERE (driver_name LIKE ? OR vehicle_no LIKE ?) AND students_tagged IS NOT NULL
     `;
     const vehicleValues = [`%${query}%`, `%${query}%`];
 
@@ -33,7 +29,6 @@ router.get('/listStudents_getVehicleDetails', (req, res) => {
         res.status(200).json(vehicleResults);
     });
 });
-
 
 // Endpoint to fetch shift details based on vehicle number
 router.get('/listStudents_shiftDetails', (req, res) => {
