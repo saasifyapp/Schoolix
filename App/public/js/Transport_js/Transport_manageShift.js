@@ -2,6 +2,7 @@ let shiftsData = {}; // Local object to store shift details
 
 // Function to fetch shift data and store it in the local object
 function refreshShiftsData() {
+    document.getElementById('searchShift').value = "";
     fetch("/displayShifts")
         .then((response) => response.json())
         .then((data) => {
@@ -64,7 +65,7 @@ const manageShiftsForm = document.getElementById("manageShiftsForm");
 const shiftsTableBody = document.getElementById("shiftsTableBody");
 const shiftTypeInput = document.getElementById("shiftType");
 const shiftTypeContainer = shiftTypeInput.parentNode;
-const classsuggestionsContainer = document.getElementById("standardsDivisionsSuggestionBox");
+const classsuggestionsContainer = document.getElementById("shiftTypeSuggestionBox");
 let selectedStandardsDivisions = [];
 
 // Form submission handler
@@ -89,7 +90,7 @@ manageShiftsForm.addEventListener("submit", function (e) {
                 alert(data.error);
             } else {
                 alert(data.message);
-                resetForm();
+                resetshiftForm();
                 refreshShiftsData(); // Refresh the table after adding a new shift
             }
         })
@@ -100,7 +101,7 @@ manageShiftsForm.addEventListener("submit", function (e) {
 });
 
 // Function to reset the form
-function resetForm() {
+function resetshiftForm() {
     manageShiftsForm.reset(); // Reset the form fields
     selectedStandardsDivisions = []; // Clear selected items
     renderSelectedStandardsDivisions(); // Update the input field and tags
@@ -108,7 +109,7 @@ function resetForm() {
 
 
 // Function to fetch distinct standards with divisions and display suggestions
-function fetchAndDisplaySuggestions(query) {
+function fetchAndDisplayshiftSuggestions(query) {
     fetch("/distinctStandardsDivisions")
         .then((response) => response.json())
         .then((data) => {
@@ -179,7 +180,7 @@ function renderSelectedStandardsDivisions() {
 shiftTypeInput.addEventListener("input", function () {
     const query = this.value;
     if (query.length >= 1) {
-        fetchAndDisplaySuggestions(query);
+        fetchAndDisplayshiftSuggestions(query);
     } else {
         classsuggestionsContainer.style.display = "none"; // Hide suggestions container
     }
@@ -228,146 +229,146 @@ function deleteShift(shiftId) {
 }
 
 
-// Function to display the edit shift popup and populate fields
-function editShift(shiftId) {
-    // Fetch shift details from the local object (assuming `shiftData` contains your shifts)
-    const shiftData = shiftsData[shiftId]; // Replace with your actual data source
+// // Function to display the edit shift popup and populate fields
+// function editShift(shiftId) {
+//     // Fetch shift details from the local object (assuming `shiftData` contains your shifts)
+//     const shiftData = shiftsData[shiftId]; // Replace with your actual data source
 
-    if (shiftData) {
-        document.getElementById('editShiftName').value = shiftData.route_shift_name;
+//     if (shiftData) {
+//         document.getElementById('editShiftName').value = shiftData.route_shift_name;
         
-        // Clear existing tags and suggestions
-        selectedStandardsDivisions = shiftData.route_shift_detail.split(", ").map(classes => classes.trim());
-        renderSelectedStandardsDivisionsEdit();
+//         // Clear existing tags and suggestions
+//         selectedStandardsDivisions = shiftData.route_shift_detail.split(", ").map(classes => classes.trim());
+//         renderSelectedStandardsDivisionsEdit();
         
-        // Show popup and background blur
-        document.getElementById('editShiftPopup').style.display = 'block';
-        document.getElementById('popupBg').style.display = 'block';
+//         // Show popup and background blur
+//         document.getElementById('editShiftPopup').style.display = 'block';
+//         document.getElementById('popupBg').style.display = 'block';
 
-        // Store the current routeShiftId for saving later
-        currentEditingShiftId = shiftId;
-    }
-}
+//         // Store the current routeShiftId for saving later
+//         currentEditingShiftId = shiftId;
+//     }
+// }
 
-// Function to close the edit shift popup
-function closeEditShiftPopup() {
-    document.getElementById('editShiftPopup').style.display = 'none';
-    document.getElementById('popupBg').style.display = 'none';
-}
+// // Function to close the edit shift popup
+// function closeEditShiftPopup() {
+//     document.getElementById('editShiftPopup').style.display = 'none';
+//     document.getElementById('popupBg').style.display = 'none';
+// }
 
 
-// Function to fetch and display suggestions for the edit form
-function fetchAndDisplayEditSuggestions(query) {
-    fetch("/distinctStandardsDivisions")
-        .then(response => response.json())
-        .then(data => {
-            const classSuggestionsEdit = document.getElementById("classSuggestionsContainer");
-            classSuggestionsEdit.innerHTML = ""; // Clear existing suggestions
+// // Function to fetch and display suggestions for the edit form
+// function fetchAndDisplayEditSuggestions(query) {
+//     fetch("/distinctStandardsDivisions")
+//         .then(response => response.json())
+//         .then(data => {
+//             const classSuggestionsEdit = document.getElementById("classSuggestionsContainer");
+//             classSuggestionsEdit.innerHTML = ""; // Clear existing suggestions
 
-            const filteredData = data.filter(item => item.standard_with_division.toLowerCase().includes(query.toLowerCase()));
+//             const filteredData = data.filter(item => item.standard_with_division.toLowerCase().includes(query.toLowerCase()));
 
-            if (filteredData.length === 0) {
-                classSuggestionsEdit.style.display = "none"; // Hide suggestions container
-            } else {
-                filteredData.forEach(item => {
-                    const suggestionItem = document.createElement("div");
-                    suggestionItem.classList.add("suggestion-item");
-                    suggestionItem.textContent = item.standard_with_division;
-                    suggestionItem.addEventListener("click", function () {
-                        addStandardDivisionToSelectedEdit(item.standard_with_division);
-                    });
-                    classSuggestionsEdit.appendChild(suggestionItem);
-                });
-                classSuggestionsEdit.style.display = "flex"; // Show suggestions container
-            }
-        })
-        .catch(error => console.error("Error fetching suggestions:", error));
-}
+//             if (filteredData.length === 0) {
+//                 classSuggestionsEdit.style.display = "none"; // Hide suggestions container
+//             } else {
+//                 filteredData.forEach(item => {
+//                     const suggestionItem = document.createElement("div");
+//                     suggestionItem.classList.add("suggestion-item");
+//                     suggestionItem.textContent = item.standard_with_division;
+//                     suggestionItem.addEventListener("click", function () {
+//                         addStandardDivisionToSelectedEdit(item.standard_with_division);
+//                     });
+//                     classSuggestionsEdit.appendChild(suggestionItem);
+//                 });
+//                 classSuggestionsEdit.style.display = "flex"; // Show suggestions container
+//             }
+//         })
+//         .catch(error => console.error("Error fetching suggestions:", error));
+// }
 
-// Function to add a standard with division to the selected list (for edit)
-function addStandardDivisionToSelectedEdit(standardDivision) {
-    if (!selectedStandardsDivisions.includes(standardDivision)) {
-        selectedStandardsDivisions.push(standardDivision);
-        renderSelectedStandardsDivisionsEdit();
-    }
-    document.getElementById("classSuggestionsContainer").style.display = "none"; // Hide suggestions container
-}
+// // Function to add a standard with division to the selected list (for edit)
+// function addStandardDivisionToSelectedEdit(standardDivision) {
+//     if (!selectedStandardsDivisions.includes(standardDivision)) {
+//         selectedStandardsDivisions.push(standardDivision);
+//         renderSelectedStandardsDivisionsEdit();
+//     }
+//     document.getElementById("classSuggestionsContainer").style.display = "none"; // Hide suggestions container
+// }
 
-// Function to remove a standard with division from the selected list (for edit)
-function removeStandardDivisionFromSelectedEdit(standardDivision) {
-    selectedStandardsDivisions = selectedStandardsDivisions.filter(sd => sd !== standardDivision);
-    renderSelectedStandardsDivisionsEdit();
-}
+// // Function to remove a standard with division from the selected list (for edit)
+// function removeStandardDivisionFromSelectedEdit(standardDivision) {
+//     selectedStandardsDivisions = selectedStandardsDivisions.filter(sd => sd !== standardDivision);
+//     renderSelectedStandardsDivisionsEdit();
+// }
 
-// Function to render selected standards with divisions (for edit)
-function renderSelectedStandardsDivisionsEdit() {
-    const shiftTypeContainer = document.getElementById('shiftClassesContainer');
-    const shiftTypeInput = document.getElementById('classInput');
+// // Function to render selected standards with divisions (for edit)
+// function renderSelectedStandardsDivisionsEdit() {
+//     const shiftTypeContainer = document.getElementById('shiftClassesContainer');
+//     const shiftTypeInput = document.getElementById('classInput');
 
-    // Remove all tags except the input field
-    Array.from(shiftTypeContainer.childNodes).forEach(child => {
-        if (child !== shiftTypeInput && child !== document.getElementById('classSuggestionsContainer')) {
-            shiftTypeContainer.removeChild(child);
-        }
-    });
+//     // Remove all tags except the input field
+//     Array.from(shiftTypeContainer.childNodes).forEach(child => {
+//         if (child !== shiftTypeInput && child !== document.getElementById('classSuggestionsContainer')) {
+//             shiftTypeContainer.removeChild(child);
+//         }
+//     });
 
-    selectedStandardsDivisions.forEach(standardDivision => {
-        const divisionElem = document.createElement("div");
-        divisionElem.classList.add("tag");
-        divisionElem.textContent = standardDivision;
+//     selectedStandardsDivisions.forEach(standardDivision => {
+//         const divisionElem = document.createElement("div");
+//         divisionElem.classList.add("tag");
+//         divisionElem.textContent = standardDivision;
 
-        const removeButton = document.createElement("span");
-        removeButton.classList.add("remove-tag");
-        removeButton.textContent = "×";
-        removeButton.addEventListener("click", () => removeStandardDivisionFromSelectedEdit(standardDivision));
+//         const removeButton = document.createElement("span");
+//         removeButton.classList.add("remove-tag");
+//         removeButton.textContent = "×";
+//         removeButton.addEventListener("click", () => removeStandardDivisionFromSelectedEdit(standardDivision));
 
-        divisionElem.appendChild(removeButton);
-        shiftTypeContainer.insertBefore(divisionElem, shiftTypeInput);
-    });
+//         divisionElem.appendChild(removeButton);
+//         shiftTypeContainer.insertBefore(divisionElem, shiftTypeInput);
+//     });
 
-    shiftTypeInput.value = "";
-}
+//     shiftTypeInput.value = "";
+// }
 
-// Event listener for the standardsDivisions input field (for edit)
-document.getElementById('classInput').addEventListener('input', function () {
-    const query = this.value;
-    if (query.length >= 1) {
-        fetchAndDisplayEditSuggestions(query);
-    } else {
-        document.getElementById('classSuggestionsContainer').style.display = "none"; // Hide suggestions container
-    }
-});
+// // Event listener for the standardsDivisions input field (for edit)
+// document.getElementById('classInput').addEventListener('input', function () {
+//     const query = this.value;
+//     if (query.length >= 1) {
+//         fetchAndDisplayEditSuggestions(query);
+//     } else {
+//         document.getElementById('classSuggestionsContainer').style.display = "none"; // Hide suggestions container
+//     }
+// });
 
-// Function to save shift details
-function saveShiftDetails() {
-    const shiftName = document.getElementById("editShiftName").value;
-    const shiftClasses = selectedStandardsDivisions.join(", "); // Convert array to comma-separated string
+// // Function to save shift details
+// function saveShiftDetails() {
+//     const shiftName = document.getElementById("editShiftName").value;
+//     const shiftClasses = selectedStandardsDivisions.join(", "); // Convert array to comma-separated string
 
-    // Call the API to save shift details
-    fetch('/updateShift', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            shiftId: currentEditingShiftId, // Assume you store this somewhere on edit
-            shiftName: shiftName,
-            shiftClasses: shiftClasses,
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.message === 'Shift updated successfully') {
-            alert('Shift updated successfully!');
-            closeEditShiftPopup(); // Close popup on success
-            refreshShiftsData(); // Refresh the shifts data to reflect changes
-        } else {
-            // Handle errors if the message is not 'Shift updated successfully'
-            alert('Error updating shift: ' + (data.message || 'Unknown error'));
-        }
-    })
-    .catch(error => {
-        console.error('Error updating shift:', error);
-        alert('Error updating shift: ' + error.message);
-    });
-}
+//     // Call the API to save shift details
+//     fetch('/updateShift', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({
+//             shiftId: currentEditingShiftId, // Assume you store this somewhere on edit
+//             shiftName: shiftName,
+//             shiftClasses: shiftClasses,
+//         })
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         if (data.message === 'Shift updated successfully') {
+//             alert('Shift updated successfully!');
+//             closeEditShiftPopup(); // Close popup on success
+//             refreshShiftsData(); // Refresh the shifts data to reflect changes
+//         } else {
+//             // Handle errors if the message is not 'Shift updated successfully'
+//             alert('Error updating shift: ' + (data.message || 'Unknown error'));
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Error updating shift:', error);
+//         alert('Error updating shift: ' + error.message);
+//     });
+// }

@@ -2,6 +2,7 @@
 let routeData = {}; // Object to store route data by route_shift_id
 
 function refreshRoutesData() {
+    document.getElementById('searchRoute').value = "";
     return fetch("/displayRoutes")
         .then((response) => response.json())
         .then((data) => {
@@ -73,36 +74,40 @@ document.getElementById('searchRoute').addEventListener('input', function () {
 });
 
 
-function deleteRoute(route_shift_id) {
-    if (confirm("Are you sure you want to delete this route?")) {
-        fetch(`/deleteRoute/${route_shift_id}`, {
-            method: "DELETE",
-        })
-            .then((response) => response.json())
-            .then((result) => {
-                if (result.success) {
-                    // // Remove the deleted route from the local data
-                    // delete routeData[route_shift_id];
+function deleteRoute(routeId) {
+    // Confirm before deletion
+    const confirmDelete = confirm("Are you sure you want to delete this route?");
+    if (!confirmDelete) return;
 
-                    // // Refresh the displayed routes
-                    // displayRoutes(Object.values(routeData));
-                    alert("Entry Deleted Successfully.")
-                    refreshRoutesData();
-                } else {
-                    console.error("Failed to delete route");
-                }
-            })
-            .catch((error) => console.error("Error deleting route:", error));
-    }
+    // Send DELETE request to the server
+    fetch(`/deleteRoute/${routeId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            // Successfully deleted, now refresh the route data
+            alert("Route deleted successfully!");
+            refreshRoutesData(); // Refresh the routes list after deletion
+        } else {
+            return response.json().then(errorData => {
+                throw new Error(errorData.message || "Failed to delete route");
+            });
+        }
+    })
+    .catch(error => {
+        console.error("Error deleting route:", error);
+        alert("Error deleting route: " + error.message);
+    });
 }
-
 
 const manageRoutesForm = document.getElementById("manageRoutesForm");
 const routesTableBody = document.getElementById("routesTableBody");
 const citiesAddressInput = document.getElementById("citiesAddress");
 const citiesAddressContainer = document.getElementById("citiesAddressContainer");
 const addresssuggestionsContainer = document.getElementById("address_suggestionBox");
-const editsuggestionsContainer = document.getElementById("suggestionsContainer");
 let selectedCities = [];
 
 // Form submission handler
@@ -127,7 +132,7 @@ manageRoutesForm.addEventListener("submit", function (e) {
                 alert(data.error);
             } else {
                 alert(data.message);
-                resetForm();
+                reseteditForm();
                 refreshRoutesData(); // Refresh the table after adding a new route
             }
         })
@@ -138,7 +143,7 @@ manageRoutesForm.addEventListener("submit", function (e) {
 });
 
 // Function to reset the form
-function resetForm() {
+function reseteditForm() {
     manageRoutesForm.reset(); // Reset the form fields
     selectedCities = []; // Clear selected cities
     renderSelectedCities(); // Update the input field and tags
@@ -197,7 +202,7 @@ function fetchAndDisplaySuggestions(query) {
         .then((response) => response.json())
         .then((data) => {
             addresssuggestionsContainer.innerHTML = ""; // Clear existing suggestions
-
+            
             const filteredData = data.filter(item => item.transport_pickup_drop.toLowerCase().startsWith(query.toLowerCase()));
 
             if (filteredData.length === 0) {
@@ -272,147 +277,149 @@ citiesAddressInput.addEventListener("input", function () {
 });
 
 
-// Initial fetch and display of route details
-// displayRoutes();
 
 
-// function to edit route
-let editedSelectedCities = []; // Stores cities selected during editing
 
-// Function to fetch distinct addresses and display suggestions (for the edit route popup)
-function fetchAndDisplayCitySuggestionsForEdit(query) {
-    fetch("/distinctAddresses")
-        .then((response) => response.json())
-        .then((data) => {
-            const suggestionsContainer = document.getElementById("suggestionsContainer");
-            suggestionsContainer.innerHTML = ""; // Clear existing suggestions
+// // function to edit route
+// let editedSelectedCities = []; // Stores cities selected during editing
 
-            const filteredData = data.filter(item =>
-                item.transport_pickup_drop.toLowerCase().startsWith(query.toLowerCase())
-            );
+// // Function to fetch distinct addresses and display suggestions (for the edit route popup)
+// function fetchAndDisplayCitySuggestionsForEdit(query) {
+//     fetch("/distinctAddresses")
+//         .then((response) => response.json())
+//         .then((data) => {
+//             const suggestionsContainer = document.getElementById("editsuggestionsContainer");
+//             // suggestionsContainer.innerHTML = ""; 
 
-            if (filteredData.length === 0) {
-                suggestionsContainer.style.display = "none"; // Hide suggestions container if no match
-            } else {
-                filteredData.forEach((item) => {
-                    const suggestionItem = document.createElement("div");
-                    suggestionItem.classList.add("suggestion-item");
-                    suggestionItem.textContent = item.transport_pickup_drop;
+//             const filteredData = data.filter(item =>
+//                 item.transport_pickup_drop.toLowerCase().startsWith(query.toLowerCase())
+//             );
 
-                    // Add click event for selecting a suggestion
-                    suggestionItem.addEventListener("click", function () {
-                        addCityToEditedSelected(item.transport_pickup_drop);
-                    });
+//             if (filteredData.length === 0) {
+//                 suggestionsContainer.style.display = "none"; // Hide suggestions container if no match
+//             } else {
+//                 filteredData.forEach((item) => {
+//                     const suggestionItem = document.createElement("div");
+//                     suggestionItem.classList.add("suggestion-item");
+//                     suggestionItem.textContent = item.transport_pickup_drop;
 
-                    suggestionsContainer.appendChild(suggestionItem);
-                });
-                suggestionsContainer.style.display = "flex"; // Show suggestions
-            }
-        })
-        .catch((error) => console.error("Error fetching suggestions:", error));
-}
+//                     // Add click event for selecting a suggestion
+//                     suggestionItem.addEventListener("click", function () {
+//                         addCityToEditedSelected(item.transport_pickup_drop);
+//                     });
 
-// Function to add a city to the edited selected cities list
-function addCityToEditedSelected(city) {
-    if (!editedSelectedCities.includes(city)) {
-        editedSelectedCities.push(city);
-        renderEditedSelectedCities();
-    }
-    document.getElementById("cityInput").value = ""; // Clear input after selection
-    document.getElementById("suggestionsContainer").style.display = "none"; // Hide suggestions
-}
+//                     suggestionsContainer.appendChild(suggestionItem);
+//                 });
+//                 suggestionsContainer.style.display = "flex"; // Show suggestions
+//             }
+//         })
+//         .catch((error) => console.error("Error fetching suggestions:", error));
+// }
 
-// Function to render the selected cities as tags in the cities container (for edit popup)
-function renderEditedSelectedCities() {
-    const citiesContainer = document.getElementById("citiesContainer");
+// // Function to add a city to the edited selected cities list
+// function addCityToEditedSelected(city) {
+//     if (!editedSelectedCities.includes(city)) {
+//         editedSelectedCities.push(city);
+//         renderEditedSelectedCities();
+//     }
+//     document.getElementById("cityInput").value = ""; // Clear input after selection
+//     document.getElementById("suggestionsContainer").style.display = "none"; // Hide suggestions
+// }
 
-    // Remove all previous city tags (except the input field)
-    Array.from(citiesContainer.childNodes).forEach(child => {
-        if (child !== document.getElementById("cityInput")) {
-            citiesContainer.removeChild(child);
-        }
-    });
+// // Function to render the selected cities as tags in the cities container (for edit popup)
+// function renderEditedSelectedCities() {
+//     const citiesContainer = document.getElementById("citiesContainer");
 
-    // Add each selected city as a tag with a remove button
-    editedSelectedCities.forEach(city => {
-        const cityElem = document.createElement("div");
-        cityElem.classList.add("tag");
-        cityElem.textContent = city;
+//     // Remove all previous city tags (except the input field)
+//     Array.from(citiesContainer.childNodes).forEach(child => {
+//         if (child !== document.getElementById("cityInput")) {
+//             citiesContainer.removeChild(child);
+//         }
+//     });
 
-        const removeButton = document.createElement("span");
-        removeButton.classList.add("remove-tag");
-        removeButton.textContent = "×";
-        removeButton.addEventListener("click", () => removeCityFromEditedSelected(city));
+//     // Add each selected city as a tag with a remove button
+//     editedSelectedCities.forEach(city => {
+//         const cityElem = document.createElement("div");
+//         cityElem.classList.add("tag");
+//         cityElem.textContent = city;
 
-        cityElem.appendChild(removeButton);
-        citiesContainer.insertBefore(cityElem, document.getElementById("cityInput")); // Insert before input
-    });
-}
+//         const removeButton = document.createElement("span");
+//         removeButton.classList.add("remove-tag");
+//         removeButton.textContent = "×";
+//         removeButton.addEventListener("click", () => removeCityFromEditedSelected(city));
 
-// Function to remove a city from the edited selected list
-function removeCityFromEditedSelected(city) {
-    editedSelectedCities = editedSelectedCities.filter(c => c !== city);
-    renderEditedSelectedCities(); // Re-render after removing
-}
+//         cityElem.appendChild(removeButton);
+//         citiesContainer.insertBefore(cityElem, document.getElementById("cityInput")); // Insert before input
+//     });
+// }
 
-// Event listener for the city input field to trigger suggestions (for edit popup)
-document.getElementById("cityInput").addEventListener("input", function () {
-    const query = this.value;
-    if (query.length >= 1) {
-        fetchAndDisplayCitySuggestionsForEdit(query); // Using the renamed function
-    } else {
-        document.getElementById("suggestionsContainer").style.display = "none"; // Hide suggestions if input is cleared
-    }
-});
+// // Function to remove a city from the edited selected list
+// function removeCityFromEditedSelected(city) {
+//     editedSelectedCities = editedSelectedCities.filter(c => c !== city);
+//     renderEditedSelectedCities(); // Re-render after removing
+// }
 
-// Function to save route details (you'll need to send edited selected cities as a comma-separated string)
-function saveRouteDetails() {
-    const routeName = document.getElementById("editRouteName").value;
-    const routeCities = editedSelectedCities.join(", "); // Convert array to comma-separated string
+// // Event listener for the city input field to trigger suggestions (for edit popup)
+// document.getElementById("cityInput").addEventListener("input", function () {
+//     const query = this.value;
+//     if (query.length >= 1) {
+//         fetchAndDisplayCitySuggestionsForEdit(query); // Using the renamed function
+//     } else {
+//         document.getElementById("suggestionsContainer").style.display = "none"; // Hide suggestions if input is cleared
+//     }
+// });
 
-    // Call the API to save route details (implement the backend for this)
-    fetch('/updateRoute', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            routeShiftId: selectedRouteId, // Assume you store this somewhere on edit
-            routeName: routeName,
-            routeCities: routeCities,
-            routeType: 'route' // Example type
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.message === 'Route updated successfully') {
-            alert('Route updated successfully!');
-            closeEditRoutePopup(); // Close popup on success
-            refreshRoutesData(); // Refresh the routes data to reflect changes
-        }
-    })
-    .catch(error => console.error('Error updating route:', error));
-}
+// // Function to save route details (you'll need to send edited selected cities as a comma-separated string)
+// function saveRouteDetails() {
+//     const routeName = document.getElementById("editRouteName").value;
+//     const routeCities = editedSelectedCities.join(", "); // Convert array to comma-separated string
 
-// Function to open the edit route popup
-function editRoute(routeShiftId) {
-    const route = routeData[routeShiftId];
-    document.getElementById("editRouteName").value = route.route_shift_name;
+//     // Call the API to save route details (implement the backend for this)
+//     fetch('/updateRoute', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({
+//             routeShiftId: selectedRouteId, // Assume you store this somewhere on edit
+//             routeName: routeName,
+//             routeCities: routeCities,
+//             routeType: 'route' // Example type
+//         })
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         if (data.message === 'Route updated successfully') {
+//             alert('Route updated successfully!');
+//             closeEditRoutePopup(); // Close popup on success
+//             refreshRoutesData(); // Refresh the routes data to reflect changes
+//         }
+//     })
+//     .catch(error => console.error('Error updating route:', error));
+// }
 
-    // Populate edited selected cities from the route details (comma-separated)
-    editedSelectedCities = route.route_shift_detail.split(", ").map(city => city.trim());
-    renderEditedSelectedCities();
+// // Function to open the edit route popup
+// function editRoute(routeShiftId) {
+//     const route = routeData[routeShiftId];
+//     document.getElementById("editRouteName").value = route.route_shift_name;
 
-    // Show popup and blur background
-    document.getElementById("editRoutePopup").style.display = "block";
-    document.getElementById("popupBg").style.display = "block";
+//     // Populate edited selected cities from the route details (comma-separated)
+//     editedSelectedCities = route.route_shift_detail.split(", ").map(city => city.trim());
+//     renderEditedSelectedCities();
 
-    // Store the current routeShiftId for saving later
-    selectedRouteId = routeShiftId;
-}
+//     // Show popup and blur background
+//     document.getElementById("editRoutePopup").style.display = "block";
+//     document.getElementById("popupBg").style.display = "block";
 
-// Function to close the edit route popup
-function closeEditRoutePopup() {
-    document.getElementById("editRoutePopup").style.display = "none";
-    document.getElementById("popupBg").style.display = "none";
-}
+//     // Store the current routeShiftId for saving later
+//     selectedRouteId = routeShiftId;
+// }
+
+// // Function to close the edit route popup
+// function closeEditRoutePopup() {
+//     document.getElementById("editRoutePopup").style.display = "none";
+//     document.getElementById("popupBg").style.display = "none";
+// }
+
+
+

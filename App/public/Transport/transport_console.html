@@ -244,7 +244,7 @@
                             <option value="">Select Type</option>
                             <option value="Driver">Driver</option>
                             <option value="Conductor">Conductor</option>
-                        </select>                           
+                        </select>
                     </div>
                     <button class="refreshButton" onclick="refreshDriverConductorData()" style="margin-top: 10px;">
                         <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
@@ -383,8 +383,8 @@
                     <div class="search-container">
                         <div class="form-Searchgroup">
                             <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
-                            <input type="text" class="form-control" id="searchBar" name="routeSearch" placeholder=" "
-                                oninput="searchRouteDetails()" style="width: 400px; height: 1.7rem !important;">
+                            <input type="text" class="form-control" id="searchRoute" name="routeSearch" placeholder=" "
+                                style="width: 400px; height: 1.7rem !important;">
                             <span class="form-control-placeholder" style="left: 3.75rem;">Search Route...</span>
                         </div>
                         <button class="refreshButton" onclick="refreshRoutesData()" style="margin-top: 10px;">
@@ -412,33 +412,28 @@
                 </div>
             </div>
         </div>
+
+       
     </div>
 
 
-    <!-- Edit popup for manage routes -->
-    <div id="editRoutePopup" class="popup-container" style="display: none;">
-        <div class="popup-content">
-            <span class="close-popup" onclick="closeEditRoutePopup()">×</span>
-            <h2>Edit Route</h2>
-            <div class="form-group">
-                <label for="editRouteName">Route Name</label>
-                <input type="text" id="editRouteName" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="editRouteCities">Route Cities</label>
-                <div id="citiesContainer" class="cities-container">
-                    <!-- Dynamically added city tags will appear here -->
-                    <input type="text" id="cityInput" placeholder="Add a city" class="city-input">
-                </div>
-                <!-- Container for city suggestions -->
-                <div id="suggestionsContainer" class="suggestions-container" style="display: none;"></div>
-            </div>
-            <button onclick="saveRouteDetails()">Save</button>
+    <div id="popupBg" class="popup-bg"></div>
+
+    <div id="editRoutePopup" class="edit-route-popup">
+        <h2>Edit Route</h2>
+        
+        <label for="routeNameInput">Route Name:</label>
+        <input type="text" id="routeNameInput" placeholder="Enter route name" />
+    
+        <label for="cityInput">City Addresses:</label>
+        <div id="cityTagsContainer" class="tags-container">
+            <input type="text" id="cityInput" placeholder="Enter city name" autocomplete="off" />
+            <div id="suggestionsContainer" class="suggestions-container"></div>
         </div>
+    
+        <button id="saveRouteBtn">Save</button>
+        <button id="closePopupBtn">Cancel</button>
     </div>
-
-    <!-- Background Blur -->
-    <div id="popupBg" class="popup-bg" style="display: none;"></div>
 
 
 
@@ -493,8 +488,7 @@
                     <div class="search-container">
                         <div class="form-Searchgroup">
                             <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
-                            <input type="text" class="form-control" id="searchBar" name="shiftSearch"
-                                placeholder=" " oninput="searchShiftDetails()"
+                            <input type="text" class="form-control" id="searchShift" name="shiftSearch" placeholder=" "
                                 style="width: 400px; height: 1.7rem !important;">
                             <span class="form-control-placeholder" style="left: 3.75rem;">Search Shift...</span>
                         </div>
@@ -523,39 +517,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Edit Shift Popup -->
-    <div id="editShiftPopup" class="popup-container" style="display: none;">
-        <div class="popup-content">
-            <span class="close-popup" onclick="closeEditShiftPopup()">×</span>
-            <h2>Edit Shift</h2>
-
-            <!-- Form Group for Shift Name -->
-            <div class="form-group">
-                <label for="editShiftName">Shift Name</label>
-                <input type="text" id="editShiftName" class="form-control" placeholder="Enter shift name">
-            </div>
-
-            <!-- Form Group for Classes Allotted -->
-            <div class="form-group">
-                <label for="editShiftClasses">Classes Allotted</label>
-                <div id="shiftClassesContainer" class="tags-container">
-                    <!-- Dynamically added class tags will appear here -->
-                    <input type="text" id="classInput" placeholder="Add a class" class="class-input">
-                </div>
-                <!-- Container for class suggestions -->
-                <div id="classSuggestionsContainer" class="suggestions-container" style="display: none;"></div>
-            </div>
-
-            <!-- Save Button -->
-            <button class="save-button" onclick="saveShiftDetails()">Save</button>
-        </div>
-    </div>
-
-    <!-- Background Blur -->
-    <div id="popupBg" class="popup-bg" style="display: none;"></div>
-
-
 
 
     <!-- Overlay for Tag Route Shift -->
@@ -653,7 +614,7 @@
     </div>
 
 
-    <!-- Overlay for Allocate Bus -->       
+    <!-- Overlay for Allocate Bus -->
     <div id="allocateBusOverlay" class="overlay-search">
         <div class="overlay-content-search">
             <button id="closeAllocateBusOverlay" class="close-button">&times;</button>
@@ -714,83 +675,83 @@
         </div>
     </div>
 
-   <!-- Overlay for List Scheduling -->
-<div id="listStudentsOverlay" class="overlay-search">
-    <div class="overlay-content-search">
-        <button id="closeListStudentsOverlay" class="close-button">&times;</button>
-        <div class="overlay-inner">
-            <!-- Left Side -->
-            <div class="left-side" style="display: flex; flex-direction: column;">
-                <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
-                    type="module"></script>
+    <!-- Overlay for List Scheduling -->
+    <div id="listStudentsOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeListStudentsOverlay" class="close-button">&times;</button>
+            <div class="overlay-inner">
+                <!-- Left Side -->
+                <div class="left-side" style="display: flex; flex-direction: column;">
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                        type="module"></script>
 
-                <dotlottie-player src="https://lottie.host/9c718d68-ba48-4d8e-a0c8-40afe1b833fe/sxmNRw9ZoN.json"
-                    background="transparent" speed="1" style="width: 300px; height: 300px;" loop
-                    autoplay></dotlottie-player>
+                    <dotlottie-player src="https://lottie.host/9c718d68-ba48-4d8e-a0c8-40afe1b833fe/sxmNRw9ZoN.json"
+                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                        autoplay></dotlottie-player>
 
-                <!-- Input Fields -->
-                <div class="form-group">
-                    <input type="text" class="form-control" id="listStudents_vehicleNo" placeholder="Vehicle No">
-                    <div id="listStudents_vehicleSuggestions" class="suggestions"></div>
-                </div>
-
-                <div class="form-group">
-                    <input type="text" class="form-control" id="listStudents_shiftType" placeholder="Shift">
-                    <div id="listStudents_shiftSuggestions" class="suggestions"></div>
-                </div>
-
-                <div id="listStudents_vehicleInfo" class="info-containe">
-                    <!-- Vehicle info will be displayed here -->
-                </div>
-
-            </div>
-
-            <!-- Right Side -->
-            <div class="right-side">
-                <h2>List Students</h2>
-                <div class="form-row">
+                    <!-- Input Fields -->
                     <div class="form-group">
-                        <input type="text" class="form-control" id="listStudents_stops"
-                            placeholder="Filter by Vehicle Route">
-                        <div id="listStudents_stopSuggestions" class="suggestions"></div>
+                        <input type="text" class="form-control" id="listStudents_vehicleNo" placeholder="Vehicle No">
+                        <div id="listStudents_vehicleSuggestions" class="suggestions"></div>
                     </div>
 
                     <div class="form-group">
-                        <input type="text" class="form-control" id="listStudents_classes"
-                            placeholder="Filter by Class">
-                        <div id="listStudents_classSuggestions" class="suggestions"></div>
+                        <input type="text" class="form-control" id="listStudents_shiftType" placeholder="Shift">
+                        <div id="listStudents_shiftSuggestions" class="suggestions"></div>
                     </div>
 
-                    <button button id="exportStudentListButton" class="export_registered_students">
-                        <img src="/images/export.png" alt="Export Icon"> Export
-                    </button>
+                    <div id="listStudents_vehicleInfo" class="info-containe">
+                        <!-- Vehicle info will be displayed here -->
+                    </div>
+
                 </div>
 
-                <!-- Student Count -->
-                <div class="student-count">
-                    <h3>Students Count: <span id="studentCount">0</span></h3>
-                </div>
+                <!-- Right Side -->
+                <div class="right-side">
+                    <h2>List Students</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="listStudents_stops"
+                                placeholder="Filter by Vehicle Route">
+                            <div id="listStudents_stopSuggestions" class="suggestions"></div>
+                        </div>
 
-                <div class="table-container">
-                    <table id="listStudents_scheduleTable" class="styled-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Class</th>
-                                <th>Division</th>
-                                <th>Contact</th>
-                                <th>Pickup-Drop</th>
-                            </tr>
-                        </thead>
-                        <tbody id="listStudents_scheduleTableBody">
-                            <!-- Table rows will be populated here -->
-                        </tbody>
-                    </table>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="listStudents_classes"
+                                placeholder="Filter by Class">
+                            <div id="listStudents_classSuggestions" class="suggestions"></div>
+                        </div>
+
+                        <button button id="exportStudentListButton" class="export_registered_students">
+                            <img src="/images/export.png" alt="Export Icon"> Export
+                        </button>
+                    </div>
+
+                    <!-- Student Count -->
+                    <div class="student-count">
+                        <h3>Students Count: <span id="studentCount">0</span></h3>
+                    </div>
+
+                    <div class="table-container">
+                        <table id="listStudents_scheduleTable" class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Class</th>
+                                    <th>Division</th>
+                                    <th>Contact</th>
+                                    <th>Pickup-Drop</th>
+                                </tr>
+                            </thead>
+                            <tbody id="listStudents_scheduleTableBody">
+                                <!-- Table rows will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
     <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Transport_js/Transport_console.js"></script>
