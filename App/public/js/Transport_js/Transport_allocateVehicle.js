@@ -65,6 +65,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 shiftSuggestionsContainer.style.display = 'flex'; // Show suggestions container
                 shiftSuggestionsContainer.innerHTML = '';
 
+                
+
                 const filteredData = query
                     ? data.filter(shift => shift.route_shift_name.toLowerCase().includes(query.toLowerCase()))
                     : data;
@@ -154,11 +156,14 @@ document.addEventListener('DOMContentLoaded', function () {
             routeSuggestionsContainer.innerHTML = '';
 
             // Clear shift input and suggestions when a new route is selected
-            shiftInput.value = '';
+            // shiftInput.value = '';
             shiftSuggestionsContainer.innerHTML = '';
             shiftDetailContainer.innerHTML = '';
             selectedShiftDetail = '';
             studentDetailsContainer.innerHTML = '';
+            vehicleDetailContainer.innerHTML = '';
+            shiftInput.value = '';
+            vehicleInput.value = '';
 
             // Fetch student count if both details are available
             if (selectedShiftDetail) {
@@ -178,6 +183,9 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
             shiftSuggestionsContainer.style.display = 'none'; // Hide suggestions container
             shiftSuggestionsContainer.innerHTML = '';
+
+            vehicleInput.value = '';
+            vehicleDetailContainer.innerHTML = '';
 
             // Fetch student count if both details are available
             if (selectedRouteDetail) {
