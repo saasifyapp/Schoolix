@@ -413,27 +413,33 @@
             </div>
         </div>
 
-       
+
     </div>
 
-
-    <div id="popupBg" class="popup-bg"></div>
-
-    <div id="editRoutePopup" class="edit-route-popup">
-        <h2>Edit Route</h2>
-        
-        <label for="routeNameInput">Route Name:</label>
-        <input type="text" id="routeNameInput" placeholder="Enter route name" />
-    
-        <label for="cityInput">City Addresses:</label>
-        <div id="cityTagsContainer" class="tags-container">
-            <input type="text" id="cityInput" placeholder="Enter city name" autocomplete="off" />
-            <div id="suggestionsContainer" class="suggestions-container"></div>
+    <!-- Edit popup for manage routes -->
+    <div id="editRoutePopup" class="popup-container" style="display: none;">
+        <div class="popup-content">
+            <span class="close-popup" onclick="closeEditRoutePopup()">×</span>
+            <h2>Edit Route</h2>
+            <div class="form-group">
+                <label for="editRouteName">Route Name</label>
+                <input type="text" id="editRouteName" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="editRouteCities">Route Cities</label>
+                <div id="citiesContainer" class="cities-container">
+                    <!-- Dynamically added city tags will appear here -->
+                    <input type="text" id="cityInput" placeholder="Add a city" class="city-input">
+                </div>
+                <!-- Container for city suggestions -->
+                <div id="suggestionsContainer" class="suggestions-container" style="display: none;"></div>
+            </div>
+            <button onclick="saveRouteDetails()">Save</button>
         </div>
-    
-        <button id="saveRouteBtn">Save</button>
-        <button id="closePopupBtn">Cancel</button>
     </div>
+
+    <!-- Background Blur -->
+    <div id="popupBg" class="popup-bg" style="display: none;"></div>
 
 
 
@@ -517,6 +523,32 @@
             </div>
         </div>
     </div>
+
+    <!-- Edit popup for manage shifts -->
+    <div id="editShiftPopup" class="popup-container" style="display: none;">
+        <div class="popup-content">
+            <span class="close-popup" onclick="closeEditShiftPopup()">×</span>
+            <h2>Edit Shift</h2>
+            <div class="form-group">
+                <label for="editShiftNameInput">Shift Name</label>
+                <input type="text" id="editShiftNameInput" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="editShiftTypes">Shift Types</label>
+                <div id="shiftTypeseditContainer" class="shift-types-container">
+                    <!-- Dynamically added shift type tags will appear here -->
+                    <input type="text" id="shiftTypeInputField" placeholder="Add a shift type" class="shift-type-input">
+                </div>
+                <!-- Container for shift type suggestions -->
+                <div id="shiftTypeSuggestionsContainer" class="suggestions-container" style="display: none;"></div>
+            </div>
+            <button onclick="saveShiftDetails()">Save</button>
+        </div>
+    </div>
+
+    <!-- Background Blur -->
+    <div id="popupBackgroundShift" class="popup-bg" style="display: none;"></div>
+
 
 
     <!-- Overlay for Tag Route Shift -->

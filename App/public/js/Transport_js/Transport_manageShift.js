@@ -372,3 +372,151 @@ function deleteShift(shiftId) {
 //         alert('Error updating shift: ' + error.message);
 //     });
 // }
+
+
+let editedSelectedShiftTypes = []; // To store the selected shift types
+let selectedShiftId = null; // To store the currently selected shift ID
+
+// Function to fetch and display shift type suggestions based on input query
+function fetchAndDisplayShiftTypeSuggestions(query) {
+    fetch("/distinctStandardsDivisions")
+        .then((response) => response.json())
+        .then((data) => {
+            const suggestionsContainer = document.getElementById("shiftTypeSuggestionsContainer");
+            suggestionsContainer.innerHTML = ""; // Clear existing suggestions
+
+            // Filter shift types based on the query
+            const filteredData = data.filter(item => item.standard_with_division.toLowerCase().includes(query.toLowerCase()));
+
+            if (filteredData.length === 0) {
+                suggestionsContainer.style.display = "none"; // Hide if no matches
+            } else {
+                filteredData.forEach((item) => {
+                    const suggestionItem = document.createElement("div");
+                    suggestionItem.classList.add("suggestion-item");
+                    suggestionItem.textContent = item.standard_with_division;
+
+                    // Add click event to select a suggestion
+                    suggestionItem.addEventListener("click", function () {
+                        addShiftTypeToEditedSelected(item.standard_with_division);
+                    });
+
+                    suggestionsContainer.appendChild(suggestionItem);
+                });
+                suggestionsContainer.style.display = "flex"; // Show suggestions
+            }
+        })
+        .catch((error) => console.error("Error fetching suggestions:", error));
+}
+
+// Function to add a shift type to the edited selected list
+function addShiftTypeToEditedSelected(shiftType) {
+    if (!editedSelectedShiftTypes.includes(shiftType)) {
+        editedSelectedShiftTypes.push(shiftType); // Add to the array if not already present
+        renderEditedSelectedShiftTypes(); // Re-render the tags
+    }
+    document.getElementById("shiftTypeInputField").value = ""; // Clear input after selection
+    document.getElementById("shiftTypeSuggestionsContainer").style.display = "none"; // Hide suggestions
+}
+
+// Event listener for the shift type input to trigger suggestions
+document.getElementById("shiftTypeInputField").addEventListener("input", function () {
+    const query = this.value;
+    if (query.length >= 1) {
+        fetchAndDisplayShiftTypeSuggestions(query); // Trigger suggestions based on input
+    } else {
+        document.getElementById("shiftTypeSuggestionsContainer").style.display = "none"; // Hide suggestions if input is cleared
+    }
+});
+
+// Function to open the edit shift popup
+function editShift(shiftId) {
+    const shift = shiftsData[shiftId];
+    document.getElementById("editShiftNameInput").value = shift.route_shift_name;
+
+    // Populate the selected shift types from the shift details (comma-separated)
+    editedSelectedShiftTypes = shift.route_shift_detail.split(", ").map(type => type.trim());
+    renderEditedSelectedShiftTypes();
+
+    // Show popup and blur background
+    document.getElementById("editShiftPopup").style.display = "block";
+    document.getElementById("popupBackgroundShift").style.display = "block";
+
+    // Store the current shiftId for saving later
+    selectedShiftId = shiftId;
+}
+
+// Function to close the edit shift popup
+function closeEditShiftPopup() {
+    document.getElementById("editShiftPopup").style.display = "none";
+    document.getElementById("popupBackgroundShift").style.display = "none";
+    document.getElementById("shiftTypeSuggestionsContainer").style.display = "none"; // Hide suggestions
+}
+
+// Function to render the selected shift types as tags
+function renderEditedSelectedShiftTypes() {
+    const shiftTypeContainer = document.getElementById("shiftTypeseditContainer");
+
+    // Remove all existing tags except the input field
+    Array.from(shiftTypeContainer.childNodes).forEach(child => {
+        if (child !== document.getElementById("shiftTypeInputField")) {
+            shiftTypeContainer.removeChild(child);
+        }
+    });
+
+    // Create and append tags for each selected shift type
+    editedSelectedShiftTypes.forEach(type => {
+        const tagElement = document.createElement("div");
+        tagElement.classList.add("tag");
+        tagElement.textContent = type;
+
+        const removeButton = document.createElement("span");
+        removeButton.classList.add("remove-tag");
+        removeButton.textContent = "×";
+        removeButton.addEventListener("click", () => removeShiftType(type));
+
+        tagElement.appendChild(removeButton);
+        shiftTypeContainer.insertBefore(tagElement, document.getElementById("shiftTypeInputField"));
+    });
+
+    document.getElementById("shiftTypeInputField").value = ""; // Clear input field
+}
+
+// Function to remove a selected shift type
+function removeShiftType(type) {
+    editedSelectedShiftTypes = editedSelectedShiftTypes.filter(t => t !== type);
+    renderEditedSelectedShiftTypes(); // Re-render the tags
+}
+
+// Function to save shift details (you'll need to send edited selected shift types as a comma-separated string)
+function saveShiftDetails() {
+    const shiftName = document.getElementById("editShiftNameInput").value;
+    const shiftTypes = editedSelectedShiftTypes.join(", "); // Convert array to comma-separated string
+
+    // Call the API to save shift details (implement the backend for this)
+    fetch('/updateShift', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            shiftId: selectedShiftId, // Assume you store this somewhere on edit
+            shiftName: shiftName,
+            shiftClasses: shiftTypes, // This corresponds to route_shift_detail in your SQL
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message === 'Shift updated successfully') {
+            alert('Shift updated successfully!');
+            closeEditShiftPopup(); // Close popup on success
+            refreshShiftsData(); // Refresh the shifts data to reflect changes
+        } else {
+            alert('Error updating shift: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error updating shift:', error);
+        alert('An error occurred while updating the shift.');
+    });
+}
