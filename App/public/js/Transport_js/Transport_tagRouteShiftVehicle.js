@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to delete a record
     function deleteRecord(id) {
+        fetchAndDisplayData();
         // Show a confirmation dialog
         const userConfirmed = window.confirm('Do you really want to delete this record? This process cannot be undone.');
     
