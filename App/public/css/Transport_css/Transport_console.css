@@ -1,24 +1,34 @@
 .overlay {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */   
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+    justify-content: center;
+    /* Center horizontally */
+    align-items: center;
+    /* Center vertically */
 }
 
 .overlay-content {
     background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
     padding: 20px;
     border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
-    max-width: 1100px; /* Optional: maximum width for better control */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: shadow effect */
+    width: 80%;
+    /* Could be more or less, depending on screen size */
+    max-width: 1100px;
+    /* Optional: maximum width for better control */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Optional: shadow effect */
     position: relative;
     top: 2rem;
     bottom: 2rem;
@@ -31,9 +41,12 @@
     background-color: #fefefe;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
-    max-width: 350px; /* Optional: maximum width for better control */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: shadow effect */
+    width: 80%;
+    /* Could be more or less, depending on screen size */
+    max-width: 350px;
+    /* Optional: maximum width for better control */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Optional: shadow effect */
     position: relative;
     top: 2rem;
     bottom: 2rem;
@@ -83,14 +96,14 @@
 }
 
 
-.overlay-search-head {  
+.overlay-search-head {
     font-size: 30px;
     color: var(--grey-color);
     animation: slideInFromUp 0.3s ease-in-out;
 
 }
 
-.overlay-content h2{
+.overlay-content h2 {
     font-size: 1.5rem;
     font-weight: 700;
     line-height: 1.2;
@@ -99,7 +112,7 @@
     color: var(--grey-color);
 }
 
-.overlay-content-inner h2{
+.overlay-content-inner h2 {
     font-size: 1.5rem;
     font-weight: 700;
     line-height: 1.2;
@@ -133,17 +146,17 @@
     justify-content: center;
 }
 
-.left{
+.left {
     width: 100%;
-max-width: 400px;
-text-align: center;    
-box-sizing: border-box;
-color: white;
-flex-direction: column;    
+    max-width: 400px;
+    text-align: center;
+    box-sizing: border-box;
+    color: white;
+    flex-direction: column;
 
-padding: 20px;
-border-radius: 20px;
-box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
 
 .right-side {
@@ -161,7 +174,7 @@ box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     margin: 10px;
     /* background-color: white; */
     /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); */
-    
+
 }
 
 .center-heading {
@@ -172,6 +185,7 @@ box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     color: var(--grey-color);
     margin-bottom: 60px;
 }
+
 .form-inline {
     display: flex;
     justify-content: center;
@@ -218,7 +232,8 @@ box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     border-collapse: collapse;
 }
 
-.details-table th, .details-table td {
+.details-table th,
+.details-table td {
     border: 1px solid #ddd;
     padding: 8px;
 }
@@ -232,7 +247,7 @@ box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 .horizontal-group {
     display: flex;
     justify-content: space-between;
-    gap: 10px;        
+    gap: 10px;
 }
 
 
@@ -265,18 +280,22 @@ box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 .form-Searchgroup {
     display: flex;
     align-items: center;
-    gap: 10px; /* Space between elements */
+    gap: 10px;
+    /* Space between elements */
     width: 100%;
     max-width: 1200px;
 }
 
-#searchBar {
+#searchBar,
+#searchRoute,
+#searchShift {
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ddd;
     border-radius: 30px;
     height: 3rem;
-    flex-grow: 3; /* Allow it to take up remaining space */
+    flex-grow: 3;
+    /* Allow it to take up remaining space */
 }
 
 .vendorIcon {
@@ -314,8 +333,9 @@ box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 
 .refreshButton,
 .export_registered_students,
-.export_routes{
-    margin-bottom: 15px; /* Add margin between the buttons */
+.export_routes {
+    margin-bottom: 15px;
+    /* Add margin between the buttons */
     cursor: pointer;
     background-color: transparent;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -324,12 +344,15 @@ box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     border-radius: 20px;
     height: 2.3rem;
     width: 6rem;
-    font-size: 1rem; /* Reduce the font size */
+    font-size: 1rem;
+    /* Reduce the font size */
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 8px; /* Add padding to fit content */
-    transition: all 0.3s; /* Add transition for smooth hover effect */
+    padding: 0 8px;
+    /* Add padding to fit content */
+    transition: all 0.3s;
+    /* Add transition for smooth hover effect */
     font-family: 'Open Sans', sans-serif;
     font-weight: bold;
 }
@@ -337,20 +360,26 @@ box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 .refreshButton img,
 .export_registered_students img,
 .export_routes img {
-    height: 80%; /* Set image height to fit button */
-    margin-right: 5px; /* Add a 5px margin to the right of the image */
+    height: 80%;
+    /* Set image height to fit button */
+    margin-right: 5px;
+    /* Add a 5px margin to the right of the image */
 }
 
 
 .export_registered_students:hover,
 .export_routes:hover {
-    background-color: #27AE60; /* Change background color on hover */
-    transform: scale(1.05); /* Increase size on hover */
+    background-color: #27AE60;
+    /* Change background color on hover */
+    transform: scale(1.05);
+    /* Increase size on hover */
 }
 
 .refreshButton:hover {
-    background-color: #76D7C4; /* Change background color on hover */
-    transform: scale(1.05); /* Increase size on hover */
+    background-color: #76D7C4;
+    /* Change background color on hover */
+    transform: scale(1.05);
+    /* Increase size on hover */
 }
 
 .export_registered_students,
@@ -364,19 +393,24 @@ box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 
 
 .table-container {
-    max-height: calc(100% - 11rem); /* Set maximum height for the table container */
+    max-height: calc(100% - 11rem);
+    /* Set maximum height for the table container */
     overflow-y: auto;
-    margin-top: 0.725rem; /* Set margin between the table container and overlay content */
-    border-radius: 10px 10px 0 0; /* Apply border-radius to top corners */
+    margin-top: 0.725rem;
+    /* Set margin between the table container and overlay content */
+    border-radius: 10px 10px 0 0;
+    /* Apply border-radius to top corners */
 }
 
 .styled-table {
-    border-collapse: collapse; /* Ensure that the border radius is applied properly */
+    border-collapse: collapse;
+    /* Ensure that the border radius is applied properly */
     width: 100%;
     box-shadow: 0 0 0 1px #dddddd;
     margin: auto;
     animation: fadeUp 0.5s ease-in-out;
-    animation-delay: 0.4s; /* Delay to start after overlay animation */
+    animation-delay: 0.4s;
+    /* Delay to start after overlay animation */
     animation-fill-mode: backwards;
 }
 
@@ -400,8 +434,10 @@ box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     border: 1px solid #dddddd;
     padding: 0px;
     text-align: center;
-    height: 50px; /* Fixed height */
-    overflow: hidden; /* Hide content that overflows */
+    height: 50px;
+    /* Fixed height */
+    overflow: hidden;
+    /* Hide content that overflows */
 }
 
 .styled-table td button {
@@ -461,12 +497,13 @@ box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     cursor: pointer;
 }
 
-.button-container{
+.button-container {
     display: flex;
     justify-content: center;
-    align-items: center;   
+    align-items: center;
     background-color: transparent;
-    gap: 10px; /* Adjust the gap between cards as needed */
+    gap: 10px;
+    /* Adjust the gap between cards as needed */
 }
 
 
@@ -497,7 +534,7 @@ box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
 
 .bookvaltcard::after {
-    content: "";    
+    content: "";
     position: absolute;
     background: inherit;
     inset: -10px;
@@ -525,9 +562,9 @@ box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     mix-blend-mode: multiply;
 }
 
-.bookvaltcard img{
+.bookvaltcard img {
     height: 93px;
-    width: 100px;    
+    width: 100px;
     background-color: transparent
 }
 
@@ -535,7 +572,7 @@ box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 
-.animatedBtn{
+.animatedBtn {
     width: 180px;
     height: 60px;
     border: none;
@@ -545,29 +582,29 @@ box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     font-size: 16px;
     border-radius: 40px;
     text-align: center;
-    box-shadow: 0 6px 20px -5px rgba(0,0,0,0.4);
+    box-shadow: 0 6px 20px -5px rgba(0, 0, 0, 0.4);
     position: relative;
     overflow: hidden;
     cursor: pointer;
 }
 
-.check-box{
+.check-box {
     width: 60px;
     height: 60px;
     border-radius: 40px;
-    box-shadow: 0 0 12px -2px rgba(0,0,0,0.5);
+    box-shadow: 0 0 12px -2px rgba(0, 0, 0, 0.5);
     position: absolute;
     top: 0;
     right: -40px;
     opacity: 0;
 }
 
-.check-box svg{
+.check-box svg {
     width: 28px;
     margin: 18px;
 }
 
-svg path{
+svg path {
     stroke-width: 2;
     stroke: #fff;
     stroke-dasharray: 34;
@@ -575,23 +612,23 @@ svg path{
     stroke-linecap: round;
 }
 
-.active{
+.active {
     background: #ff2b75;
     transition: 1s;
 }
 
-.active .check-box{
+.active .check-box {
     right: 0;
     opacity: 1;
     transition: 1s;
 }
 
-.active p{
+.active p {
     margin-right: 90px;
     transition: 1s;
 }
 
-.active svg path{
+.active svg path {
     stroke-dashoffset: 0;
     transition: 1s;
     transition-delay: 1s;
@@ -613,7 +650,8 @@ svg path{
 }
 
 
-#confirmButton, #cancelButton {
+#confirmButton,
+#cancelButton {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -632,19 +670,22 @@ svg path{
     text-decoration: none;
 }
 
-#confirmButton:hover, #cancelButton:hover {
+#confirmButton:hover,
+#cancelButton:hover {
     transform: scale(1.1);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
-#confirmButton img, #cancelButton img {
+#confirmButton img,
+#cancelButton img {
     width: 25px;
     height: 25px;
     border-radius: 0px;
     margin: 5px;
 }
 
-#confirmButton span, #cancelButton span {
+#confirmButton span,
+#cancelButton span {
     margin-right: 10px;
 }
 
@@ -654,282 +695,306 @@ svg path{
 
 
 .custom-prompt {
-display: flex;
-align-items: center;
-justify-content: center;
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background-color: rgba(0, 0, 0, 0.5);
-z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
 }
 
 
 
 .prompt-content {
-text-align: center;
-animation: fadeUp 0.3s ease-in-out;
-min-width: 400px;
+    text-align: center;
+    animation: fadeUp 0.3s ease-in-out;
+    min-width: 400px;
 }
 
 
 
 .prompt-content label {
-display: block;
-margin-bottom: 0.6rem;
+    display: block;
+    margin-bottom: 0.6rem;
 }
 
 
 .prompt-content h2 {
-font-size: 1.5rem;
-font-weight: 700;
-line-height: 1.2;
-text-align: center;
-pointer-events: auto;
-color: #484b51;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    pointer-events: auto;
+    color: #484b51;
 }
 
 .prompt-content p {
-font-size: 1rem;
-font-weight: 500;
-line-height: 1.2;
-text-align: center;
-pointer-events: auto;
-color: #484b51;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+    pointer-events: auto;
+    color: #484b51;
 
 }
 
 
 .prompt-content input {
-width: 100%;
-padding: 8px;
-margin-bottom: 0.6rem;
-box-sizing: border-box;
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 0.6rem;
+    box-sizing: border-box;
 }
 
 .prompt-content button {
-padding: 0.5rem 1.25rem;
-/* 8px and 20px converted to rem */
-margin-right: 0.625rem;
-/* 10px converted to rem */
-border: none;
-background-color: #4caf50;
-color: white;
-border-radius: 0.1875rem;
-/* 3px converted to rem */
-cursor: pointer;
+    padding: 0.5rem 1.25rem;
+    /* 8px and 20px converted to rem */
+    margin-right: 0.625rem;
+    /* 10px converted to rem */
+    border: none;
+    background-color: #4caf50;
+    color: white;
+    border-radius: 0.1875rem;
+    /* 3px converted to rem */
+    cursor: pointer;
 }
 
 .prompt-content button:hover {
-background-color: #45a049;
+    background-color: #45a049;
 }
 
 .prompt-content button:last-child {
-background-color: #f44336;
+    background-color: #f44336;
 }
 
 .prompt-content button:last-child:hover {
-background-color: #d32f2f;
+    background-color: #d32f2f;
 }
 
 
 /* Overlay for the modal */
 .custom-prompt2 {
-display: flex;
-align-items: center;
-justify-content: center;
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background-color: rgba(0, 0, 0, 0.5);
-z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
 }
 
 /* Content of the modal */
 .prompt-content {
-background: #fff;
-padding: 20px;
-border-radius: 8px;
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-min-width: 400px;
-width: auto;
-/* Adjust the width as needed */
-text-align: center;
-background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    min-width: 400px;
+    width: auto;
+    /* Adjust the width as needed */
+    text-align: center;
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
 }
 
 .prompt-content h2 {
-margin-top: 0;
+    margin-top: 0;
 }
 
 
 
 .prompt-content select,
 .prompt-content input {
-width: 100%;
-/* Ensure full width for input fields */
-margin-bottom: 10px;
+    width: 100%;
+    /* Ensure full width for input fields */
+    margin-bottom: 10px;
 }
 
 .prompt-content button {
-background-color: transparent;
-border: none;
-color: black;
-padding: 0;
-text-align: center;
-text-decoration: none;
-display: inline-flex;
-align-items: center;
-justify-content: center;
-font-size: 14px;
-cursor: pointer;
-max-height: 100%;
-border-radius: 20px;
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-transition: transform 0.2s, box-shadow 0.2s;
-margin-bottom: 10px;
+    background-color: transparent;
+    border: none;
+    color: black;
+    padding: 0;
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    max-height: 100%;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 10px;
 }
 
 .prompt-content button img {
-width: 25px;
-height: 25px;
-border-radius: 0px;
-margin: 5px;
+    width: 25px;
+    height: 25px;
+    border-radius: 0px;
+    margin: 5px;
 }
 
 .prompt-content button span {
-margin-right: 10px;
+    margin-right: 10px;
 }
 
 
 
 /*------------------------ ___________ Report Css ______------------------------------------------------------------------------------------------*/
 .filter-container {
-display: flex;
-justify-content: center;
-gap: 30px;
-margin-top: -10px;
-animation: fadeInFromUp 1s ease-out; /* Animation applied here */
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: -10px;
+    animation: fadeInFromUp 1s ease-out;
+    /* Animation applied here */
 }
 
 
-.filter-container label{
-color: var(--grey-color);
+.filter-container label {
+    color: var(--grey-color);
 }
 
 .dropdown {
-display: flex;
-flex-direction: column;
-align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .dropdown label {
-margin-bottom: 5px;
-font-weight: bold;    
+    margin-bottom: 5px;
+    font-weight: bold;
 }
 
 .custom-input-container,
 .custom-dropdown-container {
-position: relative;
-display: flex;
-align-items: center;
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .common-height {
-height: 2.8125rem; /* Adjust the height as needed */
+    height: 2.8125rem;
+    /* Adjust the height as needed */
 }
 
 .custom-input,
 .custom-dropdown {
-padding-left: 2.5rem; /* Add padding to the left for the icon */
-padding-right: 2.5rem; /* Add padding to the right for the right icon */
-border: 0.0625rem solid #ccc; /* Adjust border as needed */
-border-radius: 0.625rem; /* Adjust border-radius as needed */
-font-size: 1rem; /* Adjust font size as needed */
-cursor: pointer;
-transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Add transition for smooth effect */
+    padding-left: 2.5rem;
+    /* Add padding to the left for the icon */
+    padding-right: 2.5rem;
+    /* Add padding to the right for the right icon */
+    border: 0.0625rem solid #ccc;
+    /* Adjust border as needed */
+    border-radius: 0.625rem;
+    /* Adjust border-radius as needed */
+    font-size: 1rem;
+    /* Adjust font size as needed */
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    /* Add transition for smooth effect */
 }
 
 .custom-input:hover,
 .custom-input:focus,
 .custom-dropdown:hover,
 .custom-dropdown:focus {
-box-shadow: 0 0 10px #5DADE2; /* Add shadow on hover and focus */   
-border: 1px solid #85C1E9;
-outline: none;
+    box-shadow: 0 0 10px #5DADE2;
+    /* Add shadow on hover and focus */
+    border: 1px solid #85C1E9;
+    outline: none;
 }
 
 .custom-input-icon,
 .custom-dropdown-left-icon,
 .custom-dropdown-right-icon {
-position: absolute;
-width: 1.5rem; /* Adjust the size as needed */
-height: 1.5rem; /* Adjust the size as needed */
-pointer-events: none; /* Ensure the icon does not interfere with input */
-border-radius: 15px;
-mix-blend-mode: multiply; /* Add this property */
+    position: absolute;
+    width: 1.5rem;
+    /* Adjust the size as needed */
+    height: 1.5rem;
+    /* Adjust the size as needed */
+    pointer-events: none;
+    /* Ensure the icon does not interfere with input */
+    border-radius: 15px;
+    mix-blend-mode: multiply;
+    /* Add this property */
 }
 
 .custom-input-icon {
-left: 0.75rem; /* Adjust the position as needed */
+    left: 0.75rem;
+    /* Adjust the position as needed */
 }
 
 .custom-dropdown-left-icon {
-left: 0.5rem; /* Adjust the position as needed */
+    left: 0.5rem;
+    /* Adjust the position as needed */
 }
 
 .custom-dropdown-right-icon {
-right: 0.5rem; /* Adjust the position as needed */
+    right: 0.5rem;
+    /* Adjust the position as needed */
 }
 
 /* Hide the default dropdown arrow */
 .custom-dropdown {
-appearance: none;
--webkit-appearance: none;
--moz-appearance: none;
-background: none; /* Remove the default background */
-background-position: right 0.5rem center; /* Position the custom right icon */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: none;
+    /* Remove the default background */
+    background-position: right 0.5rem center;
+    /* Position the custom right icon */
 }
 
 /* Override default styles for dropdown arrow */
 .custom-dropdown::after {
-content: '';
+    content: '';
 }
 
-.report-lottie{
-display: flex;
-align-items: center;
-justify-content: center;
-mix-blend-mode: multiply;
+.report-lottie {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    mix-blend-mode: multiply;
 }
 
 
 /* Custom styles for SweetAlert2 popup */
 .library_setup_popup {
-border-radius: 20px; /* More rounded border radius */
+    border-radius: 20px;
+    /* More rounded border radius */
 }
 
 /* Custom styles for SweetAlert2 button */
 .library_setup_button {
-width: 100px; /* Wider button */
-border-radius: 20px; /* Rounder button */
-padding: 10px 20px; /* Increase padding for a larger button */
+    width: 100px;
+    /* Wider button */
+    border-radius: 20px;
+    /* Rounder button */
+    padding: 10px 20px;
+    /* Increase padding for a larger button */
 }
 
 /* Custom styles for SweetAlert2 title */
 .library_setup_title {
-margin-bottom: 10px; /* Reduce the gap between title and input fields */
+    margin-bottom: 10px;
+    /* Reduce the gap between title and input fields */
 }
 
 
 
 /* Style for the suggestions container */
 .suggestions {
-    border-radius: 5px; /* Rounded corners */
+    border-radius: 5px;
+    /* Rounded corners */
     max-height: 10rem;
     width: 18.7rem;
     overflow-y: auto;
@@ -939,14 +1004,16 @@ margin-bottom: 10px; /* Reduce the gap between title and input fields */
     /* top: 3.3rem; */
     display: none;
     flex-direction: column;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Optional: Add a subtle shadow */
 }
 
 /* Style for each suggestion item */
 .suggestion-item {
     padding: 10px;
     cursor: pointer;
-    border-bottom: 1.5px solid #eee; /* Optional: Add a separator between items */
+    border-bottom: 1.5px solid #eee;
+    /* Optional: Add a separator between items */
 }
 
 /* Style for the last suggestion item to remove the bottom border */
@@ -956,32 +1023,42 @@ margin-bottom: 10px; /* Reduce the gap between title and input fields */
 
 .suggestion-item:hover {
     background: #D6EAF8;
-    font-weight: bold; /* Make text bold on hover */
+    font-weight: bold;
+    /* Make text bold on hover */
 }
 
 .no-results {
-    color: #999; /* Grey color for "No results found" text */
-    font-style: italic; /* Italic to differentiate from normal items */
-    pointer-events: none; /* Prevent clicks */
-    text-align: center; /* Center the text */
+    color: #999;
+    /* Grey color for "No results found" text */
+    font-style: italic;
+    /* Italic to differentiate from normal items */
+    pointer-events: none;
+    /* Prevent clicks */
+    text-align: center;
+    /* Center the text */
 }
 
 /* Customize the scrollbar */
 .suggestions::-webkit-scrollbar {
-    width: 4px; /* Thin scrollbar width */
+    width: 4px;
+    /* Thin scrollbar width */
 }
 
 .suggestions::-webkit-scrollbar-thumb {
-    background-color: #ccc; /* Color of the scrollbar */
-    border-radius: 10px; /* Rounded scrollbar */
+    background-color: #ccc;
+    /* Color of the scrollbar */
+    border-radius: 10px;
+    /* Rounded scrollbar */
 }
 
 .suggestions::-webkit-scrollbar-thumb:hover {
-    background-color: #aaa; /* Darker on hover */
+    background-color: #aaa;
+    /* Darker on hover */
 }
 
 .suggestions::-webkit-scrollbar-track {
-    background: transparent; /* Transparent track */
+    background: transparent;
+    /* Transparent track */
 }
 
 
@@ -1004,8 +1081,10 @@ margin-bottom: 10px; /* Reduce the gap between title and input fields */
     border: none;
     outline: none;
     flex: 1;
-    min-width: 200px;  /* Ensures minimum width */
-    max-width: 100%;  /* Ensures it doesn't overflow */
+    min-width: 200px;
+    /* Ensures minimum width */
+    max-width: 100%;
+    /* Ensures it doesn't overflow */
     padding: 5px;
     box-sizing: border-box;
 }
@@ -1018,7 +1097,8 @@ margin-bottom: 10px; /* Reduce the gap between title and input fields */
     width: 100%;
     overflow-y: auto;
     position: absolute;
-    top: 45px; /* Adjust based on the height of the input field and padding */
+    top: 45px;
+    /* Adjust based on the height of the input field and padding */
     background: white;
     z-index: 1000;
     display: none;
@@ -1041,7 +1121,8 @@ margin-bottom: 10px; /* Reduce the gap between title and input fields */
 /* Style for suggestion item on hover */
 .suggestion-item:hover {
     background: #D6EAF8;
-    font-weight: bold; /* Make text bold on hover */
+    font-weight: bold;
+    /* Make text bold on hover */
 }
 
 /* Styles for the selected city tags inside the input */
@@ -1054,7 +1135,7 @@ margin-bottom: 10px; /* Reduce the gap between title and input fields */
     align-items: center;
 }
 
-.tag-head{
+.tag-head {
     font-size: 30px;
     color: var(--grey-color);
 }
@@ -1074,8 +1155,10 @@ margin-bottom: 10px; /* Reduce the gap between title and input fields */
     margin-top: 10px;
     background-color: #f9f9f9;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    position: relative; /* Ensure it stays within the flow of the document */
-    width: 100%; /* Match the width of the input field */
+    position: relative;
+    /* Ensure it stays within the flow of the document */
+    width: 100%;
+    /* Match the width of the input field */
 }
 
 .tag-flex-container {
@@ -1095,7 +1178,7 @@ margin-bottom: 10px; /* Reduce the gap between title and input fields */
     overflow-x: auto;
 }
 
-.left-manageroute ,
+.left-manageroute,
 .left-manageshift {
     width: 100%;
     max-width: 400px;
@@ -1128,7 +1211,8 @@ margin-bottom: 10px; /* Reduce the gap between title and input fields */
     border: 1px solid #ddd;
     border-radius: 5px;
     background-color: #f9f9f9;
-    display: none; /* Initially hidden */
+    display: none;
+    /* Initially hidden */
     width: 100%;
     max-height: 75px;
     overflow-y: auto;
@@ -1140,6 +1224,7 @@ margin-bottom: 10px; /* Reduce the gap between title and input fields */
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
