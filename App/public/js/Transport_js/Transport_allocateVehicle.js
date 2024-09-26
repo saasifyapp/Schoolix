@@ -294,6 +294,18 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             return;
         }
+
+        if (selectedVehicleCapacity === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No Available Seats',
+                html: `
+                The selected vehicle <strong>${vehicleInput.value}</strong> has no available seats.
+            `
+            });
+            return;
+        }
+    
     
         // Validate if the selected route, shift, and vehicle exist in one row
         fetch('/validate_tagged_routeShiftVehicle', {
@@ -353,47 +365,52 @@ document.addEventListener('DOMContentLoaded', function () {
                         .catch(error => console.error('Error:', error));
                 }  else {
                     // Call the new endpoint to handle overflow
-                    fetch('/handle_overflow_students', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(requestData)
-                    })
-                        .then(response => response.json())
-                        .then(result => {
-                            if (result.success) {
-                                const primaryBusCount = result.primaryBus.length;
-                                const secondaryBusDetails = result.secondaryResult ? result.secondaryResult.secondaryBusDetails : [];
-    
-                                const primaryBusDetails = `${vehicleInput.value} (${driverName}) - ${primaryBusCount} students`;
-                                let alertHtml = `
-                                Due to insufficient availability of seats in <strong>${vehicleInput.value} (${driverName})</strong>, we allocated
-                                other vehicles running on same route to certain students<br><br>
-                                    <strong>Total Students:</strong> ${studentCount}<br>
-                                    ${primaryBusDetails}<br>
-                                `;
-    
-                                secondaryBusDetails.forEach(bus => {
-                                    if (bus.studentCount > 0) {
-                                        alertHtml += `${bus.vehicleNo} (${bus.driverName}) - ${bus.studentCount} students<br>`;
-                                    }
-                                });
-    
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Allocation Successful',
-                                    html: alertHtml,
-                                }).then(() => {
-                                    resetInputs(); // Clear all inputs when user clicks OK
-                                });
-    
-                                fetchAndDisplayScheduleDetails();
-                            } else {
-                                console.error('Error: Failed to fetch overflow students.');
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
+                    // Call the new endpoint to handle overflow
+fetch('/handle_overflow_students', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(requestData)
+}) 
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            const primaryBusCount = result.primaryBus.length;
+            const secondaryBusDetails = result.secondaryResult ? result.secondaryResult.secondaryBusDetails : [];
+
+            const primaryBusDetails = `${vehicleInput.value} (${driverName}) - ${primaryBusCount} students`;
+            let alertHtml = `
+            Due to insufficient availability of seats in <strong>${vehicleInput.value} (${driverName})</strong>, we allocated
+            other vehicles running on same route to certain students<br><br>
+                <strong>Total Students:</strong> ${studentCount}<br>
+                ${primaryBusDetails}<br>
+            `;
+
+            secondaryBusDetails.forEach(bus => {
+                if (bus.studentCount > 0) {
+                    alertHtml += `${bus.vehicleNo} (${bus.driverName}) - ${bus.studentCount} students<br>`;
+                }
+            });
+
+            if (result.secondaryResult && result.secondaryResult.notEnoughBuses) {
+                alertHtml += `<br><strong>Warning:</strong> Not enough buses to allocate all students. ${result.secondaryResult.remainingStudents.length} students could not be allocated.`;
+            }
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Allocation Successful',
+                html: alertHtml,
+            }).then(() => {
+                resetInputs(); // Clear all inputs when user clicks OK
+            });
+
+            fetchAndDisplayScheduleDetails();
+        } else {
+            console.error('Error: Failed to fetch overflow students.');
+        }
+    })
+    .catch(error => console.error('Error:', error));
                 }
             })
             .catch(error => console.error('Error:', error));

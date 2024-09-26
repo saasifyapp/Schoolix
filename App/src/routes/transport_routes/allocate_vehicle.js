@@ -124,7 +124,7 @@ router.post('/validate_tagged_routeShiftVehicle', (req, res) => {
             res.status(200).json({ success: false });
         }
     });
-});
+}); 
 
 
 // New endpoint to tag students to the selected bus and update transport_schedule_details
@@ -553,7 +553,7 @@ const allocateSecondaryBus = async (unallocatedStudents, primaryVehicleNo, route
         // If there are still remaining students after all available buses have been used
         if (remainingStudents.length > 0) {
             console.error('Not enough buses to allocate all students');
-            return callback(null, { allocatedStudents, remainingStudents, secondaryBusDetails });
+            return callback(null, { allocatedStudents, remainingStudents, secondaryBusDetails, notEnoughBuses: true });
         }
 
         callback(null, { allocatedStudents, secondaryBusDetails });
