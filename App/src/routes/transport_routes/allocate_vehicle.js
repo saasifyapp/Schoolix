@@ -552,7 +552,7 @@ const allocateSecondaryBus = async (unallocatedStudents, primaryVehicleNo, route
 
         // If there are still remaining students after all available buses have been used
         if (remainingStudents.length > 0) {
-            console.error('Not enough buses to allocate all students');
+           // console.error('Not enough buses to allocate all students');
             return callback(null, { allocatedStudents, remainingStudents, secondaryBusDetails, notEnoughBuses: true });
         }
 
