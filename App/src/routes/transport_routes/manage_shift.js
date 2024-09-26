@@ -17,7 +17,7 @@ router.get('/distinctStandardsDivisions', (req, res) => {
             SELECT Standard, Division FROM primary_student_details
         ) AS combined_standards
         ORDER BY Standard;
-    `;
+    `; 
 
     req.connectionPool.query(sql, (error, results) => {
         if (error) {
@@ -26,6 +26,63 @@ router.get('/distinctStandardsDivisions', (req, res) => {
         res.status(200).json(results);
     });
 });
+
+
+// Endpoint to validate shift details before adding or updating
+router.post('/shift_validateDetails', (req, res) => {
+    const { shiftName, shiftType } = req.body;
+    const shiftTypesArray = shiftType.split(',').map(item => item.trim());
+
+    // SQL query to check if the shift name already exists
+    const sqlValidateName = `
+        SELECT route_shift_id
+        FROM transport_route_shift_details
+        WHERE route_shift_name = ?
+    `;
+    const valuesValidateName = [shiftName];
+
+    // SQL query to check if any of the shift types already exist
+    const sqlValidateTypes = `
+        SELECT route_shift_detail
+        FROM transport_route_shift_details
+        WHERE route_shift_detail IN (?)
+    `;
+    const valuesValidateTypes = [shiftTypesArray];
+
+    // Check if the shift name already exists
+    req.connectionPool.query(sqlValidateName, valuesValidateName, (validateErrorName, validateResultsName) => {
+        if (validateErrorName) {
+            console.error('Database validation failed:', validateErrorName);
+            return res.status(500).json({ isValid: false, message: 'Database validation failed' });
+        }
+
+        if (validateResultsName.length > 0) {
+            return res.status(400).json({ 
+                isValid: false, 
+                message: `A shift with the name '<strong>${shiftName}</strong>' already exists.`
+            });
+        }
+
+        // Check if any of the shift types already exist
+        req.connectionPool.query(sqlValidateTypes, [shiftTypesArray], (validateErrorTypes, validateResultsTypes) => {
+            if (validateErrorTypes) {
+                console.error('Database validation failed:', validateErrorTypes);
+                return res.status(500).json({ isValid: false, message: 'Database validation failed' });
+            }
+
+            if (validateResultsTypes.length > 0) {
+                const existingDetails = validateResultsTypes.map(result => result.route_shift_detail).join(', ');
+                return res.status(400).json({ 
+                    isValid: false, 
+                    message: `One or more of the shift types '<strong>${existingDetails}</strong>' already exist.`
+                });
+            }
+
+            res.status(200).json({ isValid: true });
+        });
+    });
+});
+
 
 // Endpoint to add a new shift
 router.post('/addShift', (req, res) => {

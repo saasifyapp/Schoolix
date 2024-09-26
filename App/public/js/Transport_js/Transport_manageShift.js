@@ -77,13 +77,33 @@ manageShiftsForm.addEventListener("submit", function (e) {
         shiftType: selectedStandardsDivisions.join(", ") // Join selected items into a single string
     };
 
-    fetch("/addShift", {
-        method: "POST",
+    // Validate shift details before sending data to the server
+    fetch('/shift_validateDetails', {
+        method: 'POST',
         headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formData)
     })
+    .then(response => response.json())
+    .then(result => {
+        if (!result.isValid) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                html: result.message
+            });
+            return;
+        }
+
+        // Send data to the server
+        fetch("/addShift", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        })
         .then((response) => response.json())
         .then((data) => {
             if (data.error) {
@@ -98,7 +118,10 @@ manageShiftsForm.addEventListener("submit", function (e) {
             console.error("Error:", error);
             alert("An error occurred while submitting the form");
         });
-});
+    })
+    .catch(error => console.error('Error:', error));
+}); 
+
 
 // Function to reset the form
 function resetshiftForm() {
