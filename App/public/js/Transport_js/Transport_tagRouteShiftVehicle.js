@@ -428,7 +428,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Event listener for the submission button
     getDetailsButton.addEventListener('click', function (event) {
         event.preventDefault();
-
+    
         // Ensure all details are selected
         if (!selectedRouteDetail || !selectedShiftDetail || !selectedVehicleDetail.vehicleNo) {
             Swal.fire({
@@ -438,12 +438,12 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             return;
         }
-
+    
         // Prepare data to be sent to the server
         const routeName = routeInput.value;
         const shiftName = shiftInput.value;
         const { driverName, vehicleNo, conductorName, vehicleCapacity } = selectedVehicleDetail;
-
+    
         const data = {
             vehicle_no: vehicleNo,
             driver_name: driverName,
@@ -454,9 +454,9 @@ document.addEventListener('DOMContentLoaded', function () {
             classes_alloted: selectedShiftDetail,
             vehicle_capacity: vehicleCapacity
         };
-
-        // Send data to the server
-        fetch('/tag_populateTransportSchedule', {
+    
+        // Validate details before sending data to the server
+        fetch('/tag_validateDetails', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -465,24 +465,44 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => response.json())
             .then(result => {
-                if (result.success) {
+                if (!result.isValid) {
                     Swal.fire({
-                        icon: 'success',
-                        title: 'Tag Successful',
-                        html: `
-                    <strong>Route:</strong> ${routeName}<br>
-                    <strong>Shift:</strong> ${shiftName}<br>
-                    <strong>Vehicle:</strong> ${vehicleNo} [${driverName}]
-                `
+                        icon: 'error',
+                        title: 'Validation Error',
+                        html: result.message
                     });
-                    refreshTable(); // Refresh the table after a successful submission
-                } else {
-                    alert('Failed to add transport schedule details.');
+                    return;
                 }
+    
+                // Send data to the server
+                fetch('/tag_populateTransportSchedule', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Tag Successful',
+                                html: `
+                                    <strong>Route:</strong> ${routeName}<br>
+                                    <strong>Shift:</strong> ${shiftName}<br>
+                                    <strong>Vehicle:</strong> ${vehicleNo} [${driverName}]
+                                `
+                            });
+                            refreshTable(); // Refresh the table after a successful submission
+                        } else {
+                            alert('Failed to add transport schedule details.');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
             })
             .catch(error => console.error('Error:', error));
     });
-
 
     // Function to display the info container with fade-up animation
     function displayInfoContainer(container, content) {

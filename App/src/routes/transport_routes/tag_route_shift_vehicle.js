@@ -64,6 +64,61 @@ router.get('/tag_getShiftDetails', (req, res) => {
     });
 });
 
+
+// Endpoint to validate details before populating transport schedule
+router.post('/tag_validateDetails', (req, res) => {
+    const { vehicle_no, route_name, shift_name, driver_name } = req.body;
+
+    // SQL query to check if the vehicle is already tagged to the same route and shift
+    const sqlValidateSameRoute = `
+        SELECT id
+        FROM transport_schedule_details
+        WHERE vehicle_no = ? AND route_name = ? AND shift_name = ?
+    `;
+    const valuesValidateSameRoute = [vehicle_no, route_name, shift_name];
+
+    // SQL query to check if the vehicle is tagged to a different route in the same shift
+    const sqlValidateDifferentRoute = `
+        SELECT id, route_name
+        FROM transport_schedule_details
+        WHERE vehicle_no = ? AND shift_name = ? AND route_name != ?
+    `;
+    const valuesValidateDifferentRoute = [vehicle_no, shift_name, route_name];
+
+    // Perform validation for the same route and shift
+    req.connectionPool.query(sqlValidateSameRoute, valuesValidateSameRoute, (validateErrorSameRoute, validateResultsSameRoute) => {
+        if (validateErrorSameRoute) {
+            console.error('Database validation failed:', validateErrorSameRoute);
+            return res.status(500).json({ isValid: false, message: 'Database validation failed' });
+        }
+
+        if (validateResultsSameRoute.length > 0) {
+            return res.status(400).json({ 
+                isValid: false, 
+                message: `The vehicle '<strong>${vehicle_no} | ${driver_name}</strong>' is already tagged on Route: '<strong>${route_name}</strong>' in '<strong>${shift_name}</strong>' shift`
+            });
+        }
+
+        // Perform validation for different routes in the same shift
+        req.connectionPool.query(sqlValidateDifferentRoute, valuesValidateDifferentRoute, (validateErrorDifferentRoute, validateResultsDifferentRoute) => {
+            if (validateErrorDifferentRoute) {
+                console.error('Database validation failed:', validateErrorDifferentRoute);
+                return res.status(500).json({ isValid: false, message: 'Database validation failed' });
+            }
+
+            if (validateResultsDifferentRoute.length > 0) {
+                const existingRouteName = validateResultsDifferentRoute[0].route_name;
+                return res.status(400).json({ 
+                    isValid: false, 
+                    message: `The vehicle '<strong>${vehicle_no} | ${driver_name}</strong>' is already tagged on a different Route: '<strong>${existingRouteName}</strong>' in '<strong>${shift_name}</strong>' shift`
+                });
+            }
+
+            res.status(200).json({ isValid: true });
+        });
+    });
+});
+
 // Endpoint to populate transport schedule details
 router.post('/tag_populateTransportSchedule', (req, res) => {
     const { vehicle_no, driver_name, conductor_name, route_name, route_stops, shift_name, classes_alloted, vehicle_capacity } = req.body;
