@@ -267,12 +267,12 @@ router.delete('/deleteDriverConductor/:id', (req, res) => {
     });
 });
 
+
 router.put('/editDriverConductor', async (req, res) => {
-    const { id, name, contact, address, driver_conductor_type, vehicle_no, vehicle_type, vehicle_capacity } = req.body;
-    console.log(vehicle_capacity);
+    const { id, name, contact, address, driver_conductor_type, vehicle_no, vehicle_type, vehicle_capacity, new_seats } = req.body;
 
     try {
-        // Prepare SQL query parts
+        // Prepare SQL query parts for the driver/conductor details table
         const updates = [];
         const params = [];
 
@@ -308,20 +308,54 @@ router.put('/editDriverConductor', async (req, res) => {
         // Add the ID as the last parameter
         params.push(id);
 
-        // Construct the SQL query
-        const sql = `
+        // Construct the SQL query for the driver/conductor details table
+        const sqlDriverConductor = `
             UPDATE transport_driver_conductor_details
             SET ${updates.join(', ')}
             WHERE id = ?
         `;
 
-        await req.connectionPool.query(sql, params);
-        res.status(200).json({ message: 'Details updated successfully' });
+        // Execute the update query for the driver/conductor details table
+        await req.connectionPool.query(sqlDriverConductor, params);
+
+        // Now handle the update for the transport_schedule_details table
+        if (vehicle_no) {
+            // Retrieve existing values of available_seats and vehicle_capacity
+            req.connectionPool.query(`
+                SELECT available_seats, vehicle_capacity
+                FROM transport_schedule_details
+                WHERE vehicle_no = ?
+            `, [vehicle_no], async (error, results) => {
+                if (error) {
+                    throw error;
+                }
+
+                if (results.length > 0) {
+                    const { available_seats, vehicle_capacity: existing_vehicle_capacity } = results[0];
+
+                    // Calculate new values
+                    const new_available_seats = available_seats + new_seats;
+                    const new_vehicle_capacity = existing_vehicle_capacity + new_seats;
+
+                    // Update the transport_schedule_details table
+                    const sqlScheduleDetails = `
+                        UPDATE transport_schedule_details
+                        SET available_seats = ?, vehicle_capacity = ?
+                        WHERE vehicle_no = ?
+                    `;
+
+                    await req.connectionPool.query(sqlScheduleDetails, [new_available_seats, new_vehicle_capacity, vehicle_no]);
+                }
+
+                res.status(200).json({ message: 'Details updated successfully' });
+            });
+        } else {
+            res.status(200).json({ message: 'Details updated successfully' });
+        }
     } catch (error) {
         console.error('Error updating driver/conductor details:', error);
         res.status(500).json({ message: 'Failed to update details' });
     }
 });
-
 
 module.exports = router;

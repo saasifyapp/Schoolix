@@ -427,11 +427,11 @@ function editDriverConductor(id) {
           </div>
           <div style="display: flex; align-items: center; gap: 20px;">
               <div>
-                  <label for="originalCapacity">Original Vehicle Capacity:</label>
+                  <label for="originalCapacity">Current Capacity:</label>
                   <input type="number" id="originalCapacity" name="originalCapacity" class="form-control" value="${driverConductorDetails.vehicle_capacity || 0}" readonly>
               </div>
               <div>
-                  <label for="additionalCapacity">Increase Capacity:</label>
+                  <label for="additionalCapacity">New Seats:</label>
                   <input type="number" id="additionalCapacity" name="additionalCapacity" class="form-control" placeholder="Enter increase in capacity">
               </div>
           </div>
@@ -548,7 +548,6 @@ function closeEditPopup() {
   document.getElementById('editPopup').style.display = 'none';
 }
 
-// Function to save driver/conductor details (you'll need to send edited selected cities as a comma-separated string)
 async function saveDriverConductorDetails() {
   const id = document.getElementById('editDriverConductorForm').dataset.currentId;
   const driverConductorType = document.getElementById('editTypeDisplay').textContent;
@@ -568,9 +567,8 @@ async function saveDriverConductorDetails() {
     type: driverConductorType,
     vehicle_no: document.getElementById('editVehicleNo') ? document.getElementById('editVehicleNo').value : '',
     vehicle_type: document.getElementById('editVehicleType') ? document.getElementById('editVehicleType').value : '',
-
-    // Set the total capacity to the sum of original and additional capacities
-    vehicle_capacity: totalVehicleCapacity
+    vehicle_capacity: totalVehicleCapacity,
+    new_seats: additionalCapacity  // Add new seats value to the object
   };
 
   // Validate driver/conductor details before sending data to the server
