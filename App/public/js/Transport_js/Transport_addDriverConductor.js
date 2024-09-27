@@ -49,8 +49,8 @@ function displayDriverConductors(data) {
               <td>${item.address || ""}</td>
               <td>${item.driver_conductor_type || ""}</td>
               <td>${item.vehicle_no || ""}</td>
-              <td>${item.vehicle_type || ""}</td>
-              <td>${item.vehicle_capacity || ""}</td>
+              <td>${item.vehicle_type || "-"}</td>
+              <td>${item.vehicle_capacity || "-"}</td>
               <td>
                 <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
                   <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
@@ -241,59 +241,59 @@ addDriverForm.addEventListener("submit", function (e) {
   e.preventDefault();
 
   const formData = {
-      name: document.getElementById("name").value,
-      contact: document.getElementById("contact").value,
-      address: document.getElementById("address").value,
-      type: document.getElementById("type").value,
-      vehicle_no: document.getElementById("vehicle_no") ? document.getElementById("vehicle_no").value : null,
-      vehicle_type: document.getElementById("type").value === "driver" ? document.getElementById("vehicle_type").value : null,
-      vehicle_capacity: document.getElementById("type").value === "driver" ? document.getElementById("vehicle_capacity").value : null,
+    name: document.getElementById("name").value,
+    contact: document.getElementById("contact").value,
+    address: document.getElementById("address").value,
+    type: document.getElementById("type").value,
+    vehicle_no: document.getElementById("vehicle_no") ? document.getElementById("vehicle_no").value : null,
+    vehicle_type: document.getElementById("type").value === "driver" ? document.getElementById("vehicle_type").value : null,
+    vehicle_capacity: document.getElementById("type").value === "driver" ? document.getElementById("vehicle_capacity").value : null,
   };
 
   // Validate driver/conductor details before sending data to the server
   fetch('/validateDriverConductorDetails', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(formData)
   })
-  .then(response => response.json())
-  .then(result => {
+    .then(response => response.json())
+    .then(result => {
       if (!result.isValid) {
-          Swal.fire({
-              icon: 'error',
-              title: 'Validation Error',
-              html: result.message
-          });
-          return;
+        Swal.fire({
+          icon: 'error',
+          title: 'Validation Error',
+          html: result.message
+        });
+        return;
       }
 
       // Send data to the server
       fetch("/addDriverConductor", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       })
-      .then((response) => response.json())
-      .then((data) => {
+        .then((response) => response.json())
+        .then((data) => {
           if (data.error) {
-              alert(data.error);
+            alert(data.error);
           } else {
-              alert(data.message);
-              resetForm();
-              refreshDriverConductorData(); // Refresh the table after adding a new entry
+            alert(data.message);
+            resetForm();
+            refreshDriverConductorData(); // Refresh the table after adding a new entry
           }
-      })
-      .catch((error) => {
+        })
+        .catch((error) => {
           console.error("Error:", error);
           alert("An error occurred while submitting the form");
-      });
-  })
-  .catch(error => console.error('Error:', error));
-}); 
+        });
+    })
+    .catch(error => console.error('Error:', error));
+});
 
 // Function to reset the form and clear dynamic fields
 function resetForm() {
@@ -400,7 +400,7 @@ function editDriverConductor(id) {
   // Populate the form fields based on type
   if (driverConductorDetails.driver_conductor_type === 'Driver') {
     editFieldsContainer.innerHTML = `
-          <div>
+             <div>
               <label for="editName">Name:</label>
               <input type="text" id="editName" name="name" class="form-control" value="${driverConductorDetails.name || ''}">
           </div>
@@ -425,11 +425,32 @@ function editDriverConductor(id) {
                   <option value="Other" ${driverConductorDetails.vehicle_type === 'Other' ? 'selected' : ''}>Other</option>
               </select>
           </div>
-          <div>
-              <label for="editVehicleCapacity">Vehicle Capacity:</label>
-              <input type="number" id="editVehicleCapacity" name="vehicleCapacity" class="form-control" value="${driverConductorDetails.vehicle_capacity || ''}">
+          <div style="display: flex; align-items: center; gap: 20px;">
+              <div>
+                  <label for="originalCapacity">Original Vehicle Capacity:</label>
+                  <input type="number" id="originalCapacity" name="originalCapacity" class="form-control" value="${driverConductorDetails.vehicle_capacity || 0}" readonly>
+              </div>
+              <div>
+                  <label for="additionalCapacity">Increase Capacity:</label>
+                  <input type="number" id="additionalCapacity" name="additionalCapacity" class="form-control" placeholder="Enter increase in capacity">
+              </div>
+          </div>
+          <div style="margin-top: 10px;">
+              <span>Total Capacity: </span>
+              <span id="totalCapacity">${driverConductorDetails.vehicle_capacity || 0}</span>
           </div>
       `;
+
+    // Update total capacity dynamically
+    const originalCapacityInput = document.getElementById('originalCapacity');
+    const additionalCapacityInput = document.getElementById('additionalCapacity');
+    const totalCapacitySpan = document.getElementById('totalCapacity');
+
+    additionalCapacityInput.addEventListener('input', function () {
+      const originalCapacity = parseInt(originalCapacityInput.value, 10);
+      const additionalCapacity = parseInt(additionalCapacityInput.value, 10) || 0;
+      totalCapacitySpan.textContent = originalCapacity + additionalCapacity;
+    });
 
     const vehicleNoInput = document.getElementById('editVehicleNo');
     vehicleNoInput.addEventListener('input', function () {
@@ -510,9 +531,9 @@ function editDriverConductor(id) {
       }
     });
 
-    
+
   }
- 
+
   // Show the popup
   document.getElementById('editPopupOverlay').style.display = 'block';
   document.getElementById('editPopup').style.display = 'block';
@@ -532,60 +553,69 @@ async function saveDriverConductorDetails() {
   const id = document.getElementById('editDriverConductorForm').dataset.currentId;
   const driverConductorType = document.getElementById('editTypeDisplay').textContent;
 
+  // Retrieve the original capacity and additional capacity inputs
+  const originalCapacity = document.getElementById('originalCapacity') ? parseInt(document.getElementById('originalCapacity').value, 10) : 0;
+  const additionalCapacity = document.getElementById('additionalCapacity') ? parseInt(document.getElementById('additionalCapacity').value, 10) || 0 : 0;
+
+  // Calculate the total vehicle capacity
+  const totalVehicleCapacity = originalCapacity + additionalCapacity;
+
   const updatedDetails = {
-      id: id,
-      name: document.getElementById('editName').value,
-      contact: document.getElementById('editContact').value,
-      address: document.getElementById('editAddress').value,
-      type: driverConductorType,
-      vehicle_no: document.getElementById('editVehicleNo') ? document.getElementById('editVehicleNo').value : '',
-      vehicle_type: document.getElementById('editVehicleType') ? document.getElementById('editVehicleType').value : '',
-      vehicle_capacity: document.getElementById('editVehicleCapacity') ? parseInt(document.getElementById('editVehicleCapacity').value, 10) : ''
+    id: id,
+    name: document.getElementById('editName').value,
+    contact: document.getElementById('editContact').value,
+    address: document.getElementById('editAddress').value,
+    type: driverConductorType,
+    vehicle_no: document.getElementById('editVehicleNo') ? document.getElementById('editVehicleNo').value : '',
+    vehicle_type: document.getElementById('editVehicleType') ? document.getElementById('editVehicleType').value : '',
+
+    // Set the total capacity to the sum of original and additional capacities
+    vehicle_capacity: totalVehicleCapacity
   };
 
   // Validate driver/conductor details before sending data to the server
   try {
-      const validationResponse = await fetch('/validateDriverConductorDetails', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(updatedDetails)
+    const validationResponse = await fetch('/validateDriverConductorDetails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedDetails)
+    });
+
+    const validationResult = await validationResponse.json();
+
+    if (!validationResult.isValid) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        html: validationResult.message
       });
+      return;
+    }
 
-      const validationResult = await validationResponse.json();
+    // Call the API to save driver/conductor details (implement the backend for this)
+    const response = await fetch('/editDriverConductor', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedDetails),
+    });
 
-      if (!validationResult.isValid) {
-          Swal.fire({
-              icon: 'error',
-              title: 'Validation Error',
-              html: validationResult.message
-          });
-          return;
-      }
+    if (!response.ok) {
+      throw new Error('Failed to update details');
+    }
 
-      // Call the API to save driver/conductor details (implement the backend for this)
-      const response = await fetch('/editDriverConductor', {
-          method: 'PUT',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(updatedDetails),
-      });
+    alert("Details Updated Successfully");
 
-      if (!response.ok) {
-          throw new Error('Failed to update details');
-      }
+    // Refresh the displayed data
+    refreshDriverConductorData();
 
-      alert("Details Updated Successfully");
-
-      // Refresh the displayed data
-      refreshDriverConductorData();
-
-      // Close the popup
-      closeEditPopup();
+    // Close the popup
+    closeEditPopup();
   } catch (error) {
-      console.error('Error saving driver/conductor details:', error);
-      alert('An error occurred while updating the details.');
+    console.error('Error saving driver/conductor details:', error);
+    alert('An error occurred while updating the details.');
   }
 }

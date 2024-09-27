@@ -269,6 +269,7 @@ router.delete('/deleteDriverConductor/:id', (req, res) => {
 
 router.put('/editDriverConductor', async (req, res) => {
     const { id, name, contact, address, driver_conductor_type, vehicle_no, vehicle_type, vehicle_capacity } = req.body;
+    console.log(vehicle_capacity);
 
     try {
         // Prepare SQL query parts
