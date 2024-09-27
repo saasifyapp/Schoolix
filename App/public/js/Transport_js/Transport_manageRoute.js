@@ -1,6 +1,6 @@
 
 let routeData = {}; // Object to store route data by route_shift_id
-
+ 
 function refreshRoutesData() {
     document.getElementById('searchRoute').value = "";
     return fetch("/displayRoutes")
@@ -119,13 +119,33 @@ manageRoutesForm.addEventListener("submit", function (e) {
         citiesAddress: selectedCities.join(", ") // Join selected cities into a single string
     };
 
-    fetch("/addRoute", {
-        method: "POST",
+    // Validate route details before sending data to the server
+    fetch('/route_validateDetails', {
+        method: 'POST',
         headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ routeName: formData.routeName })
     })
+    .then(response => response.json())
+    .then(result => {
+        if (!result.isValid) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                html: result.message
+            });
+            return;
+        }
+
+        // Send data to the server
+        fetch("/addRoute", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        })
         .then((response) => response.json())
         .then((data) => {
             if (data.error) {
@@ -140,7 +160,9 @@ manageRoutesForm.addEventListener("submit", function (e) {
             console.error("Error:", error);
             alert("An error occurred while submitting the form");
         });
-});
+    })
+    .catch(error => console.error('Error:', error));
+}); 
 
 // Function to reset the form
 function reseteditForm() {
@@ -516,28 +538,54 @@ function saveRouteDetails() {
     const routeName = document.getElementById("editRouteName").value;
     const routeCities = editedSelectedCities.join(", "); // Convert array to comma-separated string
 
-    // Call the API to save route details (implement the backend for this)
-    fetch('/updateRoute', {
+    // Validate route details before sending data to the server
+    fetch('/route_validateDetails', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-            routeShiftId: selectedRouteId, // Assume you store this somewhere on edit
-            routeName: routeName,
-            routeCities: routeCities,
-            routeType: 'route' // Example type
-        })
+        body: JSON.stringify({ routeId: selectedRouteId, routeName: routeName })
     })
     .then(response => response.json())
-    .then(data => {
-        if (data.message === 'Route updated successfully') {
-            alert('Route updated successfully!');
-            closeEditRoutePopup(); // Close popup on success
-            refreshRoutesData(); // Refresh the routes data to reflect changes
+    .then(result => {
+        if (!result.isValid) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                html: result.message
+            });
+            return;
         }
+
+        // Call the API to save route details (implement the backend for this)
+        fetch('/updateRoute', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                routeShiftId: selectedRouteId, // Assume you store this somewhere on edit
+                routeName: routeName,
+                routeCities: routeCities,
+                routeType: 'route' // Example type
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message === 'Route updated successfully') {
+                alert('Route updated successfully!');
+                closeEditRoutePopup(); // Close popup on success
+                refreshRoutesData(); // Refresh the routes data to reflect changes
+            } else {
+                alert('Error updating route: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error updating route:', error);
+            alert('An error occurred while updating the route.');
+        });
     })
-    .catch(error => console.error('Error updating route:', error));
+    .catch(error => console.error('Error:', error));
 }
 
 // Function to open the edit route popup

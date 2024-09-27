@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+ 
 const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
 
 // Use the connection manager middleware
@@ -25,6 +25,43 @@ router.get('/distinctAddresses', (req, res) => {
         res.status(200).json(results);
     });
 });
+
+
+// Endpoint to validate route details before adding or updating
+router.post('/route_validateDetails', (req, res) => {
+    const { routeId, routeName } = req.body;
+
+    // SQL query to check if the route name already exists for a different route
+    const sqlValidateName = routeId ? `
+        SELECT route_shift_id
+        FROM transport_route_shift_details
+        WHERE route_shift_name = ? AND route_shift_id != ?
+    ` : `
+        SELECT route_shift_id
+        FROM transport_route_shift_details
+        WHERE route_shift_name = ?
+    `;
+    const valuesValidateName = routeId ? [routeName, routeId] : [routeName];
+
+    // Check if the route name already exists
+    req.connectionPool.query(sqlValidateName, valuesValidateName, (validateErrorName, validateResultsName) => {
+        if (validateErrorName) {
+            console.error('Database validation failed:', validateErrorName);
+            return res.status(500).json({ isValid: false, message: 'Database validation failed' });
+        }
+
+        if (validateResultsName.length > 0) {
+            return res.status(400).json({ 
+                isValid: false, 
+                message: `A route with the name '<strong>${routeName}</strong>' already exists.`
+            });
+        }
+
+        res.status(200).json({ isValid: true });
+    });
+});
+
+
 // Endpoint to add a new route
 router.post('/addRoute', (req, res) => {
     const { routeName, citiesAddress } = req.body;
