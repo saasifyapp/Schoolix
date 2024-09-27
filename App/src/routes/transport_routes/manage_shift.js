@@ -30,24 +30,19 @@ router.get('/distinctStandardsDivisions', (req, res) => {
 
 // Endpoint to validate shift details before adding or updating
 router.post('/shift_validateDetails', (req, res) => {
-    const { shiftName, shiftType } = req.body;
-    const shiftTypesArray = shiftType.split(',').map(item => item.trim());
+    const { shiftId, shiftName } = req.body;
 
-    // SQL query to check if the shift name already exists
-    const sqlValidateName = `
+    // SQL query to check if the shift name already exists for a different shift
+    const sqlValidateName = shiftId ? `
+        SELECT route_shift_id
+        FROM transport_route_shift_details
+        WHERE route_shift_name = ? AND route_shift_id != ?
+    ` : `
         SELECT route_shift_id
         FROM transport_route_shift_details
         WHERE route_shift_name = ?
     `;
-    const valuesValidateName = [shiftName];
-
-    // SQL query to check if any of the shift types already exist
-    const sqlValidateTypes = `
-        SELECT route_shift_detail
-        FROM transport_route_shift_details
-        WHERE route_shift_detail IN (?)
-    `;
-    const valuesValidateTypes = [shiftTypesArray];
+    const valuesValidateName = shiftId ? [shiftName, shiftId] : [shiftName];
 
     // Check if the shift name already exists
     req.connectionPool.query(sqlValidateName, valuesValidateName, (validateErrorName, validateResultsName) => {
@@ -63,23 +58,7 @@ router.post('/shift_validateDetails', (req, res) => {
             });
         }
 
-        // Check if any of the shift types already exist
-        req.connectionPool.query(sqlValidateTypes, [shiftTypesArray], (validateErrorTypes, validateResultsTypes) => {
-            if (validateErrorTypes) {
-                console.error('Database validation failed:', validateErrorTypes);
-                return res.status(500).json({ isValid: false, message: 'Database validation failed' });
-            }
-
-            if (validateResultsTypes.length > 0) {
-                const existingDetails = validateResultsTypes.map(result => result.route_shift_detail).join(', ');
-                return res.status(400).json({ 
-                    isValid: false, 
-                    message: `One or more of the shift types '<strong>${existingDetails}</strong>' already exist.`
-                });
-            }
-
-            res.status(200).json({ isValid: true });
-        });
+        res.status(200).json({ isValid: true });
     });
 });
 

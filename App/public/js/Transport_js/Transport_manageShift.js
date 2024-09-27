@@ -83,7 +83,7 @@ manageShiftsForm.addEventListener("submit", function (e) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ shiftName: formData.shiftName })
     })
     .then(response => response.json())
     .then(result => {
@@ -121,7 +121,6 @@ manageShiftsForm.addEventListener("submit", function (e) {
     })
     .catch(error => console.error('Error:', error));
 }); 
-
 
 // Function to reset the form
 function resetshiftForm() {
@@ -516,30 +515,51 @@ function saveShiftDetails() {
     const shiftName = document.getElementById("editShiftNameInput").value;
     const shiftTypes = editedSelectedShiftTypes.join(", "); // Convert array to comma-separated string
 
-    // Call the API to save shift details (implement the backend for this)
-    fetch('/updateShift', {
+    // Validate shift details before sending data to the server
+    fetch('/shift_validateDetails', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-            shiftId: selectedShiftId, // Assume you store this somewhere on edit
-            shiftName: shiftName,
-            shiftClasses: shiftTypes, // This corresponds to route_shift_detail in your SQL
-        })
+        body: JSON.stringify({ shiftId: selectedShiftId, shiftName: shiftName })
     })
     .then(response => response.json())
-    .then(data => {
-        if (data.message === 'Shift updated successfully') {
-            alert('Shift updated successfully!');
-            closeEditShiftPopup(); // Close popup on success
-            refreshShiftsData(); // Refresh the shifts data to reflect changes
-        } else {
-            alert('Error updating shift: ' + data.message);
+    .then(result => {
+        if (!result.isValid) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                html: result.message
+            });
+            return;
         }
+
+        // Call the API to save shift details (implement the backend for this)
+        fetch('/updateShift', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                shiftId: selectedShiftId, // Assume you store this somewhere on edit
+                shiftName: shiftName,
+                shiftClasses: shiftTypes, // This corresponds to route_shift_detail in your SQL
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message === 'Shift updated successfully') {
+                alert('Shift updated successfully!');
+                closeEditShiftPopup(); // Close popup on success
+                refreshShiftsData(); // Refresh the shifts data to reflect changes
+            } else {
+                alert('Error updating shift: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error updating shift:', error);
+            alert('An error occurred while updating the shift.');
+        });
     })
-    .catch(error => {
-        console.error('Error updating shift:', error);
-        alert('An error occurred while updating the shift.');
-    });
+    .catch(error => console.error('Error:', error));
 }
