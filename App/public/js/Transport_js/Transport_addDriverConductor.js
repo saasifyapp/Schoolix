@@ -181,38 +181,43 @@ typeSelect.addEventListener("change", function () {
     const vehicleNoInput = document.getElementById("vehicle_no");
     const suggestionsContainer = document.getElementById("suggestions");
 
-    // Add event listener to format vehicle number
+    // Function to fetch driver details and update suggestions
+    function fetchDriverDetails(query) {
+      fetch(`/getDriverDetails?q=${query}`)
+        .then((response) => response.json())
+        .then((data) => {
+          suggestionsContainer.style.display = "flex"; // Show suggestions container
+          suggestionsContainer.innerHTML = "";
+
+          if (data.length === 0) {
+            const noResultsItem = document.createElement("div");
+            noResultsItem.classList.add("suggestion-item", "no-results");
+            noResultsItem.textContent = "No results found";
+            suggestionsContainer.appendChild(noResultsItem);
+          } else {
+            data.forEach((driver) => {
+              const suggestionItem = document.createElement("div");
+              suggestionItem.classList.add("suggestion-item");
+              suggestionItem.textContent = `${driver.vehicle_no} | ${driver.name}`;
+              suggestionItem.dataset.vehicleNo = driver.vehicle_no;
+              suggestionItem.dataset.name = driver.name;
+              suggestionsContainer.appendChild(suggestionItem);
+            });
+          }
+        })
+        .catch((error) => console.error("Error:", error));
+    }
+
+    // Show initial suggestions on focus
+    vehicleNoInput.addEventListener("focus", function () {
+      fetchDriverDetails("");
+    });
+
+    // Update suggestions on input
     vehicleNoInput.addEventListener("input", function () {
       this.value = formatVehicleNumber(this.value);
       const query = this.value;
-      if (query.length >= 0) {
-        fetch(`/getDriverDetails?q=${query}`)
-          .then((response) => response.json())
-          .then((data) => {
-            suggestionsContainer.style.display = "flex"; // Show suggestions container
-            suggestionsContainer.innerHTML = "";
-
-            if (data.length === 0) {
-              const noResultsItem = document.createElement("div");
-              noResultsItem.classList.add("suggestion-item", "no-results");
-              noResultsItem.textContent = "No results found";
-              suggestionsContainer.appendChild(noResultsItem);
-            } else {
-              data.forEach((driver) => {
-                const suggestionItem = document.createElement("div");
-                suggestionItem.classList.add("suggestion-item");
-                suggestionItem.textContent = `${driver.vehicle_no} | ${driver.name}`;
-                suggestionItem.dataset.vehicleNo = driver.vehicle_no;
-                suggestionItem.dataset.name = driver.name;
-                suggestionsContainer.appendChild(suggestionItem);
-              });
-            }
-          })
-          .catch((error) => console.error("Error:", error));
-      } else {
-        suggestionsContainer.style.display = "none"; // Hide suggestions container
-        suggestionsContainer.innerHTML = "";
-      }
+      fetchDriverDetails(query);
     });
 
     suggestionsContainer.addEventListener("click", function (event) {
@@ -325,61 +330,6 @@ function formatVehicleNumber(value) {
   return value.toUpperCase();
 }
 
-// // Function to fetch and display driver/conductor details
-// function displayDriverConductors() {
-//   fetch("/displayDriverConductors")
-//     .then((response) => response.json())
-//     .then((data) => {
-//       driverConductorTableBody.innerHTML = ""; // Clear existing table rows
-
-//       if (data.length === 0) {
-//         const noResultsRow = document.createElement("tr");
-//         noResultsRow.innerHTML = '<td colspan="8">No results found</td>';
-//         driverConductorTableBody.appendChild(noResultsRow);
-//       } else {
-//         // Reverse the data array
-//         data.reverse();
-
-//         // Dynamically create table rows
-//         data.forEach((item) => {
-//           const row = document.createElement("tr");
-//           row.innerHTML = `
-//             <td>${item.name || ""}</td>
-//             <td>${item.contact || ""}</td>
-//             <td>${item.address || ""}</td>
-//             <td>${item.driver_conductor_type || ""}</td>
-//             <td>${item.vehicle_no || ""}</td>
-//             <td>${item.vehicle_type || ""}</td>
-//             <td>${item.vehicle_capacity || ""}</td>
-//             <td>
-//               <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
-//                 <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-//                   onclick="editDriverConductor('${item.id}')"
-//                   onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-//                   onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-//                   <img src="../images/edit.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-//                   <span style="margin-right: 10px;">Edit</span>
-//                 </button>
-//                 <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-//                   onclick="deleteDriverConductor('${item.id}')"
-//                   onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-//                   onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-//                   <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-//                   <span style="margin-right: 10px;">Delete</span>
-//                 </button>
-//               </div>
-//             </td>
-//           `;
-//           driverConductorTableBody.appendChild(row);
-//         });
-//       }
-//     })
-//     .catch((error) => console.error("Error:", error));
-// }
-
-// // Initial fetch and display of driver/conductor details
-// displayDriverConductors();
-
 // Function to open the edit popup and populate it with data
 function editDriverConductor(id) {
   const driverConductorDetails = driverConductorData[id];
@@ -482,37 +432,43 @@ function editDriverConductor(id) {
     const vehicleNoInput = document.getElementById('editVehicleNo');
     const suggestionsContainer = document.getElementById('editSuggestions');
 
+    // Function to fetch driver details and update suggestions
+    function fetchDriverDetails(query) {
+      fetch(`/getDriverDetails?q=${query}`)
+        .then((response) => response.json())
+        .then((data) => {
+          suggestionsContainer.style.display = 'flex'; // Show suggestions container
+          suggestionsContainer.innerHTML = '';
+
+          if (data.length === 0) {
+            const noResultsItem = document.createElement('div');
+            noResultsItem.classList.add('edit-suggestion-item', 'no-results');
+            noResultsItem.textContent = 'No results found';
+            suggestionsContainer.appendChild(noResultsItem);
+          } else {
+            data.forEach((driver) => {
+              const suggestionItem = document.createElement('div');
+              suggestionItem.classList.add('edit-suggestion-item');
+              suggestionItem.textContent = `${driver.vehicle_no} | ${driver.name}`;
+              suggestionItem.dataset.vehicleNo = driver.vehicle_no;
+              suggestionItem.dataset.name = driver.name;
+              suggestionsContainer.appendChild(suggestionItem);
+            });
+          }
+        })
+        .catch((error) => console.error('Error:', error));
+    }
+
+    // Show initial suggestions on focus
+    vehicleNoInput.addEventListener("focus", function () {
+      fetchDriverDetails("");
+    });
+
+    // Update suggestions on input
     vehicleNoInput.addEventListener('input', function () {
       this.value = formatVehicleNumber(this.value);
       const query = this.value;
-      if (query.length >= 0) {
-        fetch(`/getDriverDetails?q=${query}`)
-          .then((response) => response.json())
-          .then((data) => {
-            suggestionsContainer.style.display = 'flex'; // Show suggestions container
-            suggestionsContainer.innerHTML = '';
-
-            if (data.length === 0) {
-              const noResultsItem = document.createElement('div');
-              noResultsItem.classList.add('edit-suggestion-item', 'no-results');
-              noResultsItem.textContent = 'No results found';
-              suggestionsContainer.appendChild(noResultsItem);
-            } else {
-              data.forEach((driver) => {
-                const suggestionItem = document.createElement('div');
-                suggestionItem.classList.add('edit-suggestion-item');
-                suggestionItem.textContent = `${driver.vehicle_no} | ${driver.name}`;
-                suggestionItem.dataset.vehicleNo = driver.vehicle_no;
-                suggestionItem.dataset.name = driver.name;
-                suggestionsContainer.appendChild(suggestionItem);
-              });
-            }
-          })
-          .catch((error) => console.error('Error:', error));
-      } else {
-        suggestionsContainer.style.display = 'none'; // Hide suggestions container
-        suggestionsContainer.innerHTML = '';
-      }
+      fetchDriverDetails(query);
     });
 
     suggestionsContainer.addEventListener('click', function (event) {
@@ -530,8 +486,6 @@ function editDriverConductor(id) {
         suggestionsContainer.innerHTML = '';
       }
     });
-
-
   }
 
   // Show the popup
