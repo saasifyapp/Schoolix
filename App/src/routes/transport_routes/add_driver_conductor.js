@@ -26,6 +26,192 @@ router.get('/getDriverDetails', (req, res) => {
     });
 });
 
+// Endpoint to validate driver/conductor details before adding or updating
+router.post('/validateDriverConductorDetails', (req, res) => {
+    const { id, name, type, vehicle_no } = req.body;
+
+    // SQL query to check if the name already exists for a different entry
+    const sqlValidateName = id ? `
+        SELECT id
+        FROM transport_driver_conductor_details
+        WHERE name = ? AND id != ?
+    ` : `
+        SELECT id
+        FROM transport_driver_conductor_details
+        WHERE name = ?
+    `;
+    const valuesValidateName = id ? [name, id] : [name];
+
+    // SQL query to check if the vehicle number already exists for a different driver
+    const sqlValidateVehicleNo = type === 'driver' ? (id ? `
+        SELECT id
+        FROM transport_driver_conductor_details
+        WHERE vehicle_no = ? AND id != ?
+    ` : `
+        SELECT id
+        FROM transport_driver_conductor_details
+        WHERE vehicle_no = ?
+    `) : null;
+    const valuesValidateVehicleNo = type === 'driver' ? (id ? [vehicle_no, id] : [vehicle_no]) : null;
+
+    // SQL query to check if the vehicle number exists for the entered name when type is conductor
+    const sqlValidateConductorVehicle = type === 'conductor' ? `
+        SELECT id
+        FROM transport_driver_conductor_details
+        WHERE name = ? AND vehicle_no = ?
+    ` : null;
+    const valuesValidateConductorVehicle = type === 'conductor' ? [name, vehicle_no] : null;
+
+    // SQL query to check if the vehicle already has a conductor assigned
+    const sqlValidateExistingConductor = type === 'conductor' ? (id ? `
+        SELECT id
+        FROM transport_driver_conductor_details
+        WHERE vehicle_no = ? AND driver_conductor_type = 'conductor' AND id != ?
+    ` : `
+        SELECT id
+        FROM transport_driver_conductor_details
+        WHERE vehicle_no = ? AND driver_conductor_type = 'conductor'
+    `) : null;
+    const valuesValidateExistingConductor = type === 'conductor' ? (id ? [vehicle_no, id] : [vehicle_no]) : null;
+
+    // Perform validations
+    req.connectionPool.query(sqlValidateName, valuesValidateName, (validateErrorName, validateResultsName) => {
+        if (validateErrorName) {
+            console.error('Database validation failed:', validateErrorName);
+            return res.status(500).json({ isValid: false, message: 'Database validation failed' });
+        }
+
+        if (validateResultsName.length > 0) {
+            return res.status(400).json({ 
+                isValid: false, 
+                message: `A driver/conductor with the name '<strong>${name}</strong>' already exists.`
+            });
+        }
+
+        if (sqlValidateVehicleNo) {
+            req.connectionPool.query(sqlValidateVehicleNo, valuesValidateVehicleNo, (validateErrorVehicleNo, validateResultsVehicleNo) => {
+                if (validateErrorVehicleNo) {
+                    console.error('Database validation failed:', validateErrorVehicleNo);
+                    return res.status(500).json({ isValid: false, message: 'Database validation failed' });
+                }
+
+                if (validateResultsVehicleNo.length > 0) {
+                    return res.status(400).json({ 
+                        isValid: false, 
+                        message: `A driver with the vehicle number '<strong>${vehicle_no}</strong>' already exists.`
+                    });
+                }
+
+                if (sqlValidateExistingConductor) {
+                    req.connectionPool.query(sqlValidateExistingConductor, valuesValidateExistingConductor, (validateErrorExistingConductor, validateResultsExistingConductor) => {
+                        if (validateErrorExistingConductor) {
+                            console.error('Database validation failed:', validateErrorExistingConductor);
+                            return res.status(500).json({ isValid: false, message: 'Database validation failed' });
+                        }
+
+                        if (validateResultsExistingConductor.length > 0) {
+                            return res.status(400).json({ 
+                                isValid: false, 
+                                message: `The vehicle number '<strong>${vehicle_no}</strong>' already has a conductor assigned.`
+                            });
+                        }
+
+                        if (sqlValidateConductorVehicle) {
+                            req.connectionPool.query(sqlValidateConductorVehicle, valuesValidateConductorVehicle, (validateErrorConductorVehicle, validateResultsConductorVehicle) => {
+                                if (validateErrorConductorVehicle) {
+                                    console.error('Database validation failed:', validateErrorConductorVehicle);
+                                    return res.status(500).json({ isValid: false, message: 'Database validation failed' });
+                                }
+
+                                if (validateResultsConductorVehicle.length > 0) {
+                                    return res.status(400).json({ 
+                                        isValid: false, 
+                                        message: `The vehicle number '<strong>${vehicle_no}</strong>' is already assigned to the conductor '<strong>${name}</strong>'.`
+                                    });
+                                }
+
+                                res.status(200).json({ isValid: true });
+                            });
+                        } else {
+                            res.status(200).json({ isValid: true });
+                        }
+                    });
+                } else if (sqlValidateConductorVehicle) {
+                    req.connectionPool.query(sqlValidateConductorVehicle, valuesValidateConductorVehicle, (validateErrorConductorVehicle, validateResultsConductorVehicle) => {
+                        if (validateErrorConductorVehicle) {
+                            console.error('Database validation failed:', validateErrorConductorVehicle);
+                            return res.status(500).json({ isValid: false, message: 'Database validation failed' });
+                        }
+
+                        if (validateResultsConductorVehicle.length > 0) {
+                            return res.status(400).json({ 
+                                isValid: false, 
+                                message: `The vehicle number '<strong>${vehicle_no}</strong>' is already assigned to the conductor '<strong>${name}</strong>'.`
+                            });
+                        }
+
+                        res.status(200).json({ isValid: true });
+                    });
+                } else {
+                    res.status(200).json({ isValid: true });
+                }
+            });
+        } else if (sqlValidateExistingConductor) {
+            req.connectionPool.query(sqlValidateExistingConductor, valuesValidateExistingConductor, (validateErrorExistingConductor, validateResultsExistingConductor) => {
+                if (validateErrorExistingConductor) {
+                    console.error('Database validation failed:', validateErrorExistingConductor);
+                    return res.status(500).json({ isValid: false, message: 'Database validation failed' });
+                }
+
+                if (validateResultsExistingConductor.length > 0) {
+                    return res.status(400).json({ 
+                        isValid: false, 
+                        message: `The vehicle number '<strong>${vehicle_no}</strong>' already has a conductor assigned.`
+                    });
+                }
+
+                if (sqlValidateConductorVehicle) {
+                    req.connectionPool.query(sqlValidateConductorVehicle, valuesValidateConductorVehicle, (validateErrorConductorVehicle, validateResultsConductorVehicle) => {
+                        if (validateErrorConductorVehicle) {
+                            console.error('Database validation failed:', validateErrorConductorVehicle);
+                            return res.status(500).json({ isValid: false, message: 'Database validation failed' });
+                        }
+
+                        if (validateResultsConductorVehicle.length > 0) {
+                            return res.status(400).json({ 
+                                isValid: false, 
+                                message: `The vehicle number '<strong>${vehicle_no}</strong>' is already assigned to the conductor '<strong>${name}</strong>'.`
+                            });
+                        }
+
+                        res.status(200).json({ isValid: true });
+                    });
+                } else {
+                    res.status(200).json({ isValid: true });
+                }
+            });
+        } else if (sqlValidateConductorVehicle) {
+            req.connectionPool.query(sqlValidateConductorVehicle, valuesValidateConductorVehicle, (validateErrorConductorVehicle, validateResultsConductorVehicle) => {
+                if (validateErrorConductorVehicle) {
+                    console.error('Database validation failed:', validateErrorConductorVehicle);
+                    return res.status(500).json({ isValid: false, message: 'Database validation failed' });
+                }
+
+                if (validateResultsConductorVehicle.length > 0) {
+                    return res.status(400).json({ 
+                        isValid: false, 
+                        message: `The vehicle number '<strong>${vehicle_no}</strong>' is already assigned to the conductor '<strong>${name}</strong>'.`
+                    });
+                }
+
+                res.status(200).json({ isValid: true });
+            });
+        } else {
+            res.status(200).json({ isValid: true });
+        }
+    });
+});
+
 
 // Endpoint to handle driverConductor form submission
 router.post('/addDriverConductor', (req, res) => {
@@ -108,7 +294,7 @@ router.put('/editDriverConductor', async (req, res) => {
         if (vehicle_no !== undefined) {
             updates.push('vehicle_no = ?');
             params.push(vehicle_no);
-        }
+        } 
         if (vehicle_type !== undefined) {
             updates.push('vehicle_type = ?');
             params.push(vehicle_type);

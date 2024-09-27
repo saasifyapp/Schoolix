@@ -241,46 +241,66 @@ addDriverForm.addEventListener("submit", function (e) {
   e.preventDefault();
 
   const formData = {
-    name: document.getElementById("name").value,
-    contact: document.getElementById("contact").value,
-    address: document.getElementById("address").value,
-    type: document.getElementById("type").value,
-    vehicle_no: document.getElementById("vehicle_no")
-      ? document.getElementById("vehicle_no").value
-      : null,
-    vehicle_type:
-      document.getElementById("type").value === "driver"
-        ? document.getElementById("vehicle_type").value
-        : null,
-    vehicle_capacity:
-      document.getElementById("type").value === "driver"
-        ? document.getElementById("vehicle_capacity").value
-        : null,
+      name: document.getElementById("name").value,
+      contact: document.getElementById("contact").value,
+      address: document.getElementById("address").value,
+      type: document.getElementById("type").value,
+      vehicle_no: document.getElementById("vehicle_no") ? document.getElementById("vehicle_no").value : null,
+      vehicle_type: document.getElementById("type").value === "driver" ? document.getElementById("vehicle_type").value : null,
+      vehicle_capacity: document.getElementById("type").value === "driver" ? document.getElementById("vehicle_capacity").value : null,
   };
 
-  fetch("/addDriverConductor", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(formData),
+  // Validate driver/conductor details before sending data to the server
+  fetch('/validateDriverConductorDetails', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
   })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.error) {
-        alert(data.error);
-      } else {
-        alert(data.message);
-        resetForm();
-        //hideOverlay('addDriverOverlay');
-        refreshDriverConductorData() // Refresh the table after adding a new entry
+  .then(response => response.json())
+  .then(result => {
+      if (!result.isValid) {
+          Swal.fire({
+              icon: 'error',
+              title: 'Validation Error',
+              html: result.message
+          });
+          return;
       }
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      alert("An error occurred while submitting the form");
-    });
-});
+
+      // Send data to the server
+      fetch("/addDriverConductor", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+      })
+      .then((response) => response.json())
+      .then((data) => {
+          if (data.error) {
+              alert(data.error);
+          } else {
+              alert(data.message);
+              resetForm();
+              refreshDriverConductorData(); // Refresh the table after adding a new entry
+          }
+      })
+      .catch((error) => {
+          console.error("Error:", error);
+          alert("An error occurred while submitting the form");
+      });
+  })
+  .catch(error => console.error('Error:', error));
+}); 
+
+// Function to reset the form and clear dynamic fields
+function resetForm() {
+  addDriverForm.reset(); // Reset the form fields
+  dynamicFields.innerHTML = ""; // Clear dynamic fields
+  typeSelect.value = ""; // Reset type select
+}
 
 // Function to reset the form and clear dynamic fields
 function resetForm() {
@@ -492,7 +512,7 @@ function editDriverConductor(id) {
 
     
   }
-
+ 
   // Show the popup
   document.getElementById('editPopupOverlay').style.display = 'block';
   document.getElementById('editPopup').style.display = 'block';
@@ -507,29 +527,50 @@ function closeEditPopup() {
   document.getElementById('editPopup').style.display = 'none';
 }
 
-// Function to save the edited details
+// Function to save driver/conductor details (you'll need to send edited selected cities as a comma-separated string)
 async function saveDriverConductorDetails() {
   const id = document.getElementById('editDriverConductorForm').dataset.currentId;
-
-  // Retrieve the type from the span element, which is non-editable
-  // const driverConductorType = document.getElementById('editType').textContent;
+  const driverConductorType = document.getElementById('editTypeDisplay').textContent;
 
   const updatedDetails = {
+      id: id,
       name: document.getElementById('editName').value,
       contact: document.getElementById('editContact').value,
       address: document.getElementById('editAddress').value,
+      type: driverConductorType,
       vehicle_no: document.getElementById('editVehicleNo') ? document.getElementById('editVehicleNo').value : '',
       vehicle_type: document.getElementById('editVehicleType') ? document.getElementById('editVehicleType').value : '',
       vehicle_capacity: document.getElementById('editVehicleCapacity') ? parseInt(document.getElementById('editVehicleCapacity').value, 10) : ''
   };
 
+  // Validate driver/conductor details before sending data to the server
   try {
+      const validationResponse = await fetch('/validateDriverConductorDetails', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(updatedDetails)
+      });
+
+      const validationResult = await validationResponse.json();
+
+      if (!validationResult.isValid) {
+          Swal.fire({
+              icon: 'error',
+              title: 'Validation Error',
+              html: validationResult.message
+          });
+          return;
+      }
+
+      // Call the API to save driver/conductor details (implement the backend for this)
       const response = await fetch('/editDriverConductor', {
           method: 'PUT',
           headers: {
               'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ id, ...updatedDetails }),
+          body: JSON.stringify(updatedDetails),
       });
 
       if (!response.ok) {
@@ -545,6 +586,6 @@ async function saveDriverConductorDetails() {
       closeEditPopup();
   } catch (error) {
       console.error('Error saving driver/conductor details:', error);
+      alert('An error occurred while updating the details.');
   }
 }
-
