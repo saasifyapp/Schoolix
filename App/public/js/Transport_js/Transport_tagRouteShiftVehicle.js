@@ -138,21 +138,70 @@ document.addEventListener('DOMContentLoaded', function () {
         fetchShiftSuggestions(this.value);
     });
 
-    // Function to fetch vehicle suggestions
-    function fetchVehicleSuggestions(query) {
-        fetch(`/tag_getVehicleDetails?q=${query}`)
+    // // Function to fetch vehicle suggestions
+    // function fetchVehicleSuggestions(query) {
+    //     fetch(`/tag_getVehicleDetails?q=${query}`)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             vehicleSuggestionsContainer.style.display = 'flex'; // Show suggestions container
+    //             vehicleSuggestionsContainer.innerHTML = '';
+
+    //             if (data.length === 0) {
+    //                 const noResultsItem = document.createElement('div');
+    //                 noResultsItem.classList.add('suggestion-item', 'no-results');
+    //                 noResultsItem.textContent = 'No results found';
+    //                 vehicleSuggestionsContainer.appendChild(noResultsItem);
+    //             } else {
+    //                 data.forEach((driver) => {
+    //                     const suggestionItem = document.createElement('div');
+    //                     suggestionItem.classList.add('suggestion-item');
+    //                     suggestionItem.textContent = `${driver.vehicle_no || 'N/A'} | ${driver.driver_name || 'N/A'}`;
+    //                     suggestionItem.dataset.driverName = driver.driver_name || 'N/A';
+    //                     suggestionItem.dataset.vehicleNo = driver.vehicle_no || 'N/A';
+    //                     suggestionItem.dataset.conductorName = driver.conductor_name || 'N/A';
+    //                     suggestionItem.dataset.vehicleCapacity = driver.vehicle_capacity || 'N/A';
+    //                     vehicleSuggestionsContainer.appendChild(suggestionItem);
+    //                 });
+    //             }
+    //         })
+    //         .catch((error) => console.error('Error:', error));
+    // }
+
+    // // Show vehicle suggestions when input is focused
+    // vehicleInput.addEventListener('focus', function () {
+    //     fetchVehicleSuggestions(this.value);
+    // });
+
+    // // Update vehicle suggestions when user types
+    // vehicleInput.addEventListener('input', function () {
+    //     fetchVehicleSuggestions(this.value);
+    // });
+
+     // Function to fetch vehicle suggestions
+     function fetchVehicleSuggestions(query) {
+        // Pass the query parameter to the endpoint
+        fetch(`/tag_getVehicleDetails?q=${encodeURIComponent(query)}`)
             .then(response => response.json())
             .then(data => {
                 vehicleSuggestionsContainer.style.display = 'flex'; // Show suggestions container
                 vehicleSuggestionsContainer.innerHTML = '';
 
-                if (data.length === 0) {
+                console.log(data)
+
+                // Filter data to match the user's query on the client side as a fallback
+                const filteredData = data.filter(driver =>
+                    driver.driver_name.toLowerCase().includes(query.toLowerCase()) ||
+                    driver.vehicle_no.toLowerCase().includes(query.toLowerCase())
+                );
+
+                // Display filtered suggestions or show no results found
+                if (filteredData.length === 0) {
                     const noResultsItem = document.createElement('div');
                     noResultsItem.classList.add('suggestion-item', 'no-results');
                     noResultsItem.textContent = 'No results found';
                     vehicleSuggestionsContainer.appendChild(noResultsItem);
                 } else {
-                    data.forEach((driver) => {
+                    filteredData.forEach((driver) => {
                         const suggestionItem = document.createElement('div');
                         suggestionItem.classList.add('suggestion-item');
                         suggestionItem.textContent = `${driver.vehicle_no || 'N/A'} | ${driver.driver_name || 'N/A'}`;

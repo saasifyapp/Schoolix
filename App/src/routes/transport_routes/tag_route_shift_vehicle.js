@@ -6,29 +6,73 @@ const connectionManager = require('../../middleware/connectionManager'); // Adju
 // Use the connection manager middleware
 router.use(connectionManager);
 
+// // Endpoint to fetch driver and conductor details for dynamic dropdown of Conductor-For
+// router.get('/tag_getVehicleDetails', (req, res) => {
+//     const query = req.query.q;
+
+//     // SQL query to fetch driver details
+//     const driverSql = `
+//         SELECT 
+//             name AS driver_name, 
+//             vehicle_no, 
+//             vehicle_type, 
+//             vehicle_capacity, 
+//             (SELECT name FROM transport_driver_conductor_details WHERE vehicle_no = tdc.vehicle_no AND driver_conductor_type = 'Conductor') AS conductor_name
+//         FROM transport_driver_conductor_details tdc
+//         WHERE driver_conductor_type = 'Driver' AND (name LIKE ? OR vehicle_no LIKE ?)
+//     `;
+//     const driverValues = [`%${query}%`, `%${query}%`];
+
+//     req.connectionPool.query(driverSql, driverValues, (driverError, driverResults) => {
+//         if (driverError) {
+//             return res.status(500).json({ error: 'Database query failed' });
+//         }
+
+//         res.status(200).json(driverResults);
+//     });
+// });
+
 // Endpoint to fetch driver and conductor details for dynamic dropdown of Conductor-For
 router.get('/tag_getVehicleDetails', (req, res) => {
-    const query = req.query.q;
+    // Read the query parameter from the request
+    const query = req.query.q ? `%${req.query.q}%` : '%'; // Default to '%' if no query is provided
 
-    // SQL query to fetch driver details
+    // SQL query to fetch driver details with LEFT JOIN to get conductor details
     const driverSql = `
-        SELECT 
-            name AS driver_name, 
-            vehicle_no, 
-            vehicle_type, 
-            vehicle_capacity, 
-            (SELECT name FROM transport_driver_conductor_details WHERE vehicle_no = tdc.vehicle_no AND driver_conductor_type = 'Conductor') AS conductor_name
-        FROM transport_driver_conductor_details tdc
-        WHERE driver_conductor_type = 'Driver' AND (name LIKE ? OR vehicle_no LIKE ?)
+        SELECT DISTINCT
+            tdc1.name AS driver_name,
+            tdc1.vehicle_no,
+            tdc1.vehicle_type,
+            tdc1.vehicle_capacity,
+            tdc2.name AS conductor_name
+        FROM 
+            transport_driver_conductor_details tdc1
+        LEFT JOIN 
+            transport_driver_conductor_details tdc2
+        ON 
+            tdc1.vehicle_no = tdc2.vehicle_no AND tdc2.driver_conductor_type = 'Conductor'
+        WHERE 
+            tdc1.driver_conductor_type = 'Driver'
+            AND (tdc1.name LIKE ? OR tdc1.vehicle_no LIKE ? OR tdc2.name LIKE ?)
     `;
-    const driverValues = [`%${query}%`, `%${query}%`];
+    const driverValues = [query, query, query];
 
     req.connectionPool.query(driverSql, driverValues, (driverError, driverResults) => {
         if (driverError) {
             return res.status(500).json({ error: 'Database query failed' });
         }
 
-        res.status(200).json(driverResults);
+        // Map to filter out any potential duplicates
+        const uniqueDrivers = driverResults.reduce((acc, current) => {
+            const duplicate = acc.find(item => item.vehicle_no === current.vehicle_no);
+            if (!duplicate) {
+                acc.push(current);
+            }
+            return acc;
+        }, []);
+
+        // Return unique driver results
+        res.status(200).json(uniqueDrivers);
     });
 });
 
@@ -93,8 +137,8 @@ router.post('/tag_validateDetails', (req, res) => {
         }
 
         if (validateResultsSameRoute.length > 0) {
-            return res.status(400).json({ 
-                isValid: false, 
+            return res.status(400).json({
+                isValid: false,
                 message: `The vehicle '<strong>${vehicle_no} | ${driver_name}</strong>' is already tagged on Route: '<strong>${route_name}</strong>' in '<strong>${shift_name}</strong>' shift`
             });
         }
@@ -108,8 +152,8 @@ router.post('/tag_validateDetails', (req, res) => {
 
             if (validateResultsDifferentRoute.length > 0) {
                 const existingRouteName = validateResultsDifferentRoute[0].route_name;
-                return res.status(400).json({ 
-                    isValid: false, 
+                return res.status(400).json({
+                    isValid: false,
                     message: `The vehicle '<strong>${vehicle_no} | ${driver_name}</strong>' is already tagged on a different Route: '<strong>${existingRouteName}</strong>' in '<strong>${shift_name}</strong>' shift`
                 });
             }
@@ -127,7 +171,7 @@ router.post('/tag_populateTransportSchedule', (req, res) => {
         INSERT INTO transport_schedule_details (vehicle_no, driver_name, conductor_name, route_name, route_stops, shift_name, classes_alloted,available_seats, vehicle_capacity)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-    const valuesInsert = [vehicle_no, driver_name, conductor_name, route_name, route_stops, shift_name, classes_alloted,vehicle_capacity, vehicle_capacity];
+    const valuesInsert = [vehicle_no, driver_name, conductor_name, route_name, route_stops, shift_name, classes_alloted, vehicle_capacity, vehicle_capacity];
 
     req.connectionPool.query(sqlInsert, valuesInsert, (insertError, insertResults) => {
         if (insertError) {
@@ -180,11 +224,11 @@ router.delete('/delete_transport_schedule/:id', (req, res) => {
         const { vehicle_no, students_tagged, driver_name, route_name, shift_name } = checkResults[0];
 
         if (students_tagged !== null) {
-            return res.status(400).json({ 
-                error: 'Cannot delete record with students tagged', 
-                vehicle_no: vehicle_no, 
+            return res.status(400).json({
+                error: 'Cannot delete record with students tagged',
+                vehicle_no: vehicle_no,
                 students_tagged: students_tagged,
-                driver_name:  driver_name,
+                driver_name: driver_name,
                 route_name: route_name,
                 shift_name: shift_name
             });
@@ -206,12 +250,12 @@ router.delete('/delete_transport_schedule/:id', (req, res) => {
                 return res.status(404).json({ error: 'Record not found' });
             }
 
-            res.status(200).json({ 
+            res.status(200).json({
                 success: true,
                 vehicle_no: vehicle_no,
                 route_name: route_name,
                 shift_name: shift_name,
-                driver_name:  driver_name
+                driver_name: driver_name
 
             });
         });
