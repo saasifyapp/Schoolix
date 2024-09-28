@@ -147,16 +147,26 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.target.classList.contains('suggestion-item')) {
             const selectedRoute = event.target;
             routeInput.value = selectedRoute.dataset.routeName;
-            selectedRouteDetail = selectedRoute.dataset.routeDetail;
+    
+            // Populate the route details
+            const selectedRouteDetail = {
+                routeName: selectedRoute.dataset.routeName || "N/A",
+                routeDetail: selectedRoute.dataset.routeDetail || "N/A",
+            };
+    
             routeDetailContainer.innerHTML = `
-                <strong>Route Name:</strong> ${selectedRoute.dataset.routeName}<br>
-                <strong>Stops:</strong> ${selectedRoute.dataset.routeDetail}
+                <strong>Route Name:</strong> ${selectedRouteDetail.routeName}<br>
+                <strong>Stops:</strong> ${selectedRouteDetail.routeDetail}
             `;
-            routeSuggestionsContainer.style.display = 'none'; // Hide suggestions container
-            routeSuggestionsContainer.innerHTML = '';
-
+    
+            // Show the route detail container
+            routeDetailContainer.style.display = 'block';
+    
+            // Hide suggestions container
+            routeSuggestionsContainer.style.display = 'none';
+            routeSuggestionsContainer.innerHTML = ''; // Clear suggestions
+    
             // Clear shift input and suggestions when a new route is selected
-            // shiftInput.value = '';
             shiftSuggestionsContainer.innerHTML = '';
             shiftDetailContainer.innerHTML = '';
             selectedShiftDetail = '';
@@ -164,10 +174,10 @@ document.addEventListener('DOMContentLoaded', function () {
             vehicleDetailContainer.innerHTML = '';
             shiftInput.value = '';
             vehicleInput.value = '';
-
+    
             // Fetch student count if both details are available
             if (selectedShiftDetail) {
-                fetchStudentCount(selectedRouteDetail, selectedShiftDetail);
+                fetchStudentCount(selectedRouteDetail.routeDetail, selectedShiftDetail);
             }
         }
     });
@@ -175,21 +185,35 @@ document.addEventListener('DOMContentLoaded', function () {
     shiftSuggestionsContainer.addEventListener('click', function (event) {
         if (event.target.classList.contains('suggestion-item')) {
             const selectedShift = event.target;
-            shiftInput.value = selectedShift.dataset.shiftName;
-            selectedShiftDetail = selectedShift.dataset.shiftDetail;
+    
+            // Populate the shift details
+            const selectedShiftDetail = {
+                shiftName: selectedShift.dataset.shiftName || "N/A",
+                shiftDetail: selectedShift.dataset.shiftDetail || "N/A",
+            };
+    
+            // Set input value
+            shiftInput.value = selectedShiftDetail.shiftName;
+    
+            // Update the shift detail container
             shiftDetailContainer.innerHTML = `
-                <strong>Shift Name:</strong> ${selectedShift.dataset.shiftName}<br>
-                <strong>Classes Alloted:</strong> ${selectedShift.dataset.shiftDetail}
+                <strong>Shift Name:</strong> ${selectedShiftDetail.shiftName}<br>
+                <strong>Classes Alloted:</strong> ${selectedShiftDetail.shiftDetail}
             `;
-            shiftSuggestionsContainer.style.display = 'none'; // Hide suggestions container
-            shiftSuggestionsContainer.innerHTML = '';
-
-            vehicleInput.value = '';
-            vehicleDetailContainer.innerHTML = '';
-
+    
+            // Show the shift detail container
+            shiftDetailContainer.style.display = 'block';
+    
+            // Hide suggestions container and clear its contents
+            shiftSuggestionsContainer.style.display = 'none';
+            shiftSuggestionsContainer.innerHTML = ''; // Clear suggestions
+    
+            // Clear vehicle input and related container
+            clearVehicleInputs();
+    
             // Fetch student count if both details are available
             if (selectedRouteDetail) {
-                fetchStudentCount(selectedRouteDetail, selectedShiftDetail);
+                fetchStudentCount(selectedRouteDetail, selectedShiftDetail.shiftDetail);
             }
         }
     });
@@ -197,20 +221,37 @@ document.addEventListener('DOMContentLoaded', function () {
     vehicleSuggestionsContainer.addEventListener('click', function (event) {
         if (event.target.classList.contains('suggestion-item')) {
             const selectedDriver = event.target;
-            vehicleInput.value = selectedDriver.dataset.vehicleNo;
-            const availableSeats = parseInt(selectedDriver.dataset.availableSeats, 10);
+    
+            // Populate vehicle details
+            const selectedVehicleDetail = {
+                driverName: selectedDriver.dataset.driverName || "N/A",
+                vehicleNo: selectedDriver.dataset.vehicleNo || "N/A",
+                vehicleCapacity: selectedDriver.dataset.vehicleCapacity || "N/A",
+                availableSeats: parseInt(selectedDriver.dataset.availableSeats, 10) || 0,
+                conductorName: selectedDriver.dataset.conductorName || "N/A"
+            };
+    
+            // Set input value
+            vehicleInput.value = selectedVehicleDetail.vehicleNo;
+    
+            // Update the vehicle detail container
             vehicleDetailContainer.innerHTML = `
-                <strong>Driver Name:</strong> ${selectedDriver.dataset.driverName}<br>
-                <strong>Vehicle No:</strong> ${selectedDriver.dataset.vehicleNo}<br>
-                <strong>Vehicle Capacity:</strong> ${selectedDriver.dataset.vehicleCapacity}<br>
-                <strong>Available Seats:</strong> ${selectedDriver.dataset.availableSeats}<br>
-                <strong>Conductor Name:</strong> ${selectedDriver.dataset.conductorName}
+                <strong>Driver Name:</strong> ${selectedVehicleDetail.driverName}<br>
+                <strong>Vehicle No:</strong> ${selectedVehicleDetail.vehicleNo}<br>
+                <strong>Vehicle Capacity:</strong> ${selectedVehicleDetail.vehicleCapacity}<br>
+                <strong>Available Seats:</strong> ${selectedVehicleDetail.availableSeats}<br>
+                <strong>Conductor Name:</strong> ${selectedVehicleDetail.conductorName}
             `;
-            vehicleSuggestionsContainer.style.display = 'none'; // Hide suggestions container
-            vehicleSuggestionsContainer.innerHTML = '';
+    
+            // Show the vehicle detail container
+            vehicleDetailContainer.style.display = 'block';
+    
+            // Hide suggestions container and clear its contents
+            vehicleSuggestionsContainer.style.display = 'none';
+            vehicleSuggestionsContainer.innerHTML = ''; // Clear suggestions
             
             // Store available seats in a global variable
-            selectedVehicleCapacity = availableSeats;
+            selectedVehicleCapacity = selectedVehicleDetail.availableSeats;
         }
     });
 
