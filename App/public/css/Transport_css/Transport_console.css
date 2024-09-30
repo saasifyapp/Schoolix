@@ -1,3 +1,19 @@
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0000;
+    border-radius: 30px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #1C4ED8;
+    border-radius: 30px;
+    border: 20px solid #555777;
+}
+
 .overlay {
     display: none;
     /* Hidden by default */
@@ -1209,14 +1225,24 @@ svg path {
     margin-bottom: 20px;
     padding: 15px;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+    border-radius: 10px;
+    background-color: #fff;
     display: none;
     /* Initially hidden */
     width: 100%;
     max-height: 75px;
     overflow-y: auto;
     animation: fadeUp 0.5s ease-in-out forwards;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover effect */
+.info-container:hover {
+    transform: translateY(-5px);
+    /* Slight upward movement */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    /* Stronger shadow on hover */
 }
 
 @keyframes fadeUp {
