@@ -663,3 +663,105 @@ body {
 #editShiftPopup button:hover {
     background-color: #45a049;
 }
+
+/* HTML: <div class="loader"></div> */
+/* From Uiverse.io by AqFox */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: rgba(255, 255, 255, 0.7); */
+    /* Semi-transparent white background */
+    backdrop-filter: blur(5px);
+    /* Adjust blur as needed */
+    z-index: 9999;
+    /* Ensure the overlay appears on top of other content */
+    display: none;
+}
+
+.loader {
+    width: 50px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 8px solid #0000;
+    border-right-color: #12c9d697;
+    position: relative;
+    animation: l24 1s infinite linear;
+}
+
+.loader:before,
+.loader:after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: inherit;
+    animation: inherit;
+    animation-duration: 2s;
+}
+
+.loader:after {
+    animation-duration: 4s;
+}
+
+@keyframes l24 {
+    100% {
+        transform: rotate(1turn)
+    }
+}
+
+/* Toast container to hold multiple toasts */
+.toast-container {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    z-index: 9999;
+}
+
+/* Toast CSS */
+.toast {
+    width: 15rem;
+    margin-bottom: 10px;
+    background-color: #4CAF50;
+    /* Green background */
+    color: white;
+    padding: 16px;
+    border-radius: 8px;
+    display: none;
+    animation: slideInRight 0.5s forwards;
+    /* Slide in animation */
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+.toast.error {
+    background-color: #f44336;
+    /* Red background for error */
+}

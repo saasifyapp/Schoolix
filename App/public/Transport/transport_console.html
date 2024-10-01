@@ -15,7 +15,9 @@
 </head>
 
 <body>
-
+    <div class="loading-overlay" id="loadingOverlayTransport">
+        <div class="loader"></div>
+    </div>
 
 
     <nav class="navbar">
@@ -47,6 +49,9 @@
         <div class="button-container">
             <h2>Transport Console</h2>
         </div>
+    </div>
+    <div id="toast-container" class="toast-container">
+        <div id="toast" class="toast"></div>
     </div>
 
 
@@ -566,7 +571,8 @@
                         <div class="form-row">
                             <!-- Route Input and Info Container -->
                             <div class="form-group">
-                                <input id="tag_tag_route_name" type="text" class="form-control" placeholder="" style="text-align: center;">
+                                <input id="tag_tag_route_name" type="text" class="form-control" placeholder=""
+                                    style="text-align: center;">
                                 <span class="form-control-placeholder">Enter Route</span>
                                 <div id="tag_routeSuggestions" class="suggestions"></div>
                             </div>
@@ -574,7 +580,8 @@
 
                             <!-- Shift Input and Info Container -->
                             <div class="form-group">
-                                <input id="tag_tag_shift_name" type="text" class="form-control" placeholder="" style="text-align: center;">
+                                <input id="tag_tag_shift_name" type="text" class="form-control" placeholder=""
+                                    style="text-align: center;">
                                 <span class="form-control-placeholder">Enter Shift</span>
                                 <div id="tag_shiftSuggestions" class="suggestions"></div>
                             </div>
@@ -582,7 +589,8 @@
 
                             <!-- Vehicle Input and Info Container -->
                             <div class="form-group">
-                                <input id="tag_tag_vehicle_no" type="text" class="form-control" placeholder="" style="text-align: center;">
+                                <input id="tag_tag_vehicle_no" type="text" class="form-control" placeholder=""
+                                    style="text-align: center;">
                                 <span class="form-control-placeholder">Enter Vehicle</span>
                                 <div id="tag_vehicleSuggestions" class="suggestions"></div>
                             </div>
@@ -666,22 +674,24 @@
                         <div class="form-row">
                             <!-- Route Input and Info Container -->
                             <div class="form-group">
-                                <input type="text" id="allocate_inputRoute" class="form-control" placeholder=" " style="text-align: center;">
+                                <input type="text" id="allocate_inputRoute" class="form-control" placeholder=" "
+                                    style="text-align: center;">
                                 <span class="form-control-placeholder">Enter Route</span>
                                 <div id="allocate_routeSuggestions" class="suggestions"></div>
                             </div>
 
                             <!-- Shift Input and Info Container -->
                             <div class="form-group">
-                                <input type="text" id="allocate_inputShift" class="form-control" placeholder=" " style="text-align: center;">
+                                <input type="text" id="allocate_inputShift" class="form-control" placeholder=" "
+                                    style="text-align: center;">
                                 <span class="form-control-placeholder">Enter Shift</span>
                                 <div id="allocate_shiftSuggestions" class="suggestions"></div>
                             </div>
 
                             <!-- Vehicle Input and Info Container -->
                             <div class="form-group">
-                                <input type="text" id="allocate_inputVehicle" class="form-control" placeholder=" " style="text-align: center;"
-                                    maxlength="13">
+                                <input type="text" id="allocate_inputVehicle" class="form-control" placeholder=" "
+                                    style="text-align: center;" maxlength="13">
                                 <span class="form-control-placeholder">Enter Vehicle</span>
                                 <div id="allocate_vehicleSuggestions" class="suggestions"></div>
                             </div>

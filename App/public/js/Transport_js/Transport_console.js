@@ -189,3 +189,15 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+// Function to show the loading animation
+function showTransportLoadingAnimation() {
+    var loadingOverlay = document.getElementById("loadingOverlayTransport");
+    loadingOverlay.style.display = "flex";
+}
+
+// Function to hide the loading animation
+function hideTransportLoadingAnimation() {
+    var loadingOverlay = document.getElementById("loadingOverlayTransport");
+    loadingOverlay.style.display = "none"; // Hide the loading overlay
+}

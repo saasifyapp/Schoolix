@@ -3,17 +3,20 @@ let driverConductorData = {};
 
 // Function to refresh driver/conductor data and store it locally
 async function refreshDriverConductorData() {
+  showTransportLoadingAnimation();
   document.getElementById('searchBar').value = "";
   document.getElementById('filtertype').value = "";
   try {
     const response = await fetch('/displayDriverConductors');
     if (!response.ok) {
+      hideTransportLoadingAnimation();
       throw new Error('Failed to fetch driver/conductor details');
     }
     const data = await response.json();
     storeDriverConductorData(data);
     displayDriverConductors(data);
   } catch (error) {
+    hideTransportLoadingAnimation();
     console.error('Error fetching driver/conductor details:', error);
   }
 }
@@ -50,6 +53,7 @@ function storeDriverConductorData(data) {
 
 // Function to display driver/conductor details
 function displayDriverConductors(data) {
+  hideTransportLoadingAnimation();
   const driverConductorTableBody = document.getElementById("driverConductorTableBody");
   driverConductorTableBody.innerHTML = ""; // Clear existing rows
 
@@ -97,6 +101,7 @@ function displayDriverConductors(data) {
 
 // Function to search the driver/conductor by name or vehicle number
 function searchDriverConductorDetails() {
+  showTransportLoadingAnimation();
   const query = document.getElementById('searchBar').value;
 
   query.trim().toLowerCase(); // Normalize the search query
@@ -110,6 +115,7 @@ function searchDriverConductorDetails() {
 
 // Function to filter driver/conductor by type
 function filterDriverConductorByType() {
+  showTransportLoadingAnimation();
   const selectedType = document.getElementById('filtertype').value;
 
   // If no type is selected, display all records
@@ -133,22 +139,25 @@ async function deleteDriverConductor(id) {
   }
 
   try {
+    showTransportLoadingAnimation();
     const response = await fetch(`/deleteDriverConductor/${id}`, {
       method: 'DELETE',
     });
 
     if (!response.ok) {
+      hideTransportLoadingAnimation();
       throw new Error('Failed to delete the entry');
     }
-
+    hideTransportLoadingAnimation();
     const result = await response.json();
-    alert(result.message);
+    showToast(result.message);
 
     // Refresh the data and display after deletion
     await refreshDriverConductorData();
   } catch (error) {
+    hideTransportLoadingAnimation();
     console.error('Error:', error);
-    alert('An error occurred while deleting the entry. Please try again.');
+    showToast('An error occurred while deleting the entry. Please try again.');
   }
 }
 
@@ -263,6 +272,7 @@ typeSelect.addEventListener("change", function () {
 
 // Form submission handler
 addDriverForm.addEventListener("submit", function (e) {
+  showTransportLoadingAnimation();
   e.preventDefault();
 
   const formData = {
@@ -287,6 +297,7 @@ addDriverForm.addEventListener("submit", function (e) {
     .then(response => response.json())
     .then(result => {
       if (!result.isValid) {
+        hideTransportLoadingAnimation();
         Swal.fire({
           icon: 'error',
           title: 'Validation Error',
@@ -306,16 +317,16 @@ addDriverForm.addEventListener("submit", function (e) {
         .then((response) => response.json())
         .then((data) => {
           if (data.error) {
-            alert(data.error);
+            showToast(data.error);
           } else {
-            alert(data.message);
+            showToast(data.message);
             resetForm();
             refreshDriverConductorData(); // Refresh the table after adding a new entry
           }
         })
         .catch((error) => {
           console.error("Error:", error);
-          alert("An error occurred while submitting the form");
+          showToast("An error occurred while submitting the form");
         });
     })
     .catch(error => console.error('Error:', error));
@@ -524,6 +535,7 @@ function closeEditPopup() {
 }
 
 async function saveDriverConductorDetails() {
+  showTransportLoadingAnimation();
   const id = document.getElementById('editDriverConductorForm').dataset.currentId;
   const driverConductorType = document.getElementById('editTypeDisplay').textContent;
 
@@ -572,6 +584,7 @@ async function saveDriverConductorDetails() {
     const validationResult = await validationResponse.json();
 
     if (!validationResult.isValid) {
+      hideTransportLoadingAnimation();
       Swal.fire({
         icon: 'error',
         title: 'Validation Error',
@@ -590,10 +603,11 @@ async function saveDriverConductorDetails() {
     });
 
     if (!response.ok) {
+      hideTransportLoadingAnimation();
       throw new Error('Failed to update details');
     }
 
-    alert("Details Updated Successfully");
+    showToast("Details Updated Successfully");
 
     // Refresh the displayed data
     refreshDriverConductorData();
@@ -601,7 +615,8 @@ async function saveDriverConductorDetails() {
     // Close the popup
     closeEditPopup();
   } catch (error) {
+    hideTransportLoadingAnimation();
     console.error('Error saving driver/conductor details:', error);
-    alert('An error occurred while updating the details.');
+    showToast('An error occurred while updating the details.');
   }
 }
