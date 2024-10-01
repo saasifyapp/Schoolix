@@ -285,26 +285,37 @@
     <div id="editPopupOverlay" class="popup-overlay" style="display: none;"></div>
 
     <!-- Edit Popup Window -->
-    <div id="editPopup" class="popup-window" style="display: none;">
-        <form id="editDriverConductorForm">
-            <h3>Edit Driver/Conductor Details</h3>
+    <div id="editPopup" class="custom-prompt" style="display: none;">
+        <div class="prompt-content">
+            <form id="editDriverConductorForm">
+                <h2>Edit Driver/Conductor Details</h2>
 
-            <!-- Type Display -->
-            <div>
-                <label>Type:</label>
-                <span id="editTypeDisplay" class="form-control"></span>
-            </div>
+                <!-- Type Display -->
+                <div class="form-group">
+                    <label for="editTypeDisplay" class="form-label">Type:</label>
+                    <span id="editTypeDisplay" class="form-control" style="text-align: center;"></span>
+                </div>
+                
+                
+                <div id="editFields">
+                    <!-- The fields will be dynamically inserted here -->
+                </div>
 
-            <div id="editFields">
-                <!-- The fields will be dynamically inserted here -->
-            </div>
-
-            <div class="popup-buttons">
-                <button type="button" onclick="saveDriverConductorDetails()">Save</button>
-                <button type="button" onclick="closeEditPopup()">Cancel</button>
-            </div>
-        </form>
+                <!-- Save and Cancel Buttons -->
+                <div class="popup-buttons">
+                    <button type="button" class="styled-button" onclick="saveDriverConductorDetails()">
+                        <img src="../images/conform.png" alt="Save" class="button-icon">
+                        <span class="button-text">Save</span>
+                    </button>
+                    <button type="button" class="styled-button" onclick="closeEditPopup()">
+                        <img src="../images/cancel.png" alt="Cancel" class="button-icon">
+                        <span class="button-text">Cancel</span>
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
+
 
 
 
@@ -422,16 +433,17 @@
     </div>
 
     <!-- Edit popup for manage routes -->
-    <div id="editRoutePopup" class="popup-container" style="display: none;">
-        <div class="popup-content">
-            <span class="close-popup" onclick="closeEditRoutePopup()">×</span>
+    <div id="editRoutePopup" class="custom-prompt" style="display: none;">
+        <div class="prompt-content">
             <h2>Edit Route</h2>
+                <div class="form-group">
+                    <input type="text" id="editRouteName" class="form-control" style="text-align: center;">
+                    <span class="form-control-placeholder">Route Name</span>
+                </div>
+
+
             <div class="form-group">
-                <label for="editRouteName">Route Name</label>
-                <input type="text" id="editRouteName" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="editRouteCities">Route Cities</label>
+                <label for="editRouteCities">Route Cities :</label>
                 <div id="citiesContainer" class="cities-container">
                     <!-- Dynamically added city tags will appear here -->
                     <input type="text" id="cityInput" placeholder="Add a city" class="city-input">
@@ -439,12 +451,24 @@
                 <!-- Container for city suggestions -->
                 <div id="suggestionsContainer" class="suggestions-container" style="display: none;"></div>
             </div>
-            <button onclick="saveRouteDetails()">Save</button>
+
+            <!-- Save Button -->
+            <button class="styled-button" onclick="saveRouteDetails()">
+                <img src="../images/conform.png" alt="Save" class="button-icon">
+                <span class="button-text">Save</span>
+            </button>
+
+            <!-- Cancel Button -->
+            <button id="cancelButton" class="styled-button" onclick="closeEditRoutePopup()">
+                <img src="../images/cancel.png" alt="Cancel" class="button-icon">
+                <span class="button-text">Cancel</span>
+            </button>
         </div>
     </div>
 
-    <!-- Background Blur -->
-    <div id="popupBg" class="popup-bg" style="display: none;"></div>
+
+
+
 
 
 
@@ -530,16 +554,16 @@
     </div>
 
     <!-- Edit popup for manage shifts -->
-    <div id="editShiftPopup" class="popup-container" style="display: none;">
-        <div class="popup-content">
-            <span class="close-popup" onclick="closeEditShiftPopup()">×</span>
+    <div id="editShiftPopup" class="custom-prompt" style="display: none;">
+        <div class="prompt-content">
             <h2>Edit Shift</h2>
             <div class="form-group">
-                <label for="editShiftNameInput">Shift Name</label>
-                <input type="text" id="editShiftNameInput" class="form-control">
+                <input type="text" id="editShiftNameInput" class="form-control" style="text-align: center;">
+                <span class="form-control-placeholder">Shift Name</span>
             </div>
+
             <div class="form-group">
-                <label for="editShiftTypes">Classes Alloted</label>
+                <label for="editShiftTypes">Classes Alloted:</label>
                 <div id="shiftTypeseditContainer" class="shift-types-container">
                     <!-- Dynamically added Classes Alloted tags will appear here -->
                     <input type="text" id="shiftTypeInputField" placeholder="Add classes to be alloted"
@@ -548,9 +572,21 @@
                 <!-- Container for classes suggestions -->
                 <div id="shiftTypeSuggestionsContainer" class="suggestions-container" style="display: none;"></div>
             </div>
-            <button onclick="saveShiftDetails()">Save</button>
+
+            <!-- Save Button -->
+            <button class="styled-button" onclick="saveShiftDetails()">
+                <img src="../images/conform.png" alt="Save" class="button-icon">
+                <span class="button-text">Save</span>
+            </button>
+
+            <!-- Cancel Button -->
+            <button id="cancelButton" class="styled-button" onclick="closeEditShiftPopup()">
+                <img src="../images/cancel.png" alt="Cancel" class="button-icon">
+                <span class="button-text">Cancel</span>
+            </button>
         </div>
     </div>
+
 
     <!-- Background Blur -->
     <div id="popupBackgroundShift" class="popup-bg" style="display: none;"></div>

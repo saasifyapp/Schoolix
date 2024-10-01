@@ -461,8 +461,8 @@ function editShift(shiftId) {
     renderEditedSelectedShiftTypes();
 
     // Show popup and blur background
-    document.getElementById("editShiftPopup").style.display = "block";
-    document.getElementById("popupBackgroundShift").style.display = "block";
+    document.getElementById("editShiftPopup").style.display = "flex";
+    document.getElementById("popupBackgroundShift").style.display = "flex";
 
     // Store the current shiftId for saving later
     selectedShiftId = shiftId;

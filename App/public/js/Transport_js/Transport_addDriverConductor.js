@@ -4,57 +4,58 @@ let driverConductorData = {};
 // Function to refresh driver/conductor data and store it locally
 async function refreshDriverConductorData() {
   showTransportLoadingAnimation();
-  document.getElementById('searchBar').value = "";
-  document.getElementById('filtertype').value = "";
+  document.getElementById("searchBar").value = "";
+  document.getElementById("filtertype").value = "";
   try {
-    const response = await fetch('/displayDriverConductors');
+    const response = await fetch("/displayDriverConductors");
     if (!response.ok) {
       hideTransportLoadingAnimation();
-      throw new Error('Failed to fetch driver/conductor details');
+      throw new Error("Failed to fetch driver/conductor details");
     }
     const data = await response.json();
     storeDriverConductorData(data);
     displayDriverConductors(data);
   } catch (error) {
     hideTransportLoadingAnimation();
-    console.error('Error fetching driver/conductor details:', error);
+    console.error("Error fetching driver/conductor details:", error);
   }
 }
 
 function formatInput(input) {
   // Check if the input is not a string and convert it to a string if necessary
-  if (typeof input !== 'string') {
-      input = String(input); // Convert to string
+  if (typeof input !== "string") {
+    input = String(input); // Convert to string
   }
 
   // Trim whitespace and replace multiple spaces with a single space
-  let formattedInput = input.trim().replace(/\s+/g, ' ');
+  let formattedInput = input.trim().replace(/\s+/g, " ");
 
   // Prevent unnecessary characters or SQL injection
   formattedInput = formattedInput
-      .replace(/'/g, "''") // Escape single quotes
-      .replace(/--/g, '') // Remove SQL comment syntax
-      .replace(/;/g, '') // Remove semicolons
-      .replace(/[^a-zA-Z0-9\s._-]/g, ''); // Allow only alphanumeric characters, spaces, dots, underscores, and hyphens
+    .replace(/'/g, "''") // Escape single quotes
+    .replace(/--/g, "") // Remove SQL comment syntax
+    .replace(/;/g, "") // Remove semicolons
+    .replace(/[^a-zA-Z0-9\s._-]/g, ""); // Allow only alphanumeric characters, spaces, dots, underscores, and hyphens
 
   return formattedInput;
 }
-
 
 // Function to store the driver/conductor data locally
 function storeDriverConductorData(data) {
   driverConductorData = {}; // Clear existing data
 
-  data.forEach(item => {
+  data.forEach((item) => {
     driverConductorData[item.id] = item; // Store item by ID
   });
-  console.log(driverConductorData)
+  console.log(driverConductorData);
 }
 
 // Function to display driver/conductor details
 function displayDriverConductors(data) {
   hideTransportLoadingAnimation();
-  const driverConductorTableBody = document.getElementById("driverConductorTableBody");
+  const driverConductorTableBody = document.getElementById(
+    "driverConductorTableBody"
+  );
   driverConductorTableBody.innerHTML = ""; // Clear existing rows
 
   if (data.length === 0) {
@@ -65,7 +66,7 @@ function displayDriverConductors(data) {
     // Reverse the data array
     data.reverse();
 
-    data.forEach(item => {
+    data.forEach((item) => {
       const row = document.createElement("tr");
       row.innerHTML = `
          <td>${item.name || ""}</td>
@@ -102,12 +103,13 @@ function displayDriverConductors(data) {
 // Function to search the driver/conductor by name or vehicle number
 function searchDriverConductorDetails() {
   showTransportLoadingAnimation();
-  const query = document.getElementById('searchBar').value;
+  const query = document.getElementById("searchBar").value;
 
   query.trim().toLowerCase(); // Normalize the search query
-  const searchResults = Object.values(driverConductorData).filter(item =>
-    item.name.toLowerCase().includes(query) ||
-    item.vehicle_no.toLowerCase().includes(query)
+  const searchResults = Object.values(driverConductorData).filter(
+    (item) =>
+      item.name.toLowerCase().includes(query) ||
+      item.vehicle_no.toLowerCase().includes(query)
   );
 
   displayDriverConductors(searchResults);
@@ -116,7 +118,7 @@ function searchDriverConductorDetails() {
 // Function to filter driver/conductor by type
 function filterDriverConductorByType() {
   showTransportLoadingAnimation();
-  const selectedType = document.getElementById('filtertype').value;
+  const selectedType = document.getElementById("filtertype").value;
 
   // If no type is selected, display all records
   if (!selectedType) {
@@ -125,8 +127,8 @@ function filterDriverConductorByType() {
   }
 
   // Filter data by the selected type
-  const filteredData = Object.values(driverConductorData).filter(item =>
-    item.driver_conductor_type === selectedType
+  const filteredData = Object.values(driverConductorData).filter(
+    (item) => item.driver_conductor_type === selectedType
   );
 
   // Display the filtered results
@@ -134,19 +136,19 @@ function filterDriverConductorByType() {
 }
 
 async function deleteDriverConductor(id) {
-  if (!confirm('Are you sure you want to delete this entry?')) {
+  if (!confirm("Are you sure you want to delete this entry?")) {
     return; // User canceled the deletion
   }
 
   try {
     showTransportLoadingAnimation();
     const response = await fetch(`/deleteDriverConductor/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
     });
 
     if (!response.ok) {
       hideTransportLoadingAnimation();
-      throw new Error('Failed to delete the entry');
+      throw new Error("Failed to delete the entry");
     }
     hideTransportLoadingAnimation();
     const result = await response.json();
@@ -156,16 +158,17 @@ async function deleteDriverConductor(id) {
     await refreshDriverConductorData();
   } catch (error) {
     hideTransportLoadingAnimation();
-    console.error('Error:', error);
-    showToast('An error occurred while deleting the entry. Please try again.');
+    console.error("Error:", error);
+    showToast("An error occurred while deleting the entry. Please try again.");
   }
 }
-
 
 const typeSelect = document.getElementById("type");
 const dynamicFields = document.getElementById("dynamicFields");
 const addDriverForm = document.getElementById("addDriverForm");
-const driverConductorTableBody = document.getElementById("driverConductorTableBody");
+const driverConductorTableBody = document.getElementById(
+  "driverConductorTableBody"
+);
 
 typeSelect.addEventListener("change", function () {
   dynamicFields.innerHTML = ""; // Clear existing fields
@@ -280,28 +283,35 @@ addDriverForm.addEventListener("submit", function (e) {
     contact: formatInput(document.getElementById("contact")?.value || ""),
     address: formatInput(document.getElementById("address")?.value || ""),
     type: formatInput(document.getElementById("type")?.value || ""),
-    vehicle_no: document.getElementById("vehicle_no") ? formatInput(document.getElementById("vehicle_no").value) : null,
-    vehicle_type: (document.getElementById("type")?.value === "driver") ? formatInput(document.getElementById("vehicle_type")?.value || "") : null,
-    vehicle_capacity: (document.getElementById("type")?.value === "driver") ? formatInput(document.getElementById("vehicle_capacity")?.value || "") : null,
-};
-
+    vehicle_no: document.getElementById("vehicle_no")
+      ? formatInput(document.getElementById("vehicle_no").value)
+      : null,
+    vehicle_type:
+      document.getElementById("type")?.value === "driver"
+        ? formatInput(document.getElementById("vehicle_type")?.value || "")
+        : null,
+    vehicle_capacity:
+      document.getElementById("type")?.value === "driver"
+        ? formatInput(document.getElementById("vehicle_capacity")?.value || "")
+        : null,
+  };
 
   // Validate driver/conductor details before sending data to the server
-  fetch('/validateDriverConductorDetails', {
-    method: 'POST',
+  fetch("/validateDriverConductorDetails", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(formData)
+    body: JSON.stringify(formData),
   })
-    .then(response => response.json())
-    .then(result => {
+    .then((response) => response.json())
+    .then((result) => {
       if (!result.isValid) {
         hideTransportLoadingAnimation();
         Swal.fire({
-          icon: 'error',
-          title: 'Validation Error',
-          html: result.message
+          icon: "error",
+          title: "Validation Error",
+          html: result.message,
         });
         return;
       }
@@ -329,7 +339,7 @@ addDriverForm.addEventListener("submit", function (e) {
           showToast("An error occurred while submitting the form");
         });
     })
-    .catch(error => console.error('Error:', error));
+    .catch((error) => console.error("Error:", error));
 });
 
 // Function to reset the form and clear dynamic fields
@@ -367,120 +377,170 @@ function editDriverConductor(id) {
   const driverConductorDetails = driverConductorData[id];
 
   if (!driverConductorDetails) {
-    console.error('Driver/Conductor not found');
+    console.error("Driver/Conductor not found");
     return;
   }
 
-  const editFieldsContainer = document.getElementById('editFields');
+  const editFieldsContainer = document.getElementById("editFields");
 
   // Display the type as a span element
-  document.getElementById('editTypeDisplay').textContent = driverConductorDetails.driver_conductor_type;
+  document.getElementById("editTypeDisplay").textContent =
+    driverConductorDetails.driver_conductor_type;
 
   // Clear previous fields
-  editFieldsContainer.innerHTML = '';
+  editFieldsContainer.innerHTML = "";
 
   // Populate the form fields based on type
-  if (driverConductorDetails.driver_conductor_type === 'Driver') {
+  if (driverConductorDetails.driver_conductor_type === "Driver") {
     editFieldsContainer.innerHTML = `
-             <div>
-              <label for="editName">Name:</label>
-              <input type="text" id="editName" name="name" class="form-control" value="${driverConductorDetails.name || ''}">
-          </div>
-          <div>
-              <label for="editContact">Contact:</label>
-              <input type="text" id="editContact" name="contact" class="form-control" value="${driverConductorDetails.contact || ''}">
-          </div>
-          <div>
-              <label for="editAddress">Address:</label>
-              <input type="text" id="editAddress" name="address" class="form-control" value="${driverConductorDetails.address || ''}">
-          </div>
-          <div>
-              <label for="editVehicleNo">Vehicle Number:</label>
-              <input type="text" id="editVehicleNo" name="vehicleNo" class="form-control" value="${driverConductorDetails.vehicle_no || ''}">
-          </div>
+                 <div class="form-row">
+        <div class="form-group">
+            <input type="text" id="editName" name="name" class="form-control" value="${
+              driverConductorDetails.name || ""
+            }" style="text-align: center;">
+            <span class="form-control-placeholder">Name</span>
+        </div>
+        
+                  <div class="form-group">
+            <input type="text" id="editContact" name="contact" class="form-control" value="${
+              driverConductorDetails.contact || ""
+            }" style="text-align: center;">
+            <span class="form-control-placeholder">Contact</span>
+        </div>
+
+
+    </div>
+
+
+<div class="form-group">
+    <input type="text" id="editAddress" name="address" class="form-control" value="${
+      driverConductorDetails.address || ""
+    }" style="text-align: center;">
+    <span class="form-control-placeholder">Address</span>
+</div>
+
+          <div class="form-group">
+    <input type="text" id="editVehicleNo" name="vehicleNo" class="form-control" value="${
+      driverConductorDetails.vehicle_no || ""
+    }" style="text-align: center;">
+    <span class="form-control-placeholder">Vehicle Number</span>
+</div>
+
           <div>
               <label for="editVehicleType">Vehicle Type:</label>
               <select id="editVehicleType" name="vehicleType" class="form-control">
-                  <option value="Bus" ${driverConductorDetails.vehicle_type === 'Bus' ? 'selected' : ''}>Bus</option>
-                  <option value="Van" ${driverConductorDetails.vehicle_type === 'Van' ? 'selected' : ''}>Van</option>
-                  <option value="Car" ${driverConductorDetails.vehicle_type === 'Car' ? 'selected' : ''}>Car</option>
-                  <option value="Other" ${driverConductorDetails.vehicle_type === 'Other' ? 'selected' : ''}>Other</option>
+                  <option value="Bus" ${
+                    driverConductorDetails.vehicle_type === "Bus"
+                      ? "selected"
+                      : ""
+                  }>Bus</option>
+                  <option value="Van" ${
+                    driverConductorDetails.vehicle_type === "Van"
+                      ? "selected"
+                      : ""
+                  }>Van</option>
+                  <option value="Car" ${
+                    driverConductorDetails.vehicle_type === "Car"
+                      ? "selected"
+                      : ""
+                  }>Car</option>
+                  <option value="Other" ${
+                    driverConductorDetails.vehicle_type === "Other"
+                      ? "selected"
+                      : ""
+                  }>Other</option>
               </select>
           </div>
           <div style="display: flex; align-items: center; gap: 20px;">
-              <div>
-                  <label for="originalCapacity">Current Capacity:</label>
-                  <input type="number" id="originalCapacity" name="originalCapacity" class="form-control" value="${driverConductorDetails.vehicle_capacity || 0}" readonly>
-              </div>
-              <div>
-                  <label for="additionalCapacity">New Seats:</label>
-                  <input type="number" id="additionalCapacity" name="additionalCapacity" class="form-control" placeholder="Enter increase in capacity">
-              </div>
+             <div class="form-group">
+    <input type="number" id="originalCapacity" name="originalCapacity" class="form-control" value="${
+      driverConductorDetails.vehicle_capacity || 0
+    }" readonly style="text-align: center;">
+    <span class="form-control-placeholder">Current Capacity</span>
+</div>
+
+<div class="form-group">
+    <input type="number" id="additionalCapacity" name="additionalCapacity" class="form-control" placeholder="" style="text-align: center;">
+    <span class="form-control-placeholder">New Seats</span>
+</div>
+
           </div>
-          <div style="margin-top: 10px;">
-              <span>Total Capacity: </span>
-              <span id="totalCapacity">${driverConductorDetails.vehicle_capacity || 0}</span>
-          </div>
+          <div class="form-group" style="margin-top: 10px;">
+    <span class="form-label">Total Capacity:</span>
+    <span id="totalCapacity" class="form-control">${
+      driverConductorDetails.vehicle_capacity || 0
+    }</span>
+</div>
+
       `;
 
     // Update total capacity dynamically
-    const originalCapacityInput = document.getElementById('originalCapacity');
-    const additionalCapacityInput = document.getElementById('additionalCapacity');
-    const totalCapacitySpan = document.getElementById('totalCapacity');
+    const originalCapacityInput = document.getElementById("originalCapacity");
+    const additionalCapacityInput =
+      document.getElementById("additionalCapacity");
+    const totalCapacitySpan = document.getElementById("totalCapacity");
 
-    additionalCapacityInput.addEventListener('input', function () {
+    additionalCapacityInput.addEventListener("input", function () {
       const originalCapacity = parseInt(originalCapacityInput.value, 10);
-      const additionalCapacity = parseInt(additionalCapacityInput.value, 10) || 0;
+      const additionalCapacity =
+        parseInt(additionalCapacityInput.value, 10) || 0;
       totalCapacitySpan.textContent = originalCapacity + additionalCapacity;
     });
 
-    const vehicleNoInput = document.getElementById('editVehicleNo');
-    vehicleNoInput.addEventListener('input', function () {
+    const vehicleNoInput = document.getElementById("editVehicleNo");
+    vehicleNoInput.addEventListener("input", function () {
       this.value = formatVehicleNumber(this.value);
     });
-
-  } else if (driverConductorDetails.driver_conductor_type === 'Conductor') {
+  } else if (driverConductorDetails.driver_conductor_type === "Conductor") {
     editFieldsContainer.innerHTML = `
           <div>
               <label for="editName">Name:</label>
-              <input type="text" id="editName" name="name" class="form-control" value="${driverConductorDetails.name || ''}">
+              <input type="text" id="editName" name="name" class="form-control" value="${
+                driverConductorDetails.name || ""
+              }">
           </div>
           <div>
               <label for="editContact">Contact:</label>
-              <input type="text" id="editContact" name="contact" class="form-control" value="${driverConductorDetails.contact || ''}">
+              <input type="text" id="editContact" name="contact" class="form-control" value="${
+                driverConductorDetails.contact || ""
+              }">
           </div>
           <div>
               <label for="editAddress">Address:</label>
-              <input type="text" id="editAddress" name="address" class="form-control" value="${driverConductorDetails.address || ''}">
+              <input type="text" id="editAddress" name="address" class="form-control" value="${
+                driverConductorDetails.address || ""
+              }">
           </div>
           <div>
               <label for="editVehicleNo">Vehicle Number:</label>
-              <input type="text" id="editVehicleNo" name="vehicleNo" class="form-control" value="${driverConductorDetails.vehicle_no || ''}">
+              <input type="text" id="editVehicleNo" name="vehicleNo" class="form-control" value="${
+                driverConductorDetails.vehicle_no || ""
+              }">
 
               <div id="editSuggestions" class="edit-suggestions"></div>
           </div>
       `;
 
-    const vehicleNoInput = document.getElementById('editVehicleNo');
-    const suggestionsContainer = document.getElementById('editSuggestions');
+    const vehicleNoInput = document.getElementById("editVehicleNo");
+    const suggestionsContainer = document.getElementById("editSuggestions");
 
     // Function to fetch driver details and update suggestions
     function fetchDriverDetails(query) {
       fetch(`/getDriverDetails?q=${query}`)
         .then((response) => response.json())
         .then((data) => {
-          suggestionsContainer.style.display = 'flex'; // Show suggestions container
-          suggestionsContainer.innerHTML = '';
+          suggestionsContainer.style.display = "flex"; // Show suggestions container
+          suggestionsContainer.innerHTML = "";
 
           if (data.length === 0) {
-            const noResultsItem = document.createElement('div');
-            noResultsItem.classList.add('edit-suggestion-item', 'no-results');
-            noResultsItem.textContent = 'No results found';
+            const noResultsItem = document.createElement("div");
+            noResultsItem.classList.add("edit-suggestion-item", "no-results");
+            noResultsItem.textContent = "No results found";
             suggestionsContainer.appendChild(noResultsItem);
           } else {
             data.forEach((driver) => {
-              const suggestionItem = document.createElement('div');
-              suggestionItem.classList.add('edit-suggestion-item');
+              const suggestionItem = document.createElement("div");
+              suggestionItem.classList.add("edit-suggestion-item");
               suggestionItem.textContent = `${driver.vehicle_no} | ${driver.name}`;
               suggestionItem.dataset.vehicleNo = driver.vehicle_no;
               suggestionItem.dataset.name = driver.name;
@@ -488,7 +548,7 @@ function editDriverConductor(id) {
             });
           }
         })
-        .catch((error) => console.error('Error:', error));
+        .catch((error) => console.error("Error:", error));
     }
 
     // Show initial suggestions on focus
@@ -497,51 +557,60 @@ function editDriverConductor(id) {
     });
 
     // Update suggestions on input
-    vehicleNoInput.addEventListener('input', function () {
+    vehicleNoInput.addEventListener("input", function () {
       this.value = formatVehicleNumber(this.value);
       const query = this.value;
       fetchDriverDetails(query);
     });
 
-    suggestionsContainer.addEventListener('click', function (event) {
-      if (event.target.classList.contains('edit-suggestion-item')) {
+    suggestionsContainer.addEventListener("click", function (event) {
+      if (event.target.classList.contains("edit-suggestion-item")) {
         const selectedDriver = event.target;
         vehicleNoInput.value = selectedDriver.dataset.vehicleNo;
-        suggestionsContainer.style.display = 'none'; // Hide suggestions container
-        suggestionsContainer.innerHTML = '';
+        suggestionsContainer.style.display = "none"; // Hide suggestions container
+        suggestionsContainer.innerHTML = "";
       }
     });
 
-    document.addEventListener('click', function (event) {
-      if (!suggestionsContainer.contains(event.target) && !vehicleNoInput.contains(event.target)) {
-        suggestionsContainer.style.display = 'none'; // Hide suggestions container
-        suggestionsContainer.innerHTML = '';
+    document.addEventListener("click", function (event) {
+      if (
+        !suggestionsContainer.contains(event.target) &&
+        !vehicleNoInput.contains(event.target)
+      ) {
+        suggestionsContainer.style.display = "none"; // Hide suggestions container
+        suggestionsContainer.innerHTML = "";
       }
     });
   }
 
   // Show the popup
-  document.getElementById('editPopupOverlay').style.display = 'block';
-  document.getElementById('editPopup').style.display = 'block';
+  document.getElementById("editPopupOverlay").style.display = "flex";
+  document.getElementById("editPopup").style.display = "flex";
 
   // Store the current ID in a hidden field for later use
-  document.getElementById('editDriverConductorForm').dataset.currentId = id;
+  document.getElementById("editDriverConductorForm").dataset.currentId = id;
 }
 
 // Function to close the edit popup
 function closeEditPopup() {
-  document.getElementById('editPopupOverlay').style.display = 'none';
-  document.getElementById('editPopup').style.display = 'none';
+  document.getElementById("editPopupOverlay").style.display = "none";
+  document.getElementById("editPopup").style.display = "none";
 }
 
 async function saveDriverConductorDetails() {
   showTransportLoadingAnimation();
-  const id = document.getElementById('editDriverConductorForm').dataset.currentId;
-  const driverConductorType = document.getElementById('editTypeDisplay').textContent;
+  const id = document.getElementById("editDriverConductorForm").dataset
+    .currentId;
+  const driverConductorType =
+    document.getElementById("editTypeDisplay").textContent;
 
   // Retrieve the original capacity and additional capacity inputs
-  const originalCapacity = document.getElementById('originalCapacity') ? parseInt(document.getElementById('originalCapacity').value, 10) : 0;
-  const additionalCapacity = document.getElementById('additionalCapacity') ? parseInt(document.getElementById('additionalCapacity').value, 10) || 0 : 0;
+  const originalCapacity = document.getElementById("originalCapacity")
+    ? parseInt(document.getElementById("originalCapacity").value, 10)
+    : 0;
+  const additionalCapacity = document.getElementById("additionalCapacity")
+    ? parseInt(document.getElementById("additionalCapacity").value, 10) || 0
+    : 0;
 
   // Calculate the total vehicle capacity
   const totalVehicleCapacity = originalCapacity + additionalCapacity;
@@ -560,25 +629,28 @@ async function saveDriverConductorDetails() {
 
   const updatedDetails = {
     id: id,
-    name: formatInput(document.getElementById('editName').value),
-    contact: formatInput(document.getElementById('editContact').value),
-    address: formatInput(document.getElementById('editAddress').value),
+    name: formatInput(document.getElementById("editName").value),
+    contact: formatInput(document.getElementById("editContact").value),
+    address: formatInput(document.getElementById("editAddress").value),
     type: driverConductorType,
-    vehicle_no: document.getElementById('editVehicleNo') ? formatInput(document.getElementById('editVehicleNo').value) : '',
-    vehicle_type: document.getElementById('editVehicleType') ? formatInput(document.getElementById('editVehicleType').value) : '',
+    vehicle_no: document.getElementById("editVehicleNo")
+      ? formatInput(document.getElementById("editVehicleNo").value)
+      : "",
+    vehicle_type: document.getElementById("editVehicleType")
+      ? formatInput(document.getElementById("editVehicleType").value)
+      : "",
     vehicle_capacity: totalVehicleCapacity, // Assuming this is already validated and sanitized
-    new_seats: formatInput(additionalCapacity) // Ensure to sanitize if it's a string input
-};
-
+    new_seats: formatInput(additionalCapacity), // Ensure to sanitize if it's a string input
+  };
 
   // Validate driver/conductor details before sending data to the server
   try {
-    const validationResponse = await fetch('/validateDriverConductorDetails', {
-      method: 'POST',
+    const validationResponse = await fetch("/validateDriverConductorDetails", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(updatedDetails)
+      body: JSON.stringify(updatedDetails),
     });
 
     const validationResult = await validationResponse.json();
@@ -586,25 +658,25 @@ async function saveDriverConductorDetails() {
     if (!validationResult.isValid) {
       hideTransportLoadingAnimation();
       Swal.fire({
-        icon: 'error',
-        title: 'Validation Error',
-        html: validationResult.message
+        icon: "error",
+        title: "Validation Error",
+        html: validationResult.message,
       });
       return;
     }
 
     // Call the API to save driver/conductor details (implement the backend for this)
-    const response = await fetch('/editDriverConductor', {
-      method: 'PUT',
+    const response = await fetch("/editDriverConductor", {
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(updatedDetails),
     });
 
     if (!response.ok) {
       hideTransportLoadingAnimation();
-      throw new Error('Failed to update details');
+      throw new Error("Failed to update details");
     }
 
     showToast("Details Updated Successfully");
@@ -616,7 +688,7 @@ async function saveDriverConductorDetails() {
     closeEditPopup();
   } catch (error) {
     hideTransportLoadingAnimation();
-    console.error('Error saving driver/conductor details:', error);
-    showToast('An error occurred while updating the details.');
+    console.error("Error saving driver/conductor details:", error);
+    showToast("An error occurred while updating the details.");
   }
 }

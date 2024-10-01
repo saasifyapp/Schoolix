@@ -598,8 +598,8 @@ function editRoute(routeShiftId) {
     renderEditedSelectedCities();
 
     // Show popup and blur background
-    document.getElementById("editRoutePopup").style.display = "block";
-    document.getElementById("popupBg").style.display = "block";
+    document.getElementById("editRoutePopup").style.display = "flex";
+    document.getElementById("popupBg").style.display = "flex";
 
     // Store the current routeShiftId for saving later
     selectedRouteId = routeShiftId;

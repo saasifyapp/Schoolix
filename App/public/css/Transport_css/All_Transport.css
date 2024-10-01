@@ -396,36 +396,6 @@ body {
 
 
 
-/* edit form css driverconductor */
-.popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-}
-
-.popup-window {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    z-index: 1001;
-    width: 400px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-}
-
-.popup-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
 
 
 
@@ -459,43 +429,9 @@ body {
 }
 
 
-/* Background blur EDIT BOX FOR ROUTE */
 
-/* Popup Styles */
-.popup-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    padding: 20px;
-    z-index: 1002;
-    width: 400px;
-}
 
-.popup-content {
-    position: relative;
-}
 
-.popup-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1001;
-}
-
-.close-popup {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    font-size: 18px;
-}
 
 /* Cities Tags */
 .cities-container {
@@ -542,7 +478,7 @@ body {
     padding: 5px;
     border-radius: 4px;
     flex-direction: column;
-    top: 8rem;
+    top: 6rem;
 }
 
 .suggestion-item {
@@ -555,41 +491,7 @@ body {
 }
 
 
-/* Popup Styles for Edit Shift */
-#editShiftPopup.popup-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    padding: 20px;
-    z-index: 1002;
-    width: 400px;
-}
 
-#editShiftPopup .popup-content {
-    position: relative;
-}
-
-#popupBackgroundShift.popup-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1001;
-}
-
-#editShiftPopup .close-popup {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    font-size: 18px;
-}
 
 /* Shift Types Tags (similar to Cities Tags) */
 .shift-types-container {
@@ -648,21 +550,123 @@ body {
     background-color: #f0f0f0;
 }
 
-/* Save Button Styling */
-#editShiftPopup button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 10px 20px;
-    cursor: pointer;
-    margin-top: 10px;
-    font-size: 16px;
+
+
+/* ////////////////// Edit prompt css////////////////////////// */
+.custom-prompt {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
 }
 
-#editShiftPopup button:hover {
-    background-color: #45a049;
+/* Content of the modal */
+.prompt-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    min-width: 300px;
+    width: auto;
+    /* Adjust the width as needed */
+    text-align: center;
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
 }
+
+.prompt-content h2 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    pointer-events: auto;
+    color: #484b51;
+}
+
+.prompt-content .form-group {
+    margin-bottom: 1.8rem;
+}
+
+.prompt-content select,
+.prompt-content input {
+    width: 100%;
+    /* Ensure full width for input fields */
+    margin-bottom: 10px;
+}
+
+.prompt-content button {
+    background-color: transparent;
+    border: none;
+    color: black;
+    padding: 0;
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    max-height: 100%;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 10px;
+}
+
+.prompt-content button img {
+    width: 25px;
+    height: 25px;
+    border-radius: 0px;
+    margin: 5px;
+}
+
+.prompt-content button span {
+    margin-right: 10px;
+}
+
+.styled-button {
+    background-color: transparent;
+    border: none;
+    color: black;
+    padding: 0;
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    max-height: 100%;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 10px;
+}
+
+/* Hover effect */
+.styled-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.styled-button img.button-icon {
+    width: 25px;
+    height: 25px;
+    border-radius: 0px;
+    margin: 5px;
+}
+
+.styled-button span.button-text {
+    margin-right: 10px;
+}
+
 
 /* HTML: <div class="loader"></div> */
 /* From Uiverse.io by AqFox */
