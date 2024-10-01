@@ -211,9 +211,8 @@ document.addEventListener("DOMContentLoaded", function () {
           filteredData.forEach((driver) => {
             const suggestionItem = document.createElement("div");
             suggestionItem.classList.add("suggestion-item");
-            suggestionItem.textContent = `${driver.vehicle_no || "N/A"} | ${
-              driver.driver_name || "N/A"
-            }`;
+            suggestionItem.textContent = `${driver.vehicle_no || "N/A"} | ${driver.driver_name || "N/A"
+              }`;
             suggestionItem.dataset.driverName = driver.driver_name || "N/A";
             suggestionItem.dataset.vehicleNo = driver.vehicle_no || "N/A";
             suggestionItem.dataset.conductorName =
@@ -242,6 +241,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (event.target.classList.contains("suggestion-item")) {
       const selectedRoute = event.target;
       routeInput.value = selectedRoute.dataset.routeName;
+      selectedRouteDetail = selectedRoute.dataset.routeDetail;
 
       // Populate the route details
       routeDetailContainer.innerHTML = `
@@ -262,6 +262,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (event.target.classList.contains("suggestion-item")) {
       const selectedShift = event.target;
       shiftInput.value = selectedShift.dataset.shiftName;
+      selectedShiftDetail = selectedShift.dataset.shiftDetail;
 
       // Populate the shift details
       shiftDetailContainer.innerHTML = `
@@ -284,19 +285,18 @@ document.addEventListener("DOMContentLoaded", function () {
       vehicleInput.value = selectedDriver.dataset.vehicleNo;
 
       // Populate the vehicle details
-      const selectedVehicleDetail = {
-        driverName: selectedDriver.dataset.driverName || "N/A",
-        vehicleNo: selectedDriver.dataset.vehicleNo || "N/A",
-        conductorName: selectedDriver.dataset.conductorName || "N/A",
-        vehicleCapacity: selectedDriver.dataset.vehicleCapacity || "N/A",
+      selectedVehicleDetail = {
+        driverName: selectedDriver.dataset.driverName || 'N/A',
+        vehicleNo: selectedDriver.dataset.vehicleNo || 'N/A',
+        conductorName: selectedDriver.dataset.conductorName || 'N/A',
+        vehicleCapacity: selectedDriver.dataset.vehicleCapacity || 'N/A'
       };
-
       vehicleDetailContainer.innerHTML = `
-            <strong>Driver Name:</strong> ${selectedVehicleDetail.driverName}<br>
-            <strong>Vehicle No:</strong> ${selectedVehicleDetail.vehicleNo}<br>
-            <strong>Conductor Name:</strong> ${selectedVehicleDetail.conductorName}<br>
-            <strong>Vehicle Capacity:</strong> ${selectedVehicleDetail.vehicleCapacity}
-        `;
+        <strong>Driver Name:</strong> ${selectedDriver.dataset.driverName}<br>
+        <strong>Vehicle No:</strong> ${selectedDriver.dataset.vehicleNo}<br>
+        <strong>Conductor Name:</strong> ${selectedDriver.dataset.conductorName}<br>
+        <strong>Vehicle Capacity:</strong> ${selectedDriver.dataset.vehicleCapacity}
+    `;
 
       // Show the vehicle detail container
       vehicleDetailContainer.style.display = "block";
@@ -399,6 +399,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const shiftName = shiftInput.value;
     const { driverName, vehicleNo, conductorName, vehicleCapacity } =
       selectedVehicleDetail;
+    console.log(selectedVehicleDetail)
 
     const data = {
       vehicle_no: vehicleNo,
