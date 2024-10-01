@@ -259,6 +259,7 @@
             <button class="export_registered_students" onclick="exportDriverConductorTable()">
                 <img src="/images/export.png" alt="Export Icon"> Export
             </button>
+
             <div class="table-container">
                 <table id="driverConductorTable" class="styled-table">
                     <thead id="driverConductorTableHead">
@@ -295,8 +296,8 @@
                     <label for="editTypeDisplay" class="form-label">Type:</label>
                     <span id="editTypeDisplay" class="form-control" style="text-align: center;"></span>
                 </div>
-                
-                
+
+
                 <div id="editFields">
                     <!-- The fields will be dynamically inserted here -->
                 </div>
@@ -436,10 +437,10 @@
     <div id="editRoutePopup" class="custom-prompt" style="display: none;">
         <div class="prompt-content">
             <h2>Edit Route</h2>
-                <div class="form-group">
-                    <input type="text" id="editRouteName" class="form-control" style="text-align: center;">
-                    <span class="form-control-placeholder">Route Name</span>
-                </div>
+            <div class="form-group">
+                <input type="text" id="editRouteName" class="form-control" style="text-align: center;">
+                <span class="form-control-placeholder">Route Name</span>
+            </div>
 
 
             <div class="form-group">
@@ -776,51 +777,58 @@
     <!-- Overlay for List Scheduling -->
     <div id="listStudentsOverlay" class="overlay-search">
         <div class="overlay-content-search">
+            <img src="/images/studentlist.gif" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
             <button id="closeListStudentsOverlay" class="close-button">&times;</button>
+            <h2 class="overlay-search-head">List Students</h2>
+
             <div class="overlay-inner">
                 <!-- Left Side -->
-                <div class="left-side" style="display: flex; flex-direction: column;">
+                <div class="tag-left left-liststudents">
                     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
                         type="module"></script>
 
+                    <!-- Lottie Animation Player -->
                     <dotlottie-player src="https://lottie.host/9c718d68-ba48-4d8e-a0c8-40afe1b833fe/sxmNRw9ZoN.json"
                         background="transparent" speed="1" style="width: 300px; height: 300px;" loop
                         autoplay></dotlottie-player>
 
-                    <!-- Input Fields -->
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="listStudents_vehicleNo" placeholder="Vehicle No">
-                        <div id="listStudents_vehicleSuggestions" class="suggestions"></div>
-                    </div>
+                    <!-- Form Section Below the Animation -->
+                    <div class="form-section">
 
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="listStudents_shiftType" placeholder="Shift">
-                        <div id="listStudents_shiftSuggestions" class="suggestions"></div>
-                    </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="listStudents_vehicleNo" placeholder=" ">
+                            <span class="form-control-placeholder">Vehicle No</span>
+                            <div id="listStudents_vehicleSuggestions" class="suggestions"></div>
+                        </div>
 
-                    <div id="listStudents_vehicleInfo" class="info-containe">
-                        <!-- Vehicle info will be displayed here -->
-                    </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="listStudents_shiftType" placeholder=" ">
+                            <span class="form-control-placeholder">Shift</span>
+                            <div id="listStudents_shiftSuggestions" class="suggestions"></div>
+                        </div>
 
+                        <div id="listStudents_vehicleInfo" class="info-container">
+                            <!-- Vehicle info will be displayed here -->
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Right Side -->
-                <div class="right-side">
-                    <h2>List Students</h2>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="listStudents_stops"
-                                placeholder="Filter by Vehicle Route">
+                <div class="tag-right" style="">
+                    <div class="search-container">
+                        <div class="form-Searchgroup">
+                            <input type="text" class="form-control" id="listStudents_stops" placeholder=" ">
+                            <span class="form-control-placeholder">Filter by Vehicle Route</span>
                             <div id="listStudents_stopSuggestions" class="suggestions"></div>
                         </div>
 
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="listStudents_classes"
-                                placeholder="Filter by Class">
+                        <div class="form-Searchgroup">
+                            <input type="text" class="form-control" id="listStudents_classes" placeholder=" ">
+                            <span class="form-control-placeholder">Filter by Class</span>
                             <div id="listStudents_classSuggestions" class="suggestions"></div>
                         </div>
 
-                        <button button id="exportStudentListButton" class="export_registered_students">
+                        <button id="exportStudentListButton" class="export_registered_students">
                             <img src="/images/export.png" alt="Export Icon"> Export
                         </button>
                     </div>
@@ -850,6 +858,7 @@
             </div>
         </div>
     </div>
+
 
     <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Transport_js/Transport_console.js"></script>

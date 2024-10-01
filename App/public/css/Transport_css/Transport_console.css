@@ -869,6 +869,7 @@ svg path {
     flex-direction: column;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     /* Optional: Add a subtle shadow */
+    color: black;
 }
 
 /* Style for each suggestion item */
@@ -1042,7 +1043,8 @@ svg path {
 }
 
 .left-manageroute,
-.left-manageshift {
+.left-manageshift,
+.left-liststudents {
     width: 100%;
     max-width: 400px;
     text-align: center;

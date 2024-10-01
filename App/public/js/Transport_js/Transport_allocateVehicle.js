@@ -478,7 +478,18 @@ fetch('/handle_overflow_students', {
                     <td>${item.classes_alloted}</td>
                     <td>${item.available_seats}</td>
                     <td>${item.students_tagged}</td>
-                    <td><button class="detag-button" data-vehicle-no="${item.vehicle_no}" data-route-name="${item.route_name}" data-shift-name="${item.shift_name}" data-classes-alloted="${item.classes_alloted}">Unallocate</button></td>
+                    <td><button class="detag-button" 
+        data-vehicle-no="${item.vehicle_no}" 
+        data-route-name="${item.route_name}" 
+        data-shift-name="${item.shift_name}" 
+        data-classes-alloted="${item.classes_alloted}" 
+        style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+    <img src="../images/cancel.png" alt="Unallocate" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+    <span style="margin-left: 5px;">Unallocate</span>
+</button>
+</td>
                 `;
                     scheduleTableBody.appendChild(newRow);
                 });
