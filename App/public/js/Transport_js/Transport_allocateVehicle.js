@@ -311,9 +311,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // BUS TAGGING FUNCTIONALITY //
 
     allocateButton.addEventListener('click', function () {
-        if (!selectedRouteDetail || !selectedShiftDetail || !vehicleInput.value) {
-            alert('Please select all fields: route, shift, and vehicle.');
-            return;
+        if (!routeInput.value || !shiftInput.value || !vehicleInput.value) {
+            Swal.fire({
+                icon: "error",
+                title: "Missing Details",
+                text: "Please select all details before proceeding.",
+              });
+              return;
         }
     
         const requestData = {

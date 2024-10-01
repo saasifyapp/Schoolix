@@ -382,9 +382,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Ensure all details are selected
     if (
-      !selectedRouteDetail ||
-      !selectedShiftDetail ||
-      !selectedVehicleDetail.vehicleNo
+      !routeInput.value ||
+      !shiftInput.value ||
+      !vehicleInput.value
     ) {
       Swal.fire({
         icon: "error",

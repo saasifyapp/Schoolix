@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const searchDriverConductorOverlay = document.getElementById('searchDriverConductorOverlay');
     const routesShiftsOverlay = document.getElementById('routesShiftsOverlay');
     const manageRoutesOverlay = document.getElementById('manageRoutesOverlay');
-    const manageShiftsOverlay = document.getElementById('manageShiftsOverlay'); 
-    const busAllocationOverlay = document.getElementById('busAllocationOverlay'); 
+    const manageShiftsOverlay = document.getElementById('manageShiftsOverlay');
+    const busAllocationOverlay = document.getElementById('busAllocationOverlay');
     const allocateBusOverlay = document.getElementById('allocateBusOverlay'); // Changed from manageScheduleOverlay
     const tagRouteShiftOverlay = document.getElementById('tagRouteShiftOverlay');
     const listStudentsOverlay = document.getElementById('listStudentsOverlay'); // Changed from listSchedulingOverlay
@@ -23,10 +23,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeRoutesShiftsOverlay = document.getElementById('closeRoutesShiftsOverlay');
     const manageRoutesButton = document.getElementById('manageRoutesButton');
     const closeManageRoutesOverlay = document.getElementById('closeManageRoutesOverlay');
-    const manageShiftsButton = document.getElementById('manageShiftsButton'); 
-    const closeManageShiftsOverlay = document.getElementById('closeManageShiftsOverlay'); 
-    const schedulingButton = document.getElementById('schedulingButton'); 
-    const closeBusAllocationOverlay = document.getElementById('closeBusAllocationOverlay'); 
+    const manageShiftsButton = document.getElementById('manageShiftsButton');
+    const closeManageShiftsOverlay = document.getElementById('closeManageShiftsOverlay');
+    const schedulingButton = document.getElementById('schedulingButton');
+    const closeBusAllocationOverlay = document.getElementById('closeBusAllocationOverlay');
     const allocateBus = document.getElementById('allocateBus'); // Add for Manage Schedule
     const closeAllocateBusOverlay = document.getElementById('closeAllocateBusOverlay'); // Changed from closeManageScheduleOverlay
     const tagRouteShiftButton = document.getElementById('tagRouteShiftButton');
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
         hideAllOverlays();
         showOverlay('listStudentsOverlay'); // Changed from listSchedulingOverlay
     });
-    
+
 
     // Close Driver/Conductor Overlay
     closeDriverConductorOverlay.addEventListener('click', function () {
@@ -159,6 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log(`Hiding overlay: ${overlayId}`);
         const overlay = document.getElementById(overlayId);
         overlay.style.display = "none";
+        resetOverlayContents(overlay);
     }
 
     function hideAllOverlays() {
@@ -169,5 +170,22 @@ document.addEventListener('DOMContentLoaded', function () {
             'listStudentsOverlay' // Changed from listSchedulingOverlay
         ];
         overlays.forEach(hideOverlay);
+    }
+
+
+    // Function to reset the contents of input fields and suggestion containers
+    function resetOverlayContents(overlay) {
+        // Clear input fields
+        const inputFields = overlay.querySelectorAll('input');
+        inputFields.forEach(input => {
+            input.value = '';
+        });
+
+        // Clear suggestion containers
+        const infoContainers = overlay.querySelectorAll('.info-container');
+        infoContainers.forEach(container => {
+            // container.innerHTML = '';
+            container.style.display = 'none'; // Set display to none
+        });
     }
 });
