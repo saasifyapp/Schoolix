@@ -18,6 +18,26 @@ async function refreshDriverConductorData() {
   }
 }
 
+function formatInput(input) {
+  // Check if the input is not a string and convert it to a string if necessary
+  if (typeof input !== 'string') {
+      input = String(input); // Convert to string
+  }
+
+  // Trim whitespace and replace multiple spaces with a single space
+  let formattedInput = input.trim().replace(/\s+/g, ' ');
+
+  // Prevent unnecessary characters or SQL injection
+  formattedInput = formattedInput
+      .replace(/'/g, "''") // Escape single quotes
+      .replace(/--/g, '') // Remove SQL comment syntax
+      .replace(/;/g, '') // Remove semicolons
+      .replace(/[^a-zA-Z0-9\s._-]/g, ''); // Allow only alphanumeric characters, spaces, dots, underscores, and hyphens
+
+  return formattedInput;
+}
+
+
 // Function to store the driver/conductor data locally
 function storeDriverConductorData(data) {
   driverConductorData = {}; // Clear existing data
@@ -246,14 +266,15 @@ addDriverForm.addEventListener("submit", function (e) {
   e.preventDefault();
 
   const formData = {
-    name: document.getElementById("name").value,
-    contact: document.getElementById("contact").value,
-    address: document.getElementById("address").value,
-    type: document.getElementById("type").value,
-    vehicle_no: document.getElementById("vehicle_no") ? document.getElementById("vehicle_no").value : null,
-    vehicle_type: document.getElementById("type").value === "driver" ? document.getElementById("vehicle_type").value : null,
-    vehicle_capacity: document.getElementById("type").value === "driver" ? document.getElementById("vehicle_capacity").value : null,
-  };
+    name: formatInput(document.getElementById("name")?.value || ""),
+    contact: formatInput(document.getElementById("contact")?.value || ""),
+    address: formatInput(document.getElementById("address")?.value || ""),
+    type: formatInput(document.getElementById("type")?.value || ""),
+    vehicle_no: document.getElementById("vehicle_no") ? formatInput(document.getElementById("vehicle_no").value) : null,
+    vehicle_type: (document.getElementById("type")?.value === "driver") ? formatInput(document.getElementById("vehicle_type")?.value || "") : null,
+    vehicle_capacity: (document.getElementById("type")?.value === "driver") ? formatInput(document.getElementById("vehicle_capacity")?.value || "") : null,
+};
+
 
   // Validate driver/conductor details before sending data to the server
   fetch('/validateDriverConductorDetails', {
@@ -513,17 +534,30 @@ async function saveDriverConductorDetails() {
   // Calculate the total vehicle capacity
   const totalVehicleCapacity = originalCapacity + additionalCapacity;
 
+  // const updatedDetails = {
+  //   id: id,
+  //   name: document.getElementById('editName').value,
+  //   contact: document.getElementById('editContact').value,
+  //   address: document.getElementById('editAddress').value,
+  //   type: driverConductorType,
+  //   vehicle_no: document.getElementById('editVehicleNo') ? document.getElementById('editVehicleNo').value : '',
+  //   vehicle_type: document.getElementById('editVehicleType') ? document.getElementById('editVehicleType').value : '',
+  //   vehicle_capacity: totalVehicleCapacity,
+  //   new_seats: additionalCapacity  // Add new seats value to the object
+  // };
+
   const updatedDetails = {
     id: id,
-    name: document.getElementById('editName').value,
-    contact: document.getElementById('editContact').value,
-    address: document.getElementById('editAddress').value,
+    name: formatInput(document.getElementById('editName').value),
+    contact: formatInput(document.getElementById('editContact').value),
+    address: formatInput(document.getElementById('editAddress').value),
     type: driverConductorType,
-    vehicle_no: document.getElementById('editVehicleNo') ? document.getElementById('editVehicleNo').value : '',
-    vehicle_type: document.getElementById('editVehicleType') ? document.getElementById('editVehicleType').value : '',
-    vehicle_capacity: totalVehicleCapacity,
-    new_seats: additionalCapacity  // Add new seats value to the object
-  };
+    vehicle_no: document.getElementById('editVehicleNo') ? formatInput(document.getElementById('editVehicleNo').value) : '',
+    vehicle_type: document.getElementById('editVehicleType') ? formatInput(document.getElementById('editVehicleType').value) : '',
+    vehicle_capacity: totalVehicleCapacity, // Assuming this is already validated and sanitized
+    new_seats: formatInput(additionalCapacity) // Ensure to sanitize if it's a string input
+};
+
 
   // Validate driver/conductor details before sending data to the server
   try {
