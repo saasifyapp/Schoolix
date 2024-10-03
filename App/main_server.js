@@ -280,6 +280,24 @@ app.post('/admin-login', (req, res) => {
         res.status(200).json({ message: 'Admin login successful', isAdmin: true });
     });
 });
+
+
+
+
+// Test endpoint to get transport driver and conductor details
+app.get('/test_transport_details', (req, res) => {
+    const transportQuery = `SELECT name, contact, vehicle_no FROM transport_driver_conductor_details LIMIT 10`;
+
+    connection_auth.query(transportQuery, (error, results) => {
+        if (error) {
+            console.error(`Error querying MySQL for transport details:`, error);
+            return res.status(500).json({ error: 'Database query error' });
+        }
+        res.json(results);
+    });
+});
+
+
 // Function to Authenticate //
 
 function authenticateToken(req, res, next) {
@@ -293,6 +311,7 @@ function authenticateToken(req, res, next) {
 app.get('/get-variable', (req, res) => {
     res.json({ token });
 });
+
 app.use(authenticateToken);
 
 
@@ -554,6 +573,13 @@ app.use('/', transportAllocateVehicle);
 ////// LIST STUDENTS ROUTE
 const transportGetStudentsDetails = require('./src/routes/transport_routes/get_student_details.js');
 app.use('/', transportGetStudentsDetails);
+
+
+////// ANDROID APP ROUTES ///
+//const app_transportRouter = require('./src/routes/android_app_routes/app_transport_routes/test.js');
+//app.use('/', app_transportRouter);
+
+
 
 
 // Start the server
