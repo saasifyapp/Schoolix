@@ -102,6 +102,7 @@ function displayDriverConductors(data) {
 
 // Function to search the driver/conductor by name or vehicle number
 function searchDriverConductorDetails() {
+  document.getElementById("filtertype").value = "";
   showTransportLoadingAnimation();
   const query = document.getElementById("searchBar").value;
 

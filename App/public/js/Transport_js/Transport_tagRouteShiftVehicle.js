@@ -26,10 +26,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Function to display the data in the table
   function displayData(data) {
+    hideTransportLoadingAnimation();
     submittedDataBody.innerHTML = ""; // Clear existing data
-
-    data.forEach((item) => {
-      const newRow = `
+    if (data.length === 0) {
+      hideTransportLoadingAnimation();
+      const noResultsRow = document.createElement("tr");
+      noResultsRow.innerHTML = '<td colspan="8">No results found</td>';
+      submittedDataBody.appendChild(noResultsRow);
+    } else {
+      data.forEach((item) => {
+        const newRow = `
             <tr data-id="${item.id}">
                 <td>${item.vehicle_no}</td>
                 <td>${item.driver_name}</td>
@@ -47,8 +53,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 </td>
             </tr>
         `;
-      submittedDataBody.innerHTML += newRow;
-    });
+        submittedDataBody.innerHTML += newRow;
+      });
+    }
   }
 
   // Function to fetch the data from the server and refresh the table
@@ -56,7 +63,10 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch("/tag_display_route_shift_allocation_data")
       .then((response) => response.json())
       .then((data) => displayData(data)) // Call displayData to render the table
-      .catch((error) => console.error("Error fetching data:", error));
+      .catch((error) => {
+        hideTransportLoadingAnimation();
+        console.error("Error fetching data:", error)
+      });
   }
 
   // Call the refreshTable function to load the initial data when the page loads
@@ -255,6 +265,17 @@ document.addEventListener("DOMContentLoaded", function () {
       // Hide suggestions container
       routeSuggestionsContainer.style.display = "none";
       routeSuggestionsContainer.innerHTML = ""; // Clear suggestions
+
+      // Reset shift and vehicle details as the route has changed
+      shiftInput.value = "";
+      selectedShiftDetail = null;
+      shiftDetailContainer.style.display = "none";
+      shiftSuggestionsContainer.innerHTML = "";
+
+      vehicleInput.value = "";
+      selectedVehicleDetail = null;
+      vehicleDetailContainer.style.display = "none";
+      vehicleSuggestionsContainer.innerHTML = "";
     }
   });
 
@@ -276,6 +297,17 @@ document.addEventListener("DOMContentLoaded", function () {
       // Hide suggestions container
       shiftSuggestionsContainer.style.display = "none";
       shiftSuggestionsContainer.innerHTML = ""; // Clear suggestions
+
+      // Hide shift suggestions container
+      shiftSuggestionsContainer.style.display = "none";
+      shiftSuggestionsContainer.innerHTML = ""; // Clear suggestions
+
+      // Reset vehicle details if shift is changed
+      vehicleInput.value = "";
+      vehicleSuggestionsContainer.style.display = "none";
+      vehicleSuggestionsContainer.innerHTML = ""; // Clear vehicle suggestions
+      vehicleDetailContainer.innerHTML = "";
+      vehicleDetailContainer.style.display = "none";
     }
   });
 
@@ -339,6 +371,7 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
     if (userConfirmed) {
+      showTransportLoadingAnimation();
       // User confirmed deletion
       fetch(`/delete_transport_schedule/${id}`, {
         method: "DELETE",
@@ -346,6 +379,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then((response) => response.json())
         .then((result) => {
           if (result.success) {
+            hideTransportLoadingAnimation();
             Swal.fire({
               icon: "success",
               title: "Delete Successful",
@@ -354,6 +388,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
             refreshTable(); // Refresh the table after successful deletion
           } else if (result.error) {
+            hideTransportLoadingAnimation();
             Swal.fire({
               icon: "error",
               title: "Delete Failed",
@@ -363,8 +398,35 @@ document.addEventListener("DOMContentLoaded", function () {
             });
           }
         })
-        .catch((error) => console.error("Error:", error));
+        .catch((error) => {
+          hideTransportLoadingAnimation();
+          console.error("Error:", error)
+        });
     }
+  }
+
+  // Function to reset all inputs and details after submission
+  function resetAllSelections() {
+    // Clear route input, suggestions, and details
+    routeInput.value = "";
+    routeSuggestionsContainer.style.display = "none";
+    routeSuggestionsContainer.innerHTML = "";
+    routeDetailContainer.innerHTML = "";
+    routeDetailContainer.style.display = "none";
+
+    // Clear shift input, suggestions, and details
+    shiftInput.value = "";
+    shiftSuggestionsContainer.style.display = "none";
+    shiftSuggestionsContainer.innerHTML = "";
+    shiftDetailContainer.innerHTML = "";
+    shiftDetailContainer.style.display = "none";
+
+    // Clear vehicle input, suggestions, and details
+    vehicleInput.value = "";
+    vehicleSuggestionsContainer.style.display = "none";
+    vehicleSuggestionsContainer.innerHTML = "";
+    vehicleDetailContainer.innerHTML = "";
+    vehicleDetailContainer.style.display = "none";
   }
 
   // Event delegation for delete buttons
@@ -378,6 +440,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Event listener for the submission button
   getDetailsButton.addEventListener("click", function (event) {
+    showTransportLoadingAnimation();
     event.preventDefault();
 
     // Ensure all details are selected
@@ -386,6 +449,7 @@ document.addEventListener("DOMContentLoaded", function () {
       !shiftInput.value ||
       !vehicleInput.value
     ) {
+      hideTransportLoadingAnimation();
       Swal.fire({
         icon: "error",
         title: "Missing Details",
@@ -423,6 +487,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.json())
       .then((result) => {
         if (!result.isValid) {
+          hideTransportLoadingAnimation();
           Swal.fire({
             icon: "error",
             title: "Validation Error",
@@ -442,6 +507,7 @@ document.addEventListener("DOMContentLoaded", function () {
           .then((response) => response.json())
           .then((result) => {
             if (result.success) {
+              hideTransportLoadingAnimation();
               Swal.fire({
                 icon: "success",
                 title: "Tag Successful",
@@ -451,13 +517,21 @@ document.addEventListener("DOMContentLoaded", function () {
                                     <strong>Vehicle:</strong> ${vehicleNo} [${driverName}]
                                 `,
               });
+              resetAllSelections();
               refreshTable(); // Refresh the table after a successful submission
             } else {
-              alert("Failed to add transport schedule details.");
+              hideTransportLoadingAnimation();
+              showToast("Failed to add transport schedule details.");
             }
           })
-          .catch((error) => console.error("Error:", error));
+          .catch((error) => {
+            hideTransportLoadingAnimation();
+            console.error("Error:", error)
+          });
       })
-      .catch((error) => console.error("Error:", error));
+      .catch((error) => {
+        hideTransportLoadingAnimation();
+        console.error("Error:", error)
+      });
   });
 });

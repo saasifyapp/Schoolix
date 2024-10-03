@@ -1,7 +1,8 @@
 
 let routeData = {}; // Object to store route data by route_shift_id
- 
+
 function refreshRoutesData() {
+    showTransportLoadingAnimation();
     document.getElementById('searchRoute').value = "";
     return fetch("/displayRoutes")
         .then((response) => response.json())
@@ -15,18 +16,24 @@ function refreshRoutesData() {
             // After refreshing data, display it
             displayRoutes(data);
         })
-        .catch((error) => console.error("Error refreshing routes:", error));
+        .catch((error) => {
+            hideTransportLoadingAnimation();
+            console.error("Error refreshing routes:", error) 
+        });
 }
 
 function displayRoutes(data) {
+    hideTransportLoadingAnimation();
     const routesTableBody = document.getElementById("routesTableBody");
     routesTableBody.innerHTML = ""; // Clear existing table rows
 
     if (data.length === 0) {
+        hideTransportLoadingAnimation();
         const noResultsRow = document.createElement("tr");
         noResultsRow.innerHTML = '<td colspan="3">No results found</td>';
         routesTableBody.appendChild(noResultsRow);
     } else {
+        hideTransportLoadingAnimation();
         // Reverse the data array to display latest entries first
         data.reverse();
 
@@ -61,12 +68,13 @@ function displayRoutes(data) {
 }
 
 document.getElementById('searchRoute').addEventListener('input', function () {
+    showTransportLoadingAnimation();
     const query = this.value.toLowerCase();
 
     // Filter routes based on the search query
     const filteredRoutes = Object.values(routeData).filter(route => {
         return route.route_shift_name.toLowerCase().includes(query) ||
-               route.route_shift_detail.toLowerCase().includes(query);
+            route.route_shift_detail.toLowerCase().includes(query);
     });
 
     // Display the filtered routes
@@ -77,7 +85,11 @@ document.getElementById('searchRoute').addEventListener('input', function () {
 function deleteRoute(routeId) {
     // Confirm before deletion
     const confirmDelete = confirm("Are you sure you want to delete this route?");
-    if (!confirmDelete) return;
+    showTransportLoadingAnimation();
+    if (!confirmDelete) {
+        hideTransportLoadingAnimation();
+        return;
+    }
 
     // Send DELETE request to the server
     fetch(`/deleteRoute/${routeId}`, {
@@ -86,21 +98,24 @@ function deleteRoute(routeId) {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => {
-        if (response.ok) {
-            // Successfully deleted, now refresh the route data
-            alert("Route deleted successfully!");
-            refreshRoutesData(); // Refresh the routes list after deletion
-        } else {
-            return response.json().then(errorData => {
-                throw new Error(errorData.message || "Failed to delete route");
-            });
-        }
-    })
-    .catch(error => {
-        console.error("Error deleting route:", error);
-        alert("Error deleting route: " + error.message);
-    });
+        .then(response => {
+            if (response.ok) {
+                hideTransportLoadingAnimation();
+                // Successfully deleted, now refresh the route data
+                showToast("Route deleted successfully!");
+                refreshRoutesData(); // Refresh the routes list after deletion
+            } else {
+                hideTransportLoadingAnimation();
+                return response.json().then(errorData => {
+                    throw new Error(errorData.message || "Failed to delete route");
+                });
+            }
+        })
+        .catch(error => {
+            hideTransportLoadingAnimation();
+            console.error("Error deleting route:", error);
+            showToast("Error deleting route: " + error.message);
+        });
 }
 
 const manageRoutesForm = document.getElementById("manageRoutesForm");
@@ -112,6 +127,7 @@ let selectedCities = [];
 
 // Form submission handler
 manageRoutesForm.addEventListener("submit", function (e) {
+    showTransportLoadingAnimation();
     e.preventDefault();
 
     const formData = {
@@ -127,42 +143,48 @@ manageRoutesForm.addEventListener("submit", function (e) {
         },
         body: JSON.stringify({ routeName: formData.routeName })
     })
-    .then(response => response.json())
-    .then(result => {
-        if (!result.isValid) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Validation Error',
-                html: result.message
-            });
-            return;
-        }
-
-        // Send data to the server
-        fetch("/addRoute", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.error) {
-                alert(data.error);
-            } else {
-                alert(data.message);
-                reseteditForm();
-                refreshRoutesData(); // Refresh the table after adding a new route
+        .then(response => response.json())
+        .then(result => {
+            if (!result.isValid) {
+                hideTransportLoadingAnimation();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    html: result.message
+                });
+                return;
             }
+
+            // Send data to the server
+            fetch("/addRoute", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.error) {
+                        hideTransportLoadingAnimation();
+                        showToast(data.error);
+                    } else {
+                        hideTransportLoadingAnimation();
+                        showToast(data.message);
+                        reseteditForm();
+                        refreshRoutesData(); // Refresh the table after adding a new route
+                    }
+                })
+                .catch((error) => {
+                    hideTransportLoadingAnimation();
+                    console.error("Error:", error);
+                    showToast("An error occurred while submitting the form");
+                });
         })
-        .catch((error) => {
-            console.error("Error:", error);
-            alert("An error occurred while submitting the form");
-        });
-    })
-    .catch(error => console.error('Error:', error));
-}); 
+        .catch(error => {
+            hideTransportLoadingAnimation();
+            console.error('Error:', error)});
+});
 
 // Function to reset the form
 function reseteditForm() {
@@ -224,7 +246,7 @@ function fetchAndDisplaySuggestions(query) {
         .then((response) => response.json())
         .then((data) => {
             addresssuggestionsContainer.innerHTML = ""; // Clear existing suggestions
-            
+
             const filteredData = data.filter(item => item.transport_pickup_drop.toLowerCase().startsWith(query.toLowerCase()));
 
             if (filteredData.length === 0) {
@@ -244,7 +266,7 @@ function fetchAndDisplaySuggestions(query) {
         })
         .catch((error) => console.error("Error:", error));
 
-        
+
 }
 
 // Function to add a city to the selected cities
@@ -412,7 +434,7 @@ citiesAddressInput.addEventListener("input", function () {
 //     .then(response => response.json())
 //     .then(data => {
 //         if (data.message === 'Route updated successfully') {
-//             alert('Route updated successfully!');
+//             showToast('Route updated successfully!');
 //             closeEditRoutePopup(); // Close popup on success
 //             refreshRoutesData(); // Refresh the routes data to reflect changes
 //         }
@@ -446,17 +468,19 @@ citiesAddressInput.addEventListener("input", function () {
 
 
 let editedSelectedCities = []; // Stores cities selected during editing
-
+let selectedRouteId = null;
+const suggestionsContainer = document.getElementById("suggestionsContainer");
 // Function to fetch distinct addresses and display suggestions (for the edit route popup)
 function fetchAndDisplayCitySuggestionsForEdit(query) {
     fetch("/distinctAddresses")
         .then((response) => response.json())
         .then((data) => {
-            const suggestionsContainer = document.getElementById("suggestionsContainer");
+            
             suggestionsContainer.innerHTML = ""; // Clear existing suggestions
 
             const filteredData = data.filter(item =>
-                item.transport_pickup_drop.toLowerCase().startsWith(query.toLowerCase())
+                item.transport_pickup_drop.toLowerCase().startsWith(query.toLowerCase()) &&
+                !editedSelectedCities.includes(item.transport_pickup_drop)
             );
 
             if (filteredData.length === 0) {
@@ -482,6 +506,12 @@ function fetchAndDisplayCitySuggestionsForEdit(query) {
 
 // Function to add a city to the edited selected cities list
 function addCityToEditedSelected(city) {
+    // if (editedSelectedCities.includes(city)) {
+    //     // Show toast if the city is already added
+    //     showToast("City/Village is already added.", true);
+    //     return;
+    // }
+
     if (!editedSelectedCities.includes(city)) {
         editedSelectedCities.push(city);
         renderEditedSelectedCities();
@@ -535,6 +565,7 @@ document.getElementById("cityInput").addEventListener("input", function () {
 
 // Function to save route details (you'll need to send edited selected cities as a comma-separated string)
 function saveRouteDetails() {
+    showTransportLoadingAnimation();
     const routeName = document.getElementById("editRouteName").value;
     const routeCities = editedSelectedCities.join(", "); // Convert array to comma-separated string
 
@@ -546,60 +577,68 @@ function saveRouteDetails() {
         },
         body: JSON.stringify({ routeId: selectedRouteId, routeName: routeName })
     })
-    .then(response => response.json())
-    .then(result => {
-        if (!result.isValid) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Validation Error',
-                html: result.message
-            });
-            return;
-        }
-
-        // Call the API to save route details (implement the backend for this)
-        fetch('/updateRoute', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                routeShiftId: selectedRouteId, // Assume you store this somewhere on edit
-                routeName: routeName,
-                routeCities: routeCities,
-                routeType: 'route' // Example type
-            })
-        })
         .then(response => response.json())
-        .then(data => {
-            if (data.message === 'Route updated successfully') {
-                alert('Route updated successfully!');
-                closeEditRoutePopup(); // Close popup on success
-                refreshRoutesData(); // Refresh the routes data to reflect changes
-            } else {
-                alert('Error updating route: ' + data.message);
+        .then(result => {
+            if (!result.isValid) {
+                hideTransportLoadingAnimation();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    html: result.message
+                });
+                return;
             }
+
+            // Call the API to save route details (implement the backend for this)
+            fetch('/updateRoute', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    routeShiftId: selectedRouteId, // Assume you store this somewhere on edit
+                    routeName: routeName,
+                    routeCities: routeCities,
+                    routeType: 'route' // Example type
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'Route updated successfully') {
+                        hideTransportLoadingAnimation();
+                        showToast('Route updated successfully!');
+                        closeEditRoutePopup(); // Close popup on success
+                        refreshRoutesData(); // Refresh the routes data to reflect changes
+                    } else {
+                        hideTransportLoadingAnimation();
+                        showToast('Error updating route: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    hideTransportLoadingAnimation();
+                    console.error('Error updating route:', error);
+                    showToast('An error occurred while updating the route.');
+                });
         })
         .catch(error => {
-            console.error('Error updating route:', error);
-            alert('An error occurred while updating the route.');
-        });
-    })
-    .catch(error => console.error('Error:', error));
+            hideTransportLoadingAnimation();
+            console.error('Error:', error)});
+
 }
 
 // Function to open the edit route popup
 function editRoute(routeShiftId) {
+    showTransportLoadingAnimation();
     const route = routeData[routeShiftId];
     document.getElementById("editRouteName").value = route.route_shift_name;
-
+    hideTransportLoadingAnimation();    
     // Populate edited selected cities from the route details (comma-separated)
     editedSelectedCities = route.route_shift_detail.split(", ").map(city => city.trim());
     renderEditedSelectedCities();
 
     // Show popup and blur background
     document.getElementById("editRoutePopup").style.display = "flex";
-    document.getElementById("popupBg").style.display = "flex";
+    document.getElementById("editpopupBg").style.display = "flex";
 
     // Store the current routeShiftId for saving later
     selectedRouteId = routeShiftId;
@@ -608,6 +647,6 @@ function editRoute(routeShiftId) {
 // Function to close the edit route popup
 function closeEditRoutePopup() {
     document.getElementById("editRoutePopup").style.display = "none";
-    document.getElementById("popupBg").style.display = "none";
+    document.getElementById("editpopupBg").style.display = "none";
     suggestionsContainer.style.display = "none";
 }

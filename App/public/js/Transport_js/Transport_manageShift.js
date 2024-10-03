@@ -2,6 +2,7 @@ let shiftsData = {}; // Local object to store shift details
 
 // Function to fetch shift data and store it in the local object
 function refreshShiftsData() {
+    showTransportLoadingAnimation();
     document.getElementById('searchShift').value = "";
     fetch("/displayShifts")
         .then((response) => response.json())
@@ -15,18 +16,24 @@ function refreshShiftsData() {
             // Call displayShifts with the fetched data
             displayShifts(data);
         })
-        .catch((error) => console.error("Error fetching shifts:", error));
+        .catch((error) => {
+            hideTransportLoadingAnimation();
+            console.error("Error fetching shifts:", error)
+        });
 }
 
 // Function to display shifts
 function displayShifts(data) {
+    hideTransportLoadingAnimation();
     shiftsTableBody.innerHTML = ""; // Clear existing table rows
 
     if (data.length === 0) {
+        hideTransportLoadingAnimation();
         const noResultsRow = document.createElement("tr");
         noResultsRow.innerHTML = '<td colspan="4">No results found</td>';
         shiftsTableBody.appendChild(noResultsRow);
     } else {
+        hideTransportLoadingAnimation();
         // Reverse the data array
         data.reverse();
 
@@ -70,6 +77,7 @@ let selectedStandardsDivisions = [];
 
 // Form submission handler
 manageShiftsForm.addEventListener("submit", function (e) {
+    showTransportLoadingAnimation();
     e.preventDefault();
 
     const formData = {
@@ -85,42 +93,49 @@ manageShiftsForm.addEventListener("submit", function (e) {
         },
         body: JSON.stringify({ shiftName: formData.shiftName })
     })
-    .then(response => response.json())
-    .then(result => {
-        if (!result.isValid) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Validation Error',
-                html: result.message
-            });
-            return;
-        }
-
-        // Send data to the server
-        fetch("/addShift", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.error) {
-                alert(data.error);
-            } else {
-                alert(data.message);
-                resetshiftForm();
-                refreshShiftsData(); // Refresh the table after adding a new shift
+        .then(response => response.json())
+        .then(result => {
+            if (!result.isValid) {
+                hideTransportLoadingAnimation();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    html: result.message
+                });
+                return;
             }
+
+            // Send data to the server
+            fetch("/addShift", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.error) {
+                        hideTransportLoadingAnimation();
+                        showToast(data.error);
+                    } else {
+                        hideTransportLoadingAnimation();
+                        showToast(data.message);
+                        resetshiftForm();
+                        refreshShiftsData(); // Refresh the table after adding a new shift
+                    }
+                })
+                .catch((error) => {
+                    hideTransportLoadingAnimation();
+                    console.error("Error:", error);
+                    showToast("An error occurred while submitting the form");
+                });
         })
-        .catch((error) => {
-            console.error("Error:", error);
-            alert("An error occurred while submitting the form");
+        .catch(error => {
+            hideTransportLoadingAnimation();
+            console.error('Error:', error)
         });
-    })
-    .catch(error => console.error('Error:', error));
-}); 
+});
 
 // Function to reset the form
 function resetshiftForm() {
@@ -209,12 +224,13 @@ shiftTypeInput.addEventListener("input", function () {
 });
 
 document.getElementById('searchShift').addEventListener('input', function () {
+    showTransportLoadingAnimation();
     const query = this.value.toLowerCase();
 
     // Filter routes based on the search query
     const filteredRoutes = Object.values(shiftsData).filter(route => {
         return route.route_shift_name.toLowerCase().includes(query) ||
-               route.route_shift_detail.toLowerCase().includes(query);
+            route.route_shift_detail.toLowerCase().includes(query);
     });
 
     // Display the filtered routes
@@ -224,7 +240,11 @@ document.getElementById('searchShift').addEventListener('input', function () {
 function deleteShift(shiftId) {
     // Confirm before deletion
     const confirmDelete = confirm("Are you sure you want to delete this shift?");
-    if (!confirmDelete) return;
+    hideTransportLoadingAnimation();
+    if (!confirmDelete) {
+        hideTransportLoadingAnimation();
+        return;
+    }
 
     // Send DELETE request to the server
     fetch(`/deleteShift/${shiftId}`, {
@@ -233,21 +253,24 @@ function deleteShift(shiftId) {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => {
-        if (response.ok) {
-            // Successfully deleted, now refresh the shift data
-            alert("Shift deleted successfully!");
-            refreshShiftsData(); // Refresh the shifts list after deletion
-        } else {
-            return response.json().then(errorData => {
-                throw new Error(errorData.message || "Failed to delete shift");
-            });
-        }
-    })
-    .catch(error => {
-        console.error("Error deleting shift:", error);
-        alert("Error deleting shift: " + error.message);
-    });
+        .then(response => {
+            if (response.ok) {
+                hideTransportLoadingAnimation();
+                // Successfully deleted, now refresh the shift data
+                showToast("Shift deleted successfully!");
+                refreshShiftsData(); // Refresh the shifts list after deletion
+            } else {
+                hideTransportLoadingAnimation();
+                return response.json().then(errorData => {
+                    throw new Error(errorData.message || "Failed to delete shift");
+                });
+            }
+        })
+        .catch(error => {
+            hideTransportLoadingAnimation();
+            console.error("Error deleting shift:", error);
+            showToast("Error deleting shift: " + error.message);
+        });
 }
 
 
@@ -258,11 +281,11 @@ function deleteShift(shiftId) {
 
 //     if (shiftData) {
 //         document.getElementById('editShiftName').value = shiftData.route_shift_name;
-        
+
 //         // Clear existing tags and suggestions
 //         selectedStandardsDivisions = shiftData.route_shift_detail.split(", ").map(classes => classes.trim());
 //         renderSelectedStandardsDivisionsEdit();
-        
+
 //         // Show popup and background blur
 //         document.getElementById('editShiftPopup').style.display = 'block';
 //         document.getElementById('popupBg').style.display = 'block';
@@ -381,17 +404,17 @@ function deleteShift(shiftId) {
 //     .then(response => response.json())
 //     .then(data => {
 //         if (data.message === 'Shift updated successfully') {
-//             alert('Shift updated successfully!');
+//             showToast('Shift updated successfully!');
 //             closeEditShiftPopup(); // Close popup on success
 //             refreshShiftsData(); // Refresh the shifts data to reflect changes
 //         } else {
 //             // Handle errors if the message is not 'Shift updated successfully'
-//             alert('Error updating shift: ' + (data.message || 'Unknown error'));
+//             showToast('Error updating shift: ' + (data.message || 'Unknown error'));
 //         }
 //     })
 //     .catch(error => {
 //         console.error('Error updating shift:', error);
-//         alert('Error updating shift: ' + error.message);
+//         showToast('Error updating shift: ' + error.message);
 //     });
 // }
 
@@ -408,7 +431,8 @@ function fetchAndDisplayShiftTypeSuggestions(query) {
             suggestionsContainer.innerHTML = ""; // Clear existing suggestions
 
             // Filter shift types based on the query
-            const filteredData = data.filter(item => item.standard_with_division.toLowerCase().includes(query.toLowerCase()));
+            const filteredData = data.filter(item => item.standard_with_division.toLowerCase().includes(query.toLowerCase())&&
+            !editedSelectedShiftTypes.includes(item.standard_with_division));
 
             if (filteredData.length === 0) {
                 suggestionsContainer.style.display = "none"; // Hide if no matches
@@ -453,8 +477,10 @@ document.getElementById("shiftTypeInputField").addEventListener("input", functio
 
 // Function to open the edit shift popup
 function editShift(shiftId) {
+    showTransportLoadingAnimation();
     const shift = shiftsData[shiftId];
     document.getElementById("editShiftNameInput").value = shift.route_shift_name;
+    hideTransportLoadingAnimation();
 
     // Populate the selected shift types from the shift details (comma-separated)
     editedSelectedShiftTypes = shift.route_shift_detail.split(", ").map(type => type.trim());
@@ -512,6 +538,7 @@ function removeShiftType(type) {
 
 // Function to save shift details (you'll need to send edited selected shift types as a comma-separated string)
 function saveShiftDetails() {
+    showTransportLoadingAnimation();
     const shiftName = document.getElementById("editShiftNameInput").value;
     const shiftTypes = editedSelectedShiftTypes.join(", "); // Convert array to comma-separated string
 
@@ -523,43 +550,50 @@ function saveShiftDetails() {
         },
         body: JSON.stringify({ shiftId: selectedShiftId, shiftName: shiftName })
     })
-    .then(response => response.json())
-    .then(result => {
-        if (!result.isValid) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Validation Error',
-                html: result.message
-            });
-            return;
-        }
-
-        // Call the API to save shift details (implement the backend for this)
-        fetch('/updateShift', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                shiftId: selectedShiftId, // Assume you store this somewhere on edit
-                shiftName: shiftName,
-                shiftClasses: shiftTypes, // This corresponds to route_shift_detail in your SQL
-            })
-        })
         .then(response => response.json())
-        .then(data => {
-            if (data.message === 'Shift updated successfully') {
-                alert('Shift updated successfully!');
-                closeEditShiftPopup(); // Close popup on success
-                refreshShiftsData(); // Refresh the shifts data to reflect changes
-            } else {
-                alert('Error updating shift: ' + data.message);
+        .then(result => {
+            if (!result.isValid) {
+                hideTransportLoadingAnimation();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    html: result.message
+                });
+                return;
             }
+
+            // Call the API to save shift details (implement the backend for this)
+            fetch('/updateShift', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    shiftId: selectedShiftId, // Assume you store this somewhere on edit
+                    shiftName: shiftName,
+                    shiftClasses: shiftTypes, // This corresponds to route_shift_detail in your SQL
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'Shift updated successfully') {
+                        hideTransportLoadingAnimation();
+                        showToast('Shift updated successfully!');
+                        closeEditShiftPopup(); // Close popup on success
+                        refreshShiftsData(); // Refresh the shifts data to reflect changes
+                    } else {
+                        hideTransportLoadingAnimation();
+                        showToast('Error updating shift: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    hideTransportLoadingAnimation();
+                    console.error('Error updating shift:', error);
+                    showToast('An error occurred while updating the shift.');
+                });
         })
         .catch(error => {
-            console.error('Error updating shift:', error);
-            alert('An error occurred while updating the shift.');
+            hideTransportLoadingAnimation();
+            console.error('Error:', error)
         });
-    })
-    .catch(error => console.error('Error:', error));
 }
