@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transport Console</title>
+    <link rel="stylesheet" href="/css/NavButtons.css">
+    <link rel="stylesheet" href="/css/Transport_css/Transport_console.css">
+    <link rel="stylesheet" href="/css/Transport_css/All_Transport.css">
+    <link rel="stylesheet" href="/css/Transport_css/Transport-form-control.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+</head>
+
+<body>
+    <div class="loading-overlay" id="loadingOverlayTransport">
+        <div class="loader"></div>
+    </div>
+
+
+    <nav class="navbar">
+        <div class="logo_item">
+            <!-- <i class="bx bx-menu" id="sidebarOpen"></i> -->
+            <img id="logo" src="" alt="Logo">
+            <!-- <div class="user_name" id="user_name"></div> -->
+        </div>
+
+        <div class="navbar_center">
+            <button onclick="window.location.href='/dashboard'"> <i class='bx' id="backButton"> <img
+                        src="/images/back.png" alt="Previous Icon"></i></button>
+            <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img
+                        src="/images/homeicon.png" alt="Dashboard Icon"></i></button>
+            <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
+                        alt="Signout Icon"></i></button>
+        </div>
+
+        <div class="navbar_content">
+            <!-- <i class="bi bi-grid"></i>
+      <i class='bx bx-bell'></i> -->
+        </div>
+    </nav>
+    </button>
+
+
+
+    <div class="adm-head">
+        <div class="button-container">
+            <h2>Transport Console</h2>
+        </div>
+    </div>
+    <div id="toast-container" class="toast-container">
+        <div id="toast" class="toast"></div>
+    </div>
+
+
+
+
+
+    <div class="cards-container">
+        <div class="card">
+            <a>
+                <button id="driverConductorButton">
+                    <div class="dotlottie-container">
+                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                            type="module"></script>
+
+                        <dotlottie-player src="https://lottie.host/6677d476-6639-4a84-b644-53243d90a051/uBEkhs71Xu.json"
+                            background="transparent" speed="1" style="width: 266px; height: 221px;" loop
+                            autoplay></dotlottie-player>
+
+                    </div>
+                    <h3>Driver and Conductor</h3>
+                </button>
+            </a>
+        </div>
+
+        <div class="card">
+            <a>
+                <button id="routesShiftsButton">
+                    <div class="dotlottie-container">
+                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                            type="module"></script>
+
+                        <dotlottie-player src="https://lottie.host/7220b63b-4f7e-4f32-98a3-f51a035d9326/Y61N34EPoH.json"
+                            background="transparent" speed="1" style="width: 270px; height: 265px;" loop
+                            autoplay></dotlottie-player>
+
+                    </div>
+                    <h3>Routes and Shifts</h3>
+                </button>
+            </a>
+        </div>
+
+        <div class="card">
+            <a>
+                <button id="schedulingButton">
+
+                    <div class="dotlottie-container">
+                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                            type="module"></script>
+
+                        <dotlottie-player src="https://lottie.host/45a23584-8de0-465d-8cd7-33a6e602efbf/InuHWSRFF8.json"
+                            background="transparent" speed="1" style="width: 270px; height: 216px;" loop
+                            autoplay></dotlottie-player>
+                    </div>
+
+                    <h3>Vehicle Allocation</h3>
+                </button>
+            </a>
+        </div>
+
+        <div class="card">
+            <a>
+                <button id="">
+                    <div class="dotlottie-container">
+                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                            type="module"></script>
+
+                        <dotlottie-player src="https://lottie.host/0ecdc1d6-aa73-4d04-8792-18e7889cb4ab/qEPEOPXW7E.json"
+                            background="transparent" speed="1" style="width: 270px; height: 220px;" loop
+                            autoplay></dotlottie-player>
+
+
+                    </div>
+                    <h3>Tracking and Monitoring</h3>
+                </button>
+            </a>
+        </div>
+
+        <div class="card">
+            <a>
+                <button id="">
+                    <div class="dotlottie-container">
+                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                            type="module"></script>
+                        <dotlottie-player src="https://lottie.host/827bd400-04f7-49c4-862c-fb38dae3a901/JuXmNj8LPG.json"
+                            background="transparent" speed="1" style="width: 300px; height: 225px;" loop
+                            autoplay></dotlottie-player>
+
+                    </div>
+                    <h3>Reports</h3>
+                </button>
+            </a>
+        </div>
+
+    </div>
+
+
+
+    <!-- Overlay for selecting Add or Search Driver/Conductor -->
+    <div id="driverConductorOverlay" class="overlay">
+        <div class="overlay-content-inner">
+            <h2>Driver and Conductor</h2>
+            <button id="closeDriverConductorOverlay" class="close-button">&times;</button>
+            <div class="button-container">
+                <div class="option-card bookvaltcard">
+                    <span id="addDriverButton">
+                        <img src="/images/driver.gif" alt="">
+                        Add
+                    </span>
+                </div>
+                <div class="option-card bookvaltcard">
+                    <span id="searchDriverButton">
+                        <img src="/images/search.gif" alt="">
+                        Search
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay for Adding Driver/Conductor -->
+    <div id="addDriverOverlay" class="overlay">
+        <div class="overlay-content">
+            <button id="closeAddDriverOverlay" class="close-button">&times;</button>
+            <div class="overlay-inner">
+                <div class="left-side">
+                    <dotlottie-player src="https://lottie.host/f1ef15f0-e5ab-415a-8f01-9cfdf4c36034/TwCFf8dsdN.json"
+                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay>
+                    </dotlottie-player>
+                </div>
+                <div class="right-side">
+                    <h2>Add Vehicle Operator</h2>
+                    <form id="addDriverForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="name" placeholder=" ">
+                                <span class="form-control-placeholder">Name</span>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="contact" placeholder=" ">
+                                <span class="form-control-placeholder">Contact</span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="address" placeholder=" ">
+                                <span class="form-control-placeholder">Address</span>
+                            </div>
+                            <div class="form-group">
+                                <select id="type" class="form-control">
+                                    <option value="">Select Type</option>
+                                    <option value="driver">Driver</option>
+                                    <option value="conductor">Conductor</option>
+                                </select>
+                                <span class="form-control-placeholder">Type</span>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Fields -->
+                        <div id="dynamicFields"></div>
+
+                        <div id="suggestions" class="suggestions"></div>
+
+
+                        <button class="getDetails-button" type="submit">
+                            <img src="../images/driver.png" alt="">
+                            <span>Submit</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="searchDriverConductorOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <div class="loading-overlay" id="loadingOverlayDriverConductor">
+                <div class="spinner"></div>
+            </div>
+            <button id="closeSearchDriverConductorOverlay" class="close-button">&times;</button>
+            <img src="/images/conductor.png" alt="Overlay Icon" class="overlay-icon">
+            <h2 class="overlay-search-head">Search Vehicle Operator</h2>
+            <div class="search-container">
+                <div class="form-Searchgroup">
+                    <div class="form-Searchgroup">
+                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                        <input type="text" class="form-control" id="searchBar" name="driverConductorSearch"
+                            placeholder=" " oninput="searchDriverConductorDetails()"
+                            style="width: 400px; height: 1.7rem !important;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search Driver/Conductor...</span>
+                    </div>
+                    <div class="form-Searchgroup">
+                        <select id="filtertype" class="form-control" onchange="filterDriverConductorByType()"
+                            style="height:3rem  ;">
+                            <option value="">Select Type</option>
+                            <option value="Driver">Driver</option>
+                            <option value="Conductor">Conductor</option>
+                        </select>
+                    </div>
+                    <button class="refreshButton" onclick="refreshDriverConductorData()" style="margin-top: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
+                </div>
+            </div>
+            <button class="export_registered_students" onclick="exportDriverConductorTable()">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+
+            <div class="table-container">
+                <table id="driverConductorTable" class="styled-table">
+                    <thead id="driverConductorTableHead">
+                        <tr>
+                            <th>Name</th>
+                            <th>Contact</th>
+                            <th>Address</th>
+                            <th>Type</th>
+                            <th>Vehicle Number</th>
+                            <th>Vehicle Type</th>
+                            <th>Capacity</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="driverConductorTableBody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Blur Overlay -->
+    <div id="editPopupOverlay" class="popup-overlay" style="display: none;"></div>
+
+    <!-- Edit Popup Window -->
+    <div id="editPopup" class="custom-prompt" style="display: none;">
+        <div class="prompt-content">
+            <form id="editDriverConductorForm">
+                <h2>Edit Driver/Conductor Details</h2>
+
+                <!-- Type Display -->
+                <div class="form-group">
+                    <label for="editTypeDisplay" class="form-label">Type:</label>
+                    <span id="editTypeDisplay" class="form-control" style="text-align: center;"></span>
+                </div>
+
+
+                <div id="editFields">
+                    <!-- The fields will be dynamically inserted here -->
+                </div>
+
+                <!-- Save and Cancel Buttons -->
+                <div class="popup-buttons">
+                    <button type="button" class="styled-button" onclick="saveDriverConductorDetails()">
+                        <img src="../images/conform.png" alt="Save" class="button-icon">
+                        <span class="button-text">Save</span>
+                    </button>
+                    <button type="button" class="styled-button" onclick="closeEditPopup()">
+                        <img src="../images/cancel.png" alt="Cancel" class="button-icon">
+                        <span class="button-text">Cancel</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+
+    <!-- Overlay for Routes and Shifts -->
+    <div id="routesShiftsOverlay" class="overlay">
+        <div class="overlay-content-inner" style="max-width: 400px;">
+            <h2>Routes, Shifts, Tags</h2>
+            <button id="closeRoutesShiftsOverlay" class="close-button">&times;</button>
+            <div class="button-container">
+                <div class="option-card bookvaltcard">
+                    <span id="manageRoutesButton">
+                        <img src="../images/manage_route.gif" alt="">
+                        Manage&nbsp;Routes
+                    </span>
+                </div>
+                <div class="option-card bookvaltcard">
+                    <span id="manageShiftsButton">
+                        <img src="../images/manage_shift.gif" alt="">
+                        Manage&nbsp;Shifts
+                    </span>
+                </div>
+                <div class="option-card bookvaltcard">
+                    <span id="tagRouteShiftButton">
+                        <img src="../images/tag.gif" alt="">
+                        Tags
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay for Manage Routes -->
+    <div id="manageRoutesOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <img src="/images/route.gif" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
+            <button id="closeManageRoutesOverlay" class="close-button">&times;</button>
+            <h2 class="overlay-search-head">Manage Routes</h2>
+
+            <div class="overlay-inner">
+                <!-- Lottie Animation and Form Section -->
+                <div class="tag-left left-manageroute">
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                        type="module"></script>
+
+                    <!-- Lottie Animation Player -->
+                    <dotlottie-player src="https://lottie.host/9085a2af-7df0-468b-b0c0-059e0eca82b6/zN60LritoN.json"
+                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                        autoplay></dotlottie-player>
+
+                    <!-- Form Section Below the Animation -->
+                    <form id="manageRoutesForm" class="form-section">
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="routeName" placeholder=" ">
+                            <span class="form-control-placeholder">Route Name</span>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-with-tags" id="citiesAddressContainer">
+                                <input type="text" class="form-control" id="citiesAddress" placeholder=" ">
+                                <div id="address_suggestionBox" class="address_suggestionBox"></div>
+                            </div>
+                            <span class="form-control-placeholder">Cities/Address</span>
+                        </div>
+
+                        <!-- Create Route Button -->
+                        <button class="getDetails-button" type="submit">
+                            <img src="../images/route.png" alt="">
+                            <span>Create Route</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="tag-right" style="height: 100%;">
+                    <!-- Search Input and Table Section -->
+                    <!-- Search Route Input Section -->
+                    <button class="export_routes" onclick="">
+                        <img src="/images/export.png" alt="Export Icon"> Export
+                    </button>
+
+                    <div class="search-container">
+                        <div class="form-Searchgroup">
+                            <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                            <input type="text" class="form-control" id="searchRoute" name="routeSearch" placeholder=" "
+                                style="width: 400px; height: 1.7rem !important;">
+                            <span class="form-control-placeholder" style="left: 3.75rem;">Search Route...</span>
+                        </div>
+                        <button class="refreshButton" onclick="refreshRoutesData()" style="margin-top: 10px;">
+                            <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                        </button>
+                    </div>
+
+
+                    <div class="table-container">
+
+                        <!-- Table for Routes -->
+                        <table id="routesTable" class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Route Name</th>
+                                    <th>Cities/Address</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="routesTableBody">
+                                <!-- Table rows will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- Edit popup for manage routes -->
+    <div id="editRoutePopup" class="custom-prompt" style="display: none;">
+        <div class="prompt-content">
+            <h2>Edit Route</h2>
+            <div class="form-group">
+                <input type="text" id="editRouteName" class="form-control" style="text-align: center;">
+                <span class="form-control-placeholder">Route Name</span>
+            </div>
+
+
+            <div class="form-group">
+                <label for="editRouteCities">Route Cities :</label>
+                <div id="citiesContainer" class="cities-container">
+                    <!-- Dynamically added city tags will appear here -->
+                    <input type="text" id="cityInput" placeholder="Add a city" class="city-input">
+                </div>
+                <!-- Container for city suggestions -->
+                <div id="suggestionsContainer" class="suggestions-container" style="display: none;"></div>
+            </div>
+
+            <!-- Save Button -->
+            <button class="styled-button" onclick="saveRouteDetails()">
+                <img src="../images/conform.png" alt="Save" class="button-icon">
+                <span class="button-text">Save</span>
+            </button>
+
+            <!-- Cancel Button -->
+            <button id="cancelButton" class="styled-button" onclick="closeEditRoutePopup()">
+                <img src="../images/cancel.png" alt="Cancel" class="button-icon">
+                <span class="button-text">Cancel</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Background Blur -->
+    <div id="editpopupBg" class="popup-bg" style="display: none;"></div>
+
+
+
+
+
+    <!-- Overlay for Manage Shifts -->
+    <div id="manageShiftsOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <img src="/images/manageshift.png" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
+            <button id="closeManageShiftsOverlay" class="close-button">&times;</button>
+            <h2 class="overlay-search-head">Manage Shifts</h2>
+
+            <div class="overlay-inner">
+                <!-- Lottie Animation and Form Section -->
+                <div class="tag-left left-manageshift">
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                        type="module"></script>
+
+                    <!-- Lottie Animation Player -->
+                    <dotlottie-player src="https://lottie.host/1d619a4d-bd00-4b60-95ac-2e2859866ec1/REwvaSqKpK.json"
+                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                        autoplay></dotlottie-player>
+
+                    <!-- Form Section Below the Animation -->
+                    <form id="manageShiftsForm" class="form-section">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="shiftName" placeholder=" ">
+                            <span class="form-control-placeholder">Shift Name</span>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-with-tags" id="shiftTypeContainer">
+                                <input type="text" class="form-control" id="shiftType" placeholder=" ">
+                                <div id="shiftTypeSuggestionBox" class="address_suggestionBox"></div>
+                            </div>
+                            <span class="form-control-placeholder">Classes</span>
+                        </div>
+
+                        <!-- Create Shift Button -->
+                        <button class="getDetails-button" type="submit">
+                            <img src="../images/shift.png" alt="">
+                            <span>Create Shift</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="tag-right" style="height: 100%;">
+                    <!-- Search Input and Table Section -->
+                    <button class="export_routes" onclick="">
+                        <img src="/images/export.png" alt="Export Icon"> Export
+                    </button>
+
+                    <!-- Search Shift Input Section -->
+                    <div class="search-container">
+                        <div class="form-Searchgroup">
+                            <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                            <input type="text" class="form-control" id="searchShift" name="shiftSearch" placeholder=" "
+                                style="width: 400px; height: 1.7rem !important;">
+                            <span class="form-control-placeholder" style="left: 3.75rem;">Search Shift...</span>
+                        </div>
+                        <button class="refreshButton" onclick="refreshShiftsData()" style="margin-top: 10px;">
+                            <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                        </button>
+                    </div>
+
+
+                    <!-- Table for Shifts -->
+                    <div class="table-container">
+                        <table id="shiftsTable" class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Shift Name</th>
+                                    <th>Classes Alloted</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="shiftsTableBody">
+                                <!-- Table rows will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit popup for manage shifts -->
+    <div id="editShiftPopup" class="custom-prompt" style="display: none;">
+        <div class="prompt-content">
+            <h2>Edit Shift</h2>
+            <div class="form-group">
+                <input type="text" id="editShiftNameInput" class="form-control" style="text-align: center;">
+                <span class="form-control-placeholder">Shift Name</span>
+            </div>
+
+            <div class="form-group">
+                <label for="editShiftTypes">Classes Alloted:</label>
+                <div id="shiftTypeseditContainer" class="shift-types-container">
+                    <!-- Dynamically added Classes Alloted tags will appear here -->
+                    <input type="text" id="shiftTypeInputField" placeholder="Add classes to be alloted"
+                        class="shift-type-input">
+                </div>
+                <!-- Container for classes suggestions -->
+                <div id="shiftTypeSuggestionsContainer" class="suggestions-container" style="display: none;"></div>
+            </div>
+
+            <!-- Save Button -->
+            <button class="styled-button" onclick="saveShiftDetails()">
+                <img src="../images/conform.png" alt="Save" class="button-icon">
+                <span class="button-text">Save</span>
+            </button>
+
+            <!-- Cancel Button -->
+            <button id="cancelButton" class="styled-button" onclick="closeEditShiftPopup()">
+                <img src="../images/cancel.png" alt="Cancel" class="button-icon">
+                <span class="button-text">Cancel</span>
+            </button>
+        </div>
+    </div>
+
+
+    <!-- Background Blur -->
+    <div id="popupBackgroundShift" class="popup-bg" style="display: none;"></div>
+
+
+    <!-- Overlay for Tag Route Shift -->
+    <div id="tagRouteShiftOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <img src="/images/manageshift.png" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
+            <button id="closeTagRouteShiftOverlay" class="close-button">&times;</button>
+            <h2 class="tag-head">Vehicle Route and Shift Tagging</h2>
+
+            <!-- Flex container for left (form) and right (table) sections -->
+            <div class="tag-flex-container">
+                <!-- Left Section: Form -->
+                <div class="input-section">
+                    <form class="input-form">
+                        <div class="form-row">
+                            <!-- Route Input and Info Container -->
+                            <div class="form-group">
+                                <input id="tag_tag_route_name" type="text" class="form-control" placeholder=""
+                                    style="text-align: center;">
+                                <span class="form-control-placeholder">Enter Route</span>
+                                <div id="tag_routeSuggestions" class="suggestions"></div>
+                            </div>
+
+
+                            <!-- Shift Input and Info Container -->
+                            <div class="form-group">
+                                <input id="tag_tag_shift_name" type="text" class="form-control" placeholder=""
+                                    style="text-align: center;">
+                                <span class="form-control-placeholder">Enter Shift</span>
+                                <div id="tag_shiftSuggestions" class="suggestions"></div>
+                            </div>
+
+
+                            <!-- Vehicle Input and Info Container -->
+                            <div class="form-group">
+                                <input id="tag_tag_vehicle_no" type="text" class="form-control" placeholder=""
+                                    style="text-align: center;">
+                                <span class="form-control-placeholder">Enter Vehicle</span>
+                                <div id="tag_vehicleSuggestions" class="suggestions"></div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-row">
+                            <div id="tag_routeDetail" class="info-container"></div>
+                            <div id="tag_shiftDetail" class="info-container"></div>
+                            <div id="tag_vehicleDetail" class="info-container"></div>
+                        </div>
+
+                        <!-- Tag Button -->
+                        <button id="tag_getDetailsButton" class="getDetails-button" type="submit">
+                            <img src="../images/shift.png" alt="">
+                            <span>Tag</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Right Section: Table -->
+                <div class="table-container">
+                    <table id="submittedDataTable" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Vehicle No</th>
+                                <th>Driver Name</th>
+                                <th>Conductor Name</th>
+                                <th>Route Name</th>
+                                <th>Route Stops</th>
+                                <th>Shift Name</th>
+                                <th>Classes Allotted</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody id="submittedDataBody">
+                            <!-- Table rows will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Overlay for Bus Allocation -->
+    <div id="busAllocationOverlay" class="overlay">
+        <div class="overlay-content-inner">
+            <h2>Vehicle Allocation</h2>
+            <button id="closeBusAllocationOverlay" class="close-button">&times;</button>
+            <div class="button-container">
+                <div class="option-card bookvaltcard">
+                    <span id="allocateBus">
+                        <img src="../images/create_schedule.gif" alt="">
+                        Allocate&nbsp;Vehicle
+                    </span>
+                </div>
+                <div class="option-card bookvaltcard">
+                    <span id="listStudentsButton">
+                        <img src="../images/manage_schedule.gif" alt="">
+                        List&nbsp;Students
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Overlay for Allocate Vehicle -->
+    <div id="allocateBusOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <img src="/images/driver.png" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
+            <button id="closeAllocateBusOverlay" class="close-button">&times;</button>
+            <h2 class="tag-head">Allocate Vehicle</h2>
+
+            <!-- Flex container for left (form) and right (table) sections -->
+            <div class="tag-flex-container">
+                <!-- Left Section: Form -->
+                <div class="input-section">
+                    <form id="allocate_manageScheduleForm" class="input-form">
+                        <div class="form-row">
+                            <!-- Route Input and Info Container -->
+                            <div class="form-group">
+                                <input type="text" id="allocate_inputRoute" class="form-control" placeholder=" "
+                                    style="text-align: center;">
+                                <span class="form-control-placeholder">Enter Route</span>
+                                <div id="allocate_routeSuggestions" class="suggestions"></div>
+                            </div>
+
+                            <!-- Shift Input and Info Container -->
+                            <div class="form-group">
+                                <input type="text" id="allocate_inputShift" class="form-control" placeholder=" "
+                                    style="text-align: center;">
+                                <span class="form-control-placeholder">Enter Shift</span>
+                                <div id="allocate_shiftSuggestions" class="suggestions"></div>
+                            </div>
+
+                            <!-- Vehicle Input and Info Container -->
+                            <div class="form-group">
+                                <input type="text" id="allocate_inputVehicle" class="form-control" placeholder=" "
+                                    style="text-align: center;" maxlength="13">
+                                <span class="form-control-placeholder">Enter Vehicle</span>
+                                <div id="allocate_vehicleSuggestions" class="suggestions"></div>
+                            </div>
+                        </div>
+
+                        <!-- Details containers for Route, Shift, and Vehicle -->
+                        <div class="form-row">
+                            <div id="allocate_routeDetail" class="info-container"></div>
+                            <div id="allocate_shiftDetail" class="info-container"></div>
+                            <div id="allocate_vehicleDetail" class="info-container"></div>
+                        </div>
+
+                        <!-- Allocate Button -->
+                        <button id="allocate_getDetailsButton" class="getDetails-button" type="button">
+                            <img src="../images/driver.png" alt="">
+                            <span>Allocate</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Right Section: Table -->
+                <div class="table-container">
+                    <table id="allocate_scheduleTable" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Vehicle No</th>
+                                <th>Driver Name</th>
+                                <th>Route Name</th>
+                                <th>Route Stops</th>
+                                <th>Shift Name</th>
+                                <th>Classes Alloted</th>
+                                <th>Available Seats</th>
+                                <th>Students Tagged</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allocate_scheduleTableBody">
+                            <!-- Data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay for List Scheduling -->
+    <div id="listStudentsOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <img src="/images/studentlist.gif" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
+            <button id="closeListStudentsOverlay" class="close-button">&times;</button>
+            <h2 class="overlay-search-head">List Students</h2>
+
+            <div class="overlay-inner">
+                <!-- Left Side -->
+                <div class="tag-left left-liststudents">
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                        type="module"></script>
+
+                    <!-- Lottie Animation Player -->
+                    <dotlottie-player src="https://lottie.host/9c718d68-ba48-4d8e-a0c8-40afe1b833fe/sxmNRw9ZoN.json"
+                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                        autoplay></dotlottie-player>
+
+                    <!-- Form Section Below the Animation -->
+                    <div class="form-section">
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="listStudents_vehicleNo" placeholder=" ">
+                            <span class="form-control-placeholder">Vehicle No</span>
+                            <div id="listStudents_vehicleSuggestions" class="suggestions"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="listStudents_shiftType" placeholder=" ">
+                            <span class="form-control-placeholder">Shift</span>
+                            <div id="listStudents_shiftSuggestions" class="suggestions"></div>
+                        </div>
+
+                        <div id="listStudents_vehicleInfo" class="info-container">
+                            <!-- Vehicle info will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side -->
+                <div class="tag-right" style="">
+                    <div class="search-container">
+                        <div class="form-Searchgroup">
+                            <input type="text" class="form-control" id="listStudents_stops" placeholder=" ">
+                            <span class="form-control-placeholder">Filter by Vehicle Route</span>
+                            <div id="listStudents_stopSuggestions" class="suggestions"></div>
+                        </div>
+
+                        <div class="form-Searchgroup">
+                            <input type="text" class="form-control" id="listStudents_classes" placeholder=" ">
+                            <span class="form-control-placeholder">Filter by Class</span>
+                            <div id="listStudents_classSuggestions" class="suggestions"></div>
+                        </div>
+
+                        <button id="exportStudentListButton" class="export_registered_students">
+                            <img src="/images/export.png" alt="Export Icon"> Export
+                        </button>
+                    </div>
+
+                    <!-- Student Count -->
+                    <div class="student-count">
+                        <h3>Students Count: <span id="studentCount">0</span></h3>
+                    </div>
+
+                    <div class="table-container">
+                        <table id="listStudents_scheduleTable" class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Class</th>
+                                    <th>Division</th>
+                                    <th>Contact</th>
+                                    <th>Pickup-Drop</th>
+                                </tr>
+                            </thead>
+                            <tbody id="listStudents_scheduleTableBody">
+                                <!-- Table rows will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="/js/Inventory_js/All.js"></script>
+    <script src="/js/Transport_js/Transport_console.js"></script>
+    <script src="/js/Transport_js/Transport_addDriverConductor.js"></script>
+    <script src="/js/Transport_js/Transport_manageRoute.js"></script>
+    <script src="/js/Transport_js/Transport_manageShift.js"></script>
+    <script src="/js/Transport_js/Transport_tagRouteShiftVehicle.js"></script>
+    <script src="/js/Transport_js/Transport_allocateVehicle.js"></script>
+    <script src="/js/Transport_js/Transport_getStudentDetails.js"></script>
+
+
+
+    <script src="/js/Universal_Components_JS/handle_session.js"></script>
+
+
+</body>
+
+</html>

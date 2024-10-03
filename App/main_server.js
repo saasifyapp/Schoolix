@@ -280,6 +280,24 @@ app.post('/admin-login', (req, res) => {
         res.status(200).json({ message: 'Admin login successful', isAdmin: true });
     });
 });
+
+
+
+
+// Test endpoint to get transport driver and conductor details
+app.get('/test_transport_details', (req, res) => {
+    const transportQuery = `SELECT name, contact, vehicle_no FROM transport_driver_conductor_details LIMIT 10`;
+
+    connection_auth.query(transportQuery, (error, results) => {
+        if (error) {
+            console.error(`Error querying MySQL for transport details:`, error);
+            return res.status(500).json({ error: 'Database query error' });
+        }
+        res.json(results);
+    });
+});
+
+
 // Function to Authenticate //
 
 function authenticateToken(req, res, next) {
@@ -293,6 +311,7 @@ function authenticateToken(req, res, next) {
 app.get('/get-variable', (req, res) => {
     res.json({ token });
 });
+
 app.use(authenticateToken);
 
 
@@ -382,6 +401,10 @@ app.get('/inventory/invoiceReports', authenticateToken, (req, res) => {
 //Serve HTML form
 app.get('/Library/library_console', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Library', 'library_console.html'));
+});
+
+app.get('/Transport/transport_console', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Transport', 'transport_console.html'));
 });
 
 /////////////////////// ROUTES FOR MAIN DASHBOARD COMPONENTS ///////////////////////////////////////
@@ -492,6 +515,9 @@ app.use('/', searchInvoiceRouter);
 const invoiceReportRouter = require('./src/routes/Inventory_routes/invoice_reports');
 app.use('/', invoiceReportRouter);
 
+
+////////////////////////////////// LIBRARY ROUTES ///////////////////////////////////
+
 ////// ADD LIBRARY BOOK ROUTE
 const addlibrarybookRouter = require('./src/routes/library_routes/add_library_books');
 app.use('/', addlibrarybookRouter);
@@ -519,6 +545,41 @@ app.use('/', penaltyProcessorRouter);
 ////// REPORTS ROUTE
 const libraryReportsRouter = require('./src/routes/library_routes/library_reports');
 app.use('/', libraryReportsRouter);
+
+
+///////////////////////////////// TRANSPORT ROUTES /////////////////////////////
+
+////// DRIVER CONDUCTOR ROUTE
+const transportDriverConductorRouter = require('./src/routes/transport_routes/add_driver_conductor');
+app.use('/', transportDriverConductorRouter);
+
+////// Create/Manage Bus Route ROUTE
+const transportManageRouteRouter = require('./src/routes/transport_routes/manage_route');
+app.use('/', transportManageRouteRouter);
+
+////// Create/Manage Shift ROUTE
+const transportManageShiftRouter = require('./src/routes/transport_routes/manage_shift');
+app.use('/', transportManageShiftRouter);
+
+////// Manage TAG ROUTE SHIFT VEHICLE ROUTE
+const transporttagRouteSHiftVehicle = require('./src/routes/transport_routes/tag_route_shift_vehicle');
+app.use('/', transporttagRouteSHiftVehicle);
+
+////// ALLOCATE VEHICLE ROUTE 
+const transportAllocateVehicle = require('./src/routes/transport_routes/allocate_vehicle.js');
+app.use('/', transportAllocateVehicle);
+
+
+////// LIST STUDENTS ROUTE
+const transportGetStudentsDetails = require('./src/routes/transport_routes/get_student_details.js');
+app.use('/', transportGetStudentsDetails);
+
+
+////// ANDROID APP ROUTES ///
+//const app_transportRouter = require('./src/routes/android_app_routes/app_transport_routes/test.js');
+//app.use('/', app_transportRouter);
+
+
 
 
 // Start the server
