@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two Screen App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen">
+        <div class="login-gif-wrapper">
+            <img src="./images/login.gif" alt="Login GIF" class="login-gif">
+        </div>
+        <h1>Login</h1>
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button id="login-button">Login</button>
+    </div>
+
+    <!-- Driver Console Screen -->
+    <div id="driver-console" class="screen hidden">
+        <h1>DRIVER CONSOLE</h1>
+        
+        <!-- Driver Details Card -->
+        <div class="card">
+            <h2>Driver Details</h2>
+            <ul id="driver-details">
+                <li>Driver Name: <span id="driver-name"></span></li>
+                <li>Vehicle No: <span id="vehicle-no"></span></li>
+                <li>Vehicle Capacity: <span id="vehicle-capacity"></span></li>
+                <li>Conductor Name: <span id="conductor-name"></span></li>
+            </ul>
+        </div>
+        
+        <!-- Buttons Card -->
+        <div class="card button-card">
+            <div class="shift-button" id="morning-shift">
+                <img src="./images/morning.gif" alt="Morning Shift GIF" class="shift-gif">
+                <span>Morning Shift</span>
+            </div>
+            <div class="shift-button" id="afternoon-shift">
+                <img src="./images/afternoon.gif" alt="Afternoon Shift GIF" class="shift-gif">
+                <span>Afternoon Shift</span>
+            </div>
+        </div>
+        
+        <button id="back-button">Back</button>
+    </div>
+
+    <!-- Driver Details Screen -->
+    <div id="driver-details-screen" class="screen hidden">
+        <h1>Driver Details</h1>
+        <ul id="detailed-driver-list"></ul>
+        <button id="back-to-console-button">Back</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
