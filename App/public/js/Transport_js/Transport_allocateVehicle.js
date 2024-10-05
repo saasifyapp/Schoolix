@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 shiftSuggestionsContainer.style.display = 'flex'; // Show suggestions container
                 shiftSuggestionsContainer.innerHTML = '';
 
-                
+
 
                 const filteredData = query
                     ? data.filter(shift => shift.route_shift_name.toLowerCase().includes(query.toLowerCase()))
@@ -147,25 +147,25 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.target.classList.contains('suggestion-item')) {
             const selectedRoute = event.target;
             routeInput.value = selectedRoute.dataset.routeName;
-    
+
             // Populate the route details
-            const selectedRouteDetail = {
+            selectedRouteDetail = {
                 routeName: selectedRoute.dataset.routeName || "N/A",
                 routeDetail: selectedRoute.dataset.routeDetail || "N/A",
             };
-    
+
             routeDetailContainer.innerHTML = `
                 <strong>Route Name:</strong> ${selectedRouteDetail.routeName}<br>
                 <strong>Stops:</strong> ${selectedRouteDetail.routeDetail}
             `;
-    
+
             // Show the route detail container
             routeDetailContainer.style.display = 'block';
-    
+
             // Hide suggestions container
             routeSuggestionsContainer.style.display = 'none';
             routeSuggestionsContainer.innerHTML = ''; // Clear suggestions
-    
+
             // Clear shift input and suggestions when a new route is selected
             shiftSuggestionsContainer.innerHTML = '';
             shiftDetailContainer.innerHTML = '';
@@ -174,10 +174,10 @@ document.addEventListener('DOMContentLoaded', function () {
             vehicleDetailContainer.innerHTML = '';
             shiftInput.value = '';
             vehicleInput.value = '';
-    
+
             // Fetch student count if both details are available
             if (selectedShiftDetail) {
-                fetchStudentCount(selectedRouteDetail.routeDetail, selectedShiftDetail);
+                fetchStudentCount(selectedRouteDetail.routeDetail, selectedShiftDetail.shiftDetail);
             }
         }
     });
@@ -185,43 +185,45 @@ document.addEventListener('DOMContentLoaded', function () {
     shiftSuggestionsContainer.addEventListener('click', function (event) {
         if (event.target.classList.contains('suggestion-item')) {
             const selectedShift = event.target;
-    
+
             // Populate the shift details
-            const selectedShiftDetail = {
+            selectedShiftDetail = {
                 shiftName: selectedShift.dataset.shiftName || "N/A",
                 shiftDetail: selectedShift.dataset.shiftDetail || "N/A",
             };
-    
+
             // Set input value
             shiftInput.value = selectedShiftDetail.shiftName;
-    
+
             // Update the shift detail container
             shiftDetailContainer.innerHTML = `
                 <strong>Shift Name:</strong> ${selectedShiftDetail.shiftName}<br>
                 <strong>Classes Alloted:</strong> ${selectedShiftDetail.shiftDetail}
             `;
-    
+
             // Show the shift detail container
             shiftDetailContainer.style.display = 'block';
-    
+
             // Hide suggestions container and clear its contents
             shiftSuggestionsContainer.style.display = 'none';
             shiftSuggestionsContainer.innerHTML = ''; // Clear suggestions
-    
+
             // Clear vehicle input and related container
-            clearVehicleInputs();
-    
+            // clearVehicleInputs();
+
             // Fetch student count if both details are available
             if (selectedRouteDetail) {
-                fetchStudentCount(selectedRouteDetail, selectedShiftDetail.shiftDetail);
+                fetchStudentCount(selectedRouteDetail.routeDetail, selectedShiftDetail.shiftDetail);
             }
+
+
         }
     });
 
     vehicleSuggestionsContainer.addEventListener('click', function (event) {
         if (event.target.classList.contains('suggestion-item')) {
             const selectedDriver = event.target;
-    
+
             // Populate vehicle details
             const selectedVehicleDetail = {
                 driverName: selectedDriver.dataset.driverName || "N/A",
@@ -230,10 +232,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 availableSeats: parseInt(selectedDriver.dataset.availableSeats, 10) || 0,
                 conductorName: selectedDriver.dataset.conductorName || "N/A"
             };
-    
+
             // Set input value
             vehicleInput.value = selectedVehicleDetail.vehicleNo;
-    
+
             // Update the vehicle detail container
             vehicleDetailContainer.innerHTML = `
                 <strong>Driver Name:</strong> ${selectedVehicleDetail.driverName}<br>
@@ -242,14 +244,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 <strong>Available Seats:</strong> ${selectedVehicleDetail.availableSeats}<br>
                 <strong>Conductor Name:</strong> ${selectedVehicleDetail.conductorName}
             `;
-    
+
             // Show the vehicle detail container
             vehicleDetailContainer.style.display = 'block';
-    
+
             // Hide suggestions container and clear its contents
             vehicleSuggestionsContainer.style.display = 'none';
             vehicleSuggestionsContainer.innerHTML = ''; // Clear suggestions
-            
+
             // Store available seats in a global variable
             selectedVehicleCapacity = selectedVehicleDetail.availableSeats;
         }
@@ -274,38 +276,43 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch(`/allocate_getStudentCount?routeStops=${encodeURIComponent(routeStops)}&shiftClasses=${encodeURIComponent(shiftClasses)}`)
             .then(response => response.json())
             .then(data => {
+                studentDetailsContainer.style.display = 'flex';
                 studentCount = data.studentCount;
                 studentDetailsContainer.innerHTML = `
-                    <strong>Student Count:</strong> ${data.studentCount}
+                    <strong>Student Count: </strong> ${studentCount}
                 `;
             })
             .catch(error => console.error('Error fetching student count:', error));
     }
 
 
-        // Function to reset all inputs
-        function resetInputs() {
-            routeInput.value = '';
-            routeSuggestionsContainer.innerHTML = '';
-            routeDetailContainer.innerHTML = '';
-    
-            shiftInput.value = '';
-            shiftSuggestionsContainer.innerHTML = '';
-            shiftDetailContainer.innerHTML = '';
-    
-            vehicleInput.value = '';
-            vehicleSuggestionsContainer.innerHTML = '';
-            vehicleDetailContainer.innerHTML = '';
-    
-            studentDetailsContainer.innerHTML = '';
-    
-            selectedRouteDetail = '';
-            selectedShiftDetail = '';
-            studentCount = 0;
-            selectedVehicleCapacity = 0;
-        }
+    // Function to reset all inputs
+    function resetInputs() {
+        routeInput.value = '';
+        routeSuggestionsContainer.innerHTML = '';
+        routeDetailContainer.innerHTML = '';
 
-        
+        shiftInput.value = '';
+        shiftSuggestionsContainer.innerHTML = '';
+        shiftDetailContainer.innerHTML = '';
+
+        vehicleInput.value = '';
+        vehicleSuggestionsContainer.innerHTML = '';
+        vehicleDetailContainer.innerHTML = '';
+
+        studentDetailsContainer.innerHTML = '';
+
+        routeDetailContainer.style.display = 'none';
+        vehicleDetailContainer.style.display = 'none';
+        shiftDetailContainer.style.display = 'none';
+        studentDetailsContainer.style.display = 'none';
+        selectedRouteDetail = '';
+        selectedShiftDetail = '';
+        // studentCount = 0;
+        selectedVehicleCapacity = 0;
+    }
+
+
 
 
     // BUS TAGGING FUNCTIONALITY //
@@ -316,10 +323,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 icon: "error",
                 title: "Missing Details",
                 text: "Please select all details before proceeding.",
-              });
-              return;
+            });
+            return;
         }
-    
+
         const requestData = {
             routeStops: selectedRouteDetail,
             shiftClasses: selectedShiftDetail,
@@ -328,7 +335,7 @@ document.addEventListener('DOMContentLoaded', function () {
             routeName: routeInput.value,
             shiftName: shiftInput.value,
         };
-    
+
         if (studentCount === 0) {
             Swal.fire({
                 icon: 'info',
@@ -350,8 +357,8 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             return;
         }
-    
-    
+
+
         // Validate if the selected route, shift, and vehicle exist in one row
         fetch('/validate_tagged_routeShiftVehicle', {
             method: 'POST',
@@ -372,15 +379,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                     return;
                 }
-    
+
                 const driverName = result.driverName;  // Is only found when above validation succeeds //
-    
+
                 // Proceed with the existing logic if validation passes
-    
+
                 if (studentCount <= selectedVehicleCapacity) {
                     // Log the data being sent to the server
                     //console.log('Data sent to server:', requestData);
-    
+
                     // Call the new endpoint to tag the bus to all the listed students
                     fetch('/allocate_tagStudentsToBus', {
                         method: 'POST',
@@ -408,54 +415,54 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                         })
                         .catch(error => console.error('Error:', error));
-                }  else {
+                } else {
                     // Call the new endpoint to handle overflow
                     // Call the new endpoint to handle overflow
-fetch('/handle_overflow_students', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(requestData)
-}) 
-    .then(response => response.json())
-    .then(result => {
-        if (result.success) {
-            const primaryBusCount = result.primaryBus.length;
-            const secondaryBusDetails = result.secondaryResult ? result.secondaryResult.secondaryBusDetails : [];
+                    fetch('/handle_overflow_students', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(requestData)
+                    })
+                        .then(response => response.json())
+                        .then(result => {
+                            if (result.success) {
+                                const primaryBusCount = result.primaryBus.length;
+                                const secondaryBusDetails = result.secondaryResult ? result.secondaryResult.secondaryBusDetails : [];
 
-            const primaryBusDetails = `${vehicleInput.value} (${driverName}) - ${primaryBusCount} students`;
-            let alertHtml = `
+                                const primaryBusDetails = `${vehicleInput.value} (${driverName}) - ${primaryBusCount} students`;
+                                let alertHtml = `
             Due to insufficient availability of seats in <strong>${vehicleInput.value} (${driverName})</strong>, we allocated
             other vehicles running on same route to certain students<br><br>
                 <strong>Total Students:</strong> ${studentCount}<br>
                 ${primaryBusDetails}<br>
             `;
 
-            secondaryBusDetails.forEach(bus => {
-                if (bus.studentCount > 0) {
-                    alertHtml += `${bus.vehicleNo} (${bus.driverName}) - ${bus.studentCount} students<br>`;
-                }
-            });
+                                secondaryBusDetails.forEach(bus => {
+                                    if (bus.studentCount > 0) {
+                                        alertHtml += `${bus.vehicleNo} (${bus.driverName}) - ${bus.studentCount} students<br>`;
+                                    }
+                                });
 
-            if (result.secondaryResult && result.secondaryResult.notEnoughBuses) {
-                alertHtml += `<br><strong>Warning:</strong> Not enough buses to allocate all students. ${result.secondaryResult.remainingStudents.length} students could not be allocated.`;
-            }
+                                if (result.secondaryResult && result.secondaryResult.notEnoughBuses) {
+                                    alertHtml += `<br><strong>Warning:</strong> Not enough buses to allocate all students. ${result.secondaryResult.remainingStudents.length} students could not be allocated.`;
+                                }
 
-            Swal.fire({
-                icon: 'success',
-                title: 'Allocation Successful',
-                html: alertHtml,
-            }).then(() => {
-                resetInputs(); // Clear all inputs when user clicks OK
-            });
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Allocation Successful',
+                                    html: alertHtml,
+                                }).then(() => {
+                                    resetInputs(); // Clear all inputs when user clicks OK
+                                });
 
-            fetchAndDisplayScheduleDetails();
-        } else {
-            console.error('Error: Failed to fetch overflow students.');
-        }
-    })
-    .catch(error => console.error('Error:', error));
+                                fetchAndDisplayScheduleDetails();
+                            } else {
+                                console.error('Error: Failed to fetch overflow students.');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
                 }
             })
             .catch(error => console.error('Error:', error));
@@ -510,49 +517,49 @@ fetch('/handle_overflow_students', {
             .catch(error => console.error('Error fetching schedule details:', error));
     }
 
-// Function to detag/unallocate a vehicle 
+    // Function to detag/unallocate a vehicle 
 
-function detagBus(vehicleNo, routeName, shiftName, classesAlloted) {
-    // Show a confirmation dialog
-    const userConfirmed = window.confirm('Do you really want to detag this bus? This process cannot be undone.');
+    function detagBus(vehicleNo, routeName, shiftName, classesAlloted) {
+        // Show a confirmation dialog
+        const userConfirmed = window.confirm('Do you really want to detag this bus? This process cannot be undone.');
 
-    if (userConfirmed) {
-        // Split the classesAlloted string into an array
-        const classesArray = classesAlloted.split(',').map(cls => cls.trim());
+        if (userConfirmed) {
+            // Split the classesAlloted string into an array
+            const classesArray = classesAlloted.split(',').map(cls => cls.trim());
 
-        const requestData = { vehicleNo, routeName, shiftName, classesAlloted: classesArray };
+            const requestData = { vehicleNo, routeName, shiftName, classesAlloted: classesArray };
 
-        // Log the data being sent to the server
-        //console.log('Data sent to server:', requestData);
+            // Log the data being sent to the server
+            //console.log('Data sent to server:', requestData);
 
-        fetch('/allocate_detagBus', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestData)
-        })
-        .then(response => response.json())
-        .then(result => {
-            if (result.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Unallocation Successful',
-                    html: `<strong>Vehicle No:</strong> ${result.vehicle_no} [${result.driver_name}] <br> has been successfully unallocated for <strong>${result.students_detagged}</strong> students.`
-                });
-                // Refresh the schedule details table
-                fetchAndDisplayScheduleDetails();
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Detag Failed',
-                    text: 'Error: Failed to detag bus.'
-                });
-            }
-        })
-        .catch(error => console.error('Error:', error));
+            fetch('/allocate_detagBus', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Unallocation Successful',
+                            html: `<strong>Vehicle No:</strong> ${result.vehicle_no} [${result.driver_name}] <br> has been successfully unallocated for <strong>${result.students_detagged}</strong> students.`
+                        });
+                        // Refresh the schedule details table
+                        fetchAndDisplayScheduleDetails();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Detag Failed',
+                            text: 'Error: Failed to detag bus.'
+                        });
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
     }
-}
     // Initial data fetch for schedule details
     fetchAndDisplayScheduleDetails();
 });
