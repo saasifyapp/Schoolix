@@ -1,6 +1,7 @@
 /* Base styles */
 body {
     display: flex;
+    flex-direction: column; /* Allow stacking of content vertically */
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -11,8 +12,10 @@ body {
 
 .screen {
     text-align: center;
-    width: 90%;
+    width: 90%; 
     max-width: 500px;
+    padding: 20px; /* Add padding to prevent content from touching edges */
+    box-sizing: border-box; /* Include padding in width calculation */
 }
 
 .hidden {
@@ -37,27 +40,29 @@ body {
 }
 
 input[type="text"], input[type="password"] {
-    width: 80%; /* Reduced width */
+    width: 100%; /* Full width */
+    max-width: 300px; /* Limit max width for better appearance */
     padding: 10px;
-    margin: 10px auto; /* Center the input fields */
+    margin: 10px auto; 
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
-    display: block; /* Ensure the inputs are block elements */
+    display: block; 
 }
 
 button {
-    width: 50%; /* Reduced width */
+    width: 100%; /* Full width for better touch targets */
+    max-width: 300px; /* Limit max width */
     padding: 10px;
     font-size: 1em;
     cursor: pointer;
-    margin: 20px auto 0; /* Add margin to position below inputs */
+    margin: 20px auto 0; 
     border: none;
-    border-radius: 25px; /* Make the button round */
+    border-radius: 25px; 
     background-color: #007bff;
     color: white;
     transition: background-color 0.3s ease;
-    display: block; /* Ensure the button is a block element */
+    display: block; 
 }
 
 button:hover {
@@ -76,6 +81,7 @@ ul {
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: left;
+    overflow: hidden; /* Prevent overflow from card */
 }
 
 .card h2 {
@@ -113,17 +119,18 @@ ul {
 }
 
 #back-button, #back-to-console-button {
-    width: 50%; /* Reduced width */
+    width: 100%; /* Full width */
+    max-width: 300px; /* Limit max width */
     padding: 10px;
     font-size: 1em;
     cursor: pointer;
-    margin: 20px auto 0; /* Add margin to position below inputs */
+    margin: 20px auto 0; 
     border: none;
-    border-radius: 25px; /* Make the button round */
+    border-radius: 25px; 
     background-color: #dc3545;
     color: white;
     transition: background-color 0.3s ease;
-    display: block; /* Ensure the button is a block element */
+    display: block; 
 }
 
 #back-button:hover, #back-to-console-button:hover {
@@ -168,6 +175,7 @@ li {
     background-color: #dc3545;
 }
 
+/* Media query for smaller devices */
 @media (max-width: 600px) {
     button {
         padding: 8px 16px;
@@ -180,7 +188,7 @@ li {
     }
 
     .shift-button {
-        width: 100%;
+        width: 100%; /* Make shift buttons full width */
         margin-bottom: 20px;
     }
 

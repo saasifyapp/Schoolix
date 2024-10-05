@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="io.cordova.hellocordova" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Schoolix</name> <!-- This is the name of your app -->
+    <description>Sample Apache Cordova App</description>
+    <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
+        Apache Cordova Team
+    </author>
+    
+    <content src="index.html" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+
+    <!-- Add icons -->
+    <icon src="res/icon/android/icon.png" />
+    <icon src="res/icon/android/icon-mdpi.png" target="android" density="mdpi" />
+    <icon src="res/icon/android/icon-hdpi.png" target="android" density="hdpi" />
+    <icon src="res/icon/android/icon-xhdpi.png" target="android" density="xhdpi" />
+    <icon src="res/icon/android/icon-xxhdpi.png" target="android" density="xxhdpi" />
+    <icon src="res/icon/android/icon-xxxhdpi.png" target="android" density="xxxhdpi" />
+</widget>
