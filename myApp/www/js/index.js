@@ -113,6 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const data = await response.json();
+            console.log(`Fetched ${data.length} item(s)`); // Log the count of items fetched
             displayDriverDetails(data);
         } catch (error) {
             console.error('Error fetching driver details:', error);
@@ -159,7 +160,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fetchDriverListForShift = async (shift) => {
         try {
-            let response = await fetch('http://localhost:3000/android/driver-details', {
+            const vehicleNo = vehicleNoField.textContent;
+            const shiftName = shift;
+
+            const response = await fetch(`http://localhost:3000/android/driver-details?vehicleNo=${vehicleNo}&shiftName=${shiftName}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -184,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const refreshData = await refreshResponse.json();
                     token = refreshData.accessToken;
 
-                    response = await fetch('http://localhost:3000/android/driver-details', {
+                    response = await fetch(`http://localhost:3000/android/driver-details?vehicleNo=${vehicleNo}&shiftName=${shiftName}`, {
                         method: 'GET',
                         headers: {
                             'Authorization': `Bearer ${token}`,
@@ -206,6 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const data = await response.json();
+            console.log(`Fetched ${data.length} item(s)`); // Log the count of items fetched
             displayDriverList(data);
         } catch (error) {
             console.error('Error fetching driver details:', error);
