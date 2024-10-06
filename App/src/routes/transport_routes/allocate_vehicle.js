@@ -131,8 +131,8 @@ router.post('/validate_tagged_routeShiftVehicle', (req, res) => {
 router.post('/allocate_tagStudentsToBus', (req, res) => {
     const { vehicleNo, routeStops, shiftClasses, availableSeats, routeName, shiftName } = req.body;
 
-    const stopsArray = routeStops.split(',').map(stop => stop.trim());
-    const classesArray = shiftClasses.split(',').map(cls => cls.trim());
+    const stopsArray = routeStops.routeDetail.split(',').map(stop => stop.trim());
+    const classesArray = shiftClasses.shiftDetail.split(',').map(cls => cls.trim());
 
     // Fetch students who need transport and are not yet tagged
     const sqlFetchStudents = `
@@ -340,8 +340,9 @@ router.post('/allocate_detagBus', (req, res) => {
 router.post('/handle_overflow_students', (req, res) => {
     const { routeStops, shiftClasses, vehicleNo, availableSeats, routeName, shiftName } = req.body;
 
-    const stopsArray = routeStops.split(',').map(stop => stop.trim());
-    const classesArray = shiftClasses.split(',').map(cls => cls.trim());
+
+    const stopsArray = routeStops.routeDetail.split(',').map(stop => stop.trim());
+    const classesArray = shiftClasses.shiftDetail.split(',').map(cls => cls.trim());
 
     const sqlFetchStudents = `
         SELECT Student_id, Name, transport_pickup_drop, Standard, Division
