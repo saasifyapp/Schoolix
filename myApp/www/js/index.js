@@ -8,15 +8,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const studentConsole = document.getElementById('student-console');
     const driverDetailsScreen = document.getElementById('driver-details-screen');
     const detailedDriverList = document.getElementById('detailed-driver-list');
-    const driverName = document.getElementById('driver-name');
-    const vehicleNo = document.getElementById('vehicle-no');
-    const vehicleCapacity = document.getElementById('vehicle-capacity');
-    const conductorName = document.getElementById('conductor-name');
+    const driverNameField = document.getElementById('driver-name');
+    const vehicleNoField = document.getElementById('vehicle-no');
+    const vehicleCapacityField = document.getElementById('vehicle-capacity');
+    const conductorNameField = document.getElementById('conductor-name');
+    const buttonCard = document.querySelector('.button-card');
+
+    // Shift GIFs
+    const shiftGifs = {
+        'Morning': './img/morning.gif',
+        'Afternoon': './img/afternoon.gif'
+    };
 
     let token = null;
     let refreshToken = null;
     let dbCredentials = null;
     let userType = null;
+    let driverName = null;
 
     if (loginButton) {
         loginButton.addEventListener('click', async () => {
@@ -47,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 refreshToken = data.refreshToken;
                 dbCredentials = data.dbCredentials;
                 userType = data.type;
+                driverName = username; // Assuming username is the driver's name
 
                 // Clear previous user data
                 clearUserData();
@@ -56,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Switch to the appropriate console based on user type
                 if (userType === 'driver' || userType === 'conductor') {
                     driverConsole.classList.remove('hidden');
-                    refreshDriverConsole();
+                    await fetchDriverDetails(); // Fetch driver details from the new endpoint
                 } else if (userType === 'teacher') {
                     teacherConsole.classList.remove('hidden');
                     refreshTeacherConsole();
@@ -86,6 +95,69 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const fetchDriverDetails = async () => {
+        try {
+            const response = await fetch(`http://localhost:3000/driver-details?driverName=${driverName}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'db-host': dbCredentials.host,
+                    'db-user': dbCredentials.user,
+                    'db-password': dbCredentials.password,
+                    'db-database': dbCredentials.database
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch driver details');
+            }
+
+            const data = await response.json();
+            displayDriverDetails(data);
+        } catch (error) {
+            console.error('Error fetching driver details:', error);
+            alert('Error fetching driver details');
+        }
+    };
+
+    const displayDriverDetails = (data) => {
+        if (data.length > 0) {
+            const details = data[0]; // Use the first entry to populate the fields
+            driverNameField.textContent = details.driver_name;
+            vehicleNoField.textContent = details.vehicle_no;
+            vehicleCapacityField.textContent = details.vehicle_capacity || 'N/A';
+            conductorNameField.textContent = details.conductor_name || 'N/A';
+
+            // Clear existing buttons
+            buttonCard.innerHTML = '';
+
+            // Determine the shifts available
+            const shifts = new Set(data.map(entry => entry.shift_name.trim()));
+            console.log('Available shifts:', shifts); // Debugging line
+
+            // Create buttons based on available shifts
+            let shiftIndex = 1;
+            shifts.forEach(shift => {
+                const shiftButton = document.createElement('div');
+                shiftButton.classList.add('shift-button');
+                shiftButton.innerHTML = `
+                    <img src="${shiftGifs[shiftIndex === 1 ? 'Morning' : 'Afternoon']}" alt="Shift GIF" class="shift-gif">
+                    <span>${shift} Shift</span>
+                `;
+                shiftButton.addEventListener('click', () => {
+                    fetchDriverListForShift(shift);
+                    driverConsole.classList.add('hidden');
+                    driverDetailsScreen.classList.remove('hidden');
+                });
+                buttonCard.appendChild(shiftButton);
+                shiftIndex++;
+            });
+        } else {
+            alert('No details found for the driver.');
+        }
+    };
+
+    const fetchDriverListForShift = async (shift) => {
         try {
             let response = await fetch('http://localhost:3000/android/driver-details', {
                 method: 'GET',
@@ -134,14 +206,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const data = await response.json();
-            displayDriverDetails(data);
+            displayDriverList(data);
         } catch (error) {
             console.error('Error fetching driver details:', error);
             alert('Error fetching driver details');
         }
     };
 
-    const displayDriverDetails = (data) => {
+    const displayDriverList = (data) => {
         detailedDriverList.innerHTML = '';
         data.forEach(item => {
             const listItem = document.createElement('li');
@@ -166,52 +238,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert(`Delete button clicked for ${item.name}`);
             });
         });
-
-        // Update the driver details card
-        if (data.length > 0) {
-            const firstDriver = data[0];
-            driverName.textContent = firstDriver.name;
-            vehicleNo.textContent = firstDriver.vehicle_no;
-            vehicleCapacity.textContent = firstDriver.vehicle_capacity || 'N/A';
-            conductorName.textContent = firstDriver.conductor_name || 'N/A';
-        } else {
-            driverName.textContent = '';
-            vehicleNo.textContent = '';
-            vehicleCapacity.textContent = '';
-            conductorName.textContent = '';
-        }
     };
-
-    const morningShiftButton = document.getElementById('morning-shift');
-    const afternoonShiftButton = document.getElementById('afternoon-shift');
-
-    if (morningShiftButton) {
-        morningShiftButton.addEventListener('click', () => {
-            if (userType === 'driver' || userType === 'conductor') {
-                fetchDriverDetails();
-                driverConsole.classList.add('hidden');
-                driverDetailsScreen.classList.remove('hidden');
-            }
-        });
-    }
-
-    if (afternoonShiftButton) {
-        afternoonShiftButton.addEventListener('click', () => {
-            if (userType === 'driver' || userType === 'conductor') {
-                fetchDriverDetails();
-                driverConsole.classList.add('hidden');
-                driverDetailsScreen.classList.remove('hidden');
-            }
-        });
-    }
 
     const clearUserData = () => {
         // Clear driver details
         detailedDriverList.innerHTML = '';
-        driverName.textContent = '';
-        vehicleNo.textContent = '';
-        vehicleCapacity.textContent = '';
-        conductorName.textContent = '';
+        driverNameField.textContent = '';
+        vehicleNoField.textContent = '';
+        vehicleCapacityField.textContent = '';
+        conductorNameField.textContent = '';
+        buttonCard.innerHTML = ''; // Clear existing buttons
 
         // Clear other user-specific data if needed
     };
