@@ -13,10 +13,45 @@ document.addEventListener('DOMContentLoaded', () => {
     const vehicleCapacity = document.getElementById('vehicle-capacity');
     const conductorName = document.getElementById('conductor-name');
 
+    let token = null;
+    let refreshToken = null;
+    let dbCredentials = null;
+
     if (loginButton) {
-        loginButton.addEventListener('click', () => {
-            loginScreen.classList.add('hidden');
-            driverConsole.classList.remove('hidden');
+        loginButton.addEventListener('click', async () => {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('http://localhost:3000/android-login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    if (data.message === 'No database details found for the school. Please contact the admin.') {
+                        alert('Unauthorized Login. Please contact the school admin.');
+                    } else {
+                        alert(data.message || 'Login failed');
+                    }
+                    return;
+                }
+
+                token = data.accessToken;
+                refreshToken = data.refreshToken;
+                dbCredentials = data.dbCredentials;
+
+                loginScreen.classList.add('hidden');
+                driverConsole.classList.remove('hidden');
+            } catch (error) {
+                console.error('Error during login:', error);
+                alert(error.message);
+            }
         });
     }
 
@@ -51,15 +86,58 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const fetchDriverDetails = async () => {
-        const proxyUrl = 'https://api.allorigins.win/get?url=';
-        const targetUrl = encodeURIComponent('https://schoolix.saasifyapp.com/test_transport_details');
         try {
-            const response = await fetch(proxyUrl + targetUrl);
+            let response = await fetch('http://localhost:3000/android/driver-details', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'db-host': dbCredentials.host,
+                    'db-user': dbCredentials.user,
+                    'db-password': dbCredentials.password,
+                    'db-database': dbCredentials.database
+                }
+            });
+
+            if (response.status === 401) {
+                const refreshResponse = await fetch('http://localhost:3000/refresh-token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ token: refreshToken })
+                });
+
+                if (refreshResponse.ok) {
+                    const refreshData = await refreshResponse.json();
+                    token = refreshData.accessToken;
+
+                    response = await fetch('http://localhost:3000/android/driver-details', {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json',
+                            'db-host': dbCredentials.host,
+                            'db-user': dbCredentials.user,
+                            'db-password': dbCredentials.password,
+                            'db-database': dbCredentials.database
+                        }
+                    });
+                } else {
+                    alert('Session expired. Please log in again.');
+                    return;
+                }
+            }
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch driver details');
+            }
+
             const data = await response.json();
-            const driverData = JSON.parse(data.contents);
-            displayDriverDetails(driverData);
+            displayDriverDetails(data);
         } catch (error) {
             console.error('Error fetching driver details:', error);
+            alert('Error fetching driver details');
         }
     };
 

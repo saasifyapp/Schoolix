@@ -7,10 +7,21 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const app = express();
+const cors = require('cors'); // Import the cors middleware
+const refreshTokens = []; // Define the refreshTokens array
+
+
  
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+// Use the cors middleware
+app.use(cors({
+    origin: 'http://127.0.0.1:5500', // Allow requests from this origin
+    credentials: true // Allow credentials (cookies, authorization headers, etc.)
+}));
+
+
 
 // Import path for device detection middleware
 const deviceDetection = require('./src/middleware/deviceDetection'); 
@@ -283,19 +294,69 @@ app.post('/admin-login', (req, res) => {
 
 
 
+// Android APP login endpoint ////
 
-// Test endpoint to get transport driver and conductor details
-app.get('/test_transport_details', (req, res) => {
-    const transportQuery = `SELECT name, contact, vehicle_no FROM transport_driver_conductor_details LIMIT 10`;
+app.post('/android-login', (req, res) => {
+    const { username, password } = req.body;
+    console.log(`Android login attempt for user: ${username}`);
 
-    connection_auth.query(transportQuery, (error, results) => {
+    const query = 'SELECT * FROM android_app_users WHERE username = ? AND password = ?';
+
+    connection_auth.query(query, [username, password], (error, results) => {
         if (error) {
-            console.error(`Error querying MySQL for transport details:`, error);
-            return res.status(500).json({ error: 'Database query error' });
+            console.error('Error querying database:', error);
+            return res.status(500).send('Internal Server Error');
         }
-        res.json(results);
+
+        if (results.length === 0) {
+            console.log('Invalid username or password.');
+            return res.status(401).json({ message: 'Invalid username or password.' });
+        }
+
+        const user = results[0];
+        const schoolName = user.school_name;
+
+        const dbQuery = 'SELECT * FROM user_details WHERE schoolName = ?';
+
+        connection_auth.query(dbQuery, [schoolName], (dbError, dbResults) => {
+            if (dbError) {
+                console.error('Error querying database:', dbError);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            if (dbResults.length === 0) {
+                console.log('No database details found for the school.');
+                return res.status(404).json({ message: 'No database details found for the school. Please contact the admin.' });
+            }
+
+            const dbDetails = dbResults[0];
+
+            // Generate JWT token with 6-hour lifespan
+            const accessToken = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '6h' });
+            const refreshToken = jwt.sign({ userId: user.id }, JWT_SECRET);
+            refreshTokens.push(refreshToken);
+
+            res.json({
+                accessToken,
+                refreshToken,
+                dbCredentials: {
+                    host: dbDetails.serverName,
+                    user: dbDetails.databaseUser,
+                    password: dbDetails.databasePassword,
+                    database: dbDetails.databaseName
+                }
+            });
+        });
     });
 });
+
+
+///// ROUTES FOR ANDROID APP /////
+
+const app_transportRoutes = require('./src/routes/android_app_routes/transport_routes/transport_getStudents');
+app.use('/', app_transportRoutes);
+
+
 
 
 // Function to Authenticate //
@@ -576,8 +637,6 @@ app.use('/', transportGetStudentsDetails);
 
 
 ////// ANDROID APP ROUTES ///
-//const app_transportRouter = require('./src/routes/android_app_routes/app_transport_routes/test.js');
-//app.use('/', app_transportRouter);
 
 
 
