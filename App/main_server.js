@@ -17,7 +17,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 // Use the cors middleware
 app.use(cors({
-    origin: 'http://127.0.0.1:5500', // Allow requests from this origin
+    origin: true, // Allow requests from any origin
     credentials: true // Allow credentials (cookies, authorization headers, etc.)
 }));
 
