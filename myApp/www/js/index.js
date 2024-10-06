@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('password').value;
 
             try {
-                const response = await fetch('http://schoolix.saasifyapp.com/android-login', {
+                const response = await fetch('https://schoolix.saasifyapp.com/android-login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fetchDriverDetails = async () => {
         try {
-            const response = await fetch(`http://schoolix.saasifyapp.com/driver-details?driverName=${driverName}`, {
+            const response = await fetch(`https://schoolix.saasifyapp.com/driver-details?driverName=${driverName}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const vehicleNo = vehicleNoField.textContent;
             const shiftName = shift;
 
-            const response = await fetch(`http://schoolix.saasifyapp.com/android/driver-details?vehicleNo=${vehicleNo}&shiftName=${shiftName}`, {
+            const response = await fetch(`https://schoolix.saasifyapp.com/android/driver-details?vehicleNo=${vehicleNo}&shiftName=${shiftName}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.status === 401) {
-                const refreshResponse = await fetch('http://schoolix.saasifyapp.com/refresh-token', {
+                const refreshResponse = await fetch('https://schoolix.saasifyapp.com/refresh-token', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const refreshData = await refreshResponse.json();
                     token = refreshData.accessToken;
 
-                    response = await fetch(`http://schoolix.saasifyapp.com/android/driver-details?vehicleNo=${vehicleNo}&shiftName=${shiftName}`, {
+                    response = await fetch(`https://schoolix.saasifyapp.com/android/driver-details?vehicleNo=${vehicleNo}&shiftName=${shiftName}`, {
                         method: 'GET',
                         headers: {
                             'Authorization': `Bearer ${token}`,

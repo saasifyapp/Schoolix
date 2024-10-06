@@ -22,8 +22,6 @@ app.use(cors({
     credentials: true // Allow credentials (cookies, authorization headers, etc.)
 }));
 
-// Handle preflight requests
-app.options('*', cors());
 
 
 // Import path for device detection middleware
