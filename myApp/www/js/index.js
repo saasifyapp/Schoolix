@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loginButton = document.getElementById('login-button');
     const backButton = document.getElementById('back-button');
-    const morningShiftButton = document.getElementById('morning-shift');
-    const afternoonShiftButton = document.getElementById('afternoon-shift');
     const backToConsoleButton = document.getElementById('back-to-console-button');
     const loginScreen = document.getElementById('login-screen');
     const driverConsole = document.getElementById('driver-console');
+    const teacherConsole = document.getElementById('teacher-console');
+    const studentConsole = document.getElementById('student-console');
     const driverDetailsScreen = document.getElementById('driver-details-screen');
     const detailedDriverList = document.getElementById('detailed-driver-list');
     const driverName = document.getElementById('driver-name');
@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let token = null;
     let refreshToken = null;
     let dbCredentials = null;
+    let userType = null;
 
     if (loginButton) {
         loginButton.addEventListener('click', async () => {
@@ -45,9 +46,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 token = data.accessToken;
                 refreshToken = data.refreshToken;
                 dbCredentials = data.dbCredentials;
+                userType = data.type;
+
+                // Clear previous user data
+                clearUserData();
 
                 loginScreen.classList.add('hidden');
-                driverConsole.classList.remove('hidden');
+                
+                // Switch to the appropriate console based on user type
+                if (userType === 'driver' || userType === 'conductor') {
+                    driverConsole.classList.remove('hidden');
+                    refreshDriverConsole();
+                } else if (userType === 'teacher') {
+                    teacherConsole.classList.remove('hidden');
+                    refreshTeacherConsole();
+                } else if (userType === 'student') {
+                    studentConsole.classList.remove('hidden');
+                    refreshStudentConsole();
+                }
             } catch (error) {
                 console.error('Error during login:', error);
                 alert(error.message);
@@ -66,22 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
         backToConsoleButton.addEventListener('click', () => {
             driverDetailsScreen.classList.add('hidden');
             driverConsole.classList.remove('hidden');
-        });
-    }
-
-    if (morningShiftButton) {
-        morningShiftButton.addEventListener('click', () => {
-            fetchDriverDetails();
-            driverConsole.classList.add('hidden');
-            driverDetailsScreen.classList.remove('hidden');
-        });
-    }
-
-    if (afternoonShiftButton) {
-        afternoonShiftButton.addEventListener('click', () => {
-            fetchDriverDetails();
-            driverConsole.classList.add('hidden');
-            driverDetailsScreen.classList.remove('hidden');
         });
     }
 
@@ -174,6 +174,63 @@ document.addEventListener('DOMContentLoaded', () => {
             vehicleNo.textContent = firstDriver.vehicle_no;
             vehicleCapacity.textContent = firstDriver.vehicle_capacity || 'N/A';
             conductorName.textContent = firstDriver.conductor_name || 'N/A';
+        } else {
+            driverName.textContent = '';
+            vehicleNo.textContent = '';
+            vehicleCapacity.textContent = '';
+            conductorName.textContent = '';
         }
+    };
+
+    const morningShiftButton = document.getElementById('morning-shift');
+    const afternoonShiftButton = document.getElementById('afternoon-shift');
+
+    if (morningShiftButton) {
+        morningShiftButton.addEventListener('click', () => {
+            if (userType === 'driver' || userType === 'conductor') {
+                fetchDriverDetails();
+                driverConsole.classList.add('hidden');
+                driverDetailsScreen.classList.remove('hidden');
+            }
+        });
+    }
+
+    if (afternoonShiftButton) {
+        afternoonShiftButton.addEventListener('click', () => {
+            if (userType === 'driver' || userType === 'conductor') {
+                fetchDriverDetails();
+                driverConsole.classList.add('hidden');
+                driverDetailsScreen.classList.remove('hidden');
+            }
+        });
+    }
+
+    const clearUserData = () => {
+        // Clear driver details
+        detailedDriverList.innerHTML = '';
+        driverName.textContent = '';
+        vehicleNo.textContent = '';
+        vehicleCapacity.textContent = '';
+        conductorName.textContent = '';
+
+        // Clear other user-specific data if needed
+    };
+
+    const refreshDriverConsole = () => {
+        // Add logic to refresh driver console content
+        console.log('Refreshing Driver Console...');
+        // You can add more logic here to refresh specific parts of the driver console if needed
+    };
+
+    const refreshTeacherConsole = () => {
+        // Add logic to refresh teacher console content
+        console.log('Refreshing Teacher Console...');
+        // You can add more logic here to refresh specific parts of the teacher console if needed
+    };
+
+    const refreshStudentConsole = () => {
+        // Add logic to refresh student console content
+        console.log('Refreshing Student Console...');
+        // You can add more logic here to refresh specific parts of the student console if needed
     };
 });

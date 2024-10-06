@@ -339,6 +339,7 @@ app.post('/android-login', (req, res) => {
             res.json({
                 accessToken,
                 refreshToken,
+                type: user.type, // Include user type in response
                 dbCredentials: {
                     host: dbDetails.serverName,
                     user: dbDetails.databaseUser,
@@ -350,6 +351,23 @@ app.post('/android-login', (req, res) => {
     });
 });
 
+// Refresh token endpoint
+app.post('/refresh-token', (req, res) => {
+    const { token } = req.body;
+    if (!token) {
+        return res.sendStatus(401);
+    }
+    if (!refreshTokens.includes(token)) {
+        return res.sendStatus(403);
+    }
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) {
+            return res.sendStatus(403);
+        }
+        const accessToken = jwt.sign({ userId: user.userId }, JWT_SECRET, { expiresIn: '6h' });
+        res.json({ accessToken });
+    });
+});
 
 ///// ROUTES FOR ANDROID APP /////
 

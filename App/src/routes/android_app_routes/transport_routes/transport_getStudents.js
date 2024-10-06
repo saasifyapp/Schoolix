@@ -3,6 +3,8 @@ const connectionManagerAndroid = require('../../../middleware/connectionManagerA
 
 const router = express.Router();
 
+
+
 router.get('/android/driver-details', connectionManagerAndroid, (req, res) => {
     const query = 'SELECT name, contact, vehicle_no FROM transport_driver_conductor_details LIMIT 10';
 
