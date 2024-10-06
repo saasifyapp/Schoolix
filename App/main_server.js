@@ -15,12 +15,15 @@ const refreshTokens = []; // Define the refreshTokens array
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-// Use the cors middleware
+
+// Allow requests from any origin
 app.use(cors({
     origin: true, // Allow requests from any origin
     credentials: true // Allow credentials (cookies, authorization headers, etc.)
 }));
 
+// Handle preflight requests
+app.options('*', cors());
 
 
 // Import path for device detection middleware
