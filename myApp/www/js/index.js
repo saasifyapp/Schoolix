@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const vehicleCapacityField = document.getElementById('vehicle-capacity');
     const conductorNameField = document.getElementById('conductor-name');
     const buttonCard = document.querySelector('.button-card');
+    const selectedShiftField = document.getElementById('selected-shift');
+    const totalStopsField = document.getElementById('total-stops');
+    const totalStudentsField = document.getElementById('total-students');
 
     // Shift GIFs
     const shiftGifs = {
@@ -96,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fetchDriverDetails = async () => {
         try {
-            const response = await fetch(`https://schoolix.saasifyapp.com/driver-details?driverName=${driverName}`, {
+            const response = await fetch(`https://schoolix.saasifyapp.com/android/driver-details?driverName=${driverName}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -147,6 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
                 shiftButton.addEventListener('click', () => {
                     fetchDriverListForShift(shift);
+                    fetchShiftDetails(shift); // Fetch shift details
                     driverConsole.classList.add('hidden');
                     driverDetailsScreen.classList.remove('hidden');
                 });
@@ -163,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const vehicleNo = vehicleNoField.textContent;
             const shiftName = shift;
 
-            const response = await fetch(`https://schoolix.saasifyapp.com/android/driver-details?vehicleNo=${vehicleNo}&shiftName=${shiftName}`, {
+            const response = await fetch(`https://schoolix.saasifyapp.com/android/get-student-details?vehicleNo=${vehicleNo}&shiftName=${shiftName}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -188,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const refreshData = await refreshResponse.json();
                     token = refreshData.accessToken;
 
-                    response = await fetch(`https://schoolix.saasifyapp.com/android/driver-details?vehicleNo=${vehicleNo}&shiftName=${shiftName}`, {
+                    response = await fetch(`https://schoolix.saasifyapp.com/android/get-student-details?vehicleNo=${vehicleNo}&shiftName=${shiftName}`, {
                         method: 'GET',
                         headers: {
                             'Authorization': `Bearer ${token}`,
@@ -206,16 +210,49 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (!response.ok) {
-                throw new Error('Failed to fetch driver details');
+                throw new Error('Failed to fetch student details');
             }
 
             const data = await response.json();
             console.log(`Fetched ${data.length} item(s)`); // Log the count of items fetched
             displayDriverList(data);
         } catch (error) {
-            console.error('Error fetching driver details:', error);
-            alert('Error fetching driver details');
+            console.error('Error fetching student details:', error);
+            alert('Error fetching student details');
         }
+    };
+
+    const fetchShiftDetails = async (shift) => {
+        try {
+            const response = await fetch(`https://schoolix.saasifyapp.com/android/shift-details?driverName=${driverName}&shiftName=${shift}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'db-host': dbCredentials.host,
+                    'db-user': dbCredentials.user,
+                    'db-password': dbCredentials.password,
+                    'db-database': dbCredentials.database
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch shift details');
+            }
+
+            const data = await response.json();
+            console.log(`Fetched shift details:`, data); // Log the shift details fetched
+            displayShiftDetails(data);
+        } catch (error) {
+            console.error('Error fetching shift details:', error);
+            alert('Error fetching shift details');
+        }
+    };
+
+    const displayShiftDetails = (data) => {
+        selectedShiftField.textContent = data.shift_name;
+        totalStopsField.textContent = data.route_stops_count;
+        totalStudentsField.textContent = data.students_tagged;
     };
 
     const displayDriverList = (data) => {
@@ -225,22 +262,37 @@ document.addEventListener('DOMContentLoaded', () => {
             listItem.innerHTML = `
                 <div class="item-content">
                     <p>Name: ${item.name}</p>
-                    <p>Contact: ${item.contact}</p>
-                    <p>Vehicle No: ${item.vehicle_no}</p>
+                    <p>Class: ${item.class}</p>
+                    <p>Contact: ${item.f_mobile_no}</p>
+                    <p>Transport Pickup/Drop: ${item.transport_pickup_drop}</p>
                 </div>
                 <div class="button-group">
-                    <button class="add-button">Add</button>
-                    <button class="delete-button">Delete</button>
+                    <button class="not-picked">
+                        <img src="./img/not_pick.png" alt="Not Picked">
+                        <span>Not Picked</span>
+                    </button>
+                    <button class="not-dropped">
+                        <img src="./img/not_drop.png" alt="Not Dropped">
+                        <span>Not Dropped</span>
+                    </button>
+                    <button class="call-button">
+                        <img src="./img/call.png" alt="Call">
+                        <span>Call</span>
+                    </button>
                 </div>
             `;
             detailedDriverList.appendChild(listItem);
-
-            listItem.querySelector('.add-button').addEventListener('click', () => {
-                alert(`Add button clicked for ${item.name}`);
+    
+            listItem.querySelector('.not-picked').addEventListener('click', () => {
+                alert(`${item.name} not picked`);
+            });
+    
+            listItem.querySelector('.not-dropped').addEventListener('click', () => {
+                alert(`${item.name} not dropped`);
             });
 
-            listItem.querySelector('.delete-button').addEventListener('click', () => {
-                alert(`Delete button clicked for ${item.name}`);
+            listItem.querySelector('.call-button').addEventListener('click', () => {
+                window.location.href = `tel:${item.f_mobile_no}`;
             });
         });
     };
