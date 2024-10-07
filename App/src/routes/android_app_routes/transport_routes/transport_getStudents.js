@@ -4,7 +4,7 @@ const connectionManagerAndroid = require('../../../middleware/connectionManagerA
 const router = express.Router();
 
 // Endpoint to fetch driver details based on driver name
-router.get('/driver-details', connectionManagerAndroid, (req, res) => {
+router.get('/android/driver-details', connectionManagerAndroid, (req, res) => {
     const { driverName } = req.query;
 
     if (!driverName) {
@@ -28,10 +28,42 @@ router.get('/driver-details', connectionManagerAndroid, (req, res) => {
     });
 });
 
+// Endpoint to fetch shift details based on driver name and shift name
+router.get('/android/shift-details', connectionManagerAndroid, (req, res) => {
+    const { driverName, shiftName } = req.query;
 
+    if (!driverName || !shiftName) {
+        return res.status(400).json({ message: 'Driver name and shift name are required' });
+    }
+
+    const query = `
+        SELECT 
+            shift_name, 
+            students_tagged, 
+            LENGTH(route_stops) - LENGTH(REPLACE(route_stops, ',', '')) + 1 AS route_stops_count 
+        FROM 
+            transport_schedule_details 
+        WHERE 
+            driver_name = ? AND shift_name = ?
+    `;
+
+    req.connectionPool.query(query, [driverName, shiftName], (error, results) => {
+        if (error) {
+            console.error('Error querying database:', error);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        if (results.length === 0) {
+            console.log('No shift details found for the driver and shift name.');
+            return res.status(404).json({ message: 'No shift details found for the driver and shift name.' });
+        }
+
+        res.json(results[0]);
+    });
+});
 
 // Endpoint to fetch student details based on vehicle number, shift name, route, and class
-router.get('/android/driver-details', connectionManagerAndroid, (req, res) => {
+router.get('/android/get-student-details', connectionManagerAndroid, (req, res) => {
     const vehicleNo = req.query.vehicleNo;
     const shiftName = req.query.shiftName;
     const route = req.query.route || ''; // Optional route filter
@@ -75,8 +107,7 @@ router.get('/android/driver-details', connectionManagerAndroid, (req, res) => {
             let studentSql = `
                 SELECT 
                     name, 
-                    standard, 
-                    division, 
+                    CONCAT(standard, ' ', division) AS class, 
                     f_mobile_no, 
                     transport_pickup_drop 
                 FROM pre_primary_student_details 
@@ -84,8 +115,7 @@ router.get('/android/driver-details', connectionManagerAndroid, (req, res) => {
                 UNION
                 SELECT 
                     name, 
-                    standard, 
-                    division, 
+                    CONCAT(standard, ' ', division) AS class, 
                     f_mobile_no, 
                     transport_pickup_drop 
                 FROM primary_student_details 
@@ -117,6 +147,8 @@ router.get('/android/driver-details', connectionManagerAndroid, (req, res) => {
                     console.error('Database query failed:', studentError); // Log the error details
                     return res.status(500).json({ error: 'Database query failed' });
                 }
+
+                console.log('Raw student results:', studentResults); // Log the raw results for debugging
 
                 console.log(`Fetched ${studentResults.length} student(s)`); // Log the count of items fetched
 

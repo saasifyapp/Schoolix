@@ -12,10 +12,16 @@ body {
 
 .screen {
     text-align: center;
-    width: 90%; 
+    width: 100%; 
     max-width: 500px;
-    padding: 20px; /* Add padding to prevent content from touching edges */
+    padding: 10px; /* Reduced padding */
     box-sizing: border-box; /* Include padding in width calculation */
+    overflow: hidden; /* Prevent content overflow */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1; /* Allow the screen to grow and fill the available space */
+    justify-content: center; /* Center content vertically */
 }
 
 .hidden {
@@ -76,16 +82,18 @@ ul {
 
 .card {
     background: #fff;
-    margin: 20px 0;
-    padding: 20px;
+    margin: 10px 0; /* Reduced margin */
+    padding: 15px; /* Reduced padding */
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: left;
-    overflow: hidden; /* Prevent overflow from card */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .card h2 {
     margin-top: 0;
+    font-size: 1.25em; /* Reduced heading size */
 }
 
 .button-card {
@@ -159,20 +167,83 @@ li {
 
 .button-group {
     display: flex;
-    gap: 10px;
+    justify-content: space-between; /* Distribute space evenly between buttons */
+    gap: 20px; /* Space between buttons */
+    width: 100%; /* Ensure the buttons take up the full width */
 }
 
-.add-button, .delete-button {
-    padding: 5px 10px;
+.not-picked, .not-dropped, .call-button {
+    flex: 0 1 30%; /* Allow buttons to grow and take up equal space, but limit their width */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center; /* Center the text inside the buttons */
+    padding: 10px 15px; /* Padding inside the buttons */
     cursor: pointer;
     border: none;
-    border-radius: 5px;
-    background-color: #28a745;
+    border-radius: 15px;
     color: white;
+    background: none; /* Remove background color */
+    max-width: 120px; /* Set a maximum width for the buttons */
 }
 
-.delete-button {
+.not-picked img, .not-dropped img, .call-button img {
+    width: 24px; /* Adjust the size of the images */
+    height: 24px;
+    margin-right: 10px; /* Add space between image and label */
+}
+
+.not-picked span, .not-dropped span, .call-button span {
+    font-size: 0.9em; /* Adjust font size if needed */
+}
+
+.not-picked {
+    background-color: #28a745;
+}
+
+.not-dropped {
     background-color: #dc3545;
+}
+
+.call-button {
+    background-color: #17a2b8;
+}
+
+.not-picked:hover {
+    background-color: #218838;
+}
+
+.not-dropped:hover {
+    background-color: #c82333;
+}
+
+.call-button:hover {
+    background-color: #138496;
+}
+
+/* Fixed size and positioning for containers */
+#shift-details-container {
+    width: 100%;
+    max-width: 500px;
+    padding: 15px; /* Reduced padding */
+    box-sizing: border-box;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px; /* Reduced margin */
+    text-align: left; /* Align items to the left */
+}
+
+#student-details-container {
+    width: 100%;
+    max-width: 500px;
+    height: 70vh; /* Increased height */
+    padding: 15px; /* Reduced padding */
+    box-sizing: border-box;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow-y: auto; /* Enable vertical scrolling */
 }
 
 /* Media query for smaller devices */
@@ -202,7 +273,7 @@ li {
         gap: 5px;
     }
 
-    .add-button, .delete-button {
+    .not-picked, .not-dropped, .call-button {
         width: auto;
         padding: 5px 10px;
     }

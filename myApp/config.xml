@@ -9,6 +9,7 @@
     <content src="index.html" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" /> <!-- Allow tel scheme -->
 
     <!-- Add icons -->
     <icon src="res/icon/android/icon.png" />
