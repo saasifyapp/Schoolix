@@ -163,6 +163,7 @@ li {
 
 .item-content p {
     margin: 5px 0;
+    text-align: left; /* Align text to the left */
 }
 
 .button-group {
@@ -245,6 +246,45 @@ li {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow-y: auto; /* Enable vertical scrolling */
 }
+
+/* Route container */
+.route-container {
+    margin: 20px 0;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.route-container h3 {
+    margin-top: 0;
+    font-size: 1em; /* Reduced heading size */
+    color: #333;
+    text-align: left; /* Align text to the left */
+}
+
+/* Student list within a route container */
+.student-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.student-list li {
+    background: #fff;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column; /* Align items in a column layout */
+    align-items: flex-start; /* Align items to the left */
+    text-align: left; /* Align text to the left */
+}
+
+.item-content p {
+    margin: 5px 0;
+    text-align: left; /* Align text to the left */
+}
+
 
 /* Media query for smaller devices */
 @media (max-width: 600px) {

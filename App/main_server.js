@@ -322,7 +322,7 @@ app.post('/android-login', (req, res) => {
         connection_auth.query(dbQuery, [schoolName], (dbError, dbResults) => {
             if (dbError) {
                 console.error('Error querying database:', dbError);
-                return res.status(500).send('Internal Server Error');
+                return res.status(500).json({ message: 'Unauthorized Login. Please contact the school admin.' });
             }
 
             if (dbResults.length === 0) {
