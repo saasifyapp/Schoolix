@@ -1,82 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Two Screen App</title>
     <link rel="stylesheet" href="./css/index.css">
 </head>
-
 <body>
     <!-- Login Screen -->
     <div id="login-screen" class="screen">
         <div class="login-gif-wrapper">
             <img src="./img/login.gif" alt="Login GIF" class="login-gif">
         </div>
-        <h1>Login</h1>
+        <h1>Schoolix Login</h1>
         <input type="text" id="username" placeholder="Username" required>
         <input type="password" id="password" placeholder="Password" required>
         <button id="login-button">Login</button>
     </div>
 
-    <!-- Driver Console Screen -->
-    <div id="driver-console" class="screen hidden">
-        <h1>DRIVER CONSOLE</h1>
-
-        <!-- Driver Details Card -->
-        <div class="card">
-            <h2>Driver Details</h2>
-            <ul id="driver-details">
-                <li>Driver Name: <span id="driver-name"></span></li>
-                <li>Vehicle No: <span id="vehicle-no"></span></li>
-                <li>Vehicle Capacity: <span id="vehicle-capacity"></span></li>
-                <li>Conductor Name: <span id="conductor-name"></span></li>
-            </ul>
-        </div>
-
-        <!-- Buttons Card -->
-        <div class="card button-card">
-            <!-- Dynamic buttons will be added here -->
-        </div>
-
-        <button id="back-button">Back</button>
-    </div>
-
-    <!-- Teacher Console Screen -->
-    <div id="teacher-console" class="screen hidden">
-        <h1>TEACHER CONSOLE</h1>
-        <!-- Add teacher-specific UI elements here -->
-        <button id="back-button">Back</button>
-    </div>
-
-    <!-- Student Console Screen -->
-    <div id="student-console" class="screen hidden">
-        <h1>STUDENT CONSOLE</h1>
-        <!-- Add student-specific UI elements here -->
-        <button id="back-button">Back</button>
-    </div>
-
-    <!-- Driver Details Screen -->
-    <div id="driver-details-screen" class="screen hidden">
-        <!-- Shift Details Container -->
-        <div id="shift-details-container">
-            <h2>Shift Details</h2>
-            <p>Selected Shift: <span id="selected-shift"></span></p>
-            <p>Total Stops: <span id="total-stops"></span></p>
-            <p>Total Students: <span id="total-students"></span></p>
-        </div>
-
-        <!-- Student Details Container -->
-        <div id="student-details-container">
-            <h2>Student Details</h2>
-            <ul id="detailed-driver-list"></ul>
-        </div>
-
-        <button id="back-to-console-button">Back</button>
-    </div>
-
     <script src="./js/index.js"></script>
 </body>
-
 </html>
