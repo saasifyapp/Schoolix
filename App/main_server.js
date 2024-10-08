@@ -296,7 +296,6 @@ app.post('/admin-login', (req, res) => {
 
 
 // Android APP login endpoint ////
-
 app.post('/android-login', (req, res) => {
     const { username, password } = req.body;
     console.log(`Android login attempt for user: ${username}`);
@@ -341,6 +340,7 @@ app.post('/android-login', (req, res) => {
                 accessToken,
                 refreshToken,
                 type: user.type, // Include user type in response
+                name: user.name, // Include the original name in response
                 dbCredentials: {
                     host: dbDetails.serverName,
                     user: dbDetails.databaseUser,

@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
+const { connection_auth } = require('../../../main_server'); // Adjust the path as needed
+
 
 // Use the connection manager middleware
 router.use(connectionManager);
@@ -222,18 +224,47 @@ router.post('/addDriverConductor', (req, res) => {
         return res.status(400).json({ error: 'Name, contact, address, and type are required fields' });
     }
 
-    // Insert data into the table
-    const sql = `
+    // Retrieve school name from cookie
+    const schoolName = req.cookies.schoolName;
+    if (!schoolName) {
+        return res.status(400).json({ error: 'School name is required' });
+    }
+
+    // Generate username and password
+    const username = name.replace(/\s+/g, '').toLowerCase(); // Remove spaces and convert to lowercase
+    const password = `school@${username}`;
+    const userType = type.toLowerCase() === 'driver' ? 'driver' : 'conductor'; // Determine user type based on the type from client
+
+    // First, insert data into the transport_driver_conductor_details table
+    const sqlDriverConductor = `
         INSERT INTO transport_driver_conductor_details (name, contact, address, driver_conductor_type, vehicle_no, vehicle_type, vehicle_capacity)
         VALUES (?, ?, ?, ?, ?, ?, ?)
     `;
-    const values = [name, contact, address, type, vehicle_no, vehicle_type, vehicle_capacity];
+    const valuesDriverConductor = [name, contact, address, type, vehicle_no, vehicle_type, vehicle_capacity];
 
-    req.connectionPool.query(sql, values, (error, results) => {
+    req.connectionPool.query(sqlDriverConductor, valuesDriverConductor, (error, resultsDriverConductor) => {
         if (error) {
-            return res.status(500).json({ error: 'Database insertion failed' });
+            return res.status(500).json({ error: 'Database insertion failed for driver/conductor details' });
         }
-        res.status(200).json({ message: 'Driver/Conductor added successfully', id: results.insertId });
+
+        // Now, insert data into the android_app_users table
+        const sqlUser = `
+            INSERT INTO android_app_users (username, password, school_name, type, name)
+            VALUES (?, ?, ?, ?, ?)
+        `;
+        const valuesUser = [username, password, schoolName, userType, name];
+
+        connection_auth.query(sqlUser, valuesUser, (error, resultsUser) => {
+            if (error) {
+                return res.status(500).json({ error: 'Database insertion failed for user details' });
+            }
+
+            res.status(200).json({ 
+                message: 'Driver/Conductor added successfully', 
+                driverConductorId: resultsDriverConductor.insertId,
+                userId: resultsUser.insertId
+            });
+        });
     });
 });
 
@@ -252,21 +283,46 @@ router.get('/displayDriverConductors', (req, res) => {
 router.delete('/deleteDriverConductor/:id', (req, res) => {
     const id = req.params.id;
 
-    const query = 'DELETE FROM transport_driver_conductor_details WHERE id = ?';
-    req.connectionPool.query(query, [id], (error, results) => {
-        if (error) {
-            console.error('Error deleting driver/conductor:', error);
+    // First, fetch the driver/conductor details to get the name
+    const fetchQuery = 'SELECT name FROM transport_driver_conductor_details WHERE id = ?';
+    req.connectionPool.query(fetchQuery, [id], (fetchError, fetchResults) => {
+        if (fetchError) {
+            console.error('Error fetching driver/conductor details:', fetchError);
             return res.status(500).json({ error: 'Internal Server Error' });
         }
 
-        if (results.affectedRows === 0) {
+        if (fetchResults.length === 0) {
             return res.status(404).json({ error: 'Driver/Conductor not found' });
         }
 
-        res.status(200).json({ message: 'Driver/Conductor deleted successfully' });
+        const name = fetchResults[0].name;
+        const username = name.replace(/\s+/g, '').toLowerCase(); // Generate the username
+
+        // Delete from transport_driver_conductor_details table
+        const deleteDriverConductorQuery = 'DELETE FROM transport_driver_conductor_details WHERE id = ?';
+        req.connectionPool.query(deleteDriverConductorQuery, [id], (deleteDriverConductorError, deleteDriverConductorResults) => {
+            if (deleteDriverConductorError) {
+                console.error('Error deleting driver/conductor:', deleteDriverConductorError);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
+
+            if (deleteDriverConductorResults.affectedRows === 0) {
+                return res.status(404).json({ error: 'Driver/Conductor not found' });
+            }
+
+            // Delete from android_app_users table
+            const deleteUserQuery = 'DELETE FROM android_app_users WHERE username = ?';
+            connection_auth.query(deleteUserQuery, [username], (deleteUserError, deleteUserResults) => {
+                if (deleteUserError) {
+                    console.error('Error deleting user:', deleteUserError);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+
+                res.status(200).json({ message: 'Driver/Conductor and associated user deleted successfully' });
+            });
+        });
     });
 });
-
 
 router.put('/editDriverConductor', async (req, res) => {
     const { id, name, contact, address, driver_conductor_type, vehicle_no, vehicle_type, vehicle_capacity, new_seats } = req.body;

@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 sessionStorage.setItem('token', data.accessToken);
                 sessionStorage.setItem('refreshToken', data.refreshToken);
                 sessionStorage.setItem('dbCredentials', JSON.stringify(data.dbCredentials));
-                sessionStorage.setItem('driverName', username);
+                sessionStorage.setItem('driverName', data.name); // Store the original name
 
                 const userType = data.type;
 
