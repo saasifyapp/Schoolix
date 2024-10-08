@@ -249,10 +249,10 @@ router.post('/addDriverConductor', (req, res) => {
 
         // Now, insert data into the android_app_users table
         const sqlUser = `
-            INSERT INTO android_app_users (username, password, school_name, type)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO android_app_users (username, password, school_name, type, name)
+            VALUES (?, ?, ?, ?, ?)
         `;
-        const valuesUser = [username, password, schoolName, userType];
+        const valuesUser = [username, password, schoolName, userType, name];
 
         connection_auth.query(sqlUser, valuesUser, (error, resultsUser) => {
             if (error) {
@@ -267,7 +267,6 @@ router.post('/addDriverConductor', (req, res) => {
         });
     });
 });
-
 
 // Endpoint to fetch all driver and conductor details
 router.get('/displayDriverConductors', (req, res) => {
