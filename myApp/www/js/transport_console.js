@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectedShiftField = document.getElementById('selected-shift');
     const totalStopsField = document.getElementById('total-stops');
     const totalStudentsField = document.getElementById('total-students');
+    const searchBar = document.getElementById('search-bar');
 
     // Shift GIFs
     const shiftGifs = {
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let dbCredentials = JSON.parse(sessionStorage.getItem('dbCredentials'));
     let driverName = sessionStorage.getItem('driverName');
     let routeStops = []; // Store route stops
+    let studentsData = []; // Store the fetched students data
 
     if (!dbCredentials) {
         console.error('Database credentials not found in session storage.');
@@ -168,6 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
             console.log(`Fetched ${data.length} item(s)`); // Log the count of items fetched
+            studentsData = data; // Store the fetched students data
             displayDriverList(data);
         } catch (error) {
             console.error('Error fetching student details:', error);
@@ -294,6 +297,18 @@ document.addEventListener('DOMContentLoaded', () => {
             detailedDriverList.appendChild(routeContainer);
         });
     };
+
+    // Search functionality
+    searchBar.addEventListener('input', (event) => {
+        const searchTerm = event.target.value.toLowerCase();
+        const filteredData = studentsData.filter(student => 
+            student.name.toLowerCase().includes(searchTerm) ||
+            student.class.toLowerCase().includes(searchTerm) ||
+            student.f_mobile_no.toLowerCase().includes(searchTerm) ||
+            student.transport_pickup_drop.toLowerCase().includes(searchTerm)
+        );
+        displayDriverList(filteredData);
+    });
 
     fetchDriverDetails();
 });

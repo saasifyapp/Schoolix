@@ -285,6 +285,22 @@ li {
     text-align: left; /* Align text to the left */
 }
 
+#search-container {
+    width: 100%;
+    max-width: 500px;
+    padding: 10px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+#search-bar {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 25px; /* Increase border-radius to make it round */
+    box-sizing: border-box;
+    font-size: 1em;
+}
 
 /* Media query for smaller devices */
 @media (max-width: 600px) {
