@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('password').value;
 
             try {
-                const response = await fetch('http://localhost:3000/android-login', {
+                const response = await fetch('https://schoolix.saasifyapp.com/android-login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

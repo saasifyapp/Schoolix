@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fetchShiftDetails = async (shift) => {
         try {
-            const response = await fetch(`http://localhost:3000/android/shift-details?driverName=${driverName}&shiftName=${shift}`, {
+            const response = await fetch(`https://schoolix.saasifyapp.com/android/shift-details?driverName=${driverName}&shiftName=${shift}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
