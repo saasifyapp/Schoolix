@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalStopsField = document.getElementById('total-stops');
     const totalStudentsField = document.getElementById('total-students');
     const searchBar = document.getElementById('search-bar');
+    const spinner = document.getElementById('spinner');
 
     // Shift GIFs
     const shiftGifs = {
@@ -47,7 +48,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const showSpinner = () => {
+        spinner.classList.remove('hidden');
+    };
+
+    const hideSpinner = () => {
+        spinner.classList.add('hidden');
+    };
+
     const fetchDriverDetails = async () => {
+        showSpinner();
         try {
             const response = await fetch(`https://schoolix.saasifyapp.com/android/driver-details?driverName=${driverName}`, {
                 method: 'GET',
@@ -75,6 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error fetching driver details:', error);
             alert('Unauthorized Login. Please contact the school admin.');
             window.location.href = './index.html'; // Redirect to the login page
+        } finally {
+            hideSpinner();
         }
     };
 
@@ -103,6 +115,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span>${shift} Shift</span>
                 `;
                 shiftButton.addEventListener('click', () => {
+                    // Clear previous data and show spinner immediately
+                    detailedDriverList.innerHTML = '';
+                    showSpinner();
+
                     fetchDriverListForShift(shift);
                     fetchShiftDetails(shift); // Fetch shift details
                     driverConsole.classList.add('hidden');
@@ -175,6 +191,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Error fetching student details:', error);
             alert('Error fetching student details');
+        } finally {
+            hideSpinner();
         }
     };
 
@@ -203,6 +221,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Error fetching shift details:', error);
             alert('Error fetching shift details');
+        } finally {
+            hideSpinner();
         }
     };
 

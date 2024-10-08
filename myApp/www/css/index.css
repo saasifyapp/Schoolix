@@ -5,9 +5,33 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
     margin: 0;
     font-family: Arial, sans-serif;
+}
+
+/* Spinner styles */
+.spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(0, 0, 0, 0.1);
+    border-top: 5px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    transform: translate(-50%, -50%);
+    z-index: 1000; /* Ensure it stays on top */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.hidden {
+    display: none;
 }
 
 .screen {
@@ -45,34 +69,48 @@ body {
     height: 100%;
 }
 
+/* Styles for login inputs and button */
 input[type="text"], input[type="password"] {
     width: 100%; /* Full width */
     max-width: 300px; /* Limit max width for better appearance */
-    padding: 10px;
+    padding: 12px 20px; /* Increased padding for better touch targets */
     margin: 10px auto; 
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 25px; /* Rounded corners */
     box-sizing: border-box;
     display: block; 
+    font-size: 1em; /* Consistent font size */
+    transition: border-color 0.3s ease; /* Smooth transition for border color */
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+    border-color: #007bff; /* Border color on focus */
+    outline: none; /* Remove default outline */
 }
 
 button {
     width: 100%; /* Full width for better touch targets */
     max-width: 300px; /* Limit max width */
-    padding: 10px;
-    font-size: 1em;
+    padding: 12px 20px; /* Increased padding */
+    font-size: 1em; /* Consistent font size */
     cursor: pointer;
     margin: 20px auto 0; 
     border: none;
     border-radius: 25px; 
     background-color: #007bff;
     color: white;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transitions */
     display: block; 
 }
 
 button:hover {
     background-color: #0056b3;
+    transform: translateY(-2px); /* Slight lift effect on hover */
+}
+
+button:active {
+    background-color: #004494;
+    transform: translateY(0); /* Remove lift effect on click */
 }
 
 ul {
