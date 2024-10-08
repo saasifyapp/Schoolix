@@ -40,6 +40,7 @@ router.get('/android/shift-details', connectionManagerAndroid, (req, res) => {
         SELECT 
             shift_name, 
             students_tagged, 
+            route_stops,
             LENGTH(route_stops) - LENGTH(REPLACE(route_stops, ',', '')) + 1 AS route_stops_count 
         FROM 
             transport_schedule_details 
@@ -135,12 +136,6 @@ router.get('/android/get-student-details', connectionManagerAndroid, (req, res) 
                 studentSql += ' AND standard = ? AND division = ?';
                 studentValues.push(standard, division);
             }
-
-            // Add sorting based on route_stops
-            studentSql += ' ORDER BY FIELD(transport_pickup_drop, ?)';
-
-            // Add the routeStops array again for the FIELD function
-            studentValues.push(...routeStops);
 
             req.connectionPool.query(studentSql, studentValues, (studentError, studentResults) => {
                 if (studentError) {

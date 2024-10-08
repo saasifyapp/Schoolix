@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let dbCredentials = null;
     let userType = null;
     let driverName = null;
+    let routeStops = []; // Store route stops
 
     if (loginButton) {
         loginButton.addEventListener('click', async () => {
@@ -224,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fetchShiftDetails = async (shift) => {
         try {
-            const response = await fetch(`https://schoolix.saasifyapp.com/android/shift-details?driverName=${driverName}&shiftName=${shift}`, {
+            const response = await fetch(`http://localhost:3000/android/shift-details?driverName=${driverName}&shiftName=${shift}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -243,6 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             console.log(`Fetched shift details:`, data); // Log the shift details fetched
             displayShiftDetails(data);
+            routeStops = data.route_stops.split(', '); // Store route stops
         } catch (error) {
             console.error('Error fetching shift details:', error);
             alert('Error fetching shift details');
@@ -257,6 +259,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const displayDriverList = (data) => {
         detailedDriverList.innerHTML = '';
+        
+        // Sort students based on routeStops order
+        data.sort((a, b) => {
+            return routeStops.indexOf(a.transport_pickup_drop) - routeStops.indexOf(b.transport_pickup_drop);
+        });
+
         data.forEach(item => {
             const listItem = document.createElement('li');
             listItem.innerHTML = `
@@ -264,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p>Name: ${item.name}</p>
                     <p>Class: ${item.class}</p>
                     <p>Contact: ${item.f_mobile_no}</p>
-                    <p>Transport Pickup/Drop: ${item.transport_pickup_drop}</p>
+                    <p>Pickup-Drop: ${item.transport_pickup_drop}</p>
                 </div>
                 <div class="button-group">
                     <button class="not-picked">
