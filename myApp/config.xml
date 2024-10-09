@@ -18,4 +18,12 @@
     <icon src="res/icon/android/icon-xhdpi.png" target="android" density="xhdpi" />
     <icon src="res/icon/android/icon-xxhdpi.png" target="android" density="xxhdpi" />
     <icon src="res/icon/android/icon-xxxhdpi.png" target="android" density="xxxhdpi" />
+
+ <!-- Add access permissions for geolocation -->
+    <platform name="android">
+        <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest">
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+        </edit-config>
+    </platform>
 </widget>
