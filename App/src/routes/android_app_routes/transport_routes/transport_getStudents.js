@@ -1,5 +1,6 @@
 const express = require('express');
 const connectionManagerAndroid = require('../../../middleware/connectionManagerAndroid'); // Adjust the path as needed
+const moment = require('moment-timezone');
 
 const router = express.Router();
 
@@ -64,17 +65,20 @@ router.get('/android/shift-details', connectionManagerAndroid, (req, res) => {
 });
 
 // API endpoint to receive coordinates
-router.post('/android/send-coordinates',connectionManagerAndroid, (req, res) => {
+router.post('/android/send-coordinates', connectionManagerAndroid, (req, res) => {
     const { driverName, vehicleNumber, latitude, longitude } = req.body;
+
+    // Get the current timestamp in IST
+    const timestampIST = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
 
     // Update the table with the new coordinates and timestamp
     const query = `
         UPDATE transport_driver_conductor_details
-        SET latitude = ?, longitude = ?, location_timestamp = NOW()
+        SET latitude = ?, longitude = ?, location_timestamp = ?
         WHERE name = ? AND vehicle_no = ?
     `;
 
-    req.connectionPool.query(query, [latitude, longitude, driverName, vehicleNumber], (err, result) => {
+    req.connectionPool.query(query, [latitude, longitude, timestampIST, driverName, vehicleNumber], (err, result) => {
         if (err) {
             console.error('Error updating coordinates:', err);
             return res.status(500).json({ error: 'Failed to update coordinates' });
