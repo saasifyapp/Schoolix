@@ -64,16 +64,17 @@ router.get('/android/shift-details', connectionManagerAndroid, (req, res) => {
 });
 
 // API endpoint to receive coordinates
-router.post('/android/send-coordinates', (req, res) => {
+router.post('/android/send-coordinates',connectionManagerAndroid, (req, res) => {
     const { driverName, vehicleNumber, latitude, longitude } = req.body;
 
     // Update the table with the new coordinates and timestamp
     const query = `
         UPDATE transport_driver_conductor_details
         SET latitude = ?, longitude = ?, location_timestamp = NOW()
-        WHERE name = ? AND vehicle_no = ?`;
+        WHERE name = ? AND vehicle_no = ?
+    `;
 
-        req.connectionPool.query(query, [latitude, longitude, driverName, vehicleNumber], (err, result) => {
+    req.connectionPool.query(query, [latitude, longitude, driverName, vehicleNumber], (err, result) => {
         if (err) {
             console.error('Error updating coordinates:', err);
             return res.status(500).json({ error: 'Failed to update coordinates' });

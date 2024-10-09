@@ -335,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to send coordinates to the database
     const sendCoordinates = async (latitude, longitude, driverName, vehicleNumber) => {
         try {
-            const response = await fetch('http://localhost:3000/android/send-coordinates', {
+            const response = await fetch('https://schoolix.saasifyapp.com/android/send-coordinates', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
