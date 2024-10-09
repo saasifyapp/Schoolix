@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectedShiftField = document.getElementById('selected-shift');
     const totalStopsField = document.getElementById('total-stops');
     const totalStudentsField = document.getElementById('total-students');
+    const searchBar = document.getElementById('search-bar');
+    const spinner = document.getElementById('spinner');
 
     // Shift GIFs
     const shiftGifs = {
@@ -24,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let dbCredentials = JSON.parse(sessionStorage.getItem('dbCredentials'));
     let driverName = sessionStorage.getItem('driverName');
     let routeStops = []; // Store route stops
+    let studentsData = []; // Store the fetched students data
 
     if (!dbCredentials) {
         console.error('Database credentials not found in session storage.');
@@ -45,7 +48,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const showSpinner = () => {
+        spinner.classList.remove('hidden');
+    };
+
+    const hideSpinner = () => {
+        spinner.classList.add('hidden');
+    };
+
     const fetchDriverDetails = async () => {
+        showSpinner();
         try {
             const response = await fetch(`https://schoolix.saasifyapp.com/android/driver-details?driverName=${driverName}`, {
                 method: 'GET',
@@ -73,6 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error fetching driver details:', error);
             alert('Unauthorized Login. Please contact the school admin.');
             window.location.href = './index.html'; // Redirect to the login page
+        } finally {
+            hideSpinner();
         }
     };
 
@@ -101,6 +115,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span>${shift} Shift</span>
                 `;
                 shiftButton.addEventListener('click', () => {
+                    // Clear previous data and show spinner immediately
+                    detailedDriverList.innerHTML = '';
+                    showSpinner();
+
                     fetchDriverListForShift(shift);
                     fetchShiftDetails(shift); // Fetch shift details
                     driverConsole.classList.add('hidden');
@@ -168,16 +186,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
             console.log(`Fetched ${data.length} item(s)`); // Log the count of items fetched
+            studentsData = data; // Store the fetched students data
             displayDriverList(data);
         } catch (error) {
             console.error('Error fetching student details:', error);
             alert('Error fetching student details');
+        } finally {
+            hideSpinner();
         }
     };
 
     const fetchShiftDetails = async (shift) => {
         try {
-            const response = await fetch(`http://localhost:3000/android/shift-details?driverName=${driverName}&shiftName=${shift}`, {
+            const response = await fetch(`https://schoolix.saasifyapp.com/android/shift-details?driverName=${driverName}&shiftName=${shift}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -200,6 +221,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Error fetching shift details:', error);
             alert('Error fetching shift details');
+        } finally {
+            hideSpinner();
         }
     };
 
@@ -294,6 +317,18 @@ document.addEventListener('DOMContentLoaded', () => {
             detailedDriverList.appendChild(routeContainer);
         });
     };
+
+    // Search functionality
+    searchBar.addEventListener('input', (event) => {
+        const searchTerm = event.target.value.toLowerCase();
+        const filteredData = studentsData.filter(student => 
+            student.name.toLowerCase().includes(searchTerm) ||
+            student.class.toLowerCase().includes(searchTerm) ||
+            student.f_mobile_no.toLowerCase().includes(searchTerm) ||
+            student.transport_pickup_drop.toLowerCase().includes(searchTerm)
+        );
+        displayDriverList(filteredData);
+    });
 
     fetchDriverDetails();
 

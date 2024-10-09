@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('password').value;
 
             try {
-                const response = await fetch('http://localhost:3000/android-login', {
+                const response = await fetch('https://schoolix.saasifyapp.com/android-login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 sessionStorage.setItem('token', data.accessToken);
                 sessionStorage.setItem('refreshToken', data.refreshToken);
                 sessionStorage.setItem('dbCredentials', JSON.stringify(data.dbCredentials));
-                sessionStorage.setItem('driverName', username);
+                sessionStorage.setItem('driverName', data.name); // Store the original name
 
                 const userType = data.type;
 
