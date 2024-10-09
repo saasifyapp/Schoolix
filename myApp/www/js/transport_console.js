@@ -49,11 +49,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const showSpinner = () => {
-        spinner.classList.remove('hidden');
+        // spinner.classList.remove('hidden');
+        const spinnerContainer = document.getElementById('spinnerContainer');
+        spinnerContainer.style.display = 'flex'; // Show spinner container
     };
 
     const hideSpinner = () => {
-        spinner.classList.add('hidden');
+        // spinner.classList.add('hidden');
+        const spinnerContainer = document.getElementById('spinnerContainer');
+        spinnerContainer.style.display = 'none'; // Hide spinner container
     };
 
     const fetchDriverDetails = async () => {
@@ -321,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Search functionality
     searchBar.addEventListener('input', (event) => {
         const searchTerm = event.target.value.toLowerCase();
-        const filteredData = studentsData.filter(student => 
+        const filteredData = studentsData.filter(student =>
             student.name.toLowerCase().includes(searchTerm) ||
             student.class.toLowerCase().includes(searchTerm) ||
             student.f_mobile_no.toLowerCase().includes(searchTerm) ||

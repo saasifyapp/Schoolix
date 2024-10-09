@@ -11,28 +11,38 @@ body {
 }
 
 /* Spinner styles */
-.spinner {
+/* Spinner container styles */
+.spinner-container {
     position: fixed;
-    top: 50%;
-    left: 50%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex; /* Use flex to center the spinner */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    background: rgba(255, 255, 255, 0.7); /* Optional: semi-transparent background */
+    z-index: 1000; /* Ensure it stays on top */
+}
+
+/* Spinner styles */
+.spinner {
     width: 50px;
     height: 50px;
     border: 5px solid rgba(0, 0, 0, 0.1);
     border-top: 5px solid #007bff;
     border-radius: 50%;
     animation: spin 1s linear infinite;
-    transform: translate(-50%, -50%);
-    z-index: 1000; /* Ensure it stays on top */
 }
 
+/* Keyframes for the spinning animation */
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
-
-.hidden {
+/* .hidden {
     display: none;
-}
+} */
 
 .screen {
     text-align: center;
