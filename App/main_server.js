@@ -654,6 +654,10 @@ app.use('/', transportAllocateVehicle);
 const transportGetStudentsDetails = require('./src/routes/transport_routes/get_student_details.js');
 app.use('/', transportGetStudentsDetails);
 
+////// LIST STUDENTS ROUTE
+const transportMonitorTrack = require('./src/routes/transport_routes/monitor_track.js');
+app.use('/', transportMonitorTrack);
+
 
 ////// ANDROID APP ROUTES ///
 
