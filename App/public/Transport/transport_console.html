@@ -10,6 +10,11 @@
     <link rel="stylesheet" href="/css/Transport_css/All_Transport.css">
     <link rel="stylesheet" href="/css/Transport_css/Transport-form-control.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
 
 </head>
@@ -113,16 +118,12 @@
 
         <div class="card">
             <a>
-                <button id="">
+                <button id="trackingMonitoringButton">
                     <div class="dotlottie-container">
-                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
-                            type="module"></script>
-
+                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
                         <dotlottie-player src="https://lottie.host/0ecdc1d6-aa73-4d04-8792-18e7889cb4ab/qEPEOPXW7E.json"
-                            background="transparent" speed="1" style="width: 270px; height: 220px;" loop
-                            autoplay></dotlottie-player>
-
-
+                            background="transparent" speed="1" style="width: 270px; height: 220px;" loop autoplay>
+                        </dotlottie-player>
                     </div>
                     <h3>Tracking and Monitoring</h3>
                 </button>
@@ -877,6 +878,15 @@
         </div>
     </div>
 
+    <!-- Transport Monitoring Overlay -->
+    <div id="transportMonitoringOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <h2>Transport Monitoring</h2>
+            <button id="closeTransportMonitoringOverlay" class="close-button">&times;</button>
+            <div id="map"></div>
+        </div>
+    </div>
+
 
     <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Transport_js/Transport_console.js"></script>
@@ -886,6 +896,7 @@
     <script src="/js/Transport_js/Transport_tagRouteShiftVehicle.js"></script>
     <script src="/js/Transport_js/Transport_allocateVehicle.js"></script>
     <script src="/js/Transport_js/Transport_getStudentDetails.js"></script>
+    <script src="/js/Transport_js/Transport_monitoring.js"></script>
 
 
 

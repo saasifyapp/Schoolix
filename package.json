@@ -15,6 +15,7 @@
     "http": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
+    "moment-timezone": "^0.5.46",
     "mysql": "^2.18.1",
     "mysql2": "^3.11.0",
     "node-cron": "^3.0.3",

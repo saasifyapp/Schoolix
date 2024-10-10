@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const allocateBusOverlay = document.getElementById('allocateBusOverlay'); // Changed from manageScheduleOverlay
     const tagRouteShiftOverlay = document.getElementById('tagRouteShiftOverlay');
     const listStudentsOverlay = document.getElementById('listStudentsOverlay'); // Changed from listSchedulingOverlay
-
+    const transportMonitoringOverlay = document.getElementById('transportMonitoringOverlay');
 
     // Buttons
     const driverConductorButton = document.getElementById('driverConductorButton');
@@ -32,7 +32,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const tagRouteShiftButton = document.getElementById('tagRouteShiftButton');
     const closeTagRouteShiftOverlay = document.getElementById('closeTagRouteShiftOverlay');
     const closeListStudentsOverlay = document.getElementById('closeListStudentsOverlay'); // Changed from closeListSchedulingOverlay
-
+    const trackingMonitoringButton = document.getElementById('trackingMonitoringButton');
+    const closeTransportMonitoringOverlay = document.getElementById('closeTransportMonitoringOverlay');
 
     // Show Driver/Conductor Selection Overlay
     driverConductorButton.addEventListener('click', function () {
@@ -147,7 +148,16 @@ document.addEventListener('DOMContentLoaded', function () {
     closeListStudentsOverlay.addEventListener('click', function () {
         hideOverlay('listStudentsOverlay'); // Changed from listSchedulingOverlay
     });
+    // Show Transport Monitoring Overlay
+    trackingMonitoringButton.addEventListener('click', function () {
+        hideAllOverlays();
+        showOverlay('transportMonitoringOverlay');
+    });
 
+    // Close Transport Monitoring Overlay
+    closeTransportMonitoringOverlay.addEventListener('click', function () {
+        hideOverlay('transportMonitoringOverlay');
+    });
 
     // Utility Functions to Show/Hide Overlays
     function showOverlay(overlayId) {
@@ -167,11 +177,10 @@ document.addEventListener('DOMContentLoaded', function () {
             'driverConductorOverlay', 'addDriverOverlay', 'searchDriverConductorOverlay',
             'routesShiftsOverlay', 'manageRoutesOverlay', 'manageShiftsOverlay',
             'busAllocationOverlay', 'allocateBusOverlay', 'tagRouteShiftOverlay',
-            'listStudentsOverlay' // Changed from listSchedulingOverlay
+            'listStudentsOverlay', 'transportMonitoringOverlay' // Added transportMonitoringOverlay
         ];
         overlays.forEach(hideOverlay);
     }
-
 
     // Function to reset the contents of input fields and suggestion containers
     function resetOverlayContents(overlay) {

@@ -137,7 +137,17 @@ function filterDriverConductorByType() {
 }
 
 async function deleteDriverConductor(id) {
-  if (!confirm("Are you sure you want to delete this entry?")) {
+  const confirmation = await Swal.fire({
+    title: "Are you sure?",
+    text: "Do you really want to delete this entry? This process cannot be undone.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, delete it!",
+    cancelButtonText: "No, cancel!",
+    reverseButtons: true
+  });
+
+  if (!confirmation.isConfirmed) {
     return; // User canceled the deletion
   }
 
@@ -147,22 +157,56 @@ async function deleteDriverConductor(id) {
       method: "DELETE",
     });
 
-    if (!response.ok) {
-      hideTransportLoadingAnimation();
-      throw new Error("Failed to delete the entry");
-    }
-    hideTransportLoadingAnimation();
     const result = await response.json();
-    showToast(result.message);
 
-    // Refresh the data and display after deletion
-    await refreshDriverConductorData();
+    hideTransportLoadingAnimation();
+
+    if (!response.ok) {
+      if (response.status === 400) {
+        // Specific error when driver/conductor is tagged
+        await Swal.fire({
+          icon: "error",
+          title: "Delete Failed",
+          html: `Cannot delete the driver.<br>
+                 <strong>Vehicle No:</strong> ${result.vehicle_no} [${result.driver_name}]<br><br>
+                 Please detag this vehicle from <br> <strong>Tagging Console</strong>.`,
+        });
+      } else {
+        // Generic error
+        await Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "An error occurred while deleting the entry. Please try again.",
+        });
+      }
+
+      // Only throw an error for unexpected cases to avoid logging the specific error
+      if (response.status !== 400) {
+        throw new Error(result.error);
+      }
+    } else {
+      await Swal.fire({
+        icon: "success",
+        title: "Delete Successful",
+        html: `<strong>Driver/Conductor:</strong> ${result.name} <br> has been successfully deleted.`,
+      });
+
+      // Refresh the data and display after deletion
+      await refreshDriverConductorData();
+    }
   } catch (error) {
     hideTransportLoadingAnimation();
     console.error("Error:", error);
-    showToast("An error occurred while deleting the entry. Please try again.");
+    if (error.message !== "Driver/Conductor is tagged to a route and shift. Please untag before deleting.") {
+      await Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "An error occurred while deleting the entry. Please try again.",
+      });
+    }
   }
 }
+
 
 const typeSelect = document.getElementById("type");
 const dynamicFields = document.getElementById("dynamicFields");

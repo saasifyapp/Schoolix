@@ -1094,6 +1094,18 @@ svg path {
     /* Stronger shadow on hover */
 }
 
+#map {
+    height: 90%; /* Ensure the map container takes full height of its parent */
+    width: 100%; /* Ensure the map container takes full width of its parent */
+}
+
+.leaflet-interactive {
+    stroke: #3939f0 !important;
+    stroke-width: 5 !important;
+    stroke-opacity: 1.0 !important;
+    stroke-dasharray: none !important; /* Ensure the line is continuous */
+}
+
 @keyframes fadeUp {
     from {
         opacity: 0;

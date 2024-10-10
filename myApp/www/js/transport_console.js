@@ -49,11 +49,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const showSpinner = () => {
-        spinner.classList.remove('hidden');
+        // spinner.classList.remove('hidden');
+        const spinnerContainer = document.getElementById('spinnerContainer');
+        spinnerContainer.style.display = 'flex'; // Show spinner container
     };
 
     const hideSpinner = () => {
-        spinner.classList.add('hidden');
+        // spinner.classList.add('hidden');
+        const spinnerContainer = document.getElementById('spinnerContainer');
+        spinnerContainer.style.display = 'none'; // Hide spinner container
     };
 
     const fetchDriverDetails = async () => {
@@ -234,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const displayDriverList = (data) => {
         detailedDriverList.innerHTML = '';
-    
+
         // Group students by routes
         const groupedByRoute = data.reduce((acc, item) => {
             const route = item.transport_pickup_drop;
@@ -244,32 +248,32 @@ document.addEventListener('DOMContentLoaded', () => {
             acc[route].push(item);
             return acc;
         }, {});
-    
+
         // Sort routes based on routeStops order
         const sortedRoutes = Object.keys(groupedByRoute).sort((a, b) => {
             return routeStops.indexOf(a) - routeStops.indexOf(b);
         });
-    
+
         // Colors for different routes
         const routeColors = ['#ffdddd', '#ddffdd', '#ddddff', '#ffffdd', '#ddffff', '#ffddff'];
-    
+
         // Render each route and its students
         sortedRoutes.forEach((route, index) => {
             // Create a route container
             const routeContainer = document.createElement('div');
             routeContainer.classList.add('route-container');
             routeContainer.style.backgroundColor = routeColors[index % routeColors.length];
-    
+
             // Create a route header with student count
             const studentCount = groupedByRoute[route].length;
             const routeHeader = document.createElement('h3');
             routeHeader.textContent = `Stop: ${route} | Students: ${studentCount}`;
             routeContainer.appendChild(routeHeader);
-    
+
             // Create a list for the students
             const studentList = document.createElement('ul');
             studentList.classList.add('student-list');
-    
+
             // Render students for this route
             groupedByRoute[route].forEach(item => {
                 const listItem = document.createElement('li');
@@ -296,23 +300,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `;
                 studentList.appendChild(listItem);
-    
+
                 listItem.querySelector('.not-picked').addEventListener('click', () => {
                     alert(`${item.name} not picked`);
                 });
-    
+
                 listItem.querySelector('.not-dropped').addEventListener('click', () => {
                     alert(`${item.name} not dropped`);
                 });
-    
+
                 listItem.querySelector('.call-button').addEventListener('click', () => {
                     window.location.href = `tel:${item.f_mobile_no}`;
                 });
             });
-    
+
             // Append the student list to the route container
             routeContainer.appendChild(studentList);
-    
+
             // Append the route container to the detailed driver list
             detailedDriverList.appendChild(routeContainer);
         });
@@ -321,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Search functionality
     searchBar.addEventListener('input', (event) => {
         const searchTerm = event.target.value.toLowerCase();
-        const filteredData = studentsData.filter(student => 
+        const filteredData = studentsData.filter(student =>
             student.name.toLowerCase().includes(searchTerm) ||
             student.class.toLowerCase().includes(searchTerm) ||
             student.f_mobile_no.toLowerCase().includes(searchTerm) ||
@@ -331,4 +335,76 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     fetchDriverDetails();
+
+    // Function to send coordinates to the database
+    const sendCoordinates = async (latitude, longitude, driverName, vehicleNumber) => {
+        try {
+            const response = await fetch('https://schoolix.saasifyapp.com/android/send-coordinates', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'db-host': dbCredentials.host,
+                    'db-user': dbCredentials.user,
+                    'db-password': dbCredentials.password,
+                    'db-database': dbCredentials.database
+                },
+                body: JSON.stringify({
+                    driverName: driverName,
+                    vehicleNumber: vehicleNumber,
+                    latitude: latitude,
+                    longitude: longitude
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to send coordinates: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('Coordinates sent successfully:', data);
+        } catch (error) {
+            console.error('Error sending coordinates:', error);
+        }
+    };
+
+    // Function to get the current location
+    const getCurrentLocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                console.log('Coordinates:', latitude, longitude);
+
+                // Assuming you have fetched the driver's details before
+                const driverName = driverNameField.textContent;
+                const vehicleNumber = vehicleNoField.textContent;
+
+                // Send coordinates to the server
+                await sendCoordinates(latitude, longitude, driverName, vehicleNumber);
+            }, (error) => {
+                console.error('Error getting location:', error);
+            }, {
+                enableHighAccuracy: true
+            });
+        } else {
+            alert('Geolocation is not supported by this browser.');
+        }
+    };
+
+    // Function to start sending coordinates every 2 minutes
+    const startSendingCoordinates = () => {
+        // Call the location function every 2 minutes (120000 milliseconds)
+        setInterval(getCurrentLocation, 120000);
+
+        // Trigger it immediately as well
+        getCurrentLocation();
+    };
+
+    // After successfully fetching driver details, start sending coordinates
+    fetchDriverDetails().then(() => {
+        startSendingCoordinates(); // Start sending the coordinates every 2 minutes
+    });
+
 });

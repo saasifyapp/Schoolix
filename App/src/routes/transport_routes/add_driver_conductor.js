@@ -298,27 +298,47 @@ router.delete('/deleteDriverConductor/:id', (req, res) => {
         const name = fetchResults[0].name;
         const username = name.replace(/\s+/g, '').toLowerCase(); // Generate the username
 
-        // Delete from transport_driver_conductor_details table
-        const deleteDriverConductorQuery = 'DELETE FROM transport_driver_conductor_details WHERE id = ?';
-        req.connectionPool.query(deleteDriverConductorQuery, [id], (deleteDriverConductorError, deleteDriverConductorResults) => {
-            if (deleteDriverConductorError) {
-                console.error('Error deleting driver/conductor:', deleteDriverConductorError);
+        // Check if the driver or vehicle is tagged in the transport_schedule_details table
+        const checkScheduleQuery = 'SELECT * FROM transport_schedule_details WHERE driver_name = ? OR conductor_name = ? LIMIT 1';
+        req.connectionPool.query(checkScheduleQuery, [name, name], (checkScheduleError, checkScheduleResults) => {
+            if (checkScheduleError) {
+                console.error('Error checking schedule details:', checkScheduleError);
                 return res.status(500).json({ error: 'Internal Server Error' });
             }
 
-            if (deleteDriverConductorResults.affectedRows === 0) {
-                return res.status(404).json({ error: 'Driver/Conductor not found' });
+            if (checkScheduleResults.length > 0) {
+                return res.status(400).json({ 
+                    error: 'Driver/Conductor is tagged to a route and shift. Please untag before deleting.',
+                    vehicle_no: checkScheduleResults[0].vehicle_no,
+                    driver_name: checkScheduleResults[0].driver_name,
+                    route_name: checkScheduleResults[0].route_name,
+                    shift_name: checkScheduleResults[0].shift_name,
+                    students_tagged: checkScheduleResults[0].students_tagged
+                });
             }
 
-            // Delete from android_app_users table
-            const deleteUserQuery = 'DELETE FROM android_app_users WHERE username = ?';
-            connection_auth.query(deleteUserQuery, [username], (deleteUserError, deleteUserResults) => {
-                if (deleteUserError) {
-                    console.error('Error deleting user:', deleteUserError);
+            // Delete from transport_driver_conductor_details table
+            const deleteDriverConductorQuery = 'DELETE FROM transport_driver_conductor_details WHERE id = ?';
+            req.connectionPool.query(deleteDriverConductorQuery, [id], (deleteDriverConductorError, deleteDriverConductorResults) => {
+                if (deleteDriverConductorError) {
+                    console.error('Error deleting driver/conductor:', deleteDriverConductorError);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
 
-                res.status(200).json({ message: 'Driver/Conductor and associated user deleted successfully' });
+                if (deleteDriverConductorResults.affectedRows === 0) {
+                    return res.status(404).json({ error: 'Driver/Conductor not found' });
+                }
+
+                // Delete from android_app_users table
+                const deleteUserQuery = 'DELETE FROM android_app_users WHERE username = ?';
+                connection_auth.query(deleteUserQuery, [username], (deleteUserError, deleteUserResults) => {
+                    if (deleteUserError) {
+                        console.error('Error deleting user:', deleteUserError);
+                        return res.status(500).json({ error: 'Internal Server Error' });
+                    }
+
+                    res.status(200).json({ message: 'Driver/Conductor and associated user deleted successfully', name: name });
+                });
             });
         });
     });
