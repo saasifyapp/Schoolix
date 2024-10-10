@@ -5,6 +5,16 @@ document.addEventListener('DOMContentLoaded', () => {
     let vehicleRoutes = {}; // Object to store routes by vehicle number
     const schoolCoordinates = { latitude: 18.55155648187179, longitude: 73.76337674561302 }; // Hardcoded school coordinates
 
+    // Helper function to read cookie by name
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    // Get school name from cookie and decode the URI component
+    const schoolName = decodeURIComponent(getCookie('schoolName')) || 'School';
+
     function initializeMap() {
         if (map) {
             map.invalidateSize(); // Ensure map is resized correctly
@@ -26,9 +36,17 @@ document.addEventListener('DOMContentLoaded', () => {
             popupAnchor: [0, -50]
         });
 
-        L.marker([schoolCoordinates.latitude, schoolCoordinates.longitude], { icon: schoolIcon })
+        const schoolMarker = L.marker([schoolCoordinates.latitude, schoolCoordinates.longitude], { icon: schoolIcon })
             .addTo(map)
-            .bindPopup('<b>School Location</b>');
+            .bindPopup(`<b>${schoolName} Location</b>`);
+
+        // Display school popup on hover
+        schoolMarker.on('mouseover', function () {
+            this.openPopup();
+        });
+        schoolMarker.on('mouseout', function () {
+            this.closePopup();
+        });
 
         fetchDataAndUpdateMap();
         setInterval(fetchDataAndUpdateMap, 120000); // Fetch and update map every 2 minutes
