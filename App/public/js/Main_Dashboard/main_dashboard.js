@@ -7,6 +7,7 @@ const sidebarClose = document.querySelector(".collapse_sidebar");
 const sidebarExpand = document.querySelector(".expand_sidebar");
 sidebarOpen.addEventListener("click", () => sidebar.classList.toggle("close"));
 
+
 // darkLight.addEventListener("click", () => {
 //     body.classList.toggle("dark");
 //     if (body.classList.contains("dark")) {
@@ -117,6 +118,27 @@ function displayUserInfo(cookieName, usernameElementId, logoElementId) {
 
 // Call the function to display the dynamic username and logo
 displayUserInfo("schoolName", "user_name", "logo");
+
+// Function to retrieve the value of a cookie by name
+function getCookieValue(cookieName) {
+  const cookies = document.cookie.split(";");  // Split the cookies by semicolon
+  for (let cookie of cookies) {
+    const [name, value] = cookie.trim().split("=");  // Trim spaces and split each cookie
+    if (name === cookieName) {
+      return decodeURIComponent(value);  // Decode and return the cookie value
+    }
+  }
+  return null;  // Return null if cookie not found
+}
+
+// Example usage
+const username = getCookieValue("username");
+if (username) {
+  console.log("Username from cookie:", username);
+} else {
+  console.log("Username cookie not found.");
+}
+
 
 //////////////// SIGNOUT FUNCTION /////////////
 
@@ -454,3 +476,87 @@ function updateCountWithAnimation(elementId, valueCallback) {
     // Start animation
     animationFrameId = window.requestAnimationFrame(step);
 }*/
+async function confirmSchoolLocation(loginName) {
+  // Check the user's confirmation status
+  const statusResponse = await fetch('/check-confirmation-status', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ loginName: loginName }),
+  });
+
+  const statusData = await statusResponse.json();
+
+  // Check if the user is found and if confirmation is needed
+  if (statusData.error) {
+      console.error(statusData.error);
+      return; // Handle error if user is not found
+  }
+
+  // Proceed only if confirmed_at_school is 0
+  if (statusData.confirmed_at_school === 0) {
+      // Ask the user if they are at the school's location using Swal
+      const result = await Swal.fire({
+          title: "Are you at the school's location?",
+          text: "Please confirm if you're currently at the school.",
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, I am',
+          cancelButtonText: 'No',
+      });
+
+      // Get the user's coordinates
+      navigator.geolocation.getCurrentPosition(async (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+
+          if (result.isConfirmed) {
+              // Send the coordinates to the server and confirm the location
+              const response = await fetch('/confirm-location', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                      loginName: loginName,
+                      latitude: latitude,
+                      longitude: longitude,
+                  }),
+              });
+
+              const data = await response.json();
+              if (data.success) {
+                  await Swal.fire({
+                      icon: 'success',
+                      title: 'Location Confirmed',
+                      text: 'Your location has been confirmed and saved.',
+                  });
+              } else {
+                  await Swal.fire({
+                      icon: 'info',
+                      title: 'Location Already Confirmed',
+                      text: 'You have already confirmed your location.',
+                  });
+              }
+          } else {
+              await Swal.fire({
+                  icon: 'info',
+                  title: 'Location Not Confirmed',
+                  text: 'Please confirm your location at the next login.',
+              });
+          }
+      }, (error) => {
+          console.error('Error getting location:', error);
+          Swal.fire({
+              icon: 'error',
+              title: 'Location Error',
+              text: 'Failed to get your location. Please enable location services and try again.',
+          });
+      });
+  } 
+}
+
+
+// Call this function when the user logs in, passing the login name
+confirmSchoolLocation(username); // Replace with the actual login name

@@ -41,7 +41,7 @@ router.get('/main_dashboard_data', (req, res) => {
         });
     });
 
-    
+
 
     // Once all counts are fetched, send them as a response
     Promise.all(promises)
@@ -105,6 +105,60 @@ router.get('/main_dashboard_library_data', (req, res) => {
             res.status(500).json({ error: 'Error fetching counts from MySQL' });
         });
 });
+
+// Helper function to wrap connectionPool query in a promise
+const runQuery = (connectionPool, sql, params) => {
+    return new Promise((resolve, reject) => {
+        connectionPool.query(sql, params, (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+};
+
+// POST endpoint to check confirmation status
+router.post('/check-confirmation-status', async (req, res) => {
+    const { loginName } = req.body;
+
+    const checkUserSql = `SELECT confirmed_at_school FROM user_details WHERE LoginName = ?`;
+    try {
+        // Use the runQuery helper function to execute the query
+        const userResults = await runQuery(req.connectionPool, checkUserSql, [loginName]);
+
+        if (userResults.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const confirmedAtSchool = userResults[0].confirmed_at_school;
+        return res.json({ confirmed_at_school: confirmedAtSchool });
+    } catch (error) {
+        console.error('Error checking confirmation status:', error);
+        return res.status(500).json({ error: 'Database query failed' });
+    }
+});
+
+
+
+// POST endpoint to confirm user location
+router.post('/confirm-location', async (req, res) => {
+    const { loginName, latitude, longitude } = req.body;
+
+    try {
+
+        // Save the coordinates and mark the user as confirmed
+        const updateSql = `UPDATE user_details SET fixed_latitude = ?, fixed_longitude = ?, confirmed_at_school = 1 WHERE LoginName = ?`;
+        await runQuery(req.connectionPool, updateSql, [latitude, longitude, loginName]);
+
+        return res.json({ success: true, message: 'Location confirmed and saved.' });
+    } catch (error) {
+        console.error('Error in confirm-location:', error);
+        return res.status(500).json({ error: 'Database query failed' });
+    }
+});
+
 
 
 // Endpoint to get Student counts //

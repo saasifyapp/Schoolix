@@ -19,11 +19,16 @@
     <icon src="res/icon/android/icon-xxhdpi.png" target="android" density="xxhdpi" />
     <icon src="res/icon/android/icon-xxxhdpi.png" target="android" density="xxxhdpi" />
 
- <!-- Add access permissions for geolocation -->
+    <!-- Add access permissions for geolocation -->
     <platform name="android">
-        <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest">
+        <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/uses-permission[@android:name='android.permission.ACCESS_COARSE_LOCATION']" xmlns:android="http://schemas.android.com/apk/res/android">
             <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+        </edit-config>
+        <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/uses-permission[@android:name='android.permission.ACCESS_FINE_LOCATION']" xmlns:android="http://schemas.android.com/apk/res/android">
             <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
         </edit-config>
     </platform>
+
+    <!-- Add the Geolocation Plugin -->
+    <plugin name="cordova-plugin-geolocation" spec="^4.0.2" />
 </widget>
