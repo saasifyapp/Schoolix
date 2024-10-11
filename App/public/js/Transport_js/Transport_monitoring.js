@@ -1,9 +1,9 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const transportMonitoringOverlay = document.getElementById('transportMonitoringOverlay');
     let map;
     let vehicleMarkers = {}; // Object to store vehicle markers by vehicle number
     let vehicleRoutes = {}; // Object to store routes by vehicle number
-    const schoolCoordinates = { latitude: 18.55155648187179, longitude: 73.76337674561302 }; // Hardcoded school coordinates
+    let schoolCoordinates = { latitude: 0, longitude: 0 }; // Placeholder for school coordinates
 
     // Helper function to read cookie by name
     function getCookie(name) {
@@ -15,13 +15,31 @@ document.addEventListener('DOMContentLoaded', () => {
     // Get school name from cookie and decode the URI component
     const schoolName = decodeURIComponent(getCookie('schoolName')) || 'School';
 
+    // Fetch school's location from the server
+    async function fetchSchoolLocation() {
+        try {
+            const response = await fetch('/getSchoolLocation');
+            const data = await response.json();
+            if (response.ok) {
+                schoolCoordinates = { latitude: data.fixed_latitude, longitude: data.fixed_longitude };
+                console.log('Fetched school coordinates:', schoolCoordinates);
+            } else {
+                console.error('Error fetching school location:', data.error);
+            }
+        } catch (error) {
+            console.error('Error fetching school location:', error);
+        }
+    }
+
+    await fetchSchoolLocation(); // Fetch school location before initializing the map
+
     function initializeMap() {
         if (map) {
             map.invalidateSize(); // Ensure map is resized correctly
             return;
         }
 
-        map = L.map('map').setView([20.5937, 78.9629], 5); // Centered on India
+        map = L.map('map').setView([schoolCoordinates.latitude, schoolCoordinates.longitude], 15); // Centered on the school
 
         // Add OpenStreetMap tiles
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
