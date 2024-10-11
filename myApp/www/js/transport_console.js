@@ -426,7 +426,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const driverName = driverNameField.textContent;
 
         try {
-            const response = await fetch('http://localhost:3000/android/log-pick-drop-event', {
+            const response = await fetch('https://schoolix.saasifyapp.com/android/log-pick-drop-event', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
