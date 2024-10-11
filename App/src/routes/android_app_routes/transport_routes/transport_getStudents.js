@@ -180,5 +180,46 @@ router.get('/android/get-student-details', connectionManagerAndroid, (req, res) 
     });
 });
 
+
+// Endpoint to log pick/drop events
+router.post('/android/log-pick-drop-event', connectionManagerAndroid, (req, res) => {
+    const { studentName, pickDropLocation, dateOfLog, typeOfLog, vehicleNo, driverName, shift, standard } = req.body;
+
+    if (!studentName || !pickDropLocation || !dateOfLog || !typeOfLog || !vehicleNo || !driverName || !shift || !standard) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    const checkQuery = `
+        SELECT * FROM transport_pick_drop_logs 
+        WHERE student_name = ? AND pick_drop_location = ? AND date_of_log = ? AND type_of_log = ? AND vehicle_no = ? AND driver_name = ? AND shift = ? AND standard = ?
+    `;
+
+    req.connectionPool.query(checkQuery, [studentName, pickDropLocation, dateOfLog, typeOfLog, vehicleNo, driverName, shift, standard], (error, results) => {
+        if (error) {
+            console.error('Error querying database:', error);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        if (results.length > 0) {
+            return res.status(409).json({ message: `Student already logged under ${typeOfLog} category for this date` }); // 409 Conflict
+        }
+
+        const insertQuery = `
+            INSERT INTO transport_pick_drop_logs (student_name, pick_drop_location, date_of_log, type_of_log, vehicle_no, driver_name, shift, standard)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+
+        req.connectionPool.query(insertQuery, [studentName, pickDropLocation, dateOfLog, typeOfLog, vehicleNo, driverName, shift, standard], (error, results) => {
+            if (error) {
+                console.error('Error inserting into database:', error);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            res.status(201).json({ message: 'Log entry created successfully' });
+        });
+    });
+});
+
+
 module.exports = router;
 

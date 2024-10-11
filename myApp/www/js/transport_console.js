@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let driverName = sessionStorage.getItem('driverName');
     let routeStops = []; // Store route stops
     let studentsData = []; // Store the fetched students data
+    let currentShiftName = ''; // Store the current shift name
 
     if (!dbCredentials) {
         console.error('Database credentials not found in session storage.');
@@ -49,13 +50,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const showSpinner = () => {
-        // spinner.classList.remove('hidden');
         const spinnerContainer = document.getElementById('spinnerContainer');
         spinnerContainer.style.display = 'flex'; // Show spinner container
     };
 
     const hideSpinner = () => {
-        // spinner.classList.add('hidden');
         const spinnerContainer = document.getElementById('spinnerContainer');
         spinnerContainer.style.display = 'none'; // Hide spinner container
     };
@@ -234,6 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedShiftField.textContent = data.shift_name;
         totalStopsField.textContent = data.route_stops_count;
         totalStudentsField.textContent = data.students_tagged;
+        currentShiftName = data.shift_name; // Store the current shift name
     };
 
     const displayDriverList = (data) => {
@@ -301,12 +301,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
                 studentList.appendChild(listItem);
 
-                listItem.querySelector('.not-picked').addEventListener('click', () => {
-                    alert(`${item.name} not picked`);
+                listItem.querySelector('.not-picked').addEventListener('click', async () => {
+                    const result = await logPickDropEvent(item.name, item.transport_pickup_drop, 'not_picked', currentShiftName, item.class);
+                    if (result === 'exists') {
+                        alert('Student already logged under not_picked category for this date');
+                    } else {
+                        alert(`${item.name} not picked`);
+                    }
                 });
 
-                listItem.querySelector('.not-dropped').addEventListener('click', () => {
-                    alert(`${item.name} not dropped`);
+                listItem.querySelector('.not-dropped').addEventListener('click', async () => {
+                    const result = await logPickDropEvent(item.name, item.transport_pickup_drop, 'not_dropped', currentShiftName, item.class);
+                    if (result === 'exists') {
+                        alert('Student already logged under not_dropped category for this date');
+                    } else {
+                        alert(`${item.name} not dropped`);
+                    }
                 });
 
                 listItem.querySelector('.call-button').addEventListener('click', () => {
@@ -406,5 +416,51 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchDriverDetails().then(() => {
         startSendingCoordinates(); // Start sending the coordinates every 2 minutes
     });
+
+    // Function to log pick/drop events
+    const logPickDropEvent = async (studentName, pickDropLocation, typeOfLog, shift, standard) => {
+        const dateOfLog = new Date().toISOString().split('T')[0]; // Get the current date in YYYY-MM-DD format
+        const vehicleNo = vehicleNoField.textContent;
+        const driverName = driverNameField.textContent;
+
+        try {
+            const response = await fetch('http://localhost:3000/android/log-pick-drop-event', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'db-host': dbCredentials.host,
+                    'db-user': dbCredentials.user,
+                    'db-password': dbCredentials.password,
+                    'db-database': dbCredentials.database
+                },
+                body: JSON.stringify({
+                    studentName: studentName,
+                    pickDropLocation: pickDropLocation,
+                    dateOfLog: dateOfLog,
+                    typeOfLog: typeOfLog,
+                    vehicleNo: vehicleNo,
+                    driverName: driverName,
+                    shift: shift,
+                    standard: standard
+                }),
+            });
+
+            if (response.status === 409) {
+                return 'exists';
+            }
+
+            if (!response.ok) {
+                throw new Error(`Failed to log event: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('Event logged successfully:', data);
+            return 'success';
+        } catch (error) {
+            console.error('Error logging event:', error);
+            return 'error';
+        }
+    };
 
 });
