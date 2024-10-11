@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         backToConsoleButton.addEventListener('click', () => {
             driverDetailsScreen.classList.add('hidden');
             driverConsole.classList.remove('hidden');
+            searchBar.value = ''; // Clear the search field when going back to the console
         });
     }
 
@@ -121,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Clear previous data and show spinner immediately
                     detailedDriverList.innerHTML = '';
                     showSpinner();
+                    searchBar.value = ''; // Clear the search field when switching shifts
 
                     fetchDriverListForShift(shift);
                     fetchShiftDetails(shift); // Fetch shift details
