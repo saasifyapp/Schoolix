@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await response.json();
             if (response.ok) {
                 schoolCoordinates = { latitude: data.fixed_latitude, longitude: data.fixed_longitude };
-                console.log('Fetched school coordinates:', schoolCoordinates);
             } else {
                 console.error('Error fetching school location:', data.error);
             }
@@ -72,10 +71,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function fetchDataAndUpdateMap() {
         try {
-            console.log('Sending request to fetch coordinates...');
             const response = await fetch('/fetch-all-coordinates');
             const data = await response.json();
-            console.log('Fetched data:', data);
 
             if (response.ok) {
                 let bounds = [];
@@ -89,7 +86,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     // Update existing marker or create a new one
                     if (vehicleMarkers[vehicle_no]) {
-                        console.log(`Updating marker for vehicle: ${vehicle_no} at (${latitude}, ${longitude})`);
                         vehicleMarkers[vehicle_no].setLatLng(vehicleLatLng);
                         vehicleMarkers[vehicle_no].getPopup().setContent(popupContent);
 
@@ -98,7 +94,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                             map.removeControl(vehicleRoutes[vehicle_no]);
                         }
                     } else {
-                        console.log(`Adding marker for new vehicle: ${vehicle_no} at (${latitude}, ${longitude})`);
                         const customIcon = L.icon({
                             iconUrl: '/images/busIcon.png',
                             iconSize: [50, 50],
@@ -169,16 +164,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     document.getElementById('trackingMonitoringButton').addEventListener('click', () => {
-        console.log('Showing transport monitoring overlay...');
         transportMonitoringOverlay.style.display = 'flex';
         setTimeout(() => {
-            console.log('Initializing map after delay...');
             initializeMap();
         }, 500);
     });
 
     document.getElementById('closeTransportMonitoringOverlay').addEventListener('click', () => {
-        console.log('Hiding transport monitoring overlay...');
         transportMonitoringOverlay.style.display = 'none';
     });
 });

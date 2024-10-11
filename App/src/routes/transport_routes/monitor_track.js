@@ -23,8 +23,8 @@ router.get('/getSchoolLocation', (req, res) => {
     const sql = 'SELECT fixed_latitude, fixed_longitude FROM user_details WHERE schoolName = ? AND LoginName = ? LIMIT 1';
     const params = [schoolName, username];
 
-    console.log('SQL Query:', sql);
-    console.log('Parameters:', params);
+    //console.log('SQL Query:', sql);
+    //console.log('Parameters:', params);
 
     connection_auth.query(sql, params, (error, results) => {
         if (error) {
@@ -37,7 +37,7 @@ router.get('/getSchoolLocation', (req, res) => {
             return res.status(404).json({ error: 'School location not found' });
         }
 
-        console.log('Query Results:', results);
+        //console.log('Query Results:', results);
         res.status(200).json(results[0]);
     });
 });
