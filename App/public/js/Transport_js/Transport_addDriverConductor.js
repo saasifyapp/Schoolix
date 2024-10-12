@@ -465,7 +465,7 @@ function editDriverConductor(id) {
 </div>
 
           <div class="form-group">
-    <input type="text" id="editVehicleNo" name="vehicleNo" class="form-control" value="${
+    <input readonly type="text" id="editVehicleNo" name="vehicleNo" class="form-control" value="${
       driverConductorDetails.vehicle_no || ""
     }" style="text-align: center;">
     <span class="form-control-placeholder">Vehicle Number</span>
@@ -558,7 +558,7 @@ function editDriverConductor(id) {
           </div>
           <div>
               <label for="editVehicleNo">Vehicle Number:</label>
-              <input type="text" id="editVehicleNo" name="vehicleNo" class="form-control" value="${
+              <input type="text" id="editVehicleNo" name="vehicleNo" class="form-control" readonly value="${
                 driverConductorDetails.vehicle_no || ""
               }">
 
@@ -644,96 +644,46 @@ function closeEditPopup() {
 
 async function saveDriverConductorDetails() {
   showTransportLoadingAnimation();
-  const id = document.getElementById("editDriverConductorForm").dataset
-    .currentId;
-  const driverConductorType =
-    document.getElementById("editTypeDisplay").textContent;
+  const id = document.getElementById("editDriverConductorForm").dataset.currentId;
+  const driverConductorType = document.getElementById("editTypeDisplay").textContent;
 
-  // Retrieve the original capacity and additional capacity inputs
-  const originalCapacity = document.getElementById("originalCapacity")
-    ? parseInt(document.getElementById("originalCapacity").value, 10)
-    : 0;
-  const additionalCapacity = document.getElementById("additionalCapacity")
-    ? parseInt(document.getElementById("additionalCapacity").value, 10) || 0
-    : 0;
-
-  // Calculate the total vehicle capacity
+  const originalCapacity = parseInt(document.getElementById("originalCapacity").value, 10) || 0;
+  const additionalCapacity = parseInt(document.getElementById("additionalCapacity").value, 10) || 0;
   const totalVehicleCapacity = originalCapacity + additionalCapacity;
 
-  // const updatedDetails = {
-  //   id: id,
-  //   name: document.getElementById('editName').value,
-  //   contact: document.getElementById('editContact').value,
-  //   address: document.getElementById('editAddress').value,
-  //   type: driverConductorType,
-  //   vehicle_no: document.getElementById('editVehicleNo') ? document.getElementById('editVehicleNo').value : '',
-  //   vehicle_type: document.getElementById('editVehicleType') ? document.getElementById('editVehicleType').value : '',
-  //   vehicle_capacity: totalVehicleCapacity,
-  //   new_seats: additionalCapacity  // Add new seats value to the object
-  // };
-
   const updatedDetails = {
-    id: id,
-    name: formatInput(document.getElementById("editName").value),
-    contact: formatInput(document.getElementById("editContact").value),
-    address: formatInput(document.getElementById("editAddress").value),
-    type: driverConductorType,
-    vehicle_no: document.getElementById("editVehicleNo")
-      ? formatInput(document.getElementById("editVehicleNo").value)
-      : "",
-    vehicle_type: document.getElementById("editVehicleType")
-      ? formatInput(document.getElementById("editVehicleType").value)
-      : "",
-    vehicle_capacity: totalVehicleCapacity, // Assuming this is already validated and sanitized
-    new_seats: formatInput(additionalCapacity), // Ensure to sanitize if it's a string input
+      id,
+      name: formatInput(document.getElementById("editName").value),
+      contact: formatInput(document.getElementById("editContact").value),
+      address: formatInput(document.getElementById("editAddress").value),
+      driver_conductor_type: driverConductorType,
+      vehicle_no: formatInput(document.getElementById("editVehicleNo").value),
+      vehicle_type: formatInput(document.getElementById("editVehicleType").value),
+      vehicle_capacity: totalVehicleCapacity,
+      new_seats: additionalCapacity,
   };
 
-  // Validate driver/conductor details before sending data to the server
   try {
-    const validationResponse = await fetch("/validateDriverConductorDetails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedDetails),
-    });
-
-    const validationResult = await validationResponse.json();
-
-    if (!validationResult.isValid) {
-      hideTransportLoadingAnimation();
-      Swal.fire({
-        icon: "error",
-        title: "Validation Error",
-        html: validationResult.message,
+      const response = await fetch("/updateAllDetails", {
+          method: "PUT",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedDetails),
       });
-      return;
-    }
 
-    // Call the API to save driver/conductor details (implement the backend for this)
-    const response = await fetch("/editDriverConductor", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedDetails),
-    });
+      if (!response.ok) {
+          throw new Error("Failed to update details");
+      }
 
-    if (!response.ok) {
-      hideTransportLoadingAnimation();
-      throw new Error("Failed to update details");
-    }
-
-    showToast("Details Updated Successfully");
-
-    // Refresh the displayed data
-    refreshDriverConductorData();
-
-    // Close the popup
-    closeEditPopup();
+      showToast("All details updated successfully");
+      refreshDriverConductorData();
+      closeEditPopup();
   } catch (error) {
-    hideTransportLoadingAnimation();
-    console.error("Error saving driver/conductor details:", error);
-    showToast("An error occurred while updating the details.");
+      console.error("Error saving driver/conductor details:", error);
+      showToast("An error occurred while updating the details.");
+  } finally {
+      hideTransportLoadingAnimation();
   }
 }
+
