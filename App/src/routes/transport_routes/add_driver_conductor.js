@@ -84,8 +84,8 @@ router.post('/validateDriverConductorDetails', (req, res) => {
         }
 
         if (validateResultsName.length > 0) {
-            return res.status(400).json({ 
-                isValid: false, 
+            return res.status(400).json({
+                isValid: false,
                 message: `A driver/conductor with the name '<strong>${name}</strong>' already exists.`
             });
         }
@@ -98,8 +98,8 @@ router.post('/validateDriverConductorDetails', (req, res) => {
                 }
 
                 if (validateResultsVehicleNo.length > 0) {
-                    return res.status(400).json({ 
-                        isValid: false, 
+                    return res.status(400).json({
+                        isValid: false,
                         message: `A driver with the vehicle number '<strong>${vehicle_no}</strong>' already exists.`
                     });
                 }
@@ -112,8 +112,8 @@ router.post('/validateDriverConductorDetails', (req, res) => {
                         }
 
                         if (validateResultsExistingConductor.length > 0) {
-                            return res.status(400).json({ 
-                                isValid: false, 
+                            return res.status(400).json({
+                                isValid: false,
                                 message: `The vehicle number '<strong>${vehicle_no}</strong>' already has a conductor assigned.`
                             });
                         }
@@ -126,8 +126,8 @@ router.post('/validateDriverConductorDetails', (req, res) => {
                                 }
 
                                 if (validateResultsConductorVehicle.length > 0) {
-                                    return res.status(400).json({ 
-                                        isValid: false, 
+                                    return res.status(400).json({
+                                        isValid: false,
                                         message: `The vehicle number '<strong>${vehicle_no}</strong>' is already assigned to the conductor '<strong>${name}</strong>'.`
                                     });
                                 }
@@ -146,8 +146,8 @@ router.post('/validateDriverConductorDetails', (req, res) => {
                         }
 
                         if (validateResultsConductorVehicle.length > 0) {
-                            return res.status(400).json({ 
-                                isValid: false, 
+                            return res.status(400).json({
+                                isValid: false,
                                 message: `The vehicle number '<strong>${vehicle_no}</strong>' is already assigned to the conductor '<strong>${name}</strong>'.`
                             });
                         }
@@ -166,8 +166,8 @@ router.post('/validateDriverConductorDetails', (req, res) => {
                 }
 
                 if (validateResultsExistingConductor.length > 0) {
-                    return res.status(400).json({ 
-                        isValid: false, 
+                    return res.status(400).json({
+                        isValid: false,
                         message: `The vehicle number '<strong>${vehicle_no}</strong>' already has a conductor assigned.`
                     });
                 }
@@ -180,8 +180,8 @@ router.post('/validateDriverConductorDetails', (req, res) => {
                         }
 
                         if (validateResultsConductorVehicle.length > 0) {
-                            return res.status(400).json({ 
-                                isValid: false, 
+                            return res.status(400).json({
+                                isValid: false,
                                 message: `The vehicle number '<strong>${vehicle_no}</strong>' is already assigned to the conductor '<strong>${name}</strong>'.`
                             });
                         }
@@ -200,8 +200,8 @@ router.post('/validateDriverConductorDetails', (req, res) => {
                 }
 
                 if (validateResultsConductorVehicle.length > 0) {
-                    return res.status(400).json({ 
-                        isValid: false, 
+                    return res.status(400).json({
+                        isValid: false,
                         message: `The vehicle number '<strong>${vehicle_no}</strong>' is already assigned to the conductor '<strong>${name}</strong>'.`
                     });
                 }
@@ -248,19 +248,21 @@ router.post('/addDriverConductor', (req, res) => {
         }
 
         // Now, insert data into the android_app_users table
+        // Now, insert data into the android_app_users table
         const sqlUser = `
-            INSERT INTO android_app_users (username, password, school_name, type, name)
-            VALUES (?, ?, ?, ?, ?)
-        `;
-        const valuesUser = [username, password, schoolName, userType, name];
+INSERT INTO android_app_users (username, password, school_name, type, name, dr_id)
+VALUES (?, ?, ?, ?, ?, ?)
+`;
+        const valuesUser = [username, password, schoolName, userType, name, resultsDriverConductor.insertId]; // Include dr_id
+
 
         connection_auth.query(sqlUser, valuesUser, (error, resultsUser) => {
             if (error) {
                 return res.status(500).json({ error: 'Database insertion failed for user details' });
             }
 
-            res.status(200).json({ 
-                message: 'Driver/Conductor added successfully', 
+            res.status(200).json({
+                message: 'Driver/Conductor added successfully',
                 driverConductorId: resultsDriverConductor.insertId,
                 userId: resultsUser.insertId
             });
@@ -307,7 +309,7 @@ router.delete('/deleteDriverConductor/:id', (req, res) => {
             }
 
             if (checkScheduleResults.length > 0) {
-                return res.status(400).json({ 
+                return res.status(400).json({
                     error: 'Driver/Conductor is tagged to a route and shift. Please untag before deleting.',
                     vehicle_no: checkScheduleResults[0].vehicle_no,
                     driver_name: checkScheduleResults[0].driver_name,
@@ -344,94 +346,254 @@ router.delete('/deleteDriverConductor/:id', (req, res) => {
     });
 });
 
-router.put('/editDriverConductor', async (req, res) => {
-    const { id, name, contact, address, driver_conductor_type, vehicle_no, vehicle_type, vehicle_capacity, new_seats } = req.body;
+// /// Combined Update API
+// router.put('/updateAllDetails', async (req, res) => {
+//     const { id, name, contact, address, driver_conductor_type, vehicle_no, vehicle_type, vehicle_capacity, new_seats, dr_id } = req.body;
+
+//     try {
+//         // 1. Update Android App Users Table
+//         const username = name;
+//         username.replace(/\s+/g, '').toLowerCase(); // Remove spaces and convert to lowercase
+//         const password = `school@${username}`;
+
+//         const sqlAndroidAppUsers = `
+//             UPDATE android_app_users
+//             SET username = ?, password = ?, name = ?
+//             WHERE dr_id = ?
+//         `;
+//         await req.connectionPool.query(sqlAndroidAppUsers, [username, password, name, dr_id]);
+
+//         // 2. Update Driver/Conductor Details Table
+//         const updates = [];
+//         const params = [];
+
+//         if (name) {
+//             updates.push('name = ?');
+//             params.push(name);
+//         }
+//         if (contact) {
+//             updates.push('contact = ?');
+//             params.push(contact);
+//         }
+//         if (address) {
+//             updates.push('address = ?');
+//             params.push(address);
+//         }
+//         if (driver_conductor_type) {
+//             updates.push('driver_conductor_type = ?');
+//             params.push(driver_conductor_type);
+//         }
+//         if (vehicle_no) {
+//             updates.push('vehicle_no = ?');
+//             params.push(vehicle_no);
+//         }
+//         if (vehicle_type) {
+//             updates.push('vehicle_type = ?');
+//             params.push(vehicle_type);
+//         }
+//         if (vehicle_capacity) {
+//             updates.push('vehicle_capacity = ?');
+//             params.push(vehicle_capacity);
+//         }
+
+//         params.push(id);
+
+//         const sqlDriverConductor = `
+//             UPDATE transport_driver_conductor_details
+//             SET ${updates.join(', ')}
+//             WHERE id = ?
+//         `;
+//         await req.connectionPool.query(sqlDriverConductor, params);
+
+//         // 3. Update Transport Schedule Details Table
+//         if (vehicle_no) {
+//             // Get the driver's name to update in schedule details
+//             const driverName = name; // Use the updated name directly
+
+//             const sqlScheduleDetails = `
+//                 UPDATE transport_schedule_details
+//                 SET driver_name = ?
+//                 WHERE vehicle_no = ?
+//             `;
+//             await req.connectionPool.query(sqlScheduleDetails, [driverName, vehicle_no]);
+
+//             // Update available seats and vehicle capacity if applicable
+//             const results = await req.connectionPool.query(`
+//                 SELECT available_seats, vehicle_capacity
+//                 FROM transport_schedule_details
+//                 WHERE vehicle_no = ?
+//             `, [vehicle_no]);
+
+//             if (results.length > 0) {
+//                 const { available_seats, vehicle_capacity: existing_vehicle_capacity } = results[0];
+
+//                 const new_available_seats = available_seats + new_seats;
+//                 const new_vehicle_capacity = existing_vehicle_capacity + new_seats;
+
+//                 const sqlUpdateCapacity = `
+//                     UPDATE transport_schedule_details
+//                     SET available_seats = ?, vehicle_capacity = ?
+//                     WHERE vehicle_no = ?
+//                 `;
+//                 await req.connectionPool.query(sqlUpdateCapacity, [new_available_seats, new_vehicle_capacity, vehicle_no]);
+//             }
+//         }
+
+//         res.status(200).json({ message: 'All details updated successfully' });
+//     } catch (error) {
+//         console.error('Error updating details:', error);
+//         res.status(500).json({ message: 'Failed to update details' });
+//     }
+// });
+
+router.put('/updateAllDetails', async (req, res) => {
+    const { id, name, contact, address, driver_conductor_type, vehicle_no, vehicle_type, vehicle_capacity, new_seats, dr_id } = req.body;
+    let conn;
 
     try {
-        // Prepare SQL query parts for the driver/conductor details table
+        // Get a connection from the pool
+        conn = await new Promise((resolve, reject) => {
+            req.connectionPool.getConnection((err, connection) => {
+                if (err) reject(err);
+                else resolve(connection);
+            });
+        });
+
+        // Start a transaction
+        await new Promise((resolve, reject) => {
+            conn.beginTransaction(err => {
+                if (err) reject(err);
+                else resolve();
+            });
+        });
+
+        // 1. Update Android App Users Table
+        const username = name.replace(/\s+/g, '').toLowerCase(); // Remove spaces and convert to lowercase
+        const password = `school@${username}`;
+
+        const sqlAndroidAppUsers = `
+            UPDATE android_app_users
+            SET username = ?, password = ?, name = ?
+            WHERE dr_id = ?
+        `;
+        const androidAppResult = await conn.query(sqlAndroidAppUsers, [username, password, name, dr_id]);
+        if (androidAppResult.affectedRows === 0) {
+            throw new Error('Failed to update android_app_users table: No rows affected');
+        }
+
+        // 2. Update Driver/Conductor Details Table
         const updates = [];
         const params = [];
 
-        if (name !== undefined) {
+        if (name) {
             updates.push('name = ?');
             params.push(name);
         }
-        if (contact !== undefined) {
+        if (contact) {
             updates.push('contact = ?');
             params.push(contact);
         }
-        if (address !== undefined) {
+        if (address) {
             updates.push('address = ?');
             params.push(address);
         }
-        if (driver_conductor_type !== undefined) {
+        if (driver_conductor_type) {
             updates.push('driver_conductor_type = ?');
             params.push(driver_conductor_type);
         }
-        if (vehicle_no !== undefined) {
+        if (vehicle_no) {
             updates.push('vehicle_no = ?');
             params.push(vehicle_no);
-        } 
-        if (vehicle_type !== undefined) {
+        }
+        if (vehicle_type) {
             updates.push('vehicle_type = ?');
             params.push(vehicle_type);
         }
-        if (vehicle_capacity !== undefined) {
+        if (vehicle_capacity) {
             updates.push('vehicle_capacity = ?');
             params.push(vehicle_capacity);
         }
 
-        // Add the ID as the last parameter
         params.push(id);
 
-        // Construct the SQL query for the driver/conductor details table
         const sqlDriverConductor = `
             UPDATE transport_driver_conductor_details
             SET ${updates.join(', ')}
             WHERE id = ?
         `;
+        const driverConductorResult = await conn.query(sqlDriverConductor, params);
+        if (driverConductorResult.affectedRows === 0) {
+            throw new Error('Failed to update transport_driver_conductor_details table: No rows affected');
+        }
 
-        // Execute the update query for the driver/conductor details table
-        await req.connectionPool.query(sqlDriverConductor, params);
-
-        // Now handle the update for the transport_schedule_details table
+        // 3. Update Transport Schedule Details Table
         if (vehicle_no) {
-            // Retrieve existing values of available_seats and vehicle_capacity
-            req.connectionPool.query(`
+            // Get the driver's name to update in schedule details
+            const driverName = name; // Use the updated name directly
+
+            const sqlScheduleDetails = `
+                UPDATE transport_schedule_details
+                SET driver_name = ?
+                WHERE vehicle_no = ?
+            `;
+            const scheduleResult = await conn.query(sqlScheduleDetails, [driverName, vehicle_no]);
+            if (scheduleResult.affectedRows === 0) {
+                throw new Error('Failed to update transport_schedule_details table: No rows affected');
+            }
+
+            // Update available seats and vehicle capacity if applicable
+            const results = await conn.query(`
                 SELECT available_seats, vehicle_capacity
                 FROM transport_schedule_details
                 WHERE vehicle_no = ?
-            `, [vehicle_no], async (error, results) => {
-                if (error) {
-                    throw error;
+            `, [vehicle_no]);
+
+            if (results.length > 0) {
+                const { available_seats, vehicle_capacity: existing_vehicle_capacity } = results[0];
+
+                const new_available_seats = available_seats + new_seats;
+                const new_vehicle_capacity = existing_vehicle_capacity + new_seats;
+
+                const sqlUpdateCapacity = `
+                    UPDATE transport_schedule_details
+                    SET available_seats = ?, vehicle_capacity = ?
+                    WHERE vehicle_no = ?
+                `;
+                const updateCapacityResult = await conn.query(sqlUpdateCapacity, [new_available_seats, new_vehicle_capacity, vehicle_no]);
+                if (updateCapacityResult.affectedRows === 0) {
+                    throw new Error('Failed to update transport_schedule_details table: No rows affected');
                 }
-
-                if (results.length > 0) {
-                    const { available_seats, vehicle_capacity: existing_vehicle_capacity } = results[0];
-
-                    // Calculate new values
-                    const new_available_seats = available_seats + new_seats;
-                    const new_vehicle_capacity = existing_vehicle_capacity + new_seats;
-
-                    // Update the transport_schedule_details table
-                    const sqlScheduleDetails = `
-                        UPDATE transport_schedule_details
-                        SET available_seats = ?, vehicle_capacity = ?
-                        WHERE vehicle_no = ?
-                    `;
-
-                    await req.connectionPool.query(sqlScheduleDetails, [new_available_seats, new_vehicle_capacity, vehicle_no]);
-                }
-
-                res.status(200).json({ message: 'Details updated successfully' });
-            });
-        } else {
-            res.status(200).json({ message: 'Details updated successfully' });
+            }
         }
+
+        // Commit the transaction
+        await new Promise((resolve, reject) => {
+            conn.commit(err => {
+                if (err) reject(err);
+                else resolve();
+            });
+        });
+
+        res.status(200).json({ message: 'All details updated successfully' });
+
     } catch (error) {
-        console.error('Error updating driver/conductor details:', error);
-        res.status(500).json({ message: 'Failed to update details' });
+        console.error('Error updating details:', error);
+        if (conn) {
+            // Rollback the transaction in case of error
+            await new Promise((resolve, reject) => {
+                conn.rollback(() => {
+                    resolve();
+                });
+            });
+        }
+        res.status(500).json({ message: 'Failed to update details', error: error.message });
+    } finally {
+        if (conn) {
+            // Release the connection back to the pool
+            conn.release();
+        }
     }
 });
+
 
 module.exports = router;
