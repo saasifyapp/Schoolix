@@ -1,4 +1,30 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('deviceready', () => {
+    const permissions = cordova.plugins.permissions;
+    const requiredPermissions = [
+        permissions.ACCESS_FINE_LOCATION,
+        permissions.ACCESS_COARSE_LOCATION
+    ];
+
+    permissions.checkPermission(requiredPermissions, (status) => {
+        if (!status.hasPermission) {
+            permissions.requestPermissions(requiredPermissions, (status) => {
+                if (!status.hasPermission) {
+                    alert("Permission denied. The app needs location permissions to function properly.");
+                } else {
+                    initializeApp();
+                }
+            }, (error) => {
+                console.error("Error requesting permissions", error);
+            });
+        } else {
+            initializeApp();
+        }
+    }, (error) => {
+        console.error("Error checking permissions", error);
+    });
+}, false);
+
+const initializeApp = () => {
     const backButton = document.getElementById('back-button');
     const backToConsoleButton = document.getElementById('back-to-console-button');
     const driverConsole = document.getElementById('driver-console');
@@ -464,5 +490,4 @@ document.addEventListener('DOMContentLoaded', () => {
             return 'error';
         }
     };
-
-});
+}
