@@ -428,7 +428,25 @@ function initializeApp() {
 
     // Function to get the current location
     const getCurrentLocation = () => {
-        if (navigator.geolocation) {
+        if (typeof cordova !== 'undefined' && cordova.plugins && cordova.plugins.geolocation) {
+            cordova.plugins.geolocation.getCurrentPosition(async (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                console.log('Coordinates:', latitude, longitude);
+
+                // Assuming you have fetched the driver's details before
+                const driverName = driverNameField.textContent;
+                const vehicleNumber = vehicleNoField.textContent;
+
+                // Send coordinates to the server
+                await sendCoordinates(latitude, longitude, driverName, vehicleNumber);
+            }, (error) => {
+                console.error('Error getting location:', error);
+            }, {
+                enableHighAccuracy: true
+            });
+        } else if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(async (position) => {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
