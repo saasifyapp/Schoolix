@@ -17,6 +17,7 @@ document.addEventListener('deviceready', function() {
     cancelBtn.addEventListener('click', function() {
         console.log("Cancel button clicked");
         hideLocationSettingsPrompt();
+        redirectToLogin();
     });
 
     function checkLocationPermissionsAndServices() {
@@ -71,5 +72,10 @@ document.addEventListener('deviceready', function() {
     function hideLocationSettingsPrompt() {
         console.log("Hiding location settings prompt");
         locationModal.style.display = 'none';
+    }
+
+    function redirectToLogin() {
+        console.log("Redirecting to login page");
+        window.location.href = './index.html'; // Adjust the path as needed
     }
 });
