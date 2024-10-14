@@ -3,15 +3,22 @@ document.addEventListener('deviceready', function() {
     const locationDisplay = document.getElementById('locationDisplay');
 
     getLocationBtn.addEventListener('click', function() {
-        checkLocationEnabled();
+        checkLocationServices();
     });
 
-    function checkLocationEnabled() {
-        if (!navigator.geolocation) {
-            locationDisplay.innerHTML = "Geolocation is not supported by this browser.";
-            return;
-        }
+    function checkLocationServices() {
+        cordova.plugins.diagnostic.isLocationEnabled(function(enabled) {
+            if (enabled) {
+                getLocation();
+            } else {
+                showLocationSettingsPrompt();
+            }
+        }, function(error) {
+            console.error("The following error occurred: " + error);
+        });
+    }
 
+    function getLocation() {
         navigator.geolocation.getCurrentPosition(onSuccess, onError, {
             enableHighAccuracy: true,
             timeout: 5000,
@@ -32,7 +39,6 @@ document.addEventListener('deviceready', function() {
                 break;
             case error.POSITION_UNAVAILABLE:
                 locationDisplay.innerHTML = "Location information is unavailable.";
-                showLocationSettingsPrompt();
                 break;
             case error.TIMEOUT:
                 locationDisplay.innerHTML = "The request to get user location timed out.";
@@ -44,20 +50,12 @@ document.addEventListener('deviceready', function() {
     }
 
     function showLocationSettingsPrompt() {
-        locationDisplay.innerHTML += "<br><strong>Please enable location services for this app.</strong>";
+        locationDisplay.innerHTML = "<strong>Please enable location services for this app.</strong>";
 
         const settingsButton = document.createElement('button');
         settingsButton.innerHTML = "Open Location Settings";
         settingsButton.onclick = function() {
-            if (window.cordova && window.cordova.plugins && window.cordova.plugins.settings) {
-                window.cordova.plugins.settings.open("location", function() {
-                    console.log("Location settings opened successfully");
-                }, function() {
-                    console.log("Failed to open settings");
-                });
-            } else {
-                console.log("Settings plugin is not available.");
-            }
+            cordova.plugins.diagnostic.switchToLocationSettings();
         };
         locationDisplay.appendChild(settingsButton);
     }
