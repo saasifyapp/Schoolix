@@ -1,10 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
-    if (typeof cordova !== 'undefined') {
-        document.addEventListener('deviceready', onDeviceReady, false);
-    } else {
-        onDeviceReady();
-    }
-});
+document.addEventListener('deviceready', onDeviceReady, false);
 
 function onDeviceReady() {
     console.log("Device is ready");
@@ -25,21 +19,38 @@ function onDeviceReady() {
                         alert("Permission denied. The app needs location permissions to function properly.");
                     } else {
                         console.log("Permissions granted");
-                        initializeApp();
+                        checkLocationServices();
                     }
                 }, (error) => {
                     console.error("Error requesting permissions", error);
                 });
             } else {
                 console.log("Permissions already granted");
-                initializeApp();
+                checkLocationServices();
             }
         }, (error) => {
             console.error("Error checking permissions", error);
         });
     } else {
-        initializeApp();
+        checkLocationServices();
     }
+}
+
+function checkLocationServices() {
+    cordova.plugins.diagnostic.isLocationEnabled(function(enabled) {
+        if (enabled) {
+            initializeApp();
+        } else {
+            showLocationSettingsPrompt();
+        }
+    }, function(error) {
+        console.error("The following error occurred: " + error);
+    });
+}
+
+function showLocationSettingsPrompt() {
+    alert("Location services are disabled. Please enable them to use this app.");
+    cordova.plugins.diagnostic.switchToLocationSettings();
 }
 
 function initializeApp() {
@@ -59,7 +70,6 @@ function initializeApp() {
     const totalStopsField = document.getElementById('total-stops');
     const totalStudentsField = document.getElementById('total-students');
     const searchBar = document.getElementById('search-bar');
-    const spinner = document.getElementById('spinner');
 
     // Shift GIFs
     const shiftGifs = {
@@ -482,6 +492,7 @@ function initializeApp() {
     fetchDriverDetails().then(() => {
         startSendingCoordinates(); // Start sending the coordinates every 2 minutes
     });
+
 
     // Function to log pick/drop events
     const logPickDropEvent = async (studentName, pickDropLocation, typeOfLog, shift, standard) => {
