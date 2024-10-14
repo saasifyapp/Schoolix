@@ -1,9 +1,21 @@
 document.addEventListener('deviceready', function() {
     const getLocationBtn = document.getElementById('getLocationBtn');
     const locationDisplay = document.getElementById('locationDisplay');
+    const locationModal = document.getElementById('locationModal');
+    const enableLocationBtn = document.getElementById('enableLocationBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
 
     getLocationBtn.addEventListener('click', function() {
         checkLocationServices();
+    });
+
+    enableLocationBtn.addEventListener('click', function() {
+        cordova.plugins.diagnostic.switchToLocationSettings();
+        hideLocationSettingsPrompt();
+    });
+
+    cancelBtn.addEventListener('click', function() {
+        hideLocationSettingsPrompt();
     });
 
     function checkLocationServices() {
@@ -51,13 +63,10 @@ document.addEventListener('deviceready', function() {
     }
 
     function showLocationSettingsPrompt() {
-        locationDisplay.innerHTML += "<br><strong>Please enable location services for this app.</strong>";
+        locationModal.style.display = 'flex';
+    }
 
-        const settingsButton = document.createElement('button');
-        settingsButton.innerHTML = "Open Location Settings";
-        settingsButton.onclick = function() {
-            cordova.plugins.diagnostic.switchToLocationSettings();
-        };
-        locationDisplay.appendChild(settingsButton);
+    function hideLocationSettingsPrompt() {
+        locationModal.style.display = 'none';
     }
 });
