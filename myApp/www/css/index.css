@@ -85,7 +85,7 @@ body {
     z-index: 1000; /* High z-index to appear above other elements */
 }
 
-
+ 
 /* Spinner styles */
 .spinner {
     width: 50px;
