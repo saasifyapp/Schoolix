@@ -20,6 +20,23 @@ body {
     z-index: 1000;
 }
 
+.refresh-spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #000;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
 
 /* Modal Styles */
 #locationModal {
@@ -52,21 +69,6 @@ body {
     font-size: 16px;
     margin: 5px;
     cursor: pointer;
-}
-
-/* Spinner styles */
-/* Spinner container styles */
-.spinner-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex; /* Use flex to center the spinner */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    background: rgba(255, 255, 255, 0.7); /* Optional: semi-transparent background */
-    z-index: 1000; /* Ensure it stays on top */
 }
 
 /* Spinner styles */
