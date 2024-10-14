@@ -22,7 +22,7 @@ body {
 
 .refresh-spinner {
     border: 5px solid #007bff;
-    border-left-color: #000;
+    border-left-color: #ffff;
     border-radius: 50%;
     width: 24px;
     height: 24px;
