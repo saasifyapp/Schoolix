@@ -16,12 +16,14 @@ function onDeviceReady() {
             permissions.requestPermissions(requiredPermissions, (status) => {
                 if (!status.hasPermission) {
                     alert("Permission denied. The app needs location permissions to function properly.");
+                    hideSpinner();
                 } else {
                     console.log("Permissions granted");
                     checkLocationServices();
                 }
             }, (error) => {
                 console.error("Error requesting permissions", error);
+                hideSpinner();
             });
         } else {
             console.log("Permissions already granted");
@@ -29,6 +31,7 @@ function onDeviceReady() {
         }
     }, (error) => {
         console.error("Error checking permissions", error);
+        hideSpinner();
     });
 }
 
@@ -42,15 +45,35 @@ function checkLocationServices() {
         }
     }, function(error) {
         console.error("The following error occurred: " + error);
+        hideSpinner();
     });
 }
 
 function showLocationSettingsPrompt() {
     alert("Location services are disabled. Please enable them to use this app.");
     cordova.plugins.diagnostic.switchToLocationSettings();
+    hideSpinner();
 }
 
 function initializeApp() {
     console.log("Initializing app");
+    hideSpinner();
     // Placeholder for further logic
 }
+
+function showSpinner() {
+    const spinnerContainer = document.getElementById('spinnerContainer');
+    if (spinnerContainer) {
+        spinnerContainer.style.display = 'flex';
+    }
+}
+
+function hideSpinner() {
+    const spinnerContainer = document.getElementById('spinnerContainer');
+    if (spinnerContainer) {
+        spinnerContainer.style.display = 'none';
+    }
+}
+
+// Show spinner initially when the app is loading
+showSpinner();
