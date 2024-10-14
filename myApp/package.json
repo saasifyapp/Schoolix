@@ -24,7 +24,8 @@
     ],
     "plugins": {
       "cordova-plugin-geolocation": {},
-      "cordova-plugin-android-permissions": {}
+      "cordova-plugin-android-permissions": {},
+      "cordova.plugins.diagnostic": {}
     }
   }
 }
