@@ -10,6 +10,16 @@ body {
     font-family: Arial, sans-serif;
 }
 
+/* Refresh Indicator Styles */
+#refreshIndicator {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+
 
 /* Modal Styles */
 #locationModal {

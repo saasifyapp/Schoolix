@@ -4,6 +4,7 @@ document.addEventListener('deviceready', function() {
     const locationModal = document.getElementById('locationModal');
     const enableLocationBtn = document.getElementById('enableLocationBtn');
     const cancelBtn = document.getElementById('cancelBtn');
+    const refreshIndicator = document.getElementById('refreshIndicator');
 
     // Check location permissions and status on load
     checkLocationPermissionsAndServices();
@@ -99,7 +100,10 @@ document.addEventListener('deviceready', function() {
             const currentY = event.touches[0].pageY;
             if (currentY - startY > 50) { // Threshold for pull-to-refresh
                 console.log("Pull-to-refresh triggered");
-                location.reload();
+                showRefreshIndicator();
+                setTimeout(() => {
+                    location.reload();
+                }, 1000); // Delay to show the refresh indicator
                 isPullingDown = false;
             }
         }
@@ -108,4 +112,15 @@ document.addEventListener('deviceready', function() {
     document.addEventListener('touchend', function() {
         isPullingDown = false;
     });
+
+    function showRefreshIndicator() {
+        refreshIndicator.style.display = 'block';
+    }
+
+    function hideRefreshIndicator() {
+        refreshIndicator.style.display = 'none';
+    }
+
+    // Hide the refresh indicator after the page is reloaded
+    window.addEventListener('load', hideRefreshIndicator);
 });
