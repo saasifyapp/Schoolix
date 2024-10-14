@@ -1,79 +1,98 @@
-document.addEventListener('deviceready', onDeviceReady, false);
+document.addEventListener('deviceready', function() {
+    const getLocationBtn = document.getElementById('getLocationBtn');
+    const locationDisplay = document.getElementById('locationDisplay');
+    const locationModal = document.getElementById('locationModal');
+    const enableLocationBtn = document.getElementById('enableLocationBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
 
-function onDeviceReady() {
-    console.log("Device is ready");
-
-    const permissions = cordova.plugins.permissions;
-    const requiredPermissions = [
-        permissions.ACCESS_FINE_LOCATION,
-        permissions.ACCESS_COARSE_LOCATION
-    ];
-
-    permissions.checkPermission(requiredPermissions, (status) => {
-        console.log("Checking permissions");
-        if (!status.hasPermission) {
-            console.log("Permissions not granted, requesting permissions");
-            permissions.requestPermissions(requiredPermissions, (status) => {
-                if (!status.hasPermission) {
-                    alert("Permission denied. The app needs location permissions to function properly.");
-                    hideSpinner();
-                } else {
-                    console.log("Permissions granted");
-                    checkLocationServices();
-                }
-            }, (error) => {
-                console.error("Error requesting permissions", error);
-                hideSpinner();
-            });
-        } else {
-            console.log("Permissions already granted");
-            checkLocationServices();
-        }
-    }, (error) => {
-        console.error("Error checking permissions", error);
-        hideSpinner();
+    getLocationBtn.addEventListener('click', function() {
+        checkLocationPermissions();
     });
-}
 
-function checkLocationServices() {
-    cordova.plugins.diagnostic.isLocationEnabled(function(enabled) {
-        if (enabled) {
-            console.log("Location services are enabled");
-            initializeApp(); // Placeholder for further logic
-        } else {
-            showLocationSettingsPrompt();
-        }
-    }, function(error) {
-        console.error("The following error occurred: " + error);
-        hideSpinner();
+    enableLocationBtn.addEventListener('click', function() {
+        cordova.plugins.diagnostic.switchToLocationSettings();
+        hideLocationSettingsPrompt();
     });
-}
 
-function showLocationSettingsPrompt() {
-    alert("Location services are disabled. Please enable them to use this app.");
-    cordova.plugins.diagnostic.switchToLocationSettings();
-    hideSpinner();
-}
+    cancelBtn.addEventListener('click', function() {
+        hideLocationSettingsPrompt();
+    });
 
-function initializeApp() {
-    console.log("Initializing app");
-    hideSpinner();
-    // Placeholder for further logic
-}
+    function checkLocationPermissions() {
+        const permissions = cordova.plugins.permissions;
+        const requiredPermissions = [
+            permissions.ACCESS_FINE_LOCATION,
+            permissions.ACCESS_COARSE_LOCATION
+        ];
 
-function showSpinner() {
-    const spinnerContainer = document.getElementById('spinnerContainer');
-    if (spinnerContainer) {
-        spinnerContainer.style.display = 'flex';
+        permissions.checkPermission(requiredPermissions, (status) => {
+            if (!status.hasPermission) {
+                permissions.requestPermissions(requiredPermissions, (status) => {
+                    if (!status.hasPermission) {
+                        alert("Permission denied. The app needs location permissions to function properly.");
+                    } else {
+                        checkLocationServices();
+                    }
+                }, (error) => {
+                    console.error("Error requesting permissions", error);
+                });
+            } else {
+                checkLocationServices();
+            }
+        }, (error) => {
+            console.error("Error checking permissions", error);
+        });
     }
-}
 
-function hideSpinner() {
-    const spinnerContainer = document.getElementById('spinnerContainer');
-    if (spinnerContainer) {
-        spinnerContainer.style.display = 'none';
+    function checkLocationServices() {
+        cordova.plugins.diagnostic.isLocationEnabled(function(enabled) {
+            if (enabled) {
+                getLocation();
+            } else {
+                showLocationSettingsPrompt();
+            }
+        }, function(error) {
+            console.error("The following error occurred: " + error);
+        });
     }
-}
 
-// Show spinner initially when the app is loading
-showSpinner();
+    function getLocation() {
+        navigator.geolocation.getCurrentPosition(onSuccess, onError, {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+        });
+    }
+
+    function onSuccess(position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        locationDisplay.innerHTML = `Latitude: ${latitude}<br>Longitude: ${longitude}`;
+    }
+
+    function onError(error) {
+        switch (error.code) {
+            case error.PERMISSION_DENIED:
+                locationDisplay.innerHTML = "User denied the request for Geolocation.";
+                break;
+            case error.POSITION_UNAVAILABLE:
+                locationDisplay.innerHTML = "Location information is unavailable.";
+                showLocationSettingsPrompt();
+                break;
+            case error.TIMEOUT:
+                locationDisplay.innerHTML = "The request to get user location timed out.";
+                break;
+            case error.UNKNOWN_ERROR:
+                locationDisplay.innerHTML = "An unknown error occurred.";
+                break;
+        }
+    }
+
+    function showLocationSettingsPrompt() {
+        locationModal.style.display = 'flex';
+    }
+
+    function hideLocationSettingsPrompt() {
+        locationModal.style.display = 'none';
+    }
+});
