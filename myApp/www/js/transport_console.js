@@ -35,17 +35,20 @@ document.addEventListener('deviceready', function() {
                 permissions.requestPermissions(requiredPermissions, (status) => {
                     if (!status.hasPermission) {
                         alert("Permission denied. The app needs location permissions to function properly.");
+                        redirectToLogin();
                     } else {
                         checkLocationServices();
                     }
                 }, (error) => {
                     console.error("Error requesting permissions", error);
+                    redirectToLogin();
                 });
             } else {
                 checkLocationServices();
             }
         }, (error) => {
             console.error("Error checking permissions", error);
+            redirectToLogin();
         });
     }
 
@@ -61,6 +64,7 @@ document.addEventListener('deviceready', function() {
             }
         }, function(error) {
             console.error("The following error occurred: " + error);
+            redirectToLogin();
         });
     }
 
