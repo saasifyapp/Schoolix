@@ -21,7 +21,7 @@ body {
 }
 
 .refresh-spinner {
-    border: 4px solid rgba(0, 0, 0, 0.1);
+    border: 5px solid #007bff;
     border-left-color: #000;
     border-radius: 50%;
     width: 24px;
