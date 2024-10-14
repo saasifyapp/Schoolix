@@ -6,7 +6,7 @@ document.addEventListener('deviceready', function() {
     const cancelBtn = document.getElementById('cancelBtn');
 
     getLocationBtn.addEventListener('click', function() {
-        checkLocationPermissions();
+        checkLocationServices();
     });
 
     enableLocationBtn.addEventListener('click', function() {
@@ -17,30 +17,6 @@ document.addEventListener('deviceready', function() {
     cancelBtn.addEventListener('click', function() {
         hideLocationSettingsPrompt();
     });
-
-    function checkLocationPermissions() {
-        cordova.plugins.diagnostic.getPermissionAuthorizationStatus(function(status) {
-            if (status === cordova.plugins.diagnostic.permissionStatus.GRANTED) {
-                checkLocationServices();
-            } else {
-                requestLocationPermissions();
-            }
-        }, function(error) {
-            console.error("The following error occurred: " + error);
-        }, cordova.plugins.diagnostic.permission.ACCESS_FINE_LOCATION);
-    }
-
-    function requestLocationPermissions() {
-        cordova.plugins.diagnostic.requestPermission(function(status) {
-            if (status === cordova.plugins.diagnostic.permissionStatus.GRANTED) {
-                checkLocationServices();
-            } else {
-                locationDisplay.innerHTML = "Location permission is required.";
-            }
-        }, function(error) {
-            console.error("The following error occurred: " + error);
-        }, cordova.plugins.diagnostic.permission.ACCESS_FINE_LOCATION);
-    }
 
     function checkLocationServices() {
         cordova.plugins.diagnostic.isLocationEnabled(function(enabled) {
