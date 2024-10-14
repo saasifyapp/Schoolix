@@ -82,4 +82,30 @@ document.addEventListener('deviceready', function() {
         console.log("Redirecting to login page");
         window.location.href = './index.html'; // Adjust the path as needed
     }
+
+    // Pull-to-refresh functionality
+    let startY = 0;
+    let isPullingDown = false;
+
+    document.addEventListener('touchstart', function(event) {
+        if (document.documentElement.scrollTop === 0) {
+            startY = event.touches[0].pageY;
+            isPullingDown = true;
+        }
+    });
+
+    document.addEventListener('touchmove', function(event) {
+        if (isPullingDown) {
+            const currentY = event.touches[0].pageY;
+            if (currentY - startY > 50) { // Threshold for pull-to-refresh
+                console.log("Pull-to-refresh triggered");
+                location.reload();
+                isPullingDown = false;
+            }
+        }
+    });
+
+    document.addEventListener('touchend', function() {
+        isPullingDown = false;
+    });
 });
