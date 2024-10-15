@@ -84,59 +84,6 @@ document.addEventListener('deviceready', function() {
         window.location.href = './index.html'; // Adjust the path as needed
     }
 
-    // Handle Android back button
-    document.addEventListener('backbutton', function(e) {
-        e.preventDefault();
-        if (navigationStack.length > 0) {
-            const previousState = navigationStack.pop();
-            sessionStorage.setItem('navigationStack', JSON.stringify(navigationStack));
-            restoreState(previousState);
-        } else {
-            navigator.app.exitApp(); // Exit the app if no previous state is available
-        }
-    }, false);
-
-    // Function to navigate to a new state
-    function navigateTo(newState) {
-        const currentState = {
-            driverDetailsScreenVisible: !driverDetailsScreen.classList.contains('hidden'),
-            driverConsoleVisible: !driverConsole.classList.contains('hidden'),
-            searchBarValue: searchBar.value,
-            detailedDriverListContent: detailedDriverList.innerHTML
-        };
-
-        navigationStack.push(currentState);
-        sessionStorage.setItem('navigationStack', JSON.stringify(navigationStack));
-
-        // Update the state based on the new state
-        if (newState.driverDetailsScreenVisible) {
-            driverDetailsScreen.classList.remove('hidden');
-            driverConsole.classList.add('hidden');
-        } else {
-            driverDetailsScreen.classList.add('hidden');
-            driverConsole.classList.remove('hidden');
-        }
-
-        searchBar.value = newState.searchBarValue;
-        detailedDriverList.innerHTML = newState.detailedDriverListContent;
-    }
-
-    // Function to restore a previous state
-    function restoreState(state) {
-        if (state.driverDetailsScreenVisible) {
-            driverDetailsScreen.classList.remove('hidden');
-            driverConsole.classList.add('hidden');
-        } else {
-            driverDetailsScreen.classList.add('hidden');
-            driverConsole.classList.remove('hidden');
-        }
-
-        searchBar.value = state.searchBarValue;
-        detailedDriverList.innerHTML = state.detailedDriverListContent;
-    }
-
-    // Existing onDeviceReady function
-    onDeviceReady();
 });
 
 // Existing onDeviceReady function
@@ -197,7 +144,7 @@ function initializeApp() {
     console.log("Initializing app");
 
     const backButton = document.getElementById('back-button');
-    const backToConsoleButton = document.getElementById('back-to-console-button');
+    //const backToConsoleButton = document.getElementById('back-to-console-button');
     const driverConsole = document.getElementById('driver-console');
     const driverDetailsScreen = document.getElementById('driver-details-screen');
     const detailedDriverList = document.getElementById('detailed-driver-list');
@@ -238,13 +185,13 @@ function initializeApp() {
         });
     }
 
-    if (backToConsoleButton) {
-        backToConsoleButton.addEventListener('click', () => {
-            driverDetailsScreen.classList.add('hidden');
-            driverConsole.classList.remove('hidden');
-            searchBar.value = ''; // Clear the search field when going back to the console
-        });
-    }
+    // if (backToConsoleButton) {
+    //     backToConsoleButton.addEventListener('click', () => {
+    //         driverDetailsScreen.classList.add('hidden');
+    //         driverConsole.classList.remove('hidden');
+    //         searchBar.value = ''; // Clear the search field when going back to the console
+    //     });
+    // }
 
     const showSpinner = () => {
         const spinnerContainer = document.getElementById('spinnerContainer');
