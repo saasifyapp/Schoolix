@@ -4,7 +4,6 @@ document.addEventListener('deviceready', function() {
     const locationModal = document.getElementById('locationModal');
     const enableLocationBtn = document.getElementById('enableLocationBtn');
     const cancelBtn = document.getElementById('cancelBtn');
-    let navigationStack = JSON.parse(sessionStorage.getItem('navigationStack')) || [];
 
     // Check location permissions and status on load
     checkLocationPermissionsAndServices();
@@ -84,6 +83,33 @@ document.addEventListener('deviceready', function() {
         window.location.href = './index.html'; // Adjust the path as needed
     }
 
+    // Handle Android back button
+    document.addEventListener('backbutton', function(e) {
+        e.preventDefault();
+        console.log("Back button pressed");
+        // Do nothing or show a message if needed
+    }, false);
+
+    // Custom back button logic
+    const customBackButton = document.getElementById('back-button');
+    const customBackButtonDetails = document.getElementById('back-to-console-button');
+
+    if (customBackButton) {
+        customBackButton.addEventListener('click', () => {
+            window.location.href = './index.html'; // Navigate to the login page
+        });
+    }
+
+    if (customBackButtonDetails) {
+        customBackButtonDetails.addEventListener('click', () => {
+            driverDetailsScreen.classList.add('hidden');
+            driverConsole.classList.remove('hidden');
+            searchBar.value = ''; // Clear the search field when going back to the console
+        });
+    }
+
+    // Existing onDeviceReady function
+    onDeviceReady();
 });
 
 // Existing onDeviceReady function
@@ -144,7 +170,7 @@ function initializeApp() {
     console.log("Initializing app");
 
     const backButton = document.getElementById('back-button');
-    //const backToConsoleButton = document.getElementById('back-to-console-button');
+    const backToConsoleButton = document.getElementById('back-to-console-button');
     const driverConsole = document.getElementById('driver-console');
     const driverDetailsScreen = document.getElementById('driver-details-screen');
     const detailedDriverList = document.getElementById('detailed-driver-list');
