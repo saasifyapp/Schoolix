@@ -14,6 +14,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "cordova-android": "^13.0.0",
+    "cordova-plugin-file": "^8.1.0",
     "cordova-plugin-geolocation": "^5.0.0",
     "cordova-plugin-settings-hook": "^0.3.1",
     "cordova.plugins.diagnostic": "^7.2.1"
@@ -25,7 +26,10 @@
     "plugins": {
       "cordova-plugin-geolocation": {},
       "cordova-plugin-android-permissions": {},
-      "cordova.plugins.diagnostic": {}
+      "cordova.plugins.diagnostic": {},
+      "cordova-plugin-file": {
+        "ANDROIDX_WEBKIT_VERSION": "1.4.0"
+      }
     }
   }
 }
