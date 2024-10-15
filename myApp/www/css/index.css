@@ -10,33 +10,6 @@ body {
     font-family: Arial, sans-serif;
 }
 
-/* Refresh Indicator Styles */
-#refreshIndicator {
-    display: none; /* Hidden by default */
-    position: fixed;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-}
-
-.refresh-spinner {
-    border: 5px solid #3498db;
-    border-left-color: #aed6f1;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
 
 /* Modal Styles */
 #locationModal {

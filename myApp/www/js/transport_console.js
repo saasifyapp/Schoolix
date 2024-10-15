@@ -4,7 +4,6 @@ document.addEventListener('deviceready', function() {
     const locationModal = document.getElementById('locationModal');
     const enableLocationBtn = document.getElementById('enableLocationBtn');
     const cancelBtn = document.getElementById('cancelBtn');
-    const refreshIndicator = document.getElementById('refreshIndicator');
 
     // Check location permissions and status on load
     checkLocationPermissionsAndServices();
@@ -84,55 +83,17 @@ document.addEventListener('deviceready', function() {
         window.location.href = './index.html'; // Adjust the path as needed
     }
 
-    // Pull-to-refresh functionality
-    let startY = 0;
-    let isPullingDown = false;
-
-    document.addEventListener('touchstart', function(event) {
-        if (document.documentElement.scrollTop === 0) {
-            startY = event.touches[0].pageY;
-            isPullingDown = true;
-        }
-    });
-
-    document.addEventListener('touchmove', function(event) {
-        if (isPullingDown) {
-            const currentY = event.touches[0].pageY;
-            if (currentY - startY > 50) { // Threshold for pull-to-refresh
-                console.log("Pull-to-refresh triggered");
-                showRefreshIndicator();
-                setTimeout(() => {
-                    location.reload();
-                }, 1000); // Delay to show the refresh indicator
-                isPullingDown = false;
-            }
-        }
-    });
-
-    document.addEventListener('touchend', function() {
-        isPullingDown = false;
-    });
-
-    function showRefreshIndicator() {
-        refreshIndicator.style.display = 'block';
-    }
-
-    function hideRefreshIndicator() {
-        refreshIndicator.style.display = 'none';
-    }
-
-    // Hide the refresh indicator after the page is reloaded
-    window.addEventListener('load', hideRefreshIndicator);
-
     // Handle Android back button
     document.addEventListener('backbutton', function(e) {
         e.preventDefault();
-        const currentPage = window.location.pathname.split("/").pop();
+        const currentPage = sessionStorage.getItem('currentPage');
         const previousPage = sessionStorage.getItem('previousPage');
 
-        if (currentPage === 'page3.html') {
-            window.location.href = previousPage; // Navigate back to the previous page (transport_console.html)
-        } else if (currentPage === 'transport_console.html') {
+        if (currentPage === 'page3') {
+            sessionStorage.setItem('currentPage', 'transport_console');
+            window.location.href = './transport_console.html'; // Navigate back to the transport console page
+        } else if (currentPage === 'transport_console') {
+            sessionStorage.setItem('currentPage', 'index');
             window.location.href = './index.html'; // Navigate back to the login page if on transport console page
         } else {
             navigator.app.exitApp(); // Exit the app if on the login page
@@ -142,7 +103,8 @@ document.addEventListener('deviceready', function() {
     // Store the current page as the previous page before navigating to a new page
     document.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', function() {
-            sessionStorage.setItem('previousPage', window.location.pathname.split("/").pop());
+            sessionStorage.setItem('previousPage', sessionStorage.getItem('currentPage'));
+            sessionStorage.setItem('currentPage', link.getAttribute('href').split(".")[0]);
         });
     });
 
