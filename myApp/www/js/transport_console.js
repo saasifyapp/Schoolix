@@ -90,23 +90,6 @@ document.addEventListener('deviceready', function() {
         // Do nothing or show a message if needed
     }, false);
 
-    // Custom back button logic
-    const customBackButton = document.getElementById('back-button');
-    const customBackButtonDetails = document.getElementById('back-to-console-button');
-
-    if (customBackButton) {
-        customBackButton.addEventListener('click', () => {
-            window.location.href = './index.html'; // Navigate to the login page
-        });
-    }
-
-    if (customBackButtonDetails) {
-        customBackButtonDetails.addEventListener('click', () => {
-            driverDetailsScreen.classList.add('hidden');
-            driverConsole.classList.remove('hidden');
-            searchBar.value = ''; // Clear the search field when going back to the console
-        });
-    }
 
     // Existing onDeviceReady function
     onDeviceReady();
@@ -211,13 +194,13 @@ function initializeApp() {
         });
     }
 
-    // if (backToConsoleButton) {
-    //     backToConsoleButton.addEventListener('click', () => {
-    //         driverDetailsScreen.classList.add('hidden');
-    //         driverConsole.classList.remove('hidden');
-    //         searchBar.value = ''; // Clear the search field when going back to the console
-    //     });
-    // }
+    if (backToConsoleButton) {
+        backToConsoleButton.addEventListener('click', () => {
+            driverDetailsScreen.classList.add('hidden');
+            driverConsole.classList.remove('hidden');
+            searchBar.value = ''; // Clear the search field when going back to the console
+        });
+    }
 
     const showSpinner = () => {
         const spinnerContainer = document.getElementById('spinnerContainer');

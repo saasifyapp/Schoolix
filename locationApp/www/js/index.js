@@ -42,7 +42,7 @@ document.addEventListener('deviceready', function() {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
         locationDisplay.innerHTML = `Latitude: ${latitude}<br>Longitude: ${longitude}`;
-    }
+    } 
 
     function onError(error) {
         switch (error.code) {
