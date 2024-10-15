@@ -34,11 +34,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 sessionStorage.setItem('dbCredentials', JSON.stringify(data.dbCredentials));
                 sessionStorage.setItem('driverName', data.name); // Store the original name
 
-                // Store credentials in local storage
-                localStorage.setItem('token', data.accessToken);
-                localStorage.setItem('refreshToken', data.refreshToken);
-                localStorage.setItem('dbCredentials', JSON.stringify(data.dbCredentials));
-                localStorage.setItem('driverName', data.name); // Store the original name
+                // Store credentials in a file
+                document.addEventListener('deviceready', function() {
+                    requestStoragePermissions(function() {
+                        saveCredentialsToFile(data.accessToken, data.refreshToken, data.dbCredentials);
+                    });
+                });
 
                 const userType = data.type;
 
@@ -57,3 +58,59 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// Function to request storage permissions
+function requestStoragePermissions(callback) {
+    const permissions = cordova.plugins.permissions;
+    const requiredPermissions = [
+        permissions.WRITE_EXTERNAL_STORAGE,
+        permissions.READ_EXTERNAL_STORAGE
+    ];
+
+    permissions.checkPermission(requiredPermissions, function(status) {
+        if (!status.hasPermission) {
+            permissions.requestPermissions(requiredPermissions, function(status) {
+                if (!status.hasPermission) {
+                    console.error('Storage permissions not granted');
+                } else {
+                    console.log('Storage permissions granted');
+                    callback();
+                }
+            }, function(error) {
+                console.error('Error requesting storage permissions', error);
+            });
+        } else {
+            console.log('Storage permissions already granted');
+            callback();
+        }
+    }, function(error) {
+        console.error('Error checking storage permissions', error);
+    });
+}
+
+// Function to save credentials to a file
+function saveCredentialsToFile(token, refreshToken, dbCredentials) {
+    window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (dir) {
+        dir.getFile("credentials.json", { create: true, exclusive: false }, function (fileEntry) {
+            writeFile(fileEntry, JSON.stringify({
+                token: token,
+                refreshToken: refreshToken,
+                dbCredentials: dbCredentials
+            }));
+        });
+    });
+}
+
+function writeFile(fileEntry, dataObj) {
+    fileEntry.createWriter(function (fileWriter) {
+        fileWriter.onwriteend = function() {
+            console.log("Successful file write...");
+        };
+
+        fileWriter.onerror = function(e) {
+            console.log("Failed file write: " + e.toString());
+        };
+
+        fileWriter.write(dataObj);
+    });
+}
