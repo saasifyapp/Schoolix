@@ -83,6 +83,13 @@ document.addEventListener('deviceready', function() {
         window.location.href = './index.html'; // Adjust the path as needed
     }
 
+    // // Handle Android back button
+    // document.addEventListener('backbutton', function(e) {
+    //     e.preventDefault();
+    //     console.log("Back button pressed");
+    //     // Do nothing or show a message if needed
+    // }, false);
+
 
     // Existing onDeviceReady function
     onDeviceReady();
@@ -91,30 +98,7 @@ document.addEventListener('deviceready', function() {
 // Existing onDeviceReady function
 function onDeviceReady() {
     console.log("Device is ready");
-
-       // Retrieve credentials from the file
-    retrieveCredentialsFromFile(function(data) {
-        if (data) {
-            let token = data.token;
-            let refreshToken = data.refreshToken;
-            let dbCredentials = data.dbCredentials;
-            let driverName = data.driverName;
-
-            if (!token || !refreshToken || !dbCredentials || !driverName) {
-                console.error('Credentials not found.');
-                alert('Session expired. Please log in again.');
-                window.location.href = './index.html';
-                return;
-            }
-
-            // Use the retrieved credentials
-            initializeApp(token, refreshToken, dbCredentials, driverName);
-        } else {
-            console.error('Failed to retrieve credentials.');
-            alert('Session expired. Please log in again.');
-            window.location.href = './index.html';
-        }
-    });
+    
 
     if (typeof cordova !== 'undefined') {
         const permissions = cordova.plugins.permissions;
@@ -190,7 +174,10 @@ function initializeApp() {
         'Afternoon': './img/afternoon.gif'
     };
 
-    
+    let token = sessionStorage.getItem('token');
+    let refreshToken = sessionStorage.getItem('refreshToken');
+    let dbCredentials = JSON.parse(sessionStorage.getItem('dbCredentials'));
+    let driverName = sessionStorage.getItem('driverName');
     let routeStops = []; // Store route stops
     let studentsData = []; // Store the fetched students data
     let currentShiftName = ''; // Store the current shift name
@@ -201,6 +188,20 @@ function initializeApp() {
         window.location.href = './index.html';
         return;
     }
+
+    // if (backButton) {
+    //     backButton.addEventListener('click', () => {
+    //         window.location.href = './index.html';
+    //     });
+    // }
+
+    // if (backToConsoleButton) {
+    //     backToConsoleButton.addEventListener('click', () => {
+    //         driverDetailsScreen.classList.add('hidden');
+    //         driverConsole.classList.remove('hidden');
+    //         searchBar.value = ''; // Clear the search field when going back to the console
+    //     });
+    // }
 
     const showSpinner = () => {
         const spinnerContainer = document.getElementById('spinnerContainer');
