@@ -83,12 +83,12 @@ document.addEventListener('deviceready', function() {
         window.location.href = './index.html'; // Adjust the path as needed
     }
 
-    // Handle Android back button
-    document.addEventListener('backbutton', function(e) {
-        e.preventDefault();
-        console.log("Back button pressed");
-        // Do nothing or show a message if needed
-    }, false);
+    // // Handle Android back button
+    // document.addEventListener('backbutton', function(e) {
+    //     e.preventDefault();
+    //     console.log("Back button pressed");
+    //     // Do nothing or show a message if needed
+    // }, false);
 
 
     // Existing onDeviceReady function
@@ -188,19 +188,19 @@ function initializeApp() {
         return;
     }
 
-    if (backButton) {
-        backButton.addEventListener('click', () => {
-            window.location.href = './index.html';
-        });
-    }
+    // if (backButton) {
+    //     backButton.addEventListener('click', () => {
+    //         window.location.href = './index.html';
+    //     });
+    // }
 
-    if (backToConsoleButton) {
-        backToConsoleButton.addEventListener('click', () => {
-            driverDetailsScreen.classList.add('hidden');
-            driverConsole.classList.remove('hidden');
-            searchBar.value = ''; // Clear the search field when going back to the console
-        });
-    }
+    // if (backToConsoleButton) {
+    //     backToConsoleButton.addEventListener('click', () => {
+    //         driverDetailsScreen.classList.add('hidden');
+    //         driverConsole.classList.remove('hidden');
+    //         searchBar.value = ''; // Clear the search field when going back to the console
+    //     });
+    // }
 
     const showSpinner = () => {
         const spinnerContainer = document.getElementById('spinnerContainer');
@@ -458,7 +458,7 @@ function initializeApp() {
                 listItem.querySelector('.not-picked').addEventListener('click', async () => {
                     const result = await logPickDropEvent(item.name, item.transport_pickup_drop, 'not_picked', currentShiftName, item.class);
                     if (result === 'exists') {
-                        alert('Student already marked under not_picked category for this today');
+                        alert('Student already marked under not_picked category for today');
                     } else {
                         alert(`${item.name} not picked`);
                     }
@@ -467,7 +467,7 @@ function initializeApp() {
                 listItem.querySelector('.not-dropped').addEventListener('click', async () => {
                     const result = await logPickDropEvent(item.name, item.transport_pickup_drop, 'not_dropped', currentShiftName, item.class);
                     if (result === 'exists') {
-                        alert('Student already marked under not_dropped category for this today');
+                        alert('Student already marked under not_dropped category for today');
                     } else {
                         alert(`${item.name} not dropped`);
                     }

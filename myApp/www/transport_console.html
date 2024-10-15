@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Driver Console</title>
     <link rel="stylesheet" href="./css/index.css">
 </head>
-
 <body>
 
     <!-- Spinner Container -->
@@ -27,7 +25,6 @@
             </ul>
         </div>
         <div class="card button-card"></div>
-        <button id="back-button">Back</button>
     </div>
 
     <div id="driver-details-screen" class="screen hidden">
@@ -45,21 +42,13 @@
             <h2>Student Details</h2>
             <ul id="detailed-driver-list"></ul>
         </div>
-         <button id="back-to-console-button">Back</button>
     </div>
 
-
-    <!-- Modal Structure -->
-    <div id="locationModal" class="modal">
-        <div class="modal-content">
-            <p>Location services are disabled. Please enable them to use this app.</p>
-            <button id="enableLocationBtn">Enable Location</button>
-            <button id="cancelBtn">Cancel</button>
-        </div>
-    </div>
+    <!-- Include Universal HTML -->
+    <div id="universal-container"></div>
 
     <script src="cordova.js"></script>
+    <script src="./js/universal_components.js"></script>
     <script src="./js/transport_console.js"></script>
 </body>
-
 </html>
