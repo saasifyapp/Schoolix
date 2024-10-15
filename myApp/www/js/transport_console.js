@@ -1,4 +1,4 @@
-document.addEventListener('deviceready', function () {
+document.addEventListener('deviceready', function() {
     console.log("Device is ready");
 
     const locationModal = document.getElementById('locationModal');
@@ -9,13 +9,13 @@ document.addEventListener('deviceready', function () {
     // Check location permissions and status on load
     checkLocationPermissionsAndServices();
 
-    enableLocationBtn.addEventListener('click', function () {
+    enableLocationBtn.addEventListener('click', function() {
         console.log("Enable Location button clicked");
         cordova.plugins.diagnostic.switchToLocationSettings();
         hideLocationSettingsPrompt();
     });
 
-    cancelBtn.addEventListener('click', function () {
+    cancelBtn.addEventListener('click', function() {
         console.log("Cancel button clicked");
         hideLocationSettingsPrompt();
         redirectToLogin();
@@ -55,7 +55,7 @@ document.addEventListener('deviceready', function () {
 
     function checkLocationServices() {
         console.log("Checking location services...");
-        cordova.plugins.diagnostic.isLocationEnabled(function (enabled) {
+        cordova.plugins.diagnostic.isLocationEnabled(function(enabled) {
             if (enabled) {
                 console.log("Location services are enabled");
                 onDeviceReady(); // Call the existing onDeviceReady function
@@ -63,7 +63,7 @@ document.addEventListener('deviceready', function () {
                 console.log("Location services are disabled, showing prompt...");
                 showLocationSettingsPrompt();
             }
-        }, function (error) {
+        }, function(error) {
             console.error("The following error occurred: " + error);
             redirectToLogin();
         });
@@ -88,14 +88,14 @@ document.addEventListener('deviceready', function () {
     let startY = 0;
     let isPullingDown = false;
 
-    document.addEventListener('touchstart', function (event) {
+    document.addEventListener('touchstart', function(event) {
         if (document.documentElement.scrollTop === 0) {
             startY = event.touches[0].pageY;
             isPullingDown = true;
         }
     });
 
-    document.addEventListener('touchmove', function (event) {
+    document.addEventListener('touchmove', function(event) {
         if (isPullingDown) {
             const currentY = event.touches[0].pageY;
             if (currentY - startY > 50) { // Threshold for pull-to-refresh
@@ -109,7 +109,7 @@ document.addEventListener('deviceready', function () {
         }
     });
 
-    document.addEventListener('touchend', function () {
+    document.addEventListener('touchend', function() {
         isPullingDown = false;
     });
 
@@ -124,16 +124,30 @@ document.addEventListener('deviceready', function () {
     // Hide the refresh indicator after the page is reloaded
     window.addEventListener('load', hideRefreshIndicator);
 
-
     // Handle Android back button
-    document.addEventListener('backbutton', function (e) {
+    document.addEventListener('backbutton', function(e) {
         e.preventDefault();
-        if (window.location.pathname.endsWith('transport_console.html')) {
+        const currentPage = window.location.pathname.split("/").pop();
+        const previousPage = sessionStorage.getItem('previousPage');
+
+        if (currentPage === 'page3.html') {
+            window.location.href = previousPage; // Navigate back to the previous page (transport_console.html)
+        } else if (currentPage === 'transport_console.html') {
             window.location.href = './index.html'; // Navigate back to the login page if on transport console page
         } else {
-            navigator.app.backHistory(); // Navigate back to the previous page
+            navigator.app.exitApp(); // Exit the app if on the login page
         }
     }, false);
+
+    // Store the current page as the previous page before navigating to a new page
+    document.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', function() {
+            sessionStorage.setItem('previousPage', window.location.pathname.split("/").pop());
+        });
+    });
+
+    // Existing onDeviceReady function
+    onDeviceReady();
 });
 
 // Existing onDeviceReady function
