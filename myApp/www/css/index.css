@@ -21,8 +21,8 @@ body {
 }
 
 .refresh-spinner {
-    border: 5px solid #007bff;
-    border-left-color: #ffff;
+    border: 5px solid #3498db;
+    border-left-color: #aed6f1;
     border-radius: 50%;
     width: 24px;
     height: 24px;

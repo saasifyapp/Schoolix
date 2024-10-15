@@ -69,4 +69,14 @@ document.addEventListener('deviceready', function() {
     function hideLocationSettingsPrompt() {
         locationModal.style.display = 'none';
     }
+
+    // Handle Android back button
+    document.addEventListener('backbutton', function(e) {
+        e.preventDefault();
+        if (window.location.pathname.endsWith('index.html')) {
+            navigator.app.exitApp(); // Exit the app if on the login page
+        } else {
+            window.history.back(); // Navigate back to the previous page
+        }
+    }, false);
 });
