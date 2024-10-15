@@ -4,6 +4,7 @@ document.addEventListener('deviceready', function() {
     const locationModal = document.getElementById('locationModal');
     const enableLocationBtn = document.getElementById('enableLocationBtn');
     const cancelBtn = document.getElementById('cancelBtn');
+    const navigationStack = JSON.parse(sessionStorage.getItem('navigationStack')) || [];
 
     // Check location permissions and status on load
     checkLocationPermissionsAndServices();
@@ -86,25 +87,21 @@ document.addEventListener('deviceready', function() {
     // Handle Android back button
     document.addEventListener('backbutton', function(e) {
         e.preventDefault();
-        const currentPage = sessionStorage.getItem('currentPage');
-        const previousPage = sessionStorage.getItem('previousPage');
-
-        if (currentPage === 'page3') {
-            sessionStorage.setItem('currentPage', 'transport_console');
-            window.location.href = './transport_console.html'; // Navigate back to the transport console page
-        } else if (currentPage === 'transport_console') {
-            sessionStorage.setItem('currentPage', 'index');
-            window.location.href = './index.html'; // Navigate back to the login page if on transport console page
+        if (navigationStack.length > 0) {
+            const previousPage = navigationStack.pop();
+            sessionStorage.setItem('navigationStack', JSON.stringify(navigationStack));
+            window.location.href = previousPage;
         } else {
-            navigator.app.exitApp(); // Exit the app if on the login page
+            navigator.app.exitApp(); // Exit the app if no previous page is available
         }
     }, false);
 
     // Store the current page as the previous page before navigating to a new page
     document.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', function() {
-            sessionStorage.setItem('previousPage', sessionStorage.getItem('currentPage'));
-            sessionStorage.setItem('currentPage', link.getAttribute('href').split(".")[0]);
+            const currentPath = window.location.pathname;
+            navigationStack.push(currentPath);
+            sessionStorage.setItem('navigationStack', JSON.stringify(navigationStack));
         });
     });
 
