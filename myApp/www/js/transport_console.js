@@ -458,7 +458,7 @@ function initializeApp() {
                 listItem.querySelector('.not-picked').addEventListener('click', async () => {
                     const result = await logPickDropEvent(item.name, item.transport_pickup_drop, 'not_picked', currentShiftName, item.class);
                     if (result === 'exists') {
-                        alert('Student already logged under not_picked category for this date');
+                        alert('Student already marked under not_picked category for this today');
                     } else {
                         alert(`${item.name} not picked`);
                     }
@@ -467,7 +467,7 @@ function initializeApp() {
                 listItem.querySelector('.not-dropped').addEventListener('click', async () => {
                     const result = await logPickDropEvent(item.name, item.transport_pickup_drop, 'not_dropped', currentShiftName, item.class);
                     if (result === 'exists') {
-                        alert('Student already logged under not_dropped category for this date');
+                        alert('Student already marked under not_dropped category for this today');
                     } else {
                         alert(`${item.name} not dropped`);
                     }
