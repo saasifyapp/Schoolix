@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Custom back button logic
     const backButton = document.getElementById('back-button');
     const backToConsoleButton = document.getElementById('back-to-console-button');
@@ -21,13 +21,22 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-document.addEventListener('deviceready', function() {
+document.addEventListener('deviceready', function () {
     console.log("Device is ready");
 
     // Handle Android back button
-    document.addEventListener('backbutton', function(e) {
+    document.addEventListener('backbutton', function (e) {
         e.preventDefault();
         console.log("Back button pressed");
         // Do nothing or show a message if needed
     }, false);
+});
+
+// Sign-out button functionality
+document.getElementById('signout-button').addEventListener('click', function () {
+    // Clear localStorage or sessionStorage
+    localStorage.clear();
+    sessionStorage.clear();
+    // Redirect to the login page
+    window.location.href = './index.html';
 });

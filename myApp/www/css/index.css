@@ -10,6 +10,22 @@ body {
     font-family: Arial, sans-serif;
 }
 
+.signout-button {
+    position: absolute;
+    top: 0;
+    right: 15px;
+    background: none; /* No background */
+    border: none; /* No border */
+    cursor: pointer; /* Pointer cursor on hover */
+    width: 30px; /* Match the image width */
+    height: 30px; /* Match the image height */
+    padding: 0; /* No padding */
+}
+
+.signout-button img {
+    width: 100%; /* Make the image fill the button */
+    height: 100%; /* Make the image fill the button */
+}
 
 /* Modal Styles */
 #locationModal {
