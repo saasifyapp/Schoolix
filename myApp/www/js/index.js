@@ -34,6 +34,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 sessionStorage.setItem('dbCredentials', JSON.stringify(data.dbCredentials));
                 sessionStorage.setItem('driverName', data.name); // Store the original name
 
+                // Store credentials in local storage
+                localStorage.setItem('token', data.accessToken);
+                localStorage.setItem('refreshToken', data.refreshToken);
+                localStorage.setItem('dbCredentials', JSON.stringify(data.dbCredentials));
+                localStorage.setItem('driverName', data.name); // Store the original name
+
                 const userType = data.type;
 
                 // Redirect to the appropriate console based on user type

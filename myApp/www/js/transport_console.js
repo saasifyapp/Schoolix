@@ -99,6 +99,19 @@ document.addEventListener('deviceready', function() {
 function onDeviceReady() {
     console.log("Device is ready");
 
+      // Retrieve credentials from localStorage
+      let token = localStorage.getItem('token');
+      let refreshToken = localStorage.getItem('refreshToken');
+      let dbCredentials = JSON.parse(localStorage.getItem('dbCredentials'));
+      let driverName = localStorage.getItem('driverName');
+  
+      if (!token || !refreshToken || !dbCredentials || !driverName) {
+          console.error('Credentials not found in localStorage.');
+          alert('Session expired. Please log in again.');
+          window.location.href = './index.html';
+          return;
+      }
+
     if (typeof cordova !== 'undefined') {
         const permissions = cordova.plugins.permissions;
         const requiredPermissions = [
@@ -173,10 +186,7 @@ function initializeApp() {
         'Afternoon': './img/afternoon.gif'
     };
 
-    let token = sessionStorage.getItem('token');
-    let refreshToken = sessionStorage.getItem('refreshToken');
-    let dbCredentials = JSON.parse(sessionStorage.getItem('dbCredentials'));
-    let driverName = sessionStorage.getItem('driverName');
+    
     let routeStops = []; // Store route stops
     let studentsData = []; // Store the fetched students data
     let currentShiftName = ''; // Store the current shift name
