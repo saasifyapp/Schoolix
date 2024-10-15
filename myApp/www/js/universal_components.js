@@ -34,9 +34,13 @@ document.addEventListener('deviceready', function () {
 
 // Sign-out button functionality
 document.getElementById('signout-button').addEventListener('click', function () {
-    // Clear localStorage or sessionStorage
-    localStorage.clear();
-    sessionStorage.clear();
-    // Redirect to the login page
-    window.location.href = './index.html';
+    // Ask for confirmation before signing out
+    const confirmation = confirm("Are you sure you want to sign out?");
+    if (confirmation) {
+        // Clear localStorage or sessionStorage
+        localStorage.clear();
+        sessionStorage.clear();
+        // Redirect to the login page
+        window.location.href = './index.html';
+    }
 });
