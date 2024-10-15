@@ -4,7 +4,7 @@ document.addEventListener('deviceready', function() {
     const locationModal = document.getElementById('locationModal');
     const enableLocationBtn = document.getElementById('enableLocationBtn');
     const cancelBtn = document.getElementById('cancelBtn');
-    const navigationStack = JSON.parse(sessionStorage.getItem('navigationStack')) || [];
+    let navigationStack = JSON.parse(sessionStorage.getItem('navigationStack')) || [];
 
     // Check location permissions and status on load
     checkLocationPermissionsAndServices();
@@ -88,22 +88,52 @@ document.addEventListener('deviceready', function() {
     document.addEventListener('backbutton', function(e) {
         e.preventDefault();
         if (navigationStack.length > 0) {
-            const previousPage = navigationStack.pop();
+            const previousState = navigationStack.pop();
             sessionStorage.setItem('navigationStack', JSON.stringify(navigationStack));
-            window.location.href = previousPage;
+            restoreState(previousState);
         } else {
-            navigator.app.exitApp(); // Exit the app if no previous page is available
+            navigator.app.exitApp(); // Exit the app if no previous state is available
         }
     }, false);
 
-    // Store the current page as the previous page before navigating to a new page
-    document.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', function() {
-            const currentPath = window.location.pathname;
-            navigationStack.push(currentPath);
-            sessionStorage.setItem('navigationStack', JSON.stringify(navigationStack));
-        });
-    });
+    // Function to navigate to a new state
+    function navigateTo(newState) {
+        const currentState = {
+            driverDetailsScreenVisible: !driverDetailsScreen.classList.contains('hidden'),
+            driverConsoleVisible: !driverConsole.classList.contains('hidden'),
+            searchBarValue: searchBar.value,
+            detailedDriverListContent: detailedDriverList.innerHTML
+        };
+
+        navigationStack.push(currentState);
+        sessionStorage.setItem('navigationStack', JSON.stringify(navigationStack));
+
+        // Update the state based on the new state
+        if (newState.driverDetailsScreenVisible) {
+            driverDetailsScreen.classList.remove('hidden');
+            driverConsole.classList.add('hidden');
+        } else {
+            driverDetailsScreen.classList.add('hidden');
+            driverConsole.classList.remove('hidden');
+        }
+
+        searchBar.value = newState.searchBarValue;
+        detailedDriverList.innerHTML = newState.detailedDriverListContent;
+    }
+
+    // Function to restore a previous state
+    function restoreState(state) {
+        if (state.driverDetailsScreenVisible) {
+            driverDetailsScreen.classList.remove('hidden');
+            driverConsole.classList.add('hidden');
+        } else {
+            driverDetailsScreen.classList.add('hidden');
+            driverConsole.classList.remove('hidden');
+        }
+
+        searchBar.value = state.searchBarValue;
+        detailedDriverList.innerHTML = state.detailedDriverListContent;
+    }
 
     // Existing onDeviceReady function
     onDeviceReady();
