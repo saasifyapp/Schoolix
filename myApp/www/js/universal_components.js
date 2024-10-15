@@ -28,10 +28,6 @@ document.addEventListener('deviceready', function() {
     document.addEventListener('backbutton', function(e) {
         e.preventDefault();
         console.log("Back button pressed");
-        // Trigger the custom back button click event
-        const backButton = document.getElementById('back-button');
-        if (backButton) {
-            backButton.click();
-        }
+        // Do nothing or show a message if needed
     }, false);
 });
