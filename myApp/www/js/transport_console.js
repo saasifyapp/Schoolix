@@ -1,4 +1,4 @@
-document.addEventListener('deviceready', function() {
+document.addEventListener('deviceready', function () {
     console.log("Device is ready");
 
     const locationModal = document.getElementById('locationModal');
@@ -8,13 +8,13 @@ document.addEventListener('deviceready', function() {
     // Check location permissions and status on load
     checkLocationPermissionsAndServices();
 
-    enableLocationBtn.addEventListener('click', function() {
+    enableLocationBtn.addEventListener('click', function () {
         console.log("Enable Location button clicked");
         cordova.plugins.diagnostic.switchToLocationSettings();
         hideLocationSettingsPrompt();
     });
 
-    cancelBtn.addEventListener('click', function() {
+    cancelBtn.addEventListener('click', function () {
         console.log("Cancel button clicked");
         hideLocationSettingsPrompt();
         redirectToLogin();
@@ -54,7 +54,7 @@ document.addEventListener('deviceready', function() {
 
     function checkLocationServices() {
         console.log("Checking location services...");
-        cordova.plugins.diagnostic.isLocationEnabled(function(enabled) {
+        cordova.plugins.diagnostic.isLocationEnabled(function (enabled) {
             if (enabled) {
                 console.log("Location services are enabled");
                 onDeviceReady(); // Call the existing onDeviceReady function
@@ -62,7 +62,7 @@ document.addEventListener('deviceready', function() {
                 console.log("Location services are disabled, showing prompt...");
                 showLocationSettingsPrompt();
             }
-        }, function(error) {
+        }, function (error) {
             console.error("The following error occurred: " + error);
             redirectToLogin();
         });
@@ -98,7 +98,7 @@ document.addEventListener('deviceready', function() {
 // Existing onDeviceReady function
 function onDeviceReady() {
     console.log("Device is ready");
-    
+
 
     if (typeof cordova !== 'undefined') {
         const permissions = cordova.plugins.permissions;
@@ -153,8 +153,7 @@ function showLocationSettingsPrompt() {
 function initializeApp() {
     console.log("Initializing app");
 
-    const backButton = document.getElementById('back-button');
-    const backToConsoleButton = document.getElementById('back-to-console-button');
+    
     const driverConsole = document.getElementById('driver-console');
     const driverDetailsScreen = document.getElementById('driver-details-screen');
     const detailedDriverList = document.getElementById('detailed-driver-list');
@@ -174,34 +173,20 @@ function initializeApp() {
         'Afternoon': './img/afternoon.gif'
     };
 
-    let token = sessionStorage.getItem('token');
-    let refreshToken = sessionStorage.getItem('refreshToken');
-    let dbCredentials = JSON.parse(sessionStorage.getItem('dbCredentials'));
-    let driverName = sessionStorage.getItem('driverName');
+    let token = localStorage.getItem('token');
+    let refreshToken = localStorage.getItem('refreshToken');
+    let dbCredentials = JSON.parse(localStorage.getItem('dbCredentials'));
+    let driverName = localStorage.getItem('driverName');
     let routeStops = []; // Store route stops
     let studentsData = []; // Store the fetched students data
     let currentShiftName = ''; // Store the current shift name
 
     if (!dbCredentials) {
-        console.error('Database credentials not found in session storage.');
+        console.error('Database credentials not found in local storage.');
         alert('Session expired. Please log in again.');
         window.location.href = './index.html';
         return;
     }
-
-    // if (backButton) {
-    //     backButton.addEventListener('click', () => {
-    //         window.location.href = './index.html';
-    //     });
-    // }
-
-    // if (backToConsoleButton) {
-    //     backToConsoleButton.addEventListener('click', () => {
-    //         driverDetailsScreen.classList.add('hidden');
-    //         driverConsole.classList.remove('hidden');
-    //         searchBar.value = ''; // Clear the search field when going back to the console
-    //     });
-    // }
 
     const showSpinner = () => {
         const spinnerContainer = document.getElementById('spinnerContainer');

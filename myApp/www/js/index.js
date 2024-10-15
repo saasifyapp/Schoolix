@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Function to check if a session is already active
     function checkSession() {
-        const token = sessionStorage.getItem('token');
-        const userType = sessionStorage.getItem('userType');
+        const token = localStorage.getItem('token');
+        const userType = localStorage.getItem('userType');
 
         if (token && userType) {
             const tokenPayload = JSON.parse(atob(token.split('.')[1]));
@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 redirectToConsole(userType);
                 return true;
             } else {
-                // Token has expired, clear session storage
-                sessionStorage.clear();
+                // Token has expired, clear local storage
+                localStorage.clear();
             }
         }
         return false;
@@ -62,12 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         return;
                     }
 
-                    // Store credentials and session details in session storage
-                    sessionStorage.setItem('token', data.accessToken);
-                    sessionStorage.setItem('refreshToken', data.refreshToken);
-                    sessionStorage.setItem('dbCredentials', JSON.stringify(data.dbCredentials));
-                    sessionStorage.setItem('driverName', data.name); // Store the original name
-                    sessionStorage.setItem('userType', data.type); // Store the user type
+                    // Store credentials and session details in local storage
+                    localStorage.setItem('token', data.accessToken);
+                    localStorage.setItem('refreshToken', data.refreshToken);
+                    localStorage.setItem('dbCredentials', JSON.stringify(data.dbCredentials));
+                    localStorage.setItem('driverName', data.name); // Store the original name
+                    localStorage.setItem('userType', data.type); // Store the user type
 
                     // Redirect to the appropriate console based on user type
                     redirectToConsole(data.type);
