@@ -370,6 +370,28 @@ app.post('/refresh-token', (req, res) => {
     });
 });
 
+
+// Android sign-out endpoint
+app.post('/android-signout', (req, res) => {
+    const { token } = req.body;
+    if (!token) {
+        return res.sendStatus(401);
+    }
+
+    // Remove the token from the list of valid refresh tokens
+    const index = refreshTokens.indexOf(token);
+    if (index !== -1) {
+        refreshTokens.splice(index, 1);
+        console.log(`Refresh token invalidated: ${token}`);
+    }
+
+    res.sendStatus(204); // No Content
+});
+
+app.listen(3000, () => {
+    console.log('Server is running on port 3000');
+});
+
 ///// ROUTES FOR ANDROID APP /////
 
 const app_transportRoutes = require('./src/routes/android_app_routes/transport_routes/transport_getStudents');
