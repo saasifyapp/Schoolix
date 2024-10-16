@@ -576,12 +576,10 @@ function initializeApp() {
     });
 
 
-    // Function to log pick/drop events
     const logPickDropEvent = async (studentName, pickDropLocation, typeOfLog, shift, standard) => {
-        const dateOfLog = new Date().toISOString().split('T')[0]; // Get the current date in YYYY-MM-DD format
         const vehicleNo = vehicleNoField.textContent;
         const driverName = driverNameField.textContent;
-
+    
         try {
             const response = await fetch('https://schoolix.saasifyapp.com/android/log-pick-drop-event', {
                 method: 'POST',
@@ -596,7 +594,6 @@ function initializeApp() {
                 body: JSON.stringify({
                     studentName: studentName,
                     pickDropLocation: pickDropLocation,
-                    dateOfLog: dateOfLog,
                     typeOfLog: typeOfLog,
                     vehicleNo: vehicleNo,
                     driverName: driverName,
@@ -604,15 +601,15 @@ function initializeApp() {
                     standard: standard
                 }),
             });
-
+    
             if (response.status === 409) {
                 return 'exists';
             }
-
+    
             if (!response.ok) {
                 throw new Error(`Failed to log event: ${response.status}`);
             }
-
+    
             const data = await response.json();
             console.log('Event logged successfully:', data);
             return 'success';

@@ -183,11 +183,13 @@ router.get('/android/get-student-details', connectionManagerAndroid, (req, res) 
 
 // Endpoint to log pick/drop events
 router.post('/android/log-pick-drop-event', connectionManagerAndroid, (req, res) => {
-    const { studentName, pickDropLocation, dateOfLog, typeOfLog, vehicleNo, driverName, shift, standard } = req.body;
+    const { studentName, pickDropLocation, typeOfLog, vehicleNo, driverName, shift, standard } = req.body;
 
-    if (!studentName || !pickDropLocation || !dateOfLog || !typeOfLog || !vehicleNo || !driverName || !shift || !standard) {
+    if (!studentName || !pickDropLocation || !typeOfLog || !vehicleNo || !driverName || !shift || !standard) {
         return res.status(400).json({ message: 'All fields are required' });
     }
+
+    const dateOfLog = moment().tz('Asia/Kolkata').format('YYYY-MM-DD'); // Get the current date in YYYY-MM-DD format in IST
 
     const checkQuery = `
         SELECT * FROM transport_pick_drop_logs 
