@@ -9,6 +9,17 @@
 </head>
 
 <body>
+
+    <!-- Spinner Container -->
+    <div id="spinnerContainer" class="spinner-container">
+        <div id="spinner" class="spinner"></div>
+    </div>
+
+    <!-- Sign-out Button with Image -->
+    <button id="signout-button" class="signout-button">
+        <img src="./img/signout.png" alt="Sign Out">
+    </button>
+
     <div id="driver-console" class="screen">
         <h1>DRIVER CONSOLE</h1>
         <div class="card">
@@ -43,15 +54,19 @@
     </div>
 
 
-    <!-- Spinner Container -->
-    <!-- Spinner Container -->
-    <div id="spinnerContainer" class="spinner-container">
-        <div id="spinner" class="spinner"></div>
+    <!-- Modal Structure -->
+    <div id="locationModal" class="modal">
+        <div class="modal-content">
+            <p>Location services are disabled. Please enable them to use this app.</p>
+            <button id="enableLocationBtn">Enable Location</button>
+            <button id="cancelBtn">Cancel</button>
+        </div>
     </div>
 
-
-
+    <script src="cordova.js"></script>
     <script src="./js/transport_console.js"></script>
+    <script src="./js/universal_components.js"></script>
+
 </body>
 
 </html>

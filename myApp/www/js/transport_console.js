@@ -1,6 +1,159 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const backButton = document.getElementById('back-button');
-    const backToConsoleButton = document.getElementById('back-to-console-button');
+document.addEventListener('deviceready', function () {
+    console.log("Device is ready");
+
+    const locationModal = document.getElementById('locationModal');
+    const enableLocationBtn = document.getElementById('enableLocationBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+
+    // Check location permissions and status on load
+    checkLocationPermissionsAndServices();
+
+    enableLocationBtn.addEventListener('click', function () {
+        console.log("Enable Location button clicked");
+        cordova.plugins.diagnostic.switchToLocationSettings();
+        hideLocationSettingsPrompt();
+    });
+
+    cancelBtn.addEventListener('click', function () {
+        console.log("Cancel button clicked");
+        hideLocationSettingsPrompt();
+        redirectToLogin();
+    });
+
+    function checkLocationPermissionsAndServices() {
+        const permissions = cordova.plugins.permissions;
+        const requiredPermissions = [
+            permissions.ACCESS_FINE_LOCATION,
+            permissions.ACCESS_COARSE_LOCATION
+        ];
+
+        console.log("Checking permissions...");
+        permissions.checkPermission(requiredPermissions, (status) => {
+            console.log("Permissions status:", status);
+            if (!status.hasPermission) {
+                console.log("Permissions not granted, requesting permissions...");
+                permissions.requestPermissions(requiredPermissions, (status) => {
+                    if (!status.hasPermission) {
+                        alert("Permission denied. The app needs location permissions to function properly.");
+                        redirectToLogin();
+                    } else {
+                        checkLocationServices();
+                    }
+                }, (error) => {
+                    console.error("Error requesting permissions", error);
+                    redirectToLogin();
+                });
+            } else {
+                checkLocationServices();
+            }
+        }, (error) => {
+            console.error("Error checking permissions", error);
+            redirectToLogin();
+        });
+    }
+
+    function checkLocationServices() {
+        console.log("Checking location services...");
+        cordova.plugins.diagnostic.isLocationEnabled(function (enabled) {
+            if (enabled) {
+                console.log("Location services are enabled");
+                onDeviceReady(); // Call the existing onDeviceReady function
+            } else {
+                console.log("Location services are disabled, showing prompt...");
+                showLocationSettingsPrompt();
+            }
+        }, function (error) {
+            console.error("The following error occurred: " + error);
+            redirectToLogin();
+        });
+    }
+
+    function showLocationSettingsPrompt() {
+        console.log("Showing location settings prompt");
+        locationModal.style.display = 'flex';
+    }
+
+    function hideLocationSettingsPrompt() {
+        console.log("Hiding location settings prompt");
+        locationModal.style.display = 'none';
+    }
+
+    function redirectToLogin() {
+        console.log("Redirecting to login page");
+        window.location.href = './index.html'; // Adjust the path as needed
+    }
+
+    // // Handle Android back button
+    // document.addEventListener('backbutton', function(e) {
+    //     e.preventDefault();
+    //     console.log("Back button pressed");
+    //     // Do nothing or show a message if needed
+    // }, false);
+
+
+    // Existing onDeviceReady function
+    onDeviceReady();
+});
+
+// Existing onDeviceReady function
+function onDeviceReady() {
+    console.log("Device is ready");
+
+
+    if (typeof cordova !== 'undefined') {
+        const permissions = cordova.plugins.permissions;
+        const requiredPermissions = [
+            permissions.ACCESS_FINE_LOCATION,
+            permissions.ACCESS_COARSE_LOCATION
+        ];
+
+        permissions.checkPermission(requiredPermissions, (status) => {
+            console.log("Checking permissions");
+            if (!status.hasPermission) {
+                console.log("Permissions not granted, requesting permissions");
+                permissions.requestPermissions(requiredPermissions, (status) => {
+                    if (!status.hasPermission) {
+                        alert("Permission denied. The app needs location permissions to function properly.");
+                    } else {
+                        console.log("Permissions granted");
+                        checkLocationServices();
+                    }
+                }, (error) => {
+                    console.error("Error requesting permissions", error);
+                });
+            } else {
+                console.log("Permissions already granted");
+                checkLocationServices();
+            }
+        }, (error) => {
+            console.error("Error checking permissions", error);
+        });
+    } else {
+        checkLocationServices();
+    }
+}
+
+function checkLocationServices() {
+    cordova.plugins.diagnostic.isLocationEnabled(function (enabled) {
+        if (enabled) {
+            initializeApp();
+        } else {
+            showLocationSettingsPrompt();
+        }
+    }, function (error) {
+        console.error("The following error occurred: " + error);
+    });
+}
+
+function showLocationSettingsPrompt() {
+    alert("Location services are disabled. Please enable them to use this app.");
+    cordova.plugins.diagnostic.switchToLocationSettings();
+}
+
+function initializeApp() {
+    console.log("Initializing app");
+
+    
     const driverConsole = document.getElementById('driver-console');
     const driverDetailsScreen = document.getElementById('driver-details-screen');
     const detailedDriverList = document.getElementById('detailed-driver-list');
@@ -13,7 +166,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalStopsField = document.getElementById('total-stops');
     const totalStudentsField = document.getElementById('total-students');
     const searchBar = document.getElementById('search-bar');
-    const spinner = document.getElementById('spinner');
 
     // Shift GIFs
     const shiftGifs = {
@@ -21,33 +173,19 @@ document.addEventListener('DOMContentLoaded', () => {
         'Afternoon': './img/afternoon.gif'
     };
 
-    let token = sessionStorage.getItem('token');
-    let refreshToken = sessionStorage.getItem('refreshToken');
-    let dbCredentials = JSON.parse(sessionStorage.getItem('dbCredentials'));
-    let driverName = sessionStorage.getItem('driverName');
+    let token = localStorage.getItem('token');
+    let refreshToken = localStorage.getItem('refreshToken');
+    let dbCredentials = JSON.parse(localStorage.getItem('dbCredentials'));
+    let driverName = localStorage.getItem('driverName');
     let routeStops = []; // Store route stops
     let studentsData = []; // Store the fetched students data
     let currentShiftName = ''; // Store the current shift name
 
     if (!dbCredentials) {
-        console.error('Database credentials not found in session storage.');
+        console.error('Database credentials not found in local storage.');
         alert('Session expired. Please log in again.');
         window.location.href = './index.html';
         return;
-    }
-
-    if (backButton) {
-        backButton.addEventListener('click', () => {
-            window.location.href = './index.html';
-        });
-    }
-
-    if (backToConsoleButton) {
-        backToConsoleButton.addEventListener('click', () => {
-            driverDetailsScreen.classList.add('hidden');
-            driverConsole.classList.remove('hidden');
-            searchBar.value = ''; // Clear the search field when going back to the console
-        });
     }
 
     const showSpinner = () => {
@@ -306,7 +444,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 listItem.querySelector('.not-picked').addEventListener('click', async () => {
                     const result = await logPickDropEvent(item.name, item.transport_pickup_drop, 'not_picked', currentShiftName, item.class);
                     if (result === 'exists') {
-                        alert('Student already logged under not_picked category for this date');
+                        alert('Student already marked under not_picked category for today');
                     } else {
                         alert(`${item.name} not picked`);
                     }
@@ -315,7 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 listItem.querySelector('.not-dropped').addEventListener('click', async () => {
                     const result = await logPickDropEvent(item.name, item.transport_pickup_drop, 'not_dropped', currentShiftName, item.class);
                     if (result === 'exists') {
-                        alert('Student already logged under not_dropped category for this date');
+                        alert('Student already marked under not_dropped category for today');
                     } else {
                         alert(`${item.name} not dropped`);
                     }
@@ -382,7 +520,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to get the current location
     const getCurrentLocation = () => {
-        if (navigator.geolocation) {
+        if (typeof cordova !== 'undefined' && cordova.plugins && cordova.plugins.geolocation) {
+            cordova.plugins.geolocation.getCurrentPosition(async (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                console.log('Coordinates:', latitude, longitude);
+
+                // Assuming you have fetched the driver's details before
+                const driverName = driverNameField.textContent;
+                const vehicleNumber = vehicleNoField.textContent;
+
+                // Send coordinates to the server
+                await sendCoordinates(latitude, longitude, driverName, vehicleNumber);
+            }, (error) => {
+                console.error('Error getting location:', error);
+            }, {
+                enableHighAccuracy: true
+            });
+        } else if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(async (position) => {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
@@ -419,12 +575,11 @@ document.addEventListener('DOMContentLoaded', () => {
         startSendingCoordinates(); // Start sending the coordinates every 2 minutes
     });
 
-    // Function to log pick/drop events
+
     const logPickDropEvent = async (studentName, pickDropLocation, typeOfLog, shift, standard) => {
-        const dateOfLog = new Date().toISOString().split('T')[0]; // Get the current date in YYYY-MM-DD format
         const vehicleNo = vehicleNoField.textContent;
         const driverName = driverNameField.textContent;
-
+    
         try {
             const response = await fetch('https://schoolix.saasifyapp.com/android/log-pick-drop-event', {
                 method: 'POST',
@@ -439,7 +594,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({
                     studentName: studentName,
                     pickDropLocation: pickDropLocation,
-                    dateOfLog: dateOfLog,
                     typeOfLog: typeOfLog,
                     vehicleNo: vehicleNo,
                     driverName: driverName,
@@ -447,15 +601,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     standard: standard
                 }),
             });
-
+    
             if (response.status === 409) {
                 return 'exists';
             }
-
+    
             if (!response.ok) {
                 throw new Error(`Failed to log event: ${response.status}`);
             }
-
+    
             const data = await response.json();
             console.log('Event logged successfully:', data);
             return 'success';
@@ -464,5 +618,4 @@ document.addEventListener('DOMContentLoaded', () => {
             return 'error';
         }
     };
-
-});
+}

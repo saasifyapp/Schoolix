@@ -8,6 +8,7 @@ const sidebarExpand = document.querySelector(".expand_sidebar");
 sidebarOpen.addEventListener("click", () => sidebar.classList.toggle("close"));
 
 
+
 // darkLight.addEventListener("click", () => {
 //     body.classList.toggle("dark");
 //     if (body.classList.contains("dark")) {
@@ -228,6 +229,160 @@ document
 
 function staytuned() {
   alert("Feature Yet to be released! Stay Tuned!");
+}
+
+
+////////////////// LOCATION FUNCTIONALITY ///////////
+document.addEventListener('DOMContentLoaded', () => {
+  const locationDropbtn = document.querySelector('.location_dropbtn');
+  const locationDropdownContent = document.querySelector('.location_dropdown-content');
+  
+  // Toggle dropdown visibility on button click
+  locationDropbtn.addEventListener('click', () => {
+      locationDropdownContent.style.display = locationDropdownContent.style.display === 'block' ? 'none' : 'block';
+  });
+
+  // Close dropdown when clicking outside of it
+  window.addEventListener('click', (event) => {
+      if (!locationDropbtn.contains(event.target) && !locationDropdownContent.contains(event.target)) {
+          locationDropdownContent.style.display = 'none';
+      }
+  });
+
+  // Select the buttons in the dropdown
+  const autoDetectLocationButton = document.getElementById('auto_detectLocation');
+  const manuallyAddLocationButton = document.getElementById('manually_addLocation');
+
+  // Add event listener to the auto-detect location button
+  autoDetectLocationButton.addEventListener('click', async (event) => {
+      event.preventDefault(); // Prevent default link behavior
+
+      // Call the autoDetectLocation function with the retrieved username
+      await autoDetectLocation(username);
+  });
+
+  // Add event listener to the manually add location button
+  manuallyAddLocationButton.addEventListener('click', async (event) => {
+      event.preventDefault(); // Prevent default link behavior
+
+      // Show the Swal popup for manually adding location
+      const { value: formValues } = await Swal.fire({
+          title: 'Manually Add Location',
+          html:
+            '<input id="swal-input1" class="swal2-input" placeholder="Latitude">' +
+            '<input id="swal-input2" class="swal2-input" placeholder="Longitude">',
+          focusConfirm: false,
+          showCancelButton: true,
+          confirmButtonText: 'Submit',
+          cancelButtonText: 'Close',
+          preConfirm: () => {
+              return [
+                  document.getElementById('swal-input1').value,
+                  document.getElementById('swal-input2').value
+              ]
+          }
+      });
+
+      if (formValues) {
+          const [latitude, longitude] = formValues;
+          if (latitude && longitude) {
+              // Call the manualAddLocation function with the user-entered latitude and longitude
+              await manualAddLocation(username, latitude, longitude);
+          } else {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Invalid Input',
+                  text: 'Please enter both latitude and longitude.',
+              });
+          }
+      }
+  });
+});
+
+async function autoDetectLocation(loginName) {
+  // Check the user's confirmation status
+  const statusResponse = await fetch('/check-confirmation-status', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ loginName: loginName }),
+  });
+
+  const statusData = await statusResponse.json();
+
+  // Check if the user is found and if confirmation is needed
+  if (statusData.error) {
+      console.error(statusData.error);
+      return; // Handle error if user is not found
+  }
+
+  // Show the confirmation alert regardless of the confirmed_at_school status
+  const result = await Swal.fire({
+      title: "Are you at the school's location?",
+      text: "Please confirm if you're currently at the school.",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, I am',
+      cancelButtonText: 'No',
+  });
+
+  if (result.isConfirmed) {
+      // Get the user's coordinates automatically
+      navigator.geolocation.getCurrentPosition(async (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          await sendLocationToServer(loginName, latitude, longitude);
+      }, (error) => {
+          console.error('Error getting location:', error);
+          Swal.fire({
+              icon: 'error',
+              title: 'Location Error',
+              text: 'Failed to get your location. Please enable location services and try again.',
+          });
+      });
+  } else {
+      await Swal.fire({
+          icon: 'info',
+          title: 'Location Not Confirmed',
+          text: 'Please confirm your location at the next login.',
+      });
+  }
+}
+
+async function manualAddLocation(loginName, latitude, longitude) {
+  // Directly send the manually entered coordinates to the server
+  await sendLocationToServer(loginName, latitude, longitude);
+}
+
+async function sendLocationToServer(loginName, latitude, longitude) {
+  // Send the coordinates to the server and confirm the location
+  const response = await fetch('/confirm-location', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+          loginName: loginName,
+          latitude: latitude,
+          longitude: longitude,
+      }),
+  });
+
+  const data = await response.json();
+  if (data.success) {
+      await Swal.fire({
+          icon: 'success',
+          title: 'Location Confirmed',
+          text: 'Your location has been confirmed and saved.',
+      });
+  } else {
+      await Swal.fire({
+          icon: 'info',
+          title: 'Location Already Confirmed',
+          text: 'You have already confirmed your location.',
+      });
+  }
 }
 
 ///////////////////////////////////////// GET VALUES FOR PREADMISSION CONSOLE ON DASHBOARD ////////////////////////////
