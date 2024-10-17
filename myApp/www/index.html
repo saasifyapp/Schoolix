@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Two Screen App</title>
-    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/form-control.css">   
+    <link rel="stylesheet" href="./css/login.css">
 </head>
 <body>
     <!-- Login Screen -->
@@ -12,10 +13,24 @@
         <div class="login-gif-wrapper">
             <img src="./img/login.gif" alt="Login GIF" class="login-gif">
         </div>
-        <h1>Schoolix Login</h1>
-        <input type="text" id="username" placeholder="Username" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <button id="login-button">Login</button>
+        <h1 class="heading">Schoolix Login</h1>
+        <!-- <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required> -->
+
+        <div class="form-group">
+            <input type="text" class="form-control" id="username" placeholder=" " required>
+            <span class="form-control-placeholder">Username</span>
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" id="password" placeholder=" " required>
+            <span class="form-control-placeholder">Password</span>
+        </div>
+        
+        <button id="login-button" type="submit">
+            <img src="./img/login-icon.png" alt="Login Icon">
+            <span>Login</span>
+        </button>
+        
     </div>
 
     <script src="./js/index.js"></script>
