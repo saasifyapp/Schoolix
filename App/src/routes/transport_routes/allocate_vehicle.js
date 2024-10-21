@@ -77,29 +77,42 @@ router.get('/allocate_getStudentCount', (req, res) => {
     const stopsArray = routeStops.split(',').map(stop => stop.trim());
     const classesArray = shiftClasses.split(',').map(cls => cls.trim());
 
+    // Construct the updated SQL query
     const sql = `
-        SELECT COUNT(*) AS studentCount
-        FROM (
-            SELECT transport_pickup_drop, Standard, Division
-            FROM pre_primary_student_details
-            WHERE transport_needed = 1 AND transport_tagged IS NULL
-            UNION ALL
-            SELECT transport_pickup_drop, Standard, Division
-            FROM primary_student_details
-            WHERE transport_needed = 1 AND transport_tagged IS NULL
-        ) AS combined
-        WHERE combined.transport_pickup_drop IN (?) AND CONCAT(combined.Standard, ' ', combined.Division) IN (?)
+        SELECT
+            (SELECT COUNT(*)
+             FROM (
+                 SELECT transport_pickup_drop, Standard, Division
+                 FROM pre_primary_student_details
+                 WHERE transport_needed = 1 AND transport_tagged IS NULL
+                 UNION ALL
+                 SELECT transport_pickup_drop, Standard, Division
+                 FROM primary_student_details
+                 WHERE transport_needed = 1 AND transport_tagged IS NULL
+             ) AS combined
+             WHERE combined.transport_pickup_drop IN (?)
+             AND CONCAT(combined.Standard, ' ', combined.Division) IN (?)
+            ) AS studentCount,
+
+            (SELECT COUNT(*)
+             FROM teacher_details
+             WHERE transport_needed = 1 AND transport_tagged IS NULL
+             AND transport_pickup_drop IN (?)
+             AND (${classesArray.map(() => `FIND_IN_SET(?, classes_alloted)`).join(' > 0 OR ')} > 0)
+            ) AS teacherCount
     `;
 
-    req.connectionPool.query(sql, [stopsArray, classesArray], (error, results) => {
+    const queryParameters = [stopsArray, classesArray, stopsArray, ...classesArray];
+
+    req.connectionPool.query(sql, queryParameters, (error, results) => {
         if (error) {
             console.error('Database query failed:', error);
             return res.status(500).json({ error: 'Database query failed' });
         }
+
         res.status(200).json(results[0]);
     });
 });
-
 
 // Endpoint to validate if the selected route, shift, and vehicle exist in one row and fetch the driver name
 router.post('/validate_tagged_routeShiftVehicle', (req, res) => {
@@ -127,7 +140,7 @@ router.post('/validate_tagged_routeShiftVehicle', (req, res) => {
 }); 
 
 
-// New endpoint to tag students to the selected bus and update transport_schedule_details
+// New endpoint to tag students and teachers to the selected bus and update transport_schedule_details
 router.post('/allocate_tagStudentsToBus', (req, res) => {
     const { vehicleNo, routeStops, shiftClasses, availableSeats, routeName, shiftName } = req.body;
 
@@ -148,12 +161,20 @@ router.post('/allocate_tagStudentsToBus', (req, res) => {
         ORDER BY transport_pickup_drop ASC
     `;
 
-    req.connectionPool.query(sqlFetchStudents, [stopsArray, classesArray, stopsArray, classesArray], (fetchError, fetchResults) => {
-        if (fetchError) {
+    // Fetch teachers who need transport and are not yet tagged
+    const sqlFetchTeachers = `
+        SELECT id AS Teacher_id, name AS Name, transport_pickup_drop
+        FROM teacher_details
+        WHERE transport_needed = 1 AND transport_tagged IS NULL
+          AND transport_pickup_drop IN (?) AND (${classesArray.map(() => `FIND_IN_SET(?, classes_alloted)`).join(' > 0 OR ')} > 0)
+    `;
+
+    req.connectionPool.query(sqlFetchStudents, [stopsArray, classesArray, stopsArray, classesArray], (fetchErrorStudents, fetchResultsStudents) => {
+        if (fetchErrorStudents) {
             return res.status(500).json({ success: false, error: 'Database query failed for fetching students' });
         }
 
-        const students = fetchResults.map(row => ({
+        const students = fetchResultsStudents.map(row => ({
             id: row.Student_id,
             name: row.Name,
             pickupDrop: row.transport_pickup_drop,
@@ -161,63 +182,87 @@ router.post('/allocate_tagStudentsToBus', (req, res) => {
             division: row.Division
         }));
 
-        // Extract the route stops and class details from the students
-        const routeStops = [...new Set(students.map(student => student.pickupDrop))];
-        const classesAlloted = [...new Set(students.map(student => `${student.standard} ${student.division}`))];
-
-        // Split the classesAlloted array into Standard and Division
-        const classesArray = classesAlloted.map(cls => {
-            const [standard, ...divisionParts] = cls.split(' ');
-            const division = divisionParts.join(' ');
-            return { standard, division };
-        });
-
-        // Generate the SQL WHERE clause for Standard and Division pairs
-        const whereClause = classesArray.map(({ standard, division }) => `(Standard = '${standard}' AND Division = '${division}')`).join(' OR ');
-
-        // SQL query to update transport_tagged for specific students in pre_primary_student_details
-        const sqlUpdateStudentsPrePrimary = `
-            UPDATE pre_primary_student_details
-            SET transport_tagged = ?
-            WHERE transport_pickup_drop IN (?) AND (${whereClause}) AND transport_needed = 1
-        `;
-        const sqlUpdateStudentsPrimary = `
-            UPDATE primary_student_details
-            SET transport_tagged = ?
-            WHERE transport_pickup_drop IN (?) AND (${whereClause}) AND transport_needed = 1
-        `;
-        const valuesUpdateStudents = [vehicleNo, routeStops];
-
-        // Execute the queries to update student details
-        req.connectionPool.query(sqlUpdateStudentsPrePrimary, valuesUpdateStudents, (updateErrorPrePrimary, updateResultsPrePrimary) => {
-            if (updateErrorPrePrimary) {
-                return res.status(500).json({ success: false, error: 'Database update failed for pre_primary_student_details' });
+        req.connectionPool.query(sqlFetchTeachers, [stopsArray, ...classesArray], (fetchErrorTeachers, fetchResultsTeachers) => {
+            if (fetchErrorTeachers) {
+                return res.status(500).json({ success: false, error: 'Database query failed for fetching teachers' });
             }
 
-            req.connectionPool.query(sqlUpdateStudentsPrimary, valuesUpdateStudents, (updateErrorPrimary, updateResultsPrimary) => {
-                if (updateErrorPrimary) {
-                    return res.status(500).json({ success: false, error: 'Database update failed for primary_student_details' });
+            const teachers = fetchResultsTeachers.map(row => ({
+                id: row.Teacher_id,
+                name: row.Name,
+                pickupDrop: row.transport_pickup_drop,
+            }));
+
+            // Process student allocation
+            const routeStopsStudents = [...new Set(students.map(student => student.pickupDrop))];
+            const classesAllotedStudents = [...new Set(students.map(student => `${student.standard} ${student.division}`))];
+
+            const classesArrayStudents = classesAllotedStudents.map(cls => {
+                const [standard, ...divisionParts] = cls.split(' ');
+                const division = divisionParts.join(' ');
+                return { standard, division };
+            });
+
+            const whereClauseStudents = classesArrayStudents.map(({ standard, division }) => `(Standard = '${standard}' AND Division = '${division}')`).join(' OR ');
+
+            const sqlUpdateStudentsPrePrimary = `
+                UPDATE pre_primary_student_details
+                SET transport_tagged = ?
+                WHERE transport_pickup_drop IN (?) AND (${whereClauseStudents}) AND transport_needed = 1
+            `;
+            const sqlUpdateStudentsPrimary = `
+                UPDATE primary_student_details
+                SET transport_tagged = ?
+                WHERE transport_pickup_drop IN (?) AND (${whereClauseStudents}) AND transport_needed = 1
+            `;
+            const valuesUpdateStudents = [vehicleNo, routeStopsStudents];
+
+            req.connectionPool.query(sqlUpdateStudentsPrePrimary, valuesUpdateStudents, (updateErrorPrePrimary, updateResultsPrePrimary) => {
+                if (updateErrorPrePrimary) {
+                    return res.status(500).json({ success: false, error: 'Database update failed for pre_primary_student_details' });
                 }
 
-                // Calculate the number of allocated students and update available seats
-                const allocatedStudentCount = students.length;
-                const updatedAvailableSeats = availableSeats - allocatedStudentCount;
-
-                // SQL query to update the transport_schedule_details
-                const sqlUpdateScheduleDetails = `
-                    UPDATE transport_schedule_details
-                    SET available_seats = ?,  students_tagged = COALESCE(students_tagged, 0) + ?
-                    WHERE vehicle_no = ? AND route_name = ? AND shift_name = ?
-                `;
-                const valuesUpdateScheduleDetails = [updatedAvailableSeats, allocatedStudentCount, vehicleNo, routeName, shiftName];
-
-                req.connectionPool.query(sqlUpdateScheduleDetails, valuesUpdateScheduleDetails, (updateScheduleError, updateScheduleResults) => {
-                    if (updateScheduleError) {
-                        console.error('Failed to update transport_schedule_details:', updateScheduleError);
-                        return res.status(500).json({ success: false, error: 'Database update failed for transport_schedule_details' });
+                req.connectionPool.query(sqlUpdateStudentsPrimary, valuesUpdateStudents, (updateErrorPrimary, updateResultsPrimary) => {
+                    if (updateErrorPrimary) {
+                        return res.status(500).json({ success: false, error: 'Database update failed for primary_student_details' });
                     }
 
-                    res.status(200).json({ success: true, allocatedStudents: students });
+                    // Process teacher allocation
+                    const sqlUpdateTeachers = `
+                        UPDATE teacher_details
+                        SET transport_tagged = ?
+                        WHERE transport_pickup_drop IN (?)
+                          AND (${classesArray.map(() => `FIND_IN_SET(?, classes_alloted)`).join(' > 0 OR ')} > 0)
+                          AND transport_needed = 1
+                    `;
+                    const valuesUpdateTeachers = [vehicleNo, stopsArray, ...classesArray];
+
+                    req.connectionPool.query(sqlUpdateTeachers, valuesUpdateTeachers, (updateErrorTeachers, updateResultsTeachers) => {
+                        if (updateErrorTeachers) {
+                            return res.status(500).json({ success: false, error: 'Database update failed for teacher_details' });
+                        }
+
+                         // Calculate the total count (students + teachers)
+                         const allocatedCount = students.length + teachers.length;
+                         const updatedAvailableSeats = availableSeats - allocatedCount;
+ 
+                         // SQL query to update the transport_schedule_details
+                         const sqlUpdateScheduleDetails = `
+                             UPDATE transport_schedule_details
+                             SET available_seats = ?, students_tagged = COALESCE(students_tagged, 0) + ?
+                             WHERE vehicle_no = ? AND route_name = ? AND shift_name = ?
+                         `;
+                         const valuesUpdateScheduleDetails = [updatedAvailableSeats, allocatedCount, vehicleNo, routeName, shiftName];
+ 
+                         req.connectionPool.query(sqlUpdateScheduleDetails, valuesUpdateScheduleDetails, (updateScheduleError, updateScheduleResults) => {
+                             if (updateScheduleError) {
+                                 console.error('Failed to update transport_schedule_details:', updateScheduleError);
+                                 return res.status(500).json({ success: false, error: 'Database update failed for transport_schedule_details' });
+                             }
+ 
+                             res.status(200).json({ success: true, allocatedStudents: students, allocatedTeachers: teachers });
+                         });
+                    });
                 });
             });
         });
@@ -253,6 +298,7 @@ router.get('/allocate_getScheduleDetails', (req, res) => {
 });
 
 // Endpoint to detag a bus
+// Endpoint to detag a bus
 router.post('/allocate_detagBus', (req, res) => {
     const { vehicleNo, routeName, shiftName, classesAlloted } = req.body;
 
@@ -266,7 +312,7 @@ router.post('/allocate_detagBus', (req, res) => {
     // Generate the SQL WHERE clause for Standard and Division pairs
     const whereClause = classesArray.map(({ standard, division }) => `(Standard = '${standard}' AND Division = '${division}')`).join(' OR ');
 
-    // SQL query to update transport_tagged to NULL for specific students in pre_primary_student_details
+    // SQL queries to update transport_tagged to NULL for specific students
     const sqlUpdateStudentsPrePrimary = `
         UPDATE pre_primary_student_details
         SET transport_tagged = NULL
@@ -279,7 +325,7 @@ router.post('/allocate_detagBus', (req, res) => {
     `;
     const valuesUpdateStudents = [vehicleNo];
 
-    // Execute the queries
+    // Execute the queries for students
     req.connectionPool.query(sqlUpdateStudentsPrePrimary, valuesUpdateStudents, (updateErrorPrePrimary, updateResultsPrePrimary) => {
         if (updateErrorPrePrimary) {
             console.error('Database update failed for pre_primary_student_details:', updateErrorPrePrimary);
@@ -292,47 +338,66 @@ router.post('/allocate_detagBus', (req, res) => {
                 return res.status(500).json({ success: false, error: 'Database update failed for primary_student_details' });
             }
 
-          
-            // Fetch vehicle capacity, driver name, and current students tagged
-            const fetchVehicleDetailsSql = `
-                SELECT vehicle_capacity, driver_name, students_tagged
-                FROM transport_schedule_details
-                WHERE vehicle_no = ? AND route_name = ? AND shift_name = ?
+            // SQL query to update transport_tagged to NULL for specific teachers
+            const sqlUpdateTeachers = `
+                UPDATE teacher_details
+                SET transport_tagged = NULL
+                WHERE transport_tagged = ? AND transport_needed = 1
+                AND (${classesArray.map(() => `FIND_IN_SET(?, classes_alloted)`).join(' > 0 OR ')} > 0)
             `;
-            req.connectionPool.query(fetchVehicleDetailsSql, [vehicleNo, routeName, shiftName], (fetchError, fetchResults) => {
-                if (fetchError || fetchResults.length === 0) {
-                    console.error('Database query failed for fetching vehicle details:', fetchError);
-                    return res.status(500).json({ success: false, error: 'Database query failed for fetching vehicle details' });
+            const valuesUpdateTeachers = [vehicleNo, ...classesArray.map(cls => `${cls.standard} ${cls.division}`)];
+
+            req.connectionPool.query(sqlUpdateTeachers, valuesUpdateTeachers, (updateErrorTeachers, updateResultsTeachers) => {
+                if (updateErrorTeachers) {
+                    console.error('Database update failed for teacher_details:', updateErrorTeachers);
+                    return res.status(500).json({ success: false, error: 'Database update failed for teacher_details' });
                 }
 
-                const { vehicle_capacity: vehicleCapacity, driver_name: driverName, students_tagged: currentStudentsTagged } = fetchResults[0];
-
-                // SQL query to update transport_schedule_details
-                const sqlUpdateSchedule = `
-                    UPDATE transport_schedule_details
-                    SET available_seats = ?, students_tagged = NULL
+                // Fetch vehicle capacity, driver name, and current students tagged
+                const fetchVehicleDetailsSql = `
+                    SELECT vehicle_capacity, driver_name, students_tagged
+                    FROM transport_schedule_details
                     WHERE vehicle_no = ? AND route_name = ? AND shift_name = ?
                 `;
-                const valuesUpdateSchedule = [vehicleCapacity, vehicleNo, routeName, shiftName];
-
-                req.connectionPool.query(sqlUpdateSchedule, valuesUpdateSchedule, (updateErrorSchedule, updateResultsSchedule) => {
-                    if (updateErrorSchedule) {
-                        console.error('Database update failed for transport_schedule_details:', updateErrorSchedule);
-                        return res.status(500).json({ success: false, error: 'Database update failed for transport_schedule_details' });
+                req.connectionPool.query(fetchVehicleDetailsSql, [vehicleNo, routeName, shiftName], (fetchError, fetchResults) => {
+                    if (fetchError || fetchResults.length === 0) {
+                        console.error('Database query failed for fetching vehicle details:', fetchError);
+                        return res.status(500).json({ success: false, error: 'Database query failed for fetching vehicle details' });
                     }
 
-                    res.status(200).json({ 
-                        success: true,
-                        vehicle_no: vehicleNo,
-                        driver_name: driverName,
-                        students_detagged: currentStudentsTagged
+                    const { vehicle_capacity: vehicleCapacity, driver_name: driverName, students_tagged: currentStudentsTagged } = fetchResults[0];
+
+                    // SQL query to update transport_schedule_details
+                    const sqlUpdateSchedule = `
+                        UPDATE transport_schedule_details
+                        SET available_seats = ?, students_tagged = NULL
+                        WHERE vehicle_no = ? AND route_name = ? AND shift_name = ?
+                    `;
+                    const valuesUpdateSchedule = [vehicleCapacity, vehicleNo, routeName, shiftName];
+
+                    req.connectionPool.query(sqlUpdateSchedule, valuesUpdateSchedule, (updateErrorSchedule, updateResultsSchedule) => {
+                        if (updateErrorSchedule) {
+                            console.error('Database update failed for transport_schedule_details:', updateErrorSchedule);
+                            return res.status(500).json({ success: false, error: 'Database update failed for transport_schedule_details' });
+                        }
+
+                        // Calculate detagged counts
+                        const numDetaggedStudents = updateResultsPrePrimary.affectedRows + updateResultsPrimary.affectedRows;
+                        const numDetaggedTeachers = updateResultsTeachers.affectedRows;
+
+                        res.status(200).json({
+                            success: true,
+                            vehicle_no: vehicleNo,
+                            driver_name: driverName,
+                            detagged_students: numDetaggedStudents,
+                            detagged_teachers: numDetaggedTeachers
+                        });
                     });
                 });
             });
         });
     });
 });
-
 
 // OVERFLOW HANDLING //
 
