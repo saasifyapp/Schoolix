@@ -405,7 +405,6 @@ router.post('/allocate_detagBus', (req, res) => {
 router.post('/handle_overflow_students', (req, res) => {
     const { routeStops, shiftClasses, vehicleNo, availableSeats, routeName, shiftName } = req.body;
 
-
     const stopsArray = routeStops.routeDetail.split(',').map(stop => stop.trim());
     const classesArray = shiftClasses.shiftDetail.split(',').map(cls => cls.trim());
 
@@ -570,25 +569,39 @@ const allocateSecondaryBus = async (unallocatedStudents, primaryVehicleNo, route
             const studentsToAllocate = remainingStudents.slice(0, availableSeats);
             remainingStudents = remainingStudents.slice(availableSeats);
 
-            // SQL query to update transport_tagged for specific students in pre_primary_student_details and primary_student_details
-            const studentIds = studentsToAllocate.map(student => student.id);
+            // Extract the route stops and class details from the students
+            const routeStops = [...new Set(studentsToAllocate.map(student => student.pickupDrop))];
+            const classesAlloted = [...new Set(studentsToAllocate.map(student => `${student.standard} ${student.division}`))];
+
+            // Split the classesAlloted array into Standard and Division
+            const classesArray = classesAlloted.map(cls => {
+                const [standard, ...divisionParts] = cls.split(' ');
+                const division = divisionParts.join(' ');
+                return { standard, division };
+            });
+
+            // Generate the SQL WHERE clause for Standard and Division pairs
+            const whereClause = classesArray.map(({ standard, division }) => `(Standard = '${standard}' AND Division = '${division}')`).join(' OR ');
+
+            // SQL query to update transport_tagged for specific students in pre_primary_student_details
             const sqlUpdateStudentsPrePrimary = `
                 UPDATE pre_primary_student_details
                 SET transport_tagged = ?
-                WHERE Student_id IN (${studentIds.join(',')}) AND transport_needed = 1
+                WHERE transport_pickup_drop IN (?) AND (${whereClause}) AND transport_needed = 1
             `;
             const sqlUpdateStudentsPrimary = `
                 UPDATE primary_student_details
                 SET transport_tagged = ?
-                WHERE Student_id IN (${studentIds.join(',')}) AND transport_needed = 1
+                WHERE transport_pickup_drop IN (?) AND (${whereClause}) AND transport_needed = 1
             `;
+            const valuesUpdateStudents = [vehicleNo, routeStops];
 
             await new Promise((resolve, reject) => {
-                connectionPool.query(sqlUpdateStudentsPrePrimary, [vehicleNo], (updateErrorPrePrimary) => {
+                connectionPool.query(sqlUpdateStudentsPrePrimary, valuesUpdateStudents, (updateErrorPrePrimary) => {
                     if (updateErrorPrePrimary) {
                         return reject(updateErrorPrePrimary);
                     }
-                    connectionPool.query(sqlUpdateStudentsPrimary, [vehicleNo], (updateErrorPrimary) => {
+                    connectionPool.query(sqlUpdateStudentsPrimary, valuesUpdateStudents, (updateErrorPrimary) => {
                         if (updateErrorPrimary) {
                             return reject(updateErrorPrimary);
                         }
