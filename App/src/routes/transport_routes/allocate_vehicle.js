@@ -467,10 +467,10 @@ router.post('/handle_overflow_students', (req, res) => {
                             return res.status(500).json({ success: false, error: 'Failed to allocate students and teachers to the secondary bus' });
                         }
 
-                        res.status(200).json({ success: true, primaryBus: { allocatedStudents, allocatedTeachers }, secondaryResult });
+                        res.status(200).json({ success: true, primaryBus: { allocatedStudents, allocatedTeachers }, secondaryBusDetails: secondaryResult.secondaryBusDetails });
                     });
                 } else {
-                    res.status(200).json({ success: true, primaryBus: { allocatedStudents, allocatedTeachers }, message: 'All students and teachers allocated to the primary bus' });
+                    res.status(200).json({ success: true, primaryBus: { allocatedStudents, allocatedTeachers }, secondaryBusDetails: [] });
                 }
             });
         });
@@ -534,12 +534,6 @@ const allocatePrimaryBus = (students, teachers, vehicleNo, availableSeats, route
                     WHERE id IN (?)
                 `;
                 const valuesUpdateTeachers = [vehicleNo, teacherIds];
-
-                // Log the selected teacher IDs and the IDs being updated for debugging
-                //console.log('Selected teachers for updating:', teachersToAllocate);
-                //console.log('Selected teacher IDs for updating:', teacherIds);
-                // console.log('SQL Query for updating teachers:', sqlUpdateTeachers);
-                //console.log('Values for updating teachers:', valuesUpdateTeachers);
 
                 connectionPool.query(sqlUpdateTeachers, valuesUpdateTeachers, (updateErrorTeachers, updateResultsTeachers) => {
                     if (updateErrorTeachers) {
@@ -697,12 +691,6 @@ const allocateSecondaryBus = async (unallocatedStudents, unallocatedTeachers, pr
                 `;
                 const valuesUpdateTeachers = [vehicleNo, teacherIds];
 
-                // Log the selected teacher IDs and the IDs being updated for debugging
-                console.log('Selected teachers for updating (secondary bus):', teachersToAllocate);
-                console.log('Selected teacher IDs for updating (secondary bus):', teacherIds);
-                console.log('SQL Query for updating teachers (secondary bus):', sqlUpdateTeachers);
-                console.log('Values for updating teachers (secondary bus):', valuesUpdateTeachers);
-
                 await new Promise((resolve, reject) => {
                     connectionPool.query(sqlUpdateTeachers, valuesUpdateTeachers, (updateErrorTeachers) => {
                         if (updateErrorTeachers) {
@@ -734,7 +722,7 @@ const allocateSecondaryBus = async (unallocatedStudents, unallocatedTeachers, pr
 
             allocatedStudents = allocatedStudents.concat(studentsToAllocate);
             allocatedTeachers = allocatedTeachers.concat(teachersToAllocate);
-            secondaryBusDetails.push({ vehicleNo, driverName, studentCount: studentsToAllocate.length, teacherCount: teachersToAllocate.length });
+            secondaryBusDetails.push({ vehicleNo, driverName, studentCount: allocatedStudentCount, teacherCount: allocatedTeacherCount });
         }
 
         // If there are still remaining students and teachers after all available buses have been used

@@ -433,19 +433,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => response.json())
                 .then(result => {
                     if (result.success) {
-                        const primaryBusDetails = `${vehicleInput.value} (${driverName}) - ${result.primaryBus.length ? result.primaryBus.length : 0} students and teachers`;
                         let alertHtml = `
-                            Due to insufficient availability of seats in <strong>${vehicleInput.value} (${driverName})</strong>, we allocated other vehicles running on same route to certain students and teachers<br><br>
+                            Due to insufficient availability of seats in <strong>${vehicleInput.value} (${driverName})</strong>, we allocated other vehicles running on the same route to certain students and teachers.<br><br>
                             <strong>Total Students:</strong> ${studentCount}<br>
-                            <strong>Total Teachers:</strong> ${teacherCount}<br>
-                            ${primaryBusDetails}<br>
+                            <strong>Total Teachers:</strong> ${teacherCount}<br><br>
                         `;
     
-                        if (result.secondaryBusDetails) {
+                        const primaryBusDetails = `${vehicleInput.value} (${driverName}) - ${result.primaryBus.allocatedStudents.length} students and ${result.primaryBus.allocatedTeachers.length} teachers`;
+                        alertHtml += `${primaryBusDetails}<br>`;
+    
+                        if (result.secondaryBusDetails && result.secondaryBusDetails.length > 0) {
                             result.secondaryBusDetails.forEach(bus => {
-                                if (bus.studentCount > 0) {
-                                    alertHtml += `${bus.vehicleNo} (${bus.driverName}) - ${bus.studentCount} students<br>`;
-                                }
+                                alertHtml += `${bus.vehicleNo} (${bus.driverName}) - ${bus.studentCount} students and ${bus.teacherCount} teachers<br>`;
                             });
                         }
     
