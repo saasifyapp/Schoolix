@@ -279,7 +279,7 @@ function initializeApp() {
         try {
             const vehicleNo = vehicleNoField.textContent;
             const shiftName = shift;
-
+    
             let response = await fetch(`https://schoolix.saasifyapp.com/android/get-student-details?vehicleNo=${vehicleNo}&shiftName=${shiftName}`, {
                 method: 'GET',
                 headers: {
@@ -291,7 +291,7 @@ function initializeApp() {
                     'db-database': dbCredentials.database
                 }
             });
-
+    
             if (response.status === 401) {
                 const refreshResponse = await fetch('https://schoolix.saasifyapp.com/refresh-token', {
                     method: 'POST',
@@ -300,11 +300,11 @@ function initializeApp() {
                     },
                     body: JSON.stringify({ token: refreshToken })
                 });
-
+    
                 if (refreshResponse.ok) {
                     const refreshData = await refreshResponse.json();
                     token = refreshData.accessToken;
-
+    
                     response = await fetch(`https://schoolix.saasifyapp.com/android/get-student-details?vehicleNo=${vehicleNo}&shiftName=${shiftName}`, {
                         method: 'GET',
                         headers: {
@@ -322,11 +322,11 @@ function initializeApp() {
                     return;
                 }
             }
-
+    
             if (!response.ok) {
                 throw new Error('Failed to fetch student details');
             }
-
+    
             const data = await response.json();
             console.log(`Fetched ${data.length} item(s)`); // Log the count of items fetched
             studentsData = data; // Store the fetched students data
@@ -338,7 +338,7 @@ function initializeApp() {
             hideSpinner();
         }
     };
-
+    
     const fetchShiftDetails = async (shift) => {
         try {
             const response = await fetch(`https://schoolix.saasifyapp.com/android/shift-details?driverName=${driverName}&shiftName=${shift}`, {
@@ -352,11 +352,11 @@ function initializeApp() {
                     'db-database': dbCredentials.database
                 }
             });
-
+    
             if (!response.ok) {
                 throw new Error('Failed to fetch shift details');
             }
-
+    
             const data = await response.json();
             console.log(`Fetched shift details:`, data); // Log the shift details fetched
             displayShiftDetails(data);
@@ -368,18 +368,18 @@ function initializeApp() {
             hideSpinner();
         }
     };
-
+    
     const displayShiftDetails = (data) => {
         selectedShiftField.textContent = data.shift_name;
         totalStopsField.textContent = data.route_stops_count;
         totalStudentsField.textContent = data.students_tagged;
         currentShiftName = data.shift_name; // Store the current shift name
     };
-
+    
     const displayDriverList = (data) => {
         detailedDriverList.innerHTML = '';
-
-        // Group students by routes
+    
+        // Group students and teachers by routes
         const groupedByRoute = data.reduce((acc, item) => {
             const route = item.transport_pickup_drop;
             if (!acc[route]) {
@@ -388,33 +388,34 @@ function initializeApp() {
             acc[route].push(item);
             return acc;
         }, {});
-
+    
         // Sort routes based on routeStops order
         const sortedRoutes = Object.keys(groupedByRoute).sort((a, b) => {
             return routeStops.indexOf(a) - routeStops.indexOf(b);
         });
-
+    
         // Colors for different routes
         const routeColors = ['#ffdddd', '#ddffdd', '#ddddff', '#ffffdd', '#ddffff', '#ffddff'];
-
-        // Render each route and its students
+    
+        // Render each route and its students/teachers
         sortedRoutes.forEach((route, index) => {
             // Create a route container
             const routeContainer = document.createElement('div');
             routeContainer.classList.add('route-container');
             routeContainer.style.backgroundColor = routeColors[index % routeColors.length];
-
-            // Create a route header with student count
-            const studentCount = groupedByRoute[route].length;
+    
+            // Create a route header with student/teacher count
+            const studentCount = groupedByRoute[route].filter(item => item.class !== 'Teacher').length;
+            const teacherCount = groupedByRoute[route].filter(item => item.class === 'Teacher').length;
             const routeHeader = document.createElement('h3');
-            routeHeader.textContent = `Stop: ${route} | Students: ${studentCount}`;
+            routeHeader.textContent = `Stop: ${route} | Students: ${studentCount} | Teachers: ${teacherCount}`;
             routeContainer.appendChild(routeHeader);
-
-            // Create a list for the students
-            const studentList = document.createElement('ul');
-            studentList.classList.add('student-list');
-
-            // Render students for this route
+    
+            // Create a list for the students/teachers
+            const list = document.createElement('ul');
+            list.classList.add('student-list');
+    
+            // Render students/teachers for this route
             groupedByRoute[route].forEach(item => {
                 const listItem = document.createElement('li');
                 listItem.innerHTML = `
@@ -439,34 +440,34 @@ function initializeApp() {
                         </button>
                     </div>
                 `;
-                studentList.appendChild(listItem);
-
+                list.appendChild(listItem);
+    
                 listItem.querySelector('.not-picked').addEventListener('click', async () => {
                     const result = await logPickDropEvent(item.name, item.transport_pickup_drop, 'not_picked', currentShiftName, item.class);
                     if (result === 'exists') {
-                        alert('Student already marked under not_picked category for today');
+                        alert('Already marked under not_picked category for today');
                     } else {
                         alert(`${item.name} not picked`);
                     }
                 });
-
+    
                 listItem.querySelector('.not-dropped').addEventListener('click', async () => {
                     const result = await logPickDropEvent(item.name, item.transport_pickup_drop, 'not_dropped', currentShiftName, item.class);
                     if (result === 'exists') {
-                        alert('Student already marked under not_dropped category for today');
+                        alert('Already marked under not_dropped category for today');
                     } else {
                         alert(`${item.name} not dropped`);
                     }
                 });
-
+    
                 listItem.querySelector('.call-button').addEventListener('click', () => {
                     window.location.href = `tel:${item.f_mobile_no}`;
                 });
             });
-
-            // Append the student list to the route container
-            routeContainer.appendChild(studentList);
-
+    
+            // Append the list to the route container
+            routeContainer.appendChild(list);
+    
             // Append the route container to the detailed driver list
             detailedDriverList.appendChild(routeContainer);
         });

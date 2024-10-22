@@ -88,7 +88,7 @@ router.post('/android/send-coordinates', connectionManagerAndroid, (req, res) =>
     });
 });
 
-// Endpoint to fetch student details based on vehicle number, shift name, route, and class
+// Endpoint to fetch student and teacher details based on vehicle number, shift name, route, and class
 router.get('/android/get-student-details', connectionManagerAndroid, (req, res) => {
     const vehicleNo = req.query.vehicleNo;
     const shiftName = req.query.shiftName;
@@ -129,8 +129,8 @@ router.get('/android/get-student-details', connectionManagerAndroid, (req, res) 
                 }
             });
 
-            // SQL query to fetch student details from pre_primary_student_details and primary_student_details tables
-            let studentSql = `
+            // SQL query to fetch student and teacher details
+            let studentTeacherSql = `
                 SELECT 
                     name, 
                     CONCAT(standard, ' ', division) AS class, 
@@ -146,33 +146,45 @@ router.get('/android/get-student-details', connectionManagerAndroid, (req, res) 
                     transport_pickup_drop 
                 FROM primary_student_details 
                 WHERE standard IN (?) AND division IN (?) AND transport_pickup_drop IN (?) AND transport_tagged = ?
+                UNION
+                SELECT 
+                    name, 
+                    'Teacher' AS class, 
+                    mobile_no AS f_mobile_no, 
+                    transport_pickup_drop 
+                FROM teacher_details 
+                WHERE transport_pickup_drop IN (?) AND transport_tagged = ?
             `;
-            const studentValues = [standards, divisions, routeStops, vehicleNo, standards, divisions, routeStops, vehicleNo];
+            const studentTeacherValues = [
+                standards, divisions, routeStops, vehicleNo, 
+                standards, divisions, routeStops, vehicleNo, 
+                routeStops, vehicleNo
+            ];
 
             // Add filtering for route if provided
             if (route) {
-                studentSql += ' AND transport_pickup_drop = ?';
-                studentValues.push(route);
+                studentTeacherSql += ' AND transport_pickup_drop = ?';
+                studentTeacherValues.push(route);
             }
 
             // Add filtering for class if provided
             if (classFilter) {
                 const [standard, division] = classFilter.split(' ');
-                studentSql += ' AND standard = ? AND division = ?';
-                studentValues.push(standard, division);
+                studentTeacherSql += ' AND standard = ? AND division = ?';
+                studentTeacherValues.push(standard, division);
             }
 
-            req.connectionPool.query(studentSql, studentValues, (studentError, studentResults) => {
-                if (studentError) {
-                    console.error('Database query failed:', studentError); // Log the error details
+            req.connectionPool.query(studentTeacherSql, studentTeacherValues, (studentTeacherError, studentTeacherResults) => {
+                if (studentTeacherError) {
+                    console.error('Database query failed:', studentTeacherError); // Log the error details
                     return res.status(500).json({ error: 'Database query failed' });
                 }
 
-                console.log('Raw student results:', studentResults); // Log the raw results for debugging
+                console.log('Raw student and teacher results:', studentTeacherResults); // Log the raw results for debugging
 
-                console.log(`Fetched ${studentResults.length} student(s)`); // Log the count of items fetched
+                console.log(`Fetched ${studentTeacherResults.length} student(s) and teacher(s)`); // Log the count of items fetched
 
-                res.status(200).json(studentResults);
+                res.status(200).json(studentTeacherResults);
             });
         } else {
             res.status(200).json([]);
