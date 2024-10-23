@@ -393,7 +393,7 @@ document.addEventListener("DOMContentLoaded", function () {
               icon: "error",
               title: "Delete Failed",
               html: `Cannot delete this record.<br>
-                           <strong>Vehicle No:</strong> ${result.vehicle_no} [${result.driver_name}] <br> is allocated to <strong>${result.students_tagged}</strong> students.<br><br>
+                           <strong>Vehicle No:</strong> ${result.vehicle_no} [${result.driver_name}] <br> is allocated to <strong>${result.students_tagged}</strong> passengers.<br><br>
                            Please detag this vehicle from <br> <strong>Vehicle Allocation Console</strong>.`,
             });
           }
