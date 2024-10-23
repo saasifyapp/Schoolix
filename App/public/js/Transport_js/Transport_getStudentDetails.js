@@ -21,16 +21,16 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedShiftName = '';
     let studentData = [];
 
-    // Function to update the read-only attribute of stop and class inputs
-    function updateInputReadOnlyStatus() {
+    // Function to update the disabled attribute of stop and class inputs
+    function updateInputDisabledStatus() {
         if (selectedVehicleNo && selectedShiftName) {
-            stopInput.readOnly = false;
-            classInput.readOnly = false;
+            stopInput.disabled = false;
+            classInput.disabled = false;
             fetchAndDisplayStudentDetails(); // Fetch and display student details
             fetchVehicleInfo(); // Fetch and display vehicle info
         } else {
-            stopInput.readOnly = true;
-            classInput.readOnly = true;
+            stopInput.disabled = true;
+            classInput.disabled = true;
             vehicleInfoContainer.innerHTML = ''; // Clear vehicle info container
         }
     }
@@ -70,6 +70,18 @@ document.addEventListener('DOMContentLoaded', function () {
     // Update vehicle suggestions when user types
     vehicleInput.addEventListener('input', function () {
         fetchVehicleSuggestions(this.value);
+
+        // Clear shift, stop, and class inputs, and reset the table and other related elements
+        shiftInput.value = '';
+        stopInput.value = '';
+        classInput.value = '';
+        selectedShiftName = '';
+        stopInput.disabled = true;
+        classInput.disabled = true;
+        vehicleInfoContainer.innerHTML = '';
+        scheduleTableBody.innerHTML = '';
+        studentCountElement.textContent = '0';
+        teacherCountElement.textContent = '0';
     });
 
     // Handle vehicle suggestion click
@@ -80,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedVehicleNo = selectedDriver.dataset.vehicleNo;
             vehicleSuggestionsContainer.style.display = 'none'; // Hide suggestions container
             vehicleSuggestionsContainer.innerHTML = '';
-            updateInputReadOnlyStatus(); // Update read-only status
+            updateInputDisabledStatus(); // Update disabled status
         }
     });
 
@@ -95,6 +107,15 @@ document.addEventListener('DOMContentLoaded', function () {
     shiftInput.addEventListener('input', function () {
         if (selectedVehicleNo) {
             fetchShiftSuggestions(selectedVehicleNo);
+
+            // Clear stop and class inputs
+            stopInput.value = '';
+            classInput.value = '';
+            stopInput.disabled = true;
+            classInput.disabled = true;
+            scheduleTableBody.innerHTML = '';
+            studentCountElement.textContent = '0';
+            teacherCountElement.textContent = '0';
         }
     });
 
@@ -133,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedShiftName = selectedShift.dataset.shiftName;
             shiftSuggestionsContainer.style.display = 'none'; // Hide suggestions container
             shiftSuggestionsContainer.innerHTML = '';
-            updateInputReadOnlyStatus(); // Update read-only status
+            updateInputDisabledStatus(); // Update disabled status
         }
     });
 
@@ -294,7 +315,6 @@ document.addEventListener('DOMContentLoaded', function () {
         filterAndDisplayStudentDetails(); // Filter and display student details
     });
 
-
     // Function to fetch and display student details
     function fetchAndDisplayStudentDetails() {
         if (selectedVehicleNo && selectedShiftName) {
@@ -363,8 +383,8 @@ document.addEventListener('DOMContentLoaded', function () {
         teacherCountElement.textContent = teacherCount; // Update teacher count
     }
 
-    // Initial call to set read-only status
-    updateInputReadOnlyStatus();
+    // Initial call to set disabled status
+    updateInputDisabledStatus();
 
     // Function to export table to CSV
     function export_getStudentListTable() {
