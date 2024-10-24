@@ -120,7 +120,8 @@
             <a>
                 <button id="trackingMonitoringButton">
                     <div class="dotlottie-container">
-                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                            type="module"></script>
                         <dotlottie-player src="https://lottie.host/0ecdc1d6-aa73-4d04-8792-18e7889cb4ab/qEPEOPXW7E.json"
                             background="transparent" speed="1" style="width: 270px; height: 220px;" loop autoplay>
                         </dotlottie-player>
@@ -178,9 +179,12 @@
             <button id="closeAddDriverOverlay" class="close-button">&times;</button>
             <div class="overlay-inner">
                 <div class="left-side">
-                    <dotlottie-player src="https://lottie.host/f1ef15f0-e5ab-415a-8f01-9cfdf4c36034/TwCFf8dsdN.json"
-                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay>
-                    </dotlottie-player>
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                        type="module"></script>
+
+                    <dotlottie-player src="https://lottie.host/c0e0d07c-c6ff-499d-968d-9681beba8363/LXldI5d5fJ.json"
+                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                        autoplay></dotlottie-player>
                 </div>
                 <div class="right-side">
                     <h2>Add Vehicle Operator</h2>
@@ -356,7 +360,7 @@
             <button id="closeManageRoutesOverlay" class="close-button">&times;</button>
             <h2 class="overlay-search-head">Manage Routes</h2>
 
-            <div class="overlay-inner"  style="height: calc(100% - 4rem)">
+            <div class="overlay-inner" style="height: calc(100% - 4rem)">
                 <!-- Lottie Animation and Form Section -->
                 <div class="tag-left left-manageroute" style="margin-bottom: 40px;">
                     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
@@ -602,81 +606,81 @@
             <button id="closeTagRouteShiftOverlay" class="close-button">&times;</button>
             <h2 class="tag-head">Vehicle Route and Shift Tagging</h2>
 
-            <!-- Flex container for left (form) and right (table) sections -->           
-                <div class="tag-flex-container">
-                    <!-- Left Section: Form -->
-                    <div class="input-section">
-                        <form class="input-form">
-                            <div class="form-row">
-                                <!-- Route Input and Info Container -->
-                                <div class="form-group">
-                                    <input id="tag_tag_route_name" type="text" class="form-control" placeholder=""
-                                        style="text-align: center;">
-                                    <span class="form-control-placeholder">Enter Route</span>
-                                    <div id="tag_routeSuggestions" class="suggestions"></div>
-                                </div>
-    
-    
-                                <!-- Shift Input and Info Container -->
-                                <div class="form-group">
-                                    <input id="tag_tag_shift_name" type="text" class="form-control" placeholder=""
-                                        style="text-align: center;">
-                                    <span class="form-control-placeholder">Enter Shift</span>
-                                    <div id="tag_shiftSuggestions" class="suggestions"></div>
-                                </div>
-    
-    
-                                <!-- Vehicle Input and Info Container -->
-                                <div class="form-group">
-                                    <input id="tag_tag_vehicle_no" type="text" class="form-control" placeholder=""
-                                        style="text-align: center;">
-                                    <span class="form-control-placeholder">Enter Vehicle</span>
-                                    <div id="tag_vehicleSuggestions" class="suggestions"></div>
-                                </div>
-    
+            <!-- Flex container for left (form) and right (table) sections -->
+            <div class="tag-flex-container">
+                <!-- Left Section: Form -->
+                <div class="input-section">
+                    <form class="input-form">
+                        <div class="form-row">
+                            <!-- Route Input and Info Container -->
+                            <div class="form-group">
+                                <input id="tag_tag_route_name" type="text" class="form-control" placeholder=""
+                                    style="text-align: center;">
+                                <span class="form-control-placeholder">Enter Route</span>
+                                <div id="tag_routeSuggestions" class="suggestions"></div>
                             </div>
-    
-                            <div class="form-row">
-                                <div id="tag_routeDetail" class="info-container"></div>
-                                <div id="tag_shiftDetail" class="info-container"></div>
-                                <div id="tag_vehicleDetail" class="info-container"></div>
+
+
+                            <!-- Shift Input and Info Container -->
+                            <div class="form-group">
+                                <input id="tag_tag_shift_name" type="text" class="form-control" placeholder=""
+                                    style="text-align: center;">
+                                <span class="form-control-placeholder">Enter Shift</span>
+                                <div id="tag_shiftSuggestions" class="suggestions"></div>
                             </div>
-    
-                            <!-- Tag Button -->
-                            <button id="tag_getDetailsButton" class="getDetails-button" type="submit">
-                                <img src="../images/shift.png" alt="">
-                                <span>Tag</span>
-                            </button>
-                        </form>
-                    </div>
-    
-                    
+
+
+                            <!-- Vehicle Input and Info Container -->
+                            <div class="form-group">
+                                <input id="tag_tag_vehicle_no" type="text" class="form-control" placeholder=""
+                                    style="text-align: center;">
+                                <span class="form-control-placeholder">Enter Vehicle</span>
+                                <div id="tag_vehicleSuggestions" class="suggestions"></div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-row">
+                            <div id="tag_routeDetail" class="info-container"></div>
+                            <div id="tag_shiftDetail" class="info-container"></div>
+                            <div id="tag_vehicleDetail" class="info-container"></div>
+                        </div>
+
+                        <!-- Tag Button -->
+                        <button id="tag_getDetailsButton" class="getDetails-button" type="submit">
+                            <img src="../images/shift.png" alt="">
+                            <span>Tag</span>
+                        </button>
+                    </form>
                 </div>
 
-                <div class="inner-overlay" style="height: calc(100% - 4rem);" >
-                    <!-- Right Section: Table -->
-                    <div class="table-container">
-                        <table id="submittedDataTable" class="styled-table">
-                            <thead>
-                                <tr>
-                                    <th>Vehicle No</th>
-                                    <th>Driver Name</th>
-                                    <th>Conductor Name</th>
-                                    <th>Route Name</th>
-                                    <th>Route Stops</th>
-                                    <th>Shift Name</th>
-                                    <th>Classes Allotted</th>
-                                    <th>Delete</th>
-                                </tr>
-                            </thead>
-                            <tbody id="submittedDataBody">
-                                <!-- Table rows will be populated here -->
-                            </tbody>
-                        </table>
-                    </div>
+
+            </div>
+
+            <div class="inner-overlay" style="height: calc(100% - 4rem);">
+                <!-- Right Section: Table -->
+                <div class="table-container">
+                    <table id="submittedDataTable" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Vehicle No</th>
+                                <th>Driver Name</th>
+                                <th>Conductor Name</th>
+                                <th>Route Name</th>
+                                <th>Route Stops</th>
+                                <th>Shift Name</th>
+                                <th>Classes Allotted</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody id="submittedDataBody">
+                            <!-- Table rows will be populated here -->
+                        </tbody>
+                    </table>
                 </div>
-            
-            
+            </div>
+
+
         </div>
     </div>
 
@@ -733,7 +737,7 @@
                                 <div id="allocate_shiftSuggestions" class="suggestions"></div>
                             </div>
 
-                          
+
 
                             <!-- Vehicle Input and Info Container -->
                             <div class="form-group">
@@ -750,8 +754,8 @@
                             <div id="allocate_shiftDetail" class="info-container"></div>
                             <div id="allocate_vehicleDetail" class="info-container"></div>
 
-                              <!-- New Student Details Container -->
-                              <div class="form-group">
+                            <!-- New Student Details Container -->
+                            <div class="form-group">
                                 <div id="allocate_studentDetails" class="info-container"></div>
                             </div>
                         </div>
@@ -764,7 +768,7 @@
                     </form>
                 </div>
 
-                
+
             </div>
 
             <div class="overlay-inner" style="height: calc(100% - 4rem);">
@@ -780,7 +784,7 @@
                                 <th>Shift Name</th>
                                 <th>Classes Alloted</th>
                                 <th>Available Seats</th>
-                                <th>Students Tagged</th>
+                                <th>Passengers Tagged</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -826,7 +830,7 @@
                             <div id="listStudents_shiftSuggestions" class="suggestions"></div>
                         </div>
 
-                        <div id="listStudents_vehicleInfo" class="info-container">
+                        <div id="listStudents_vehicleInfo" class="info-containe">
                             <!-- Vehicle info will be displayed here -->
                         </div>
                     </div>
@@ -852,9 +856,11 @@
                         </button>
                     </div>
 
-                    <!-- Student Count -->
                     <div class="student-count">
                         <h3>Students Count: <span id="studentCount">0</span></h3>
+                    </div>
+                    <div class="teacher-count">
+                        <h3>Teachers Count: <span id="teacherCount">0</span></h3>
                     </div>
 
                     <div class="table-container">

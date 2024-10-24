@@ -94,40 +94,12 @@ body {
     display: none;
 } */
 
-.screen {
-    text-align: center;
-    width: 100%; 
-    max-width: 500px;
-    padding: 10px; /* Reduced padding */
-    box-sizing: border-box; /* Include padding in width calculation */
-    overflow: hidden; /* Prevent content overflow */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex-grow: 1; /* Allow the screen to grow and fill the available space */
-    justify-content: center; /* Center content vertically */
-}
+
 
 .hidden {
     display: none;
 }
 
-.login-gif-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
-    border-radius: 50%;
-    width: 120px;
-    height: 120px;
-    margin: 0 auto 20px;
-    overflow: hidden;
-}
-
-.login-gif {
-    width: 100%;
-    height: 100%;
-}
 
 /* Styles for login inputs and button */
 input[type="text"], input[type="password"] {

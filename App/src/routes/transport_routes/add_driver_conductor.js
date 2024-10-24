@@ -216,6 +216,7 @@ router.post('/validateDriverConductorDetails', (req, res) => {
 
 
 // Endpoint to handle driverConductor form submission
+// Endpoint to handle driverConductor form submission
 router.post('/addDriverConductor', (req, res) => {
     const { name, contact, address, type, vehicle_no, vehicle_type, vehicle_capacity } = req.body;
 
@@ -230,41 +231,87 @@ router.post('/addDriverConductor', (req, res) => {
         return res.status(400).json({ error: 'School name is required' });
     }
 
+    // Format school name to lowercase and replace spaces with underscores
+    const formattedSchoolName = schoolName.replace(/\s+/g, '_').toLowerCase();
+
     // Generate username and password
     const username = name.replace(/\s+/g, '').toLowerCase(); // Remove spaces and convert to lowercase
     const password = `school@${username}`;
     const userType = type.toLowerCase() === 'driver' ? 'driver' : 'conductor'; // Determine user type based on the type from client
 
-    // First, insert data into the transport_driver_conductor_details table
-    const sqlDriverConductor = `
-        INSERT INTO transport_driver_conductor_details (name, contact, address, driver_conductor_type, vehicle_no, vehicle_type, vehicle_capacity)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    `;
-    const valuesDriverConductor = [name, contact, address, type, vehicle_no, vehicle_type, vehicle_capacity];
-
-    req.connectionPool.query(sqlDriverConductor, valuesDriverConductor, (error, resultsDriverConductor) => {
-        if (error) {
-            return res.status(500).json({ error: 'Database insertion failed for driver/conductor details' });
+    // Start a transaction
+    req.connectionPool.getConnection((err, connection) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database connection failed' });
         }
 
-        // Now, insert data into the android_app_users table
-        // Now, insert data into the android_app_users table
-        const sqlUser = `
-INSERT INTO android_app_users (username, password, school_name, type, name, dr_id)
-VALUES (?, ?, ?, ?, ?, ?)
-`;
-        const valuesUser = [username, password, schoolName, userType, name, resultsDriverConductor.insertId]; // Include dr_id
-
-
-        connection_auth.query(sqlUser, valuesUser, (error, resultsUser) => {
+        connection.beginTransaction(error => {
             if (error) {
-                return res.status(500).json({ error: 'Database insertion failed for user details' });
+                return res.status(500).json({ error: 'Transaction initiation failed' });
             }
 
-            res.status(200).json({
-                message: 'Driver/Conductor added successfully',
-                driverConductorId: resultsDriverConductor.insertId,
-                userId: resultsUser.insertId
+            // First, insert data into the transport_driver_conductor_details table without uid
+            const sqlDriverConductor = `
+                INSERT INTO transport_driver_conductor_details (name, contact, address, driver_conductor_type, vehicle_no, vehicle_type, vehicle_capacity)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            `;
+            const valuesDriverConductor = [name, contact, address, type, vehicle_no, vehicle_type, vehicle_capacity];
+
+            connection.query(sqlDriverConductor, valuesDriverConductor, (error, resultsDriverConductor) => {
+                if (error) {
+                    return connection.rollback(() => {
+                        res.status(500).json({ error: 'Database insertion failed for driver/conductor details' });
+                    });
+                }
+
+                // Generate the uid
+                const uid = `${formattedSchoolName}_${userType}_${resultsDriverConductor.insertId}`;
+
+                // Update the transport_driver_conductor_details table with the uid
+                const sqlUpdateDriverConductor = `
+                    UPDATE transport_driver_conductor_details
+                    SET uid = ?
+                    WHERE id = ?
+                `;
+                const valuesUpdateDriverConductor = [uid, resultsDriverConductor.insertId];
+
+                connection.query(sqlUpdateDriverConductor, valuesUpdateDriverConductor, (error) => {
+                    if (error) {
+                        return connection.rollback(() => {
+                            res.status(500).json({ error: 'Database update failed for driver/conductor uid' });
+                        });
+                    }
+
+                    // Now, insert data into the android_app_users table
+                    const sqlUser = `
+                        INSERT INTO android_app_users (username, password, school_name, type, name, uid)
+                        VALUES (?, ?, ?, ?, ?, ?)
+                    `;
+                    const valuesUser = [username, password, schoolName, userType, name, uid];
+
+                    connection.query(sqlUser, valuesUser, (error, resultsUser) => {
+                        if (error) {
+                            return connection.rollback(() => {
+                                res.status(500).json({ error: 'Database insertion failed for user details' });
+                            });
+                        }
+
+                        // Commit the transaction
+                        connection.commit(error => {
+                            if (error) {
+                                return connection.rollback(() => {
+                                    res.status(500).json({ error: 'Transaction commit failed' });
+                                });
+                            }
+
+                            res.status(200).json({
+                                message: 'Driver/Conductor added successfully',
+                                driverConductorId: resultsDriverConductor.insertId,
+                                userId: resultsUser.insertId
+                            });
+                        });
+                    });
+                });
             });
         });
     });
@@ -285,8 +332,8 @@ router.get('/displayDriverConductors', (req, res) => {
 router.delete('/deleteDriverConductor/:id', (req, res) => {
     const id = req.params.id;
 
-    // First, fetch the driver/conductor details to get the name
-    const fetchQuery = 'SELECT name FROM transport_driver_conductor_details WHERE id = ?';
+    // First, fetch the driver/conductor details to get the name and uid
+    const fetchQuery = 'SELECT name, uid FROM transport_driver_conductor_details WHERE id = ?';
     req.connectionPool.query(fetchQuery, [id], (fetchError, fetchResults) => {
         if (fetchError) {
             console.error('Error fetching driver/conductor details:', fetchError);
@@ -298,7 +345,7 @@ router.delete('/deleteDriverConductor/:id', (req, res) => {
         }
 
         const name = fetchResults[0].name;
-        const username = name.replace(/\s+/g, '').toLowerCase(); // Generate the username
+        const uid = fetchResults[0].uid;
 
         // Check if the driver or vehicle is tagged in the transport_schedule_details table
         const checkScheduleQuery = 'SELECT * FROM transport_schedule_details WHERE driver_name = ? OR conductor_name = ? LIMIT 1';
@@ -331,9 +378,9 @@ router.delete('/deleteDriverConductor/:id', (req, res) => {
                     return res.status(404).json({ error: 'Driver/Conductor not found' });
                 }
 
-                // Delete from android_app_users table
-                const deleteUserQuery = 'DELETE FROM android_app_users WHERE username = ?';
-                connection_auth.query(deleteUserQuery, [username], (deleteUserError, deleteUserResults) => {
+                // Delete from android_app_users table using uid
+                const deleteUserQuery = 'DELETE FROM android_app_users WHERE uid = ?';
+                connection_auth.query(deleteUserQuery, [uid], (deleteUserError, deleteUserResults) => {
                     if (deleteUserError) {
                         console.error('Error deleting user:', deleteUserError);
                         return res.status(500).json({ error: 'Internal Server Error' });
@@ -446,154 +493,138 @@ router.delete('/deleteDriverConductor/:id', (req, res) => {
 //     }
 // });
 
-router.put('/updateAllDetails', async (req, res) => {
-    const { id, name, contact, address, driver_conductor_type, vehicle_no, vehicle_type, vehicle_capacity, new_seats, dr_id } = req.body;
-    let conn;
+router.put('/updateAllDetails', (req, res) => {
+    const { id, name, contact, address, driver_conductor_type, vehicle_no, vehicle_type, vehicle_capacity, new_seats } = req.body;
 
-    try {
-        // Get a connection from the pool
-        conn = await new Promise((resolve, reject) => {
-            req.connectionPool.getConnection((err, connection) => {
-                if (err) reject(err);
-                else resolve(connection);
-            });
-        });
+    req.connectionPool.getConnection((err, conn) => {
+        if (err) {
+            console.error('Error getting connection from pool:', err);
+            return res.status(500).json({ message: 'Failed to get database connection' });
+        }
 
-        // Start a transaction
-        await new Promise((resolve, reject) => {
-            conn.beginTransaction(err => {
-                if (err) reject(err);
-                else resolve();
-            });
-        });
-
-        // 1. Update Android App Users Table
-        const username = name.replace(/\s+/g, '').toLowerCase(); // Remove spaces and convert to lowercase
+        // Declare all SQL queries
+        const username = name.replace(/\s+/g, '').toLowerCase();
         const password = `school@${username}`;
 
-        const sqlAndroidAppUsers = `
-            UPDATE android_app_users
-            SET username = ?, password = ?, name = ?
-            WHERE dr_id = ?
-        `;
-        const androidAppResult = await conn.query(sqlAndroidAppUsers, [username, password, name, dr_id]);
-        if (androidAppResult.affectedRows === 0) {
-            throw new Error('Failed to update android_app_users table: No rows affected');
-        }
-
-        // 2. Update Driver/Conductor Details Table
-        const updates = [];
-        const params = [];
-
-        if (name) {
-            updates.push('name = ?');
-            params.push(name);
-        }
-        if (contact) {
-            updates.push('contact = ?');
-            params.push(contact);
-        }
-        if (address) {
-            updates.push('address = ?');
-            params.push(address);
-        }
-        if (driver_conductor_type) {
-            updates.push('driver_conductor_type = ?');
-            params.push(driver_conductor_type);
-        }
-        if (vehicle_no) {
-            updates.push('vehicle_no = ?');
-            params.push(vehicle_no);
-        }
-        if (vehicle_type) {
-            updates.push('vehicle_type = ?');
-            params.push(vehicle_type);
-        }
-        if (vehicle_capacity) {
-            updates.push('vehicle_capacity = ?');
-            params.push(vehicle_capacity);
-        }
-
-        params.push(id);
-
-        const sqlDriverConductor = `
-            UPDATE transport_driver_conductor_details
-            SET ${updates.join(', ')}
+        const sqlSelectUid = `
+            SELECT uid
+            FROM transport_driver_conductor_details
             WHERE id = ?
         `;
-        const driverConductorResult = await conn.query(sqlDriverConductor, params);
-        if (driverConductorResult.affectedRows === 0) {
-            throw new Error('Failed to update transport_driver_conductor_details table: No rows affected');
-        }
+        const sqlUpdateAndroidAppUsers = `
+            UPDATE android_app_users
+            SET username = ?, password = ?, name = ?
+            WHERE uid = ?
+        `;
+        const sqlUpdateDriverConductor = `
+            UPDATE transport_driver_conductor_details
+            SET name = ?, contact = ?, address = ?, driver_conductor_type = ?, vehicle_no = ?, vehicle_type = ?, vehicle_capacity = ?
+            WHERE id = ?
+        `;
+        const sqlUpdateDriverName = `
+            UPDATE transport_schedule_details
+            SET driver_name = ?
+            WHERE vehicle_no = ?
+        `;
+        const sqlSelectCapacity = `
+            SELECT available_seats, vehicle_capacity
+            FROM transport_schedule_details
+            WHERE vehicle_no = ?
+        `;
+        const sqlUpdateCapacity = `
+            UPDATE transport_schedule_details
+            SET available_seats = ?, vehicle_capacity = ?
+            WHERE vehicle_no = ?
+        `;
 
-        // 3. Update Transport Schedule Details Table
-        if (vehicle_no) {
-            // Get the driver's name to update in schedule details
-            const driverName = name; // Use the updated name directly
-
-            const sqlScheduleDetails = `
-                UPDATE transport_schedule_details
-                SET driver_name = ?
-                WHERE vehicle_no = ?
-            `;
-            const scheduleResult = await conn.query(sqlScheduleDetails, [driverName, vehicle_no]);
-            if (scheduleResult.affectedRows === 0) {
-                throw new Error('Failed to update transport_schedule_details table: No rows affected');
+        // Execute the SELECT query to get the uid
+        conn.query(sqlSelectUid, [id], (err, results) => {
+            if (err) {
+                conn.release();
+                console.error('Error selecting from transport_driver_conductor_details table:', err);
+                return res.status(500).json({ message: 'Failed to select from transport_driver_conductor_details table' });
+            }
+            if (results.length === 0) {
+                conn.release();
+                console.error('No rows found in transport_driver_conductor_details table for id:', id);
+                return res.status(404).json({ message: 'No rows found in transport_driver_conductor_details table for id' });
             }
 
-            // Update available seats and vehicle capacity if applicable
-            const results = await conn.query(`
-                SELECT available_seats, vehicle_capacity
-                FROM transport_schedule_details
-                WHERE vehicle_no = ?
-            `, [vehicle_no]);
+            const uid = results[0].uid;
 
-            if (results.length > 0) {
-                const { available_seats, vehicle_capacity: existing_vehicle_capacity } = results[0];
-
-                const new_available_seats = available_seats + new_seats;
-                const new_vehicle_capacity = existing_vehicle_capacity + new_seats;
-
-                const sqlUpdateCapacity = `
-                    UPDATE transport_schedule_details
-                    SET available_seats = ?, vehicle_capacity = ?
-                    WHERE vehicle_no = ?
-                `;
-                const updateCapacityResult = await conn.query(sqlUpdateCapacity, [new_available_seats, new_vehicle_capacity, vehicle_no]);
-                if (updateCapacityResult.affectedRows === 0) {
-                    throw new Error('Failed to update transport_schedule_details table: No rows affected');
+            // Execute SQL queries one by one without transaction
+            conn.query(sqlUpdateAndroidAppUsers, [username, password, name, uid], (err, androidAppResult) => {
+                if (err) {
+                    conn.release();
+                    console.error('Error updating android_app_users table:', err);
+                    return res.status(500).json({ message: 'Failed to update android_app_users table' });
                 }
-            }
-        }
+                if (androidAppResult.affectedRows === 0) {
+                    conn.release();
+                    console.error('No rows affected in android_app_users table:', { username, password, name, uid });
+                    return res.status(404).json({ message: 'No rows affected in android_app_users table' });
+                }
 
-        // Commit the transaction
-        await new Promise((resolve, reject) => {
-            conn.commit(err => {
-                if (err) reject(err);
-                else resolve();
-            });
-        });
+                conn.query(sqlUpdateDriverConductor, [name, contact, address, driver_conductor_type, vehicle_no, vehicle_type, vehicle_capacity, id], (err, driverConductorResult) => {
+                    if (err) {
+                        conn.release();
+                        console.error('Error updating transport_driver_conductor_details table:', err);
+                        return res.status(500).json({ message: 'Failed to update transport_driver_conductor_details table' });
+                    }
+                    if (driverConductorResult.affectedRows === 0) {
+                        conn.release();
+                        console.error('No rows affected in transport_driver_conductor_details table:', { name, contact, address, driver_conductor_type, vehicle_no, vehicle_type, vehicle_capacity, id });
+                        return res.status(404).json({ message: 'No rows affected in transport_driver_conductor_details table' });
+                    }
 
-        res.status(200).json({ message: 'All details updated successfully' });
+                    if (vehicle_no) {
+                        conn.query(sqlUpdateDriverName, [name, vehicle_no], (err, driverNameResult) => {
+                            if (err) {
+                                conn.release();
+                                console.error('Error updating transport_schedule_details table:', err);
+                                return res.status(500).json({ message: 'Failed to update transport_schedule_details table' });
+                            }
 
-    } catch (error) {
-        console.error('Error updating details:', error);
-        if (conn) {
-            // Rollback the transaction in case of error
-            await new Promise((resolve, reject) => {
-                conn.rollback(() => {
-                    resolve();
+                            conn.query(sqlSelectCapacity, [vehicle_no], (err, results) => {
+                                if (err) {
+                                    conn.release();
+                                    console.error('Error selecting from transport_schedule_details table:', err);
+                                    return res.status(500).json({ message: 'Failed to select from transport_schedule_details table' });
+                                }
+
+                                if (results.length === 0) {
+                                    // If no rows found in transport_schedule_details table, skip the capacity update
+                                    conn.release();
+                                    return res.status(200).json({ message: 'All details updated successfully, but no schedule details found to update capacity.' });
+                                }
+
+                                const { available_seats, vehicle_capacity: existing_vehicle_capacity } = results[0];
+                                const new_available_seats = available_seats + new_seats;
+                                const new_vehicle_capacity = existing_vehicle_capacity + new_seats;
+
+                                conn.query(sqlUpdateCapacity, [new_available_seats, new_vehicle_capacity, vehicle_no], (err, updateCapacityResult) => {
+                                    conn.release();
+                                    if (err) {
+                                        console.error('Error updating transport_schedule_details table:', err);
+                                        return res.status(500).json({ message: 'Failed to update transport_schedule_details table' });
+                                    }
+                                    if (updateCapacityResult.affectedRows === 0) {
+                                        console.error('No rows affected in transport_schedule_details table for capacity update:', { new_available_seats, new_vehicle_capacity, vehicle_no });
+                                        return res.status(404).json({ message: 'No rows affected in transport_schedule_details table for capacity update' });
+                                    }
+
+                                    res.status(200).json({ message: 'All details updated successfully' });
+                                });
+                            });
+                        });
+                    } else {
+                        conn.release();
+                        res.status(200).json({ message: 'All details updated successfully' });
+                    }
                 });
             });
-        }
-        res.status(500).json({ message: 'Failed to update details', error: error.message });
-    } finally {
-        if (conn) {
-            // Release the connection back to the pool
-            conn.release();
-        }
-    }
+        });
+    });
 });
-
 
 module.exports = router;

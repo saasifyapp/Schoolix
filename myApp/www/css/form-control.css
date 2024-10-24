@@ -1,0 +1,160 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+* {
+
+    font-family: "Poppins", sans-serif;
+}
+
+:root {
+    --white-color: #fff;
+    --blue-color: #4070f4;
+    --grey-color: #707070;
+    --grey-color-light: #aaa;
+}
+
+/* Form group styling */
+
+
+.form-container {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    animation: slideDownFromUp 0.7s ease-in-out;
+    /* Adjust timing as needed */
+}
+
+
+.form-Searchgroup {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    /* Center the element horizontally */
+    width: 30rem;
+    /* 500px converted to rem (assuming 1rem = 16px)*/
+    animation: slideInFromDown 0.8s ease-in-out;
+
+}
+
+
+.form-Searchgroup {
+    display: flex;
+    align-items: center;
+}
+
+.form-controlSearch {
+    flex: 1;
+    /* This will make the input field take up the remaining space */
+}
+
+#bookssearchField:hover,
+#searchField:hover,
+#searchField:focus,
+#bookssearchField:focus {
+    box-shadow: 0 0 10px #5DADE2;
+    /* Add shadow on hover and focus */
+}
+
+
+
+
+.form-control{
+    /* padding: 1rem 1rem; */
+    /* Adjusted padding to center placeholder vertically */
+    font-size: 1rem;
+    /* Increased font size */
+    border: 1px solid #ced4da;
+    border-radius: 20px;
+    transition: border-color 0.3s ease;
+    margin-right: 1rem;
+    flex: 1;
+    /* Allow input fields to grow */
+    height: 3rem;
+    /* Increased height for input fields */
+    transition: transform 0.3s ease-in-out;
+
+}
+
+.form-control.wide {
+    flex: 2;
+    /* Make first two fields wider */
+}
+
+.form-control:focus {
+    box-shadow: 0 0 10px #5DADE2;
+    outline: 1px solid #85C1E9;
+    /* Add a solid outline */
+}
+
+.form-control:hover {
+    box-shadow: 0 0 10px #5DADE2;
+    transition: 0.3s;
+
+}
+
+.form-control-placeholder {
+    position: absolute;
+    top: 48%;
+    left: 0.75rem;
+    transform: translateY(-50%);
+    /* Center placeholder vertically */
+    pointer-events: none;
+    transition: top 0.2s, font-size 0.2s, transform 0.2s;
+    font-size: 16px;
+    color: #999;
+
+}
+
+.form-control:focus+.form-control-placeholder,
+.form-control:not(:placeholder-shown)+.form-control-placeholder {
+    top: -0.2rem;
+    /* Adjusted position when focused */
+    font-size: 0.80rem;
+    font-weight: 400;
+    background-color: white;
+    border-radius: 5px;
+    border-color: #85C1E9;
+    border-top: 1px solid #85C1E9;
+    /* Adding border top */
+    transform: translateY(0);
+    /* Reset transform */
+    color: #000;
+}
+
+.form-control {
+    transition: box-shadow 0.3s ease, transform 0.3s ease-in-out;
+}
+
+
+
+
+
+@keyframes slideIn {
+    0% {
+        transform: translateY(100%) scale(0.9);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+
+@keyframes slide-in {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}

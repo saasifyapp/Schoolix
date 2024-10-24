@@ -14,22 +14,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const scheduleTableBody = document.getElementById('listStudents_scheduleTableBody');
     const studentCountElement = document.getElementById('studentCount');
+    const teacherCountElement = document.getElementById('teacherCount'); // New element for teacher count
     const vehicleInfoContainer = document.getElementById('listStudents_vehicleInfo');
 
     let selectedVehicleNo = '';
     let selectedShiftName = '';
     let studentData = [];
 
-    // Function to update the read-only attribute of stop and class inputs
-    function updateInputReadOnlyStatus() {
+    // Function to update the disabled attribute of stop and class inputs
+    function updateInputDisabledStatus() {
         if (selectedVehicleNo && selectedShiftName) {
-            stopInput.readOnly = false;
-            classInput.readOnly = false;
+            stopInput.disabled = false;
+            classInput.disabled = false;
             fetchAndDisplayStudentDetails(); // Fetch and display student details
             fetchVehicleInfo(); // Fetch and display vehicle info
         } else {
-            stopInput.readOnly = true;
-            classInput.readOnly = true;
+            stopInput.disabled = true;
+            classInput.disabled = true;
             vehicleInfoContainer.innerHTML = ''; // Clear vehicle info container
         }
     }
@@ -69,6 +70,18 @@ document.addEventListener('DOMContentLoaded', function () {
     // Update vehicle suggestions when user types
     vehicleInput.addEventListener('input', function () {
         fetchVehicleSuggestions(this.value);
+
+        // Clear shift, stop, and class inputs, and reset the table and other related elements
+        shiftInput.value = '';
+        stopInput.value = '';
+        classInput.value = '';
+        selectedShiftName = '';
+        stopInput.disabled = true;
+        classInput.disabled = true;
+        vehicleInfoContainer.innerHTML = '';
+        scheduleTableBody.innerHTML = '';
+        studentCountElement.textContent = '0';
+        teacherCountElement.textContent = '0';
     });
 
     // Handle vehicle suggestion click
@@ -79,38 +92,59 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedVehicleNo = selectedDriver.dataset.vehicleNo;
             vehicleSuggestionsContainer.style.display = 'none'; // Hide suggestions container
             vehicleSuggestionsContainer.innerHTML = '';
-            updateInputReadOnlyStatus(); // Update read-only status
+            updateInputDisabledStatus(); // Update disabled status
         }
     });
 
     // Fetch shift suggestions when shift input is focused
     shiftInput.addEventListener('focus', function () {
         if (selectedVehicleNo) {
-            fetch(`/listStudents_shiftDetails?vehicleNo=${encodeURIComponent(selectedVehicleNo)}`)
-                .then((response) => response.json())
-                .then((data) => {
-                    shiftSuggestionsContainer.style.display = 'flex'; // Show suggestions container
-                    shiftSuggestionsContainer.innerHTML = '';
-
-                    if (!Array.isArray(data) || data.length === 0) {
-                        const noResultsItem = document.createElement('div');
-                        noResultsItem.classList.add('suggestion-item', 'no-results');
-                        noResultsItem.textContent = 'No results found';
-                        shiftSuggestionsContainer.appendChild(noResultsItem);
-                    } else {
-                        data.forEach((shift) => {
-                            const suggestionItem = document.createElement('div');
-                            suggestionItem.classList.add('suggestion-item');
-                            suggestionItem.textContent = shift.shift_name;
-                            suggestionItem.dataset.shiftName = shift.shift_name;
-                            suggestionItem.dataset.classesAlloted = shift.classes_alloted;
-                            shiftSuggestionsContainer.appendChild(suggestionItem);
-                        });
-                    }
-                })
-                .catch((error) => console.error('Error:', error));
+            fetchShiftSuggestions(selectedVehicleNo);
         }
     });
+
+    // Update shift suggestions when user types
+    shiftInput.addEventListener('input', function () {
+        if (selectedVehicleNo) {
+            fetchShiftSuggestions(selectedVehicleNo);
+
+            // Clear stop and class inputs
+            stopInput.value = '';
+            classInput.value = '';
+            stopInput.disabled = true;
+            classInput.disabled = true;
+            scheduleTableBody.innerHTML = '';
+            studentCountElement.textContent = '0';
+            teacherCountElement.textContent = '0';
+        }
+    });
+
+    // Function to fetch shift suggestions
+    function fetchShiftSuggestions(vehicleNo) {
+        fetch(`/listStudents_shiftDetails?vehicleNo=${encodeURIComponent(vehicleNo)}`)
+            .then((response) => response.json())
+            .then((data) => {
+                shiftSuggestionsContainer.style.display = 'flex'; // Show suggestions container
+                shiftSuggestionsContainer.innerHTML = '';
+
+                if (!Array.isArray(data) || data.length === 0) {
+                    const noResultsItem = document.createElement('div');
+                    noResultsItem.classList.add('suggestion-item', 'no-results');
+                    noResultsItem.textContent = 'No results found';
+                    shiftSuggestionsContainer.appendChild(noResultsItem);
+                } else {
+                    data.forEach((shift) => {
+                        const suggestionItem = document.createElement('div');
+                        suggestionItem.classList.add('suggestion-item');
+                        suggestionItem.textContent = shift.shift_name;
+                        suggestionItem.dataset.shiftName = shift.shift_name;
+                        suggestionItem.dataset.classesAlloted = shift.classes_alloted;
+                        shiftSuggestionsContainer.appendChild(suggestionItem);
+                    });
+                }
+            })
+            .catch((error) => console.error('Error:', error));
+    }
 
     // Handle shift suggestion click
     shiftSuggestionsContainer.addEventListener('click', function (event) {
@@ -120,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedShiftName = selectedShift.dataset.shiftName;
             shiftSuggestionsContainer.style.display = 'none'; // Hide suggestions container
             shiftSuggestionsContainer.innerHTML = '';
-            updateInputReadOnlyStatus(); // Update read-only status
+            updateInputDisabledStatus(); // Update disabled status
         }
     });
 
@@ -149,31 +183,43 @@ document.addEventListener('DOMContentLoaded', function () {
     // Fetch stop suggestions when stop input is focused
     stopInput.addEventListener('focus', function () {
         if (selectedVehicleNo && selectedShiftName) {
-            fetch(`/listStudents_getStops?vehicleNo=${encodeURIComponent(selectedVehicleNo)}&shiftName=${encodeURIComponent(selectedShiftName)}`)
-                .then((response) => response.json())
-                .then((data) => {
-                    stopSuggestionsContainer.style.display = 'flex'; // Show suggestions container
-                    stopSuggestionsContainer.innerHTML = '';
-
-                    if (!data.route_stops) {
-                        const noResultsItem = document.createElement('div');
-                        noResultsItem.classList.add('suggestion-item', 'no-results');
-                        noResultsItem.textContent = 'No results found';
-                        stopSuggestionsContainer.appendChild(noResultsItem);
-                    } else {
-                        const stopsArray = data.route_stops.split(', ');
-                        stopsArray.forEach((stop) => {
-                            const suggestionItem = document.createElement('div');
-                            suggestionItem.classList.add('suggestion-item');
-                            suggestionItem.textContent = stop;
-                            suggestionItem.dataset.routeStop = stop;
-                            stopSuggestionsContainer.appendChild(suggestionItem);
-                        });
-                    }
-                })
-                .catch((error) => console.error('Error:', error));
+            fetchStopSuggestions(selectedVehicleNo, selectedShiftName);
         }
     });
+
+    // Update stop suggestions when user types
+    stopInput.addEventListener('input', function () {
+        if (selectedVehicleNo && selectedShiftName) {
+            fetchStopSuggestions(selectedVehicleNo, selectedShiftName);
+        }
+    });
+
+    // Function to fetch stop suggestions
+    function fetchStopSuggestions(vehicleNo, shiftName) {
+        fetch(`/listStudents_getStops?vehicleNo=${encodeURIComponent(vehicleNo)}&shiftName=${encodeURIComponent(shiftName)}`)
+            .then((response) => response.json())
+            .then((data) => {
+                stopSuggestionsContainer.style.display = 'flex'; // Show suggestions container
+                stopSuggestionsContainer.innerHTML = '';
+
+                if (!data.route_stops) {
+                    const noResultsItem = document.createElement('div');
+                    noResultsItem.classList.add('suggestion-item', 'no-results');
+                    noResultsItem.textContent = 'No results found';
+                    stopSuggestionsContainer.appendChild(noResultsItem);
+                } else {
+                    const stopsArray = data.route_stops.split(', ');
+                    stopsArray.forEach((stop) => {
+                        const suggestionItem = document.createElement('div');
+                        suggestionItem.classList.add('suggestion-item');
+                        suggestionItem.textContent = stop;
+                        suggestionItem.dataset.routeStop = stop;
+                        stopSuggestionsContainer.appendChild(suggestionItem);
+                    });
+                }
+            })
+            .catch((error) => console.error('Error:', error));
+    }
 
     // Handle stop suggestion click
     stopSuggestionsContainer.addEventListener('click', function (event) {
@@ -190,41 +236,53 @@ document.addEventListener('DOMContentLoaded', function () {
     // Fetch class suggestions when class input is focused
     classInput.addEventListener('focus', function () {
         if (selectedVehicleNo && selectedShiftName) {
-            fetch(`/listStudents_getClass?vehicleNo=${encodeURIComponent(selectedVehicleNo)}&shiftName=${encodeURIComponent(selectedShiftName)}`)
-                .then((response) => response.json())
-                .then((data) => {
-                    classSuggestionsContainer.style.display = 'flex'; // Show suggestions container
-                    classSuggestionsContainer.innerHTML = '';
-
-                    if (!data.classes_alloted) {
-                        const noResultsItem = document.createElement('div');
-                        noResultsItem.classList.add('suggestion-item', 'no-results');
-                        noResultsItem.textContent = 'No results found';
-                        classSuggestionsContainer.appendChild(noResultsItem);
-                    } else {
-                        const classesArray = data.classes_alloted.split(', ');
-                        const groupedClasses = {};
-
-                        classesArray.forEach((cls) => {
-                            const [standard, division] = cls.split(' ');
-                            if (!groupedClasses[standard]) {
-                                groupedClasses[standard] = [];
-                            }
-                            groupedClasses[standard].push(division);
-                        });
-
-                        for (const [standard, divisions] of Object.entries(groupedClasses)) {
-                            const suggestionItem = document.createElement('div');
-                            suggestionItem.classList.add('suggestion-item');
-                            suggestionItem.textContent = `${standard} (${divisions.join(', ')})`;
-                            suggestionItem.dataset.class = `${standard} (${divisions.join(', ')})`;
-                            classSuggestionsContainer.appendChild(suggestionItem);
-                        }
-                    }
-                })
-                .catch((error) => console.error('Error:', error));
+            fetchClassSuggestions(selectedVehicleNo, selectedShiftName);
         }
     });
+
+    // Update class suggestions when user types
+    classInput.addEventListener('input', function () {
+        if (selectedVehicleNo && selectedShiftName) {
+            fetchClassSuggestions(selectedVehicleNo, selectedShiftName);
+        }
+    });
+
+    // Function to fetch class suggestions
+    function fetchClassSuggestions(vehicleNo, shiftName) {
+        fetch(`/listStudents_getClass?vehicleNo=${encodeURIComponent(vehicleNo)}&shiftName=${encodeURIComponent(shiftName)}`)
+            .then((response) => response.json())
+            .then((data) => {
+                classSuggestionsContainer.style.display = 'flex'; // Show suggestions container
+                classSuggestionsContainer.innerHTML = '';
+
+                if (!data.classes_alloted) {
+                    const noResultsItem = document.createElement('div');
+                    noResultsItem.classList.add('suggestion-item', 'no-results');
+                    noResultsItem.textContent = 'No results found';
+                    classSuggestionsContainer.appendChild(noResultsItem);
+                } else {
+                    const classesArray = data.classes_alloted.split(', ');
+                    const groupedClasses = {};
+
+                    classesArray.forEach((cls) => {
+                        const [standard, division] = cls.split(' ');
+                        if (!groupedClasses[standard]) {
+                            groupedClasses[standard] = [];
+                        }
+                        groupedClasses[standard].push(division);
+                    });
+
+                    for (const [standard, divisions] of Object.entries(groupedClasses)) {
+                        const suggestionItem = document.createElement('div');
+                        suggestionItem.classList.add('suggestion-item');
+                        suggestionItem.textContent = `${standard} (${divisions.join(', ')})`;
+                        suggestionItem.dataset.class = `${standard} (${divisions.join(', ')})`;
+                        classSuggestionsContainer.appendChild(suggestionItem);
+                    }
+                }
+            })
+            .catch((error) => console.error('Error:', error));
+    }
 
     // Handle class suggestion click
     classSuggestionsContainer.addEventListener('click', function (event) {
@@ -262,9 +320,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (selectedVehicleNo && selectedShiftName) {
             fetch(`/fetch_getStudentsList?vehicleNo=${encodeURIComponent(selectedVehicleNo)}&shiftName=${encodeURIComponent(selectedShiftName)}`)
                 .then((response) => response.json())
-                .then((data) => {
-                    studentData = data; // Store the fetched data
-                    displayStudentDetails(data); // Display the fetched data
+                .then((result) => {
+                    studentData = result.data; // Store the fetched data
+                    displayStudentDetails(result.data); // Display the fetched data
+                    updateCounts(result.studentCount, result.teacherCount); // Update counts
                 })
                 .catch((error) => console.error('Error:', error));
         }
@@ -288,6 +347,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         displayStudentDetails(filteredData);
+
+        // Update counts based on filtered data
+        const studentCount = filteredData.filter(result => result.standard !== 'Teacher').length;
+        const teacherCount = filteredData.filter(result => result.standard === 'Teacher').length;
+        updateCounts(studentCount, teacherCount);
     }
 
     // Function to display student details in the table
@@ -306,17 +370,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 `;
                 scheduleTableBody.appendChild(row);
             });
-            studentCountElement.textContent = data.length; // Update student count
         } else {
             const noResultsRow = document.createElement('tr');
             noResultsRow.innerHTML = '<td colspan="5">No students found</td>';
             scheduleTableBody.appendChild(noResultsRow);
-            studentCountElement.textContent = 0; // Update student count
         }
     }
 
-    // Initial call to set read-only status
-    updateInputReadOnlyStatus();
+    // Function to update the student and teacher counts
+    function updateCounts(studentCount, teacherCount) {
+        studentCountElement.textContent = studentCount; // Update student count
+        teacherCountElement.textContent = teacherCount; // Update teacher count
+    }
+
+    // Initial call to set disabled status
+    updateInputDisabledStatus();
 
     // Function to export table to CSV
     function export_getStudentListTable() {
@@ -339,7 +407,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const rows = Array.from(reportTableBody.querySelectorAll('tr'));
         rows.forEach(row => {
-            const cols = Array.from(row.querySelectorAll('td')). map(col => col.textContent.trim());
+            const cols = Array.from(row.querySelectorAll('td')).map(col => col.textContent.trim());
             csvContent += cols.join(',') + '\n';
         });
 

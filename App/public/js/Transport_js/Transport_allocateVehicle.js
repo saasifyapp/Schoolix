@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedRouteDetail = '';
     let selectedShiftDetail = '';
     let studentCount = 0;
+    let teacherCount = 0;
     let selectedVehicleCapacity = 0;
 
     function fetchRouteDetails(query = '') {
@@ -278,11 +279,13 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 studentDetailsContainer.style.display = 'flex';
                 studentCount = data.studentCount;
+                teacherCount = data.teacherCount;
                 studentDetailsContainer.innerHTML = `
-                    <strong>Student Count: </strong> ${studentCount}
+                    <strong>Student Count: </strong> ${studentCount} <br>
+                    <strong>Teacher Count: </strong> ${teacherCount}
                 `;
             })
-            .catch(error => console.error('Error fetching student count:', error));
+            .catch(error => console.error('Error fetching counts:', error));
     }
 
 
@@ -316,7 +319,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // BUS TAGGING FUNCTIONALITY //
-
     allocateButton.addEventListener('click', function () {
         if (!routeInput.value || !shiftInput.value || !vehicleInput.value) {
             Swal.fire({
@@ -326,7 +328,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             return;
         }
-
+    
         const requestData = {
             routeStops: selectedRouteDetail,
             shiftClasses: selectedShiftDetail,
@@ -335,30 +337,29 @@ document.addEventListener('DOMContentLoaded', function () {
             routeName: routeInput.value,
             shiftName: shiftInput.value,
         };
-
-        if (studentCount === 0) {
+    
+        if (studentCount === 0 && teacherCount === 0) {
             Swal.fire({
                 icon: 'info',
-                title: 'No Students Found',
+                title: 'No Students or Teachers Found',
                 html: `
-                All the students on <strong>${routeInput.value}</strong> route in <strong>${shiftInput.value}</strong> shift are allocated with a vehicle.
-            `
+                    All the students and teachers on <strong>${routeInput.value}</strong> route in <strong>${shiftInput.value}</strong> shift are allocated with a vehicle.
+                `
             });
             return;
         }
-
+    
         if (selectedVehicleCapacity === 0) {
             Swal.fire({
                 icon: 'warning',
                 title: 'No Available Seats',
                 html: `
-                The selected vehicle <strong>${vehicleInput.value}</strong> has no available seats.
-            `
+                    The selected vehicle <strong>${vehicleInput.value}</strong> has no available seats.
+                `
             });
             return;
         }
-
-
+    
         // Validate if the selected route, shift, and vehicle exist in one row
         fetch('/validate_tagged_routeShiftVehicle', {
             method: 'POST',
@@ -367,105 +368,107 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify(requestData)
         })
-            .then(response => response.json())
-            .then(result => {
-                if (!result.success) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Invalid Selection',
-                        html: `
+        .then(response => response.json())
+        .then(result => {
+            if (!result.success) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Selection',
+                    html: `
                         The selected <strong>Route</strong>, <strong>Shift</strong> and <strong>Vehicle</strong> combination does not exist.
                     `
-                    });
-                    return;
-                }
-
-                const driverName = result.driverName;  // Is only found when above validation succeeds //
-
-                // Proceed with the existing logic if validation passes
-
-                if (studentCount <= selectedVehicleCapacity) {
-                    // Log the data being sent to the server
-                    //console.log('Data sent to server:', requestData);
-
-                    // Call the new endpoint to tag the bus to all the listed students
-                    fetch('/allocate_tagStudentsToBus', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(requestData)
-                    })
-                        .then(response => response.json())
-                        .then(result => {
-                            if (result.success) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Allocation Successful',
-                                    html: `
-                                        <strong>Vehicle:</strong> ${vehicleInput.value} [ ${driverName} ]<br>
-                                        is successfully tagged to <strong>${studentCount}</strong> students.
-                                    `,
-                                }).then(() => {
-                                    resetInputs(); // Clear all inputs when user clicks OK
-                                });
-                                fetchAndDisplayScheduleDetails();
-                            } else {
-                                alert('Error: Failed to allocate bus.');
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
-                } else {
-                    // Call the new endpoint to handle overflow
-                    // Call the new endpoint to handle overflow
-                    fetch('/handle_overflow_students', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(requestData)
-                    })
-                        .then(response => response.json())
-                        .then(result => {
-                            if (result.success) {
-                                const primaryBusCount = result.primaryBus.length;
-                                const secondaryBusDetails = result.secondaryResult ? result.secondaryResult.secondaryBusDetails : [];
-
-                                const primaryBusDetails = `${vehicleInput.value} (${driverName}) - ${primaryBusCount} students`;
-                                let alertHtml = `
-            Due to insufficient availability of seats in <strong>${vehicleInput.value} (${driverName})</strong>, we allocated
-            other vehicles running on same route to certain students<br><br>
-                <strong>Total Students:</strong> ${studentCount}<br>
-                ${primaryBusDetails}<br>
-            `;
-
-                                secondaryBusDetails.forEach(bus => {
-                                    if (bus.studentCount > 0) {
-                                        alertHtml += `${bus.vehicleNo} (${bus.driverName}) - ${bus.studentCount} students<br>`;
-                                    }
-                                });
-
-                                if (result.secondaryResult && result.secondaryResult.notEnoughBuses) {
-                                    alertHtml += `<br><strong>Warning:</strong> Not enough buses to allocate all students. ${result.secondaryResult.remainingStudents.length} students could not be allocated.`;
-                                }
-
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Allocation Successful',
-                                    html: alertHtml,
-                                }).then(() => {
-                                    resetInputs(); // Clear all inputs when user clicks OK
-                                });
-
-                                fetchAndDisplayScheduleDetails();
-                            } else {
-                                console.error('Error: Failed to fetch overflow students.');
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
-                }
-            })
-            .catch(error => console.error('Error:', error));
+                });
+                return;
+            }
+    
+            const driverName = result.driverName;  // Is only found when above validation succeeds //
+    
+            // Proceed with the existing logic if validation passes
+    
+            // DEBUG: Log the counts and capacity
+            console.log('studentCount:', studentCount);
+            console.log('teacherCount:', teacherCount);
+            console.log('selectedVehicleCapacity:', selectedVehicleCapacity);
+    
+            if (studentCount + teacherCount <= selectedVehicleCapacity) {
+                // Call the new endpoint to tag the bus to all the listed students and teachers
+                fetch('/allocate_tagStudentsToBus', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        const allocatedStudents = result.allocatedStudents.length;
+                        const allocatedTeachers = result.allocatedTeachers.length;
+    
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Allocation Successful',
+                            html: `
+                                <strong>Vehicle:</strong> ${vehicleInput.value} [ ${driverName} ]<br>
+                                is successfully tagged to <strong>${allocatedStudents}</strong> students and <strong>${allocatedTeachers}</strong> teachers.
+                            `,
+                        }).then(() => {
+                            resetInputs(); // Clear all inputs when user clicks OK
+                        });
+                        fetchAndDisplayScheduleDetails();
+                    } else {
+                        alert('Error: Failed to allocate bus.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            } else {
+                // Call the new endpoint to handle overflow
+                fetch('/handle_overflow_students', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        let alertHtml = `
+                            Due to insufficient availability of seats in <strong>${vehicleInput.value} (${driverName})</strong>, we allocated other vehicles running on the same route to certain students and teachers.<br><br>
+                            <strong>Total Students:</strong> ${studentCount}<br>
+                            <strong>Total Teachers:</strong> ${teacherCount}<br><br>
+                        `;
+    
+                        const primaryBusDetails = `${vehicleInput.value} (${driverName}) - ${result.primaryBus.allocatedStudents.length} students and ${result.primaryBus.allocatedTeachers.length} teachers`;
+                        alertHtml += `${primaryBusDetails}<br>`;
+    
+                        if (result.secondaryBusDetails && result.secondaryBusDetails.length > 0) {
+                            result.secondaryBusDetails.forEach(bus => {
+                                alertHtml += `${bus.vehicleNo} (${bus.driverName}) - ${bus.studentCount} students and ${bus.teacherCount} teachers<br>`;
+                            });
+                        }
+    
+                        if (result.secondaryResult && result.secondaryResult.notEnoughBuses) {
+                            alertHtml += `<br><strong>Warning:</strong> Not enough buses to allocate all students. ${result.secondaryResult.remainingStudents ? result.secondaryResult.remainingStudents.length : 0} students could not be allocated.`;
+                        }
+    
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Allocation Successful',
+                            html: alertHtml,
+                        }).then(() => {
+                            resetInputs(); // Clear all inputs when user clicks OK
+                        });
+    
+                        fetchAndDisplayScheduleDetails();
+                    } else {
+                        console.error('Error: Failed to fetch overflow students.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        })
+        .catch(error => console.error('Error:', error));
     });
 
     // Fetch and display the schedule details in the table
@@ -522,16 +525,13 @@ document.addEventListener('DOMContentLoaded', function () {
     function detagBus(vehicleNo, routeName, shiftName, classesAlloted) {
         // Show a confirmation dialog
         const userConfirmed = window.confirm('Do you really want to detag this bus? This process cannot be undone.');
-
+    
         if (userConfirmed) {
             // Split the classesAlloted string into an array
             const classesArray = classesAlloted.split(',').map(cls => cls.trim());
-
+    
             const requestData = { vehicleNo, routeName, shiftName, classesAlloted: classesArray };
-
-            // Log the data being sent to the server
-            //console.log('Data sent to server:', requestData);
-
+    
             fetch('/allocate_detagBus', {
                 method: 'POST',
                 headers: {
@@ -539,25 +539,30 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 body: JSON.stringify(requestData)
             })
-                .then(response => response.json())
-                .then(result => {
-                    if (result.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Unallocation Successful',
-                            html: `<strong>Vehicle No:</strong> ${result.vehicle_no} [${result.driver_name}] <br> has been successfully unallocated for <strong>${result.students_detagged}</strong> students.`
-                        });
-                        // Refresh the schedule details table
-                        fetchAndDisplayScheduleDetails();
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Detag Failed',
-                            text: 'Error: Failed to detag bus.'
-                        });
-                    }
-                })
-                .catch(error => console.error('Error:', error));
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Unallocation Successful',
+                        html: `
+                            <strong>Vehicle No:</strong> ${result.vehicle_no} [${result.driver_name}] <br>
+                            has been successfully unallocated for 
+                            <strong>${result.detagged_students}</strong> students and 
+                            <strong>${result.detagged_teachers}</strong> teachers.
+                        `
+                    });
+                    // Refresh the schedule details table
+                    fetchAndDisplayScheduleDetails();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Detag Failed',
+                        text: 'Error: Failed to detag bus.'
+                    });
+                }
+            })
+            .catch(error => console.error('Error:', error));
         }
     }
     // Initial data fetch for schedule details
