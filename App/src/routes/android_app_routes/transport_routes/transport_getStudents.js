@@ -153,12 +153,12 @@ router.get('/android/get-student-details', connectionManagerAndroid, (req, res) 
                     mobile_no AS f_mobile_no, 
                     transport_pickup_drop 
                 FROM teacher_details 
-                WHERE transport_pickup_drop IN (?) AND transport_tagged = ?
+                WHERE transport_pickup_drop IN (?) AND transport_tagged = ? AND (${classesAlloted.map(cls => `FIND_IN_SET(?, classes_alloted) > 0`).join(' OR ')})
             `;
             const studentTeacherValues = [
                 standards, divisions, routeStops, vehicleNo, 
                 standards, divisions, routeStops, vehicleNo, 
-                routeStops, vehicleNo
+                routeStops, vehicleNo, ...classesAlloted
             ];
 
             // Add filtering for route if provided
@@ -172,6 +172,10 @@ router.get('/android/get-student-details', connectionManagerAndroid, (req, res) 
                 const [standard, division] = classFilter.split(' ');
                 studentTeacherSql += ' AND standard = ? AND division = ?';
                 studentTeacherValues.push(standard, division);
+
+                // Add class filter for teachers as well
+                studentTeacherSql += ' AND FIND_IN_SET(?, classes_alloted) > 0';
+                studentTeacherValues.push(`${standard} ${division}`);
             }
 
             req.connectionPool.query(studentTeacherSql, studentTeacherValues, (studentTeacherError, studentTeacherResults) => {
