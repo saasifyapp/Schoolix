@@ -279,7 +279,7 @@ function initializeApp() {
         try {
             const vehicleNo = vehicleNoField.textContent;
             const shiftName = shift;
-
+     
             let response = await fetch(`https://schoolix.saasifyapp.com/android/get-student-details?vehicleNo=${vehicleNo}&shiftName=${shiftName}`, {
                 method: 'GET',
                 headers: {
