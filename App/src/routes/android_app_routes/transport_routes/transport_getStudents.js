@@ -172,6 +172,10 @@ router.get('/android/get-student-details', connectionManagerAndroid, (req, res) 
                 const [standard, division] = classFilter.split(' ');
                 studentTeacherSql += ' AND standard = ? AND division = ?';
                 studentTeacherValues.push(standard, division);
+
+                // Add class filter for teachers as well
+                studentTeacherSql += ' AND FIND_IN_SET(?, classes_alloted) > 0';
+                studentTeacherValues.push(`${standard} ${division}`);
             }
 
             req.connectionPool.query(studentTeacherSql, studentTeacherValues, (studentTeacherError, studentTeacherResults) => {
