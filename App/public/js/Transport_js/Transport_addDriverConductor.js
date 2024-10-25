@@ -447,7 +447,7 @@ function editDriverConductor(id) {
         </div>
         
                   <div class="form-group">
-            <input type="text" id="editContact" name="contact" class="form-control" value="${
+            <input type="tel" maxlength="10" id="editContact" name="contact" class="form-control" value="${
               driverConductorDetails.contact || ""
             }" style="text-align: center;">
             <span class="form-control-placeholder">Contact</span>
@@ -546,7 +546,7 @@ function editDriverConductor(id) {
           </div>
           <div>
               <label for="editContact">Contact:</label>
-              <input type="text" id="editContact" name="contact" class="form-control" value="${
+              <input type="tel" maxlength="10" id="editContact" name="contact" class="form-control" value="${
                 driverConductorDetails.contact || ""
               }">
           </div>
