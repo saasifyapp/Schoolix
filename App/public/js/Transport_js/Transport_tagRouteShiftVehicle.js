@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+
   const routeInput = document.getElementById("tag_tag_route_name");
   const routeSuggestionsContainer = document.getElementById(
     "tag_routeSuggestions"
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Call the refreshTable function to load the initial data when the page loads
-  refreshTable();
+  // refreshTable();
 
   // Function to fetch route suggestions
   function fetchRouteSuggestions(query) {
@@ -534,4 +534,3 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Error:", error)
       });
   });
-});

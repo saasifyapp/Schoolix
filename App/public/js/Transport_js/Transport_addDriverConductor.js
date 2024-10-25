@@ -678,6 +678,7 @@ async function saveDriverConductorDetails() {
 
       showToast("All details updated successfully");
       refreshDriverConductorData();
+      // refreshTable();
       closeEditPopup();
   } catch (error) {
       console.error("Error saving driver/conductor details:", error);

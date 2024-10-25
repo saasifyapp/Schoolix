@@ -91,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
     tagRouteShiftButton.addEventListener('click', function () {
         hideAllOverlays();
         showOverlay('tagRouteShiftOverlay');
+        refreshTable();
     });
 
 
