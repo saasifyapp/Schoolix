@@ -501,6 +501,17 @@ function fetchAndDisplayScheduleDetails() {
         .then(response => response.json())
         .then(data => {
             scheduleTableBody.innerHTML = ''; // Clear existing data
+
+                // Check if data array is empty
+                if (data.length === 0) {
+                    const noDataRow = document.createElement('tr');
+                    noDataRow.innerHTML = `
+                        <td colspan="9" style="text-align: center; font-size: 16px; color: gray;">No results found</td>
+                    `;
+                    scheduleTableBody.appendChild(noDataRow);
+                    hideTransportLoadingAnimation();
+                    return; // Exit function since there's no data to display
+                }
             data.forEach(item => {
                 const newRow = document.createElement('tr');
                 newRow.innerHTML = `
