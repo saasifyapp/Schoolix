@@ -84,6 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
     allocateBus.addEventListener('click', function () {
         hideAllOverlays();
         showOverlay('allocateBusOverlay');
+        fetchAndDisplayScheduleDetails();
     });
 
     // Show Tag Route Shift Overlay
