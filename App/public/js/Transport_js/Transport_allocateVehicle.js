@@ -1,22 +1,22 @@
 
-const routeInput = document.getElementById('allocate_inputRoute');
-const routeSuggestionsContainer = document.getElementById('allocate_routeSuggestions');
-const routeDetailContainer = document.getElementById('allocate_routeDetail');
+const routeInputallocate = document.getElementById('allocate_inputRoute');
+const routeSuggestionsContainerallocate = document.getElementById('allocate_routeSuggestions');
+const routeDetailContainerallocate = document.getElementById('allocate_routeDetail');
 
-const shiftInput = document.getElementById('allocate_inputShift');
-const shiftSuggestionsContainer = document.getElementById('allocate_shiftSuggestions');
-const shiftDetailContainer = document.getElementById('allocate_shiftDetail');
+const shiftInputallocate = document.getElementById('allocate_inputShift');
+const shiftSuggestionsContainerallocate = document.getElementById('allocate_shiftSuggestions');
+const shiftDetailContainerallocate = document.getElementById('allocate_shiftDetail');
 
-const vehicleInput = document.getElementById('allocate_inputVehicle');
-const vehicleSuggestionsContainer = document.getElementById('allocate_vehicleSuggestions');
-const vehicleDetailContainer = document.getElementById('allocate_vehicleDetail');
+const vehicleInputallocate = document.getElementById('allocate_inputVehicle');
+const vehicleSuggestionsContainerallocate = document.getElementById('allocate_vehicleSuggestions');
+const vehicleDetailContainerallocate = document.getElementById('allocate_vehicleDetail');
 
-const studentDetailsContainer = document.getElementById('allocate_studentDetails');
+const studentDetailsContainerallocate = document.getElementById('allocate_studentDetails');
 const allocateButton = document.getElementById('allocate_getDetailsButton');
 const scheduleTableBody = document.getElementById('allocate_scheduleTableBody');
 
-let selectedRouteDetail = '';
-let selectedShiftDetail = '';
+let allocateselectedRouteDetail = '';
+let allocateselectedShiftDetail = '';
 let studentCount = 0;
 let teacherCount = 0;
 let selectedVehicleCapacity = 0;
@@ -25,8 +25,8 @@ function fetchRouteDetails(query = '') {
     fetch(`/allocate_getRouteDetails`)
         .then((response) => response.json())
         .then((data) => {
-            routeSuggestionsContainer.style.display = 'flex'; // Show suggestions container
-            routeSuggestionsContainer.innerHTML = '';
+            routeSuggestionsContainerallocate.style.display = 'flex'; // Show suggestions container
+            routeSuggestionsContainerallocate.innerHTML = '';
 
             const filteredData = query
                 ? data.filter(route => route.route_shift_name.toLowerCase().includes(query.toLowerCase()))
@@ -36,7 +36,7 @@ function fetchRouteDetails(query = '') {
                 const noResultsItem = document.createElement('div');
                 noResultsItem.classList.add('suggestion-item', 'no-results');
                 noResultsItem.textContent = 'No results found';
-                routeSuggestionsContainer.appendChild(noResultsItem);
+                routeSuggestionsContainerallocate.appendChild(noResultsItem);
             } else {
                 filteredData.forEach((route) => {
                     const suggestionItem = document.createElement('div');
@@ -44,18 +44,18 @@ function fetchRouteDetails(query = '') {
                     suggestionItem.textContent = route.route_shift_name;
                     suggestionItem.dataset.routeName = route.route_shift_name;
                     suggestionItem.dataset.routeDetail = route.route_shift_detail;
-                    routeSuggestionsContainer.appendChild(suggestionItem);
+                    routeSuggestionsContainerallocate.appendChild(suggestionItem);
                 });
             }
         })
         .catch((error) => console.error('Error:', error));
 }
 
-routeInput.addEventListener('focus', function () {
+routeInputallocate.addEventListener('focus', function () {
     fetchRouteDetails();
 });
 
-routeInput.addEventListener('input', function () {
+routeInputallocate.addEventListener('input', function () {
     fetchRouteDetails(this.value);
 });
 
@@ -63,8 +63,8 @@ function fetchShiftDetails(routeName, query = '') {
     fetch(`/allocate_getShiftDetails?routeName=${encodeURIComponent(routeName)}`)
         .then((response) => response.json())
         .then((data) => {
-            shiftSuggestionsContainer.style.display = 'flex'; // Show suggestions container
-            shiftSuggestionsContainer.innerHTML = '';
+            shiftSuggestionsContainerallocate.style.display = 'flex'; // Show suggestions container
+            shiftSuggestionsContainerallocate.innerHTML = '';
 
 
 
@@ -76,7 +76,7 @@ function fetchShiftDetails(routeName, query = '') {
                 const noResultsItem = document.createElement('div');
                 noResultsItem.classList.add('suggestion-item', 'no-results');
                 noResultsItem.textContent = 'No results found';
-                shiftSuggestionsContainer.appendChild(noResultsItem);
+                shiftSuggestionsContainerallocate.appendChild(noResultsItem);
             } else {
                 filteredData.forEach((shift) => {
                     const suggestionItem = document.createElement('div');
@@ -84,22 +84,22 @@ function fetchShiftDetails(routeName, query = '') {
                     suggestionItem.textContent = shift.route_shift_name;
                     suggestionItem.dataset.shiftName = shift.route_shift_name;
                     suggestionItem.dataset.shiftDetail = shift.route_shift_detail;
-                    shiftSuggestionsContainer.appendChild(suggestionItem);
+                    shiftSuggestionsContainerallocate.appendChild(suggestionItem);
                 });
             }
         })
         .catch((error) => console.error('Error:', error));
 }
 
-shiftInput.addEventListener('focus', function () {
-    if (routeInput.value) {
-        fetchShiftDetails(routeInput.value);
+shiftInputallocate.addEventListener('focus', function () {
+    if (routeInputallocate.value) {
+        fetchShiftDetails(routeInputallocate.value);
     }
 });
 
-shiftInput.addEventListener('input', function () {
-    if (routeInput.value) {
-        fetchShiftDetails(routeInput.value, this.value);
+shiftInputallocate.addEventListener('input', function () {
+    if (routeInputallocate.value) {
+        fetchShiftDetails(routeInputallocate.value, this.value);
     }
 });
 
@@ -107,14 +107,14 @@ function fetchVehicleDetails(routeName, shiftName, query = '') {
     fetch(`/allocate_getVehicleDetails?q=${encodeURIComponent(query)}&routeName=${encodeURIComponent(routeName)}&shiftName=${encodeURIComponent(shiftName)}`)
         .then((response) => response.json())
         .then((data) => {
-            vehicleSuggestionsContainer.style.display = 'flex'; // Show suggestions container
-            vehicleSuggestionsContainer.innerHTML = '';
+            vehicleSuggestionsContainerallocate.style.display = 'flex'; // Show suggestions container
+            vehicleSuggestionsContainerallocate.innerHTML = '';
 
             if (data.length === 0) {
                 const noResultsItem = document.createElement('div');
                 noResultsItem.classList.add('suggestion-item', 'no-results');
                 noResultsItem.textContent = 'No results found';
-                vehicleSuggestionsContainer.appendChild(noResultsItem);
+                vehicleSuggestionsContainerallocate.appendChild(noResultsItem);
             } else {
                 data.forEach((driver) => {
                     const suggestionItem = document.createElement('div');
@@ -125,116 +125,116 @@ function fetchVehicleDetails(routeName, shiftName, query = '') {
                     suggestionItem.dataset.vehicleCapacity = driver.vehicle_capacity || 'N/A';
                     suggestionItem.dataset.availableSeats = driver.available_seats || 0; // Fallback to 0 if null or 0
                     suggestionItem.dataset.conductorName = driver.conductor_name || 'N/A';
-                    vehicleSuggestionsContainer.appendChild(suggestionItem);
+                    vehicleSuggestionsContainerallocate.appendChild(suggestionItem);
                 });
             }
         })
         .catch((error) => console.error('Error:', error));
 }
 
-vehicleInput.addEventListener('focus', function () {
-    if (routeInput.value && shiftInput.value) {
-        fetchVehicleDetails(routeInput.value, shiftInput.value);
+vehicleInputallocate.addEventListener('focus', function () {
+    if (routeInputallocate.value && shiftInputallocate.value) {
+        fetchVehicleDetails(routeInputallocate.value, shiftInputallocate.value);
     }
 });
 
-vehicleInput.addEventListener('input', function () {
-    if (routeInput.value && shiftInput.value) {
-        fetchVehicleDetails(routeInput.value, shiftInput.value, this.value);
+vehicleInputallocate.addEventListener('input', function () {
+    if (routeInputallocate.value && shiftInputallocate.value) {
+        fetchVehicleDetails(routeInputallocate.value, shiftInputallocate.value, this.value);
     }
 });
 
-routeSuggestionsContainer.addEventListener('click', function (event) {
+routeSuggestionsContainerallocate.addEventListener('click', function (event) {
     if (event.target.classList.contains('suggestion-item')) {
         const selectedRoute = event.target;
-        routeInput.value = selectedRoute.dataset.routeName;
+        routeInputallocate.value = selectedRoute.dataset.routeName;
 
         // Populate the route details
-        selectedRouteDetail = {
+        allocateselectedRouteDetail = {
             routeName: selectedRoute.dataset.routeName || "N/A",
             routeDetail: selectedRoute.dataset.routeDetail || "N/A",
         };
 
-        routeDetailContainer.innerHTML = `
-                <strong>Route Name:</strong> ${selectedRouteDetail.routeName}<br>
-                <strong>Stops:</strong> ${selectedRouteDetail.routeDetail}
+        routeDetailContainerallocate.innerHTML = `
+                <strong>Route Name:</strong> ${allocateselectedRouteDetail.routeName}<br>
+                <strong>Stops:</strong> ${allocateselectedRouteDetail.routeDetail}
             `;
 
         // Show the route detail container
-        routeDetailContainer.style.display = 'block';
+        routeDetailContainerallocate.style.display = 'block';
 
         // Hide suggestions container
-        routeSuggestionsContainer.style.display = 'none';
-        routeSuggestionsContainer.innerHTML = ''; // Clear suggestions
+        routeSuggestionsContainerallocate.style.display = 'none';
+        routeSuggestionsContainerallocate.innerHTML = ''; // Clear suggestions
 
         // Clear shift input and suggestions when a new route is selected
-        shiftSuggestionsContainer.innerHTML = '';
-        shiftDetailContainer.innerHTML = '';
-        selectedShiftDetail = '';
-        studentDetailsContainer.innerHTML = '';
-        vehicleDetailContainer.innerHTML = '';
-        shiftInput.value = '';
-        vehicleInput.value = '';
+        shiftSuggestionsContainerallocate.innerHTML = '';
+        shiftDetailContainerallocate.innerHTML = '';
+        allocateselectedShiftDetail = '';
+        studentDetailsContainerallocate.innerHTML = '';
+        vehicleDetailContainerallocate.innerHTML = '';
+        shiftInputallocate.value = '';
+        vehicleInputallocate.value = '';
 
         //Container display none
-        shiftDetailContainer.style.display = "none";
-        studentDetailsContainer.style.display = "none";
-        vehicleDetailContainer.style.display = "none";
+        shiftDetailContainerallocate.style.display = "none";
+        studentDetailsContainerallocate.style.display = "none";
+        vehicleDetailContainerallocate.style.display = "none";
 
         // Fetch student count if both details are available
-        if (selectedShiftDetail) {
-            fetchStudentCount(selectedRouteDetail.routeDetail, selectedShiftDetail.shiftDetail);
+        if (allocateselectedShiftDetail) {
+            fetchStudentCount(allocateselectedRouteDetail.routeDetail, allocateselectedShiftDetail.shiftDetail);
         }
     }
 });
 
-shiftSuggestionsContainer.addEventListener('click', function (event) {
+shiftSuggestionsContainerallocate.addEventListener('click', function (event) {
     if (event.target.classList.contains('suggestion-item')) {
         const selectedShift = event.target;
 
         // Populate the shift details
-        selectedShiftDetail = {
+        allocateselectedShiftDetail = {
             shiftName: selectedShift.dataset.shiftName || "N/A",
             shiftDetail: selectedShift.dataset.shiftDetail || "N/A",
         };
 
         // Set input value
-        shiftInput.value = selectedShiftDetail.shiftName;
+        shiftInputallocate.value = allocateselectedShiftDetail.shiftName;
 
         // Update the shift detail container
-        shiftDetailContainer.innerHTML = `
-                <strong>Shift Name:</strong> ${selectedShiftDetail.shiftName}<br>
-                <strong>Classes Alloted:</strong> ${selectedShiftDetail.shiftDetail}
+        shiftDetailContainerallocate.innerHTML = `
+                <strong>Shift Name:</strong> ${allocateselectedShiftDetail.shiftName}<br>
+                <strong>Classes Alloted:</strong> ${allocateselectedShiftDetail.shiftDetail}
             `;
 
         // Show the shift detail container
-        shiftDetailContainer.style.display = 'block';
+        shiftDetailContainerallocate.style.display = 'block';
 
         // Hide suggestions container and clear its contents
-        shiftSuggestionsContainer.style.display = 'none';
-        shiftSuggestionsContainer.innerHTML = ''; // Clear suggestions
+        shiftSuggestionsContainerallocate.style.display = 'none';
+        shiftSuggestionsContainerallocate.innerHTML = ''; // Clear suggestions
 
         // Clear vehicle input and related container
-        // clearVehicleInputs();
-        vehicleInput.value = '';
+        // clearvehicleInputallocates();
+        vehicleInputallocate.value = '';
 
         //container display none
-        studentDetailsContainer.style.display = "none";
-        vehicleDetailContainer.style.display = "none";
+        studentDetailsContainerallocate.style.display = "none";
+        vehicleDetailContainerallocate.style.display = "none";
 
-        studentDetailsContainer.innerHTML = '';
-        vehicleDetailContainer.innerHTML = '';
+        studentDetailsContainerallocate.innerHTML = '';
+        vehicleDetailContainerallocate.innerHTML = '';
 
         // Fetch student count if both details are available
-        if (selectedRouteDetail) {
-            fetchStudentCount(selectedRouteDetail.routeDetail, selectedShiftDetail.shiftDetail);
+        if (allocateselectedRouteDetail) {
+            fetchStudentCount(allocateselectedRouteDetail.routeDetail, allocateselectedShiftDetail.shiftDetail);
         }
 
 
     }
 });
 
-vehicleSuggestionsContainer.addEventListener('click', function (event) {
+vehicleSuggestionsContainerallocate.addEventListener('click', function (event) {
     if (event.target.classList.contains('suggestion-item')) {
         const selectedDriver = event.target;
 
@@ -248,10 +248,10 @@ vehicleSuggestionsContainer.addEventListener('click', function (event) {
         };
 
         // Set input value
-        vehicleInput.value = selectedVehicleDetail.vehicleNo;
+        vehicleInputallocate.value = selectedVehicleDetail.vehicleNo;
 
         // Update the vehicle detail container
-        vehicleDetailContainer.innerHTML = `
+        vehicleDetailContainerallocate.innerHTML = `
                 <strong>Driver Name:</strong> ${selectedVehicleDetail.driverName}<br>
                 <strong>Vehicle No:</strong> ${selectedVehicleDetail.vehicleNo}<br>
                 <strong>Vehicle Capacity:</strong> ${selectedVehicleDetail.vehicleCapacity}<br>
@@ -260,11 +260,11 @@ vehicleSuggestionsContainer.addEventListener('click', function (event) {
             `;
 
         // Show the vehicle detail container
-        vehicleDetailContainer.style.display = 'block';
+        vehicleDetailContainerallocate.style.display = 'block';
 
         // Hide suggestions container and clear its contents
-        vehicleSuggestionsContainer.style.display = 'none';
-        vehicleSuggestionsContainer.innerHTML = ''; // Clear suggestions
+        vehicleSuggestionsContainerallocate.style.display = 'none';
+        vehicleSuggestionsContainerallocate.innerHTML = ''; // Clear suggestions
 
         // Store available seats in a global variable
         selectedVehicleCapacity = selectedVehicleDetail.availableSeats;
@@ -272,17 +272,17 @@ vehicleSuggestionsContainer.addEventListener('click', function (event) {
 });
 
 document.addEventListener('click', function (event) {
-    if (!routeSuggestionsContainer.contains(event.target) && !routeInput.contains(event.target)) {
-        routeSuggestionsContainer.style.display = 'none'; // Hide suggestions container
-        routeSuggestionsContainer.innerHTML = '';
+    if (!routeSuggestionsContainerallocate.contains(event.target) && !routeInputallocate.contains(event.target)) {
+        routeSuggestionsContainerallocate.style.display = 'none'; // Hide suggestions container
+        routeSuggestionsContainerallocate.innerHTML = '';
     }
-    if (!shiftSuggestionsContainer.contains(event.target) && !shiftInput.contains(event.target)) {
-        shiftSuggestionsContainer.style.display = 'none'; // Hide suggestions container
-        shiftSuggestionsContainer.innerHTML = '';
+    if (!shiftSuggestionsContainerallocate.contains(event.target) && !shiftInputallocate.contains(event.target)) {
+        shiftSuggestionsContainerallocate.style.display = 'none'; // Hide suggestions container
+        shiftSuggestionsContainerallocate.innerHTML = '';
     }
-    if (!vehicleSuggestionsContainer.contains(event.target) && !vehicleInput.contains(event.target)) {
-        vehicleSuggestionsContainer.style.display = 'none'; // Hide suggestions container
-        vehicleSuggestionsContainer.innerHTML = '';
+    if (!vehicleSuggestionsContainerallocate.contains(event.target) && !vehicleInputallocate.contains(event.target)) {
+        vehicleSuggestionsContainerallocate.style.display = 'none'; // Hide suggestions container
+        vehicleSuggestionsContainerallocate.innerHTML = '';
     }
 });
 
@@ -290,10 +290,10 @@ function fetchStudentCount(routeStops, shiftClasses) {
     fetch(`/allocate_getStudentCount?routeStops=${encodeURIComponent(routeStops)}&shiftClasses=${encodeURIComponent(shiftClasses)}`)
         .then(response => response.json())
         .then(data => {
-            studentDetailsContainer.style.display = 'flex';
+            studentDetailsContainerallocate.style.display = 'flex';
             studentCount = data.studentCount;
             teacherCount = data.teacherCount;
-            studentDetailsContainer.innerHTML = `
+            studentDetailsContainerallocate.innerHTML = `
                     <strong>Student Count: </strong> ${studentCount} <br>
                     <strong>Teacher Count: </strong> ${teacherCount}
                 `;
@@ -304,26 +304,26 @@ function fetchStudentCount(routeStops, shiftClasses) {
 
 // Function to reset all inputs
 function resetInputs() {
-    routeInput.value = '';
-    routeSuggestionsContainer.innerHTML = '';
-    routeDetailContainer.innerHTML = '';
+    routeInputallocate.value = '';
+    routeSuggestionsContainerallocate.innerHTML = '';
+    routeDetailContainerallocate.innerHTML = '';
 
-    shiftInput.value = '';
-    shiftSuggestionsContainer.innerHTML = '';
-    shiftDetailContainer.innerHTML = '';
+    shiftInputallocate.value = '';
+    shiftSuggestionsContainerallocate.innerHTML = '';
+    shiftDetailContainerallocate.innerHTML = '';
 
-    vehicleInput.value = '';
-    vehicleSuggestionsContainer.innerHTML = '';
-    vehicleDetailContainer.innerHTML = '';
+    vehicleInputallocate.value = '';
+    vehicleSuggestionsContainerallocate.innerHTML = '';
+    vehicleDetailContainerallocate.innerHTML = '';
 
-    studentDetailsContainer.innerHTML = '';
+    studentDetailsContainerallocate.innerHTML = '';
 
-    routeDetailContainer.style.display = 'none';
-    vehicleDetailContainer.style.display = 'none';
-    shiftDetailContainer.style.display = 'none';
-    studentDetailsContainer.style.display = 'none';
-    selectedRouteDetail = '';
-    selectedShiftDetail = '';
+    routeDetailContainerallocate.style.display = 'none';
+    vehicleDetailContainerallocate.style.display = 'none';
+    shiftDetailContainerallocate.style.display = 'none';
+    studentDetailsContainerallocate.style.display = 'none';
+    allocateselectedRouteDetail = '';
+    allocateselectedShiftDetail = '';
     // studentCount = 0;
     selectedVehicleCapacity = 0;
 }
@@ -334,7 +334,7 @@ function resetInputs() {
 // BUS TAGGING FUNCTIONALITY //
 allocateButton.addEventListener('click', function () {
     showTransportLoadingAnimation();
-    if (!routeInput.value || !shiftInput.value || !vehicleInput.value) {
+    if (!routeInputallocate.value || !shiftInputallocate.value || !vehicleInputallocate.value) {
         hideTransportLoadingAnimation();
         Swal.fire({
             icon: "error",
@@ -345,12 +345,12 @@ allocateButton.addEventListener('click', function () {
     }
 
     const requestData = {
-        routeStops: selectedRouteDetail,
-        shiftClasses: selectedShiftDetail,
-        vehicleNo: vehicleInput.value,
+        routeStops: allocateselectedRouteDetail,
+        shiftClasses: allocateselectedShiftDetail,
+        vehicleNo: vehicleInputallocate.value,
         availableSeats: selectedVehicleCapacity,
-        routeName: routeInput.value,
-        shiftName: shiftInput.value,
+        routeName: routeInputallocate.value,
+        shiftName: shiftInputallocate.value,
     };
 
     if (studentCount === 0 && teacherCount === 0) {
@@ -359,7 +359,7 @@ allocateButton.addEventListener('click', function () {
             icon: 'info',
             title: 'No Students or Teachers Found',
             html: `
-                    All the students and teachers on <strong>${routeInput.value}</strong> route in <strong>${shiftInput.value}</strong> shift are allocated with a vehicle.
+                    All the students and teachers on <strong>${routeInputallocate.value}</strong> route in <strong>${shiftInputallocate.value}</strong> shift are allocated with a vehicle.
                 `
         });
         return;
@@ -371,7 +371,7 @@ allocateButton.addEventListener('click', function () {
             icon: 'warning',
             title: 'No Available Seats',
             html: `
-                    The selected vehicle <strong>${vehicleInput.value}</strong> has no available seats.
+                    The selected vehicle <strong>${vehicleInputallocate.value}</strong> has no available seats.
                 `
         });
         return;
@@ -427,7 +427,7 @@ allocateButton.addEventListener('click', function () {
                                 icon: 'success',
                                 title: 'Allocation Successful',
                                 html: `
-                                <strong>Vehicle:</strong> ${vehicleInput.value} [ ${driverName} ]<br>
+                                <strong>Vehicle:</strong> ${vehicleInputallocate.value} [ ${driverName} ]<br>
                                 is successfully tagged to <strong>${allocatedStudents}</strong> students and <strong>${allocatedTeachers}</strong> teachers.
                             `,
                             }).then(() => {
@@ -454,12 +454,12 @@ allocateButton.addEventListener('click', function () {
                         if (result.success) {
                             hideTransportLoadingAnimation();
                             let alertHtml = `
-                            Due to insufficient availability of seats in <strong>${vehicleInput.value} (${driverName})</strong>, we allocated other vehicles running on the same route to certain students and teachers.<br><br>
+                            Due to insufficient availability of seats in <strong>${vehicleInputallocate.value} (${driverName})</strong>, we allocated other vehicles running on the same route to certain students and teachers.<br><br>
                             <strong>Total Students:</strong> ${studentCount}<br>
                             <strong>Total Teachers:</strong> ${teacherCount}<br><br>
                         `;
 
-                            const primaryBusDetails = `${vehicleInput.value} (${driverName}) - ${result.primaryBus.allocatedStudents.length} students and ${result.primaryBus.allocatedTeachers.length} teachers`;
+                            const primaryBusDetails = `${vehicleInputallocate.value} (${driverName}) - ${result.primaryBus.allocatedStudents.length} students and ${result.primaryBus.allocatedTeachers.length} teachers`;
                             alertHtml += `${primaryBusDetails}<br>`;
 
                             if (result.secondaryBusDetails && result.secondaryBusDetails.length > 0) {
