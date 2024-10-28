@@ -253,9 +253,9 @@ function initializeApp() {
                 const shiftButton = document.createElement('div');
                 shiftButton.classList.add('shift-button');
                 shiftButton.innerHTML = `
-                    <img src="${shiftGifs[shiftIndex === 1 ? 'Morning' : 'Afternoon']}" alt="Shift GIF" class="shift-gif">
-                    <span>${shift} Shift</span>
-                `;
+        <img src="${shiftGifs[shiftIndex === 1 ? 'Morning' : 'Afternoon']}" alt="Shift GIF" class="shift-gif">
+        <span>${shift} Shift</span>
+    `;
                 shiftButton.addEventListener('click', () => {
                     // Clear previous data and show spinner immediately
                     detailedDriverList.innerHTML = '';
@@ -279,7 +279,7 @@ function initializeApp() {
         try {
             const vehicleNo = vehicleNoField.textContent;
             const shiftName = shift;
-     
+
             let response = await fetch(`https://schoolix.saasifyapp.com/android/get-student-details?vehicleNo=${vehicleNo}&shiftName=${shiftName}`, {
                 method: 'GET',
                 headers: {
@@ -584,7 +584,7 @@ function initializeApp() {
     const logPickDropEvent = async (studentName, pickDropLocation, typeOfLog, shift, standard) => {
         const vehicleNo = vehicleNoField.textContent;
         const driverName = driverNameField.textContent;
-    
+
         try {
             const response = await fetch('https://schoolix.saasifyapp.com/android/log-pick-drop-event', {
                 method: 'POST',
@@ -606,15 +606,15 @@ function initializeApp() {
                     standard: standard
                 }),
             });
-    
+
             if (response.status === 409) {
                 return 'exists';
             }
-    
+
             if (!response.ok) {
                 throw new Error(`Failed to log event: ${response.status}`);
             }
-    
+
             const data = await response.json();
             console.log('Event logged successfully:', data);
             return 'success';

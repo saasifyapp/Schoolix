@@ -149,6 +149,37 @@ body {
     background-color: #2e57a0;
 }
 
+/* Shift Button styles */
+.shift-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    background-color: #f3f3f3;
+    border-radius: 5px;
+    cursor: pointer;
+    max-width: 150px; /* Adjust the max-width as needed */
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+}
+
+.shift-button img {
+    max-width: 100px; /* Adjust the max-width to fit the screen */
+    height: auto;
+    margin-bottom: 10px;
+    border-radius: 50%; /* Optional: Add rounded corners */
+}
+
+.shift-button span {
+    font-size: 14px;
+    color: #3466af;
+}
+
+.shift-button:hover {
+    background-color: #e0e0e0;
+}
+
 /* Spinner Container */
 .spinner-container {
     display: none;
