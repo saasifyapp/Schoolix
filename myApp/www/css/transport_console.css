@@ -57,15 +57,16 @@ body {
 
 .driver-details p {
     margin: 5px 0;
+    font-size: 14px; /* Font size for other details */
 }
 
-.driver-name {
-    font-size: 40px; /* Huge font for the driver name */
-    font-weight: 700; /* Bold font weight */
+.driver-greeting {
+    font-size: 35px; /* 5x bigger font size for the greeting */
+    font-weight: 500;
+    line-height: 1.2; /* Increased line height for more vertical spacing */
 }
-
 .vehicle-info, .conductor-info {
-    font-size: 14px;
+    font-size: 14px; /* Font size for other details */
 }
 
 /* Driver GIF styles */
@@ -116,7 +117,7 @@ body {
     background-color: white;
     border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 -4px 8px rgba(0, 0, 0, 0.1), 4px 0 8px rgba(0, 0, 0, 0.1), -4px 0 8px rgba(0, 0, 0, 0.1);
     width: 100%;
     box-sizing: border-box;
 }
@@ -135,8 +136,8 @@ body {
 /* Button styles */
 .button-card button {
     padding: 10px 20px;
-    background-color: #3466af;
-    color: white;
+    background-color: transparent;
+    color: transparent;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -361,10 +362,11 @@ body {
         font-size: 14px;
     }
 
-    .driver-name {
-        font-size: 34px; /* Huge font for the driver name on smaller screens */
+    .driver-greeting {
+        font-size: 35px; /* 5x bigger font size for the greeting */
+        font-weight: 500;
+        line-height: 1.2; /* Increased line height for more vertical spacing */
     }
-
     .driver-gif img {
         max-width: 70px;
     }
@@ -393,8 +395,10 @@ body {
         font-size: 12px;
     }
 
-    .driver-name {
-        font-size: 30px; /* Huge font for the driver name on smaller screens */
+    .driver-greeting {
+        font-size: 35px; /* 5x bigger font size for the greeting */
+        font-weight: 500;
+        line-height: 1.2; /* Increased line height for more vertical spacing */
     }
 
     .driver-gif img {
