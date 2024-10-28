@@ -83,14 +83,6 @@ document.addEventListener('deviceready', function () {
         window.location.href = './index.html'; // Adjust the path as needed
     }
 
-    // // Handle Android back button
-    // document.addEventListener('backbutton', function(e) {
-    //     e.preventDefault();
-    //     console.log("Back button pressed");
-    //     // Do nothing or show a message if needed
-    // }, false);
-
-
     // Existing onDeviceReady function
     onDeviceReady();
 });
@@ -98,7 +90,6 @@ document.addEventListener('deviceready', function () {
 // Existing onDeviceReady function
 function onDeviceReady() {
     console.log("Device is ready");
-
 
     if (typeof cordova !== 'undefined') {
         const permissions = cordova.plugins.permissions;
@@ -152,7 +143,6 @@ function showLocationSettingsPrompt() {
 
 function initializeApp() {
     console.log("Initializing app");
-
 
     const driverConsole = document.getElementById('driver-console');
     const driverDetailsScreen = document.getElementById('driver-details-screen');
@@ -253,19 +243,25 @@ function initializeApp() {
                 const shiftButton = document.createElement('div');
                 shiftButton.classList.add('shift-button');
                 shiftButton.innerHTML = `
-        <img src="${shiftGifs[shiftIndex === 1 ? 'Morning' : 'Afternoon']}" alt="Shift GIF" class="shift-gif">
-        <span>${shift} Shift</span>
-    `;
+                    <img src="${shiftGifs[shiftIndex === 1 ? 'Morning' : 'Afternoon']}" alt="Shift GIF" class="shift-gif">
+                    <span>${shift} Shift</span>
+                `;
                 shiftButton.addEventListener('click', () => {
                     // Clear previous data and show spinner immediately
                     detailedDriverList.innerHTML = '';
                     showSpinner();
                     searchBar.value = ''; // Clear the search field when switching shifts
 
-                    fetchDriverListForShift(shift);
-                    fetchShiftDetails(shift); // Fetch shift details
-                    driverConsole.classList.add('hidden');
-                    driverDetailsScreen.classList.remove('hidden');
+                    // Fetch the driver list and shift details for the selected shift
+                    fetchDriverListForShift(shift).then(() => {
+                        fetchShiftDetails(shift); // Fetch shift details after fetching the driver list
+                        driverConsole.classList.add('hidden');
+                        driverDetailsScreen.classList.remove('hidden');
+                    }).catch(error => {
+                        console.error('Error fetching driver list for shift:', error);
+                        hideSpinner();
+                        alert('Error fetching driver list. Please try again.');
+                    });
                 });
                 buttonCard.appendChild(shiftButton);
                 shiftIndex++;
@@ -444,6 +440,7 @@ function initializeApp() {
 
                 // Event listener for "Not Picked" button
                 listItem.querySelector('.not-picked').addEventListener('click', async () => {
+                    console.log(`Not Picked button clicked for ${item.name}`);
                     const standard = item.class === 'Teacher' ? 'Teacher' : item.class; // Check if class is "Teacher"
                     const result = await logPickDropEvent(item.name, item.transport_pickup_drop, 'not_picked', currentShiftName, standard);
                     if (result === 'exists') {
@@ -455,6 +452,7 @@ function initializeApp() {
 
                 // Event listener for "Not Dropped" button
                 listItem.querySelector('.not-dropped').addEventListener('click', async () => {
+                    console.log(`Not Dropped button clicked for ${item.name}`);
                     const standard = item.class === 'Teacher' ? 'Teacher' : item.class; // Check if class is "Teacher"
                     const result = await logPickDropEvent(item.name, item.transport_pickup_drop, 'not_dropped', currentShiftName, standard);
                     if (result === 'exists') {
@@ -465,6 +463,7 @@ function initializeApp() {
                 });
 
                 listItem.querySelector('.call-button').addEventListener('click', () => {
+                    console.log(`Call button clicked for ${item.name}`);
                     window.location.href = `tel:${item.f_mobile_no}`;
                 });
             });
