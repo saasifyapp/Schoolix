@@ -254,6 +254,10 @@ function initializeApp() {
 
                     fetchDriverListForShift(shift).then(() => {
                         fetchShiftDetails(shift); // Fetch shift details after fetching the driver list
+                        const driverConsole = document.getElementById('driver-console');
+                        const driverDetailsScreen = document.getElementById('driver-details-screen');
+                        console.log('driverConsole:', driverConsole);
+                        console.log('driverDetailsScreen:', driverDetailsScreen);
                         if (driverConsole && driverDetailsScreen) {
                             driverConsole.classList.add('hidden');
                             driverDetailsScreen.classList.remove('hidden');
