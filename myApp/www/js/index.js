@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return false;
     }
- 
+  
     // Function to redirect based on user type
     function redirectToConsole(userType) {
         if (userType === 'driver' || userType === 'conductor') {
