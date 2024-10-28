@@ -275,7 +275,9 @@ function initializeApp() {
         try {
             const vehicleNo = vehicleNoField.textContent;
             const shiftName = shift;
-
+    
+            console.log(`Fetching driver list for shift: ${shiftName}, vehicleNo: ${vehicleNo}`);
+    
             let response = await fetch(`https://schoolix.saasifyapp.com/android/get-student-details?vehicleNo=${vehicleNo}&shiftName=${shiftName}`, {
                 method: 'GET',
                 headers: {
@@ -287,8 +289,9 @@ function initializeApp() {
                     'db-database': dbCredentials.database
                 }
             });
-
+    
             if (response.status === 401) {
+                console.log('Token expired. Attempting to refresh token...');
                 const refreshResponse = await fetch('https://schoolix.saasifyapp.com/refresh-token', {
                     method: 'POST',
                     headers: {
@@ -296,11 +299,12 @@ function initializeApp() {
                     },
                     body: JSON.stringify({ token: refreshToken })
                 });
-
+    
                 if (refreshResponse.ok) {
                     const refreshData = await refreshResponse.json();
                     token = refreshData.accessToken;
-
+    
+                    console.log('Token refreshed successfully. Retrying fetch for driver list...');
                     response = await fetch(`https://schoolix.saasifyapp.com/android/get-student-details?vehicleNo=${vehicleNo}&shiftName=${shiftName}`, {
                         method: 'GET',
                         headers: {
@@ -313,16 +317,19 @@ function initializeApp() {
                         }
                     });
                 } else {
+                    console.error('Failed to refresh token. Redirecting to login...');
                     alert('Session expired. Please log in again.');
                     window.location.href = './index.html';
                     return;
                 }
             }
-
+    
             if (!response.ok) {
+                const errorText = await response.text();
+                console.error(`Failed to fetch student details. Status: ${response.status}, Error: ${errorText}`);
                 throw new Error('Failed to fetch student details');
             }
-
+    
             const data = await response.json();
             console.log(`Fetched ${data.length} item(s)`); // Log the count of items fetched
             studentsData = data; // Store the fetched students data
