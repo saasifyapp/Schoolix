@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return false;
     }
-
+ 
     // Function to redirect based on user type
     function redirectToConsole(userType) {
         if (userType === 'driver' || userType === 'conductor') {
@@ -36,9 +36,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const loginButton = document.getElementById('login-button');
 
         if (loginButton) {
-            loginButton.addEventListener('click', async () => {
+            loginButton.addEventListener('click', async (event) => {
+                event.preventDefault(); // Prevent form submission
+
                 const username = document.getElementById('username').value;
                 const password = document.getElementById('password').value;
+
+                // Check if username or password is empty
+                if (!username || !password) {
+                    alert('Please enter both username and password.');
+                    return;
+                }
 
                 try {
                     const response = await fetch('https://schoolix.saasifyapp.com/android-login', {
@@ -73,9 +81,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     redirectToConsole(data.type);
                 } catch (error) {
                     console.error('Error during login:', error);
-                    alert(error.message);
+                    alert('An error occurred during login. Please try again.');
                 }
             });
         }
     }
 });
+
+// Function to toggle password visibility
+function togglePassword() {
+    const passwordField = document.getElementById('password');
+    const toggleIcon = document.querySelector('.toggle-password i');
+
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordField.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+    }
+}

@@ -83,14 +83,6 @@ document.addEventListener('deviceready', function () {
         window.location.href = './index.html'; // Adjust the path as needed
     }
 
-    // // Handle Android back button
-    // document.addEventListener('backbutton', function(e) {
-    //     e.preventDefault();
-    //     console.log("Back button pressed");
-    //     // Do nothing or show a message if needed
-    // }, false);
-
-
     // Existing onDeviceReady function
     onDeviceReady();
 });
@@ -98,7 +90,6 @@ document.addEventListener('deviceready', function () {
 // Existing onDeviceReady function
 function onDeviceReady() {
     console.log("Device is ready");
-
 
     if (typeof cordova !== 'undefined') {
         const permissions = cordova.plugins.permissions;
@@ -152,7 +143,6 @@ function showLocationSettingsPrompt() {
 
 function initializeApp() {
     console.log("Initializing app");
-
 
     const driverConsole = document.getElementById('driver-console');
     const driverDetailsScreen = document.getElementById('driver-details-screen');
@@ -262,10 +252,23 @@ function initializeApp() {
                     showSpinner();
                     searchBar.value = ''; // Clear the search field when switching shifts
 
-                    fetchDriverListForShift(shift);
-                    fetchShiftDetails(shift); // Fetch shift details
-                    driverConsole.classList.add('hidden');
-                    driverDetailsScreen.classList.remove('hidden');
+                    fetchDriverListForShift(shift).then(() => {
+                        fetchShiftDetails(shift); // Fetch shift details after fetching the driver list
+                        const driverConsole = document.getElementById('driver-console');
+                        const driverDetailsScreen = document.getElementById('driver-details-screen');
+                        console.log('driverConsole:', driverConsole);
+                        console.log('driverDetailsScreen:', driverDetailsScreen);
+                        if (driverConsole && driverDetailsScreen) {
+                            driverConsole.classList.add('hidden');
+                            driverDetailsScreen.classList.remove('hidden');
+                        } else {
+                            console.error('driverConsole or driverDetailsScreen element not found');
+                        }
+                    }).catch(error => {
+                        console.error('Error fetching driver list for shift:', error);
+                        hideSpinner();
+                        alert('Error fetching driver list. Please try again.');
+                    });
                 });
                 buttonCard.appendChild(shiftButton);
                 shiftIndex++;
@@ -279,7 +282,9 @@ function initializeApp() {
         try {
             const vehicleNo = vehicleNoField.textContent;
             const shiftName = shift;
-     
+    
+            console.log(`Fetching driver list for shift: ${shiftName}, vehicleNo: ${vehicleNo}`);
+    
             let response = await fetch(`https://schoolix.saasifyapp.com/android/get-student-details?vehicleNo=${vehicleNo}&shiftName=${shiftName}`, {
                 method: 'GET',
                 headers: {
@@ -291,8 +296,9 @@ function initializeApp() {
                     'db-database': dbCredentials.database
                 }
             });
-
+    
             if (response.status === 401) {
+                console.log('Token expired. Attempting to refresh token...');
                 const refreshResponse = await fetch('https://schoolix.saasifyapp.com/refresh-token', {
                     method: 'POST',
                     headers: {
@@ -300,11 +306,12 @@ function initializeApp() {
                     },
                     body: JSON.stringify({ token: refreshToken })
                 });
-
+    
                 if (refreshResponse.ok) {
                     const refreshData = await refreshResponse.json();
                     token = refreshData.accessToken;
-
+    
+                    console.log('Token refreshed successfully. Retrying fetch for driver list...');
                     response = await fetch(`https://schoolix.saasifyapp.com/android/get-student-details?vehicleNo=${vehicleNo}&shiftName=${shiftName}`, {
                         method: 'GET',
                         headers: {
@@ -317,16 +324,19 @@ function initializeApp() {
                         }
                     });
                 } else {
+                    console.error('Failed to refresh token. Redirecting to login...');
                     alert('Session expired. Please log in again.');
                     window.location.href = './index.html';
                     return;
                 }
             }
-
+    
             if (!response.ok) {
+                const errorText = await response.text();
+                console.error(`Failed to fetch student details. Status: ${response.status}, Error: ${errorText}`);
                 throw new Error('Failed to fetch student details');
             }
-
+    
             const data = await response.json();
             console.log(`Fetched ${data.length} item(s)`); // Log the count of items fetched
             studentsData = data; // Store the fetched students data
@@ -377,8 +387,14 @@ function initializeApp() {
     };
 
     const displayDriverList = (data) => {
+        // Clear previous list
         detailedDriverList.innerHTML = '';
-
+    
+        if (!data || data.length === 0) {
+            console.warn('No data available to display.');
+            return;
+        }
+    
         // Group students and teachers by routes
         const groupedByRoute = data.reduce((acc, item) => {
             const route = item.transport_pickup_drop;
@@ -388,33 +404,33 @@ function initializeApp() {
             acc[route].push(item);
             return acc;
         }, {});
-
+    
         // Sort routes based on routeStops order
         const sortedRoutes = Object.keys(groupedByRoute).sort((a, b) => {
             return routeStops.indexOf(a) - routeStops.indexOf(b);
         });
-
+    
         // Colors for different routes
         const routeColors = ['#ffdddd', '#ddffdd', '#ddddff', '#ffffdd', '#ddffff', '#ffddff'];
-
+    
         // Render each route and its students/teachers
         sortedRoutes.forEach((route, index) => {
             // Create a route container
             const routeContainer = document.createElement('div');
             routeContainer.classList.add('route-container');
             routeContainer.style.backgroundColor = routeColors[index % routeColors.length];
-
+    
             // Create a route header with student/teacher count
             const studentCount = groupedByRoute[route].filter(item => item.class !== 'Teacher').length;
             const teacherCount = groupedByRoute[route].filter(item => item.class === 'Teacher').length;
             const routeHeader = document.createElement('h3');
             routeHeader.textContent = `Stop: ${route} | Students: ${studentCount} | Teachers: ${teacherCount}`;
             routeContainer.appendChild(routeHeader);
-
+    
             // Create a list for the students/teachers
             const list = document.createElement('ul');
             list.classList.add('student-list');
-
+    
             // Render students/teachers for this route
             groupedByRoute[route].forEach(item => {
                 const listItem = document.createElement('li');
@@ -441,9 +457,10 @@ function initializeApp() {
                     </div>
                 `;
                 list.appendChild(listItem);
-
+    
                 // Event listener for "Not Picked" button
-                listItem.querySelector('.not-picked').addEventListener('click', async () => {
+                listItem.querySelector('.not-picked')?.addEventListener('click', async () => {
+                    console.log(`Not Picked button clicked for ${item.name}`);
                     const standard = item.class === 'Teacher' ? 'Teacher' : item.class; // Check if class is "Teacher"
                     const result = await logPickDropEvent(item.name, item.transport_pickup_drop, 'not_picked', currentShiftName, standard);
                     if (result === 'exists') {
@@ -452,9 +469,10 @@ function initializeApp() {
                         alert(`${item.name} not picked`);
                     }
                 });
-
+    
                 // Event listener for "Not Dropped" button
-                listItem.querySelector('.not-dropped').addEventListener('click', async () => {
+                listItem.querySelector('.not-dropped')?.addEventListener('click', async () => {
+                    console.log(`Not Dropped button clicked for ${item.name}`);
                     const standard = item.class === 'Teacher' ? 'Teacher' : item.class; // Check if class is "Teacher"
                     const result = await logPickDropEvent(item.name, item.transport_pickup_drop, 'not_dropped', currentShiftName, standard);
                     if (result === 'exists') {
@@ -463,19 +481,21 @@ function initializeApp() {
                         alert(`${item.name} not dropped`);
                     }
                 });
-
-                listItem.querySelector('.call-button').addEventListener('click', () => {
+    
+                listItem.querySelector('.call-button')?.addEventListener('click', () => {
+                    console.log(`Call button clicked for ${item.name}`);
                     window.location.href = `tel:${item.f_mobile_no}`;
                 });
             });
-
+    
             // Append the list to the route container
             routeContainer.appendChild(list);
-
+    
             // Append the route container to the detailed driver list
             detailedDriverList.appendChild(routeContainer);
         });
     };
+    
 
     // Search functionality
     searchBar.addEventListener('input', (event) => {
@@ -584,7 +604,7 @@ function initializeApp() {
     const logPickDropEvent = async (studentName, pickDropLocation, typeOfLog, shift, standard) => {
         const vehicleNo = vehicleNoField.textContent;
         const driverName = driverNameField.textContent;
-    
+
         try {
             const response = await fetch('https://schoolix.saasifyapp.com/android/log-pick-drop-event', {
                 method: 'POST',
@@ -606,15 +626,15 @@ function initializeApp() {
                     standard: standard
                 }),
             });
-    
+
             if (response.status === 409) {
                 return 'exists';
             }
-    
+
             if (!response.ok) {
                 throw new Error(`Failed to log event: ${response.status}`);
             }
-    
+
             const data = await response.json();
             console.log('Event logged successfully:', data);
             return 'success';
