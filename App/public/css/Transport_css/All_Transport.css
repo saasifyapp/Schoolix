@@ -484,6 +484,7 @@ body {
 .suggestion-item {
     padding: 10px;
     cursor: pointer;
+    color: black;
 }
 
 .suggestion-item:hover {

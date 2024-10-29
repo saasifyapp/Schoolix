@@ -933,11 +933,14 @@ svg path {
     align-items: center;
     flex-wrap: wrap;
     gap: 5px;
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
     border-radius: 5px;
     padding: 5px;
-    background: white;
+    background: transparent;
     box-sizing: border-box;
+    overflow: auto;
+    height: 100px;
+    
 }
 
 /* Style for the input field */
@@ -951,6 +954,8 @@ svg path {
     /* Ensures it doesn't overflow */
     padding: 5px;
     box-sizing: border-box;
+   
+   
 }
 
 /* Style for the suggestions container */
