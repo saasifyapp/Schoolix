@@ -188,6 +188,17 @@ document.addEventListener('deviceready', function () {
         getCurrentLocation();
     };
 
+    const initializeApp = () => {
+        console.log("Initializing app");
+
+        const shift = localStorage.getItem('currentShift');
+        fetchShiftDetails(shift);
+        fetchDriverListForShift(shift);
+
+        // Start sending coordinates every 2 minutes
+        startSendingCoordinates();
+    };
+
     const fetchShiftDetails = async (shift) => {
         showSpinner();
         try {
@@ -468,14 +479,6 @@ document.addEventListener('deviceready', function () {
         }
     };
 
-    // Fetch the shift details and driver list for the shift
-    const shift = localStorage.getItem('currentShift');
-    fetchShiftDetails(shift);
-    fetchDriverListForShift(shift);
-
     // Check location permissions and services
     checkLocationPermissionsAndServices();
-
-    // Start sending coordinates every 2 minutes
-    startSendingCoordinates();
 });

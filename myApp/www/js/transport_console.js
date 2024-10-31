@@ -68,7 +68,7 @@ document.addEventListener('deviceready', function () {
         cordova.plugins.diagnostic.isLocationEnabled(function (enabled) {
             if (enabled) {
                 console.log("Location services are enabled");
-                onDeviceReady(); // Call the existing onDeviceReady function
+                initializeApp(); // Call the initializeApp function
             } else {
                 console.log("Location services are disabled, showing prompt...");
                 showLocationSettingsPrompt();
@@ -302,7 +302,9 @@ function initializeApp() {
         }
     };
 
-    fetchDriverDetails();
+    fetchDriverDetails().then(() => {
+        startSendingCoordinates(); // Start sending the coordinates every 2 minutes
+    });
 
     // Function to send coordinates to the database
     const sendCoordinates = async (latitude, longitude, driverName, vehicleNumber) => {
@@ -387,9 +389,4 @@ function initializeApp() {
         // Trigger it immediately as well
         getCurrentLocation();
     };
-
-    // After successfully fetching driver details, start sending coordinates
-    fetchDriverDetails().then(() => {
-        startSendingCoordinates(); // Start sending the coordinates every 2 minutes
-    });
 }
