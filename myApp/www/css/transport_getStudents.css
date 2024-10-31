@@ -7,7 +7,7 @@ body {
     background-color: #e3fbf5;
     margin: 0;
     font-family: "Poppins", sans-serif;
-    overflow: hidden; /* Prevent body scrolling */
+    overflow: hidden; /* Prevent body from scrolling */
 }
 
 /* Container */
@@ -116,38 +116,62 @@ body {
     list-style: none;
     padding: 0;
     margin: 0;
+    width: 100%; /* Make the student list take the full width */
 }
 
+/* Individual student list item styles */
 .student-list li {
     margin-bottom: 10px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column; /* Changed from row to column */
+    align-items: flex-start; /* Align items to the left */
+    background-color: #f9f9f9; /* Light background for contrast */
+    width: 100%;
+    box-sizing: border-box; /* Ensure padding and border are included in the width */
 }
 
 .item-content p {
     margin: 5px 0;
+    width: 100%; /* Full-width paragraphs */
+}
+
+.student-name {
+    font-size: 16px;
+    font-weight: 700; /* Bold name */
+}
+
+.student-class,
+.student-contact,
+.student-pickup-drop {
+    font-size: 14px;
+    color: #555; /* Light grey color for other details */
 }
 
 /* Button group and button styles */
 .button-group {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: space-between; /* Distribute buttons evenly */
+    width: 100%;
+    margin-top: 10px; /* Space between content and buttons */
 }
 
 .button-group button {
-    margin-top: 5px;
-    padding: 5px;
+    padding: 5px 10px; /* Add padding for better touch area */
     background-color: #f3f3f3;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     display: flex;
     align-items: center;
+    flex: 1; /* Make buttons fill available space */
+    margin-right: 5px; /* Space between buttons */
+}
+
+.button-group button:last-child {
+    margin-right: 0; /* Remove margin for the last button */
 }
 
 .button-group button img {
@@ -205,5 +229,6 @@ body {
 
     .button-group button {
         margin: 5px;
+        flex: none;
     }
 }
