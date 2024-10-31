@@ -217,7 +217,6 @@ document.addEventListener('deviceready', function () {
     </button>
     <button class="call-button">
         <img src="./img/call.png" alt="Call">
-        <span>Call</span>
     </button>
 </div>
                 `;
