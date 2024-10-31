@@ -40,11 +40,13 @@ body {
     font-size: 35px; /* 5x bigger font size for the heading */
     font-weight: 500;
     margin: 0;
+    font-family: "Poppins", sans-serif; /* Apply Poppins font */
 }
 
 .shift-details p {
     margin: 5px 0;
     font-size: 14px; /* Font size for other details */
+    font-family: "Poppins", sans-serif; /* Apply Poppins font */
 }
 
 /* Search bar styles */
@@ -65,6 +67,7 @@ body {
     box-sizing: border-box;
     background-color: white; /* Background color white */
     color: black; /* Text color black */
+    font-family: "Poppins", sans-serif; /* Apply Poppins font */
 }
 
 #search-bar::placeholder {
@@ -125,14 +128,16 @@ body {
     width: 100%; /* Full width */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
     box-sizing: border-box; /* Ensure padding and border are included in the width */
+    font-family: "Poppins", sans-serif; /* Apply Poppins font */
 }
 
 /* Route header */
-.route-container h3 {
+.route-container h4 {
     margin: 0;
     font-size: 16px;
     font-weight: 700; /* Bold header */
     color: #333; /* Darker text color */
+    font-family: "Poppins", sans-serif; /* Apply Poppins font */
 }
 
 /* Student list item styles */
@@ -157,6 +162,7 @@ body {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
     width: 100%; /* Full width */
     box-sizing: border-box; /* Ensure padding and border are included in the width */
+    font-family: "Poppins", sans-serif; /* Apply Poppins font */
 }
 
 .student-list li:first-child {
@@ -171,12 +177,14 @@ body {
     margin: 5px 0;
     width: 100%; /* Full-width paragraphs */
     word-wrap: break-word; /* Ensure long words break to prevent overflow */
+    font-family: "Poppins", sans-serif; /* Apply Poppins font */
 }
 
 .student-name {
     font-size: 16px;
     font-weight: 700; /* Bold name */
     color: #333; /* Darker text color */
+    font-family: "Poppins", sans-serif; /* Apply Poppins font */
 }
 
 .student-class,
@@ -184,6 +192,7 @@ body {
 .student-pickup-drop {
     font-size: 14px;
     color: #555; /* Grey color for other details */
+    font-family: "Poppins", sans-serif; /* Apply Poppins font */
 }
 
 /* Button group and button styles */
@@ -213,6 +222,7 @@ body {
     overflow: hidden; /* Prevent content overflow */
     text-overflow: ellipsis; /* Ellipsis for overflow text */
     flex-basis: 30%;
+    font-family: "Poppins", sans-serif; /* Apply Poppins font */
 }
 
 .button-group button img {

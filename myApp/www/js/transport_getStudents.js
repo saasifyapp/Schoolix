@@ -183,7 +183,7 @@ document.addEventListener('deviceready', function () {
             // Create a route header with student/teacher count
             const studentCount = groupedByRoute[route].filter(item => item.class !== 'Teacher').length;
             const teacherCount = groupedByRoute[route].filter(item => item.class === 'Teacher').length;
-            const routeHeader = document.createElement('h3');
+            const routeHeader = document.createElement('h4');
             routeHeader.textContent = `Stop: ${route} | Students: ${studentCount} | Teachers: ${teacherCount}`;
             routeContainer.appendChild(routeHeader);
 
@@ -222,7 +222,7 @@ document.addEventListener('deviceready', function () {
                     </div>
                 `;
                 list.appendChild(listItem);
-                
+
                 // Event listener for "Not Picked" button
                 listItem.querySelector('.not-picked')?.addEventListener('click', async () => {
                     console.log(`Not Picked button clicked for ${item.name}`);
