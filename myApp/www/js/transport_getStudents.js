@@ -81,11 +81,24 @@ document.addEventListener('deviceready', function () {
                 console.log("Location services are disabled, showing prompt...");
                 hideSpinner(); // Hide spinner before showing the prompt
                 showLocationSettingsPrompt();
+                listenForLocationSettingsChange();
             }
         }, function (error) {
             console.error("The following error occurred: " + error);
             hideSpinner(); // Hide spinner in case of error
             redirectToLogin();
+        });
+    };
+
+    const listenForLocationSettingsChange = () => {
+        cordova.plugins.diagnostic.registerLocationStateChangeHandler(function (state) {
+            if (state === cordova.plugins.diagnostic.locationMode.HIGH_ACCURACY ||
+                state === cordova.plugins.diagnostic.locationMode.BATTERY_SAVING ||
+                state === cordova.plugins.diagnostic.locationMode.DEVICE_ONLY) {
+                console.log("Location services are enabled");
+                hideLocationSettingsPrompt();
+                initializeApp();
+            }
         });
     };
 

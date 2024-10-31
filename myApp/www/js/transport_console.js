@@ -23,6 +23,7 @@ document.addEventListener('deviceready', function () {
         console.log("Enable Location button clicked");
         cordova.plugins.diagnostic.switchToLocationSettings();
         hideLocationSettingsPrompt();
+        listenForLocationSettingsChange();
     });
 
     cancelBtn.addEventListener('click', function () {
@@ -30,6 +31,18 @@ document.addEventListener('deviceready', function () {
         hideLocationSettingsPrompt();
         redirectToLogin();
     });
+
+    function listenForLocationSettingsChange() {
+        cordova.plugins.diagnostic.registerLocationStateChangeHandler(function (state) {
+            if (state === cordova.plugins.diagnostic.locationMode.HIGH_ACCURACY ||
+                state === cordova.plugins.diagnostic.locationMode.BATTERY_SAVING ||
+                state === cordova.plugins.diagnostic.locationMode.DEVICE_ONLY) {
+                console.log("Location services are enabled");
+                hideLocationSettingsPrompt();
+                initializeApp();
+            }
+        });
+    }
 
     function checkLocationPermissionsAndServices() {
         const permissions = cordova.plugins.permissions;
@@ -73,6 +86,7 @@ document.addEventListener('deviceready', function () {
                 console.log("Location services are disabled, showing prompt...");
                 hideSpinner(); // Hide spinner before showing the prompt
                 showLocationSettingsPrompt();
+                listenForLocationSettingsChange();
             }
         }, function (error) {
             console.error("The following error occurred: " + error);
