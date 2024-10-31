@@ -98,6 +98,9 @@ document.addEventListener('deviceready', function () {
                 console.log("Location services are enabled");
                 hideLocationSettingsPrompt();
                 initializeApp();
+            } else {
+                console.log("Location services are disabled");
+                showLocationSettingsPrompt();
             }
         });
     };
@@ -496,4 +499,7 @@ document.addEventListener('deviceready', function () {
 
     // Check location permissions and services
     checkLocationPermissionsAndServices();
+
+    // Start listening for location settings changes
+    listenForLocationSettingsChange();
 });
