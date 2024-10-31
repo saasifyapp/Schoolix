@@ -40,6 +40,9 @@ document.addEventListener('deviceready', function () {
                 console.log("Location services are enabled");
                 hideLocationSettingsPrompt();
                 initializeApp();
+            } else {
+                console.log("Location services are disabled");
+                showLocationSettingsPrompt();
             }
         });
     }
@@ -164,6 +167,9 @@ function onDeviceReady() {
     } else {
         checkLocationServices();
     }
+
+    // Start listening for location settings changes
+    listenForLocationSettingsChange();
 }
 
 function checkLocationServices() {
@@ -390,3 +396,8 @@ function initializeApp() {
         getCurrentLocation();
     };
 }
+
+document.addEventListener('deviceready', function () {
+    // Start listening for location settings changes
+    listenForLocationSettingsChange();
+});

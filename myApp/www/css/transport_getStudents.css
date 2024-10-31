@@ -294,6 +294,7 @@ body {
 .modal-content {
     background-color: white;
     padding: 20px;
+    margin: 0 20px; /* Add gaps at each end */
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
@@ -305,14 +306,13 @@ body {
     background-color: #3466af;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
 }
 
 .modal button:hover {
     background-color: #2e57a0;
 }
-
 
 /* Responsive Styles */
 @media (max-width: 480px) {
