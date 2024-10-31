@@ -102,6 +102,16 @@ document.addEventListener('deviceready', function () {
 function onDeviceReady() {
     console.log("Device is ready");
 
+    const showSpinner = () => {
+        const spinnerContainer = document.getElementById('spinnerContainer');
+        spinnerContainer.style.display = 'flex'; // Show spinner container
+    };
+
+    const hideSpinner = () => {
+        const spinnerContainer = document.getElementById('spinnerContainer');
+        spinnerContainer.style.display = 'none'; // Hide spinner container
+    };
+
     if (typeof cordova !== 'undefined') {
         const permissions = cordova.plugins.permissions;
         const requiredPermissions = [
@@ -141,6 +151,16 @@ function onDeviceReady() {
 }
 
 function checkLocationServices() {
+    const showSpinner = () => {
+        const spinnerContainer = document.getElementById('spinnerContainer');
+        spinnerContainer.style.display = 'flex'; // Show spinner container
+    };
+
+    const hideSpinner = () => {
+        const spinnerContainer = document.getElementById('spinnerContainer');
+        spinnerContainer.style.display = 'none'; // Hide spinner container
+    };
+
     console.log("Checking location services...");
     cordova.plugins.diagnostic.isLocationEnabled(function (enabled) {
         if (enabled) {
@@ -156,6 +176,16 @@ function checkLocationServices() {
 }
 
 function showLocationSettingsPrompt() {
+    const showSpinner = () => {
+        const spinnerContainer = document.getElementById('spinnerContainer');
+        spinnerContainer.style.display = 'flex'; // Show spinner container
+    };
+
+    const hideSpinner = () => {
+        const spinnerContainer = document.getElementById('spinnerContainer');
+        spinnerContainer.style.display = 'none'; // Hide spinner container
+    };
+
     alert("Location services are disabled. Please enable them to use this app.");
     cordova.plugins.diagnostic.switchToLocationSettings();
     hideSpinner(); // Hide spinner when showing location settings prompt
