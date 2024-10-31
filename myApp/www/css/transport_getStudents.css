@@ -181,8 +181,8 @@ body {
 }
 
 .student-name {
-    font-size: 16px;
-    font-weight: 700; /* Bold name */
+    font-size: 14px;
+    font-weight: 500; /* Bold name */
     color: #333; /* Darker text color */
     font-family: "Poppins", sans-serif; /* Apply Poppins font */
 }
