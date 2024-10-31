@@ -198,7 +198,7 @@ body {
 /* Button group and button styles */
 .button-group {
     display: flex;
-    justify-content: space-around; /* Evenly distribute buttons */
+    justify-content: space-between; /* Evenly distribute buttons */
     width: 100%;
     margin-top: 10px; /* Space between content and buttons */
     overflow: hidden; /* Prevent buttons from overflowing */
@@ -214,14 +214,13 @@ body {
     align-items: center;
     justify-content: center; /* Center items */
     flex: 1; /* Make buttons fill available space */
-    margin: 5px; /* Add margin around buttons */
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Slight inner shadow */
+    margin: 0 5px; /* Reduce gap between buttons */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow to buttons */
     font-size: 12px; /* Adjusted font size for buttons */
     text-align: center;
     white-space: normal; /* Allow text wrap */
     overflow: hidden; /* Prevent content overflow */
     text-overflow: ellipsis; /* Ellipsis for overflow text */
-    flex-basis: 30%; /* Increased width for buttons */
     font-family: "Poppins", sans-serif; /* Apply Poppins font */
 }
 
@@ -232,9 +231,9 @@ body {
 }
 
 .button-group button.call-button {
-    flex-basis: 10%; /* Reduced width for call button */
+    flex: 0 1 46px; /* Fixed width for call button */
     padding: 8px;
-    margin: 5px;
+    margin: 0 5px; /* Reduce gap between buttons */
 }
 
 .button-group button span {
