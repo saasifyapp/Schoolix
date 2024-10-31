@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('deviceready', function () {
     const driverDetailsScreen = document.getElementById('driver-details-screen');
     const detailedDriverList = document.getElementById('detailed-driver-list');
     const selectedShiftField = document.getElementById('selected-shift');
@@ -24,15 +24,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const showSpinner = () => {
         const spinnerContainer = document.getElementById('spinnerContainer');
-        spinnerContainer.style.display = 'flex'; // Show spinner container
+        if (spinnerContainer) {
+            spinnerContainer.style.display = 'flex'; // Show spinner container
+        }
     };
 
     const hideSpinner = () => {
         const spinnerContainer = document.getElementById('spinnerContainer');
-        spinnerContainer.style.display = 'none'; // Hide spinner container
+        if (spinnerContainer) {
+            spinnerContainer.style.display = 'none'; // Hide spinner container
+        }
     };
 
     const fetchShiftDetails = async (shift) => {
+        showSpinner();
         try {
             const response = await fetch(`https://schoolix.saasifyapp.com/android/shift-details?driverName=${driverName}&shiftName=${shift}`, {
                 method: 'GET',
@@ -70,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const fetchDriverListForShift = async (shift) => {
+        showSpinner();
         try {
             const vehicleNo = localStorage.getItem('vehicleNo');
             const shiftName = shift;

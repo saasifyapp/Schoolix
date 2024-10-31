@@ -220,14 +220,17 @@ function initializeApp() {
             vehicleNoField.textContent = details.vehicle_no;
             vehicleCapacityField.textContent = details.vehicle_capacity || 'N/A';
             conductorNameField.textContent = details.conductor_name || 'N/A';
-
+    
+            // Store vehicleNo in local storage
+            localStorage.setItem('vehicleNo', details.vehicle_no);
+    
             // Clear existing buttons
             buttonCard.innerHTML = '';
-
+    
             // Determine the shifts available
             const shifts = new Set(data.map(entry => entry.shift_name.trim()));
             console.log('Available shifts:', shifts); // Debugging line
-
+    
             // Create buttons based on available shifts
             let shiftIndex = 1;
             shifts.forEach(shift => {
