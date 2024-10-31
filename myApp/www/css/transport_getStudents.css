@@ -221,7 +221,7 @@ body {
     white-space: normal; /* Allow text wrap */
     overflow: hidden; /* Prevent content overflow */
     text-overflow: ellipsis; /* Ellipsis for overflow text */
-    flex-basis: 45%; /* Increased width for buttons */
+    flex-basis: 28%; /* Reduced width for buttons */
     font-family: "Poppins", sans-serif; /* Apply Poppins font */
 }
 
@@ -231,14 +231,15 @@ body {
     margin-right: 5px;
 }
 
+.button-group button.call-button {
+    flex-basis: 16%; /* Adjusted width for call button */
+    padding: 8px; /* Remove right padding for call button */
+    margin: 5px 5px 5px 0; /* Adjust the margins */
+}
+
 .button-group button span {
     overflow: hidden;
     text-overflow: ellipsis; /* Ellipsis for overflow text */
-}
-
-.button-group button.call-button {
-    flex-basis: 15%; /* Adjusted width for call button */
-    padding: 8px; /* Remove right padding for call button */
 }
 
 .button-group button:hover {
@@ -289,12 +290,12 @@ body {
     }
 
     .button-group button {
-        margin: 5px 5px 0 0;
+        margin: 5px 0;
         flex: none;
-        width: calc(45% - 7px); /* Adjusted for 2 buttons per row */
+        width: calc(30% - 7px); /* Adjusted for 3 buttons per row */
     }
 
     .button-group button.call-button {
-        width: calc(15% - 7px); /* Adjusted width for call button */
+        width: calc(16% - 7px); /* Adjusted width for call button */
     }
 }
