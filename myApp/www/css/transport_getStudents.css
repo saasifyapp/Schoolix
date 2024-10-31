@@ -7,7 +7,7 @@ body {
     background-color: #e3fbf5;
     margin: 0;
     font-family: "Poppins", sans-serif;
-    overflow: hidden; /* Prevent body scrolling */
+    overflow: hidden; /* Prevent body from scrolling */
 }
 
 /* Container */
@@ -21,7 +21,7 @@ body {
 
 /* Blue section */
 .blue-section {
-    flex: 3;
+    flex: 2;
     background-color: #3466af;
     display: flex;
     flex-direction: column;
@@ -82,9 +82,9 @@ body {
 
 /* White section */
 .white-section {
-    flex: 7;
+    flex: 8;
     background-color: white;
-    padding: 20px;
+    padding: 10px 20px; /* Reduced padding for better fit */
     box-sizing: border-box;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
@@ -92,23 +92,23 @@ body {
     margin-top: -20px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    height: calc(100% - 20px); /* Adjusted to include padding */
+    height: 100%; /* Make it take available height */
 }
 
 #student-details-container {
+    flex: 1;
     width: 100%;
-    height: 100%;
     overflow-y: auto; /* Make it scrollable */
 }
 
 /* Route header styles */
 .route-container {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     padding: 10px;
     border-radius: 5px;
-    background-color: #f9f9f9;
+    background-color: #fff; /* Make route container white */
     width: 100%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
 .route-container h3 {
@@ -123,19 +123,18 @@ body {
     list-style: none;
     padding: 0;
     margin: 0;
-    width: 100%; /* Make the student list take the full width */
 }
 
 /* Individual student list item styles */
 .student-list li {
     margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
+    padding: 15px;
+    border: 1px solid #e0e0e0; /* Lighter border */
     border-radius: 5px;
     display: flex;
-    flex-direction: column; /* Changed from row to column */
+    flex-direction: column; /* Align content vertically */
     align-items: flex-start; /* Align items to the left */
-    background-color: #fff; /* Light background for contrast */
+    background-color: #f9f9f9; /* Light background for contrast */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
     width: 100%; /* Full-width */
     box-sizing: border-box; /* Ensure padding and border are included in the width */
@@ -168,18 +167,24 @@ body {
 }
 
 .button-group button {
-    padding: 5px 10px; /* Add padding for better touch area */
+    padding: 8px 10px; /* Add padding for better touch area */
     background-color: #f3f3f3;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     display: flex;
     align-items: center;
+    justify-content: center; /* Center items */
     flex: 1; /* Make buttons fill available space */
     margin-right: 5px; /* Space between buttons */
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Slight inner shadow */
     font-size: 12px; /* Adjusted font size for buttons */
+    text-align: center;
     white-space: nowrap; /* Prevent text wrap */
+}
+
+.button-group button:last-child {
+    margin-right: 0; /* Remove margin for the last button */
 }
 
 .button-group button img {
@@ -188,12 +193,13 @@ body {
     margin-right: 5px;
 }
 
-.button-group button:hover {
-    background-color: #ddd;
+.button-group button span {
+    overflow: hidden;
+    text-overflow: ellipsis; /* Ellipsis for overflow text */
 }
 
-.button-group button:last-child {
-    margin-right: 0; /* Remove margin for the last button */
+.button-group button:hover {
+    background-color: #ddd;
 }
 
 /* Spinner Container */
@@ -242,6 +248,6 @@ body {
     .button-group button {
         margin: 5px 0;
         flex: none;
-        width: calc(33.33% - 10px); /* 3 buttons per row with gaps */
+        width: calc(32% - 7px); /* Adjusted for 3 buttons per row */
     }
 }
