@@ -6,6 +6,10 @@ document.addEventListener('deviceready', function () {
     const totalStudentsField = document.getElementById('total-students');
     const searchBar = document.getElementById('search-bar');
 
+    const locationModal = document.getElementById('locationModal');
+    const enableLocationBtn = document.getElementById('enableLocationBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+
     let token = localStorage.getItem('token');
     let refreshToken = localStorage.getItem('refreshToken');
     let dbCredentials = JSON.parse(localStorage.getItem('dbCredentials'));
@@ -33,6 +37,155 @@ document.addEventListener('deviceready', function () {
         if (spinnerContainer) {
             spinnerContainer.style.display = 'none'; // Hide spinner container
         }
+    };
+
+    const checkLocationPermissionsAndServices = () => {
+        const permissions = cordova.plugins.permissions;
+        const requiredPermissions = [
+            permissions.ACCESS_FINE_LOCATION,
+            permissions.ACCESS_COARSE_LOCATION
+        ];
+
+        console.log("Checking permissions...");
+        permissions.checkPermission(requiredPermissions, (status) => {
+            console.log("Permissions status:", status);
+            if (!status.hasPermission) {
+                console.log("Permissions not granted, requesting permissions...");
+                permissions.requestPermissions(requiredPermissions, (status) => {
+                    if (!status.hasPermission) {
+                        alert("Permission denied. The app needs location permissions to function properly.");
+                        redirectToLogin();
+                    } else {
+                        checkLocationServices();
+                    }
+                }, (error) => {
+                    console.error("Error requesting permissions", error);
+                    redirectToLogin();
+                });
+            } else {
+                checkLocationServices();
+            }
+        }, (error) => {
+            console.error("Error checking permissions", error);
+            redirectToLogin();
+        });
+    };
+
+    const checkLocationServices = () => {
+        console.log("Checking location services...");
+        cordova.plugins.diagnostic.isLocationEnabled(function (enabled) {
+            if (enabled) {
+                console.log("Location services are enabled");
+                initializeApp(); // Call the initializeApp function
+            } else {
+                console.log("Location services are disabled, showing prompt...");
+                showLocationSettingsPrompt();
+            }
+        }, function (error) {
+            console.error("The following error occurred: " + error);
+            redirectToLogin();
+        });
+    };
+
+    const showLocationSettingsPrompt = () => {
+        console.log("Showing location settings prompt");
+        locationModal.style.display = 'flex';
+    };
+
+    const hideLocationSettingsPrompt = () => {
+        console.log("Hiding location settings prompt");
+        locationModal.style.display = 'none';
+    };
+
+    const redirectToLogin = () => {
+        console.log("Redirecting to login page");
+        window.location.href = './index.html'; // Adjust the path as needed
+    };
+
+    enableLocationBtn.addEventListener('click', function () {
+        console.log("Enable Location button clicked");
+        cordova.plugins.diagnostic.switchToLocationSettings();
+        hideLocationSettingsPrompt();
+    });
+
+    cancelBtn.addEventListener('click', function () {
+        console.log("Cancel button clicked");
+        hideLocationSettingsPrompt();
+        redirectToLogin();
+    });
+
+    const sendCoordinates = async (latitude, longitude, driverName, vehicleNumber) => {
+        try {
+            const response = await fetch('https://schoolix.saasifyapp.com/android/send-coordinates', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'db-host': dbCredentials.host,
+                    'db-user': dbCredentials.user,
+                    'db-password': dbCredentials.password,
+                    'db-database': dbCredentials.database
+                },
+                body: JSON.stringify({
+                    driverName: driverName,
+                    vehicleNumber: vehicleNumber,
+                    latitude: latitude,
+                    longitude: longitude
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to send coordinates: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('Coordinates sent successfully:', data);
+        } catch (error) {
+            console.error('Error sending coordinates:', error);
+        }
+    };
+
+    const getCurrentLocation = () => {
+        if (typeof cordova !== 'undefined' && cordova.plugins && cordova.plugins.geolocation) {
+            cordova.plugins.geolocation.getCurrentPosition(async (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                console.log('Coordinates:', latitude, longitude);
+
+                const driverName = localStorage.getItem('driverName');
+                const vehicleNumber = localStorage.getItem('vehicleNo');
+
+                await sendCoordinates(latitude, longitude, driverName, vehicleNumber);
+            }, (error) => {
+                console.error('Error getting location:', error);
+            }, {
+                enableHighAccuracy: true
+            });
+        } else if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                console.log('Coordinates:', latitude, longitude);
+
+                const driverName = localStorage.getItem('driverName');
+                const vehicleNumber = localStorage.getItem('vehicleNo');
+
+                await sendCoordinates(latitude, longitude, driverName, vehicleNumber);
+            }, (error) => {
+                console.error('Error getting location:', error);
+            }, {
+                enableHighAccuracy: true
+            });
+        } else {
+            alert('Geolocation is not supported by this browser.');
+        }
+    };
+
+    const startSendingCoordinates = () => {
+        setInterval(getCurrentLocation, 120000);
+        getCurrentLocation();
     };
 
     const fetchShiftDetails = async (shift) => {
@@ -319,4 +472,10 @@ document.addEventListener('deviceready', function () {
     const shift = localStorage.getItem('currentShift');
     fetchShiftDetails(shift);
     fetchDriverListForShift(shift);
+
+    // Check location permissions and services
+    checkLocationPermissionsAndServices();
+
+    // Start sending coordinates every 2 minutes
+    startSendingCoordinates();
 });
