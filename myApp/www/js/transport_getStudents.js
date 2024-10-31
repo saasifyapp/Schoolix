@@ -21,7 +21,7 @@ document.addEventListener('deviceready', function () {
     if (!dbCredentials) {
         console.error('Database credentials not found in local storage.');
         alert('Session expired. Please log in again.');
-        window.location.href = './index.html';
+        window.location.href = './transport_console.html';
         return;
     }
 

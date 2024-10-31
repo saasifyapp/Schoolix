@@ -110,7 +110,7 @@ document.addEventListener('deviceready', function () {
 
     function redirectToLogin() {
         console.log("Redirecting to login page");
-        window.location.href = './index.html'; // Adjust the path as needed
+        window.location.href = './transport_console.html'; // Adjust the path as needed
     }
 
     // Existing onDeviceReady function
