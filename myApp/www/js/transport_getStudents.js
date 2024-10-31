@@ -200,7 +200,7 @@ document.addEventListener('deviceready', function () {
                 listItem.style.boxSizing = 'border-box'; // Include padding and border in the element's total width and height
 
                 listItem.innerHTML = `
-                    <div class="item-content">
+                    <div class="item-content" style="width: 100%;">
                         <p class="student-name">Name: ${item.name}</p>
                         <p class="student-class">Class: ${item.class}</p>
                         <p class="student-contact">Contact: ${item.f_mobile_no}</p>
@@ -222,7 +222,7 @@ document.addEventListener('deviceready', function () {
                     </div>
                 `;
                 list.appendChild(listItem);
-
+                
                 // Event listener for "Not Picked" button
                 listItem.querySelector('.not-picked')?.addEventListener('click', async () => {
                     console.log(`Not Picked button clicked for ${item.name}`);

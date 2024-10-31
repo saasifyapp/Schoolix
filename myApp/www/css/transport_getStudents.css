@@ -92,8 +92,8 @@ body {
     margin-top: -20px;
     display: flex;
     flex-direction: column;
-    align-items: center;
     height: 100%; /* Make it take available height */
+    width: 100%;
 }
 
 /* Student details container */
@@ -101,6 +101,9 @@ body {
     width: 100%; /* Full width of parent container */
     height: 100%;
     overflow-y: auto; /* Make it scrollable */
+    display: flex;
+    flex-direction: column; /* Ensure child elements stack vertically */
+    align-items: center; /* Center align items */
 }
 
 /* Detailed student list */
@@ -109,16 +112,19 @@ body {
     padding: 0;
     margin: 0;
     width: 100%; /* Full width of parent */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
-/* Route header styles */
+/* Route container styles (grouping container) */
 .route-container {
-    margin-bottom: 10px;
+    margin-bottom: 10px; /* Space between route containers */
     padding: 10px;
     border-radius: 5px;
     background-color: #fff; /* Make route container white */
-    width: 100%;
+    width: 100%; /* Full width */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    box-sizing: border-box; /* Ensure padding and border are included in the width */
 }
 
 /* Route header */
@@ -129,9 +135,18 @@ body {
     color: #333; /* Darker text color */
 }
 
+/* Student list item styles */
+.student-list {
+    width: 100%; /* Ensure full-width within the route container */
+    padding: 0;
+    margin: 0;
+    list-style: none; /* Remove bullet points */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
 /* Individual student list item styles */
 .student-list li {
-    margin-bottom: 10px;
+    margin-bottom: 10px; /* Space between items */
     padding: 15px;
     border: 1px solid #e0e0e0; /* Lighter border */
     border-radius: 5px;
@@ -144,9 +159,18 @@ body {
     box-sizing: border-box; /* Ensure padding and border are included in the width */
 }
 
+.student-list li:first-child {
+    margin-top: 10px; /* Space at the top for the first item */
+}
+
+.item-content {
+    width: 100%; /* Ensure item content is full width */
+}
+
 .item-content p {
     margin: 5px 0;
     width: 100%; /* Full-width paragraphs */
+    word-wrap: break-word; /* Ensure long words break to prevent overflow */
 }
 
 .student-name {
@@ -168,6 +192,7 @@ body {
     justify-content: space-between; /* Evenly distribute buttons */
     width: 100%;
     margin-top: 10px; /* Space between content and buttons */
+    overflow: hidden; /* Prevent buttons from overflowing */
 }
 
 .button-group button {
@@ -185,6 +210,8 @@ body {
     font-size: 12px; /* Adjusted font size for buttons */
     text-align: center;
     white-space: nowrap; /* Prevent text wrap */
+    overflow: hidden; /* Prevent content overflow */
+    text-overflow: ellipsis; /* Ellipsis for overflow text */
 }
 
 .button-group button:last-child {
