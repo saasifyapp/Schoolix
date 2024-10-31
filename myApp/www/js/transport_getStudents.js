@@ -1,6 +1,6 @@
 document.addEventListener('deviceready', function () {
     const driverDetailsScreen = document.getElementById('driver-details-screen');
-    const detailedDriverList = document.getElementById('detailed-driver-list');
+    const detailedStudentList = document.getElementById('detailed-student-list');
     const selectedShiftField = document.getElementById('selected-shift');
     const totalStopsField = document.getElementById('total-stops');
     const totalStudentsField = document.getElementById('total-students');
@@ -148,7 +148,7 @@ document.addEventListener('deviceready', function () {
 
     const displayDriverList = (data) => {
         // Clear previous list
-        detailedDriverList.innerHTML = '';
+        detailedStudentList.innerHTML = '';
     
         if (!data || data.length === 0) {
             console.warn('No data available to display.');
@@ -251,8 +251,8 @@ document.addEventListener('deviceready', function () {
             // Append the list to the route container
             routeContainer.appendChild(list);
     
-            // Append the route container to the detailed driver list
-            detailedDriverList.appendChild(routeContainer);
+            // Append the route container to the detailed student list
+            detailedStudentList.appendChild(routeContainer);
         });
     };
 
@@ -317,7 +317,7 @@ document.addEventListener('deviceready', function () {
     fetchDriverListForShift(shift);
 
     // Back button functionality
-    backToConsoleButton.addEventListener('click', () => {
-        window.location.href = './transport_console.html';
-    });
+    // backToConsoleButton.addEventListener('click', () => {
+    //     window.location.href = './transport_console.html';
+    // });
 });
