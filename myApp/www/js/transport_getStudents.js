@@ -178,6 +178,7 @@ document.addEventListener('deviceready', function () {
             const routeContainer = document.createElement('div');
             routeContainer.classList.add('route-container');
             routeContainer.style.backgroundColor = routeColors[index % routeColors.length];
+            routeContainer.style.width = '100%'; // Ensure full width
 
             // Create a route header with student/teacher count
             const studentCount = groupedByRoute[route].filter(item => item.class !== 'Teacher').length;
@@ -189,10 +190,15 @@ document.addEventListener('deviceready', function () {
             // Create a list for the students/teachers
             const list = document.createElement('ul');
             list.classList.add('student-list');
+            list.style.width = '100%'; // Ensure full width
 
             // Render students/teachers for this route
             groupedByRoute[route].forEach(item => {
                 const listItem = document.createElement('li');
+                listItem.style.width = '100%'; // Ensure full width
+                listItem.style.margin = '0'; // Remove margin
+                listItem.style.boxSizing = 'border-box'; // Include padding and border in the element's total width and height
+
                 listItem.innerHTML = `
                     <div class="item-content">
                         <p class="student-name">Name: ${item.name}</p>
