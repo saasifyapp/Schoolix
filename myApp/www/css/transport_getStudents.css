@@ -221,7 +221,7 @@ body {
     white-space: normal; /* Allow text wrap */
     overflow: hidden; /* Prevent content overflow */
     text-overflow: ellipsis; /* Ellipsis for overflow text */
-    flex-basis: 28%; /* Reduced width for buttons */
+    flex-basis: 30%; /* Increased width for buttons */
     font-family: "Poppins", sans-serif; /* Apply Poppins font */
 }
 
@@ -232,9 +232,9 @@ body {
 }
 
 .button-group button.call-button {
-    flex-basis: 16%; /* Adjusted width for call button */
-    padding: 8px; /* Remove right padding for call button */
-    margin: 5px 5px 5px 0; /* Adjust the margins */
+    flex-basis: 10%; /* Reduced width for call button */
+    padding: 8px;
+    margin: 5px;
 }
 
 .button-group button span {
@@ -296,6 +296,6 @@ body {
     }
 
     .button-group button.call-button {
-        width: calc(16% - 7px); /* Adjusted width for call button */
+        width: calc(10% - 7px); /* Adjusted width for call button */
     }
 }
