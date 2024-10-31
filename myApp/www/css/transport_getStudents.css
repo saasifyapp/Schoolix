@@ -7,7 +7,7 @@ body {
     background-color: #e3fbf5;
     margin: 0;
     font-family: "Poppins", sans-serif;
-    overflow: hidden; /* Prevent body from scrolling */
+    overflow: hidden; /* Prevent body scrolling */
 }
 
 /* Container */
@@ -59,7 +59,7 @@ body {
 #search-bar {
     width: 80%; /* Reduce the width */
     max-width: 300px; /* Optional: set a maximum width */
-    padding: 10px 20px 10px 20px; /* Add padding for the search icon */
+    padding: 10px 20px 10px 40px; /* Add padding for the search icon */
     border: 1px solid #ccc;
     border-radius: 50px; /* Make it round */
     box-sizing: border-box;
@@ -93,7 +93,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100%; /* Make it take available height */
+    height: calc(100% - 20px); /* Adjusted to include padding */
 }
 
 #student-details-container {
@@ -102,16 +102,23 @@ body {
     overflow-y: auto; /* Make it scrollable */
 }
 
+/* Route header styles */
 .route-container {
     margin-bottom: 20px;
     padding: 10px;
     border-radius: 5px;
+    background-color: #f9f9f9;
+    width: 100%;
 }
 
 .route-container h3 {
-    margin: 0 0 10px 0;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700; /* Bold header */
+    color: #333; /* Darker text color */
 }
 
+/* Student list */
 .student-list {
     list-style: none;
     padding: 0;
@@ -128,8 +135,9 @@ body {
     display: flex;
     flex-direction: column; /* Changed from row to column */
     align-items: flex-start; /* Align items to the left */
-    background-color: #f9f9f9; /* Light background for contrast */
-    width: 100%;
+    background-color: #fff; /* Light background for contrast */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    width: 100%; /* Full-width */
     box-sizing: border-box; /* Ensure padding and border are included in the width */
 }
 
@@ -141,19 +149,20 @@ body {
 .student-name {
     font-size: 16px;
     font-weight: 700; /* Bold name */
+    color: #333; /* Darker text color */
 }
 
 .student-class,
 .student-contact,
 .student-pickup-drop {
     font-size: 14px;
-    color: #555; /* Light grey color for other details */
+    color: #555; /* Grey color for other details */
 }
 
 /* Button group and button styles */
 .button-group {
     display: flex;
-    justify-content: space-between; /* Distribute buttons evenly */
+    justify-content: space-between; /* Evenly distribute buttons */
     width: 100%;
     margin-top: 10px; /* Space between content and buttons */
 }
@@ -168,20 +177,23 @@ body {
     align-items: center;
     flex: 1; /* Make buttons fill available space */
     margin-right: 5px; /* Space between buttons */
-}
-
-.button-group button:last-child {
-    margin-right: 0; /* Remove margin for the last button */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Slight inner shadow */
+    font-size: 12px; /* Adjusted font size for buttons */
+    white-space: nowrap; /* Prevent text wrap */
 }
 
 .button-group button img {
-    width: 20px;
-    height: 20px;
+    width: 16px; /* Adjusted icon size */
+    height: 16px; /* Adjusted icon size */
     margin-right: 5px;
 }
 
 .button-group button:hover {
     background-color: #ddd;
+}
+
+.button-group button:last-child {
+    margin-right: 0; /* Remove margin for the last button */
 }
 
 /* Spinner Container */
@@ -223,12 +235,13 @@ body {
     }
 
     .button-group {
-        flex-direction: row;
+        justify-content: space-around;
         flex-wrap: wrap;
     }
 
     .button-group button {
-        margin: 5px;
+        margin: 5px 0;
         flex: none;
+        width: calc(33.33% - 10px); /* 3 buttons per row with gaps */
     }
 }
