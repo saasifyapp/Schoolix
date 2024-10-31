@@ -134,7 +134,7 @@ body {
 /* Route header */
 .route-container h4 {
     margin: 0;
-    font-size: 16px;
+    font-size: 14px; /* Reduced font size for header */
     font-weight: 700; /* Bold header */
     color: #333; /* Darker text color */
     font-family: "Poppins", sans-serif; /* Apply Poppins font */
@@ -154,7 +154,7 @@ body {
     margin-bottom: 10px; /* Space between items */
     padding: 15px;
     border: 1px solid #e0e0e0; /* Lighter border */
-    border-radius: 5px;
+    border-radius: 15px; /* Rounded corners */
     display: flex;
     flex-direction: column; /* Align content vertically */
     align-items: flex-start; /* Align items to the left */
@@ -221,7 +221,7 @@ body {
     white-space: normal; /* Allow text wrap */
     overflow: hidden; /* Prevent content overflow */
     text-overflow: ellipsis; /* Ellipsis for overflow text */
-    flex-basis: 30%;
+    flex-basis: 45%; /* Increased width for buttons */
     font-family: "Poppins", sans-serif; /* Apply Poppins font */
 }
 
@@ -286,6 +286,6 @@ body {
     .button-group button {
         margin: 5px 5px 0 0;
         flex: none;
-        width: calc(32% - 7px); /* Adjusted for 3 buttons per row */
+        width: calc(45% - 7px); /* Adjusted for 2 buttons per row */
     }
 }
