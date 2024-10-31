@@ -181,7 +181,7 @@ body {
 }
 
 .student-name {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 700; /* Bold name */
     color: #333; /* Darker text color */
     font-family: "Poppins", sans-serif; /* Apply Poppins font */
@@ -214,7 +214,7 @@ body {
     align-items: center;
     justify-content: center; /* Center items */
     flex: 1; /* Make buttons fill available space */
-    margin: 0 5px; /* Reduce gap between buttons */
+    margin: 0 3px; /* Reduce gap between buttons */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow to buttons */
     font-size: 12px; /* Adjusted font size for buttons */
     text-align: center;
@@ -231,9 +231,9 @@ body {
 }
 
 .button-group button.call-button {
-    flex: 0 1 46px; /* Fixed width for call button */
+    flex: 0 1 40px; /* Fixed width for call button */
     padding: 8px;
-    margin: 0 5px; /* Reduce gap between buttons */
+    margin: 0 3px; /* Reduce gap between buttons */
 }
 
 .button-group button span {
@@ -289,12 +289,12 @@ body {
     }
 
     .button-group button {
-        margin: 5px 0;
+        margin: 3px 0;
         flex: none;
-        width: calc(30% - 7px); /* Adjusted for 3 buttons per row */
+        width: calc(33.33% - 6px); /* Adjusted for 3 buttons per row */
     }
 
     .button-group button.call-button {
-        width: calc(10% - 7px); /* Adjusted width for call button */
+        width: 40px; /* Fixed width for call button */
     }
 }
