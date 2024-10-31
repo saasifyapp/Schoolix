@@ -215,7 +215,7 @@ body {
     justify-content: center; /* Center items */
     flex: 1; /* Make buttons fill available space */
     margin: 0 3px; /* Reduce gap between buttons */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow to buttons */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 -2px 4px rgba(0, 0, 0, 0.1); /* Add shadow to all sides of buttons */
     font-size: 12px; /* Adjusted font size for buttons */
     text-align: center;
     white-space: normal; /* Allow text wrap */
