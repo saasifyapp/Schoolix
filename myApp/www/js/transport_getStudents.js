@@ -5,7 +5,6 @@ document.addEventListener('deviceready', function () {
     const totalStopsField = document.getElementById('total-stops');
     const totalStudentsField = document.getElementById('total-students');
     const searchBar = document.getElementById('search-bar');
-    const backToConsoleButton = document.getElementById('back-to-console-button');
 
     let token = localStorage.getItem('token');
     let refreshToken = localStorage.getItem('refreshToken');
@@ -79,9 +78,9 @@ document.addEventListener('deviceready', function () {
         try {
             const vehicleNo = localStorage.getItem('vehicleNo');
             const shiftName = shift;
-    
+
             console.log(`Fetching driver list for shift: ${shiftName}, vehicleNo: ${vehicleNo}`);
-    
+
             let response = await fetch(`https://schoolix.saasifyapp.com/android/get-student-details?vehicleNo=${vehicleNo}&shiftName=${shiftName}`, {
                 method: 'GET',
                 headers: {
@@ -93,7 +92,7 @@ document.addEventListener('deviceready', function () {
                     'db-database': dbCredentials.database
                 }
             });
-    
+
             if (response.status === 401) {
                 console.log('Token expired. Attempting to refresh token...');
                 const refreshResponse = await fetch('https://schoolix.saasifyapp.com/refresh-token', {
@@ -103,11 +102,11 @@ document.addEventListener('deviceready', function () {
                     },
                     body: JSON.stringify({ token: refreshToken })
                 });
-    
+
                 if (refreshResponse.ok) {
                     const refreshData = await refreshResponse.json();
                     token = refreshData.accessToken;
-    
+
                     console.log('Token refreshed successfully. Retrying fetch for driver list...');
                     response = await fetch(`https://schoolix.saasifyapp.com/android/get-student-details?vehicleNo=${vehicleNo}&shiftName=${shiftName}`, {
                         method: 'GET',
@@ -127,13 +126,13 @@ document.addEventListener('deviceready', function () {
                     return;
                 }
             }
-    
+
             if (!response.ok) {
                 const errorText = await response.text();
                 console.error(`Failed to fetch student details. Status: ${response.status}, Error: ${errorText}`);
                 throw new Error('Failed to fetch student details');
             }
-    
+
             const data = await response.json();
             console.log(`Fetched ${data.length} item(s)`); // Log the count of items fetched
             studentsData = data; // Store the fetched students data
@@ -149,12 +148,12 @@ document.addEventListener('deviceready', function () {
     const displayDriverList = (data) => {
         // Clear previous list
         detailedStudentList.innerHTML = '';
-    
+
         if (!data || data.length === 0) {
             console.warn('No data available to display.');
             return;
         }
-    
+
         // Group students and teachers by routes
         const groupedByRoute = data.reduce((acc, item) => {
             const route = item.transport_pickup_drop;
@@ -164,42 +163,42 @@ document.addEventListener('deviceready', function () {
             acc[route].push(item);
             return acc;
         }, {});
-    
+
         // Sort routes based on routeStops order
         const sortedRoutes = Object.keys(groupedByRoute).sort((a, b) => {
             return routeStops.indexOf(a) - routeStops.indexOf(b);
         });
-    
+
         // Colors for different routes
         const routeColors = ['#ffdddd', '#ddffdd', '#ddddff', '#ffffdd', '#ddffff', '#ffddff'];
-    
+
         // Render each route and its students/teachers
         sortedRoutes.forEach((route, index) => {
             // Create a route container
             const routeContainer = document.createElement('div');
             routeContainer.classList.add('route-container');
             routeContainer.style.backgroundColor = routeColors[index % routeColors.length];
-    
+
             // Create a route header with student/teacher count
             const studentCount = groupedByRoute[route].filter(item => item.class !== 'Teacher').length;
             const teacherCount = groupedByRoute[route].filter(item => item.class === 'Teacher').length;
             const routeHeader = document.createElement('h3');
             routeHeader.textContent = `Stop: ${route} | Students: ${studentCount} | Teachers: ${teacherCount}`;
             routeContainer.appendChild(routeHeader);
-    
+
             // Create a list for the students/teachers
             const list = document.createElement('ul');
             list.classList.add('student-list');
-    
+
             // Render students/teachers for this route
             groupedByRoute[route].forEach(item => {
                 const listItem = document.createElement('li');
                 listItem.innerHTML = `
                     <div class="item-content">
-                        <p>Name: ${item.name}</p>
-                        <p>Class: ${item.class}</p>
-                        <p>Contact: ${item.f_mobile_no}</p>
-                        <p>Pickup-Drop: ${item.transport_pickup_drop}</p>
+                        <p class="student-name">Name: ${item.name}</p>
+                        <p class="student-class">Class: ${item.class}</p>
+                        <p class="student-contact">Contact: ${item.f_mobile_no}</p>
+                        <p class="student-pickup-drop">Pickup-Drop: ${item.transport_pickup_drop}</p>
                     </div>
                     <div class="button-group">
                         <button class="not-picked">
@@ -217,7 +216,7 @@ document.addEventListener('deviceready', function () {
                     </div>
                 `;
                 list.appendChild(listItem);
-    
+
                 // Event listener for "Not Picked" button
                 listItem.querySelector('.not-picked')?.addEventListener('click', async () => {
                     console.log(`Not Picked button clicked for ${item.name}`);
@@ -229,7 +228,7 @@ document.addEventListener('deviceready', function () {
                         alert(`${item.name} not picked`);
                     }
                 });
-    
+
                 // Event listener for "Not Dropped" button
                 listItem.querySelector('.not-dropped')?.addEventListener('click', async () => {
                     console.log(`Not Dropped button clicked for ${item.name}`);
@@ -241,16 +240,16 @@ document.addEventListener('deviceready', function () {
                         alert(`${item.name} not dropped`);
                     }
                 });
-    
+
                 listItem.querySelector('.call-button')?.addEventListener('click', () => {
                     console.log(`Call button clicked for ${item.name}`);
                     window.location.href = `tel:${item.f_mobile_no}`;
                 });
             });
-    
+
             // Append the list to the route container
             routeContainer.appendChild(list);
-    
+
             // Append the route container to the detailed student list
             detailedStudentList.appendChild(routeContainer);
         });
@@ -315,9 +314,4 @@ document.addEventListener('deviceready', function () {
     const shift = localStorage.getItem('currentShift');
     fetchShiftDetails(shift);
     fetchDriverListForShift(shift);
-
-    // Back button functionality
-    // backToConsoleButton.addEventListener('click', () => {
-    //     window.location.href = './transport_console.html';
-    // });
 });
