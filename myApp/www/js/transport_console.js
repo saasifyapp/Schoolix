@@ -71,10 +71,12 @@ document.addEventListener('deviceready', function () {
                 initializeApp(); // Call the initializeApp function
             } else {
                 console.log("Location services are disabled, showing prompt...");
+                hideSpinner(); // Hide spinner before showing the prompt
                 showLocationSettingsPrompt();
             }
         }, function (error) {
             console.error("The following error occurred: " + error);
+            hideSpinner(); // Hide spinner in case of error
             redirectToLogin();
         });
     }
@@ -156,8 +158,8 @@ function checkLocationServices() {
         if (enabled) {
             initializeApp();
         } else {
+            hideSpinner(); // Hide spinner before showing the prompt
             showLocationSettingsPrompt();
-            hideSpinner(); // Hide spinner if location services are disabled
         }
     }, function (error) {
         console.error("The following error occurred: " + error);
