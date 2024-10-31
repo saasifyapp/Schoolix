@@ -236,6 +236,11 @@ body {
     text-overflow: ellipsis; /* Ellipsis for overflow text */
 }
 
+.button-group button.call-button {
+    flex-basis: 15%; /* Adjusted width for call button */
+    padding: 8px; /* Remove right padding for call button */
+}
+
 .button-group button:hover {
     background-color: #ddd;
 }
@@ -287,5 +292,9 @@ body {
         margin: 5px 5px 0 0;
         flex: none;
         width: calc(45% - 7px); /* Adjusted for 2 buttons per row */
+    }
+
+    .button-group button.call-button {
+        width: calc(15% - 7px); /* Adjusted width for call button */
     }
 }

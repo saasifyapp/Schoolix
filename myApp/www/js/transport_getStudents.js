@@ -206,20 +206,19 @@ document.addEventListener('deviceready', function () {
                         <p class="student-contact">Contact: ${item.f_mobile_no}</p>
                         <p class="student-pickup-drop">Pickup-Drop: ${item.transport_pickup_drop}</p>
                     </div>
-                    <div class="button-group">
-                        <button class="not-picked">
-                            <img src="./img/not_pick.png" alt="Not Picked">
-                            <span>Not Picked</span>
-                        </button>
-                        <button class="not-dropped">
-                            <img src="./img/not_drop.png" alt="Not Dropped">
-                            <span>Not Dropped</span>
-                        </button>
-                        <button class="call-button">
-                            <img src="./img/call.png" alt="Call">
-                            <span>Call</span>
-                        </button>
-                    </div>
+                   <div class="button-group">
+    <button class="not-picked">
+        <img src="./img/not_pick.png" alt="Not Picked">
+        <span>Not Picked</span>
+    </button>
+    <button class="not-dropped">
+        <img src="./img/not_drop.png" alt="Not Dropped">
+        <span>Not Dropped</span>
+    </button>
+    <button class="call-button">
+        <img src="./img/call.png" alt="Call">
+    </button>
+</div>
                 `;
                 list.appendChild(listItem);
 
