@@ -379,13 +379,13 @@
                             <span class="form-control-placeholder">Route Name</span>
                         </div>
 
-                      
-                            <div class="input-with-tags" id="citiesAddressContainer">
-                                <input type="text" class="form-control" id="citiesAddress" placeholder="Cities/Address">
-                                <div id="address_suggestionBox" class="address_suggestionBox"></div>
-                            </div>
-                           
-                      
+
+                        <div class="input-with-tags" id="citiesAddressContainer">
+                            <input type="text" class="form-control" id="citiesAddress" placeholder="Cities/Address">
+                            <div id="address_suggestionBox" class="address_suggestionBox"></div>
+                        </div>
+
+
 
                         <!-- Create Route Button -->
                         <button class="getDetails-button" type="submit">
@@ -398,7 +398,7 @@
                 <div class="tag-right">
                     <!-- Search Input and Table Section -->
                     <!-- Search Route Input Section -->
-                    <button class="export_routes" onclick="">
+                    <button class="export_routes" onclick="exportRouteTable()">
                         <img src="/images/export.png" alt="Export Icon"> Export
                     </button>
 
@@ -522,7 +522,7 @@
 
                 <div class="tag-right">
                     <!-- Search Input and Table Section -->
-                    <button class="export_routes" onclick="">
+                    <button class="export_routes" onclick="exportShiftTable()">
                         <img src="/images/export.png" alt="Export Icon"> Export
                     </button>
 
@@ -889,10 +889,33 @@
         <div class="overlay-content-search">
             <h2>Transport Monitoring</h2>
             <button id="closeTransportMonitoringOverlay" class="close-button">&times;</button>
+
+            <!-- Export button added above the map -->
+            <button id="exportPickDropLogs" class="export_registered_students">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+
             <div id="map"></div>
         </div>
     </div>
 
+    
+
+    <!-- Suggestion containers for SweetAlert -->
+    <div id="suggestionsContainer" style="display: none;">
+        <div id="sweetAlertInputs">
+            <div class="form-group">
+                <input type="text" id="swalVehicleNo" class="swal2-input" placeholder="Vehicle No">
+                <div id="swalVehicleSuggestions" class="suggestions"></div>
+            </div>
+            <div class="form-group">
+                <input type="text" id="swalShiftType" class="swal2-input" placeholder="Shift">
+                <div id="swalShiftSuggestions" class="suggestions"></div>
+            </div>
+        </div>
+    </div>
+
+    
 
     <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Transport_js/Transport_console.js"></script>

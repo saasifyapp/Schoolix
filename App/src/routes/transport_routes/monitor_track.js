@@ -64,4 +64,37 @@ router.get('/fetch-all-coordinates', (req, res) => {
     });
 });
 
+
+// Endpoint to fetch pick-drop logs based on vehicle number and shift
+router.get('/exportPickDropLogs', (req, res) => {
+    const vehicleNo = req.query.vehicleNo;
+    const shiftName = req.query.shiftName;
+
+    // SQL query to fetch pick-drop logs
+    const pickDropLogsSql = `
+        SELECT 
+            student_name, 
+            pick_drop_location, 
+            date_of_log, 
+            type_of_log, 
+            vehicle_no, 
+            driver_name, 
+            shift, 
+            standard
+        FROM transport_pick_drop_logs 
+        WHERE vehicle_no = ? AND shift = ?
+    `;
+    const pickDropLogsValues = [vehicleNo, shiftName];
+
+    req.connectionPool.query(pickDropLogsSql, pickDropLogsValues, (pickDropLogsError, pickDropLogsResults) => {
+        if (pickDropLogsError) {
+            return res.status(500).json({ error: 'Database query failed' });
+        }
+
+        // Send the results back to the client
+        res.status(200).json(pickDropLogsResults);
+    });
+});
+
+
 module.exports = router;
