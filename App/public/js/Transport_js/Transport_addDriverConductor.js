@@ -252,7 +252,7 @@ typeSelect.addEventListener("change", function () {
           <input type="text" class="form-control" id="vehicle_no" placeholder=" " maxlength="13">
           <span class="form-control-placeholder">Vehicle Number</span>
         </div>
-        <div id="suggestions" class="suggestions"></div>
+        <div id="suggestions" class="suggestions" style="position: unset;"></div>
       `;
 
     const vehicleNoInput = document.getElementById("vehicle_no");

@@ -177,15 +177,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('exportPickDropLogs').addEventListener('click', () => {
         // Get the input fields and suggestion containers from the HTML
         const sweetAlertInputs = `
-            <div class="form-group">
-                <input type="text" id="swalVehicleNo" class="swal2-input" placeholder="Vehicle No">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+            <div class="form-group" style="width: 80%; margin-bottom: 1rem;">
+                <input type="text" id="swalVehicleNo" class="swal2-input" placeholder="Vehicle No" style="width: 100%; text-align: center;">
                 <div id="swalVehicleSuggestions" class="suggestions"></div>
             </div>
-            <div class="form-group">
-                <input type="text" id="swalShiftType" class="swal2-input" placeholder="Shift">
+            <div class="form-group" style="width: 80%; margin-bottom: 1rem;">
+                <input type="text" id="swalShiftType" class="swal2-input" placeholder="Shift" style="width: 100%; text-align: center;">
                 <div id="swalShiftSuggestions" class="suggestions"></div>
             </div>
-        `;
+        </div>
+    `;
     
         // Trigger SweetAlert with input fields and suggestion containers
         Swal.fire({
