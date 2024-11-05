@@ -5,25 +5,10 @@ document.addEventListener('deviceready', function () {
     const enableLocationBtn = document.getElementById('enableLocationBtn');
     const cancelBtn = document.getElementById('cancelBtn');
 
-    // Show spinner initially
-    const showSpinner = () => {
-        const spinnerContainer = document.getElementById('spinnerContainer');
-        spinnerContainer.style.display = 'flex'; // Show spinner container
-    };
-
-    const hideSpinner = () => {
-        const spinnerContainer = document.getElementById('spinnerContainer');
-        spinnerContainer.style.display = 'none'; // Hide spinner container
-    };
-
-    // Spinner stays active until location permissions and services are checked
-    checkLocationPermissionsAndServices();
-
     enableLocationBtn.addEventListener('click', function () {
         console.log("Enable Location button clicked");
         cordova.plugins.diagnostic.switchToLocationSettings();
         hideLocationSettingsPrompt();
-        listenForLocationSettingsChange();
     });
 
     cancelBtn.addEventListener('click', function () {
@@ -31,72 +16,6 @@ document.addEventListener('deviceready', function () {
         hideLocationSettingsPrompt();
         redirectToLogin();
     });
-
-    function listenForLocationSettingsChange() {
-        cordova.plugins.diagnostic.registerLocationStateChangeHandler(function (state) {
-            if (state === cordova.plugins.diagnostic.locationMode.HIGH_ACCURACY ||
-                state === cordova.plugins.diagnostic.locationMode.BATTERY_SAVING ||
-                state === cordova.plugins.diagnostic.locationMode.DEVICE_ONLY) {
-                console.log("Location services are enabled");
-                hideLocationSettingsPrompt();
-                initializeApp();
-            } else {
-                console.log("Location services are disabled");
-                showLocationSettingsPrompt();
-            }
-        });
-    }
-
-    function checkLocationPermissionsAndServices() {
-        const permissions = cordova.plugins.permissions;
-        const requiredPermissions = [
-            permissions.ACCESS_FINE_LOCATION,
-            permissions.ACCESS_COARSE_LOCATION
-        ];
-
-        console.log("Checking permissions...");
-        permissions.checkPermission(requiredPermissions, (status) => {
-            console.log("Permissions status:", status);
-            if (!status.hasPermission) {
-                console.log("Permissions not granted, requesting permissions...");
-                permissions.requestPermissions(requiredPermissions, (status) => {
-                    if (!status.hasPermission) {
-                        alert("Permission denied. The app needs location permissions to function properly.");
-                        redirectToLogin();
-                    } else {
-                        checkLocationServices();
-                    }
-                }, (error) => {
-                    console.error("Error requesting permissions", error);
-                    redirectToLogin();
-                });
-            } else {
-                checkLocationServices();
-            }
-        }, (error) => {
-            console.error("Error checking permissions", error);
-            redirectToLogin();
-        });
-    }
-
-    function checkLocationServices() {
-        console.log("Checking location services...");
-        cordova.plugins.diagnostic.isLocationEnabled(function (enabled) {
-            if (enabled) {
-                console.log("Location services are enabled");
-                initializeApp(); // Call the initializeApp function
-            } else {
-                console.log("Location services are disabled, showing prompt...");
-                hideSpinner(); // Hide spinner before showing the prompt
-                showLocationSettingsPrompt();
-                listenForLocationSettingsChange();
-            }
-        }, function (error) {
-            console.error("The following error occurred: " + error);
-            hideSpinner(); // Hide spinner in case of error
-            redirectToLogin();
-        });
-    }
 
     function showLocationSettingsPrompt() {
         console.log("Showing location settings prompt");
@@ -113,11 +32,41 @@ document.addEventListener('deviceready', function () {
         window.location.href = './transport_console.html'; // Adjust the path as needed
     }
 
-    // Existing onDeviceReady function
-    onDeviceReady();
+    function listenForLocationSettingsChange() {
+        cordova.plugins.diagnostic.registerLocationStateChangeHandler(function (state) {
+            if (state === cordova.plugins.diagnostic.locationMode.HIGH_ACCURACY ||
+                state === cordova.plugins.diagnostic.locationMode.BATTERY_SAVING ||
+                state === cordova.plugins.diagnostic.locationMode.DEVICE_ONLY) {
+                console.log("Location services are enabled");
+                hideLocationSettingsPrompt();
+            } else {
+                console.log("Location services are disabled");
+                showLocationSettingsPrompt();
+            }
+        });
+    }
 
-    // Start listening for location settings changes
-    listenForLocationSettingsChange();
+    function initializeLocationTracking() {
+        listenForLocationSettingsChange();
+
+        cordova.plugins.diagnostic.isLocationEnabled(function (enabled) {
+            if (enabled) {
+                console.log("Location services are enabled");
+                hideLocationSettingsPrompt();
+            } else {
+                console.log("Location services are disabled");
+                showLocationSettingsPrompt();
+            }
+        }, function (error) {
+            console.error("The following error occurred: " + error);
+        });
+    }
+
+    // Initialize location tracking on device ready
+    initializeLocationTracking();
+
+    // Reinitialize location tracking when the page is shown again
+    window.addEventListener('pageshow', initializeLocationTracking);
 });
 
 // Existing onDeviceReady function
@@ -170,9 +119,6 @@ function onDeviceReady() {
     } else {
         checkLocationServices();
     }
-
-    // Start listening for location settings changes
-    listenForLocationSettingsChange();
 }
 
 function checkLocationServices() {
@@ -403,6 +349,5 @@ function initializeApp() {
 // Add event listener for pageshow to handle when the page is shown again
 window.addEventListener('pageshow', function () {
     console.log("Page is shown again");
-    listenForLocationSettingsChange();
-    checkLocationServices();
+    initializeLocationTracking();
 });
