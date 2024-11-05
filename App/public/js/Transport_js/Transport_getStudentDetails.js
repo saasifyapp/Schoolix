@@ -269,7 +269,7 @@ function fetchVehicleInfo() {
         fetch(`/listStudents_getClass?vehicleNo=${encodeURIComponent(vehicleNo)}&shiftName=${encodeURIComponent(shiftName)}`)
             .then((response) => response.json())
             .then((data) => {
-                classSuggestionsContainer.style.display = 'flex'; // Show suggestions container
+                classSuggestionsContainer.style.display = 'block'; // Show suggestions container
                 classSuggestionsContainer.innerHTML = '';
 
                 if (!data.classes_alloted) {
