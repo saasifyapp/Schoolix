@@ -875,6 +875,7 @@ svg path {
     justify-content: center;
     margin-left: 10%;
     top: 3.3rem;
+    border-radius: 0px 0px 25px 25px;
 }
 
 /* Style for each suggestion item */
