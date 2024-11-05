@@ -180,7 +180,7 @@ function fetchVehicleInfo() {
                         <strong>Available Seats:</strong> ${vehicleInfo.available_seats}<br>
                     `;
                     vehicleInfoContainer.style.display = 'block'; // Show the container with data
-                    vehicleInfoContainer.style.maxHeight = '65px';
+                    vehicleInfoContainer.style.maxHeight = '100px';
                     vehicleInfoContainer.style.width = '90%';
                 } else {
                     vehicleInfoContainer.innerHTML = 'No vehicle info found';
@@ -216,7 +216,7 @@ function fetchVehicleInfo() {
         fetch(`/listStudents_getStops?vehicleNo=${encodeURIComponent(vehicleNo)}&shiftName=${encodeURIComponent(shiftName)}`)
             .then((response) => response.json())
             .then((data) => {
-                stopSuggestionsContainer.style.display = 'flex'; // Show suggestions container
+                stopSuggestionsContainer.style.display = 'block'; // Show suggestions container
                 stopSuggestionsContainer.innerHTML = '';
 
                 if (!data.route_stops) {
