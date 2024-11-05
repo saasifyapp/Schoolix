@@ -116,8 +116,8 @@ document.addEventListener('deviceready', function () {
     };
 
     const redirectToLogin = () => {
-        console.log("Redirecting to login page");
-        window.location.href = './index.html'; // Adjust the path as needed
+        console.log("Redirecting to dashboard page");
+        window.location.href = './transport_console.html'; // Adjust the path as needed
     };
 
     enableLocationBtn.addEventListener('click', function () {
@@ -304,7 +304,7 @@ document.addEventListener('deviceready', function () {
                 } else {
                     console.error('Failed to refresh token. Redirecting to login...');
                     alert('Session expired. Please log in again.');
-                    window.location.href = './index.html';
+                    window.location.href = './transport_console.html';
                     return;
                 }
             }
