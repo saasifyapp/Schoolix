@@ -859,7 +859,8 @@ svg path {
     border-radius: 5px;
     /* Rounded corners */
     max-height: 10rem;
-    width: 18.7rem;
+    width: 12rem;
+    max-width  : 18.7rem;
     overflow-y: auto;
     position: absolute;
     background: white;
@@ -943,7 +944,8 @@ svg path {
     background: transparent;
     box-sizing: border-box;
     overflow: auto;
-    height: 100px;
+    /* height: 100px; */
+    max-height: 120px;
     
 }
 
@@ -969,7 +971,7 @@ svg path {
     max-height: 200px;
     width: 100%;
     overflow-y: auto;
-    position: absolute;
+    /* position: absolute; */
     top: 45px;
     /* Adjust based on the height of the input field and padding */
     background: white;
@@ -1080,6 +1082,7 @@ svg path {
 }
 
 .info-container {
+    color: black;
     margin-bottom: 20px;
     padding: 15px;
     border: 1px solid #ddd;
