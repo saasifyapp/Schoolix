@@ -870,6 +870,10 @@ svg path {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     /* Optional: Add a subtle shadow */
     color: black;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10%;
+    top: 3.3rem;
 }
 
 /* Style for each suggestion item */
