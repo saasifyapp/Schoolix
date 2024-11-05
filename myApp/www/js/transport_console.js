@@ -303,10 +303,16 @@ function initializeApp() {
                 buttonCard.appendChild(shiftButton);
                 shiftIndex++;
             });
+    
+            // Display the button-card only if there are shift buttons
+            if (buttonCard.children.length > 0) {
+                buttonCard.style.display = 'grid';
+            }
         } else {
             alert('No details found for the driver.');
         }
     };
+    
 
     fetchDriverDetails().then(() => {
         startSendingCoordinates(); // Start sending the coordinates every 2 minutes

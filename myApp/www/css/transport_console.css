@@ -122,15 +122,21 @@ body {
     box-sizing: border-box;
 }
 
+.card {
+    display: none;
+}
+
 /* Button card styles */
 .button-card {
-    display: grid;
+    display: none;
+    /* display: grid; */
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
     justify-items: center;
     justify-content: center;
     align-items: center;
     width: 100%;
+    
 }
 
 /* Button styles */
