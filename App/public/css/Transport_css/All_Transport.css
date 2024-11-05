@@ -481,16 +481,6 @@ body {
     top: 6rem;
 }
 
-.suggestion-item {
-    padding: 10px;
-    cursor: pointer;
-    color: black;
-}
-
-.suggestion-item:hover {
-    background-color: #f0f0f0;
-}
-
 
 
 

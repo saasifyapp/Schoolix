@@ -873,7 +873,7 @@ svg path {
     color: black;
     align-items: center;
     justify-content: center;
-    margin-left: 10%;
+    margin-left: 5%;
     top: 3.3rem;
     border-radius: 0px 0px 25px 25px;
 }
@@ -893,7 +893,7 @@ svg path {
 
 .suggestion-item:hover {
     background: #D6EAF8;
-    font-weight: bold;
+    font-weight: bold; /* Make text bold on hover */
     /* Make text bold on hover */
 }
 
