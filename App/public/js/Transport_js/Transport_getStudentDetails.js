@@ -479,4 +479,15 @@ function fetchVehicleInfo() {
             classSuggestionsContainer.innerHTML = '';
         }
     });
+
+    document.getElementById('closeListStudentsOverlay').addEventListener('click', function(){
+        scheduleTableBody.innerHTML = '';
+        studentCountElement.innerHTML = 0;
+        teacherCountElement.innerHTML = 0;
+        // shiftInput.value = '';
+        // vehicleInput.value = '';
+
+        selectedVehicleNo = '';
+        selectedShiftName = '';
+    })
 });
