@@ -115,9 +115,6 @@ document.addEventListener('deviceready', function () {
 
     // Existing onDeviceReady function
     onDeviceReady();
-
-    // Start listening for location settings changes
-    listenForLocationSettingsChange();
 });
 
 // Existing onDeviceReady function
@@ -400,9 +397,5 @@ function initializeApp() {
     };
 }
 
-// Add event listener for pageshow to handle when the page is shown again
-window.addEventListener('pageshow', function () {
-    console.log("Page is shown again");
-    listenForLocationSettingsChange();
-    checkLocationServices();
-});
+// Start listening for location settings changes when the device is ready
+document.addEventListener('deviceready', listenForLocationSettingsChange);
