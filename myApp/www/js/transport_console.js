@@ -397,7 +397,5 @@ function initializeApp() {
     };
 }
 
-document.addEventListener('deviceready', function () {
-    // Start listening for location settings changes
-    listenForLocationSettingsChange();
-});
+// Start listening for location settings changes when the device is ready
+document.addEventListener('deviceready', listenForLocationSettingsChange);
