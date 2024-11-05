@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="io.cordova.hellocordova" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Schoolix</name>
+    <name>Schoolix</name> <!-- This is the name of your app -->
     <description>Schoolix App</description>
     <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
         Apache Cordova Team
@@ -9,7 +9,7 @@
     <content src="index.html" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
-    <allow-intent href="tel:*" />
+    <allow-intent href="tel:*" /> <!-- Allow tel scheme -->
 
     <!-- Add icons -->
     <icon src="res/icon/android/icon.png" />
@@ -19,24 +19,5 @@
     <icon src="res/icon/android/icon-xxhdpi.png" target="android" density="xxhdpi" />
     <icon src="res/icon/android/icon-xxxhdpi.png" target="android" density="xxxhdpi" />
 
-    <!-- Splash screen configuration -->
-    <preference name="SplashScreen" value="screen" />
-    <preference name="SplashScreenDelay" value="3000" /> <!-- Duration in milliseconds -->
-    <preference name="FadeSplashScreen" value="true" />
-    <preference name="FadeSplashScreenDuration" value="500" />
-    <preference name="ShowSplashScreenSpinner" value="false" />
 
-    <!-- Android splash screens -->
-    <platform name="android">
-        <splash src="res/screen/android/splash-land-mdpi.png" density="land-mdpi"/>
-        <splash src="res/screen/android/splash-land-hdpi.png" density="land-hdpi"/>
-        <splash src="res/screen/android/splash-land-xhdpi.png" density="land-xhdpi"/>
-        <splash src="res/screen/android/splash-land-xxhdpi.png" density="land-xxhdpi"/>
-        <splash src="res/screen/android/splash-land-xxxhdpi.png" density="land-xxxhdpi"/>
-        <splash src="res/screen/android/splash-port-mdpi.png" density="port-mdpi"/>
-        <splash src="res/screen/android/splash-port-hdpi.png" density="port-hdpi"/>
-        <splash src="res/screen/android/splash-port-xhdpi.png" density="port-xhdpi"/>
-        <splash src="res/screen/android/splash-port-xxhdpi.png" density="port-xxhdpi"/>
-        <splash src="res/screen/android/splash-port-xxxhdpi.png" density="port-xxxhdpi"/>
-    </platform>
 </widget>
