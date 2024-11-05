@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             stopInput.disabled = true;
             classInput.disabled = true;
-            vehicleInfoContainer.innerHTML = ''; // Clear vehicle info container
+            vehicleInfoContainer.style = 'block'; // Clear vehicle info container
         }
     }
 
@@ -159,26 +159,43 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Function to fetch vehicle info
-    function fetchVehicleInfo() {
-        if (selectedVehicleNo && selectedShiftName) {
-            fetch(`/listStudents_getVehicleInfo?vehicleNo=${encodeURIComponent(selectedVehicleNo)}&shiftName=${encodeURIComponent(selectedShiftName)}`)
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.length > 0) {
-                        const vehicleInfo = data[0];
-                        vehicleInfoContainer.innerHTML = `
-                            <strong>Vehicle No:</strong> ${vehicleInfo.vehicle_no}<br>
-                            <strong>Driver Name:</strong> ${vehicleInfo.driver_name}<br>
-                            <strong>Total Capacity:</strong> ${vehicleInfo.vehicle_capacity}<br>
-                            <strong>Available Seats:</strong> ${vehicleInfo.available_seats}<br>
-                        `;
-                    } else {
-                        vehicleInfoContainer.innerHTML = 'No vehicle info found';
-                    }
-                })
-                .catch((error) => console.error('Error:', error));
-        }
+   // Function to fetch vehicle info
+function fetchVehicleInfo() {
+    const vehicleInfoContainer = document.getElementById('listStudents_vehicleInfo'); // Ensure this is defined
+    
+    // Check if both vehicle number and shift name are selected
+    if (selectedVehicleNo && selectedShiftName) {
+        fetch(`/listStudents_getVehicleInfo?vehicleNo=${encodeURIComponent(selectedVehicleNo)}&shiftName=${encodeURIComponent(selectedShiftName)}`)
+            .then((response) => response.json())
+            .then((data) => {
+                // Clear any previous data
+                vehicleInfoContainer.innerHTML = '';
+
+                if (data.length > 0) {
+                    const vehicleInfo = data[0];
+                    vehicleInfoContainer.innerHTML = `
+                        <strong>Vehicle No:</strong> ${vehicleInfo.vehicle_no}<br>
+                        <strong>Driver Name:</strong> ${vehicleInfo.driver_name}<br>
+                        <strong>Total Capacity:</strong> ${vehicleInfo.vehicle_capacity}<br>
+                        <strong>Available Seats:</strong> ${vehicleInfo.available_seats}<br>
+                    `;
+                    vehicleInfoContainer.style.display = 'block'; // Show the container with data
+                    vehicleInfoContainer.style.maxHeight = '65px';
+                    vehicleInfoContainer.style.width = '90%';
+                } else {
+                    vehicleInfoContainer.innerHTML = 'No vehicle info found';
+                    vehicleInfoContainer.style.display = 'block'; // Show the container even if no data is found
+                    vehicleInfoContainer.style.maxHeight = '65px';
+                    vehicleInfoContainer.style.width = '90%';
+                }
+            })
+            .catch((error) => console.error('Error:', error));
+    } else {
+        // Hide container if either vehicle number or shift name is missing
+        vehicleInfoContainer.style.display = 'none';
     }
+}
+
 
     // Fetch stop suggestions when stop input is focused
     stopInput.addEventListener('focus', function () {
