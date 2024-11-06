@@ -489,5 +489,8 @@ function fetchVehicleInfo() {
 
         selectedVehicleNo = '';
         selectedShiftName = '';
+
+        stopInput.disabled = true;
+        classInput.disabled = true;
     })
 });

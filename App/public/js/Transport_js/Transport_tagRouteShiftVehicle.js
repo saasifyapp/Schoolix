@@ -60,6 +60,7 @@
 
   // Function to fetch the data from the server and refresh the table
   function refreshTable() {
+    showTransportLoadingAnimation();
     fetch("/tag_display_route_shift_allocation_data")
       .then((response) => response.json())
       .then((data) => displayData(data)) // Call displayData to render the table
