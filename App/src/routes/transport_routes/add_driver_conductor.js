@@ -282,19 +282,20 @@ router.post('/addDriverConductor', (req, res) => {
                         });
                     }
 
-                    // Now, insert data into the android_app_users table
+                    // Now, insert data into the android_app_users table using connection_auth
                     const sqlUser = `
-                        INSERT INTO android_app_users (username, password, school_name, type, name, uid)
-                        VALUES (?, ?, ?, ?, ?, ?)
+                      INSERT INTO android_app_users (username, password, school_name, type, name, uid)
+                      VALUES (?, ?, ?, ?, ?, ?)
                     `;
                     const valuesUser = [username, password, schoolName, userType, name, uid];
 
-                    connection.query(sqlUser, valuesUser, (error, resultsUser) => {
+                    connection_auth.query(sqlUser, valuesUser, (error, resultsUser) => {
                         if (error) {
                             return connection.rollback(() => {
                                 res.status(500).json({ error: 'Database insertion failed for user details' });
                             });
                         }
+
 
                         // Commit the transaction
                         connection.commit(error => {
@@ -553,7 +554,7 @@ router.put('/updateAllDetails', (req, res) => {
             const uid = results[0].uid;
 
             // Execute SQL queries one by one without transaction
-            conn.query(sqlUpdateAndroidAppUsers, [username, password, name, uid], (err, androidAppResult) => {
+            connection_auth.query(sqlUpdateAndroidAppUsers, [username, password, name, uid], (err, androidAppResult) => {
                 if (err) {
                     conn.release();
                     console.error('Error updating android_app_users table:', err);
