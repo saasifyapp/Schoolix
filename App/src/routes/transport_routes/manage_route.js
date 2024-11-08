@@ -107,26 +107,43 @@ router.get('/displayRoutes', (req, res) => {
 // Endpoint to delete a route by its ID
 router.delete('/deleteRoute/:routeId', (req, res) => {
     const { routeId } = req.params;
+    const { routeName } = req.body;
 
-    // Query to delete the route from the database
-    const deleteQuery = 'DELETE FROM transport_route_shift_details WHERE route_shift_id = ?';
+    // Query to check if the route name exists in the schedule table
+    const checkQuery = `
+        SELECT COUNT(*) AS count
+        FROM transport_schedule_details
+        WHERE route_name = ?
+    `;
 
-    req.connectionPool.query(deleteQuery, [routeId], (error, results) => {
-        if (error) {
-            console.error('Error deleting route:', error);
-            return res.status(500).json({ message: 'Error deleting route' });
+    req.connectionPool.query(checkQuery, [routeName], (checkError, checkResults) => {
+        if (checkError) {
+            return res.status(500).json({ message: 'Error checking route in schedule' });
         }
 
-        // Check if any rows were affected (i.e., if the route existed)
-        if (results.affectedRows === 0) {
-            return res.status(404).json({ message: 'Route not found' });
+        if (checkResults[0].count > 0) {
+            // Route is tagged in the schedule, cannot delete
+            return res.status(400).json({ message: 'Cannot delete route. It is tagged to a vehicle. Please untag from Tagging Console.' });
         }
 
-        // If successful, send a success message
-        res.status(200).json({ message: 'Route deleted successfully' });
+        // If no record is found in the schedule table, proceed with deletion
+        const deleteQuery = 'DELETE FROM transport_route_shift_details WHERE route_shift_id = ?';
+
+        req.connectionPool.query(deleteQuery, [routeId], (deleteError, deleteResults) => {
+            if (deleteError) {
+                return res.status(500).json({ message: 'Error deleting route' });
+            }
+
+            // Check if any rows were affected (i.e., if the route existed)
+            if (deleteResults.affectedRows === 0) {
+                return res.status(404).json({ message: 'Route not found' });
+            }
+
+            // If successful, send a success message
+            res.status(200).json({ message: 'Route deleted successfully' });
+        });
     });
 });
-
 
 // Route to handle updating the transport route shift details
 router.post('/updateRoute', (req, res) => {
