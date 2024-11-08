@@ -362,13 +362,13 @@
 
             <div class="overlay-inner" style="height: calc(100% - 4rem)">
                 <!-- Lottie Animation and Form Section -->
-                <div class="tag-left left-manageroute" style="margin-bottom: 40px;">
+                <div class="tag-left left-manageroute" style="margin-bottom: 40px; ">
                     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
                         type="module"></script>
 
                     <!-- Lottie Animation Player -->
                     <dotlottie-player src="https://lottie.host/9085a2af-7df0-468b-b0c0-059e0eca82b6/zN60LritoN.json"
-                        background="transparent" speed="1" style="width: 250px; height: 250px;" loop
+                        background="transparent" speed="1" style="width: 250px; height: 250px;margin-left: 16%;;" loop
                         autoplay></dotlottie-player>
 
                     <!-- Form Section Below the Animation -->
@@ -379,11 +379,25 @@
                             <span class="form-control-placeholder">Route Name</span>
                         </div>
 
-
-                        <div class="input-with-tags" id="citiesAddressContainer">
-                            <input type="text" class="form-control" id="citiesAddress" placeholder="Cities/Address">
-                            <div id="address_suggestionBox" class="address_suggestionBox"></div>
+                        <div class="form-group">
+                            <div class="cities-container" id="citiesAddressContainer" style="width: 100%; height: 100px; overflow-y: auto; margin-bottom: 10px;background-color: white
+                            ;">
+                                <input type="text" class="city-input" id="citiesAddress" placeholder="Cities/Address">
+                            </div>
+                            <div id="address_suggestionBox" class="suggestions-container"
+                                style="display: none; top: 3rem; color: black;"></div>
                         </div>
+
+
+                        <!-- <div class="form-group">
+                            <label for="editRouteCities">Route Cities :</label>
+                            <div id="citiesContainer" class="cities-container">
+                                
+                                <input type="text" id="cityInput" placeholder="Add a city" class="city-input">
+                            </div>
+                            
+                            <div id="suggestionsContainer" class="suggestions-container" style="display: none;"></div>
+                        </div> -->
 
 
 
@@ -838,7 +852,8 @@
                             <div id="listStudents_shiftSuggestions" class="suggestions"></div>
                         </div>
 
-                        <div id="listStudents_vehicleInfo" class="info-container" style="color: black;max-height: 60px;width: 90%;">
+                        <div id="listStudents_vehicleInfo" class="info-container"
+                            style="color: black;max-height: 60px;width: 90%;">
                             <!-- Vehicle info will be displayed here -->
                         </div>
                     </div>
@@ -908,10 +923,10 @@
     </div>
 
 
+
+
+
    
-
-
-
 
 
 
@@ -929,6 +944,18 @@
 
     <script src="/js/Universal_Components_JS/handle_session.js"></script>
 
+    <script>
+        const citiesAddressContainer = document.getElementById('citiesAddressContainer');
+        const citiesAddressInput = document.getElementById('citiesAddress');
+
+        // Scroll to the input whenever the user focuses on the input
+        citiesAddressInput.addEventListener('focus', () => {
+            setTimeout(() => {
+                citiesAddressContainer.scrollTop = citiesAddressInput.offsetTop - citiesAddressContainer.offsetTop;
+            }, 0);
+        });
+
+    </script>
 
 </body>
 
