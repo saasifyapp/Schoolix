@@ -548,14 +548,14 @@ router.put('/updateAllDetails', (req, res) => {
             WHERE vehicle_no = ?
         `;
         const sqlSelectCapacity = `
-            SELECT available_seats, vehicle_capacity
+            SELECT shift_name, available_seats, vehicle_capacity
             FROM transport_schedule_details
             WHERE vehicle_no = ?
         `;
         const sqlUpdateCapacity = `
             UPDATE transport_schedule_details
             SET available_seats = ?, vehicle_capacity = ?
-            WHERE vehicle_no = ?
+            WHERE vehicle_no = ? AND shift_name = ?
         `;
 
         // Execute the SELECT query to get the uid
@@ -619,22 +619,29 @@ router.put('/updateAllDetails', (req, res) => {
                                     return res.status(200).json({ message: 'All details updated successfully, but no schedule details found to update capacity.' });
                                 }
 
-                                const { available_seats, vehicle_capacity: existing_vehicle_capacity } = results[0];
-                                const new_available_seats = available_seats + new_seats;
-                                const new_vehicle_capacity = existing_vehicle_capacity + new_seats;
+                                // Loop through each record and update the capacity and available seats
+                                let updateCount = 0;
+                                results.forEach(record => {
+                                    const { shift_name, available_seats, vehicle_capacity: existing_vehicle_capacity } = record;
+                                    const new_available_seats = available_seats + new_seats;
+                                    const new_vehicle_capacity = existing_vehicle_capacity + new_seats;
 
-                                conn.query(sqlUpdateCapacity, [new_available_seats, new_vehicle_capacity, vehicle_no], (err, updateCapacityResult) => {
-                                    conn.release();
-                                    if (err) {
-                                        console.error('Error updating transport_schedule_details table:', err);
-                                        return res.status(500).json({ message: 'Failed to update transport_schedule_details table' });
-                                    }
-                                    if (updateCapacityResult.affectedRows === 0) {
-                                        console.error('No rows affected in transport_schedule_details table for capacity update:', { new_available_seats, new_vehicle_capacity, vehicle_no });
-                                        return res.status(404).json({ message: 'No rows affected in transport_schedule_details table for capacity update' });
-                                    }
+                                    conn.query(sqlUpdateCapacity, [new_available_seats, new_vehicle_capacity, vehicle_no, shift_name], (err, updateCapacityResult) => {
+                                        if (err) {
+                                            console.error('Error updating transport_schedule_details table:', err);
+                                            return res.status(500).json({ message: 'Failed to update transport_schedule_details table' });
+                                        }
+                                        if (updateCapacityResult.affectedRows === 0) {
+                                            console.error('No rows affected in transport_schedule_details table for capacity update:', { new_available_seats, new_vehicle_capacity, vehicle_no, shift_name });
+                                            return res.status(404).json({ message: 'No rows affected in transport_schedule_details table for capacity update' });
+                                        }
 
-                                    res.status(200).json({ message: 'All details updated successfully' });
+                                        updateCount++;
+                                        if (updateCount === results.length) {
+                                            conn.release();
+                                            res.status(200).json({ message: 'All details updated successfully' });
+                                        }
+                                    });
                                 });
                             });
                         });
