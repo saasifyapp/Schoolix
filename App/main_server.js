@@ -403,6 +403,10 @@ app.get('/Transport/transport_console', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Transport', 'transport_console.html'));
 });
 
+app.get('/FeeStructure/feeStructure', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'FeeStructure', 'feeStructure.html'));
+});
+
 /////////////////////// ROUTES FOR MAIN DASHBOARD COMPONENTS ///////////////////////////////////////
 
 // const main_dashboard_dataRouter = require('./src/routes/main_dashboard_data');

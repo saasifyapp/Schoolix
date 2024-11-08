@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fee Structure</title>
+    <link rel="stylesheet" href="/css/NavButtons.css">
+    <link rel="stylesheet" href="/css/Fee_Css/AllFee.css">
+    <link rel="stylesheet" href="/css/Fee_Css/FeeConsole.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo_item">
+            <!-- <i class="bx bx-menu" id="sidebarOpen"></i> -->
+            <img id="logo" src="" alt="Logo">
+            <!-- <div class="user_name" id="user_name"></div> -->
+        </div>
+
+        <div class="navbar_center">
+            <button onclick="window.location.href='/dashboard'"> <i class='bx' id="backButton"> <img
+                        src="/images/back.png" alt="Previous Icon"></i></button>
+            <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img
+                        src="/images/homeicon.png" alt="Dashboard Icon"></i></button>
+            <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
+                        alt="Signout Icon"></i></button>
+        </div>
+
+        <div class="navbar_content">
+            <!-- <i class="bi bi-grid"></i>
+      <i class='bx bx-bell'></i> -->
+        </div>
+    </nav>
+
+    <div class="adm-head">
+        <div class="button-container">
+            <h2>Fee Structure Console</h2>
+        </div>
+    </div>
+
+    <div class="cards-container">
+        <div class="card">
+            <button id="feeCategoryButton">
+                <div class="dotlottie-container"></div>
+                <h3>Fee Category</h3>
+            </button>
+        </div>
+
+        <div class="card">
+            <button id="feeAmountButton">
+                <div class="dotlottie-container"></div>
+                <h3>Fee Amount</h3>
+            </button>
+        </div>
+
+        <div class="card">
+            <button id="feeReportButton">
+                <div class="dotlottie-container"></div>
+                <h3>Fee Report</h3>
+            </button>
+        </div>
+    </div>
+
+    <!-- Overlay for Fee Category -->
+    <div id="feeCategoryOverlay" class="overlay">
+        <div class="overlay-content-inner">
+            <h2>Fee Category</h2>
+            <button id="closeFeeCategoryOverlay" class="close-button">&times;</button>
+            <div class="button-container">
+                <div class="option-card bookvaltcard">
+                    <span id="createCategoryButton">
+                        <img src="">
+                        Create Category
+                    </span>
+                </div>
+                <div class="option-card bookvaltcard">
+                    <span id="editCategoryButton">
+                        <img src="">
+                        Edit Category
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay for Create Category -->
+    <div id="createCategoryOverlay" class="overlay">
+        <div class="overlay-content">
+            <h2>Create Category</h2>
+            <button id="closeCreateCategoryOverlay" class="close-button">&times;</button>
+            <!-- Add your form or content for creating a category here -->
+        </div>
+    </div>
+
+    <!-- Overlay for Edit Category -->
+    <div id="editCategoryOverlay" class="overlay">
+        <div class="overlay-content">
+            <h2>Edit Category</h2>
+            <button id="closeEditCategoryOverlay" class="close-button">&times;</button>
+            <!-- Add your form or content for editing a category here -->
+        </div>
+    </div>
+    <!-- Overlay for Fee Amount -->
+    <div id="feeAmountOverlay" class="overlay">
+        <div class="overlay-content-inner">
+            <h2>Fee Amount</h2>
+            <button id="closeFeeAmountOverlay" class="close-button">&times;</button>
+            <div class="button-container">
+                <div class="option-card bookvaltcard">
+                    <span id="setFeeAmountButton">
+                        <img src="">
+                        Set Fee Amount
+                    </span>
+                </div>
+                <div class="option-card bookvaltcard">
+                    <span id="editFeeAmountButton">
+                        <img src="">
+                        Edit Fee Amount
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay for Set Fee Amount -->
+    <div id="setAmountOverlay" class="overlay">
+        <div class="overlay-content-inner">
+            <h2>Set Fee Amount</h2>
+            <button id="closeSetAmountOverlay" class="close-button">&times;</button>
+            <!-- Content for setting the fee amount goes here -->
+            <form>
+                <label for="amount">Fee Amount:</label>
+                <input type="number" id="amount" name="amount" required>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Fee Amount Overlay -->
+<div id="editFeeAmountOverlay" class="overlay">
+    <div class="overlay-content-inner">
+        <h2>Edit Fee Amount</h2>
+        <button id="closeEditFeeAmountOverlay" class="close-button">&times;</button>
+        <!-- Form to Edit Fee Amount -->
+        <form id="editFeeAmountForm">
+            <label for="feeCategory">Fee Category:</label>
+            <select id="feeCategory" name="feeCategory" required>
+                <!-- Example Categories, you can populate this dynamically -->
+                <option value="tuition">Tuition</option>
+                <option value="lab">Lab</option>
+                <option value="library">Library</option>
+            </select>
+            <label for="feeAmount">Fee Amount:</label>
+            <input type="number" id="feeAmount" name="feeAmount" required>
+            <button type="submit">Update Amount</button>
+        </form>
+    </div>
+</div>
+
+
+
+    <script src="/js/Inventory_js/All.js"></script>
+    <script src="/js/FeeStructure_js/AllfeeStructure.js"></script>
+
+
+</body>
+
+</html>
