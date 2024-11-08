@@ -215,7 +215,15 @@ router.post('/validateDriverConductorDetails', (req, res) => {
 });
 
 
-// Endpoint to handle driverConductor form submission
+
+// Function to get initials from school name
+function getInitials(schoolName) {
+    return schoolName
+        .split(' ')
+        .map(word => word[0].toLowerCase())
+        .join('');
+}
+
 // Endpoint to handle driverConductor form submission
 router.post('/addDriverConductor', (req, res) => {
     const { name, contact, address, type, vehicle_no, vehicle_type, vehicle_capacity } = req.body;
@@ -234,9 +242,12 @@ router.post('/addDriverConductor', (req, res) => {
     // Format school name to lowercase and replace spaces with underscores
     const formattedSchoolName = schoolName.replace(/\s+/g, '_').toLowerCase();
 
+    // Format school name to initials
+    const schoolInitials = getInitials(schoolName);
+
     // Generate username and password
     const username = name.replace(/\s+/g, '').toLowerCase(); // Remove spaces and convert to lowercase
-    const password = `school@${username}`;
+    const password = `${schoolInitials}@${username}`;
     const userType = type.toLowerCase() === 'driver' ? 'driver' : 'conductor'; // Determine user type based on the type from client
 
     // Start a transaction
@@ -497,6 +508,15 @@ router.delete('/deleteDriverConductor/:id', (req, res) => {
 router.put('/updateAllDetails', (req, res) => {
     const { id, name, contact, address, driver_conductor_type, vehicle_no, vehicle_type, vehicle_capacity, new_seats } = req.body;
 
+    // Retrieve school name from cookie
+    const schoolName = req.cookies.schoolName;
+    if (!schoolName) {
+        return res.status(400).json({ error: 'School name is required' });
+    }
+
+    // Format school name to initials
+    const schoolInitials = getInitials(schoolName);
+
     req.connectionPool.getConnection((err, conn) => {
         if (err) {
             console.error('Error getting connection from pool:', err);
@@ -505,7 +525,7 @@ router.put('/updateAllDetails', (req, res) => {
 
         // Declare all SQL queries
         const username = name.replace(/\s+/g, '').toLowerCase();
-        const password = `school@${username}`;
+        const password = `${schoolInitials}@${username}`;
 
         const sqlSelectUid = `
             SELECT uid
