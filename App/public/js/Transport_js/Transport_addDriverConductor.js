@@ -21,25 +21,6 @@ async function refreshDriverConductorData() {
   }
 }
 
-function formatInput(input) {
-  // Check if the input is not a string and convert it to a string if necessary
-  if (typeof input !== "string") {
-    input = String(input); // Convert to string
-  }
-
-  // Trim whitespace and replace multiple spaces with a single space
-  let formattedInput = input.trim().replace(/\s+/g, " ");
-
-  // Prevent unnecessary characters or SQL injection
-  formattedInput = formattedInput
-    .replace(/'/g, "''") // Escape single quotes
-    .replace(/--/g, "") // Remove SQL comment syntax
-    .replace(/;/g, "") // Remove semicolons
-    .replace(/[^a-zA-Z0-9\s._-]/g, ""); // Allow only alphanumeric characters, spaces, dots, underscores, and hyphens
-
-  return formattedInput;
-}
-
 // Function to store the driver/conductor data locally
 function storeDriverConductorData(data) {
   driverConductorData = {}; // Clear existing data
@@ -201,7 +182,7 @@ async function deleteDriverConductor(id) {
       await Swal.fire({
         icon: "error",
         title: "Error",
-        text: "An error occurred while deleting the entry. Please try again.",
+        text: "An error occurred whil deleting the entry. Please try again.",
       });
     }
   }
@@ -222,11 +203,11 @@ typeSelect.addEventListener("change", function () {
     dynamicFields.innerHTML = `
         <div class="form-row">
           <div class="form-group">
-            <input type="text" class="form-control" id="vehicle_no" placeholder=" " maxlength="13">
+            <input type="text" class="form-control" id="vehicle_no" placeholder=" " maxlength="13" required>
             <span class="form-control-placeholder">Vehicle Number</span>
           </div>
           <div class="form-group">
-            <select id="vehicle_type" class="form-control">
+            <select id="vehicle_type" class="form-control" required>
               <option value="">Select Vehicle Type</option>
               <option value="Bus">Bus</option>
               <option value="Van">Van</option>
@@ -236,7 +217,7 @@ typeSelect.addEventListener("change", function () {
             <span class="form-control-placeholder">Vehicle Type</span>
           </div>
           <div class="form-group">
-            <input type="number" class="form-control" id="vehicle_capacity" placeholder=" ">
+            <input type="number" class="form-control" id="vehicle_capacity" placeholder=" " required>
             <span class="form-control-placeholder">Capacity</span>
           </div>
         </div>
@@ -324,7 +305,7 @@ addDriverForm.addEventListener("submit", function (e) {
   e.preventDefault();
 
   const formData = {
-    name: formatInput(document.getElementById("name")?.value || ""),
+    name: capitalizeName(formatInput(document.getElementById("name")?.value || "")),
     contact: formatInput(document.getElementById("contact")?.value || ""),
     address: formatInput(document.getElementById("address")?.value || ""),
     type: formatInput(document.getElementById("type")?.value || ""),
@@ -372,19 +353,26 @@ addDriverForm.addEventListener("submit", function (e) {
         .then((response) => response.json())
         .then((data) => {
           if (data.error) {
+            hideTransportLoadingAnimation();
             showToast(data.error);
           } else {
+            hideTransportLoadingAnimation();
             showToast(data.message);
             resetForm();
             refreshDriverConductorData(); // Refresh the table after adding a new entry
           }
         })
         .catch((error) => {
+          hideTransportLoadingAnimation();
           console.error("Error:", error);
           showToast("An error occurred while submitting the form");
         });
     })
-    .catch((error) => console.error("Error:", error));
+    .catch((error) => {
+      console.error(error); // Correctly call console.error with the error
+      hideTransportLoadingAnimation();
+    });
+    
 });
 
 // Function to reset the form and clear dynamic fields
@@ -394,12 +382,16 @@ function resetForm() {
   typeSelect.value = ""; // Reset type select
 }
 
-// Function to reset the form and clear dynamic fields
-function resetForm() {
-  addDriverForm.reset(); // Reset the form fields
-  dynamicFields.innerHTML = ""; // Clear dynamic fields
-  typeSelect.value = ""; // Reset type select
-}
+document.getElementById('closeAddDriverOverlay').addEventListener('click',()=> {
+  resetForm();
+});
+
+// // Function to reset the form and clear dynamic fields
+// function resetForm() {
+//   addDriverForm.reset(); // Reset the form fields
+//   dynamicFields.innerHTML = ""; // Clear dynamic fields
+//   typeSelect.value = ""; // Reset type select
+// }
 
 // Function to format vehicle number
 function formatVehicleNumber(value) {

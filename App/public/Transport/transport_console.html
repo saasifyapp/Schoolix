@@ -191,21 +191,21 @@
                     <form id="addDriverForm">
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="name" placeholder=" ">
+                                <input type="text" class="form-control" id="name" placeholder=" " required>
                                 <span class="form-control-placeholder">Name</span>
                             </div>
                             <div class="form-group">
-                                <input type="tel" maxlength="10" class="form-control" id="contact" placeholder=" ">
+                                <input type="tel" maxlength="10" class="form-control" id="contact" placeholder=" " required>
                                 <span class="form-control-placeholder">Contact</span>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="address" placeholder=" ">
+                                <input type="text" class="form-control" id="address" placeholder=" " required>
                                 <span class="form-control-placeholder">Address</span>
                             </div>
                             <div class="form-group">
-                                <select id="type" class="form-control">
+                                <select id="type" class="form-control" required>
                                     <option value="">Select Type</option>
                                     <option value="driver">Driver</option>
                                     <option value="conductor">Conductor</option>
@@ -943,6 +943,7 @@
 
 
     <script src="/js/Universal_Components_JS/handle_session.js"></script>
+    <script src="/js/Universal_Components_JS/Helping_functions.js"></script>
 
     <script>
         const citiesAddressContainer = document.getElementById('citiesAddressContainer');
