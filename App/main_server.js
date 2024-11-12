@@ -583,8 +583,12 @@ app.use('/', transportMonitorTrack);
 
 
 ////// FEE STRUCTURE ROUTES ///
-const feeStructure = require('./src/routes/fees_routes/fee_structure.js');
+const feeStructure = require('./src/routes/fees_routes/fee_create_category.js');
 app.use('/', feeStructure);
+
+////// FEE AMOUNT ROUTES ///
+const feeAmount = require('./src/routes/fees_routes/fee_set_amount.js');
+app.use('/', feeAmount);
 
 
 

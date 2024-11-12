@@ -1131,3 +1131,56 @@ svg path {
         transform: translateY(0);
     }
 }
+
+
+
+/********************************** Create Category ***********************************************************/
+
+.create-category-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.create_category_animation, .create_category_form {
+    width: 48%;
+}
+
+.create_category_animation {
+    /* Style for the animation section */
+}
+
+.create_category_form {
+    /* Style for the form section */
+    display: flex;
+    flex-direction: column;
+}
+
+.create_category_form form {
+    display: flex;
+    flex-direction: column;
+}
+
+.create_category_form form label {
+    margin-bottom: 5px;
+}
+
+.create_category_form form input, 
+.create_category_form form textarea {
+    margin-bottom: 15px;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.create_category_form form button {
+    align-self: flex-start;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.create_category_form form button:hover {
+    background-color: #0056b3;
+}
