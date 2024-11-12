@@ -404,7 +404,7 @@ app.get('/Transport/transport_console', authenticateToken, (req, res) => {
 });
 
 app.get('/FeeStructure/feeStructure', authenticateToken, (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'FeeStructure', 'feeStructure.html'));
+    res.sendFile(path.join(__dirname, 'public', 'Fees', 'feeStructure.html'));
 });
 
 /////////////////////// ROUTES FOR MAIN DASHBOARD COMPONENTS ///////////////////////////////////////
