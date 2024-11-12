@@ -21,25 +21,6 @@ async function refreshDriverConductorData() {
   }
 }
 
-function formatInput(input) {
-  // Check if the input is not a string and convert it to a string if necessary
-  if (typeof input !== "string") {
-    input = String(input); // Convert to string
-  }
-
-  // Trim whitespace and replace multiple spaces with a single space
-  let formattedInput = input.trim().replace(/\s+/g, " ");
-
-  // Prevent unnecessary characters or SQL injection
-  formattedInput = formattedInput
-    .replace(/'/g, "''") // Escape single quotes
-    .replace(/--/g, "") // Remove SQL comment syntax
-    .replace(/;/g, "") // Remove semicolons
-    .replace(/[^a-zA-Z0-9\s._-]/g, ""); // Allow only alphanumeric characters, spaces, dots, underscores, and hyphens
-
-  return formattedInput;
-}
-
 // Function to store the driver/conductor data locally
 function storeDriverConductorData(data) {
   driverConductorData = {}; // Clear existing data
@@ -201,7 +182,7 @@ async function deleteDriverConductor(id) {
       await Swal.fire({
         icon: "error",
         title: "Error",
-        text: "An error occurred while deleting the entry. Please try again.",
+        text: "An error occurred whil deleting the entry. Please try again.",
       });
     }
   }
@@ -222,11 +203,11 @@ typeSelect.addEventListener("change", function () {
     dynamicFields.innerHTML = `
         <div class="form-row">
           <div class="form-group">
-            <input type="text" class="form-control" id="vehicle_no" placeholder=" " maxlength="13">
+            <input type="text" class="form-control" id="vehicle_no" placeholder=" " maxlength="13" required>
             <span class="form-control-placeholder">Vehicle Number</span>
           </div>
           <div class="form-group">
-            <select id="vehicle_type" class="form-control">
+            <select id="vehicle_type" class="form-control" required>
               <option value="">Select Vehicle Type</option>
               <option value="Bus">Bus</option>
               <option value="Van">Van</option>
@@ -236,7 +217,7 @@ typeSelect.addEventListener("change", function () {
             <span class="form-control-placeholder">Vehicle Type</span>
           </div>
           <div class="form-group">
-            <input type="number" class="form-control" id="vehicle_capacity" placeholder=" ">
+            <input type="number" class="form-control" id="vehicle_capacity" placeholder=" " required>
             <span class="form-control-placeholder">Capacity</span>
           </div>
         </div>
@@ -324,7 +305,7 @@ addDriverForm.addEventListener("submit", function (e) {
   e.preventDefault();
 
   const formData = {
-    name: formatInput(document.getElementById("name")?.value || ""),
+    name: capitalizeName(formatInput(document.getElementById("name")?.value || "")),
     contact: formatInput(document.getElementById("contact")?.value || ""),
     address: formatInput(document.getElementById("address")?.value || ""),
     type: formatInput(document.getElementById("type")?.value || ""),
@@ -372,19 +353,26 @@ addDriverForm.addEventListener("submit", function (e) {
         .then((response) => response.json())
         .then((data) => {
           if (data.error) {
+            hideTransportLoadingAnimation();
             showToast(data.error);
           } else {
+            hideTransportLoadingAnimation();
             showToast(data.message);
             resetForm();
             refreshDriverConductorData(); // Refresh the table after adding a new entry
           }
         })
         .catch((error) => {
+          hideTransportLoadingAnimation();
           console.error("Error:", error);
           showToast("An error occurred while submitting the form");
         });
     })
-    .catch((error) => console.error("Error:", error));
+    .catch((error) => {
+      console.error(error); // Correctly call console.error with the error
+      hideTransportLoadingAnimation();
+    });
+
 });
 
 // Function to reset the form and clear dynamic fields
@@ -394,12 +382,16 @@ function resetForm() {
   typeSelect.value = ""; // Reset type select
 }
 
-// Function to reset the form and clear dynamic fields
-function resetForm() {
-  addDriverForm.reset(); // Reset the form fields
-  dynamicFields.innerHTML = ""; // Clear dynamic fields
-  typeSelect.value = ""; // Reset type select
-}
+document.getElementById('closeAddDriverOverlay').addEventListener('click', () => {
+  resetForm();
+});
+
+// // Function to reset the form and clear dynamic fields
+// function resetForm() {
+//   addDriverForm.reset(); // Reset the form fields
+//   dynamicFields.innerHTML = ""; // Clear dynamic fields
+//   typeSelect.value = ""; // Reset type select
+// }
 
 // Function to format vehicle number
 function formatVehicleNumber(value) {
@@ -440,16 +432,14 @@ function editDriverConductor(id) {
     editFieldsContainer.innerHTML = `
                  <div class="form-row">
         <div class="form-group">
-            <input type="text" id="editName" name="name" class="form-control" value="${
-              driverConductorDetails.name || ""
-            }" style="text-align: center;">
+            <input type="text" id="editName" name="name" class="form-control" value="${driverConductorDetails.name || ""
+      }" style="text-align: center;">
             <span class="form-control-placeholder">Name</span>
         </div>
         
                   <div class="form-group">
-            <input type="tel" maxlength="10" id="editContact" name="contact" class="form-control" value="${
-              driverConductorDetails.contact || ""
-            }" style="text-align: center;">
+            <input type="tel" maxlength="10" id="editContact" name="contact" class="form-control" value="${driverConductorDetails.contact || ""
+      }" style="text-align: center;">
             <span class="form-control-placeholder">Contact</span>
         </div>
 
@@ -458,49 +448,42 @@ function editDriverConductor(id) {
 
 
 <div class="form-group">
-    <input type="text" id="editAddress" name="address" class="form-control" value="${
-      driverConductorDetails.address || ""
-    }" style="text-align: center;">
+    <input type="text" id="editAddress" name="address" class="form-control" value="${driverConductorDetails.address || ""
+      }" style="text-align: center;">
     <span class="form-control-placeholder">Address</span>
 </div>
 
           <div class="form-group">
-    <input readonly type="text" id="editVehicleNo" name="vehicleNo" class="form-control" value="${
-      driverConductorDetails.vehicle_no || ""
-    }" style="text-align: center;">
+    <input readonly type="text" id="editVehicleNo" name="vehicleNo" class="form-control" value="${driverConductorDetails.vehicle_no || ""
+      }" style="text-align: center;">
     <span class="form-control-placeholder">Vehicle Number</span>
 </div>
 
           <div>
               <label for="editVehicleType">Vehicle Type:</label>
               <select id="editVehicleType" name="vehicleType" class="form-control">
-                  <option value="Bus" ${
-                    driverConductorDetails.vehicle_type === "Bus"
-                      ? "selected"
-                      : ""
-                  }>Bus</option>
-                  <option value="Van" ${
-                    driverConductorDetails.vehicle_type === "Van"
-                      ? "selected"
-                      : ""
-                  }>Van</option>
-                  <option value="Car" ${
-                    driverConductorDetails.vehicle_type === "Car"
-                      ? "selected"
-                      : ""
-                  }>Car</option>
-                  <option value="Other" ${
-                    driverConductorDetails.vehicle_type === "Other"
-                      ? "selected"
-                      : ""
-                  }>Other</option>
+                  <option value="Bus" ${driverConductorDetails.vehicle_type === "Bus"
+        ? "selected"
+        : ""
+      }>Bus</option>
+                  <option value="Van" ${driverConductorDetails.vehicle_type === "Van"
+        ? "selected"
+        : ""
+      }>Van</option>
+                  <option value="Car" ${driverConductorDetails.vehicle_type === "Car"
+        ? "selected"
+        : ""
+      }>Car</option>
+                  <option value="Other" ${driverConductorDetails.vehicle_type === "Other"
+        ? "selected"
+        : ""
+      }>Other</option>
               </select>
           </div>
           <div style="display: flex; align-items: center; gap: 20px;">
              <div class="form-group">
-    <input type="number" id="originalCapacity" name="originalCapacity" class="form-control" value="${
-      driverConductorDetails.vehicle_capacity || 0
-    }" readonly style="text-align: center;">
+    <input type="number" id="originalCapacity" name="originalCapacity" class="form-control" value="${driverConductorDetails.vehicle_capacity || 0
+      }" readonly style="text-align: center;">
     <span class="form-control-placeholder">Current Capacity</span>
 </div>
 
@@ -512,9 +495,8 @@ function editDriverConductor(id) {
           </div>
           <div class="form-group" style="margin-top: 10px;">
     <span class="form-label">Total Capacity:</span>
-    <span id="totalCapacity" class="form-control">${
-      driverConductorDetails.vehicle_capacity || 0
-    }</span>
+    <span id="totalCapacity" class="form-control">${driverConductorDetails.vehicle_capacity || 0
+      }</span>
 </div>
 
       `;
@@ -540,27 +522,23 @@ function editDriverConductor(id) {
     editFieldsContainer.innerHTML = `
           <div>
               <label for="editName">Name:</label>
-              <input type="text" id="editName" name="name" class="form-control" value="${
-                driverConductorDetails.name || ""
-              }">
+              <input type="text" id="editName" name="name" class="form-control" value="${driverConductorDetails.name || ""
+      }">
           </div>
           <div>
               <label for="editContact">Contact:</label>
-              <input type="tel" maxlength="10" id="editContact" name="contact" class="form-control" value="${
-                driverConductorDetails.contact || ""
-              }">
+              <input type="tel" maxlength="10" id="editContact" name="contact" class="form-control" value="${driverConductorDetails.contact || ""
+      }">
           </div>
           <div>
               <label for="editAddress">Address:</label>
-              <input type="text" id="editAddress" name="address" class="form-control" value="${
-                driverConductorDetails.address || ""
-              }">
+              <input type="text" id="editAddress" name="address" class="form-control" value="${driverConductorDetails.address || ""
+      }">
           </div>
           <div>
               <label for="editVehicleNo">Vehicle Number:</label>
-              <input type="text" id="editVehicleNo" name="vehicleNo" class="form-control" readonly value="${
-                driverConductorDetails.vehicle_no || ""
-              }">
+              <input type="text" id="editVehicleNo" name="vehicleNo" class="form-control" readonly value="${driverConductorDetails.vehicle_no || ""
+      }">
 
               <div id="editSuggestions" class="edit-suggestions"></div>
           </div>
@@ -642,6 +620,56 @@ function closeEditPopup() {
   document.getElementById("editPopup").style.display = "none";
 }
 
+// async function saveDriverConductorDetails() {
+//   showTransportLoadingAnimation();
+//   const id = document.getElementById("editDriverConductorForm").dataset.currentId;
+//   const driverConductorType = document.getElementById("editTypeDisplay").textContent;
+
+//   const originalCapacity = parseInt(document.getElementById("originalCapacity").value, 10) || 0;
+//   const additionalCapacity = parseInt(document.getElementById("additionalCapacity").value, 10) || 0;
+//   const totalVehicleCapacity = originalCapacity + additionalCapacity;
+
+//   const updatedDetails = {
+//       id,
+//       name: formatInput(document.getElementById("editName").value),
+//       contact: formatInput(document.getElementById("editContact").value),
+//       address: formatInput(document.getElementById("editAddress").value),
+//       driver_conductor_type: driverConductorType,
+//       vehicle_no: formatInput(document.getElementById("editVehicleNo").value),
+//       vehicle_type: formatInput(document.getElementById("editVehicleType").value),
+//       vehicle_capacity: totalVehicleCapacity,
+//       new_seats: additionalCapacity,
+//   };
+
+//   try {
+//       const response = await fetch("/updateAllDetails", {
+//           method: "PUT",
+//           headers: {
+//               "Content-Type": "application/json",
+//           },
+//           body: JSON.stringify(updatedDetails),
+//       });
+
+//       if (!response.ok) {
+//           throw new Error("Failed to update details");
+//       }
+
+//       showToast("All details updated successfully");
+//       refreshDriverConductorData();
+//       // refreshTable();
+//       closeEditPopup();
+//   } catch (error) {
+//       console.error("Error saving driver/conductor details:", error);
+//       showToast("An error occurred while updating the details.");
+//   } finally {
+//       hideTransportLoadingAnimation();
+//   }
+// }
+
+function stripHtmlTags(str) {
+  return str.replace(/<\/?[^>]+(>|$)/g, "");
+}
+
 async function saveDriverConductorDetails() {
   showTransportLoadingAnimation();
   const id = document.getElementById("editDriverConductorForm").dataset.currentId;
@@ -652,39 +680,59 @@ async function saveDriverConductorDetails() {
   const totalVehicleCapacity = originalCapacity + additionalCapacity;
 
   const updatedDetails = {
-      id,
-      name: formatInput(document.getElementById("editName").value),
-      contact: formatInput(document.getElementById("editContact").value),
-      address: formatInput(document.getElementById("editAddress").value),
-      driver_conductor_type: driverConductorType,
-      vehicle_no: formatInput(document.getElementById("editVehicleNo").value),
-      vehicle_type: formatInput(document.getElementById("editVehicleType").value),
-      vehicle_capacity: totalVehicleCapacity,
-      new_seats: additionalCapacity,
+    id,
+    name: formatInput(document.getElementById("editName").value),
+    contact: formatInput(document.getElementById("editContact").value),
+    address: formatInput(document.getElementById("editAddress").value),
+    driver_conductor_type: driverConductorType,
+    vehicle_no: formatInput(document.getElementById("editVehicleNo").value),
+    vehicle_type: formatInput(document.getElementById("editVehicleType").value),
+    vehicle_capacity: totalVehicleCapacity,
+    new_seats: additionalCapacity,
   };
 
   try {
-      const response = await fetch("/updateAllDetails", {
-          method: "PUT",
-          headers: {
-              "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedDetails),
-      });
+    // Perform validation before saving
+    const validationResponse = await fetch("/validateDriverConductorDetails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: updatedDetails.id,
+        name: updatedDetails.name,
+        type: updatedDetails.driver_conductor_type,
+        vehicle_no: updatedDetails.vehicle_no,
+      }),
+    });
 
-      if (!response.ok) {
-          throw new Error("Failed to update details");
-      }
+    const validationResult = await validationResponse.json();
+    if (!validationResult.isValid) {
+      const messageWithoutHtml = stripHtmlTags(validationResult.message);
+      showToast(messageWithoutHtml, true);
+      return;
+    }
 
-      showToast("All details updated successfully");
-      refreshDriverConductorData();
-      // refreshTable();
-      closeEditPopup();
+    // If validation passes, proceed to update the details
+    const response = await fetch("/updateAllDetails", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedDetails),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update details");
+    }
+
+    showToast("All details updated successfully");
+    refreshDriverConductorData();
+    closeEditPopup();
   } catch (error) {
-      console.error("Error saving driver/conductor details:", error);
-      showToast("An error occurred while updating the details.");
+    console.error("Error saving driver/conductor details:", error);
+    showToast("An error occurred while updating the details.");
   } finally {
-      hideTransportLoadingAnimation();
+    hideTransportLoadingAnimation();
   }
 }
-
