@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="/css/NavButtons.css">
     <link rel="stylesheet" href="/css/Fee_Css/AllFee.css">
     <link rel="stylesheet" href="/css/Fee_Css/FeeConsole.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body>
@@ -56,7 +58,7 @@
                 <div class="dotlottie-container">
                     <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script> 
 
-    <dotlottie-player src="https://lottie.host/a999345e-0fad-4f49-8933-ea2d683ebb0c/khDPh8PO6k.json" background="transparent" speed="1" style="width: 270px; height: 260px;" loop autoplay></dotlottie-player>
+    <dotlottie-player src="https://lottie.host/e904a063-64d4-4a64-8fd7-7fef7e655689/d6wvaoHys4.json" background="transparent" speed="1" style="width: 270px; height: 260px;" loop autoplay></dotlottie-player>
                 </div>
                 <h3>Fee Amount</h3>
             </button>
@@ -91,7 +93,7 @@
                 </div>
                 <div class="option-card bookvaltcard">
                     <span id="editCategoryButton">
-                        <img src="/images/cheque.gif">
+                        <img src="/images/test.gif">
                         Edit&nbspCategory
                     </span>
                 </div>
@@ -99,14 +101,29 @@
         </div>
     </div>
 
-    <!-- Overlay for Create Category -->
-    <div id="createCategoryOverlay" class="overlay">
-        <div class="overlay-content">
-            <h2>Create Category</h2>
-            <button id="closeCreateCategoryOverlay" class="close-button">&times;</button>
-            <!-- Add your form or content for creating a category here -->
+<!-- Overlay for Create Category -->
+<div id="createCategoryOverlay" class="overlay">
+    <div class="overlay-content">
+        <h2>Create Category</h2>
+        <button id="closeCreateCategoryOverlay" class="close-button">&times;</button>
+        <div class="create-category-container">
+            <div id="create_category_animation" class="create_category_animation">
+                <!-- Animation or other content can go here -->
+            </div>
+            <div id="create_category_form" class="create_category_form">
+                <form>
+                    <label for="categoryName">Category Name:</label>
+                    <input type="text" id="categoryName" name="categoryName" required>
+
+                    <label for="categoryDescription">Category Description:</label>
+                    <textarea id="categoryDescription" name="categoryDescription" required></textarea>
+
+                    <button type="submit">Create</button>
+                </form>
+            </div>
         </div>
     </div>
+</div>
 
     <!-- Overlay for Edit Category -->
     <div id="editCategoryOverlay" class="overlay">
@@ -116,6 +133,7 @@
             <!-- Add your form or content for editing a category here -->
         </div>
     </div>
+    
     <!-- Overlay for Fee Amount -->
     <div id="feeAmountOverlay" class="overlay">
         <div class="overlay-content-inner">
@@ -130,7 +148,7 @@
                 </div>
                 <div class="option-card bookvaltcard">
                     <span id="editFeeAmountButton">
-                        <img src="/images/test.gif">
+                        <img src="/images/cheque.gif">
                         Edit&nbspFee&nbspAmount
                     </span>
                 </div>
@@ -140,7 +158,7 @@
 
     <!-- Overlay for Set Fee Amount -->
     <div id="setAmountOverlay" class="overlay">
-        <div class="overlay-content-inner">
+        <div class="overlay-content">
             <h2>Set Fee Amount</h2>
             <button id="closeSetAmountOverlay" class="close-button">&times;</button>
             <!-- Content for setting the fee amount goes here -->
@@ -176,7 +194,11 @@
 
 
     <script src="/js/Inventory_js/All.js"></script>
-    <script src="/js/Fees_js/AllfeeStructure.js"></script>
+    <script src="/js/Fees_js/Fee_Console.js"></script>
+    <script src="/js/Fees_js/Fee_createCategory.js"></script>
+    <script src="/js/Fees_js/Fee_setFeeAmount.js"></script>
+
+
 
     <script src="/js/Universal_Components_JS/handle_session.js"></script>
 
