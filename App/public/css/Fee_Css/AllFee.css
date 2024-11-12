@@ -208,7 +208,8 @@ body {
 
 
 
-.getDetails-button {
+.getDetails-button,
+.createBtn {
     background-color: transparent;
     border: none;
     color: black;
@@ -229,27 +230,32 @@ body {
     font-weight: bold;
 }
 
-.getDetails-button img {
+.getDetails-button img ,
+.createBtn img {
     width: 25px;
     height: 25px;
     border-radius: 0px;
     margin: 5px;
 }
 
-.getDetails-button span {
+.getDetails-button span ,
+.createBtn span{
     margin-right: 10px;
 }
 
-.getDetails-button:hover {
+.getDetails-button:hover ,
+.createBtn:hover{
     transform: scale(1.1);
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
 }
 
-.getDetails-button:focus {
+.getDetails-button:focus ,
+.createBtn:focus{
     outline: none;
 }
 
-.getDetails-button:hover {
+.getDetails-button:hover ,
+.createBtn:hover{
     background-color: #76D7C4;
     /* Change background color on hover */
     transform: scale(1.05);

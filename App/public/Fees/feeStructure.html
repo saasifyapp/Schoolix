@@ -63,7 +63,9 @@
                     <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
                         type="module"></script>
 
-    <dotlottie-player src="https://lottie.host/e904a063-64d4-4a64-8fd7-7fef7e655689/d6wvaoHys4.json" background="transparent" speed="1" style="width: 270px; height: 260px;" loop autoplay></dotlottie-player>
+                    <dotlottie-player src="https://lottie.host/e904a063-64d4-4a64-8fd7-7fef7e655689/d6wvaoHys4.json"
+                        background="transparent" speed="1" style="width: 266px; height: 216px;" loop
+                        autoplay></dotlottie-player>
                 </div>
                 <h3>Fee Amount</h3>
             </button>
@@ -106,34 +108,51 @@
         </div>
     </div>
 
-<!-- Overlay for Create Category -->
-<div id="createCategoryOverlay" class="overlay">
-    <div class="overlay-content">
-        <h2>Create Category</h2>
-        <button id="closeCreateCategoryOverlay" class="close-button">&times;</button>
-        <div class="create-category-container">
-            <div id="create_category_animation" class="create_category_animation">
-                <!-- Animation or other content can go here -->
-            </div>
-            <div id="create_category_form" class="create_category_form">
-                <form>
-                    <label for="categoryName">Category Name:</label>
-                    <input type="text" id="categoryName" name="categoryName" required>
+    <!-- Overlay for Create Category -->
+    <div id="createCategoryOverlay" class="overlay">
+        <div class="overlay-content" style="padding: 80px;">
+            <button id="closeCreateCategoryOverlay" class="close-button">&times;</button>
+            <div class="overlay-inner">
+                <div class="left-side">
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/c0e0d07c-c6ff-499d-968d-9681beba8363/LXldI5d5fJ.json"
+                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                        autoplay></dotlottie-player>
+                </div>
+                <div class="right-side">
+                    <h2>Create Category</h2>
+                    <form id="createCategoryForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="categoryName" placeholder=" " required>
+                                <span class="form-control-placeholder">Category Name</span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <textarea class="form-control" id="categoryDescription" placeholder=" "
+                                    required></textarea>
+                                <span class="form-control-placeholder">Category Description</span>
+                            </div>
+                        </div>
 
-                    <label for="categoryDescription">Category Description:</label>
-                    <textarea id="categoryDescription" name="categoryDescription" required></textarea>
-
-                    <button type="submit">Create</button>
-                </form>
+                        <!-- Submit Button -->                       
+                        <button class="createBtn" type="submit">
+                            <img src="../images/edit.png" alt="">
+                            <span>Create</span>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
 
     <!-- Overlay for Edit Category -->
     <div id="editCategoryOverlay" class="overlay-search">
         <div class="overlay-content-search">
-            
+
             <button id="closeEditCategoryOverlay" class="close-button">&times;</button>
             <img src="/images/cheque.gif" alt="Overlay Icon" class="overlay-icon">
             <h2 class="overlay-search-head">Edit Category</h2>
@@ -141,11 +160,10 @@
                 <div class="form-Searchgroup">
                     <div class="form-Searchgroup">
                         <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
-                        <input type="text" class="form-control" id="searchBar" name=""
-                            placeholder=" " oninput=""
+                        <input type="text" class="form-control" id="searchBar" name="" placeholder=" " oninput=""
                             style="width: 400px; height: 1.7rem !important;">
                         <span class="form-control-placeholder" style="left: 3.75rem;">Search Fee Category...</span>
-                    </div>                    
+                    </div>
                     <button class="refreshButton" onclick="" style="margin-top: 10px;">
                         <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
                     </button>
