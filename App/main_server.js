@@ -579,8 +579,12 @@ const transportMonitorTrack = require('./src/routes/transport_routes/monitor_tra
 app.use('/', transportMonitorTrack);
 
 
-////// ANDROID APP ROUTES ///
+///////////////////////////////// FEES ROUTES /////////////////////////////
 
+
+////// FEE STRUCTURE ROUTES ///
+const feeStructure = require('./src/routes/fees_routes/fee_structure.js');
+app.use('/', feeStructure);
 
 
 

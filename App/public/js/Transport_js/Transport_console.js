@@ -163,12 +163,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Utility Functions to Show/Hide Overlays
     function showOverlay(overlayId) {
-        console.log(`Showing overlay: ${overlayId}`);
+        //console.log(`Showing overlay: ${overlayId}`);
         document.getElementById(overlayId).style.display = "flex";
     }
 
     function hideOverlay(overlayId) {
-        console.log(`Hiding overlay: ${overlayId}`);
+        //(`Hiding overlay: ${overlayId}`);
         const overlay = document.getElementById(overlayId);
         overlay.style.display = "none";
         resetOverlayContents(overlay);
