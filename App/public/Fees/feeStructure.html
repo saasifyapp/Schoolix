@@ -42,22 +42,37 @@
     <div class="cards-container">
         <div class="card">
             <button id="feeCategoryButton">
-                <div class="dotlottie-container"></div>
+                <div class="dotlottie-container">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script> 
+
+    <dotlottie-player src="https://lottie.host/8bfa8fbc-9782-4e02-9550-d6530a3807ac/HJPhMvQgSq.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+                </div>
                 <h3>Fee Category</h3>
             </button>
         </div>
 
         <div class="card">
             <button id="feeAmountButton">
-                <div class="dotlottie-container"></div>
+                <div class="dotlottie-container">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script> 
+
+    <dotlottie-player src="https://lottie.host/a999345e-0fad-4f49-8933-ea2d683ebb0c/khDPh8PO6k.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+                </div>
                 <h3>Fee Amount</h3>
             </button>
         </div>
 
         <div class="card">
             <button id="feeReportButton">
-                <div class="dotlottie-container"></div>
-                <h3>Fee Report</h3>
+                <div class="dotlottie-container">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                        type="module"></script>
+
+                    <dotlottie-player src="https://lottie.host/521354a5-087f-4304-bd6c-9af4e2b24a80/iorpY5grwY.json"
+                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                        autoplay></dotlottie-player>
+                </div>
+                <h3>Fee Reports</h3>
             </button>
         </div>
     </div>
@@ -138,30 +153,33 @@
     </div>
 
     <!-- Edit Fee Amount Overlay -->
-<div id="editFeeAmountOverlay" class="overlay">
-    <div class="overlay-content-inner">
-        <h2>Edit Fee Amount</h2>
-        <button id="closeEditFeeAmountOverlay" class="close-button">&times;</button>
-        <!-- Form to Edit Fee Amount -->
-        <form id="editFeeAmountForm">
-            <label for="feeCategory">Fee Category:</label>
-            <select id="feeCategory" name="feeCategory" required>
-                <!-- Example Categories, you can populate this dynamically -->
-                <option value="tuition">Tuition</option>
-                <option value="lab">Lab</option>
-                <option value="library">Library</option>
-            </select>
-            <label for="feeAmount">Fee Amount:</label>
-            <input type="number" id="feeAmount" name="feeAmount" required>
-            <button type="submit">Update Amount</button>
-        </form>
+    <div id="editFeeAmountOverlay" class="overlay">
+        <div class="overlay-content-inner">
+            <h2>Edit Fee Amount</h2>
+            <button id="closeEditFeeAmountOverlay" class="close-button">&times;</button>
+            <!-- Form to Edit Fee Amount -->
+            <form id="editFeeAmountForm">
+                <label for="feeCategory">Fee Category:</label>
+                <select id="feeCategory" name="feeCategory" required>
+                    <!-- Example Categories, you can populate this dynamically -->
+                    <option value="tuition">Tuition</option>
+                    <option value="lab">Lab</option>
+                    <option value="library">Library</option>
+                </select>
+                <label for="feeAmount">Fee Amount:</label>
+                <input type="number" id="feeAmount" name="feeAmount" required>
+                <button type="submit">Update Amount</button>
+            </form>
+        </div>
     </div>
-</div>
 
 
 
     <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Fees_js/AllfeeStructure.js"></script>
+
+    <script src="/js/Universal_Components_JS/handle_session.js"></script>
+
 
 
 </body>
