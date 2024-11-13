@@ -45,4 +45,37 @@ router.post('/createFeeCategory', (req, res) => {
     });
 });
 
+
+// GET Endpoint to fetch fee categories
+router.get('/getFeeCategories', (req, res) => {
+    const query = 'SELECT category_id, category_name, description FROM fee_categories';
+
+    req.connectionPool.query(query, (error, results) => {
+        if (error) {
+            console.error('Error fetching fee categories:', error);
+            return res.status(500).json({ error: 'Error fetching fee categories' });
+        }
+        res.status(200).json(results);
+    });
+});
+
+// DELETE Endpoint to delete a fee category
+router.delete('/deleteFeeCategory/:id', (req, res) => {
+    const categoryId = req.params.id;
+
+    const deleteQuery = 'DELETE FROM fee_categories WHERE category_id = ?';
+
+    req.connectionPool.query(deleteQuery, [categoryId], (error, results) => {
+        if (error) {
+            console.error('Error deleting fee category:', error);
+            return res.status(500).json({ error: 'Error deleting fee category' });
+        }
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ error: 'Category not found' });
+        }
+        res.status(200).json({ message: 'Category deleted successfully' });
+    });
+});
+
+
 module.exports = router;

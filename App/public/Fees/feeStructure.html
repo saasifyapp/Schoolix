@@ -149,53 +149,46 @@
     </div>
 
 
-    <!-- Overlay for Edit Category -->
-    <div id="editCategoryOverlay" class="overlay-search">
-        <div class="overlay-content-search">
-
-            <button id="closeEditCategoryOverlay" class="close-button">&times;</button>
-            <img src="/images/cheque.gif" alt="Overlay Icon" class="overlay-icon">
-            <h2 class="overlay-search-head">Edit Category</h2>
-            <div class="search-container">
+<!-- Overlay for Edit Category -->
+<div id="editCategoryOverlay" class="overlay-search">
+    <div class="overlay-content-search">
+        <button id="closeEditCategoryOverlay" class="close-button">&times;</button>
+        <img src="/images/cheque.gif" alt="Overlay Icon" class="overlay-icon">
+        <h2 class="overlay-search-head">Edit Category</h2>
+        <div class="search-container">
+            <div class="form-Searchgroup">
                 <div class="form-Searchgroup">
-                    <div class="form-Searchgroup">
-                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
-                        <input type="text" class="form-control" id="searchBar" name="" placeholder=" " oninput=""
-                            style="width: 400px; height: 1.7rem !important;">
-                        <span class="form-control-placeholder" style="left: 3.75rem;">Search Fee Category...</span>
-                    </div>
-                    <button class="refreshButton" onclick="" style="margin-top: 10px;">
-                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
-                    </button>
+                    <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                    <input type="text" class="form-control" id="searchBar" name="" placeholder=" " oninput=""
+                        style="width: 400px; height: 1.7rem !important;">
+                    <span class="form-control-placeholder" style="left: 3.75rem;">Search Fee Category...</span>
                 </div>
-            </div>
-            <button class="export_registered_students" onclick="">
-                <img src="/images/export.png" alt="Export Icon"> Export
-            </button>
-
-            <div class="table-container">
-                <table id="" class="styled-table">
-                    <thead id="">
-                        <tr>
-                            <th>Name</th>
-                            <th>Contact</th>
-                            <th>Address</th>
-                            <th>Type</th>
-                            <th>Vehicle Number</th>
-                            <th>Vehicle Type</th>
-                            <th>Capacity</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="">
-                        <!-- Table rows will be populated here -->
-                    </tbody>
-                </table>
+                <button class="refreshButton" id="refreshButton" style="margin-top: 10px;">
+                    <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                </button>
             </div>
         </div>
+        <button class="export_registered_students" onclick="">
+            <img src="/images/export.png" alt="Export Icon"> Export
+        </button>
 
+        <div class="table-container">
+            <table id="feeCategoriesTable" class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Category ID</th>
+                        <th>Category Name</th>
+                        <th>Description</th>
+                        <th>Action</th> <!-- Action column added -->
+                    </tr>
+                </thead>
+                <tbody id="feeCategoriesTableBody">
+                    <!-- Table rows will be populated here -->
+                </tbody>
+            </table>
+        </div>
     </div>
-
+</div>
 
     <!-- Overlay for Fee Amount -->
     <div id="feeAmountOverlay" class="overlay">
