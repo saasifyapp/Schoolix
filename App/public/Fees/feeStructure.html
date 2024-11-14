@@ -116,7 +116,7 @@
                 <div class="left-side">
                     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
                         type="module"></script>
-                    <dotlottie-player src="https://lottie.host/c0e0d07c-c6ff-499d-968d-9681beba8363/LXldI5d5fJ.json"
+                    <dotlottie-player src="https://lottie.host/c73ab7aa-4c5a-48d9-949b-38801085061d/sZ51ErZeHH.json"
                         background="transparent" speed="1" style="width: 300px; height: 300px;" loop
                         autoplay></dotlottie-player>
                 </div>
@@ -139,7 +139,7 @@
 
                         <!-- Submit Button -->                       
                         <button class="createBtn" type="submit">
-                            <img src="../images/edit.png" alt="">
+                            <img src="../images/pie-chart.png" alt="">
                             <span>Create</span>
                         </button>
                     </form>
@@ -212,19 +212,51 @@
         </div>
     </div>
 
-    <!-- Overlay for Set Fee Amount -->
-    <div id="setAmountOverlay" class="overlay">
-        <div class="overlay-content">
-            <h2>Set Fee Amount</h2>
-            <button id="closeSetAmountOverlay" class="close-button">&times;</button>
-            <!-- Content for setting the fee amount goes here -->
-            <form>
-                <label for="amount">Fee Amount:</label>
-                <input type="number" id="amount" name="amount" required>
-                <button type="submit">Submit</button>
-            </form>
+<!-- Overlay for Set Fee Amount -->
+<div id="setAmountOverlay" class="overlay">
+    <div class="overlay-content" style="padding: 80px;">
+        <button id="closeSetAmountOverlay" class="close-button">&times;</button>
+        <div class="overlay-inner">
+            <div class="left-side">
+                <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+                <dotlottie-player src="https://lottie.host/4a635a3f-1171-4553-99d3-ad8e45c46f73/oP0hDKm0dQ.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+            </div>
+            <div class="right-side">
+                <h2>Set Fee Amount</h2>
+                <form id="setFeeAmountForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="categoryName">Category Name:</label>
+                            <input type="text" id="categoryName" name="categoryName" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="classGrade">Class/Grade:</label>
+                            <input type="text" id="classGrade" name="classGrade" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="allGrades">All Grades:</label>
+                            <input type="radio" id="allGrades" name="gradeOption" value="allGrades" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="amount">Amount:</label>
+                            <input type="number" id="amount" name="amount" class="form-control" required>
+                        </div>
+                    </div>
+                    <button class="createBtn" type="submit">
+                        <img src="../images/money-received.png" alt="">
+                        <span>Set Amount</span>
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
+</div>
 
     <!-- Edit Fee Amount Overlay -->
     <div id="editFeeAmountOverlay" class="overlay">
