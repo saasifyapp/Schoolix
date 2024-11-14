@@ -137,7 +137,7 @@
                             </div>
                         </div>
 
-                        <!-- Submit Button -->                       
+                        <!-- Submit Button -->
                         <button class="createBtn" type="submit">
                             <img src="../images/pie-chart.png" alt="">
                             <span>Create</span>
@@ -149,46 +149,46 @@
     </div>
 
 
-<!-- Overlay for Edit Category -->
-<div id="editCategoryOverlay" class="overlay-search">
-    <div class="overlay-content-search">
-        <button id="closeEditCategoryOverlay" class="close-button">&times;</button>
-        <img src="/images/cheque.gif" alt="Overlay Icon" class="overlay-icon">
-        <h2 class="overlay-search-head">Edit Category</h2>
-        <div class="search-container">
-            <div class="form-Searchgroup">
+    <!-- Overlay for Edit Category -->
+    <div id="editCategoryOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeEditCategoryOverlay" class="close-button">&times;</button>
+            <img src="/images/test.gif" alt="Overlay Icon" class="overlay-icon">
+            <h2 class="overlay-search-head">Edit Category</h2>
+            <div class="search-container">
                 <div class="form-Searchgroup">
-                    <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
-                    <input type="text" class="form-control" id="searchBar" name="" placeholder=" " oninput=""
-                        style="width: 400px; height: 1.7rem !important;">
-                    <span class="form-control-placeholder" style="left: 3.75rem;">Search Fee Category...</span>
+                    <div class="form-Searchgroup">
+                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                        <input type="text" class="form-control" id="searchBar" name="" placeholder=" " oninput=""
+                            style="width: 400px; height: 1.7rem !important;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search Fee Category...</span>
+                    </div>
+                    <button class="refreshButton" id="refreshButton" style="margin-top: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
                 </div>
-                <button class="refreshButton" id="refreshButton" style="margin-top: 10px;">
-                    <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
-                </button>
+            </div>
+            <button class="export_registered_students" id="fee_export_category" onclick="exportFeeCategoryTable()">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+
+            <div class="table-container">
+                <table id="feeCategoriesTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Category ID</th>
+                            <th>Category Name</th>
+                            <th>Description</th>
+                            <th>Action</th> <!-- Action column added -->
+                        </tr>
+                    </thead>
+                    <tbody id="feeCategoriesTableBody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
             </div>
         </div>
-        <button class="export_registered_students" id="fee_export_category" onclick="exportFeeCategoryTable()">
-            <img src="/images/export.png" alt="Export Icon"> Export
-        </button>
-
-        <div class="table-container">
-            <table id="feeCategoriesTable" class="styled-table">
-                <thead>
-                    <tr>
-                        <th>Category ID</th>
-                        <th>Category Name</th>
-                        <th>Description</th>
-                        <th>Action</th> <!-- Action column added -->
-                    </tr>
-                </thead>
-                <tbody id="feeCategoriesTableBody">
-                    <!-- Table rows will be populated here -->
-                </tbody>
-            </table>
-        </div>
     </div>
-</div>
 
     <!-- Overlay for Fee Amount -->
     <div id="feeAmountOverlay" class="overlay">
@@ -212,72 +212,104 @@
         </div>
     </div>
 
-<!-- Overlay for Set Fee Amount -->
-<div id="setAmountOverlay" class="overlay">
-    <div class="overlay-content" style="padding: 80px;">
-        <button id="closeSetAmountOverlay" class="close-button">&times;</button>
-        <div class="overlay-inner">
-            <div class="left-side">
-                <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
-                <dotlottie-player src="https://lottie.host/4a635a3f-1171-4553-99d3-ad8e45c46f73/oP0hDKm0dQ.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
-            </div>
-            <div class="right-side">
-                <h2>Set Fee Amount</h2>
-                <form id="setFeeAmountForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="categoryName">Category Name:</label>
-                            <input type="text" id="categoryName" name="categoryName" class="form-control" required>
+    <!-- Overlay for Set Fee Amount -->
+    <div id="setAmountOverlay" class="overlay">
+        <div class="overlay-content" style="padding: 80px;">
+            <button id="closeSetAmountOverlay" class="close-button">&times;</button>
+            <div class="overlay-inner">
+                <div class="left-side">
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/4a635a3f-1171-4553-99d3-ad8e45c46f73/oP0hDKm0dQ.json"
+                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                        autoplay></dotlottie-player>
+                </div>
+                <div class="right-side">
+                    <h2>Set Fee Amount</h2>
+                    <form id="setFeeAmountForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="categoryName" placeholder=" " required>
+                                <span class="form-control-placeholder">Category Name</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="classGrade">Class/Grade:</label>
-                            <input type="text" id="classGrade" name="classGrade" class="form-control" required>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="classGrade" placeholder=" " required>
+                                <span class="form-control-placeholder">Class/Grade</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="allGrades">All Grades:</label>
-                            <input type="radio" id="allGrades" name="gradeOption" value="allGrades" class="form-control">
+                        <div class="form-row">
+                            <div class="form-group" style="display: flex; align-items: center;">
+                                <input type="radio" id="allGrades" name="gradeOption" value="allGrades"
+                                    class="form-control" style="margin-right: 10px; width: auto;">
+                                <label for="allGrades" class="form-control-placeholder"
+                                    style="position: static; transform: none;">All Grades</label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="amount">Amount:</label>
-                            <input type="number" id="amount" name="amount" class="form-control" required>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="number" class="form-control" id="amount" placeholder=" " required>
+                                <span class="form-control-placeholder">Amount</span>
+                            </div>
                         </div>
-                    </div>
-                    <button class="createBtn" type="submit">
-                        <img src="../images/money-received.png" alt="">
-                        <span>Set Amount</span>
-                    </button>
-                </form>
+
+                        <!-- Submit Button -->
+                        <button class="createBtn" type="submit">
+                            <img src="../images/money-received.png" alt="">
+                            <span>Set Amount</span>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
 
     <!-- Edit Fee Amount Overlay -->
-    <div id="editFeeAmountOverlay" class="overlay">
-        <div class="overlay-content-inner">
-            <h2>Edit Fee Amount</h2>
+    <div id="editFeeAmountOverlay" class="overlay-search">
+        <div class="overlay-content-search">
             <button id="closeEditFeeAmountOverlay" class="close-button">&times;</button>
-            <!-- Form to Edit Fee Amount -->
-            <form id="editFeeAmountForm">
-                <label for="feeCategory">Fee Category:</label>
-                <select id="feeCategory" name="feeCategory" required>
-                    <!-- Example Categories, you can populate this dynamically -->
-                    <option value="tuition">Tuition</option>
-                    <option value="lab">Lab</option>
-                    <option value="library">Library</option>
-                </select>
-                <label for="feeAmount">Fee Amount:</label>
-                <input type="number" id="feeAmount" name="feeAmount" required>
-                <button type="submit">Update Amount</button>
-            </form>
+            <img src="/images/cheque.gif" alt="Overlay Icon" class="overlay-icon">
+            <h2 class="overlay-search-head">Edit Fee Amount</h2>
+
+            <div class="search-container">
+                <div class="form-Searchgroup">
+                    <div class="form-Searchgroup">
+                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                        <input type="text" class="form-control" id="searchBar" name="" placeholder=" " oninput=""
+                            style="width: 400px; height: 1.7rem !important;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search Fee...</span>
+                    </div>
+                    <button class="refreshButton" id="refreshButton" style="margin-top: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
+                </div>
+
+            </div>
+
+            <button class="export_registered_students" id="fee_export_amount" onclick="" style="margin-top: 10px;">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+
+            <div class="table-container" style="margin-top: 20px;">
+                <table id="" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Fee ID</th>
+                            <th>Fee Name</th>
+                            <th>Amount</th>
+                            <th>Action</th> <!-- Action column added -->
+                        </tr>
+                    </thead>
+                    <tbody id="">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
 
 
 
