@@ -41,7 +41,7 @@
     border: 1px solid #888;
     width: 80%;
     /* Could be more or less, depending on screen size */
-    max-width: 900px;
+    max-width: 750px;
     /* Optional: maximum width for better control */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     /* Optional: shadow effect */
