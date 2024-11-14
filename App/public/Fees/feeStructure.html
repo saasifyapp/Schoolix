@@ -226,26 +226,28 @@
                 <form id="setFeeAmountForm">
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="categoryName">Category Name:</label>
-                            <input type="text" id="categoryName" name="categoryName" class="form-control" required>
+                            <input type="text" id="setFeeAmount_categoryName" name="categoryName" class="form-control" placeholder=" " required>
+                            <span class="form-control-placeholder">Category Name</span>
+                            <div id="categorySuggestions" class="suggestions"></div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="classGrade">Class/Grade:</label>
-                            <input type="text" id="classGrade" name="classGrade" class="form-control" required>
+                            <input type="text" id="classGrade" name="classGrade" class="form-control" placeholder=" " required>
+                            <span class="form-control-placeholder">Class/Grade</span>
+                            <div id="gradeSuggestions" class="suggestions"></div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="allGrades">All Grades:</label>
                             <input type="radio" id="allGrades" name="gradeOption" value="allGrades" class="form-control">
+                            <span class="form-control-placeholder">All Grades</span>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="amount">Amount:</label>
-                            <input type="number" id="amount" name="amount" class="form-control" required>
+                            <input type="number" id="amount" name="amount" class="form-control" placeholder=" " required>
+                            <span class="form-control-placeholder">Amount</span>
                         </div>
                     </div>
                     <button class="createBtn" type="submit">
