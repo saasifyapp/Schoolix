@@ -267,49 +267,49 @@
         </div>
     </div>
 
-    <!-- Edit Fee Amount Overlay -->
-    <div id="editFeeAmountOverlay" class="overlay-search">
-        <div class="overlay-content-search">
-            <button id="closeEditFeeAmountOverlay" class="close-button">&times;</button>
-            <img src="/images/cheque.gif" alt="Overlay Icon" class="overlay-icon">
-            <h2 class="overlay-search-head">Edit Fee Amount</h2>
+<!-- Edit Fee Amount Overlay -->
+<div id="editFeeAmountOverlay" class="overlay-search">
+    <div class="overlay-content-search">
+        <button id="closeEditFeeAmountOverlay" class="close-button">&times;</button>
+        <img src="/images/cheque.gif" alt="Overlay Icon" class="overlay-icon">
+        <h2 class="overlay-search-head">Edit Fee Amount</h2>
 
-            <div class="search-container">
+        <div class="search-container">
+            <div class="form-Searchgroup">
                 <div class="form-Searchgroup">
-                    <div class="form-Searchgroup">
-                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
-                        <input type="text" class="form-control" id="searchBar" name="" placeholder=" " oninput=""
-                            style="width: 400px; height: 1.7rem !important;">
-                        <span class="form-control-placeholder" style="left: 3.75rem;">Search Fee...</span>
-                    </div>
-                    <button class="refreshButton" id="refreshButton" style="margin-top: 10px;">
-                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
-                    </button>
+                    <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                    <input type="text" class="form-control" id="searchFeeStructureBar" name="" placeholder=" " oninput=""
+                        style="width: 400px; height: 1.7rem !important;">
+                    <span class="form-control-placeholder" style="left: 3.75rem;">Search Fee...</span>
                 </div>
-
-            </div>
-
-            <button class="export_registered_students" id="fee_export_amount" onclick="" style="margin-top: 10px;">
-                <img src="/images/export.png" alt="Export Icon"> Export
-            </button>
-
-            <div class="table-container" style="margin-top: 20px;">
-                <table id="" class="styled-table">
-                    <thead>
-                        <tr>
-                            <th>Fee ID</th>
-                            <th>Fee Name</th>
-                            <th>Amount</th>
-                            <th>Action</th> <!-- Action column added -->
-                        </tr>
-                    </thead>
-                    <tbody id="">
-                        <!-- Table rows will be populated here -->
-                    </tbody>
-                </table>
+                <button class="refreshButton" id="refreshFeeStructureButton" style="margin-top: 10px;">
+                    <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                </button>
             </div>
         </div>
+
+        <button class="export_registered_students" id="fee_export_feeStructure" onclick="exportFeeStructureTable()" style="margin-top: 10px;">
+            <img src="/images/export.png" alt="Export Icon"> Export
+        </button>
+
+        <div class="table-container" style="margin-top: 20px;">
+            <table id="feeStructuresTable" class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Fee ID</th>
+                        <th>Category Name</th>
+                        <th>Class</th>
+                        <th>Amount</th>
+                        <th>Action</th> <!-- Action column added -->
+                    </tr>
+                </thead>
+                <tbody id="feeStructuresTableBody">
+                    <!-- Table rows will be populated here -->
+                </tbody>
+            </table>
+        </div>
     </div>
+</div>
 
 
 

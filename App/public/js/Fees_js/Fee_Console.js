@@ -159,3 +159,7 @@ function exportTableToCSV(tableId, filename) {
 function exportFeeCategoryTable() {
     exportTableToCSV("feeCategoriesTable", "fee_category.csv");
 }
+
+function exportFeeStructureTable() {
+    exportTableToCSV("feeStructuresTable", "fee_structure.csv");
+}

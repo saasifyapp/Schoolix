@@ -1,22 +1,69 @@
+// Define all input elements and other variables at the beginning 
+const categoryNameInput = document.getElementById('setFeeAmount_categoryName');
+const categorySuggestionsContainer = document.getElementById('categorySuggestions');
+const classGradeInput = document.getElementById('classGrade');
+const gradeSuggestionsContainer = document.getElementById('gradeSuggestions');
+const allGradesRadio = document.getElementById('allGrades');
+const amountInput = document.getElementById('amount');
+const setFeeAmountForm = document.getElementById('setFeeAmountForm');
+const searchFeeBar = document.getElementById('searchFeeStructureBar');
+const refreshFeeButton = document.getElementById('refreshFeeStructureButton');
+
+const categoryIdInput = document.createElement('input'); // Hidden input for category ID
+categoryIdInput.type = 'hidden';
+categoryIdInput.name = 'categoryId';
+setFeeAmountForm.appendChild(categoryIdInput);
+
+let allCategories = []; // To store all categories
+let allGrades = []; // To store all grades
+
+// Function to fetch fee structures from the server and populate the table
+function fetchFeeStructures() {
+    fetch('/getFeeStructures')
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById('feeStructuresTableBody');
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No Data Found</td></tr>';
+            } else {
+                data.forEach(structure => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${structure.structure_id}</td>
+                        <td>${structure.category_name}</td>
+                        <td>${structure.class_grade}</td>
+                        <td>${structure.amount}</td>
+                        <td>
+                            <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+                                <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+                                    onclick="editFeeStructure('${structure.structure_id}')"
+                                    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                                    <img src="../images/edit.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                                    <span style="margin-right: 10px;">Edit</span>
+                                </button>
+                                <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+                                    onclick="confirmDeleteFeeStructure('${structure.structure_id}', '${structure.category_name}', '${structure.class_grade}')"
+                                    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                                    <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                                    <span style="margin-right: 10px;">Delete</span>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching fee structures:', error);
+        });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('DOM fully loaded and parsed'); // Log for debugging
-
-    // Input Elements
-    const categoryNameInput = document.getElementById('setFeeAmount_categoryName');
-    const categorySuggestionsContainer = document.getElementById('categorySuggestions');
-    const classGradeInput = document.getElementById('classGrade');
-    const gradeSuggestionsContainer = document.getElementById('gradeSuggestions');
-    const allGradesRadio = document.getElementById('allGrades');
-    const amountInput = document.getElementById('amount');
-    const setFeeAmountForm = document.getElementById('setFeeAmountForm');
-    const categoryIdInput = document.createElement('input'); // Hidden input for category ID
-    categoryIdInput.type = 'hidden';
-    categoryIdInput.name = 'categoryId';
-    setFeeAmountForm.appendChild(categoryIdInput);
-
-    let allCategories = []; // To store all categories
-    let allGrades = []; // To store all grades
-
     // Function to fetch all category suggestions
     function fetchAllCategories() {
         fetch(`/setFee_getCategoryName`)
@@ -27,7 +74,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then((data) => {
-                console.log(data); // Log the response for debugging
                 if (Array.isArray(data)) {
                     allCategories = data;
                     displayCategorySuggestions(allCategories); // Display all categories initially
@@ -48,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then((data) => {
-                console.log(data); // Log the response for debugging
                 if (Array.isArray(data)) {
                     allGrades = data;
                     displayGradeSuggestions(allGrades); // Display all grades initially
@@ -102,19 +147,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Show all categories when input is focused
     categoryNameInput.addEventListener('focus', function () {
-        console.log('Input focused'); // Log for debugging
         fetchAllCategories();
     });
 
     // Show all grades when input is focused
     classGradeInput.addEventListener('focus', function () {
-        console.log('Input focused'); // Log for debugging
         fetchAllGrades();
     });
 
     // Update category suggestions when user types
     categoryNameInput.addEventListener('input', function () {
-        console.log('Input changed'); // Log for debugging
         const query = this.value.toLowerCase();
         const filteredCategories = allCategories.filter(category =>
             category.category_name.toLowerCase().includes(query)
@@ -124,7 +166,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Update grade suggestions when user types
     classGradeInput.addEventListener('input', function () {
-        console.log('Input changed'); // Log for debugging
         const query = this.value.toLowerCase();
         const filteredGrades = allGrades.filter(grade =>
             grade.toLowerCase().includes(query)
@@ -140,10 +181,6 @@ document.addEventListener('DOMContentLoaded', function () {
             categoryIdInput.value = selectedCategory.dataset.categoryId; // Set category ID
             categorySuggestionsContainer.style.display = 'none'; // Hide suggestions container
             categorySuggestionsContainer.innerHTML = '';
-
-            // Log the selected category ID and name
-            console.log('Selected Category ID:', selectedCategory.dataset.categoryId);
-            console.log('Selected Category Name:', selectedCategory.textContent);
         }
     });
 
@@ -203,14 +240,17 @@ document.addEventListener('DOMContentLoaded', function () {
     setFeeAmountForm.addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent the default form submission
 
-        const formData = {
-            categoryId: categoryIdInput.value,
-            categoryName: categoryNameInput.value,
-            classGrade: allGradesRadio.checked ? 'All Grades' : classGradeInput.value, // Use 'All Grades' if radio is checked
-            amount: amountInput.value
-        };
+        const categoryId = categoryIdInput.value;
+        const categoryName = categoryNameInput.value;
+        const classGrade = allGradesRadio.checked ? 'All Grades' : classGradeInput.value; // Use 'All Grades' if radio is checked
+        const amount = amountInput.value;
 
-        console.log('Form Data:', formData); // Log the form data for debugging
+        const formData = {
+            categoryId: categoryId,
+            categoryName: categoryName,
+            classGrade: classGrade,
+            amount: amount
+        };
 
         fetch('/setFeeAmount', {
             method: 'POST',
@@ -221,22 +261,129 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => response.json())
         .then(data => {
-            console.log('Response:', data); // Log the response for debugging
             if (data.error) {
-                alert('Error: ' + data.error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.error
+                });
             } else {
-                alert('Fee structure added successfully!');
-                // Reset the form
-                setFeeAmountForm.reset();
-                categoryIdInput.value = '';
-                allGradesRadio.checked = false;
-                classGradeInput.disabled = false;
-                allGradesRadio.disabled = false;
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    html: `<b>${categoryName}</b> for grade <b>${classGrade}</b> is successfully set with amount <b>${amount}</b>.`
+                }).then(() => {
+                    // Reset the form after the alert is closed
+                    setFeeAmountForm.reset();
+                    categoryIdInput.value = '';
+                    allGradesRadio.checked = false;
+                    classGradeInput.disabled = false;
+                    allGradesRadio.disabled = false;
+
+                    // Fetch and update the fee structures table
+                    fetchFeeStructures();
+                });
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('An error occurred while adding the fee structure.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An error occurred while adding the fee structure.'
+            });
         });
     });
+
+    // Add event listener to the search input for fee amount
+    searchFeeBar.addEventListener('input', function () {
+        const filter = searchFeeBar.value.toLowerCase();
+        const tableBody = document.getElementById('feeStructuresTableBody');
+        const rows = tableBody.getElementsByTagName('tr');
+
+        let found = false;
+        Array.from(rows).forEach(row => {
+            const categoryNameCell = row.getElementsByTagName('td')[1];
+            if (categoryNameCell) {
+                const categoryName = categoryNameCell.textContent || categoryNameCell.innerText;
+                if (categoryName.toLowerCase().indexOf(filter) > -1) {
+                    row.style.display = '';
+                    found = true;
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        });
+
+        // Show "No Fee found" if no rows match the search
+        if (!found) {
+            tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No Fee found</td></tr>';
+        }
+    });
+
+    // Add event listener to the refresh button for fee amount
+    refreshFeeButton.addEventListener('click', function () {
+        fetchFeeStructures();
+    });
+
+    // Fetch and display fee structures when the overlay is opened
+    fetchFeeStructures();
 });
+
+// Function to delete a fee structure
+function deleteFeeStructure(structureId, categoryName, classGrade) {
+    fetch(`/deleteFeeStructure/${structureId}`, {
+        method: 'DELETE',
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(errorData => {
+                throw new Error(errorData.error);
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Success:', data);
+
+        // Show SweetAlert notification with fee structure details
+        Swal.fire({
+            title: 'Deleted!',
+            html: `Fee structure for category '<strong>${categoryName}</strong>' and class '<strong>${classGrade}</strong>' deleted successfully!`,
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+
+        // Fetch and update the fee structures table
+        fetchFeeStructures();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        let errorMessage = `An error occurred: ${error.message}`;
+
+        // Show SweetAlert notification with error message
+        Swal.fire({
+            title: 'Error',
+            html: errorMessage,
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    });
+}
+
+// Function to confirm deletion of a fee structure
+function confirmDeleteFeeStructure(structureId, categoryName, classGrade) {
+    Swal.fire({
+        title: 'Are you sure?',
+        html: `You won't be able to revert this! Deleting fee structure for category '<strong>${categoryName}</strong>' and class '<strong>${classGrade}</strong>'.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            deleteFeeStructure(structureId, categoryName, classGrade);
+        }
+    });
+}
