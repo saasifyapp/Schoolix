@@ -211,7 +211,6 @@
             </div>
         </div>
     </div>
-
     <!-- Overlay for Set Fee Amount -->
     <div id="setAmountOverlay" class="overlay">
         <div class="overlay-content" style="padding: 80px;">
@@ -240,14 +239,14 @@
                                 <input type="text" id="classGrade" name="classGrade" class="form-control"
                                     placeholder=" " required>
                                 <span class="form-control-placeholder">Class/Grade</span>
-                                <div id="gradeSuggestions" class="suggestions"></div>
+                                <div id="gradeSuggestions" class="suggestions" style="width: 13rem;"></div>
                             </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <input type="radio" id="allGrades" name="gradeOption" value="allGrades"
-                                    class="form-control">
-                                <span class="form-control-placeholder">All Grades</span>
+
+                            <div class="form-group" style="display: flex; align-items: center;">
+                                <input type="checkbox" id="allGrades" name="gradeOption" value="allGrades" class=""
+                                    style="margin-right: 10px; width: auto;">
+                                <label for="allGrades" class="" style="position: static; transform: none;">All
+                                    Grades</label>
                             </div>
                         </div>
                         <div class="form-row">
@@ -267,49 +266,55 @@
         </div>
     </div>
 
-<!-- Edit Fee Amount Overlay -->
-<div id="editFeeAmountOverlay" class="overlay-search">
-    <div class="overlay-content-search">
-        <button id="closeEditFeeAmountOverlay" class="close-button">&times;</button>
-        <img src="/images/cheque.gif" alt="Overlay Icon" class="overlay-icon">
-        <h2 class="overlay-search-head">Edit Fee Amount</h2>
 
-        <div class="search-container">
-            <div class="form-Searchgroup">
+    <!-- Edit Fee Amount Overlay -->
+    <div id="editFeeAmountOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeEditFeeAmountOverlay" class="close-button">&times;</button>
+            <img src="/images/cheque.gif" alt="Overlay Icon" class="overlay-icon">
+            <h2 class="overlay-search-head">Edit Fee Amount</h2>
+
+            <div class="search-container">
                 <div class="form-Searchgroup">
-                    <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
-                    <input type="text" class="form-control" id="searchFeeStructureBar" name="" placeholder=" " oninput=""
-                        style="width: 400px; height: 1.7rem !important;">
-                    <span class="form-control-placeholder" style="left: 3.75rem;">Search Fee...</span>
+                    <div class="form-Searchgroup">
+                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                        <input type="text" class="form-control" id="searchFeeStructureBar" name="" placeholder=" "
+                            oninput="" style="width: 400px; height: 1.7rem !important;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search Fee...</span>
+                    </div>
+                    <button class="refreshButton" id="refreshFeeStructureButton" style="margin-top: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
                 </div>
-                <button class="refreshButton" id="refreshFeeStructureButton" style="margin-top: 10px;">
-                    <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
-                </button>
+            </div>
+
+            <button class="export_registered_students" id="fee_export_feeStructure" onclick="exportFeeStructureTable()"
+                style="margin-top: 10px;">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+
+            <div class="table-container" style="margin-top: 20px;">
+                <table id="feeStructuresTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Fee ID</th>
+                            <th>Category Name</th>
+                            <th>Class</th>
+                            <th>Amount</th>
+                            <th>Action</th> <!-- Action column added -->
+                        </tr>
+                    </thead>
+                    <tbody id="feeStructuresTableBody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
             </div>
         </div>
-
-        <button class="export_registered_students" id="fee_export_feeStructure" onclick="exportFeeStructureTable()" style="margin-top: 10px;">
-            <img src="/images/export.png" alt="Export Icon"> Export
-        </button>
-
-        <div class="table-container" style="margin-top: 20px;">
-            <table id="feeStructuresTable" class="styled-table">
-                <thead>
-                    <tr>
-                        <th>Fee ID</th>
-                        <th>Category Name</th>
-                        <th>Class</th>
-                        <th>Amount</th>
-                        <th>Action</th> <!-- Action column added -->
-                    </tr>
-                </thead>
-                <tbody id="feeStructuresTableBody">
-                    <!-- Table rows will be populated here -->
-                </tbody>
-            </table>
-        </div>
     </div>
-</div>
+
+    <script>
+        
+    </script>
 
 
 
@@ -318,6 +323,7 @@
     <script src="/js/Fees_js/Fee_Console.js"></script>
     <script src="/js/Fees_js/Fee_createCategory.js"></script>
     <script src="/js/Fees_js/Fee_setFeeAmount.js"></script>
+
 
 
 

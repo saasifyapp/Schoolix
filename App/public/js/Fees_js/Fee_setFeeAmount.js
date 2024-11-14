@@ -206,36 +206,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Disable radio button if class/grade input is not null
-    classGradeInput.addEventListener('input', function () {
-        if (classGradeInput.value.trim() !== '') {
-            allGradesRadio.disabled = true;
-        } else {
-            allGradesRadio.disabled = false;
-        }
-    });
+    
 
-    // Handle radio button click to toggle selection and clear class/grade input
-    allGradesRadio.addEventListener('click', function () {
-        if (allGradesRadio.checked) {
-            classGradeInput.value = '';
-            classGradeInput.disabled = true;
-        } else {
-            allGradesRadio.checked = false;
-            classGradeInput.disabled = false;
-        }
-    });
+    
 
-    // Initial check to disable radio button if class/grade input is not empty
-    if (classGradeInput.value.trim() !== '') {
-        allGradesRadio.disabled = true;
-    }
-
-    // Initial check to disable class/grade input if radio button is selected
-    if (allGradesRadio.checked) {
-        classGradeInput.disabled = true;
-    }
-
+ 
     // Handle form submission
     setFeeAmountForm.addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent the default form submission
@@ -387,3 +362,29 @@ function confirmDeleteFeeStructure(structureId, categoryName, classGrade) {
         }
     });
 }
+
+const classGradeInput1 = document.getElementById('classGrade');
+const allGradesCheckbox = document.getElementById('allGrades');
+
+// Disable checkbox when input is focused
+classGradeInput1.addEventListener('focus', () => {
+    allGradesCheckbox.disabled = true;
+    allGradesCheckbox.checked = false; // Uncheck when disabled
+});
+
+// Enable checkbox when input loses focus, if no value is present
+classGradeInput1.addEventListener('blur', () => {
+    if (classGradeInput1.value.trim() === '') {
+        allGradesCheckbox.disabled = false;
+    }
+});
+
+// Clear class field and disable it when the checkbox is checked
+allGradesCheckbox.addEventListener('change', () => {
+    if (allGradesCheckbox.checked) {
+        classGradeInput1.value = '';
+        classGradeInput1.disabled = true;
+    } else {
+        classGradeInput1.disabled = false;
+    }
+});
