@@ -124,11 +124,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // Close Manage Routes Overlay
     closeManageRoutesOverlay.addEventListener('click', function () {
         hideOverlay('manageRoutesOverlay');
+        reseteditForm();
     });
 
     // Close Manage Shifts Overlay
     closeManageShiftsOverlay.addEventListener('click', function () {
         hideOverlay('manageShiftsOverlay');
+        resetshiftForm();
     });
 
     // Close Bus Allocation Overlay
