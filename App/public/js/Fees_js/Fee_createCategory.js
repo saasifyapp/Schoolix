@@ -181,7 +181,7 @@ function editFeeCategory(categoryId) {
     }
 
     // Populate the fields with the category data
-    document.getElementById('editCategoryfeeDisplay').innerHTML = category.category_name;
+    // document.getElementById('editCategoryfeeDisplay').innerHTML = category.category_name;
     const feeFieldsContainer = document.getElementById('editFeeFields');
     feeFieldsContainer.innerHTML = `
         <div class="form-group">
