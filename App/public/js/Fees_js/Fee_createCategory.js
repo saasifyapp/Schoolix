@@ -179,7 +179,7 @@ function deleteFeeCategory(categoryId, categoryName) {
     })
     .catch(error => {
         console.error('Error:', error);
-        let errorMessage = `An error occurred: ${error.message}`;
+        let errorMessage = `${error.message}`;
 
         // Show SweetAlert notification with error message
         Swal.fire({

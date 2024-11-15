@@ -59,23 +59,37 @@ router.get('/getFeeCategories', (req, res) => {
     });
 });
 
-// DELETE Endpoint to delete a fee category
+// DELETE Endpoint to delete a fee category with validation
 router.delete('/deleteFeeCategory/:id', (req, res) => {
     const categoryId = req.params.id;
 
-    const deleteQuery = 'DELETE FROM fee_categories WHERE category_id = ?';
-
-    req.connectionPool.query(deleteQuery, [categoryId], (error, results) => {
+    // Query to check if the category exists in fee_structures
+    const checkQuery = 'SELECT * FROM fee_structures WHERE category_id = ?';
+    
+    req.connectionPool.query(checkQuery, [categoryId], (error, checkResults) => {
         if (error) {
-            console.error('Error deleting fee category:', error);
-            return res.status(500).json({ error: 'Error deleting fee category' });
+            console.error('Error checking fee category in fee_structures:', error);
+            return res.status(500).json({ error: 'Error validating fee category' });
         }
-        if (results.affectedRows === 0) {
-            return res.status(404).json({ error: 'Category not found' });
+
+        if (checkResults.length > 0) {
+            return res.status(400).json({ error: 'Category cannot be deleted, it is used in fee structures' });
         }
-        res.status(200).json({ message: 'Category deleted successfully' });
+
+        // Delete the fee category if validation passes
+        const deleteQuery = 'DELETE FROM fee_categories WHERE category_id = ?';
+        
+        req.connectionPool.query(deleteQuery, [categoryId], (error, results) => {
+            if (error) {
+                console.error('Error deleting fee category:', error);
+                return res.status(500).json({ error: 'Error deleting fee category' });
+            }
+            if (results.affectedRows === 0) {
+                return res.status(404).json({ error: 'Category not found' });
+            }
+            res.status(200).json({ message: 'Category deleted successfully' });
+        });
     });
 });
-
 
 module.exports = router;
