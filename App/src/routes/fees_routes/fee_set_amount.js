@@ -160,5 +160,30 @@ router.delete('/deleteFeeStructure/:structureId', (req, res) => {
     });
 });
 
+// In your backend route
+router.put('/updateFeeAmount', (req, res) => {
+    const { structure_id, amount } = req.body;
+
+    if (!structure_id || !amount) {
+        return res.status(400).json({ message: 'Error: structure_id and amount are required' });
+    }
+
+    const query = `UPDATE fee_structures SET amount = ? WHERE structure_id = ?`;
+
+    req.connectionPool.query(query, [amount, structure_id], (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Error: Unable to update the fee amount' });
+        }
+
+        if (result.affectedRows > 0) {
+            res.json({ message: 'Fee amount updated successfully' });
+        } else {
+            res.status(404).json({ message: 'Error: Fee structure not found' });
+        }
+    });
+});
+
+
 
 module.exports = router;

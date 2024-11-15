@@ -17,51 +17,151 @@ setFeeAmountForm.appendChild(categoryIdInput);
 let allCategories = []; // To store all categories
 let allGrades = []; // To store all grades
 
-// Function to fetch fee structures from the server and populate the table
+// Function to refresh the fee categories and update the table
 function fetchFeeStructures() {
+    refreshFeeStructures();
+}
+
+let feeStructuresData = []; // This will store the fetched data locally
+
+// Function to refresh fee structures (fetch data and store locally)
+function refreshFeeStructures() {
     fetch('/getFeeStructures')
         .then(response => response.json())
         .then(data => {
-            const tableBody = document.getElementById('feeStructuresTableBody');
-            tableBody.innerHTML = ''; // Clear existing rows
-
-            if (data.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No Data Found</td></tr>';
-            } else {
-                data.forEach(structure => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${structure.structure_id}</td>
-                        <td>${structure.category_name}</td>
-                        <td>${structure.class_grade}</td>
-                        <td>${structure.amount}</td>
-                        <td>
-                            <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
-                                <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-                                    onclick="editFeeStructure('${structure.structure_id}')"
-                                    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                                    <img src="../images/edit.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-                                    <span style="margin-right: 10px;">Edit</span>
-                                </button>
-                                <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-                                    onclick="confirmDeleteFeeStructure('${structure.structure_id}', '${structure.category_name}', '${structure.class_grade}')"
-                                    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                                    <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-                                    <span style="margin-right: 10px;">Delete</span>
-                                </button>
-                            </div>
-                        </td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            }
+            feeStructuresData = data;  // Store the fetched data locally
+            displayFeeStructures(feeStructuresData);  // Call the display function to populate the table
         })
         .catch(error => {
             console.error('Error fetching fee structures:', error);
         });
 }
+
+// Function to display fee structures in the table
+function displayFeeStructures(data) {
+    const tableBody = document.getElementById('feeStructuresTableBody');
+    tableBody.innerHTML = ''; // Clear existing rows
+
+    if (data.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No Data Found</td></tr>';
+    } else {
+        data.forEach(structure => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${structure.structure_id}</td>
+                <td>${structure.category_name}</td>
+                <td>${structure.class_grade}</td>
+                <td>${structure.amount}</td>
+                <td>
+                    <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+                        <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+                            onclick="editFeeStructure('${structure.structure_id}')"
+                            onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                            <img src="../images/edit.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                            <span style="margin-right: 10px;">Edit</span>
+                        </button>
+                        <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+                            onclick="confirmDeleteFeeStructure('${structure.structure_id}', '${structure.category_name}', '${structure.class_grade}')"
+                            onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                            <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+                            <span style="margin-right: 10px;">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+}
+
+// Function to open the Edit Fee Structure Popup and populate the fields
+function editFeeStructure(structure_id) {
+    // Find the fee structure from the locally stored data
+    const feeStructure = feeStructuresData.find(structure => structure.structure_id == structure_id);
+
+    if (feeStructure) {
+        // Display the popup and the overlay
+        document.getElementById('editFeeAmountBackgroundOverlay').style.display = 'block';
+        document.getElementById('editFeeAmountPopup').style.display = 'block';
+
+        // Apply the blur effect to the background overlay
+        document.getElementById('editFeeAmountBackgroundOverlay').style.filter = 'blur(5px)';
+
+        // Clear the fields and add the amount field dynamically
+        const feeAmountField = document.createElement('div');
+        // feeAmountField.classList.add('form-group');
+        feeAmountField.innerHTML = `
+        <div class="form-group">
+            <label for="editCategoryfeeDisplay" class="form-label">Category:</label>
+            <input id="editCategoryfeeDisplay" class="form-control" style="text-align: center;" value="${feeStructure.category_name}" readonly></input>
+        </div>
+        <div class="form-group">
+            <label for="editAmount" class="form-label">Amount:</label>
+            <input type="number" id="editAmount" class="form-control" value="${feeStructure.amount}" required>
+        </div>
+        `;
+        document.getElementById('editFeeAmountFields').innerHTML = ''; // Clear existing fields
+        document.getElementById('editFeeAmountFields').appendChild(feeAmountField);
+
+        // Save the structure id in a hidden field for use when saving
+        document.getElementById('editFeeAmountForm').setAttribute('data-structure-id', feeStructure.structure_id);
+    } else {
+        alert("Fee structure not found!");
+    }
+}
+
+// Function to save the updated fee amount
+function saveFeeAmountDetails() {
+    const structure_id = document.getElementById('editFeeAmountForm').getAttribute('data-structure-id');
+    const amount = parseFloat(document.getElementById('editAmount').value);
+
+    if (isNaN(amount) || amount <= 0) {
+        alert("Please enter a valid amount.");
+        return;
+    }
+
+    const updatedFee = {
+        structure_id,
+        amount
+    };
+
+    // Send the updated amount to the server
+    fetch('/updateFeeAmount', {
+        method: 'PUT', // Ensure this matches your backend method (PUT or POST)
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedFee)
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Check the success or failure based on the server's response
+            if (data.message === 'Fee amount updated successfully') {
+                alert("Fee structure updated successfully!");
+                // Close the popup
+                closeEditFeeAmountPopup();
+                // Refresh the table data
+                refreshFeeStructures();
+            } else {
+                alert("Error updating fee structure: " + data.message);
+            }
+        })
+        .catch(error => {
+            console.error("Error saving fee structure:", error);
+            alert("There was an error updating the fee structure. Please try again later.");
+        });
+}
+
+
+// Function to close the Edit Fee Amount Popup
+function closeEditFeeAmountPopup() {
+    document.getElementById('editFeeAmountBackgroundOverlay').style.display = 'none';
+    document.getElementById('editFeeAmountPopup').style.display = 'none';
+}
+
+
 
 document.addEventListener('DOMContentLoaded', function () {
     // Function to fetch all category suggestions
@@ -206,11 +306,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    
 
-    
 
- 
+
+
+
     // Handle form submission
     setFeeAmountForm.addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent the default form submission
@@ -234,40 +334,40 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify(formData)
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.error
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        html: `<b>${categoryName}</b> for grade <b>${classGrade}</b> is successfully set with amount <b>${amount}</b>.`
+                    }).then(() => {
+                        // Reset the form after the alert is closed
+                        setFeeAmountForm.reset();
+                        categoryIdInput.value = '';
+                        allGradesRadio.checked = false;
+                        classGradeInput.disabled = false;
+                        allGradesRadio.disabled = false;
+
+                        // Fetch and update the fee structures table
+                        fetchFeeStructures();
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: data.error
+                    text: 'An error occurred while adding the fee structure.'
                 });
-            } else {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    html: `<b>${categoryName}</b> for grade <b>${classGrade}</b> is successfully set with amount <b>${amount}</b>.`
-                }).then(() => {
-                    // Reset the form after the alert is closed
-                    setFeeAmountForm.reset();
-                    categoryIdInput.value = '';
-                    allGradesRadio.checked = false;
-                    classGradeInput.disabled = false;
-                    allGradesRadio.disabled = false;
-
-                    // Fetch and update the fee structures table
-                    fetchFeeStructures();
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'An error occurred while adding the fee structure.'
             });
-        });
     });
 
     // Add event listener to the search input for fee amount
@@ -310,40 +410,40 @@ function deleteFeeStructure(structureId, categoryName, classGrade) {
     fetch(`/deleteFeeStructure/${structureId}`, {
         method: 'DELETE',
     })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(errorData => {
-                throw new Error(errorData.error);
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(errorData => {
+                    throw new Error(errorData.error);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Success:', data);
+
+            // Show SweetAlert notification with fee structure details
+            Swal.fire({
+                title: 'Deleted!',
+                html: `Fee structure for category '<strong>${categoryName}</strong>' and class '<strong>${classGrade}</strong>' deleted successfully!`,
+                icon: 'success',
+                confirmButtonText: 'OK'
             });
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Success:', data);
 
-        // Show SweetAlert notification with fee structure details
-        Swal.fire({
-            title: 'Deleted!',
-            html: `Fee structure for category '<strong>${categoryName}</strong>' and class '<strong>${classGrade}</strong>' deleted successfully!`,
-            icon: 'success',
-            confirmButtonText: 'OK'
+            // Fetch and update the fee structures table
+            fetchFeeStructures();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            let errorMessage = `An error occurred: ${error.message}`;
+
+            // Show SweetAlert notification with error message
+            Swal.fire({
+                title: 'Error',
+                html: errorMessage,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
         });
-
-        // Fetch and update the fee structures table
-        fetchFeeStructures();
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        let errorMessage = `An error occurred: ${error.message}`;
-
-        // Show SweetAlert notification with error message
-        Swal.fire({
-            title: 'Error',
-            html: errorMessage,
-            icon: 'error',
-            confirmButtonText: 'OK'
-        });
-    });
 }
 
 // Function to confirm deletion of a fee structure

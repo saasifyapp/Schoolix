@@ -301,7 +301,6 @@
         </div>
     </div>
 
-
     <!-- Edit Fee Amount Overlay -->
     <div id="editFeeAmountOverlay" class="overlay-search">
         <div class="overlay-content-search">
@@ -344,6 +343,40 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+
+    <!-- Background Blur Overlay for Edit Fee Amount -->
+    <div id="editFeeAmountBackgroundOverlay" class="popup-overlay" style="display: none;"></div>
+
+    <!-- Edit Fee Amount Popup Window -->
+    <div id="editFeeAmountPopup" class="custom-prompt" style="display: none;">
+        <div class="prompt-content">
+            <form id="editFeeAmountForm">
+                <h2>Edit Fee Amount Details</h2>
+
+                <!-- Category Display -->
+                <!-- <div class="form-group">
+                    <label for="editCategoryfeeDisplay" class="form-label">Category:</label>
+                    <input id="editCategoryfeeDisplay" class="form-control" style="text-align: center;" readonly></input>
+                </div> -->
+
+                <div id="editFeeAmountFields">
+                    <!-- The fee fields will be dynamically inserted here -->
+                </div>
+
+                <!-- Save and Cancel Buttons -->
+                <div class="popup-buttons">
+                    <button type="button" class="styled-button" onclick="saveFeeAmountDetails()">
+                        <img src="../images/conform.png" alt="Save" class="button-icon">
+                        <span class="button-text">Save</span>
+                    </button>
+                    <button type="button" class="styled-button" onclick="closeEditFeeAmountPopup()">
+                        <img src="../images/cancel.png" alt="Cancel" class="button-icon">
+                        <span class="button-text">Cancel</span>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
