@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
     editCategoryButton.addEventListener('click', function () {
         hideAllOverlays();
         showOverlay('editCategoryOverlay');
+        refreshFeeCategories();
     });
 
     // Show Set Amount Overlay (When the button is clicked)
@@ -58,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
     editFeeAmountButton.addEventListener('click', function () {
         hideAllOverlays();
         showOverlay('editFeeAmountOverlay');
+        refreshFeeStructures();
     });
 
     // Close Fee Category Overlay
@@ -167,26 +169,12 @@ function exportFeeStructureTable() {
 
 
 
-// Function to show the loader and apply the blur effect
+// Function to show the loader with background blur
 function showFeeLoader() {
-    const loader = document.querySelector('.loader');
-    const body = document.querySelector('body');
-
-    // Show the loader
-    loader.style.display = 'flex';
-
-    // Apply the blur effect by adding a class to the body
-    body.classList.add('blur-background');
+    document.querySelector('.feeloadingbg').style.display = 'block';
 }
 
-// Function to hide the loader and remove the blur effect
+// Function to hide the loader and remove background blur
 function hideFeeLoader() {
-    const loader = document.querySelector('.loader');
-    const body = document.querySelector('body');
-
-    // Hide the loader
-    loader.style.display = 'none';
-
-    // Remove the blur effect by removing the class from the body
-    body.classList.remove('blur-background');
+    document.querySelector('.feeloadingbg').style.display = 'none';
 }

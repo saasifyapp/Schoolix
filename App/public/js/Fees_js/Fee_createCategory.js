@@ -1,140 +1,159 @@
-document.addEventListener('DOMContentLoaded', function () {
-    // Get the form element
-    const createCategoryForm = document.querySelector('#createCategoryForm');
+// Get the form element
+const createCategoryForm = document.querySelector('#createCategoryForm');
 
-    // Handle form submission
-    createCategoryForm.addEventListener('submit', function (event) {
-        event.preventDefault(); // Prevent the default form submission
-        showFeeLoader();
+// Handle form submission
+createCategoryForm.addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent the default form submission
+    showFeeLoader();
 
-        // Get form data
-        const categoryName = capitalizeName(formatInput(document.getElementById('categoryName').value));
-        const categoryDescription = document.getElementById('categoryDescription').value;
+    // Get form data
+    const categoryName = capitalizeName(formatInput(document.getElementById('categoryName').value));
+    const categoryDescription = document.getElementById('categoryDescription').value;
 
-        // Create data object
-        const data = {
-            category_name: categoryName,
-            description: categoryDescription
-        };
-
-        // Send data to the server
-        fetch('/createFeeCategory', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-            .then(response => {
-                if (!response.ok) {
-                    // Return the response JSON to extract the error message
-                    hideFeeLoader();
-                    return response.json().then(errorData => {
-                        throw new Error(errorData.error);
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                hideFeeLoader();
-                console.log('Success:', data);
-                // Clear the form inputs
-                document.getElementById('categoryName').value = '';
-                document.getElementById('categoryDescription').value = '';
-
-                // Show SweetAlert notification with category name
-                Swal.fire({
-                    title: 'Success!',
-                    html: `Category '<strong>${categoryName}</strong>' created successfully!`,
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                });
-
-                // Fetch and update the fee categories table
-                fetchFeeCategories();
-            })
-            .catch(error => {
-                hideFeeLoader();
-                console.error('Error:', error);
-                let errorMessage = `An error occurred: ${error.message}`;
-                if (error.message.includes("Category name already exists")) {
-                    errorMessage = `Category with name '<strong>${categoryName}</strong>' already exists`;
-                }
-
-                // Show SweetAlert notification with error message
-                Swal.fire({
-                    title: 'Error',
-                    html: errorMessage,
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            });
-    });
-
-    // Add event listener to the search input
-    const searchBar = document.getElementById('searchBar');
-    searchBar.addEventListener('input', function () {
-        const filter = searchBar.value.toLowerCase();
-        const tableBody = document.getElementById('feeCategoriesTableBody');
-        const rows = tableBody.getElementsByTagName('tr');
-
-        let found = false;
-        Array.from(rows).forEach(row => {
-            const categoryNameCell = row.getElementsByTagName('td')[1];
-            if (categoryNameCell) {
-                const categoryName = categoryNameCell.textContent || categoryNameCell.innerText;
-                if (categoryName.toLowerCase().indexOf(filter) > -1) {
-                    row.style.display = '';
-                    found = true;
-                } else {
-                    row.style.display = 'none';
-                }
-            }
+    // Validate category name and description
+    if (!categoryName || !categoryDescription) {
+        hideFeeLoader();
+        Swal.fire({
+            title: 'Error',
+            text: 'Both category name and description are required.',
+            icon: 'error',
+            confirmButtonText: 'OK'
         });
+        return;
+    }
 
-        // Show "No Fee Category found" if no rows match the search
-        if (!found) {
-            tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No Fee Category found</td></tr>';
-        }
-    });
+    // Create data object
+    const data = {
+        category_name: categoryName,
+        description: categoryDescription
+    };
 
-    // Add event listener to the refresh button
-    const refreshButton = document.getElementById('refreshButton');
-    refreshButton.addEventListener('click', function () {
-        fetchFeeCategories();
-    });
+    // Send data to the server
+    fetch('/createFeeCategory', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => {
+            if (!response.ok) {
+                // Return the response JSON to extract the error message
+                hideFeeLoader();
+                return response.json().then(errorData => {
+                    throw new Error(errorData.error || 'Something went wrong.');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            hideFeeLoader();
 
-    // Fetch and display fee categories when the overlay is opened
-    fetchFeeCategories();
+            // Clear the form inputs
+            document.getElementById('categoryName').value = '';
+            document.getElementById('categoryDescription').value = '';
+
+            // Show SweetAlert notification with category name
+            Swal.fire({
+                title: 'Success!',
+                html: `Category '<strong>${categoryName}</strong>' created successfully!`,
+                icon: 'success',
+                confirmButtonText: 'OK',
+                willClose: () => {
+                    // Fetch and update the fee categories table after closing the alert
+                    refreshFeeCategories();
+                }
+            });
+        })
+        .catch(error => {
+            hideFeeLoader();
+            console.error('Error:', error);
+
+            // Handle different types of error messages
+            let errorMessage = `An error occurred: ${error.message}`;
+            if (error.message.includes("Category name already exists")) {
+                errorMessage = `Category with name '<strong>${categoryName}</strong>' already exists`;
+            }
+
+            // Show SweetAlert notification with error message
+            Swal.fire({
+                title: 'Error',
+                html: errorMessage,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        });
 });
 
-// Local object to store fee category data
-const feeCategoryData = {};
+
+// Add event listener to the search input
+const searchBar = document.getElementById('searchBar');
+
+searchBar.addEventListener('input', function () {
+    const filter = searchBar.value.toLowerCase();
+
+    // Filter the feeCategoryData based on the search input
+    const filteredCategories = Object.values(feeCategoryData).filter(category => {
+        const categoryName = category.category_name.toLowerCase();
+        return categoryName.includes(filter); // Check if the category name matches the filter
+    });
+
+    // Call displayFeeCategoryData with filtered or all data based on the search input
+    if (filter === '') {
+        // If search bar is empty, show all entries
+        // displayFeeCategoryData(feeCategoryData);
+        refreshFeeCategories();
+    } else {
+        // Show only filtered entries based on search
+        const filteredData = {};
+        filteredCategories.forEach(category => {
+            filteredData[category.category_id] = category;
+        });
+        displayFeeCategoryData(filteredData);
+    }
+});
+
+// Add event listener to the refresh button
+const refreshButton = document.getElementById('refreshButton');
+refreshButton.addEventListener('click', function () {
+    refreshFeeCategories();
+});
+
+// Fetch and display fee categories when the overlay is opened
+// refreshFeeCategories();
+
+
+/// Local object to store the fetched fee categories
+let feeCategoryData = {};
 
 // Function to fetch fee categories from the server
-function fetchFeeCategories() {
+function refreshFeeCategories() {
+    showFeeLoader();
     fetch('/getFeeCategories')
         .then(response => response.json())
         .then(data => {
-            // Store the data in the local object
+            // Update the feeCategoryData object with the fetched data
+            feeCategoryData = {}; // Clear previous data
             data.forEach(category => {
                 feeCategoryData[category.category_id] = category;
             });
 
-            // Call the display function to update the UI
-            displayFeeCategoryData();
+            hideFeeLoader();
+            // Call the display function with the updated feeCategoryData
+            displayFeeCategoryData(feeCategoryData);
         })
         .catch(error => {
+            hideFeeLoader();
             console.error('Error fetching fee categories:', error);
         });
 }
 
 // Function to display fee categories in the table
-function displayFeeCategoryData() {
+function displayFeeCategoryData(feeCategoryData) {
     const tableBody = document.getElementById('feeCategoriesTableBody');
     tableBody.innerHTML = ''; // Clear existing rows
 
-    const categories = Object.values(feeCategoryData);
+    const categories = Object.values(feeCategoryData); // Get the categories from the object
     if (categories.length === 0) {
         tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No Data Found</td></tr>';
     } else {
@@ -169,9 +188,10 @@ function displayFeeCategoryData() {
     }
 }
 
+
 // // Function to refresh the fee categories and update the table
 // function refreshFeeCategories() {
-//     fetchFeeCategories();
+//     refreshFeeCategories();
 // }
 
 // Function to display the Edit Fee Structure popup
@@ -217,96 +237,120 @@ function closeEditFeeStructurePopup() {
 }
 
 
-
-// Function to save the edited fee structure details
 async function saveFeeStructureDetails() {
     showFeeLoader();
+
+    // Retrieve input values and format them
     const categoryId = document.getElementById('editCategoryId').value;
     const categoryName = capitalizeName(formatInput(document.getElementById('editCategoryName').value.trim()));
     const categoryDescription = document.getElementById('editCategoryDescription').value.trim();
 
-    // Validate the inputs
+    // Validate the category name input
     if (!categoryName) {
         hideFeeLoader();
-        alert('Error: Category name is required');
+        Swal.fire({
+            title: 'Error',
+            text: 'Category name is required',
+            icon: 'error',
+            confirmButtonText: 'OK',
+        });
         return;
     }
 
-    // Fetch the original category data for comparison
+    // Retrieve the original category data
     const originalCategory = feeCategoryData[categoryId];
-    let isNameExists = false;
-    let isDescriptionExists = false;
+    let isDuplicateName = false;
+    let isDuplicateDescription = false;
 
-    // Check if the category name was edited
+    // Check if the category name was changed and if the new name already exists
     if (categoryName !== originalCategory.category_name) {
-        isNameExists = Object.values(feeCategoryData).some(
+        isDuplicateName = Object.values(feeCategoryData).some(
             category => category.category_name === categoryName && category.category_id !== categoryId
         );
-        if (isNameExists) {
+        if (isDuplicateName) {
             hideFeeLoader();
-            alert('Error: Category name already exists');
+            Swal.fire({
+                title: 'Error',
+                text: 'Category name already exists',
+                icon: 'error',
+                confirmButtonText: 'OK',
+            });
             return;
         }
     }
 
-    // Check if the category description was edited
+    // Check if the category description was changed and if it already exists
     if (categoryDescription !== originalCategory.description) {
-        isDescriptionExists = Object.values(feeCategoryData).some(
+        isDuplicateDescription = Object.values(feeCategoryData).some(
             category => category.description === categoryDescription && category.category_id !== categoryId
         );
-        if (isDescriptionExists) {
+        if (isDuplicateDescription) {
             hideFeeLoader();
-            alert('Error: Category description already exists');
+            Swal.fire({
+                title: 'Error',
+                text: 'Category description already exists',
+                icon: 'error',
+                confirmButtonText: 'OK',
+            });
             return;
         }
     }
 
-    // Prepare the data to be sent to the server
+    // Construct the updated category data
     const updatedCategory = {
         category_name: categoryName,
         description: categoryDescription,
     };
 
     try {
-        // Make the PUT request to the server
+        // Make the PUT request to update the category
         const response = await fetch(`/editFeeCategory/${categoryId}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updatedCategory),
         });
-        showFeeLoader();
+
         const result = await response.json();
 
+        // Handle response status and update UI accordingly
         if (response.ok) {
             hideFeeLoader();
-            alert('Category updated successfully');
-
-            // Update the local feeCategoryData object
-            feeCategoryData[categoryId] = {
-                category_id: categoryId,
-                category_name: categoryName,
-                description: categoryDescription,
-            };
-
-            // Refresh the fee categories to update the UI
+    
+            // Refresh the UI and close the popup
             refreshFeeCategories();
-
-            // Close the popup
             closeEditFeeStructurePopup();
+
+            // Show a success notification
+            Swal.fire({
+                title: 'Success',
+                html: `Category '<strong>${categoryName}</strong>' updated successfully!`,
+                icon: 'success',
+                confirmButtonText: 'OK',
+            });
         } else {
-            hideFeeLoader();
-            alert(`Error: ${result.error || 'Failed to update category'}`);
+            Swal.fire({
+                title: 'Error',
+                text: result.error || 'Failed to update category',
+                icon: 'error',
+                confirmButtonText: 'OK',
+            });
         }
     } catch (error) {
-        hideFeeLoader();
         console.error('Error making PUT request:', error);
-        alert('Error: Failed to update category');
+        Swal.fire({
+            title: 'Error',
+            text: 'Failed to update category',
+            icon: 'error',
+            confirmButtonText: 'OK',
+        });
+    } finally {
+        // Ensure the loader is always hidden
+        hideFeeLoader();
     }
 }
 
-// Function to confirm and delete a fee category
+
+
 function confirmDeleteFeeCategory(categoryId, categoryName) {
     // Show SweetAlert confirmation dialog
     Swal.fire({
@@ -316,22 +360,17 @@ function confirmDeleteFeeCategory(categoryId, categoryName) {
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
+        confirmButtonText: 'Yes, delete it!',
+    }).then(result => {
         if (result.isConfirmed) {
-            // Show the loader when deletion is confirmed
             showFeeLoader();
 
-            // Perform the DELETE request to delete the fee category
-            fetch(`/deleteFeeCategory/${categoryId}`, {
-                method: 'DELETE',
-            })
-                .then(response => {
+            // Perform the DELETE request to remove the fee category
+            fetch(`/deleteFeeCategory/${categoryId}`, { method: 'DELETE' })
+                .then(async response => {
                     if (!response.ok) {
-                        hideFeeLoader();
-                        return response.json().then(errorData => {
-                            throw new Error(errorData.error);
-                        });
+                        const errorData = await response.json();
+                        throw new Error(errorData.error);
                     }
                     return response.json();
                 })
@@ -339,30 +378,34 @@ function confirmDeleteFeeCategory(categoryId, categoryName) {
                     hideFeeLoader();
                     console.log('Success:', data);
 
-                    // Show SweetAlert notification with category name
+                    // Show a success notification
                     Swal.fire({
                         title: 'Deleted!',
                         html: `Category '<strong>${categoryName}</strong>' deleted successfully!`,
                         icon: 'success',
-                        confirmButtonText: 'OK'
+                        confirmButtonText: 'OK',
                     });
 
-                    // Fetch and update the fee categories table
-                    fetchFeeCategories();
+                    // Refresh the UI to reflect the deletion
+                    refreshFeeCategories();
                 })
                 .catch(error => {
                     hideFeeLoader();
                     console.error('Error:', error);
-                    let errorMessage = `${error.message}`;
 
-                    // Show SweetAlert notification with error message
+                    // Show an error notification
                     Swal.fire({
                         title: 'Error',
-                        html: errorMessage,
+                        html: error.message,
                         icon: 'error',
-                        confirmButtonText: 'OK'
+                        confirmButtonText: 'OK',
                     });
+                })
+                .finally(() => {
+                    // Always hide the loader, even if there's an error
+                    hideFeeLoader();
                 });
         }
     });
 }
+
