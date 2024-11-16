@@ -114,10 +114,12 @@ function editFeeStructure(structure_id) {
 
 // Function to save the updated fee amount
 function saveFeeAmountDetails() {
+    showFeeLoader();
     const structure_id = document.getElementById('editFeeAmountForm').getAttribute('data-structure-id');
     const amount = parseFloat(document.getElementById('editAmount').value);
 
     if (isNaN(amount) || amount <= 0) {
+        hideFeeLoader();
         alert("Please enter a valid amount.");
         return;
     }
@@ -139,16 +141,19 @@ function saveFeeAmountDetails() {
         .then(data => {
             // Check the success or failure based on the server's response
             if (data.message === 'Fee amount updated successfully') {
+                hideFeeLoader();
                 alert("Fee structure updated successfully!");
                 // Close the popup
                 closeEditFeeAmountPopup();
                 // Refresh the table data
                 refreshFeeStructures();
             } else {
+                hideFeeLoader();
                 alert("Error updating fee structure: " + data.message);
             }
         })
         .catch(error => {
+            hideFeeLoader();
             console.error("Error saving fee structure:", error);
             alert("There was an error updating the fee structure. Please try again later.");
         });
@@ -314,7 +319,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Handle form submission
     setFeeAmountForm.addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent the default form submission
-
+        showFeeLoader();
         const categoryId = categoryIdInput.value;
         const categoryName = categoryNameInput.value;
         const classGrade = allGradesRadio.checked ? 'All Grades' : classGradeInput.value; // Use 'All Grades' if radio is checked
@@ -337,12 +342,14 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 if (data.error) {
+                    hideFeeLoader();
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
                         text: data.error
                     });
                 } else {
+                    hideFeeLoader();
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
@@ -361,6 +368,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             })
             .catch(error => {
+                hideFeeLoader();
                 console.error('Error:', error);
                 Swal.fire({
                     icon: 'error',
@@ -407,11 +415,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Function to delete a fee structure
 function deleteFeeStructure(structureId, categoryName, classGrade) {
+    showFeeLoader();
     fetch(`/deleteFeeStructure/${structureId}`, {
         method: 'DELETE',
     })
         .then(response => {
             if (!response.ok) {
+                hideFeeLoader();
                 return response.json().then(errorData => {
                     throw new Error(errorData.error);
                 });
@@ -419,6 +429,7 @@ function deleteFeeStructure(structureId, categoryName, classGrade) {
             return response.json();
         })
         .then(data => {
+            hideFeeLoader();
             console.log('Success:', data);
 
             // Show SweetAlert notification with fee structure details
@@ -433,6 +444,7 @@ function deleteFeeStructure(structureId, categoryName, classGrade) {
             fetchFeeStructures();
         })
         .catch(error => {
+            hideFeeLoader();
             console.error('Error:', error);
             let errorMessage = `An error occurred: ${error.message}`;
 
@@ -458,6 +470,7 @@ function confirmDeleteFeeStructure(structureId, categoryName, classGrade) {
         confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
         if (result.isConfirmed) {
+            showFeeLoader();
             deleteFeeStructure(structureId, categoryName, classGrade);
         }
     });

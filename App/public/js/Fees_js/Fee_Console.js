@@ -163,3 +163,30 @@ function exportFeeCategoryTable() {
 function exportFeeStructureTable() {
     exportTableToCSV("feeStructuresTable", "fee_structure.csv");
 }
+
+
+
+
+// Function to show the loader and apply the blur effect
+function showFeeLoader() {
+    const loader = document.querySelector('.loader');
+    const body = document.querySelector('body');
+
+    // Show the loader
+    loader.style.display = 'flex';
+
+    // Apply the blur effect by adding a class to the body
+    body.classList.add('blur-background');
+}
+
+// Function to hide the loader and remove the blur effect
+function hideFeeLoader() {
+    const loader = document.querySelector('.loader');
+    const body = document.querySelector('body');
+
+    // Hide the loader
+    loader.style.display = 'none';
+
+    // Remove the blur effect by removing the class from the body
+    body.classList.remove('blur-background');
+}

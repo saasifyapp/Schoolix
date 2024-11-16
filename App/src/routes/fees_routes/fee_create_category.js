@@ -141,20 +141,18 @@ router.put('/editFeeCategory/:categoryId', (req, res) => {
                     SET category_name = ? 
                     WHERE category_id = ?
                 `;
-                connection.query(updateFeeStructuresQuery, [category_name, categoryId], (err, results) => {
-                    if (err || results.affectedRows === 0) {
+                connection.query(updateFeeStructuresQuery, [category_name, categoryId], (err) => {
+                    if (err) {
                         connection.rollback(() => {
                             connection.release();
-                            if (err) {
-                                console.error('Error updating fee_structures:', err);
-                                return res.status(500).json({ error: 'Error updating category in fee_structures' });
-                            }
-                            return res.status(404).json({ error: 'Category not found in fee_structures' });
+                            console.error('Error updating fee_structures:', err);
+                            return res.status(500).json({ error: 'Error updating category in fee_structures' });
                         });
                         return;
                     }
 
-                    // If both updates succeed, commit the transaction
+                    // If the category is not found in fee_structures, this is not considered a failure
+                    // Commit the transaction regardless
                     connection.commit(err => {
                         if (err) {
                             connection.rollback(() => {
@@ -165,15 +163,16 @@ router.put('/editFeeCategory/:categoryId', (req, res) => {
                             return;
                         }
 
-                        // Success: Both updates completed
+                        // Success: Updates completed
                         connection.release();
-                        res.status(200).json({ message: 'Category updated successfully in both tables' });
+                        res.status(200).json({ message: 'Category updated successfully' });
                     });
                 });
             });
         });
     });
 });
+
 
 
 

@@ -5,9 +5,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // Handle form submission
     createCategoryForm.addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent the default form submission
+        showFeeLoader();
 
         // Get form data
-        const categoryName = document.getElementById('categoryName').value;
+        const categoryName = capitalizeName(formatInput(document.getElementById('categoryName').value));
         const categoryDescription = document.getElementById('categoryDescription').value;
 
         // Create data object
@@ -27,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => {
                 if (!response.ok) {
                     // Return the response JSON to extract the error message
+                    hideFeeLoader();
                     return response.json().then(errorData => {
                         throw new Error(errorData.error);
                     });
@@ -34,6 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(data => {
+                hideFeeLoader();
                 console.log('Success:', data);
                 // Clear the form inputs
                 document.getElementById('categoryName').value = '';
@@ -51,6 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 fetchFeeCategories();
             })
             .catch(error => {
+                hideFeeLoader();
                 console.error('Error:', error);
                 let errorMessage = `An error occurred: ${error.message}`;
                 if (error.message.includes("Category name already exists")) {
@@ -98,7 +102,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const refreshButton = document.getElementById('refreshButton');
     refreshButton.addEventListener('click', function () {
         fetchFeeCategories();
-
     });
 
     // Fetch and display fee categories when the overlay is opened
@@ -166,10 +169,10 @@ function displayFeeCategoryData() {
     }
 }
 
-// Function to refresh the fee categories and update the table
-function refreshFeeCategories() {
-    fetchFeeCategories();
-}
+// // Function to refresh the fee categories and update the table
+// function refreshFeeCategories() {
+//     fetchFeeCategories();
+// }
 
 // Function to display the Edit Fee Structure popup
 function editFeeCategory(categoryId) {
@@ -217,12 +220,14 @@ function closeEditFeeStructurePopup() {
 
 // Function to save the edited fee structure details
 async function saveFeeStructureDetails() {
+    showFeeLoader();
     const categoryId = document.getElementById('editCategoryId').value;
-    const categoryName = document.getElementById('editCategoryName').value.trim();
+    const categoryName = capitalizeName(formatInput(document.getElementById('editCategoryName').value.trim()));
     const categoryDescription = document.getElementById('editCategoryDescription').value.trim();
 
     // Validate the inputs
     if (!categoryName) {
+        hideFeeLoader();
         alert('Error: Category name is required');
         return;
     }
@@ -238,6 +243,7 @@ async function saveFeeStructureDetails() {
             category => category.category_name === categoryName && category.category_id !== categoryId
         );
         if (isNameExists) {
+            hideFeeLoader();
             alert('Error: Category name already exists');
             return;
         }
@@ -249,6 +255,7 @@ async function saveFeeStructureDetails() {
             category => category.description === categoryDescription && category.category_id !== categoryId
         );
         if (isDescriptionExists) {
+            hideFeeLoader();
             alert('Error: Category description already exists');
             return;
         }
@@ -269,10 +276,11 @@ async function saveFeeStructureDetails() {
             },
             body: JSON.stringify(updatedCategory),
         });
-
+        showFeeLoader();
         const result = await response.json();
 
         if (response.ok) {
+            hideFeeLoader();
             alert('Category updated successfully');
 
             // Update the local feeCategoryData object
@@ -288,61 +296,19 @@ async function saveFeeStructureDetails() {
             // Close the popup
             closeEditFeeStructurePopup();
         } else {
+            hideFeeLoader();
             alert(`Error: ${result.error || 'Failed to update category'}`);
         }
     } catch (error) {
+        hideFeeLoader();
         console.error('Error making PUT request:', error);
         alert('Error: Failed to update category');
     }
 }
 
-
-
-
-
-// Function to delete a fee category
-function deleteFeeCategory(categoryId, categoryName) {
-    fetch(`/deleteFeeCategory/${categoryId}`, {
-        method: 'DELETE',
-    })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(errorData => {
-                    throw new Error(errorData.error);
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Success:', data);
-
-            // Show SweetAlert notification with category name
-            Swal.fire({
-                title: 'Deleted!',
-                html: `Category '<strong>${categoryName}</strong>' deleted successfully!`,
-                icon: 'success',
-                confirmButtonText: 'OK'
-            });
-
-            // Fetch and update the fee categories table
-            fetchFeeCategories();
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            let errorMessage = `${error.message}`;
-
-            // Show SweetAlert notification with error message
-            Swal.fire({
-                title: 'Error',
-                html: errorMessage,
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-        });
-}
-
-// Function to confirm deletion of a fee category
+// Function to confirm and delete a fee category
 function confirmDeleteFeeCategory(categoryId, categoryName) {
+    // Show SweetAlert confirmation dialog
     Swal.fire({
         title: 'Are you sure?',
         html: `You won't be able to revert this! Deleting category '<strong>${categoryName}</strong>'.`,
@@ -353,7 +319,50 @@ function confirmDeleteFeeCategory(categoryId, categoryName) {
         confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            deleteFeeCategory(categoryId, categoryName);
+            // Show the loader when deletion is confirmed
+            showFeeLoader();
+
+            // Perform the DELETE request to delete the fee category
+            fetch(`/deleteFeeCategory/${categoryId}`, {
+                method: 'DELETE',
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        hideFeeLoader();
+                        return response.json().then(errorData => {
+                            throw new Error(errorData.error);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    hideFeeLoader();
+                    console.log('Success:', data);
+
+                    // Show SweetAlert notification with category name
+                    Swal.fire({
+                        title: 'Deleted!',
+                        html: `Category '<strong>${categoryName}</strong>' deleted successfully!`,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+
+                    // Fetch and update the fee categories table
+                    fetchFeeCategories();
+                })
+                .catch(error => {
+                    hideFeeLoader();
+                    console.error('Error:', error);
+                    let errorMessage = `${error.message}`;
+
+                    // Show SweetAlert notification with error message
+                    Swal.fire({
+                        title: 'Error',
+                        html: errorMessage,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                });
         }
     });
 }
