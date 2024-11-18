@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fee Structure</title>
+    <link rel="stylesheet" href="/css/NavButtons.css">
+    <link rel="stylesheet" href="/css/Fee_Css/AllFee.css">
+    <link rel="stylesheet" href="/css/Fee_Css/FeeConsole.css">
+    <link rel="stylesheet" href="/css/Fee_Css/Fees-form-control.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+
+<body>
+
+    <!-- Wrapper for loader and background blur -->
+    <div class="feeloadingbg">
+        <div class="loader">
+            <div class="loader__image">
+                <div class="loader__coin">
+                    <img src="https://www.dropbox.com/s/fzc3fidyxqbqhnj/loader-coin.png?raw=1" alt="Coin">
+                </div>
+                <div class="loader__hand">
+                    <img src="https://www.dropbox.com/s/y8uqvjn811z6npu/loader-hand.png?raw=1" alt="Hand">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <nav class="navbar">
+        <div class="logo_item">
+            <!-- <i class="bx bx-menu" id="sidebarOpen"></i> -->
+            <img id="logo" src="" alt="Logo">
+            <!-- <div class="user_name" id="user_name"></div> -->
+        </div>
+
+        <div class="navbar_center">
+            <button onclick="window.location.href='/dashboard'"> <i class='bx' id="backButton"> <img
+                        src="/images/back.png" alt="Previous Icon"></i></button>
+            <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img
+                        src="/images/homeicon.png" alt="Dashboard Icon"></i></button>
+            <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
+                        alt="Signout Icon"></i></button>
+        </div>
+
+        <div class="navbar_content">
+            <!-- <i class="bi bi-grid"></i>
+      <i class='bx bx-bell'></i> -->
+        </div>
+    </nav>
+
+    <div class="adm-head">
+        <div class="button-container">
+            <h2>Fee Structure Console</h2>
+        </div>
+    </div>
+
+    <div class="cards-container">
+        <div class="card">
+            <button id="feeCategoryButton">
+                <div class="dotlottie-container">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                        type="module"></script>
+
+                    <dotlottie-player src="https://lottie.host/8bfa8fbc-9782-4e02-9550-d6530a3807ac/HJPhMvQgSq.json"
+                        background="transparent" speed="1" style="width: 270px; height: 250px;" loop
+                        autoplay></dotlottie-player>
+                </div>
+                <h3>Fee Category</h3>
+            </button>
+        </div>
+
+        <div class="card">
+            <button id="feeAmountButton">
+                <div class="dotlottie-container">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                        type="module"></script>
+
+                    <dotlottie-player src="https://lottie.host/e904a063-64d4-4a64-8fd7-7fef7e655689/d6wvaoHys4.json"
+                        background="transparent" speed="1" style="width: 266px; height: 216px;" loop
+                        autoplay></dotlottie-player>
+                </div>
+                <h3>Fee Amount</h3>
+            </button>
+        </div>
+
+        <div class="card">
+            <button id="feeReportButton">
+                <div class="dotlottie-container" style="padding: 10px">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                        type="module"></script>
+
+                    <dotlottie-player src="https://lottie.host/521354a5-087f-4304-bd6c-9af4e2b24a80/iorpY5grwY.json"
+                        background="transparent" speed="1" style="width: 250px; height: 230px;" loop
+                        autoplay></dotlottie-player>
+                </div>
+                <h3>Fee Reports</h3>
+            </button>
+        </div>
+    </div>
+
+    <!-- Overlay for Fee Category -->
+    <div id="feeCategoryOverlay" class="overlay">
+        <div class="overlay-content-inner">
+            <h2>Fee Category</h2>
+            <button id="closeFeeCategoryOverlay" class="close-button">&times;</button>
+            <div class="button-container">
+                <div class="option-card bookvaltcard">
+                    <span id="createCategoryButton">
+                        <img src="/images/task-list.gif">
+                        Create&nbspCategory
+                    </span>
+                </div>
+                <div class="option-card bookvaltcard">
+                    <span id="editCategoryButton">
+                        <img src="/images/test.gif">
+                        Edit&nbspCategory
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay for Create Category -->
+    <div id="createCategoryOverlay" class="overlay">
+        <div class="overlay-content" style="padding: 80px;">
+            <button id="closeCreateCategoryOverlay" class="close-button">&times;</button>
+            <div class="overlay-inner">
+                <div class="left-side">
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/c73ab7aa-4c5a-48d9-949b-38801085061d/sZ51ErZeHH.json"
+                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                        autoplay></dotlottie-player>
+                </div>
+                <div class="right-side">
+                    <h2>Create Category</h2>
+                    <form id="createCategoryForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="categoryName" placeholder=" " required>
+                                <span class="form-control-placeholder">Category Name</span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <textarea class="form-control" id="categoryDescription" placeholder=" "
+                                    required></textarea>
+                                <span class="form-control-placeholder">Category Description</span>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button class="createBtn" type="submit">
+                            <img src="../images/pie-chart.png" alt="">
+                            <span>Create</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Overlay for Edit Category -->
+    <div id="editCategoryOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeEditCategoryOverlay" class="close-button">&times;</button>
+            <img src="/images/test.gif" alt="Overlay Icon" class="overlay-icon">
+            <h2 class="overlay-search-head">Edit Category</h2>
+            <div class="search-container">
+                <div class="form-Searchgroup">
+                    <div class="form-Searchgroup">
+                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                        <input type="text" class="form-control" id="searchBar" name="" placeholder=" " oninput=""
+                            style="width: 400px; height: 1.7rem !important;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search Fee Category...</span>
+                    </div>
+                    <button class="refreshButton" id="refreshButton" style="margin-top: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
+                </div>
+            </div>
+            <button class="export_registered_students" id="fee_export_category" onclick="exportFeeCategoryTable()">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+
+            <div class="table-container">
+                <table id="feeCategoriesTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Category ID</th>
+                            <th>Category Name</th>
+                            <th>Description</th>
+                            <th>Action</th> <!-- Action column added -->
+                        </tr>
+                    </thead>
+                    <tbody id="feeCategoriesTableBody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Blur Overlay for Edit Fee Structure -->
+    <div id="editFeeStructureOverlay" class="popup-overlay" style="display: none;"></div>
+
+    <!-- Edit Fee Structure Popup Window -->
+    <div id="editFeeStructurePopup" class="custom-prompt" style="display: none;">
+        <div class="prompt-content">
+            <form id="editFeeStructureForm">
+                <h2>Edit Fee Structure Details</h2>
+
+                <!-- Category Display -->
+                <!-- <div class="form-group">
+                    <label for="editCategoryDisplay" class="form-label">Category:</label>
+                    <span id="editCategoryDisplay" class="form-control" style="text-align: center;"></span>
+                </div> -->
+
+                <div id="editFeeFields">
+                    <!-- The fee fields will be dynamically inserted here -->
+                </div>
+
+                <!-- Save and Cancel Buttons -->
+                <div class="popup-buttons">
+                    <button type="button" class="styled-button" onclick="saveFeeStructureDetails()">
+                        <img src="../images/conform.png" alt="Save" class="button-icon">
+                        <span class="button-text">Save</span>
+                    </button>
+                    <button type="button" class="styled-button" onclick="closeEditFeeStructurePopup()">
+                        <img src="../images/cancel.png" alt="Cancel" class="button-icon">
+                        <span class="button-text">Cancel</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Overlay for Fee Amount -->
+    <div id="feeAmountOverlay" class="overlay">
+        <div class="overlay-content-inner">
+            <h2>Fee Amount</h2>
+            <button id="closeFeeAmountOverlay" class="close-button">&times;</button>
+            <div class="button-container">
+                <div class="option-card bookvaltcard">
+                    <span id="setFeeAmountButton">
+                        <img src="/images/trader.gif">
+                        Set&nbspFee&nbspAmount
+                    </span>
+                </div>
+                <div class="option-card bookvaltcard">
+                    <span id="editFeeAmountButton">
+                        <img src="/images/cheque.gif">
+                        Edit&nbspFee&nbspAmount
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Overlay for Set Fee Amount -->
+    <div id="setAmountOverlay" class="overlay">
+        <div class="overlay-content" style="padding: 80px;">
+            <button id="closeSetAmountOverlay" class="close-button">&times;</button>
+            <div class="overlay-inner">
+                <div class="left-side">
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/4a635a3f-1171-4553-99d3-ad8e45c46f73/oP0hDKm0dQ.json"
+                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                        autoplay></dotlottie-player>
+                </div>
+                <div class="right-side">
+                    <h2>Set Fee Amount</h2>
+                    <form id="setFeeAmountForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" id="setFeeAmount_categoryName" name="categoryName"
+                                    class="form-control" placeholder=" " required>
+                                <span class="form-control-placeholder">Category Name</span>
+                                <div id="categorySuggestions" class="suggestions"></div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" id="classGrade" name="classGrade" class="form-control"
+                                    placeholder=" " required>
+                                <span class="form-control-placeholder">Class/Grade</span>
+                                <div id="gradeSuggestions" class="suggestions" style="width: 11rem;"></div>
+                            </div>
+
+                            <div class="form-group" style="display: flex; align-items: center;">
+                                <input type="checkbox" id="allGrades" name="gradeOption" value="allGrades" class=""
+                                    style="margin-right: 10px; width: auto;">
+                                <label for="allGrades" class="" style="position: static; transform: none;">All
+                                    Grades</label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="number" id="amount" name="amount" class="form-control" placeholder=" "
+                                    required>
+                                <span class="form-control-placeholder">Amount</span>
+                            </div>
+                        </div>
+                        <button class="createBtn" type="submit">
+                            <img src="../images/money-received.png" alt="">
+                            <span>Set Amount</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Fee Amount Overlay -->
+    <div id="editFeeAmountOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeEditFeeAmountOverlay" class="close-button">&times;</button>
+            <img src="/images/cheque.gif" alt="Overlay Icon" class="overlay-icon">
+            <h2 class="overlay-search-head">Edit Fee Amount</h2>
+
+            <div class="search-container">
+                <div class="form-Searchgroup">
+                    <div class="form-Searchgroup">
+                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                        <input type="text" class="form-control" id="searchFeeStructureBar" name="" placeholder=" "
+                            oninput="" style="width: 400px; height: 1.7rem !important;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search Fee Amount...</span>
+                    </div>
+                    <button class="refreshButton" id="refreshFeeStructureButton" style="margin-top: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <button class="export_registered_students" id="fee_export_feeStructure" onclick="exportFeeStructureTable()"
+                style="margin-top: 10px;">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+
+            <div class="table-container" style="margin-top: 20px;">
+                <table id="feeStructuresTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Fee ID</th>
+                            <th>Category Name</th>
+                            <th>Class</th>
+                            <th>Amount</th>
+                            <th>Action</th> <!-- Action column added -->
+                        </tr>
+                    </thead>
+                    <tbody id="feeStructuresTableBody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Blur Overlay for Edit Fee Amount -->
+    <div id="editFeeAmountBackgroundOverlay" class="popup-overlay" style="display: none;"></div>
+
+    <!-- Edit Fee Amount Popup Window -->
+    <div id="editFeeAmountPopup" class="custom-prompt" style="display: none;">
+        <div class="prompt-content">
+            <form id="editFeeAmountForm">
+                <h2>Edit Fee Amount Details</h2>
+
+                <!-- Category Display -->
+                <!-- <div class="form-group">
+                    <label for="editCategoryfeeDisplay" class="form-label">Category:</label>
+                    <input id="editCategoryfeeDisplay" class="form-control" style="text-align: center;" readonly></input>
+                </div> -->
+
+                <div id="editFeeAmountFields">
+                    <!-- The fee fields will be dynamically inserted here -->
+                </div>
+
+                <!-- Save and Cancel Buttons -->
+                <div class="popup-buttons">
+                    <button type="button" class="styled-button" onclick="saveFeeAmountDetails()">
+                        <img src="../images/conform.png" alt="Save" class="button-icon">
+                        <span class="button-text">Save</span>
+                    </button>
+                    <button type="button" class="styled-button" onclick="closeEditFeeAmountPopup()">
+                        <img src="../images/cancel.png" alt="Cancel" class="button-icon">
+                        <span class="button-text">Cancel</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+
+    </script>
+
+
+
+
+    <script src="/js/Inventory_js/All.js"></script>
+    <script src="/js/Fees_js/Fee_Console.js"></script>
+    <script src="/js/Fees_js/Fee_createCategory.js"></script>
+    <script src="/js/Fees_js/Fee_setFeeAmount.js"></script>
+
+
+
+
+    <script src="/js/Universal_Components_JS/handle_session.js"></script>
+    <script src="/js/Universal_Components_JS/Helping_functions.js"></script>
+
+
+
+</body>
+
+</html>

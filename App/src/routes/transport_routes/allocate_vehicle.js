@@ -40,7 +40,8 @@ router.get('/allocate_getVehicleDetails', (req, res) => {
 // Endpoint to fetch all route details where route_shift_type is 'route'
 router.get('/allocate_getRouteDetails', (req, res) => {
     const sql = `
-        SELECT DISTINCT route_name AS route_shift_name, route_stops AS route_shift_detail
+        SELECT DISTINCT route_name AS route_shift_name, 
+        route_stops AS route_shift_detail
         FROM transport_schedule_details
     `;
 
@@ -48,6 +49,9 @@ router.get('/allocate_getRouteDetails', (req, res) => {
         if (error) {
             return res.status(500).json({ error: 'Database query failed' });
         }
+
+        //console.log('Query results:', results);
+
         res.status(200).json(results);
     });
 });

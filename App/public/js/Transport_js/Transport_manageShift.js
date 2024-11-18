@@ -53,7 +53,7 @@ function displayShifts(data) {
                             <span style="margin-right: 10px;">Edit</span>
                         </button>
                         <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-                            onclick="deleteShift('${item.route_shift_id}')"
+                            onclick="deleteShift('${item.route_shift_id}', '${item.route_shift_name}')"
                             onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
                             onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
                             <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
@@ -237,40 +237,59 @@ document.getElementById('searchShift').addEventListener('input', function () {
     displayShifts(filteredRoutes);
 });
 
-function deleteShift(shiftId) {
-    // Confirm before deletion
-    const confirmDelete = confirm("Are you sure you want to delete this shift?");
-    hideTransportLoadingAnimation();
-    if (!confirmDelete) {
-        hideTransportLoadingAnimation();
-        return;
-    }
+function deleteShift(shiftId, shiftName) {
+    // Confirm before deletion using SweetAlert
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you really want to delete this shift?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            showTransportLoadingAnimation();
 
-    // Send DELETE request to the server
-    fetch(`/deleteShift/${shiftId}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-        .then(response => {
-            if (response.ok) {
-                hideTransportLoadingAnimation();
-                // Successfully deleted, now refresh the shift data
-                showToast("Shift deleted successfully!");
-                refreshShiftsData(); // Refresh the shifts list after deletion
-            } else {
-                hideTransportLoadingAnimation();
-                return response.json().then(errorData => {
-                    throw new Error(errorData.message || "Failed to delete shift");
+            // Send DELETE request to the server
+            fetch(`/deleteShift/${shiftId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ shiftName: shiftName })
+            })
+                .then(response => {
+                    hideTransportLoadingAnimation();
+                    return response.json().then(data => {
+                        if (response.ok) {
+                            // Successfully deleted, now refresh the shift data
+                            Swal.fire(
+                                'Deleted!',
+                                'Shift deleted successfully!',
+                                'success'
+                            );
+                            refreshShiftsData(); // Refresh the shifts list after deletion
+                        } else {
+                            // Show error message if shift is tagged
+                            Swal.fire(
+                                'Error!',
+                                data.message,
+                                'error'
+                            );
+                        }
+                    });
+                })
+                .catch(error => {
+                    hideTransportLoadingAnimation();
+                    Swal.fire(
+                        'Error!',
+                        'Error deleting shift: ' + error.message,
+                        'error'
+                    );
                 });
-            }
-        })
-        .catch(error => {
-            hideTransportLoadingAnimation();
-            console.error("Error deleting shift:", error);
-            showToast("Error deleting shift: " + error.message);
-        });
+        }
+    });
 }
 
 

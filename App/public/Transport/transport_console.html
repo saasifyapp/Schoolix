@@ -131,7 +131,7 @@
             </a>
         </div>
 
-        <div class="card">
+        <!-- <div class="card">
             <a>
                 <button id="">
                     <div class="dotlottie-container">
@@ -145,7 +145,7 @@
                     <h3>Reports</h3>
                 </button>
             </a>
-        </div>
+        </div> -->
 
     </div>
 
@@ -175,7 +175,7 @@
 
     <!-- Overlay for Adding Driver/Conductor -->
     <div id="addDriverOverlay" class="overlay">
-        <div class="overlay-content">
+        <div class="overlay-content" style="padding: 80px;">
             <button id="closeAddDriverOverlay" class="close-button">&times;</button>
             <div class="overlay-inner">
                 <div class="left-side">
@@ -191,21 +191,21 @@
                     <form id="addDriverForm">
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="name" placeholder=" ">
+                                <input type="text" class="form-control" id="name" placeholder=" " required>
                                 <span class="form-control-placeholder">Name</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="contact" placeholder=" ">
+                                <input type="tel" maxlength="10" class="form-control" id="contact" placeholder=" " required>
                                 <span class="form-control-placeholder">Contact</span>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="address" placeholder=" ">
+                                <input type="text" class="form-control" id="address" placeholder=" " required>
                                 <span class="form-control-placeholder">Address</span>
                             </div>
                             <div class="form-group">
-                                <select id="type" class="form-control">
+                                <select id="type" class="form-control" required>
                                     <option value="">Select Type</option>
                                     <option value="driver">Driver</option>
                                     <option value="conductor">Conductor</option>
@@ -217,7 +217,7 @@
                         <!-- Dynamic Fields -->
                         <div id="dynamicFields"></div>
 
-                        <div id="suggestions" class="suggestions"></div>
+
 
 
                         <button class="getDetails-button" type="submit">
@@ -362,13 +362,13 @@
 
             <div class="overlay-inner" style="height: calc(100% - 4rem)">
                 <!-- Lottie Animation and Form Section -->
-                <div class="tag-left left-manageroute" style="margin-bottom: 40px;">
+                <div class="tag-left left-manageroute" style="margin-bottom: 40px; ">
                     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
                         type="module"></script>
 
                     <!-- Lottie Animation Player -->
                     <dotlottie-player src="https://lottie.host/9085a2af-7df0-468b-b0c0-059e0eca82b6/zN60LritoN.json"
-                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                        background="transparent" speed="1" style="width: 250px; height: 250px;margin-left: 16%;;" loop
                         autoplay></dotlottie-player>
 
                     <!-- Form Section Below the Animation -->
@@ -380,15 +380,30 @@
                         </div>
 
                         <div class="form-group">
-                            <div class="input-with-tags" id="citiesAddressContainer">
-                                <input type="text" class="form-control" id="citiesAddress" placeholder=" ">
-                                <div id="address_suggestionBox" class="address_suggestionBox"></div>
+                            <div class="cities-container" id="citiesAddressContainer" style="width: 100%; height: 100px; overflow-y: auto; margin-bottom: 10px;background-color: white
+                            ;">
+                                <input type="text" class="city-input" id="citiesAddress" placeholder="Cities/Address">
                             </div>
-                            <span class="form-control-placeholder">Cities/Address</span>
+                            <div id="address_suggestionBox" class="suggestions-container"
+                                style="display: none; top: 3rem; color: black;"></div>
                         </div>
 
+
+                        <!-- <div class="form-group">
+                            <label for="editRouteCities">Route Cities :</label>
+                            <div id="citiesContainer" class="cities-container">
+                                
+                                <input type="text" id="cityInput" placeholder="Add a city" class="city-input">
+                            </div>
+                            
+                            <div id="suggestionsContainer" class="suggestions-container" style="display: none;"></div>
+                        </div> -->
+
+
+
                         <!-- Create Route Button -->
-                        <button class="getDetails-button" type="submit">
+                        <button class="getDetails-button" type="submit"
+                            style="position: absolute; bottom: 27px;  transform: translateX(-50%); align-items: center;">
                             <img src="../images/route.png" alt="">
                             <span>Create Route</span>
                         </button>
@@ -398,7 +413,7 @@
                 <div class="tag-right">
                     <!-- Search Input and Table Section -->
                     <!-- Search Route Input Section -->
-                    <button class="export_routes" onclick="">
+                    <button class="export_routes" onclick="exportRouteTable()">
                         <img src="/images/export.png" alt="Export Icon"> Export
                     </button>
 
@@ -434,8 +449,6 @@
                 </div>
             </div>
         </div>
-
-
     </div>
 
     <!-- Edit popup for manage routes -->
@@ -486,7 +499,7 @@
             <button id="closeManageShiftsOverlay" class="close-button">&times;</button>
             <h2 class="overlay-search-head">Manage Shifts</h2>
 
-            <div class="overlay-inner" style="height: calc(100% - 4rem)">
+            <div class="overlay-inner" style="height: calc(100% - 6rem)">
                 <!-- Lottie Animation and Form Section -->
                 <div class="tag-left left-manageshift">
                     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
@@ -494,7 +507,7 @@
 
                     <!-- Lottie Animation Player -->
                     <dotlottie-player src="https://lottie.host/1d619a4d-bd00-4b60-95ac-2e2859866ec1/REwvaSqKpK.json"
-                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                        background="transparent" speed="1" style="width: 250px; height: 250px; margin-left: 16%;" loop
                         autoplay></dotlottie-player>
 
                     <!-- Form Section Below the Animation -->
@@ -504,25 +517,42 @@
                             <span class="form-control-placeholder">Shift Name</span>
                         </div>
 
+
+                        <!-- <div class="input-with-tags" id="shiftTypeContainer">
+                            <input type="text" class="form-control" id="shiftType" placeholder="Classes">
+                            <div id="shiftTypeSuggestionBox" class="address_suggestionBox"></div>
+                        </div> -->
+
                         <div class="form-group">
-                            <div class="input-with-tags" id="shiftTypeContainer">
-                                <input type="text" class="form-control" id="shiftType" placeholder=" ">
-                                <div id="shiftTypeSuggestionBox" class="address_suggestionBox"></div>
+                            <div class="cities-container" id="shiftTypeContainer" style="width: 100%; height: 100px; overflow-y: auto; margin-bottom: 10px;background-color: white
+                            ;">
+                                <input type="text" class="city-input" id="shiftType" placeholder="Classes">
                             </div>
-                            <span class="form-control-placeholder">Classes</span>
+                            <div id="shiftTypeSuggestionBox" class="suggestions-container"
+                                style="display: none; top: 3rem; color: black;"></div>
                         </div>
 
+
+
+
+
+
+
                         <!-- Create Shift Button -->
-                        <button class="getDetails-button" type="submit">
+                        <button class="getDetails-button" type="submit"
+                            style="position: absolute; bottom: 27px;  transform: translateX(-50%); align-items: center;">
                             <img src="../images/shift.png" alt="">
                             <span>Create Shift</span>
                         </button>
+
+
+
                     </form>
                 </div>
 
                 <div class="tag-right">
                     <!-- Search Input and Table Section -->
-                    <button class="export_routes" onclick="">
+                    <button class="export_routes" onclick="exportShiftTable()">
                         <img src="/images/export.png" alt="Export Icon"> Export
                     </button>
 
@@ -773,7 +803,7 @@
 
             <div class="overlay-inner" style="height: calc(100% - 4rem);">
                 <!-- Right Section: Table -->
-                <div class="table-container">
+                <div class="table-container" style="width: 100%;">
                     <table id="allocate_scheduleTable" class="styled-table">
                         <thead>
                             <tr>
@@ -812,7 +842,7 @@
 
                     <!-- Lottie Animation Player -->
                     <dotlottie-player src="https://lottie.host/9c718d68-ba48-4d8e-a0c8-40afe1b833fe/sxmNRw9ZoN.json"
-                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                        background="transparent" speed="1" style="width: 300px; height: 250px;" loop
                         autoplay></dotlottie-player>
 
                     <!-- Form Section Below the Animation -->
@@ -825,12 +855,14 @@
                         </div>
 
                         <div class="form-group">
-                            <input type="text" class="form-control" id="listStudents_shiftType" placeholder=" ">
+                            <input type="text" class="form-control" id="listStudents_shiftType" placeholder=" "
+                                oninput="showInfoContainer()">
                             <span class="form-control-placeholder">Shift</span>
                             <div id="listStudents_shiftSuggestions" class="suggestions"></div>
                         </div>
 
-                        <div id="listStudents_vehicleInfo" class="info-containe">
+                        <div id="listStudents_vehicleInfo" class="info-container"
+                            style="color: black;max-height: 60px;width: 90%;">
                             <!-- Vehicle info will be displayed here -->
                         </div>
                     </div>
@@ -856,14 +888,12 @@
                         </button>
                     </div>
 
-                    <div class="student-count">
-                        <h3>Students Count: <span id="studentCount">0</span></h3>
+                    <div class="student-teacher-count">
+                        <h3><i class="student-icon"></i> Students Count: <span id="studentCount">&nbsp;0</span></h3>            
+                        <h3><i class="teacher-icon"></i> Teachers Count: <span id="teacherCount">&nbsp;0</span></h3>
                     </div>
-                    <div class="teacher-count">
-                        <h3>Teachers Count: <span id="teacherCount">0</span></h3>
-                    </div>
-
-                    <div class="table-container">
+                    
+                    <div class="table-container" style="max-height: calc(100% - 12.5rem);">
                         <table id="listStudents_scheduleTable" class="styled-table">
                             <thead>
                                 <tr>
@@ -889,9 +919,22 @@
         <div class="overlay-content-search">
             <h2>Transport Monitoring</h2>
             <button id="closeTransportMonitoringOverlay" class="close-button">&times;</button>
+
+            <!-- Export button added above the map -->
+            <button id="exportPickDropLogs" class="export_registered_students">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+
             <div id="map"></div>
         </div>
     </div>
+
+
+
+
+
+   
+
 
 
     <script src="/js/Inventory_js/All.js"></script>
@@ -907,7 +950,20 @@
 
 
     <script src="/js/Universal_Components_JS/handle_session.js"></script>
+    <script src="/js/Universal_Components_JS/Helping_functions.js"></script>
 
+    <script>
+        const citiesAddressContainer = document.getElementById('citiesAddressContainer');
+        const citiesAddressInput = document.getElementById('citiesAddress');
+
+        // Scroll to the input whenever the user focuses on the input
+        citiesAddressInput.addEventListener('focus', () => {
+            setTimeout(() => {
+                citiesAddressContainer.scrollTop = citiesAddressInput.offsetTop - citiesAddressContainer.offsetTop;
+            }, 0);
+        });
+
+    </script>
 
 </body>
 

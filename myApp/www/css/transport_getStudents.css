@@ -1,0 +1,339 @@
+/* Body styles */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #e3fbf5;
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    overflow: hidden; /* Prevent body from scrolling */
+}
+
+/* Container */
+.container {
+    width: 100%;
+    /* max-width: 400px; */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Blue section */
+.blue-section {
+    flex: 2;
+    background-color: #3466af;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Shift details styles */
+.shift-details {
+    text-align: left;
+    color: white;
+}
+
+.shift-details h2 {
+    font-size: 35px; /* 5x bigger font size for the heading */
+    font-weight: 500;
+    margin: 0;
+    font-family: "Poppins", sans-serif; /* Apply Poppins font */
+}
+
+.shift-details p {
+    margin: 5px 0;
+    font-size: 14px; /* Font size for other details */
+    font-family: "Poppins", sans-serif; /* Apply Poppins font */
+}
+
+/* Search bar styles */
+#search-container {
+    width: 100%;
+    margin-top: 20px; /* Add some space between shift details and search bar */
+    display: flex;
+    justify-content: center;
+    position: relative; /* Position relative for icon positioning */
+}
+
+#search-bar {
+    width: 80%; /* Reduce the width */
+    max-width: 300px; /* Optional: set a maximum width */
+    padding: 10px 20px 10px 40px; /* Add padding for the search icon */
+    border: 1px solid #ccc;
+    border-radius: 50px; /* Make it round */
+    box-sizing: border-box;
+    background-color: white; /* Background color white */
+    color: black; /* Text color black */
+    font-family: "Poppins", sans-serif; /* Apply Poppins font */
+}
+
+#search-bar::placeholder {
+    color: grey; /* Placeholder color grey */
+}
+
+.search-icon {
+    position: absolute;
+    right: calc(10% + 10px); /* Position to the right inside the search bar */
+    top: 50%;
+    transform: translateY(-50%);
+    color: #3466af; /* Blue color for the icon */
+    font-size: 1em;
+}
+
+/* White section */
+.white-section {
+    flex: 8;
+    background-color: white;
+    padding: 10px 20px; /* Reduced padding for better fit */
+    box-sizing: border-box;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1);
+    margin-top: -20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Make it take available height */
+    width: 100%;
+}
+
+/* Student details container */
+.student-details-container {
+    width: 100%; /* Full width of parent container */
+    height: 100%;
+    overflow-y: auto; /* Make it scrollable */
+    display: flex;
+    flex-direction: column; /* Ensure child elements stack vertically */
+    align-items: center; /* Center align items */
+    margin-bottom: 10px;
+}
+
+/* Detailed student list */
+.detailed-student-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%; /* Full width of parent */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Route container styles (grouping container) */
+.route-container {
+    margin-bottom: 10px; /* Space between route containers */
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #fff; /* Make route container white */
+    width: 100%; /* Full width */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    box-sizing: border-box; /* Ensure padding and border are included in the width */
+    font-family: "Poppins", sans-serif; /* Apply Poppins font */
+}
+
+/* Route header */
+.route-container h4 {
+    margin: 0;
+    font-size: 14px; /* Reduced font size for header */
+    font-weight: 700; /* Bold header */
+    color: #333; /* Darker text color */
+    font-family: "Poppins", sans-serif; /* Apply Poppins font */
+}
+
+/* Student list item styles */
+.student-list {
+    width: 100%; /* Ensure full-width within the route container */
+    padding: 0;
+    margin: 0;
+    list-style: none; /* Remove bullet points */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+/* Individual student list item styles */
+.student-list li {
+    margin-bottom: 10px; /* Space between items */
+    padding: 15px;
+    border: 1px solid #e0e0e0; /* Lighter border */
+    border-radius: 15px; /* Rounded corners */
+    display: flex;
+    flex-direction: column; /* Align content vertically */
+    align-items: flex-start; /* Align items to the left */
+    background-color: #f9f9f9; /* Light background for contrast */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    width: 100%; /* Full width */
+    box-sizing: border-box; /* Ensure padding and border are included in the width */
+    font-family: "Poppins", sans-serif; /* Apply Poppins font */
+}
+
+.student-list li:first-child {
+    margin-top: 10px; /* Space at the top for the first item */
+}
+
+.item-content {
+    width: 100%; /* Ensure item content is full width */
+}
+
+.item-content p {
+    margin: 5px 0;
+    width: 100%; /* Full-width paragraphs */
+    word-wrap: break-word; /* Ensure long words break to prevent overflow */
+    font-family: "Poppins", sans-serif; /* Apply Poppins font */
+}
+
+.student-name {
+    font-size: 14px;
+    font-weight: 700; /* Bold name */
+    color: #333; /* Darker text color */
+    font-family: "Poppins", sans-serif; /* Apply Poppins font */
+}
+
+.student-class,
+.student-contact,
+.student-pickup-drop {
+    font-size: 14px;
+    color: #555; /* Grey color for other details */
+    font-family: "Poppins", sans-serif; /* Apply Poppins font */
+}
+
+/* Button group and button styles */
+.button-group {
+    display: flex;
+    justify-content: space-between; /* Evenly distribute buttons */
+    width: 100%;
+    margin-top: 10px; /* Space between content and buttons */
+    overflow: hidden; /* Prevent buttons from overflowing */
+}
+
+.button-group button {
+    padding: 8px 10px; /* Padding for better touch area */
+    background-color: #f3f3f3;
+    border: none;
+    border-radius: 15px; /* Rounded corners */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center items */
+    flex: 1; /* Make buttons fill available space */
+    margin: 0 3px; /* Reduce gap between buttons */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 -2px 4px rgba(0, 0, 0, 0.1); /* Add shadow to all sides of buttons */
+    font-size: 12px; /* Adjusted font size for buttons */
+    text-align: center;
+    white-space: normal; /* Allow text wrap */
+    overflow: hidden; /* Prevent content overflow */
+    text-overflow: ellipsis; /* Ellipsis for overflow text */
+    font-family: "Poppins", sans-serif; /* Apply Poppins font */
+}
+
+.button-group button img {
+    width: 16px; /* Adjusted icon size */
+    height: 16px; /* Adjusted icon size */
+    margin-right: 5px;
+}
+
+.button-group button.call-button {
+    flex: 0 1 40px; /* Fixed width for call button */
+    padding: 8px;
+    margin: 0 3px; /* Reduce gap between buttons */
+}
+
+.button-group button span {
+    overflow: hidden;
+    text-overflow: ellipsis; /* Ellipsis for overflow text */
+}
+
+.button-group button:hover {
+    background-color: #ddd;
+}
+
+/* Spinner Container */
+.spinner-container {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3466af;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    margin: 0 20px; /* Add gaps at each end */
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.modal button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #3466af;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.modal button:hover {
+    background-color: #2e57a0;
+}
+
+/* Responsive Styles */
+@media (max-width: 480px) {
+    .student-list li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .button-group {
+        justify-content: space-around;
+        flex-wrap: wrap;
+    }
+
+    .button-group button {
+        margin: 3px 0;
+        flex: none;
+        width: calc(33.33% - 6px); /* Adjusted for 3 buttons per row */
+    }
+
+    .button-group button.call-button {
+        width: 40px; /* Fixed width for call button */
+    }
+}

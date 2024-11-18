@@ -53,7 +53,7 @@ function displayRoutes(data) {
                             <span style="margin-right: 10px;">Edit</span>
                         </button>
                         <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-                            onclick="deleteRoute('${item.route_shift_id}')"
+                            onclick="deleteRoute('${item.route_shift_id}', '${item.route_shift_name}')"
                             onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
                             onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
                             <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
@@ -82,41 +82,61 @@ document.getElementById('searchRoute').addEventListener('input', function () {
 });
 
 
-function deleteRoute(routeId) {
-    // Confirm before deletion
-    const confirmDelete = confirm("Are you sure you want to delete this route?");
-    showTransportLoadingAnimation();
-    if (!confirmDelete) {
-        hideTransportLoadingAnimation();
-        return;
-    }
+function deleteRoute(routeId, routeName) {
+    // Confirm before deletion using SweetAlert
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you really want to delete this route?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            showTransportLoadingAnimation();
 
-    // Send DELETE request to the server
-    fetch(`/deleteRoute/${routeId}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-        .then(response => {
-            if (response.ok) {
-                hideTransportLoadingAnimation();
-                // Successfully deleted, now refresh the route data
-                showToast("Route deleted successfully!");
-                refreshRoutesData(); // Refresh the routes list after deletion
-            } else {
-                hideTransportLoadingAnimation();
-                return response.json().then(errorData => {
-                    throw new Error(errorData.message || "Failed to delete route");
+            // Send DELETE request to the server
+            fetch(`/deleteRoute/${routeId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ routeName: routeName })
+            })
+                .then(response => {
+                    hideTransportLoadingAnimation();
+                    return response.json().then(data => {
+                        if (response.ok) {
+                            // Successfully deleted, now refresh the route data
+                            Swal.fire(
+                                'Deleted!',
+                                'Route deleted successfully!',
+                                'success'
+                            );
+                            refreshRoutesData(); // Refresh the routes list after deletion
+                        } else {
+                            // Show error message if route is tagged
+                            Swal.fire(
+                                'Error!',
+                                data.message,
+                                'error'
+                            );
+                        }
+                    });
+                })
+                .catch(error => {
+                    hideTransportLoadingAnimation();
+                    Swal.fire(
+                        'Error!',
+                        'Error deleting route: ' + error.message,
+                        'error'
+                    );
                 });
-            }
-        })
-        .catch(error => {
-            hideTransportLoadingAnimation();
-            console.error("Error deleting route:", error);
-            showToast("Error deleting route: " + error.message);
-        });
+        }
+    });
 }
+
 
 const manageRoutesForm = document.getElementById("manageRoutesForm");
 const routesTableBody = document.getElementById("routesTableBody");
@@ -224,7 +244,7 @@ function reseteditForm() {
 //                                 <span style="margin-right: 10px;">Edit</span>
 //                             </button>
 //                             <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-//                                 onclick="deleteRoute('${item.route_shift_id}')"
+//                                 onclick="deleteRoute('${item.route_shift_id}', '${item.route_shift_name}')"
 //                                 onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
 //                                 onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
 //                                 <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">

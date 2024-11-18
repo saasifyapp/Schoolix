@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Details</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="./css/transport_getStudents.css">
+</head>
+<body>
+    <!-- Spinner Container -->
+    <div id="spinnerContainer" class="spinner-container">
+        <div id="spinner" class="spinner"></div>
+    </div>
+
+    <div id="driver-details-screen" class="container">
+        <div class="blue-section">
+            <div id="shift-details-container" class="shift-details">
+                <h2>Shift Details</h2>
+                <p><strong>Selected Shift:</strong> <span id="selected-shift"></span></p>
+                <p><strong>Total Stops:</strong> <span id="total-stops"></span></p>
+                <p><strong>Total Passengers:</strong> <span id="total-students"></span></p>
+            </div>
+            <!-- Search Bar -->
+            <div id="search-container">
+                <input type="text" id="search-bar" placeholder="Search Passengers...">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+        </div>
+        <div class="white-section">
+            <div id="student-details-container" class="student-details-container">
+                <ul id="detailed-student-list" class="detailed-student-list"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="locationModal" class="modal">
+        <div class="modal-content">
+            <p>Location services are disabled. Please enable them to use this app.</p>
+            <button id="enableLocationBtn">Enable Location</button>
+            <button id="cancelBtn">Cancel</button>
+        </div>
+    </div>
+
+    <script src="cordova.js"></script>
+    <script src="./js/transport_getStudents.js"></script>
+</body>
+</html>

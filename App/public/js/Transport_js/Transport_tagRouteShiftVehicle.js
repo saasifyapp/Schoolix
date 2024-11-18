@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+
   const routeInput = document.getElementById("tag_tag_route_name");
   const routeSuggestionsContainer = document.getElementById(
     "tag_routeSuggestions"
@@ -60,6 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Function to fetch the data from the server and refresh the table
   function refreshTable() {
+    showTransportLoadingAnimation();
     fetch("/tag_display_route_shift_allocation_data")
       .then((response) => response.json())
       .then((data) => displayData(data)) // Call displayData to render the table
@@ -70,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Call the refreshTable function to load the initial data when the page loads
-  refreshTable();
+  // refreshTable();
 
   // Function to fetch route suggestions
   function fetchRouteSuggestions(query) {
@@ -534,4 +535,3 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Error:", error)
       });
   });
-});

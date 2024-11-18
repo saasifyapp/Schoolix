@@ -41,7 +41,7 @@
     border: 1px solid #888;
     width: 80%;
     /* Could be more or less, depending on screen size */
-    max-width: 1100px;
+    max-width: 750px;
     /* Optional: maximum width for better control */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     /* Optional: shadow effect */
@@ -290,7 +290,7 @@
     margin-bottom: 20px;
     margin-right: 300px;
     width: 500px;
-    margin-left: 20%;
+    margin-left: 28%;
 }
 
 .form-Searchgroup {
@@ -1120,47 +1120,6 @@ svg path {
     stroke-dasharray: none !important; /* Ensure the line is continuous */
 }
 
-.student-teacher-count {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 15px;   
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    color: var(--grey-color); /* Text color */
-    margin: 10px; /* Optional: space around the card */
-    animation: fadeUp 0.5s ease-in-out;
-    animation-delay: 0.4s;
-    animation-fill-mode: backwards;
-}
-
-.student-teacher-count h3 {
-    display: flex;
-    align-items: center;
-    margin: 0px 40px; /* Horizontal margin between h3 */
-    font-size: 1.2em; /* Adjust size as needed */
-}
-
-.student-teacher-count .student-icon,
-.student-teacher-count .teacher-icon {
-    display: inline-block;
-    width: 24px; /* Icon width */
-    height: 24px; /* Icon height */
-    margin-right: 10px; /* Space between icon and text */
-    background-size: contain;
-    background-repeat: no-repeat;    
-}
-
-.student-teacher-count .student-icon {
-    background-image: url('/images/students.png'); /* Replace with the actual path to the student icon */
-}
-
-.student-teacher-count .teacher-icon {
-    background-image: url('/images/teacher.png'); /* Replace with the actual path to the teacher icon */
-}
-
-
-
 @keyframes fadeUp {
     from {
         opacity: 0;
@@ -1172,3 +1131,7 @@ svg path {
         transform: translateY(0);
     }
 }
+
+
+
+/********************************** Create Category ***********************************************************/

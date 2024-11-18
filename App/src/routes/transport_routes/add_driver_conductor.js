@@ -215,7 +215,15 @@ router.post('/validateDriverConductorDetails', (req, res) => {
 });
 
 
-// Endpoint to handle driverConductor form submission
+
+// Function to get initials from school name
+function getInitials(schoolName) {
+    return schoolName
+        .split(' ')
+        .map(word => word[0].toLowerCase())
+        .join('');
+}
+
 // Endpoint to handle driverConductor form submission
 router.post('/addDriverConductor', (req, res) => {
     const { name, contact, address, type, vehicle_no, vehicle_type, vehicle_capacity } = req.body;
@@ -234,9 +242,12 @@ router.post('/addDriverConductor', (req, res) => {
     // Format school name to lowercase and replace spaces with underscores
     const formattedSchoolName = schoolName.replace(/\s+/g, '_').toLowerCase();
 
+    // Format school name to initials
+    const schoolInitials = getInitials(schoolName);
+
     // Generate username and password
     const username = name.replace(/\s+/g, '').toLowerCase(); // Remove spaces and convert to lowercase
-    const password = `school@${username}`;
+    const password = `${schoolInitials}@${username}`;
     const userType = type.toLowerCase() === 'driver' ? 'driver' : 'conductor'; // Determine user type based on the type from client
 
     // Start a transaction
@@ -282,19 +293,20 @@ router.post('/addDriverConductor', (req, res) => {
                         });
                     }
 
-                    // Now, insert data into the android_app_users table
+                    // Now, insert data into the android_app_users table using connection_auth
                     const sqlUser = `
-                        INSERT INTO android_app_users (username, password, school_name, type, name, uid)
-                        VALUES (?, ?, ?, ?, ?, ?)
+                      INSERT INTO android_app_users (username, password, school_name, type, name, uid)
+                      VALUES (?, ?, ?, ?, ?, ?)
                     `;
                     const valuesUser = [username, password, schoolName, userType, name, uid];
 
-                    connection.query(sqlUser, valuesUser, (error, resultsUser) => {
+                    connection_auth.query(sqlUser, valuesUser, (error, resultsUser) => {
                         if (error) {
                             return connection.rollback(() => {
                                 res.status(500).json({ error: 'Database insertion failed for user details' });
                             });
                         }
+
 
                         // Commit the transaction
                         connection.commit(error => {
@@ -496,6 +508,15 @@ router.delete('/deleteDriverConductor/:id', (req, res) => {
 router.put('/updateAllDetails', (req, res) => {
     const { id, name, contact, address, driver_conductor_type, vehicle_no, vehicle_type, vehicle_capacity, new_seats } = req.body;
 
+    // Retrieve school name from cookie
+    const schoolName = req.cookies.schoolName;
+    if (!schoolName) {
+        return res.status(400).json({ error: 'School name is required' });
+    }
+
+    // Format school name to initials
+    const schoolInitials = getInitials(schoolName);
+
     req.connectionPool.getConnection((err, conn) => {
         if (err) {
             console.error('Error getting connection from pool:', err);
@@ -504,7 +525,7 @@ router.put('/updateAllDetails', (req, res) => {
 
         // Declare all SQL queries
         const username = name.replace(/\s+/g, '').toLowerCase();
-        const password = `school@${username}`;
+        const password = `${schoolInitials}@${username}`;
 
         const sqlSelectUid = `
             SELECT uid
@@ -527,14 +548,14 @@ router.put('/updateAllDetails', (req, res) => {
             WHERE vehicle_no = ?
         `;
         const sqlSelectCapacity = `
-            SELECT available_seats, vehicle_capacity
+            SELECT shift_name, available_seats, vehicle_capacity
             FROM transport_schedule_details
             WHERE vehicle_no = ?
         `;
         const sqlUpdateCapacity = `
             UPDATE transport_schedule_details
             SET available_seats = ?, vehicle_capacity = ?
-            WHERE vehicle_no = ?
+            WHERE vehicle_no = ? AND shift_name = ?
         `;
 
         // Execute the SELECT query to get the uid
@@ -553,7 +574,7 @@ router.put('/updateAllDetails', (req, res) => {
             const uid = results[0].uid;
 
             // Execute SQL queries one by one without transaction
-            conn.query(sqlUpdateAndroidAppUsers, [username, password, name, uid], (err, androidAppResult) => {
+            connection_auth.query(sqlUpdateAndroidAppUsers, [username, password, name, uid], (err, androidAppResult) => {
                 if (err) {
                     conn.release();
                     console.error('Error updating android_app_users table:', err);
@@ -598,22 +619,29 @@ router.put('/updateAllDetails', (req, res) => {
                                     return res.status(200).json({ message: 'All details updated successfully, but no schedule details found to update capacity.' });
                                 }
 
-                                const { available_seats, vehicle_capacity: existing_vehicle_capacity } = results[0];
-                                const new_available_seats = available_seats + new_seats;
-                                const new_vehicle_capacity = existing_vehicle_capacity + new_seats;
+                                // Loop through each record and update the capacity and available seats
+                                let updateCount = 0;
+                                results.forEach(record => {
+                                    const { shift_name, available_seats, vehicle_capacity: existing_vehicle_capacity } = record;
+                                    const new_available_seats = available_seats + new_seats;
+                                    const new_vehicle_capacity = existing_vehicle_capacity + new_seats;
 
-                                conn.query(sqlUpdateCapacity, [new_available_seats, new_vehicle_capacity, vehicle_no], (err, updateCapacityResult) => {
-                                    conn.release();
-                                    if (err) {
-                                        console.error('Error updating transport_schedule_details table:', err);
-                                        return res.status(500).json({ message: 'Failed to update transport_schedule_details table' });
-                                    }
-                                    if (updateCapacityResult.affectedRows === 0) {
-                                        console.error('No rows affected in transport_schedule_details table for capacity update:', { new_available_seats, new_vehicle_capacity, vehicle_no });
-                                        return res.status(404).json({ message: 'No rows affected in transport_schedule_details table for capacity update' });
-                                    }
+                                    conn.query(sqlUpdateCapacity, [new_available_seats, new_vehicle_capacity, vehicle_no, shift_name], (err, updateCapacityResult) => {
+                                        if (err) {
+                                            console.error('Error updating transport_schedule_details table:', err);
+                                            return res.status(500).json({ message: 'Failed to update transport_schedule_details table' });
+                                        }
+                                        if (updateCapacityResult.affectedRows === 0) {
+                                            console.error('No rows affected in transport_schedule_details table for capacity update:', { new_available_seats, new_vehicle_capacity, vehicle_no, shift_name });
+                                            return res.status(404).json({ message: 'No rows affected in transport_schedule_details table for capacity update' });
+                                        }
 
-                                    res.status(200).json({ message: 'All details updated successfully' });
+                                        updateCount++;
+                                        if (updateCount === results.length) {
+                                            conn.release();
+                                            res.status(200).json({ message: 'All details updated successfully' });
+                                        }
+                                    });
                                 });
                             });
                         });

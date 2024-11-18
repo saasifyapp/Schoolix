@@ -5,54 +5,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Driver Console</title>
-    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap">
+    <link rel="stylesheet" href="./css/transport_console.css">
 </head>
 
 <body>
 
     <!-- Spinner Container -->
-    <div id="spinnerContainer" class="spinner-container">
-        <div id="spinner" class="spinner"></div>
+    <div id="spinnerContainer">
+        <div class="spinner"></div>
     </div>
 
-    <!-- Sign-out Button with Image -->
-    <button id="signout-button" class="signout-button">
-        <img src="./img/signout.png" alt="Sign Out">
-    </button>
-
-    <div id="driver-console" class="screen">
-        <h1>DRIVER CONSOLE</h1>
-        <div class="card">
-            <h2>Driver Details</h2>
-            <ul id="driver-details">
-                <li class="driver-detail-item">Driver Name: <span id="driver-name"></span></li>
-                <li class="driver-detail-item">Vehicle No: <span id="vehicle-no"></span></li>
-                <li class="driver-detail-item">Vehicle Capacity: <span id="vehicle-capacity"></span></li>
-                <li class="driver-detail-item">Conductor Name: <span id="conductor-name"></span></li>
-            </ul>
+    <div id="driver-console" class="container">
+        <div class="blue-section">
+            <div class="driver-details">
+                <div class="driver-greeting">
+                    Hi, <span id="driver-name" class="driver-name"></span>
+                </div>
+                <p class="vehicle-info">Vehicle No: <span id="vehicle-no"></span></p>
+                <p class="vehicle-info">Vehicle Capacity: <span id="vehicle-capacity"></span></p>
+                <p class="conductor-info">Conductor Name: <span id="conductor-name"></span></p>
+            </div>
+            <div class="driver-gif">
+                <img src="./img/driver.gif" alt="Driver GIF">
+            </div>
+            <button id="signout-button" class="signout-button">
+                <img src="./img/signout.png" alt="Sign Out">
+            </button>
         </div>
-        <div class="card button-card"></div>
-        <button id="back-button">Back</button>
+        <div class="white-section">
+            <h1 class="title">Dashboard</h1>
+            <div class="card button-card">
+                <!-- Buttons will be added dynamically here -->
+            </div>
+        </div>
     </div>
-
-    <div id="driver-details-screen" class="screen hidden">
-        <div id="shift-details-container">
-            <h2>Shift Details</h2>
-            <p><strong>Selected Shift:</strong> <span id="selected-shift"></span></p>
-            <p><strong>Total Stops:</strong> <span id="total-stops"></span></p>
-            <p><strong>Total Students:</strong> <span id="total-students"></span></p>
-        </div>
-        <!-- Search Bar -->
-        <div id="search-container">
-            <input type="text" id="search-bar" placeholder="Search students...">
-        </div>
-        <div id="student-details-container">
-            <h2>Student Details</h2>
-            <ul id="detailed-driver-list"></ul>
-        </div>
-        <button id="back-to-console-button">Back</button>
-    </div>
-
 
     <!-- Modal Structure -->
     <div id="locationModal" class="modal">
@@ -66,7 +53,7 @@
     <script src="cordova.js"></script>
     <script src="./js/transport_console.js"></script>
     <script src="./js/universal_components.js"></script>
-
+ 
 </body>
 
 </html>
