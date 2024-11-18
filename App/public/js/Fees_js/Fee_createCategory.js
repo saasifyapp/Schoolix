@@ -85,6 +85,15 @@ createCategoryForm.addEventListener('submit', function (event) {
         });
 });
 
+document.getElementById('closeCreateCategoryOverlay').addEventListener('click', () =>{
+    // Clear the form inputs
+    document.getElementById('categoryName').value = '';
+    document.getElementById('categoryDescription').value = '';
+});
+
+document.getElementById('closeEditCategoryOverlay').addEventListener('click', () =>{
+    searchBar.value = '';
+});
 
 // Add event listener to the search input
 const searchBar = document.getElementById('searchBar');

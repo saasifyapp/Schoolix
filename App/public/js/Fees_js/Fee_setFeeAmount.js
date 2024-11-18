@@ -419,6 +419,14 @@ function resetForm() {
     allGradesRadio.disabled = false;
 }
 
+document.getElementById('closeSetAmountOverlay').addEventListener('click', () =>{
+    resetForm();
+});
+
+document.getElementById('closeEditFeeAmountOverlay').addEventListener('click', () =>{
+    searchFeeBar.value = '';
+});
+
 
 // Add event listener to the search input for fee amount
 searchFeeBar.addEventListener('input', function () {
