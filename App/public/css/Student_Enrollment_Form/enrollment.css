@@ -26,7 +26,7 @@ body {
 
 .enrollment-form {
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 0.7fr 3fr;
     height: 100vh;
     margin-top: 3rem;
 }
@@ -80,31 +80,70 @@ h3{
     color: var(--grey-color);
 }
 
-
+/* Form Navigation Styling */
 .form-navigation {
     background-color: #f8f9fa;
     border-right: 1px solid #ddd;
     padding: 20px;
+    margin-top: 2rem;
+    border-radius: 20px;
+    margin-bottom: 4rem;
+    box-shadow: 0 0 4px #808B96;
+    text-align: start;
 }
 
+/* Style for the list of navigation items */
 .form-navigation ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
+/* Style for each navigation item */
 .form-navigation li {
+    display: flex; /* Use flexbox to position the icon and text side by side */
+    align-items: center; /* Vertically center-aligns text and icon */
     padding: 15px;
     cursor: pointer;
     border: 1px solid transparent;
+    border-radius: 15px;
     margin-bottom: 10px;
-    transition: all 0.3s ease;
+    font-size: var(--bs-nav-link-font-size);
+    font-weight: var(--bs-nav-link-font-weight);
+    --bs-text-opacity: 1;
+    color: rgba(var(--bs-black-rgb), var(--bs-text-opacity)) !important;
+    transition: all 0.08s ease;
 }
 
-.form-navigation li:hover,
+/* Hover effect for navigation items */
+.form-navigation li:hover {
+    background-color: #d8faf9;
+    transform: scale(1.05);
+    border-radius: 15px;
+    font-weight: 600;
+}
+
+/* Active state for navigation item */
 .form-navigation li.active {
-    background-color: #007bff;
-    color: #fff;
-    border-radius: 5px;
+    background-color: #d8faf9;
+    font-weight: 600; /* Optional: make the active item bold */
+}
+
+/* Style for the icon (left of the text) */
+.nav-icon {
+    width: 24px; /* Adjust the size of the icon */
+    height: 24px;
+    margin-right: 10px; /* Space between icon and text */
+    mix-blend-mode: multiply;
+}
+
+/* Style for the done icon (show after the section is complete) */
+.done-icon {
+    font-size: 16px;
+    color: green;
+    margin-left: 10px;
+    font-weight: bold;
+    display: inline-block;
 }
 
 .form-content {

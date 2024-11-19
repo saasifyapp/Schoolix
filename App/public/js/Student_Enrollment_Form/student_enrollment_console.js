@@ -96,3 +96,34 @@ document.querySelectorAll('.form-control, textarea').forEach(input => {
 
 // Initialize the progress bar on page load
 updateProgressBar();
+
+
+// Function to check if all fields in a section are filled
+function checkSectionCompletion(sectionId) {
+    const section = document.getElementById(sectionId);
+    const inputs = section.querySelectorAll('.form-control, textarea'); // Select all input and textarea fields
+    return Array.from(inputs).every(input => input.value.trim() !== ""); // Check if all inputs are filled
+}
+
+// Function to update the done icon for navigation items
+function updateDoneIcons() {
+    document.querySelectorAll('.form-navigation li').forEach(item => {
+        const sectionId = item.id.replace('-info', '-information'); // Map navigation ID to section ID
+        const isComplete = checkSectionCompletion(sectionId); // Check if the section is complete
+        const doneIcon = item.querySelector('.done-icon'); // Get the done icon for the current item
+
+        if (isComplete) {
+            doneIcon.style.display = 'inline'; // Show the done icon if the section is complete
+        } else {
+            doneIcon.style.display = 'none'; // Hide the done icon if the section is incomplete
+        }
+    });
+}
+
+// Add event listeners to all inputs to update the icons dynamically
+document.querySelectorAll('.form-control, textarea').forEach(input => {
+    input.addEventListener('input', updateDoneIcons);
+});
+
+// Initialize done icons on page load
+updateDoneIcons();
