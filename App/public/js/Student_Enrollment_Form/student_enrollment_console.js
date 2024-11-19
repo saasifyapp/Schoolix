@@ -64,3 +64,35 @@ document.querySelectorAll('.form-section').forEach((section, index, sections) =>
         });
     }
 });
+
+
+// Function to calculate and update the progress bar
+function updateProgressBar() {
+    const inputs = document.querySelectorAll('.form-control, textarea'); // Select all input and textarea fields
+    const totalInputs = inputs.length; // Total number of inputs
+    let filledInputs = 0;
+
+    // Count the number of filled inputs
+    inputs.forEach(input => {
+        if (input.value.trim() !== "") {
+            filledInputs++;
+        }
+    });
+
+    // Calculate progress percentage
+    const progressPercentage = Math.round((filledInputs / totalInputs) * 100);
+
+    // Update progress bar fill and text
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const progressBarText = document.getElementById('progress-bar-text');
+    progressBarFill.style.width = `${progressPercentage}%`;
+    progressBarText.textContent = `${progressPercentage}%`;
+}
+
+// Add event listeners to all inputs to detect changes
+document.querySelectorAll('.form-control, textarea').forEach(input => {
+    input.addEventListener('input', updateProgressBar);
+});
+
+// Initialize the progress bar on page load
+updateProgressBar();

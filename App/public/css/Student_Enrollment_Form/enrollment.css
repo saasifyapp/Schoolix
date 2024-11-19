@@ -31,6 +31,45 @@ body {
     margin-top: 3rem;
 }
 
+/* Progress Bar Container */
+.progress-bar-container {
+    width: 100%;
+    margin: 20px 0;
+    position: relative;
+    height: 20px;
+}
+
+/* Progress Bar Background */
+.progress-bar {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Progress Fill */
+.progress-bar-fill {
+    background-color: #4caf50;
+    width: 0%;
+    height: 100%;
+    transition: width 0.3s ease;
+    border-radius: 10px 0 0 10px;
+}
+
+/* Progress Text */
+.progress-bar-text {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    color: #000;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 20px;
+}
+
+
 h2{   
     font-size: 30px;
     color: var(--grey-color);
