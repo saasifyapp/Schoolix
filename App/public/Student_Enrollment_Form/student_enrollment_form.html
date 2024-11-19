@@ -1,14 +1,393 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/NavButtons.css">
     <link rel="stylesheet" href="/css/Student_Enrollment_Form/enrollment.css">
+    <link rel="stylesheet" href="/css/Student_Enrollment_Form/enrollment-form-control.css">
     <title>Student Enrollment Form</title>
 </head>
-<body>
-    <h1>Hii this is student enrollment form</h1>
 
+<body>
+
+    <nav class="navbar">
+        <div class="logo_item">
+            <!-- <i class="bx bx-menu" id="sidebarOpen"></i> -->
+            <img id="logo" src="" alt="Logo">
+            <!-- <div class="user_name" id="user_name"></div> -->
+        </div>
+
+        <div class="navbar_center">
+            <button onclick="window.location.href='/dashboard'"> <i class='bx' id="backButton"> <img
+                        src="/images/back.png" alt="Previous Icon"></i></button>
+            <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img
+                        src="/images/homeicon.png" alt="Dashboard Icon"></i></button>
+            <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
+                        alt="Signout Icon"></i></button>
+        </div>
+
+        <div class="navbar_content">
+            <!-- <i class="bi bi-grid"></i>
+      <i class='bx bx-bell'></i> -->
+        </div>
+    </nav>
+
+
+    <div class="enrollment-form">
+        <!-- Left Navigation Section -->
+        <div class="form-navigation">
+            <ul>
+                <li id="student-info" class="active">Student Information</li>
+                <li id="guardian-info">Guardian Information</li>
+                <li id="academic-info">Academic Information</li>
+                <li id="fees-info">Fees and Packages</li>
+                <li id="transport-info">Transport Service</li>
+                <li id="review-info">Review and Consent</li>
+            </ul>
+        </div>
+
+        <!-- Right Dynamic Content Section -->
+        <div class="form-content">
+            <!-- Student Information Section -->
+            <div id="student-information" class="form-section">
+                <h2>Student Information</h2>
+                <div class="input-container">
+                    <h3>Basic Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="firstName" placeholder=" ">
+                            <span class="form-control-placeholder">First Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="middleName" placeholder=" ">
+                            <span class="form-control-placeholder">Middle Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="lastName" placeholder=" ">
+                            <span class="form-control-placeholder">Last Name</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-container">
+                    <h3>Contact Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <textarea class="form-control" id="currentAddress" placeholder=" "></textarea>
+                            <span class="form-control-placeholder">Current Address</span>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" id="permanentAddress" placeholder=" "></textarea>
+                            <span class="form-control-placeholder">Permanent Address</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-container">
+                    <h3>Identity Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="nationality" placeholder=" ">
+                            <span class="form-control-placeholder">Nationality</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="religion" placeholder=" ">
+                            <span class="form-control-placeholder">Religion</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="category" placeholder=" ">
+                            <span class="form-control-placeholder">Category</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="caste" placeholder=" ">
+                            <span class="form-control-placeholder">Caste</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="domicile" placeholder=" ">
+                            <span class="form-control-placeholder">Domicile</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="motherTongue" placeholder=" ">
+                            <span class="form-control-placeholder">Mother Tongue</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="aadharNo" placeholder=" ">
+                            <span class="form-control-placeholder">Aadhar Number</span>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="documents" multiple>
+                                <option value="birth-certificate">Birth Certificate</option>
+                                <option value="passport">Passport</option>
+                                <option value="school-id">School ID</option>
+                            </select>
+                            <span class="form-control-placeholder">Select Documents</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-navigation-buttons" style="justify-content: flex-end;">                   
+                    <button type="button" class="btn next-button" id="student-next">Next</button>
+                </div>
+            </div>
+
+            <!-- Guardian Information Section -->
+            <div id="guardian-information" class="form-section" style="display: none;">
+                <h2>Guardian Information</h2>
+                <div class="input-container">
+                    <h3>Father Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="fatherFirstName" placeholder=" ">
+                            <span class="form-control-placeholder">Father's First Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="fatherMiddleName" placeholder=" ">
+                            <span class="form-control-placeholder">Father's Middle Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="fatherLastName" placeholder=" ">
+                            <span class="form-control-placeholder">Father's Last Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="fatherFullName" placeholder=" ">
+                            <span class="form-control-placeholder">Father's Full Name</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="fatherContactNumber" placeholder=" ">
+                            <span class="form-control-placeholder">Father's Contact Number</span>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" id="fatherPermanentAddress" placeholder=" "></textarea>
+                            <span class="form-control-placeholder">Permanent Address</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="fatherQualification" placeholder=" ">
+                            <span class="form-control-placeholder">Father's Qualification</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="fatherOccupation" placeholder=" ">
+                            <span class="form-control-placeholder">Father's Occupation</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <h3>Mother Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="motherFirstName" placeholder=" ">
+                            <span class="form-control-placeholder">Mother's First Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="motherLastName" placeholder=" ">
+                            <span class="form-control-placeholder">Mother's Last Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="motherFullName" placeholder=" ">
+                            <span class="form-control-placeholder">Mother's Full Name</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="motherContactNumber" placeholder=" ">
+                            <span class="form-control-placeholder">Mother's Contact Number</span>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" id="motherPermanentAddress" placeholder=" "></textarea>
+                            <span class="form-control-placeholder">Permanent Address</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="motherQualification" placeholder=" ">
+                            <span class="form-control-placeholder">Mother's Qualification</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="motherOccupation" placeholder=" ">
+                            <span class="form-control-placeholder">Mother's Occupation</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-navigation-buttons">
+                    <button type="button" class="btn prev-button" id="guardian-prev">Previous</button>
+                    <button type="button" class="btn next-button" id="guardian-next">Next</button>
+                </div>
+            </div>
+
+            <!-- Academic Information Section -->
+            <div id="academic-information" class="form-section" style="display: none;">
+                <h2>Academic Information</h2>
+
+                <div class="input-container">
+                    <h3>Academic Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="section" placeholder=" ">
+                            <span class="form-control-placeholder">Section</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="grNo" placeholder=" ">
+                            <span class="form-control-placeholder">GR Number</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="date" class="form-control" id="admissionDate" placeholder=" ">
+                            <span class="form-control-placeholder">Admission Date</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="standard" placeholder=" ">
+                            <span class="form-control-placeholder">Standard</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="division" placeholder=" ">
+                            <span class="form-control-placeholder">Division</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <h3>Previous Academic Records</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="lastSchoolAttended" placeholder=" ">
+                            <span class="form-control-placeholder">Last School Attended</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="classCompleted" placeholder=" ">
+                            <span class="form-control-placeholder">Class Completed</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="percentage" placeholder=" ">
+                            <span class="form-control-placeholder">Percentage</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-navigation-buttons">
+                    <button type="button" class="btn prev-button" id="academic-prev">Previous</button>
+                    <button type="button" class="btn next-button" id="academic-next">Next</button>
+                </div>
+            </div>
+
+            <!-- Fees and Packages Section -->
+            <div id="fees-information" class="form-section" style="display: none;">
+                <h2>Fees and Packages</h2>
+
+                <div class="input-container">
+                    <h3>Fee Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="feeSection" placeholder=" ">
+                            <span class="form-control-placeholder">Section</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="feeStandard" placeholder=" ">
+                            <span class="form-control-placeholder">Standard</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="feeDivision" placeholder=" ">
+                            <span class="form-control-placeholder">Division</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="feeCategory" placeholder=" ">
+                            <span class="form-control-placeholder">Fee Category</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="packageAllotted" placeholder=" ">
+                            <span class="form-control-placeholder">Package Allotted</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-navigation-buttons">
+                    <button type="button" class="btn prev-button" id="fees-prev">Previous</button>
+                    <button type="button" class="btn next-button" id="fees-next">Next</button>
+                </div>
+            </div>
+
+            <!-- Transport Services Section -->
+            <div id="transport-information" class="form-section" style="display: none;">
+                <h2>Transport Services</h2>
+
+                <div class="input-container">
+                    <h3>Transport Requirement</h3>
+
+                    <!-- Transport Needed: Yes/No -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <span class="">Transport Needed</span>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="transportNeeded" value="yes">
+                                    Yes
+                                </label>
+                                <label>
+                                    <input type="radio" name="transportNeeded" value="no">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <!-- Standard -->
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="transportStandard" placeholder=" ">
+                            <span class="form-control-placeholder">Standard</span>
+                        </div>
+
+                        <!-- Division -->
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="transportDivision" placeholder=" ">
+                            <span class="form-control-placeholder">Division</span>
+                        </div>
+
+                        <!-- Pick/Drop Address -->
+                        <div class="form-group">
+                            <textarea class="form-control" id="pickDropAddress" placeholder=" "></textarea>
+                            <span class="form-control-placeholder">Pick/Drop Address</span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <!-- Vehicle Running -->
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="vehicleRunning" placeholder=" ">
+                            <span class="form-control-placeholder">Vehicle Running</span>
+                        </div>
+
+                        <!-- Vehicle Details -->
+                        <div class="form-group">
+                            <textarea class="form-control" id="vehicleDetails" placeholder=" "></textarea>
+                            <span class="form-control-placeholder">Vehicle Details</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-navigation-buttons">
+                    <button type="button" class="btn prev-button" id="transport-prev">Previous</button>
+                    <button type="button" class="btn next-button" id="transport-next">Next</button>
+                </div>
+            </div>
+
+            <div id="review-information" class="form-section" style="display: none;">
+                <h2>Review Form</h2>
+
+                <div class="form-navigation-buttons">
+                    <button type="button" class="btn prev-button" id="review-prev">Previous</button>
+                    <button type="button" class="btn next-button" id="review-next">Submit</button>
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+
+    <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Student_Enrollment_Form/student_enrollment_console.js"></script>
 </body>
+
 </html>

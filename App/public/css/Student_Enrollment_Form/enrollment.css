@@ -1,3 +1,94 @@
-h1{
-    color: blue;
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+* {
+
+    font-family: "Poppins", sans-serif;
 }
+
+:root {
+    --white-color: #fff;
+    --blue-color: #4070f4;
+    --grey-color: #707070;
+    --grey-color-light: #aaa;
+}
+
+body {
+    font-family: american typewriter, sans-serif;
+    text-align: center;
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    /* Prevent scrolling */
+}
+
+
+
+.enrollment-form {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    height: 100vh;
+    margin-top: 3rem;
+}
+
+h2{   
+    font-size: 30px;
+    color: var(--grey-color);
+}
+
+h3{   
+    font-size: 20px;
+    color: var(--grey-color);
+}
+
+
+.form-navigation {
+    background-color: #f8f9fa;
+    border-right: 1px solid #ddd;
+    padding: 20px;
+}
+
+.form-navigation ul {
+    list-style: none;
+    padding: 0;
+}
+
+.form-navigation li {
+    padding: 15px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+.form-navigation li:hover,
+.form-navigation li.active {
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.form-content {
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.form-section {
+    display: none;
+    margin-bottom: 50px;
+}
+
+.form-section:first-child {
+    display: block;
+}
+
+.input-container {
+    margin-bottom: 20px;   
+    padding: 10px;
+    border: 1px solid #5DADE2;
+    margin-bottom: 20px;
+    border-radius: 10px; 
+    background-color: white;
+    box-shadow: 0 0 4px #808B96;
+}
+
