@@ -407,6 +407,10 @@ app.get('/FeeStructure/feeStructure', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Fees', 'feeStructure.html'));
 });
 
+app.get('/Student_Enrollment_Form/student_enrollment_form', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Student_Enrollment_Form', 'student_enrollment_form.html'));
+});
+
 /////////////////////// ROUTES FOR MAIN DASHBOARD COMPONENTS ///////////////////////////////////////
 
 // const main_dashboard_dataRouter = require('./src/routes/main_dashboard_data');
@@ -590,6 +594,10 @@ app.use('/', feeStructure);
 const feeAmount = require('./src/routes/fees_routes/fee_set_amount.js');
 app.use('/', feeAmount);
 
+
+///////////////////////////STUDENT ENROLLMENT FORM ROUTES//////////////////
+const studentenrollment = require('./src/routes/student_enrollment_form_routes/student_enrollment_form.js');
+app.use('/', studentenrollment);
 
 
 // Start the server
