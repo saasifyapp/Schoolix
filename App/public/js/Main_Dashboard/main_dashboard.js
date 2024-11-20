@@ -729,3 +729,5 @@ async function confirmSchoolLocation(loginName) {
 
 // Call this function when the user logs in, passing the login name
 confirmSchoolLocation(username); // Replace with the actual login name
+
+

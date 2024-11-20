@@ -97,19 +97,71 @@
                             <input type="text" class="form-control" id="lastName" placeholder=" ">
                             <span class="form-control-placeholder">Last Name</span>
                         </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="fullName" placeholder=" ">
+                            <span class="form-control-placeholder">Full Name</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="date" class="form-control" id="dob" placeholder=" ">
+                            <span class="form-control-placeholder">Date of Birth</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="placeOfBirth" placeholder=" ">
+                            <span class="form-control-placeholder">Place of Birth</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="age" placeholder=" ">
+                            <span class="form-control-placeholder">Age</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="gender" placeholder=" ">
+                            <span class="form-control-placeholder">Gender</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="bloodGroup" placeholder=" ">
+                            <span class="form-control-placeholder">Blood Group</span>
+                        </div>
                     </div>
                 </div>
                 <div class="input-container">
-                    <h3>Contact Details</h3>
+                    <h3>Contact and Permanent Address Details</h3>
                     <div class="form-row">
                         <div class="form-group">
-                            <textarea class="form-control" id="currentAddress" placeholder=" "></textarea>
-                            <span class="form-control-placeholder">Current Address</span>
+                            <input type="text" class="form-control" id="studentContact" placeholder=" ">
+                            <span class="form-control-placeholder">Student Contact No</span>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="city_village" placeholder=" ">
+                            <span class="form-control-placeholder">City/Village</span>
                         </div>
                         <div class="form-group">
-                            <textarea class="form-control" id="permanentAddress" placeholder=" "></textarea>
-                            <span class="form-control-placeholder">Permanent Address</span>
+                            <input type="text" class="form-control" id="taluka" placeholder=" ">
+                            <span class="form-control-placeholder">Taluka</span>
                         </div>
+                    </div>
+                    <div class="form-row">
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="district" placeholder=" ">
+                            <span class="form-control-placeholder">District</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="state" placeholder=" ">
+                            <span class="form-control-placeholder">State</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="landmak" placeholder=" ">
+                            <span class="form-control-placeholder">Landmark</span>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="pinCode" placeholder=" ">
+                            <span class="form-control-placeholder">PIN Code</span>
+                        </div>
+
                     </div>
                 </div>
                 <div class="input-container">
@@ -189,10 +241,6 @@
                             <span class="form-control-placeholder">Father's Contact Number</span>
                         </div>
                         <div class="form-group">
-                            <textarea class="form-control" id="fatherPermanentAddress" placeholder=" "></textarea>
-                            <span class="form-control-placeholder">Permanent Address</span>
-                        </div>
-                        <div class="form-group">
                             <input type="text" class="form-control" id="fatherQualification" placeholder=" ">
                             <span class="form-control-placeholder">Father's Qualification</span>
                         </div>
@@ -225,10 +273,6 @@
                             <span class="form-control-placeholder">Mother's Contact Number</span>
                         </div>
                         <div class="form-group">
-                            <textarea class="form-control" id="motherPermanentAddress" placeholder=" "></textarea>
-                            <span class="form-control-placeholder">Permanent Address</span>
-                        </div>
-                        <div class="form-group">
                             <input type="text" class="form-control" id="motherQualification" placeholder=" ">
                             <span class="form-control-placeholder">Mother's Qualification</span>
                         </div>
@@ -238,6 +282,45 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="input-container">
+                    <h3>Local Guardian Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="guardianName" placeholder=" ">
+                            <span class="form-control-placeholder">Guardian's Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="guardianContact" placeholder=" ">
+                            <span class="form-control-placeholder">Guardian's Contact</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="guardianRelation" placeholder=" ">
+                            <span class="form-control-placeholder">Relationship with Guardian</span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="guardian_fullAddress" placeholder=" ">
+                            <span class="form-control-placeholder">Guardian's  Address</span>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="guardianAddressLandmark" placeholder=" ">
+                            <span class="form-control-placeholder">Landmark</span>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="guardianpinCode" placeholder=" ">
+                            <span class="form-control-placeholder">PIN Code</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
                 <div class="form-navigation-buttons">
                     <button type="button" class="btn prev-button" id="guardian-prev">Previous</button>
                     <button type="button" class="btn next-button" id="guardian-next">Next</button>
@@ -249,7 +332,7 @@
                 <h2>Academic Information</h2>
 
                 <div class="input-container">
-                    <h3>Academic Details</h3>
+                    <h3>Admission Details</h3>
                     <div class="form-row">
                         <div class="form-group">
                             <input type="text" class="form-control" id="section" placeholder=" ">
