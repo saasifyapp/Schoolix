@@ -127,3 +127,5 @@ document.querySelectorAll('.form-control, textarea').forEach(input => {
 
 // Initialize done icons on page load
 updateDoneIcons();
+
+
