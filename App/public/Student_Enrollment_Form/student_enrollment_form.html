@@ -98,7 +98,7 @@
                                 <span class="form-control-placeholder">Last Name</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="fullName" placeholder=" ">
+                                <input type="text" class="form-control" id="fullName" placeholder=" " readonly>
                                 <span class="form-control-placeholder">Full Name</span>
                             </div>
                         </div>
@@ -108,20 +108,23 @@
                                 <span class="form-control-placeholder">Date of Birth</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="placeOfBirth" placeholder=" ">
-                                <span class="form-control-placeholder">Place of Birth</span>
+                                <input type="text" class="form-control" id="age" placeholder=" " readonly>
+                                <span class="form-control-placeholder">Age</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="age" placeholder=" ">
-                                <span class="form-control-placeholder">Age</span>
+                                <input type="text" class="form-control" id="placeOfBirth" placeholder=" ">
+                                <span class="form-control-placeholder">Place of Birth</span>
+                                <div id="placeOfBirthSuggestions" class="suggestions"></div> 
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="gender" placeholder=" ">
                                 <span class="form-control-placeholder">Gender</span>
+                                <div id="genderSuggestions" class="suggestions"></div>
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="bloodGroup" placeholder=" ">
                                 <span class="form-control-placeholder">Blood Group</span>
+                                <div id="bloodGroupSuggestions" class="suggestions"></div> 
                             </div>
                         </div>
                     </div>
@@ -136,10 +139,12 @@
                             <div class="form-group">
                                 <input type="text" class="form-control" id="city_village" placeholder=" ">
                                 <span class="form-control-placeholder">City/Village</span>
+                                <div id="cityVillageSuggestions" class="suggestions"></div> 
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="taluka" placeholder=" ">
                                 <span class="form-control-placeholder">Taluka</span>
+                                <div id="talukaSuggestions" class="suggestions"></div> 
                             </div>
                         </div>
                         <div class="form-row">
@@ -147,10 +152,12 @@
                             <div class="form-group">
                                 <input type="text" class="form-control" id="district" placeholder=" ">
                                 <span class="form-control-placeholder">District</span>
+                                <div id="districtSuggestions" class="suggestions"></div> 
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="state" placeholder=" ">
                                 <span class="form-control-placeholder">State</span>
+                                <div id="stateSuggestions" class="suggestions"></div> 
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="landmak" placeholder=" ">
@@ -170,32 +177,39 @@
                             <div class="form-group">
                                 <input type="text" class="form-control" id="nationality" placeholder=" ">
                                 <span class="form-control-placeholder">Nationality</span>
+                                <div id="nationalitySuggestions" class="suggestions"></div> 
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="religion" placeholder=" ">
                                 <span class="form-control-placeholder">Religion</span>
+                                <div id="religionSuggestions" class="suggestions"></div> 
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="category" placeholder=" ">
                                 <span class="form-control-placeholder">Category</span>
+                                <div id="categorySuggestions" class="suggestions"></div> 
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="caste" placeholder=" ">
                                 <span class="form-control-placeholder">Caste</span>
+                                <div id="casteSuggestions" class="suggestions"></div> 
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <input type="text" class="form-control" id="domicile" placeholder=" ">
                                 <span class="form-control-placeholder">Domicile</span>
+                                <div id="domicileSuggestions" class="suggestions"></div> 
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="motherTongue" placeholder=" ">
                                 <span class="form-control-placeholder">Mother Tongue</span>
+                                <div id="motherTongueSuggestions" class="suggestions"></div> 
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="aadharNo" placeholder=" ">
+                                <input type="text" class="form-control" id="aadhaar" placeholder=" ">
                                 <span class="form-control-placeholder">Aadhar Number</span>
+                                <div id="aadhaarError" class="error-message"></div>
                             </div>
                             <div class="form-group">
                                 <select class="form-control" id="documents" multiple>
@@ -499,7 +513,7 @@
     </div>
 
     <script src="/js/Inventory_js/All.js"></script>
-    <script src="/js/Student_Enrollment_Form/student_enrollment_console.js"></script>
+    <script src="/js/Student_Enrollment_Form/student_enrollment_form.js"></script>
     <script src="/js/Student_Enrollment_Form/enrollment_data_submission.js"></script>
 </body>
 
