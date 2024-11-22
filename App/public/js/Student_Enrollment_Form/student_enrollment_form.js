@@ -41,7 +41,7 @@ document.querySelectorAll('.form-section').forEach((section, index, sections) =>
                 });
                 document
                     .querySelectorAll('.form-navigation li')
-                    [index - 1].classList.add('active'); // Set active class to the previous item
+                [index - 1].classList.add('active'); // Set active class to the previous item
             }
         });
     }
@@ -59,7 +59,7 @@ document.querySelectorAll('.form-section').forEach((section, index, sections) =>
                 });
                 document
                     .querySelectorAll('.form-navigation li')
-                    [index + 1].classList.add('active'); // Set active class to the next item
+                [index + 1].classList.add('active'); // Set active class to the next item
             }
         });
     }
@@ -326,7 +326,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Debounce function: To limit the rate at which displayStateSuggestions is called
 function debounce(func, delay) {
     let debounceTimer;
-    return function() {
+    return function () {
         const context = this;
         const args = arguments;
         clearTimeout(debounceTimer);
@@ -505,7 +505,7 @@ document.addEventListener("DOMContentLoaded", function () {
 function displayNationalitySuggestions() {
     const nationalityInput = document.getElementById('nationality');
     const nationalitySuggestionsContainer = document.getElementById('nationalitySuggestions');
-    
+
     nationalitySuggestionsContainer.style.display = "block";
     const query = nationalityInput.value.toLowerCase().trim();
     nationalitySuggestionsContainer.innerHTML = '';
@@ -579,7 +579,7 @@ document.addEventListener("DOMContentLoaded", function () {
 function displayReligionSuggestions() {
     const religionInput = document.getElementById('religion');
     const religionSuggestionsContainer = document.getElementById('religionSuggestions');
-    
+
     religionSuggestionsContainer.style.display = "block";
     const query = religionInput.value.toLowerCase().trim();
     religionSuggestionsContainer.innerHTML = '';
@@ -651,7 +651,7 @@ document.addEventListener("DOMContentLoaded", function () {
 function displayCategorySuggestions() {
     const categoryInput = document.getElementById('category');
     const categorySuggestionsContainer = document.getElementById('categorySuggestions');
-    
+
     categorySuggestionsContainer.style.display = "block";
     const query = categoryInput.value.toLowerCase().trim();
     categorySuggestionsContainer.innerHTML = '';
@@ -795,13 +795,13 @@ document.addEventListener("DOMContentLoaded", function () {
 function displayMotherTongueSuggestions() {
     const motherTongueInput = document.getElementById('motherTongue');
     const motherTongueSuggestionsContainer = document.getElementById('motherTongueSuggestions');
-    
+
     motherTongueSuggestionsContainer.style.display = "block";
     const query = motherTongueInput.value.toLowerCase().trim();
     motherTongueSuggestionsContainer.innerHTML = '';
 
     const motherTongues = [
-        "Hindi", "Marathi", "Urdu","Gujarati", "Punjabi", "Konkani",
+        "Hindi", "Marathi", "Urdu", "Gujarati", "Punjabi", "Konkani",
         "Odia", "Assamese", "Rajasthani", "Sindhi", "Maithili", "Dogri", "Kashmiri",
         "Nepali", "Chhattisgarhi", "Haryanvi", "Telugu", "Tamil", "Kannada",
         "Malayalam", "Tulu", "Kodava", "Meitei", "Bodo", "Garo", "Mizo",
@@ -884,7 +884,7 @@ function validateAadhaar(aadhaar) {
 }
 
 // Event listener for Aadhaar input
-document.getElementById('aadhaar').addEventListener('input', function() {
+document.getElementById('aadhaar').addEventListener('input', function () {
     validateAadhaar(this.value.trim());
 });
 
@@ -990,7 +990,7 @@ document.addEventListener("click", (e) => {
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-////////////////////////////////// GUARDIAN INFORMATION /////////////////////////////////
+////////////////////////////////// GUARDIAN INFORMATION SECTION /////////////////////////////////
 
 ///////////////////// FATHERS DETAILS //////////////////////
 
@@ -1028,7 +1028,7 @@ document.getElementById('motherLastName').addEventListener('input', updateMother
 function toggleLocalGuardianDetails(isVisible) {
     const localGuardianDetails = document.getElementById('localGuardianDetails');
     const inputs = localGuardianDetails.getElementsByTagName('input');
-    
+
     if (isVisible) {
         localGuardianDetails.style.display = 'block';
         for (let i = 0; i < inputs.length; i++) {
@@ -1054,7 +1054,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function displayRelationshipSuggestions() {
     const relationshipInput = document.getElementById('guardianRelation');
     const relationshipSuggestionsContainer = document.getElementById('relationshipSuggestions');
-    
+
     relationshipSuggestionsContainer.style.display = "block";
     const query = relationshipInput.value.toLowerCase().trim();
     relationshipSuggestionsContainer.innerHTML = '';
@@ -1116,3 +1116,125 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////// ADMISSION DETAILS SECTION ////////////////////////////////
+
+
+////////////////// SECTION INPUT SUGGESTIONS ////////////
+
+ // Function to display section suggestions
+ function displaySectionSuggestions() {
+    const sectionInput = document.getElementById('section');
+    const sectionSuggestionsContainer = document.getElementById('sectionSuggestions');
+
+    sectionSuggestionsContainer.style.display = "block";
+    const query = sectionInput.value.toLowerCase().trim();
+    sectionSuggestionsContainer.innerHTML = '';
+
+    const sections = [
+        "Primary",
+        "Pre-primary"
+    ];
+
+    const filteredSections = sections.filter(section => section.toLowerCase().startsWith(query));
+
+    if (filteredSections.length > 0) {
+        filteredSections.forEach(section => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = section;
+            suggestionItem.dataset.value = section;
+            sectionSuggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        // If no results are found
+        const noResultsItem = document.createElement('div');
+        noResultsItem.classList.add('suggestion-item', 'no-results');
+        noResultsItem.textContent = 'No results found';
+        sectionSuggestionsContainer.appendChild(noResultsItem);
+    }
+
+    // Add event listeners for selection
+    sectionSuggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', function () {
+            sectionInput.value = this.dataset.value;
+            sectionSuggestionsContainer.innerHTML = '';
+            sectionSuggestionsContainer.style.display = "none";
+
+            // Fetch the next GR Number when a section is selected
+            if (sectionInput.value) {
+                fetchNextGrno(sectionInput.value);
+            }
+        });
+    });
+}
+
+// Clear GR Number if Section input is cleared
+function handleSectionInputChange() {
+    const sectionInput = document.getElementById('section');
+    const grNoInput = document.getElementById('grNo');
+
+    if (!sectionInput.value) {
+        grNoInput.value = '';
+    }
+}
+
+// Initialization of section suggestion box
+document.addEventListener("DOMContentLoaded", function () {
+    const sectionInput = document.getElementById('section');
+    const sectionSuggestionsContainer = document.getElementById('sectionSuggestions');
+
+    // Add event listeners for input, focus, and click events
+    sectionInput.addEventListener('input', displaySectionSuggestions);
+    sectionInput.addEventListener('focus', displaySectionSuggestions);
+    sectionInput.addEventListener('click', displaySectionSuggestions);
+
+    // Add event listener to clear GR Number field when Section input is cleared
+    sectionInput.addEventListener('input', handleSectionInputChange);
+
+    document.addEventListener('click', function (event) {
+        if (!sectionSuggestionsContainer.contains(event.target) && !sectionInput.contains(event.target)) {
+            sectionSuggestionsContainer.style.display = "none";
+        }
+    });
+
+    // Check and fetch GR Number when section input has value on page load
+    if (sectionInput.value) {
+        fetchNextGrno(sectionInput.value);
+    }
+});
+
+///////////////////// GET GRNO ////////////////////////////
+
+// Function to fetch and set the next GR Number
+function fetchNextGrno(sectionValue) {
+    fetch(`/getNextGrno?section=${sectionValue}`)
+        .then(response => response.json())
+        .then(data => {
+            const grNoInput = document.getElementById('grNo');
+            grNoInput.value = data.nextGrno;
+            console.log(`Section from server: ${data.section}`); // For testing
+        })
+        .catch(error => console.error('Error fetching next GR Number:', error));
+}
+
+/////////////////////// SET ADMISSION DATE ///////////
+
+
+// Function to set today's date as the default value for the admission date input
+function setAdmissionDate() {
+    const dateInput = document.getElementById('admissionDate');
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+    const year = today.getFullYear();
+    const todayDate = `${year}-${month}-${day}`;
+    dateInput.value = todayDate;
+}
+
+// Set the default date when the document is ready
+document.addEventListener('DOMContentLoaded', setAdmissionDate);
