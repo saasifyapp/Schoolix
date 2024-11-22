@@ -1,4 +1,3 @@
-
 // Initialize an object to store all the form data
 let formData = {
     studentInformation: {},
@@ -35,11 +34,10 @@ function collectStudentInformation() {
         caste: document.getElementById('caste').value.trim(),
         domicile: document.getElementById('domicile').value.trim(),
         motherTongue: document.getElementById('motherTongue').value.trim(),
-        aadharNo: document.getElementById('aadharNo').value.trim(),
-        documents: Array.from(document.getElementById('documents').selectedOptions).map(option => option.value)
+        aadharNo: document.getElementById('aadhaar').value.trim(),
+        documents: document.getElementById('documentInput').value.trim() // Adjusted for a single input field
     };
 }
-
 
 // Function to collect data from the Guardian Information section
 function collectGuardianInformation() {
@@ -71,7 +69,6 @@ function collectGuardianInformation() {
         }
     };
 }
-
 
 // Function to collect data from the Academic Information section
 function collectAcademicInformation() {
@@ -113,57 +110,83 @@ function collectTransportInformation() {
 // Collect data on "Next" button click and move to the next section
 document.getElementById('student-next').addEventListener('click', function () {
     collectStudentInformation();
-    // document.getElementById('student-information').style.display = 'none';
-    // document.getElementById('guardian-information').style.display = 'block';
+    prefillGuardianNames();
+    document.getElementById('student-information').style.display = 'none';
+    document.getElementById('guardian-information').style.display = 'block';
 });
 
 document.getElementById('guardian-next').addEventListener('click', function () {
     collectGuardianInformation();
-    // document.getElementById('guardian-information').style.display = 'none';
-    // document.getElementById('academic-information').style.display = 'block';
+    document.getElementById('guardian-information').style.display = 'none';
+    document.getElementById('academic-information').style.display = 'block';
 });
 
 document.getElementById('academic-next').addEventListener('click', function () {
     collectAcademicInformation();
-    // document.getElementById('academic-information').style.display = 'none';
-    // document.getElementById('fees-information').style.display = 'block';
+    document.getElementById('academic-information').style.display = 'none';
+    document.getElementById('fees-information').style.display = 'block';
 });
 
 document.getElementById('fees-next').addEventListener('click', function () {
     collectFeesInformation();
-    // document.getElementById('fees-information').style.display = 'none';
-    // document.getElementById('transport-information').style.display = 'block';
+    document.getElementById('fees-information').style.display = 'none';
+    document.getElementById('transport-information').style.display = 'block';
 });
 
 document.getElementById('transport-next').addEventListener('click', function () {
     collectTransportInformation();
-    // document.getElementById('transport-information').style.display = 'none';
-    // document.getElementById('review-information').style.display = 'block';
+    document.getElementById('transport-information').style.display = 'none';
+    document.getElementById('review-information').style.display = 'block';
     console.log('Form Data:', formData); // Display the collected form data in the console
 });
 
-// // Navigate back to previous sections
-// document.getElementById('guardian-prev').addEventListener('click', function () {
-//     document.getElementById('guardian-information').style.display = 'none';
-//     document.getElementById('student-information').style.display = 'block';
-// });
+// Navigate back to previous sections (if needed)
+document.getElementById('guardian-prev').addEventListener('click', function () {
+    document.getElementById('guardian-information').style.display = 'none';
+    document.getElementById('student-information').style.display = 'block';
+});
 
-// document.getElementById('academic-prev').addEventListener('click', function () {
-//     document.getElementById('academic-information').style.display = 'none';
-//     document.getElementById('guardian-information').style.display = 'block';
-// });
+document.getElementById('academic-prev').addEventListener('click', function () {
+    document.getElementById('academic-information').style.display = 'none';
+    document.getElementById('guardian-information').style.display = 'block';
+});
 
-// document.getElementById('fees-prev').addEventListener('click', function () {
-//     document.getElementById('fees-information').style.display = 'none';
-//     document.getElementById('academic-information').style.display = 'block';
-// });
+document.getElementById('fees-prev').addEventListener('click', function () {
+    document.getElementById('fees-information').style.display = 'none';
+    document.getElementById('academic-information').style.display = 'block';
+});
 
-// document.getElementById('transport-prev').addEventListener('click', function () {
-//     document.getElementById('transport-information').style.display = 'none';
-//     document.getElementById('fees-information').style.display = 'block';
-// });
+document.getElementById('transport-prev').addEventListener('click', function () {
+    document.getElementById('transport-information').style.display = 'none';
+    document.getElementById('fees-information').style.display = 'block';
+});
 
-// document.getElementById('review-prev').addEventListener('click', function () {
-//     document.getElementById('review-information').style.display = 'none';
-//     document.getElementById('transport-information').style.display = 'block';
-// });
+document.getElementById('review-prev').addEventListener('click', function () {
+    document.getElementById('review-information').style.display = 'none';
+    document.getElementById('transport-information').style.display = 'block';
+});
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// Function to pre-fill Father's and Mother's last names, and full names
+function prefillGuardianNames() {
+    const studentMiddleName = formData.studentInformation.middleName;
+    const lastName = formData.studentInformation.lastName;
+
+    // Pre-fill Father's last name
+    document.getElementById('fatherLastName').value = lastName;
+
+    // Pre-fill Mother's last name
+    document.getElementById('motherLastName').value = lastName;
+
+    // Pre-fill Father's first name with student's middle name
+    document.getElementById('fatherFirstName').value = studentMiddleName;
+
+    // Pre-fill Father's full name (assuming you want to use middle name and last name)
+    document.getElementById('fatherFullName').value = `${studentMiddleName} ${lastName}`;
+
+    // Only pre-fill Mother's full name with the student's last name
+    document.getElementById('motherFullName').value = lastName;
+}

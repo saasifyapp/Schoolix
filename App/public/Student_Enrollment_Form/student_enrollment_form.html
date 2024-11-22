@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="/css/NavButtons.css">
     <link rel="stylesheet" href="/css/Student_Enrollment_Form/enrollment.css">
     <link rel="stylesheet" href="/css/Student_Enrollment_Form/enrollment-form-control.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <title>Student Enrollment Form</title>
 </head>
 
@@ -232,7 +234,7 @@
                         <h3>Father Details</h3>
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="fatherFirstName" placeholder=" ">
+                                <input type="text" class="form-control" id="fatherFirstName" placeholder=" " readonly>
                                 <span class="form-control-placeholder">Father's First Name</span>
                             </div>
                             <div class="form-group">
@@ -240,11 +242,11 @@
                                 <span class="form-control-placeholder">Father's Middle Name</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="fatherLastName" placeholder=" ">
+                                <input type="text" class="form-control" id="fatherLastName" placeholder=" " readonly>
                                 <span class="form-control-placeholder">Father's Last Name</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="fatherFullName" placeholder=" ">
+                                <input type="text" class="form-control" id="fatherFullName" placeholder=" " readonly>
                                 <span class="form-control-placeholder">Father's Full Name</span>
                             </div>
                         </div>
@@ -272,11 +274,11 @@
                                 <span class="form-control-placeholder">Mother's First Name</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="motherLastName" placeholder=" ">
+                                <input type="text" class="form-control" id="motherLastName" placeholder=" " readonly>
                                 <span class="form-control-placeholder">Mother's Last Name</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="motherFullName" placeholder=" ">
+                                <input type="text" class="form-control" id="motherFullName" placeholder=" " readonly>
                                 <span class="form-control-placeholder">Mother's Full Name</span>
                             </div>
                         </div>
@@ -300,38 +302,52 @@
                         <h3>Local Guardian Details</h3>
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="guardianName" placeholder=" ">
-                                <span class="form-control-placeholder">Guardian's Name</span>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="guardianContact" placeholder=" ">
-                                <span class="form-control-placeholder">Guardian's Contact</span>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="guardianRelation" placeholder=" ">
-                                <span class="form-control-placeholder">Relationship with Guardian</span>
+                                <span class="">Local Guardian, if any</span>
+                                <div class="radio-group">
+                                    <label>
+                                        <input type="radio" name="localGuardianNeeded" value="yes" onclick="toggleLocalGuardianDetails(true)">
+                                        Yes
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="localGuardianNeeded" value="no" onclick="toggleLocalGuardianDetails(false)">
+                                        No
+                                    </label>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="form-row">
-
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="guardian_fullAddress" placeholder=" ">
-                                <span class="form-control-placeholder">Guardian's  Address</span>
+                        <div id="localGuardianDetails">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="guardianName" placeholder=" ">
+                                    <span class="form-control-placeholder">Guardian's Name</span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="guardianContact" placeholder=" ">
+                                    <span class="form-control-placeholder">Guardian's Contact</span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="guardianRelation" placeholder=" ">
+                                    <span class="form-control-placeholder">Relationship with Guardian</span>
+                                    <div id="relationshipSuggestions" class="suggestions"></div>
+                                </div>
                             </div>
-
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="guardianAddressLandmark" placeholder=" ">
-                                <span class="form-control-placeholder">Landmark</span>
+                    
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="guardian_fullAddress" placeholder=" ">
+                                    <span class="form-control-placeholder">Guardian's Address</span>
+                                    <div id="guardianCitySuggestions" class="suggestions"></div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="guardianAddressLandmark" placeholder=" ">
+                                    <span class="form-control-placeholder">Landmark</span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="guardianpinCode" placeholder=" ">
+                                    <span class="form-control-placeholder">PIN Code</span>
+                                </div>
                             </div>
-
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="guardianpinCode" placeholder=" ">
-                                <span class="form-control-placeholder">PIN Code</span>
-                            </div>
-
                         </div>
-
                     </div>
 
                     <div class="form-navigation-buttons">
@@ -512,6 +528,9 @@
     </div>
 
     <script src="/js/Inventory_js/All.js"></script>
+    <script src="/js/Universal_Components_JS/handle_session.js"></script>
+
+
     <script src="/js/Student_Enrollment_Form/student_enrollment_form.js"></script>
     <script src="/js/Student_Enrollment_Form/enrollment_data_submission.js"></script>
 </body>

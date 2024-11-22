@@ -801,12 +801,12 @@ function displayMotherTongueSuggestions() {
     motherTongueSuggestionsContainer.innerHTML = '';
 
     const motherTongues = [
-        "Hindi", "Bengali", "Marathi", "Gujarati", "Punjabi", "Urdu", "Konkani",
+        "Hindi", "Marathi", "Urdu","Gujarati", "Punjabi", "Konkani",
         "Odia", "Assamese", "Rajasthani", "Sindhi", "Maithili", "Dogri", "Kashmiri",
         "Nepali", "Chhattisgarhi", "Haryanvi", "Telugu", "Tamil", "Kannada",
         "Malayalam", "Tulu", "Kodava", "Meitei", "Bodo", "Garo", "Mizo",
         "Lepcha", "Bhutia", "Santali", "Mundari", "Ho", "Khasi", "Korku",
-        "English", "Sanskrit"
+        "English", "Sanskrit", "Bengali", "Marwadi"
     ];
 
     const filteredMotherTongues = motherTongues.filter(motherTongue => motherTongue.toLowerCase().startsWith(query));
@@ -890,7 +890,23 @@ document.getElementById('aadhaar').addEventListener('input', function() {
 
 
 ///////////////////////// DOCUMENTS SUBMITTED SUGGESTIONS ///////////////////
-const documentValues = ["Birth Certificate", "Passport", "School ID"];
+
+const documentValues = [
+    "Birth Certificate",
+    "Passport",
+    "School ID",
+    "Aadhaar Card",
+    "Previous School's Transfer Certificate (TC)",
+    "Previous School's Report Card",
+    "Residential Proof",
+    "Parent's Identification Proof",
+    "Passport Photos",
+    "Caste Certificate",
+    "Medical Certificate",
+    "Income Certificate",
+    "Migration Certificate"
+];
+
 const selectedDocumentsContainer = document.getElementById("selectedDocuments");
 const documentInput = document.getElementById("documentInput");
 const documentSuggestionsContainer = document.getElementById("documentSuggestions");
@@ -971,13 +987,132 @@ document.addEventListener("click", (e) => {
 });
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+////////////////////////////////// GUARDIAN INFORMATION /////////////////////////////////
+
+///////////////////// FATHERS DETAILS //////////////////////
+
+// Function to update the father's full name
+function updateFatherFullName() {
+    const fatherFirstName = document.getElementById('fatherFirstName').value.trim();
+    const fatherMiddleName = document.getElementById('fatherMiddleName').value.trim();
+    const fatherLastName = document.getElementById('fatherLastName').value.trim();
+    document.getElementById('fatherFullName').value = `${fatherFirstName} ${fatherMiddleName} ${fatherLastName}`.trim(); // Update father's full name field
+}
+
+// Add event listeners to the father's first name, middle name, and last name input fields
+document.getElementById('fatherFirstName').addEventListener('input', updateFatherFullName);
+document.getElementById('fatherMiddleName').addEventListener('input', updateFatherFullName);
+document.getElementById('fatherLastName').addEventListener('input', updateFatherFullName);
 
 
+///////////////// MOTHERS DETAILS ////////////////////
+
+// Function to update the mother's full name
+function updateMotherFullName() {
+    const motherFirstName = document.getElementById('motherFirstName').value.trim();
+    const motherLastName = document.getElementById('motherLastName').value.trim();
+    document.getElementById('motherFullName').value = `${motherFirstName} ${motherLastName}`.trim(); // Update mother's full name field
+}
+
+// Add event listeners to the mother's first name, middle name, and last name input fields
+document.getElementById('motherFirstName').addEventListener('input', updateMotherFullName);
+document.getElementById('motherLastName').addEventListener('input', updateMotherFullName);
 
 
+///////////////////////////////// LOCAL GUARDIAN DETAILS ////////////////////
+
+// Function to toggle visibility and disable local guardian details
+function toggleLocalGuardianDetails(isVisible) {
+    const localGuardianDetails = document.getElementById('localGuardianDetails');
+    const inputs = localGuardianDetails.getElementsByTagName('input');
+    
+    if (isVisible) {
+        localGuardianDetails.style.display = 'block';
+        for (let i = 0; i < inputs.length; i++) {
+            inputs[i].disabled = false;
+        }
+    } else {
+        localGuardianDetails.style.display = 'none';
+        for (let i = 0; i < inputs.length; i++) {
+            inputs[i].disabled = true;
+        }
+    }
+}
+
+// Execute toggleLocalGuardianDetails with false to ensure initial state is applied correctly
+document.addEventListener('DOMContentLoaded', () => {
+    toggleLocalGuardianDetails(false);
+});
 
 
+///////////////////////////// RELATION WITH GUARDIAN SUGGESTION ///////////
 
+// Function to display relationship suggestions
+function displayRelationshipSuggestions() {
+    const relationshipInput = document.getElementById('guardianRelation');
+    const relationshipSuggestionsContainer = document.getElementById('relationshipSuggestions');
+    
+    relationshipSuggestionsContainer.style.display = "block";
+    const query = relationshipInput.value.toLowerCase().trim();
+    relationshipSuggestionsContainer.innerHTML = '';
 
+    const relationships = [
+        "Parent",
+        "Grandparent",
+        "Uncle",
+        "Aunt",
+        "Brother",
+        "Sister",
+        "Cousin",
+        "Legal Guardian",
+        "Godparent",
+        "Family Friend",
+        "Landlord"
+    ];
+
+    const filteredRelationships = relationships.filter(relationship => relationship.toLowerCase().startsWith(query));
+
+    if (filteredRelationships.length > 0) {
+        filteredRelationships.forEach(relationship => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = relationship;
+            suggestionItem.dataset.value = relationship;
+            relationshipSuggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        // If no results are found
+        const noResultsItem = document.createElement('div');
+        noResultsItem.classList.add('suggestion-item', 'no-results');
+        noResultsItem.textContent = 'No results found';
+        relationshipSuggestionsContainer.appendChild(noResultsItem);
+    }
+}
+
+// Initialization of relationship suggestion box
+document.addEventListener("DOMContentLoaded", function () {
+    const relationshipInput = document.getElementById('guardianRelation');
+    const relationshipSuggestionsContainer = document.getElementById('relationshipSuggestions');
+
+    // Add event listeners for input, focus, and click events
+    relationshipInput.addEventListener('input', displayRelationshipSuggestions);
+    relationshipInput.addEventListener('focus', displayRelationshipSuggestions);
+    relationshipInput.addEventListener('click', displayRelationshipSuggestions);
+
+    relationshipSuggestionsContainer.addEventListener('click', function (event) {
+        if (event.target.classList.contains('suggestion-item')) {
+            const selectedRelationship = event.target.dataset.value;
+            relationshipInput.value = selectedRelationship;
+            relationshipSuggestionsContainer.innerHTML = '';
+        }
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!relationshipSuggestionsContainer.contains(event.target) && !relationshipInput.contains(event.target)) {
+            relationshipSuggestionsContainer.innerHTML = '';
+        }
+    });
+});
