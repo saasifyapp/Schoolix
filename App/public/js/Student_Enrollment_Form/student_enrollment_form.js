@@ -1124,21 +1124,29 @@ document.addEventListener("DOMContentLoaded", function () {
 /////////////////////// ADMISSION DETAILS SECTION ////////////////////////////////
 
 
-////////////////// SECTION INPUT SUGGESTIONS ////////////
+/////////////////// SECTION INPUT SUGGESTIONS ////////////
 
- // Function to display section suggestions
- function displaySectionSuggestions() {
+// Array to store sections fetched from the backend
+let sections = [];
+
+// Function to fetch sections from the backend
+function fetchSections() {
+    fetch('/getSections')
+        .then(response => response.json())
+        .then(data => {
+            sections = data.sections;
+        })
+        .catch(error => console.error('Error fetching sections:', error));
+}
+
+// Function to display section suggestions
+function displaySectionSuggestions() {
     const sectionInput = document.getElementById('section');
     const sectionSuggestionsContainer = document.getElementById('sectionSuggestions');
 
     sectionSuggestionsContainer.style.display = "block";
     const query = sectionInput.value.toLowerCase().trim();
     sectionSuggestionsContainer.innerHTML = '';
-
-    const sections = [
-        "Primary",
-        "Pre-primary"
-    ];
 
     const filteredSections = sections.filter(section => section.toLowerCase().startsWith(query));
 
@@ -1173,7 +1181,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 }
 
-// Clear GR Number if Section input is cleared
+// Clear GR Number, Standard, Division if Section input is cleared
 function handleSectionInputChange() {
     const sectionInput = document.getElementById('section');
     const grNoInput = document.getElementById('grNo');
@@ -1181,12 +1189,23 @@ function handleSectionInputChange() {
     if (!sectionInput.value) {
         grNoInput.value = '';
     }
+
+    if (!sectionInput.value) {
+        standard.value = '';
+    }
+
+    if (!sectionInput.value) {
+        division.value = '';
+    }
 }
 
 // Initialization of section suggestion box
 document.addEventListener("DOMContentLoaded", function () {
     const sectionInput = document.getElementById('section');
     const sectionSuggestionsContainer = document.getElementById('sectionSuggestions');
+
+    // Fetch sections on page load
+    fetchSections();
 
     // Add event listeners for input, focus, and click events
     sectionInput.addEventListener('input', displaySectionSuggestions);
@@ -1207,20 +1226,23 @@ document.addEventListener("DOMContentLoaded", function () {
         fetchNextGrno(sectionInput.value);
     }
 });
-
 ///////////////////// GET GRNO ////////////////////////////
 
 // Function to fetch and set the next GR Number
 function fetchNextGrno(sectionValue) {
-    fetch(`/getNextGrno?section=${sectionValue}`)
+    // Normalize section value to match backend expectations
+    const normalizedSection = sectionValue.toLowerCase().replace("-", " ");
+    fetch(`/getNextGrno?section=${normalizedSection}`)
         .then(response => response.json())
         .then(data => {
             const grNoInput = document.getElementById('grNo');
             grNoInput.value = data.nextGrno;
-            console.log(`Section from server: ${data.section}`); // For testing
+            //console.log(`Section from server: ${data.section}`); // For testing
         })
         .catch(error => console.error('Error fetching next GR Number:', error));
 }
+
+
 
 /////////////////////// SET ADMISSION DATE ///////////
 
@@ -1238,3 +1260,251 @@ function setAdmissionDate() {
 
 // Set the default date when the document is ready
 document.addEventListener('DOMContentLoaded', setAdmissionDate);
+
+
+/////////////////////// GET STANDARD SUGGESTIONS /////////
+
+        // Function to display standard suggestions
+        function displayStandardSuggestions() {
+            const standardInput = document.getElementById('standard');
+            const standardSuggestionsContainer = document.getElementById('standardSuggestions');
+            const sectionInput = document.getElementById('section').value.trim();
+
+            // Show suggestion box
+            standardSuggestionsContainer.style.display = "block";
+            const query = standardInput.value.toLowerCase().trim();
+            standardSuggestionsContainer.innerHTML = '';
+
+            if (!sectionInput) {
+                standardSuggestionsContainer.innerHTML = '<div class="suggestion-item no-results">Please select a section first</div>';
+                return;
+            }
+
+            fetch(`/getStandards?section=${sectionInput}`)
+                .then(response => response.json())
+                .then(data => {
+                    const uniqueStandards = new Set();
+                    const filteredStandards = data.standards.filter(standard => {
+                        const normalizedStandard = standard.toLowerCase();
+                        if (normalizedStandard.startsWith(query) && !uniqueStandards.has(normalizedStandard)) {
+                            uniqueStandards.add(normalizedStandard);
+                            return true;
+                        }
+                        return false;
+                    });
+
+                    if (filteredStandards.length > 0) {
+                        filteredStandards.forEach(standard => {
+                            const suggestionItem = document.createElement('div');
+                            suggestionItem.classList.add('suggestion-item');
+                            suggestionItem.textContent = standard;
+                            suggestionItem.dataset.value = standard;
+                            standardSuggestionsContainer.appendChild(suggestionItem);
+                        });
+                    } else {
+                        // If no results are found
+                        const noResultsItem = document.createElement('div');
+                        noResultsItem.classList.add('suggestion-item', 'no-results');
+                        noResultsItem.textContent = 'No results found';
+                        standardSuggestionsContainer.appendChild(noResultsItem);
+                    }
+
+                    // Add event listeners for selection
+                    standardSuggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+                        item.addEventListener('click', function () {
+                            standardInput.value = this.dataset.value;
+                            standardSuggestionsContainer.innerHTML = '';
+                            standardSuggestionsContainer.style.display = "none";
+                        });
+                    });
+                })
+                .catch(error => console.error('Error fetching standards:', error));
+        }
+
+        // Initialization of standard suggestion box
+        document.addEventListener("DOMContentLoaded", function () {
+            const standardInput = document.getElementById('standard');
+            const standardSuggestionsContainer = document.getElementById('standardSuggestions');
+
+            // Add event listeners for input, focus, and click events
+            standardInput.addEventListener('input', displayStandardSuggestions);
+            standardInput.addEventListener('focus', displayStandardSuggestions);
+            standardInput.addEventListener('click', displayStandardSuggestions);
+
+            document.addEventListener('click', function (event) {
+                if (!standardSuggestionsContainer.contains(event.target) && !standardInput.contains(event.target)) {
+                    standardSuggestionsContainer.style.display = "none";
+                }
+            });
+
+            // Add event listener to clear Division field when Standard input is cleared
+            standardInput.addEventListener('input', handleStandardInputChange);
+        });
+
+        // Clear Division if Standard input is cleared
+        function handleStandardInputChange() {
+            const standardInput = document.getElementById('standard');
+            const divisionInput = document.getElementById('division');
+
+            if (!standardInput.value) {
+                divisionInput.value = '';
+            }
+        }
+
+
+
+/////////////////////////// GET DIVISIONS based on section and standard //////
+
+
+// Function to display division suggestions
+function displayDivisionSuggestions() {
+    const divisionInput = document.getElementById('division');
+    const divisionSuggestionsContainer = document.getElementById('divisionSuggestions');
+    const sectionInput = document.getElementById('section').value.trim();
+    const standardInput = document.getElementById('standard').value.trim();
+
+    // Clear existing suggestions
+    divisionSuggestionsContainer.innerHTML = '';
+
+    // Show suggestion box
+    divisionSuggestionsContainer.style.display = "block";
+    const query = divisionInput.value.toLowerCase().trim();
+
+    if (!sectionInput || !standardInput) {
+        divisionSuggestionsContainer.innerHTML = '<div class="suggestion-item no-results">Please select a section and standard first</div>';
+        return;
+    }
+
+    fetch(`/getDivisions?section=${sectionInput}&standard=${standardInput}`)
+        .then(response => response.json())
+        .then(data => {
+            const uniqueDivisions = new Set();
+            const filteredDivisions = data.divisions.filter(division => {
+                const normalizedDivision = division.toLowerCase();
+                if (normalizedDivision.startsWith(query) && !uniqueDivisions.has(normalizedDivision)) {
+                    uniqueDivisions.add(normalizedDivision);
+                    return true;
+                }
+                return false;
+            });
+
+            if (filteredDivisions.length > 0) {
+                filteredDivisions.forEach(division => {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.classList.add('suggestion-item');
+                    suggestionItem.textContent = division;
+                    suggestionItem.dataset.value = division;
+                    divisionSuggestionsContainer.appendChild(suggestionItem);
+                });
+            } else {
+                // If no results are found
+                const noResultsItem = document.createElement('div');
+                noResultsItem.classList.add('suggestion-item', 'no-results');
+                noResultsItem.textContent = 'No results found';
+                divisionSuggestionsContainer.appendChild(noResultsItem);
+            }
+
+            // Add event listeners for selection
+            divisionSuggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+                item.addEventListener('click', function () {
+                    divisionInput.value = this.dataset.value;
+                    divisionSuggestionsContainer.innerHTML = '';
+                    divisionSuggestionsContainer.style.display = "none";
+                });
+            });
+        })
+        .catch(error => console.error('Error fetching divisions:', error));
+}
+
+// Initialization of division suggestion box
+document.addEventListener("DOMContentLoaded", function () {
+    const divisionInput = document.getElementById('division');
+    const divisionSuggestionsContainer = document.getElementById('divisionSuggestions');
+
+    // Add event listeners for input, focus, and click events
+    divisionInput.addEventListener('input', displayDivisionSuggestions);
+    divisionInput.addEventListener('focus', displayDivisionSuggestions);
+    divisionInput.addEventListener('click', displayDivisionSuggestions);
+
+    document.addEventListener('click', function (event) {
+        if (!divisionSuggestionsContainer.contains(event.target) && !divisionInput.contains(event.target)) {
+            divisionSuggestionsContainer.style.display = "none";
+        }
+    });
+});
+
+
+///////////////////////////////// CLASS COMPLETED SUGGESTIONS //////////
+
+
+        // Classes available for suggestion
+        const classes = [
+            'Nursery', 
+            'LKG', 
+            'UKG', 
+            '1st', 
+            '2nd', 
+            '3rd', 
+            '4th', 
+            '5th', 
+            '6th', 
+            '7th', 
+            '8th', 
+            '9th', 
+            '10th'
+        ];
+
+        // Function to display class completed suggestions
+        function displayClassCompletedSuggestions() {
+            const classCompletedInput = document.getElementById('classCompleted');
+            const classCompletedSuggestionsContainer = document.getElementById('classCompletedSuggestions');
+
+            // Show suggestion box
+            classCompletedSuggestionsContainer.style.display = "block";
+            const query = classCompletedInput.value.toLowerCase().trim();
+            classCompletedSuggestionsContainer.innerHTML = '';
+
+            const filteredClasses = classes.filter(className => className.toLowerCase().startsWith(query));
+
+            if (filteredClasses.length > 0) {
+                filteredClasses.forEach(className => {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.classList.add('suggestion-item');
+                    suggestionItem.textContent = className;
+                    suggestionItem.dataset.value = className;
+                    classCompletedSuggestionsContainer.appendChild(suggestionItem);
+                });
+            } else {
+                // If no results are found
+                const noResultsItem = document.createElement('div');
+                noResultsItem.classList.add('suggestion-item', 'no-results');
+                noResultsItem.textContent = 'No results found';
+                classCompletedSuggestionsContainer.appendChild(noResultsItem);
+            }
+
+            // Add event listeners for selection
+            classCompletedSuggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+                item.addEventListener('click', function () {
+                    classCompletedInput.value = this.dataset.value;
+                    classCompletedSuggestionsContainer.innerHTML = '';
+                    classCompletedSuggestionsContainer.style.display = "none";
+                });
+            });
+        }
+
+        // Initialization of class completed suggestion box
+        document.addEventListener("DOMContentLoaded", function () {
+            const classCompletedInput = document.getElementById('classCompleted');
+            const classCompletedSuggestionsContainer = document.getElementById('classCompletedSuggestions');
+
+            // Add event listeners for input, focus, and click events
+            classCompletedInput.addEventListener('input', displayClassCompletedSuggestions);
+            classCompletedInput.addEventListener('focus', displayClassCompletedSuggestions);
+            classCompletedInput.addEventListener('click', displayClassCompletedSuggestions);
+
+            document.addEventListener('click', function (event) {
+                if (!classCompletedSuggestionsContainer.contains(event.target) && !classCompletedInput.contains(event.target)) {
+                    classCompletedSuggestionsContainer.style.display = "none";
+                }
+            });
+        });
