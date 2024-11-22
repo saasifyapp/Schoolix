@@ -212,12 +212,11 @@
                                 <div id="aadhaarError" class="error-message"></div>
                             </div>
                             <div class="form-group">
-                                <select class="form-control" id="documents" multiple>
-                                    <option value="birth-certificate">Birth Certificate</option>
-                                    <option value="passport">Passport</option>
-                                    <option value="school-id">School ID</option>
-                                </select>
-                                <span class="form-control-placeholder">Select Documents</span>
+                                <div id="multiSelectContainer" class="form-control">
+                                    <span id="selectedDocuments"></span>
+                                    <input type="text" id="documentInput" placeholder="Select Documents">
+                                </div>
+                                <div id="documentSuggestions" class="suggestions"></div>
                             </div>
                         </div>
                     </div>

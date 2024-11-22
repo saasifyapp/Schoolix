@@ -328,3 +328,64 @@ input[type="checkbox"]:focus {
         transform: translateX(0);
     }
 }
+
+
+
+
+
+
+
+/* Style for the container of selected documents */
+#multiSelectContainer {
+    display: flex;
+    flex-wrap: wrap; /* Allow the content to wrap */
+    align-items: center;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    gap: 5px; /* Adds space between the tags */
+    width: 100%; /* Ensure the container takes up the full width */
+    box-sizing: border-box; /* Make sure padding is included in the width calculation */
+    height: auto; /* Allow the container to adjust height based on content */
+}
+
+/* Style for the selected document bubbles */
+#selectedDocuments span {
+    display: inline-flex;
+    align-items: center;
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 4px 10px;
+    margin: 4px 4px;
+    border-radius: 15px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+/* Style for the cross icon inside the bubbles */
+#selectedDocuments span .remove-icon {
+    margin-left: 8px;
+    font-size: 18px;
+    color: #ff0000;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+/* Change cursor to pointer when hovering over the remove icon */
+#selectedDocuments span .remove-icon:hover {
+    color: #ff4d4d;
+    cursor: pointer;
+}
+
+/* Optional: Styling for the input field */
+#documentInput {
+    border: none;
+    outline: none;
+    padding: 5px 10px;
+    font-size: 14px;
+    background: transparent;
+    min-width: 100px; /* Prevent the input from shrinking too much */
+    flex: 1 0 120px; /* Allow the input to expand and grow, but prevent it from shrinking too small */
+    box-sizing: border-box; /* Ensure padding is included in the width calculation */
+    white-space: nowrap; /* Prevent input text from wrapping */
+}

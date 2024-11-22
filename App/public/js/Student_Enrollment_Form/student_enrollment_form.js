@@ -73,8 +73,14 @@ function updateProgressBar() {
     let filledInputs = 0;
 
     // Count the number of filled inputs
+    // inputs.forEach(input => {
+    //     if (input.value.trim() !== "") {
+    //         filledInputs++;
+    //     }
+    // });
+
     inputs.forEach(input => {
-        if (input.value.trim() !== "") {
+        if (input && input.value !== undefined && input.value.trim() !== "") {
             filledInputs++;
         }
     });
@@ -884,3 +890,94 @@ document.getElementById('aadhaar').addEventListener('input', function() {
 
 
 ///////////////////////// DOCUMENTS SUBMITTED SUGGESTIONS ///////////////////
+const documentValues = ["Birth Certificate", "Passport", "School ID"];
+const selectedDocumentsContainer = document.getElementById("selectedDocuments");
+const documentInput = document.getElementById("documentInput");
+const documentSuggestionsContainer = document.getElementById("documentSuggestions");
+let selectedDocuments = [];
+
+// Function to display document suggestions
+function displayDocumentSuggestions() {
+    documentSuggestionsContainer.style.display = "block";
+    const query = documentInput.value.toLowerCase();
+    documentSuggestionsContainer.innerHTML = '';
+
+    const filteredDocumentValues = documentValues.filter(doc =>
+        doc.toLowerCase().includes(query) && !selectedDocuments.includes(doc)
+    );
+
+    if (filteredDocumentValues.length > 0) {
+        filteredDocumentValues.forEach(doc => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = doc;
+            suggestionItem.dataset.doc = doc;
+            documentSuggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        const noResultsItem = document.createElement('div');
+        noResultsItem.classList.add('suggestion-item', 'no-results');
+        noResultsItem.textContent = 'No results found';
+        documentSuggestionsContainer.appendChild(noResultsItem);
+    }
+}
+
+function addDocument(doc) { // Renamed parameter
+    if (!selectedDocuments.includes(doc)) {
+        selectedDocuments.push(doc);
+
+        const docTag = document.createElement('span');
+        docTag.textContent = doc;
+
+        const removeIcon = document.createElement('span');
+        removeIcon.textContent = '×';
+        removeIcon.classList.add('remove-icon');
+        removeIcon.onclick = () => removeDocument(doc, docTag);
+
+        docTag.appendChild(removeIcon);
+        selectedDocumentsContainer.appendChild(docTag);
+    }
+    documentInput.value = '';
+    displayDocumentSuggestions();
+}
+
+
+// Function to remove a selected document
+function removeDocument(document, docTag) {
+    selectedDocuments = selectedDocuments.filter(doc => doc !== document);
+    selectedDocumentsContainer.removeChild(docTag);
+    displayDocumentSuggestions();
+}
+
+// Event listeners
+documentInput.addEventListener("input", displayDocumentSuggestions);
+documentInput.addEventListener("focus", displayDocumentSuggestions);
+documentInput.addEventListener("click", displayDocumentSuggestions);
+
+documentSuggestionsContainer.addEventListener("click", (e) => {
+    const selectedItem = e.target;
+    if (selectedItem.classList.contains("suggestion-item") && !selectedItem.classList.contains("no-results")) {
+        const doc = selectedItem.dataset.doc; // Retrieve the document value
+        addDocument(doc); // Pass the value to the addDocument function
+    }
+});
+
+
+// Hide suggestions on clicking outside
+document.addEventListener("click", (e) => {
+    if (!e.target.closest(".form-group")) {
+        documentSuggestionsContainer.style.display = "none";
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+

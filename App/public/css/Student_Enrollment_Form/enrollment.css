@@ -176,13 +176,13 @@ h3{
     border-radius: 5px;
     /* Rounded corners */
     max-height: 10rem;
-    width: 17rem;
-    max-width  : 18.7rem;
+    width: auto; /* Ensure it expands to fit content, but we will dynamically adjust it */
+    max-width: 18.7rem; /* Limit max width */
+    min-width: 100%; /* Allow it to stretch based on the input field */
     overflow-y: auto;
     position: absolute;
     background: white;
     z-index: 1000;
-    /* top: 3.3rem; */
     display: none;
     flex-direction: column;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -190,8 +190,9 @@ h3{
     color: black;
     align-items: center;
     justify-content: center;
-    margin-left: 5%;
-    top: 3.3rem;
+    margin-left: 0;
+    top: 100%; /* Position it below the input box */
+    left: 0; /* Align it with the left of the input box */
     border-radius: 0px 0px 25px 25px;
 }
 
@@ -200,7 +201,6 @@ h3{
     padding: 10px;
     cursor: pointer;
     border-bottom: 1.5px solid #eee;
-    /* Optional: Add a separator between items */
 }
 
 /* Style for the last suggestion item to remove the bottom border */
@@ -210,40 +210,31 @@ h3{
 
 .suggestion-item:hover {
     background: #D6EAF8;
-    font-weight: bold; /* Make text bold on hover */
-    /* Make text bold on hover */
+    font-weight: bold;
 }
 
+/* No results styling */
 .no-results {
     color: #999;
-    /* Grey color for "No results found" text */
     font-style: italic;
-    /* Italic to differentiate from normal items */
     pointer-events: none;
-    /* Prevent clicks */
     text-align: center;
-    /* Center the text */
 }
 
 /* Customize the scrollbar */
 .suggestions::-webkit-scrollbar {
     width: 4px;
-    /* Thin scrollbar width */
 }
 
 .suggestions::-webkit-scrollbar-thumb {
     background-color: #ccc;
-    /* Color of the scrollbar */
     border-radius: 10px;
-    /* Rounded scrollbar */
 }
 
 .suggestions::-webkit-scrollbar-thumb:hover {
     background-color: #aaa;
-    /* Darker on hover */
 }
 
 .suggestions::-webkit-scrollbar-track {
     background: transparent;
-    /* Transparent track */
 }
