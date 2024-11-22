@@ -329,16 +329,7 @@ function debounce(func, delay) {
 }
 
 // Function to fetch and display state suggestions from API
-function displayStateSuggestions(query, suggestionsContainer) {
-    suggestionsContainer.innerHTML = ''; // Clear previous suggestions
-
-    if (query.length === 0) {
-        suggestionsContainer.style.display = "none";
-        return;
-    }
-
-    suggestionsContainer.style.display = "block";
-
+async function fetchStateSuggestions() {
     const headers = new Headers();
     headers.append("X-CSCAPI-KEY", "V2c2TU5yS2g4WlNXVDdLZ3d6Smh5cnZpTHpMODg0Y2ZZSnZjTmZ3WA=="); // Replace 'API_KEY' with your actual API key
 
@@ -348,47 +339,46 @@ function displayStateSuggestions(query, suggestionsContainer) {
         redirect: 'follow'
     };
 
-    fetch(`https://api.countrystatecity.in/v1/countries/IN/states`, requestOptions)
+    return fetch(`https://api.countrystatecity.in/v1/countries/IN/states`, requestOptions)
         .then(response => response.json())
-        .then(data => {
-            const filteredStates = data.filter(state => state.name.toLowerCase().startsWith(query));
-
-            if (filteredStates.length > 0) {
-                filteredStates.forEach(state => {
-                    const suggestionItem = document.createElement('div');
-                    suggestionItem.classList.add('suggestion-item');
-                    suggestionItem.textContent = state.name;
-                    suggestionItem.dataset.place = state.name;
-                    suggestionsContainer.appendChild(suggestionItem);
-                });
-            } else {
-                // If no results are found
-                const noResultsItem = document.createElement('div');
-                noResultsItem.classList.add('suggestion-item', 'no-results');
-                noResultsItem.textContent = 'No results found';
-                suggestionsContainer.appendChild(noResultsItem);
-            }
-        })
         .catch(error => {
             console.error('Error fetching state suggestions:', error);
-            const errorItem = document.createElement('div');
-            errorItem.classList.add('suggestion-item', 'error');
-            errorItem.textContent = 'Error fetching suggestions';
-            suggestionsContainer.appendChild(errorItem);
+            return [];
         });
 }
 
-// Function to fetch and display city suggestions from API
-function displayPlaceSuggestions(query, suggestionsContainer) {
+async function prefetchStateSuggestions() {
+    window.stateSuggestions = (await fetchStateSuggestions()) || [];
+}
+prefetchStateSuggestions();
+
+// Function to display state suggestions from pre-fetched data
+function displayStateSuggestions(query, suggestionsContainer) {
     suggestionsContainer.innerHTML = ''; // Clear previous suggestions
 
-    if (query.length === 0) {
-        suggestionsContainer.style.display = "none";
-        return;
+    const filteredStates = window.stateSuggestions.filter(state => state.name.toLowerCase().startsWith(query));
+
+    if (filteredStates.length > 0) {
+        filteredStates.forEach(state => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = state.name;
+            suggestionItem.dataset.place = state.name;
+            suggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        // If no results are found
+        const noResultsItem = document.createElement('div');
+        noResultsItem.classList.add('suggestion-item', 'no-results');
+        noResultsItem.textContent = 'No results found';
+        suggestionsContainer.appendChild(noResultsItem);
     }
 
-    suggestionsContainer.style.display = "block";
+    suggestionsContainer.style.display = filteredStates.length > 0 ? "block" : "none";
+}
 
+// Function to fetch and display city suggestions from API
+async function fetchCitySuggestions() {
     const headers = new Headers();
     headers.append("X-CSCAPI-KEY", "V2c2TU5yS2g4WlNXVDdLZ3d6Smh5cnZpTHpMODg0Y2ZZSnZjTmZ3WA=="); // Replace 'API_KEY' with your actual API key
 
@@ -398,34 +388,42 @@ function displayPlaceSuggestions(query, suggestionsContainer) {
         redirect: 'follow'
     };
 
-    fetch(`https://api.countrystatecity.in/v1/countries/IN/cities`, requestOptions)
+    return fetch(`https://api.countrystatecity.in/v1/countries/IN/cities`, requestOptions)
         .then(response => response.json())
-        .then(data => {
-            const filteredCities = data.filter(city => city.name.toLowerCase().startsWith(query));
-
-            if (filteredCities.length > 0) {
-                filteredCities.forEach(city => {
-                    const suggestionItem = document.createElement('div');
-                    suggestionItem.classList.add('suggestion-item');
-                    suggestionItem.textContent = city.name;
-                    suggestionItem.dataset.place = city.name;
-                    suggestionsContainer.appendChild(suggestionItem);
-                });
-            } else {
-                // If no results are found
-                const noResultsItem = document.createElement('div');
-                noResultsItem.classList.add('suggestion-item', 'no-results');
-                noResultsItem.textContent = 'No results found';
-                suggestionsContainer.appendChild(noResultsItem);
-            }
-        })
         .catch(error => {
-            console.error('Error fetching suggestions:', error);
-            const errorItem = document.createElement('div');
-            errorItem.classList.add('suggestion-item', 'error');
-            errorItem.textContent = 'Error fetching suggestions';
-            suggestionsContainer.appendChild(errorItem);
+            console.error('Error fetching city suggestions:', error);
+            return [];
         });
+}
+
+async function prefetchCitySuggestions() {
+    window.citySuggestions = (await fetchCitySuggestions()) || [];
+}
+prefetchCitySuggestions();
+
+// Function to display city suggestions from pre-fetched data
+function displayPlaceSuggestions(query, suggestionsContainer) {
+    suggestionsContainer.innerHTML = ''; // Clear previous suggestions
+
+    const filteredCities = window.citySuggestions.filter(city => city.name.toLowerCase().startsWith(query));
+
+    if (filteredCities.length > 0) {
+        filteredCities.forEach(city => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = city.name;
+            suggestionItem.dataset.place = city.name;
+            suggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        // If no results are found
+        const noResultsItem = document.createElement('div');
+        noResultsItem.classList.add('suggestion-item', 'no-results');
+        noResultsItem.textContent = 'No results found';
+        suggestionsContainer.appendChild(noResultsItem);
+    }
+
+    suggestionsContainer.style.display = filteredCities.length > 0 ? "block" : "none";
 }
 
 // Combined initialization of suggestion boxes
@@ -490,7 +488,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
-
 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -884,3 +881,6 @@ function validateAadhaar(aadhaar) {
 document.getElementById('aadhaar').addEventListener('input', function() {
     validateAadhaar(this.value.trim());
 });
+
+
+///////////////////////// DOCUMENTS SUBMITTED SUGGESTIONS ///////////////////
