@@ -175,18 +175,28 @@ function prefillGuardianNames() {
     const studentMiddleName = formData.studentInformation.middleName;
     const lastName = formData.studentInformation.lastName;
 
-    // Pre-fill Father's last name
     document.getElementById('fatherLastName').value = lastName;
-
-    // Pre-fill Mother's last name
     document.getElementById('motherLastName').value = lastName;
-
-    // Pre-fill Father's first name with student's middle name
     document.getElementById('fatherFirstName').value = studentMiddleName;
-
-    // Pre-fill Father's full name (assuming you want to use middle name and last name)
     document.getElementById('fatherFullName').value = `${studentMiddleName} ${lastName}`;
-
-    // Only pre-fill Mother's full name with the student's last name
     document.getElementById('motherFullName').value = lastName;
 }
+
+// Function to prefill Section, Standard and Division
+function prefillFeesDetails() {
+    const section = formData.academicInformation.section;
+    const standard = formData.academicInformation.standard;
+    const division = formData.academicInformation.division;
+
+    document.getElementById('feeSection').value = section || "";
+    document.getElementById('feeStandard').value = standard || "";
+    document.getElementById('feeDivision').value = division || "";
+}
+
+// Collect data on "Next" button click and move to the next section
+document.getElementById('academic-next').addEventListener('click', function () {
+    collectAcademicInformation();
+    prefillFeesDetails(); // Call prefill function immediately after collecting academic information
+    document.getElementById('academic-information').style.display = 'none';
+    document.getElementById('fees-information').style.display = 'block';
+});

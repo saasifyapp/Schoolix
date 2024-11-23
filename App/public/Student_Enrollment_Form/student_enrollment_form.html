@@ -423,15 +423,15 @@
                         <h3>Fee Details</h3>
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="feeSection" placeholder=" ">
+                                <input type="text" class="form-control" id="feeSection" placeholder=" " readonly>
                                 <span class="form-control-placeholder">Section</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="feeStandard" placeholder=" ">
+                                <input type="text" class="form-control" id="feeStandard" placeholder=" " readonly>
                                 <span class="form-control-placeholder">Standard</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="feeDivision" placeholder=" ">
+                                <input type="text" class="form-control" id="feeDivision" placeholder=" " readonly>
                                 <span class="form-control-placeholder">Division</span>
                             </div>
                         </div>
@@ -439,10 +439,14 @@
                             <div class="form-group">
                                 <input type="text" class="form-control" id="feeCategory" placeholder=" ">
                                 <span class="form-control-placeholder">Fee Category</span>
+                                <div id="feeCategorySuggestions" class="suggestions"></div>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="packageAllotted" placeholder=" ">
+                                <input type="text" class="form-control" id="packageAllotted" placeholder=" " readonly>
                                 <span class="form-control-placeholder">Package Allotted</span>
+
+                                <button type="button" class="btn prev-button" id="addPackageBtn" style="margin-left: 10px;">Add Package</button>
+
                             </div>
                         </div>
                     </div>

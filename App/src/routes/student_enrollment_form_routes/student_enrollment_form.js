@@ -167,4 +167,50 @@ router.get('/getDivisions', (req, res) => {
 });
 
 
+// New endpoint to fetch Fee Categories based on Standard (class grade)
+router.get('/getFeeCategory', (req, res) => {
+    const { standard } = req.query; // Get the standard parameter from the query string
+
+    if (!standard) {
+        return res.status(400).json({ error: 'Standard is required' });
+    }
+
+    const query = `SELECT category_name FROM fee_structures WHERE class_grade = ?`;
+
+    req.connectionPool.query(query, [standard], (error, results) => {
+        if (error) {
+            console.error('Error fetching fee categories:', error);
+            return res.status(500).json({ error: 'Error fetching fee categories' });
+        }
+
+        const categories = results.map(result => result.category_name);
+        res.status(200).json({ categories });
+    });
+});
+
+
+// New endpoint to fetch amount based on category_name and class_grade
+router.get('/getAmount', (req, res) => {
+    const { category_name, class_grade } = req.query; // Get the category_name and class_grade parameters from the query string
+
+    if (!category_name || !class_grade) {
+        return res.status(400).json({ error: 'category_name and class_grade are required' });
+    }
+
+    const query = `SELECT amount FROM fee_structures WHERE category_name = ? AND class_grade = ?`;
+
+    req.connectionPool.query(query, [category_name, class_grade], (error, results) => {
+        if (error) {
+            console.error('Error fetching amount:', error);
+            return res.status(500).json({ error: 'Error fetching amount' });
+        }
+
+        if (results.length > 0) {
+            res.status(200).json({ amount: results[0].amount });
+        } else {
+            res.status(404).json({ error: 'No matching record found' });
+        }
+    });
+});
+
 module.exports = router;

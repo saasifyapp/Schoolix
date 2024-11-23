@@ -1176,6 +1176,7 @@ function displaySectionSuggestions() {
             // Fetch the next GR Number when a section is selected
             if (sectionInput.value) {
                 fetchNextGrno(sectionInput.value);
+                clearStandardAndDivision(); // Clear standard and division when section changes
             }
         });
     });
@@ -1185,18 +1186,26 @@ function displaySectionSuggestions() {
 function handleSectionInputChange() {
     const sectionInput = document.getElementById('section');
     const grNoInput = document.getElementById('grNo');
+    const standardInput = document.getElementById('standard');
+    const divisionInput = document.getElementById('division');
+    const feeCategoryInput = document.getElementById('feeCategory'); // New field to clear
 
     if (!sectionInput.value) {
         grNoInput.value = '';
+        standardInput.value = '';
+        divisionInput.value = '';
+        feeCategoryInput.value = ''; // Clear fee category input
     }
+}
 
-    if (!sectionInput.value) {
-        standard.value = '';
-    }
-
-    if (!sectionInput.value) {
-        division.value = '';
-    }
+// Function to clear standard, division, and fee category fields
+function clearStandardAndDivision() {
+    const standardInput = document.getElementById('standard');
+    const divisionInput = document.getElementById('division');
+    const feeCategoryInput = document.getElementById('feeCategory'); // New field to clear
+    standardInput.value = '';
+    divisionInput.value = '';
+    feeCategoryInput.value = ''; // Clear fee category input
 }
 
 // Initialization of section suggestion box
@@ -1212,7 +1221,7 @@ document.addEventListener("DOMContentLoaded", function () {
     sectionInput.addEventListener('focus', displaySectionSuggestions);
     sectionInput.addEventListener('click', displaySectionSuggestions);
 
-    // Add event listener to clear GR Number field when Section input is cleared
+    // Add event listener to clear GR Number, Standard, Division fields when Section input is cleared
     sectionInput.addEventListener('input', handleSectionInputChange);
 
     document.addEventListener('click', function (event) {
@@ -1226,6 +1235,7 @@ document.addEventListener("DOMContentLoaded", function () {
         fetchNextGrno(sectionInput.value);
     }
 });
+
 ///////////////////// GET GRNO ////////////////////////////
 
 // Function to fetch and set the next GR Number
@@ -1241,8 +1251,6 @@ function fetchNextGrno(sectionValue) {
         })
         .catch(error => console.error('Error fetching next GR Number:', error));
 }
-
-
 
 /////////////////////// SET ADMISSION DATE ///////////
 
@@ -1261,100 +1269,109 @@ function setAdmissionDate() {
 // Set the default date when the document is ready
 document.addEventListener('DOMContentLoaded', setAdmissionDate);
 
-
 /////////////////////// GET STANDARD SUGGESTIONS /////////
 
-        // Function to display standard suggestions
-        function displayStandardSuggestions() {
-            const standardInput = document.getElementById('standard');
-            const standardSuggestionsContainer = document.getElementById('standardSuggestions');
-            const sectionInput = document.getElementById('section').value.trim();
+// Function to display standard suggestions
+function displayStandardSuggestions() {
+    const standardInput = document.getElementById('standard');
+    const standardSuggestionsContainer = document.getElementById('standardSuggestions');
+    const sectionInput = document.getElementById('section').value.trim();
 
-            // Show suggestion box
-            standardSuggestionsContainer.style.display = "block";
-            const query = standardInput.value.toLowerCase().trim();
-            standardSuggestionsContainer.innerHTML = '';
+    // Show suggestion box
+    standardSuggestionsContainer.style.display = "block";
+    const query = standardInput.value.toLowerCase().trim();
+    standardSuggestionsContainer.innerHTML = '';
 
-            if (!sectionInput) {
-                standardSuggestionsContainer.innerHTML = '<div class="suggestion-item no-results">Please select a section first</div>';
-                return;
-            }
+    if (!sectionInput) {
+        standardSuggestionsContainer.innerHTML = '<div class="suggestion-item no-results">Please select a section first</div>';
+        return;
+    }
 
-            fetch(`/getStandards?section=${sectionInput}`)
-                .then(response => response.json())
-                .then(data => {
-                    const uniqueStandards = new Set();
-                    const filteredStandards = data.standards.filter(standard => {
-                        const normalizedStandard = standard.toLowerCase();
-                        if (normalizedStandard.startsWith(query) && !uniqueStandards.has(normalizedStandard)) {
-                            uniqueStandards.add(normalizedStandard);
-                            return true;
-                        }
-                        return false;
-                    });
-
-                    if (filteredStandards.length > 0) {
-                        filteredStandards.forEach(standard => {
-                            const suggestionItem = document.createElement('div');
-                            suggestionItem.classList.add('suggestion-item');
-                            suggestionItem.textContent = standard;
-                            suggestionItem.dataset.value = standard;
-                            standardSuggestionsContainer.appendChild(suggestionItem);
-                        });
-                    } else {
-                        // If no results are found
-                        const noResultsItem = document.createElement('div');
-                        noResultsItem.classList.add('suggestion-item', 'no-results');
-                        noResultsItem.textContent = 'No results found';
-                        standardSuggestionsContainer.appendChild(noResultsItem);
-                    }
-
-                    // Add event listeners for selection
-                    standardSuggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
-                        item.addEventListener('click', function () {
-                            standardInput.value = this.dataset.value;
-                            standardSuggestionsContainer.innerHTML = '';
-                            standardSuggestionsContainer.style.display = "none";
-                        });
-                    });
-                })
-                .catch(error => console.error('Error fetching standards:', error));
-        }
-
-        // Initialization of standard suggestion box
-        document.addEventListener("DOMContentLoaded", function () {
-            const standardInput = document.getElementById('standard');
-            const standardSuggestionsContainer = document.getElementById('standardSuggestions');
-
-            // Add event listeners for input, focus, and click events
-            standardInput.addEventListener('input', displayStandardSuggestions);
-            standardInput.addEventListener('focus', displayStandardSuggestions);
-            standardInput.addEventListener('click', displayStandardSuggestions);
-
-            document.addEventListener('click', function (event) {
-                if (!standardSuggestionsContainer.contains(event.target) && !standardInput.contains(event.target)) {
-                    standardSuggestionsContainer.style.display = "none";
+    fetch(`/getStandards?section=${sectionInput}`)
+        .then(response => response.json())
+        .then(data => {
+            const uniqueStandards = new Set();
+            const filteredStandards = data.standards.filter(standard => {
+                const normalizedStandard = standard.toLowerCase();
+                if (normalizedStandard.startsWith(query) && !uniqueStandards.has(normalizedStandard)) {
+                    uniqueStandards.add(normalizedStandard);
+                    return true;
                 }
+                return false;
             });
 
-            // Add event listener to clear Division field when Standard input is cleared
-            standardInput.addEventListener('input', handleStandardInputChange);
-        });
-
-        // Clear Division if Standard input is cleared
-        function handleStandardInputChange() {
-            const standardInput = document.getElementById('standard');
-            const divisionInput = document.getElementById('division');
-
-            if (!standardInput.value) {
-                divisionInput.value = '';
+            if (filteredStandards.length > 0) {
+                filteredStandards.forEach(standard => {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.classList.add('suggestion-item');
+                    suggestionItem.textContent = standard;
+                    suggestionItem.dataset.value = standard;
+                    standardSuggestionsContainer.appendChild(suggestionItem);
+                });
+            } else {
+                // If no results are found
+                const noResultsItem = document.createElement('div');
+                noResultsItem.classList.add('suggestion-item', 'no-results');
+                noResultsItem.textContent = 'No results found';
+                standardSuggestionsContainer.appendChild(noResultsItem);
             }
+
+            // Add event listeners for selection
+            standardSuggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+                item.addEventListener('click', function () {
+                    standardInput.value = this.dataset.value;
+                    standardSuggestionsContainer.innerHTML = '';
+                    standardSuggestionsContainer.style.display = "none";
+
+                    // Clear division field when standard changes
+                    clearDivision();
+                });
+            });
+        })
+        .catch(error => console.error('Error fetching standards:', error));
+}
+
+// Function to clear division and fee category fields
+function clearDivision() {
+    const divisionInput = document.getElementById('division');
+    const feeCategoryInput = document.getElementById('feeCategory'); // New field to clear
+    divisionInput.value = '';
+    feeCategoryInput.value = ''; // Clear fee category input
+}
+
+// Initialization of standard suggestion box
+document.addEventListener("DOMContentLoaded", function () {
+    const standardInput = document.getElementById('standard');
+    const standardSuggestionsContainer = document.getElementById('standardSuggestions');
+
+    // Add event listeners for input, focus, and click events
+    standardInput.addEventListener('input', displayStandardSuggestions);
+    standardInput.addEventListener('focus', displayStandardSuggestions);
+    standardInput.addEventListener('click', displayStandardSuggestions);
+
+    document.addEventListener('click', function (event) {
+        if (!standardSuggestionsContainer.contains(event.target) && !standardInput.contains(event.target)) {
+            standardSuggestionsContainer.style.display = "none";
         }
+    });
 
+    // Add event listener to clear Division and fee category fields when Standard input is cleared
+    standardInput.addEventListener('input', handleStandardInputChange);
+});
 
+// Clear Division and fee category if Standard input is cleared
+function handleStandardInputChange() {
+    const standardInput = document.getElementById('standard');
+    const divisionInput = document.getElementById('division');
+    const feeCategoryInput = document.getElementById('feeCategory'); // New field to clear
+
+    if (!standardInput.value) {
+        divisionInput.value = '';
+        feeCategoryInput.value = ''; // Clear fee category input
+    }
+}
 
 /////////////////////////// GET DIVISIONS based on section and standard //////
-
 
 // Function to display division suggestions
 function displayDivisionSuggestions() {
@@ -1437,6 +1454,10 @@ document.addEventListener("DOMContentLoaded", function () {
 ///////////////////////////////// CLASS COMPLETED SUGGESTIONS //////////
 
 
+        // Function to display class completed suggestions
+        function displayClassCompletedSuggestions() {
+
+            
         // Classes available for suggestion
         const classes = [
             'Nursery', 
@@ -1453,9 +1474,6 @@ document.addEventListener("DOMContentLoaded", function () {
             '9th', 
             '10th'
         ];
-
-        // Function to display class completed suggestions
-        function displayClassCompletedSuggestions() {
             const classCompletedInput = document.getElementById('classCompleted');
             const classCompletedSuggestionsContainer = document.getElementById('classCompletedSuggestions');
 
@@ -1508,3 +1526,114 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
         });
+
+
+////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////// FEES AND PACKAGES ///////////////////
+/////////////// FEE CATEGORY SUGGESTIONS /////////////////
+
+// Function to display fee category suggestions
+function displayFeeCategorySuggestions() {
+    const feeCategoryInput = document.getElementById('feeCategory');
+    const feeCategorySuggestionsContainer = document.getElementById('feeCategorySuggestions');
+    const standardInput = document.getElementById('standard').value.trim();
+
+    // Clear package allotted when fee category is empty or changed
+    clearPackageAllotted();
+
+    // Clear existing suggestions
+    feeCategorySuggestionsContainer.innerHTML = '';
+
+    // Show suggestion box
+    feeCategorySuggestionsContainer.style.display = "block";
+    const query = feeCategoryInput.value.toLowerCase().trim();
+
+    if (!standardInput) {
+        feeCategorySuggestionsContainer.innerHTML = '<div class="suggestion-item no-results">Please fill academic information</div>';
+        return;
+    }
+
+    fetch(`/getFeeCategory?standard=${standardInput}`)
+        .then(response => response.json())
+        .then(data => {
+            const uniqueCategories = new Set();
+            const filteredCategories = data.categories.filter(category => {
+                const normalizedCategory = category.toLowerCase();
+                if (normalizedCategory.startsWith(query) && !uniqueCategories.has(normalizedCategory)) {
+                    uniqueCategories.add(normalizedCategory);
+                    return true;
+                }
+                return false;
+            });
+
+            if (filteredCategories.length > 0) {
+                filteredCategories.forEach(category => {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.classList.add('suggestion-item');
+                    suggestionItem.textContent = category;
+                    suggestionItem.dataset.value = category;
+                    feeCategorySuggestionsContainer.appendChild(suggestionItem);
+                });
+            } else {
+                // If no results are found
+                const noResultsItem = document.createElement('div');
+                noResultsItem.classList.add('suggestion-item', 'no-results');
+                noResultsItem.textContent = 'No results found';
+                feeCategorySuggestionsContainer.appendChild(noResultsItem);
+            }
+
+            // Add event listeners for selection
+            feeCategorySuggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+                item.addEventListener('click', function () {
+                    feeCategoryInput.value = this.dataset.value;
+                    feeCategorySuggestionsContainer.innerHTML = '';
+                    feeCategorySuggestionsContainer.style.display = "none";
+                    
+                    // Fetch and set the amount in packageAllotted field based on fee category and standard
+                    fetchAmount(feeCategoryInput.value, standardInput);
+                });
+            });
+        })
+        .catch(error => console.error('Error fetching fee categories:', error));
+}
+
+// Function to fetch and set amount in packageAllotted field
+function fetchAmount(categoryName, classGrade) {
+    fetch(`/getAmount?category_name=${categoryName}&class_grade=${classGrade}`)
+        .then(response => response.json())
+        .then(data => {
+            const packageAllottedInput = document.getElementById('packageAllotted');
+            if (data.amount) {
+                packageAllottedInput.value = data.amount;
+            } else {
+                packageAllottedInput.value = 'Amount not found';
+            }
+        })
+        .catch(error => console.error('Error fetching amount:', error));
+}
+
+// Function to clear the package allotted field
+function clearPackageAllotted() {
+    const packageAllottedInput = document.getElementById('packageAllotted');
+    packageAllottedInput.value = '';
+}
+
+// Initialization of fee category suggestion box
+document.addEventListener("DOMContentLoaded", function () {
+    const feeCategoryInput = document.getElementById('feeCategory');
+    const feeCategorySuggestionsContainer = document.getElementById('feeCategorySuggestions');
+
+    // Add event listeners for input, focus, and click events
+    feeCategoryInput.addEventListener('input', function() {
+        displayFeeCategorySuggestions();
+    });
+    feeCategoryInput.addEventListener('focus', displayFeeCategorySuggestions);
+    feeCategoryInput.addEventListener('click', displayFeeCategorySuggestions);
+
+    document.addEventListener('click', function (event) {
+        if (!feeCategorySuggestionsContainer.contains(event.target) && !feeCategoryInput.contains(event.target)) {
+            feeCategorySuggestionsContainer.style.display = "none";
+        }
+    });
+});
