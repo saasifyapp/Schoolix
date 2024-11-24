@@ -73,179 +73,161 @@
   // Call the refreshTable function to load the initial data when the page loads
   // refreshTable();
 
-  // Function to fetch route suggestions
-  function fetchRouteSuggestions(query) {
-    fetch(`/tag_getRouteDetails`)
+// Utility function to display loading suggestions
+function showLoading(suggestionsContainer) {
+  suggestionsContainer.innerHTML = '';
+  const loadingItem = document.createElement('div');
+  loadingItem.classList.add('suggestion-item', 'no-results');
+  loadingItem.textContent = 'Loading...';
+  suggestionsContainer.appendChild(loadingItem);
+  suggestionsContainer.style.display = 'flex';
+}
+
+// Utility function to display no results found message
+function showNoResults(suggestionsContainer) {
+  suggestionsContainer.innerHTML = '';
+  const noResultsItem = document.createElement('div');
+  noResultsItem.classList.add('suggestion-item', 'no-results');
+  noResultsItem.textContent = 'No results found';
+  suggestionsContainer.appendChild(noResultsItem);
+}
+
+// Function to fetch route suggestions
+function fetchRouteSuggestions(query) {
+  showLoading(routeSuggestionsContainer); // Show loading indicator
+
+  fetch(`/tag_getRouteDetails`)
       .then((response) => response.json())
       .then((data) => {
-        routeSuggestionsContainer.style.display = "flex"; // Show suggestions container
-        routeSuggestionsContainer.innerHTML = "";
+          routeSuggestionsContainer.innerHTML = ''; // Clear previous suggestions
+          routeSuggestionsContainer.style.display = 'flex'; // Show suggestions container
 
-        const filteredData = data.filter((route) =>
-          route.route_shift_name.toLowerCase().includes(query.toLowerCase())
-        );
+          const filteredData = data.filter((route) =>
+              route.route_shift_name.toLowerCase().includes(query.toLowerCase())
+          );
 
-        if (filteredData.length === 0) {
-          const noResultsItem = document.createElement("div");
-          noResultsItem.classList.add("suggestion-item", "no-results");
-          noResultsItem.textContent = "No results found";
-          routeSuggestionsContainer.appendChild(noResultsItem);
-        } else {
-          filteredData.forEach((route) => {
-            const suggestionItem = document.createElement("div");
-            suggestionItem.classList.add("suggestion-item");
-            suggestionItem.textContent = route.route_shift_name;
-            suggestionItem.dataset.routeName = route.route_shift_name;
-            suggestionItem.dataset.routeDetail = route.route_shift_detail;
-            routeSuggestionsContainer.appendChild(suggestionItem);
-          });
-        }
+          if (filteredData.length === 0) {
+              showNoResults(routeSuggestionsContainer);
+          } else {
+              filteredData.forEach((route) => {
+                  const suggestionItem = document.createElement("div");
+                  suggestionItem.classList.add("suggestion-item");
+                  suggestionItem.textContent = route.route_shift_name;
+                  suggestionItem.dataset.routeName = route.route_shift_name;
+                  suggestionItem.dataset.routeDetail = route.route_shift_detail;
+                  routeSuggestionsContainer.appendChild(suggestionItem);
+              });
+          }
       })
-      .catch((error) => console.error("Error:", error));
-  }
+      .catch((error) => {
+          console.error('Error:', error);
+          showNoResults(routeSuggestionsContainer);
+      });
+}
 
-  // Show route suggestions when input is focused
-  routeInput.addEventListener("focus", function () {
-    fetchRouteSuggestions(this.value);
-  });
+// Show route suggestions when input is focused
+routeInput.addEventListener("focus", function () {
+  fetchRouteSuggestions(this.value);
+});
 
-  // Update route suggestions when user types
-  routeInput.addEventListener("input", function () {
-    fetchRouteSuggestions(this.value);
-  });
+// Update route suggestions when user types
+routeInput.addEventListener("input", function () {
+  fetchRouteSuggestions(this.value);
+});
 
-  // Function to fetch shift suggestions
-  function fetchShiftSuggestions(query) {
-    fetch(`/tag_getShiftDetails`)
+// Function to fetch shift suggestions
+function fetchShiftSuggestions(query) {
+  showLoading(shiftSuggestionsContainer); // Show loading indicator
+
+  fetch(`/tag_getShiftDetails`)
       .then((response) => response.json())
       .then((data) => {
-        shiftSuggestionsContainer.style.display = "flex"; // Show suggestions container
-        shiftSuggestionsContainer.innerHTML = "";
+          shiftSuggestionsContainer.innerHTML = ''; // Clear previous suggestions
+          shiftSuggestionsContainer.style.display = 'flex'; // Show suggestions container
 
-        const filteredData = data.filter((shift) =>
-          shift.route_shift_name.toLowerCase().includes(query.toLowerCase())
-        );
+          const filteredData = data.filter((shift) =>
+              shift.route_shift_name.toLowerCase().includes(query.toLowerCase())
+          );
 
-        if (filteredData.length === 0) {
-          const noResultsItem = document.createElement("div");
-          noResultsItem.classList.add("suggestion-item", "no-results");
-          noResultsItem.textContent = "No results found";
-          shiftSuggestionsContainer.appendChild(noResultsItem);
-        } else {
-          filteredData.forEach((shift) => {
-            const suggestionItem = document.createElement("div");
-            suggestionItem.classList.add("suggestion-item");
-            suggestionItem.textContent = shift.route_shift_name;
-            suggestionItem.dataset.shiftName = shift.route_shift_name;
-            suggestionItem.dataset.shiftDetail = shift.route_shift_detail;
-            shiftSuggestionsContainer.appendChild(suggestionItem);
-          });
-        }
+          if (filteredData.length === 0) {
+              showNoResults(shiftSuggestionsContainer);
+          } else {
+              filteredData.forEach((shift) => {
+                  const suggestionItem = document.createElement("div");
+                  suggestionItem.classList.add("suggestion-item");
+                  suggestionItem.textContent = shift.route_shift_name;
+                  suggestionItem.dataset.shiftName = shift.route_shift_name;
+                  suggestionItem.dataset.shiftDetail = shift.route_shift_detail;
+                  shiftSuggestionsContainer.appendChild(suggestionItem);
+              });
+          }
       })
-      .catch((error) => console.error("Error:", error));
-  }
+      .catch((error) => {
+          console.error('Error:', error);
+          showNoResults(shiftSuggestionsContainer);
+      });
+}
 
-  // Show shift suggestions when input is focused
-  shiftInput.addEventListener("focus", function () {
-    fetchShiftSuggestions(this.value);
-  });
 
-  // Update shift suggestions when user types
-  shiftInput.addEventListener("input", function () {
-    fetchShiftSuggestions(this.value);
-  });
+// Show shift suggestions when input is focused
+shiftInput.addEventListener("focus", function () {
+  fetchShiftSuggestions(this.value);
+});
 
-  // // Function to fetch vehicle suggestions
-  // function fetchVehicleSuggestions(query) {
-  //     fetch(`/tag_getVehicleDetails?q=${query}`)
-  //         .then(response => response.json())
-  //         .then(data => {
-  //             vehicleSuggestionsContainer.style.display = 'flex'; // Show suggestions container
-  //             vehicleSuggestionsContainer.innerHTML = '';
+// Update shift suggestions when user types
+shiftInput.addEventListener("input", function () {
+  fetchShiftSuggestions(this.value);
+});
 
-  //             if (data.length === 0) {
-  //                 const noResultsItem = document.createElement('div');
-  //                 noResultsItem.classList.add('suggestion-item', 'no-results');
-  //                 noResultsItem.textContent = 'No results found';
-  //                 vehicleSuggestionsContainer.appendChild(noResultsItem);
-  //             } else {
-  //                 data.forEach((driver) => {
-  //                     const suggestionItem = document.createElement('div');
-  //                     suggestionItem.classList.add('suggestion-item');
-  //                     suggestionItem.textContent = `${driver.vehicle_no || 'N/A'} | ${driver.driver_name || 'N/A'}`;
-  //                     suggestionItem.dataset.driverName = driver.driver_name || 'N/A';
-  //                     suggestionItem.dataset.vehicleNo = driver.vehicle_no || 'N/A';
-  //                     suggestionItem.dataset.conductorName = driver.conductor_name || 'N/A';
-  //                     suggestionItem.dataset.vehicleCapacity = driver.vehicle_capacity || 'N/A';
-  //                     vehicleSuggestionsContainer.appendChild(suggestionItem);
-  //                 });
-  //             }
-  //         })
-  //         .catch((error) => console.error('Error:', error));
-  // }
+// Function to fetch vehicle suggestions
+function fetchVehicleSuggestions(query) {
+  showLoading(vehicleSuggestionsContainer); // Show loading indicator
 
-  // // Show vehicle suggestions when input is focused
-  // vehicleInput.addEventListener('focus', function () {
-  //     fetchVehicleSuggestions(this.value);
-  // });
-
-  // // Update vehicle suggestions when user types
-  // vehicleInput.addEventListener('input', function () {
-  //     fetchVehicleSuggestions(this.value);
-  // });
-
-  // Function to fetch vehicle suggestions
-  function fetchVehicleSuggestions(query) {
-    // Pass the query parameter to the endpoint
-    fetch(`/tag_getVehicleDetails?q=${encodeURIComponent(query)}`)
+  // Pass the query parameter to the endpoint
+  fetch(`/tag_getVehicleDetails?q=${encodeURIComponent(query)}`)
       .then((response) => response.json())
       .then((data) => {
-        vehicleSuggestionsContainer.style.display = "flex"; // Show suggestions container
-        vehicleSuggestionsContainer.innerHTML = "";
+          vehicleSuggestionsContainer.innerHTML = ''; // Clear previous suggestions
+          vehicleSuggestionsContainer.style.display = 'flex'; // Show suggestions container
 
-        console.log(data);
+          // Filter data to match the user's query on the client side as a fallback
+          const filteredData = data.filter(
+              (driver) =>
+                  driver.driver_name.toLowerCase().includes(query.toLowerCase()) ||
+                  driver.vehicle_no.toLowerCase().includes(query.toLowerCase())
+          );
 
-        // Filter data to match the user's query on the client side as a fallback
-        const filteredData = data.filter(
-          (driver) =>
-            driver.driver_name.toLowerCase().includes(query.toLowerCase()) ||
-            driver.vehicle_no.toLowerCase().includes(query.toLowerCase())
-        );
-
-        // Display filtered suggestions or show no results found
-        if (filteredData.length === 0) {
-          const noResultsItem = document.createElement("div");
-          noResultsItem.classList.add("suggestion-item", "no-results");
-          noResultsItem.textContent = "No results found";
-          vehicleSuggestionsContainer.appendChild(noResultsItem);
-        } else {
-          filteredData.forEach((driver) => {
-            const suggestionItem = document.createElement("div");
-            suggestionItem.classList.add("suggestion-item");
-            suggestionItem.textContent = `${driver.vehicle_no || "N/A"} | ${driver.driver_name || "N/A"
-              }`;
-            suggestionItem.dataset.driverName = driver.driver_name || "N/A";
-            suggestionItem.dataset.vehicleNo = driver.vehicle_no || "N/A";
-            suggestionItem.dataset.conductorName =
-              driver.conductor_name || "N/A";
-            suggestionItem.dataset.vehicleCapacity =
-              driver.vehicle_capacity || "N/A";
-            vehicleSuggestionsContainer.appendChild(suggestionItem);
-          });
-        }
+          // Display filtered suggestions or show no results found
+          if (filteredData.length === 0) {
+              showNoResults(vehicleSuggestionsContainer);
+          } else {
+              filteredData.forEach((driver) => {
+                  const suggestionItem = document.createElement("div");
+                  suggestionItem.classList.add("suggestion-item");
+                  suggestionItem.textContent = `${driver.vehicle_no || "N/A"} | ${driver.driver_name || "N/A"}`;
+                  suggestionItem.dataset.driverName = driver.driver_name || "N/A";
+                  suggestionItem.dataset.vehicleNo = driver.vehicle_no || "N/A";
+                  suggestionItem.dataset.conductorName = driver.conductor_name || "N/A";
+                  suggestionItem.dataset.vehicleCapacity = driver.vehicle_capacity || "N/A";
+                  vehicleSuggestionsContainer.appendChild(suggestionItem);
+              });
+          }
       })
-      .catch((error) => console.error("Error:", error));
-  }
+      .catch((error) => {
+          console.error('Error:', error);
+          showNoResults(vehicleSuggestionsContainer);
+      });
+}
 
-  // Show vehicle suggestions when input is focused
-  vehicleInput.addEventListener("focus", function () {
-    fetchVehicleSuggestions(this.value);
-  });
+// Show vehicle suggestions when input is focused
+vehicleInput.addEventListener("focus", function () {
+  fetchVehicleSuggestions(this.value);
+});
 
-  // Update vehicle suggestions when user types
-  vehicleInput.addEventListener("input", function () {
-    fetchVehicleSuggestions(this.value);
-  });
+// Update vehicle suggestions when user types
+vehicleInput.addEventListener("input", function () {
+  fetchVehicleSuggestions(this.value);
+});
 
   // Event listener for suggestion item clicks
   routeSuggestionsContainer.addEventListener("click", function (event) {
