@@ -500,7 +500,7 @@ async function prefetchCombinedCitySuggestions() {
         ...citySuggestions.map(item => toTitleCase(item.name)),
         ...customCitySuggestions.map(item => toTitleCase(item.Address))
     ];
-    
+
     window.combinedCitySuggestions = [...new Set(combined.map(item => item.toLowerCase()))].map(item => toTitleCase(item));
 }
 
@@ -658,7 +658,7 @@ function displayNationalitySuggestions() {
 
     nationalitySuggestionsContainer.style.display = "block";
     const query = nationalityInput.value.toLowerCase().trim();
-    
+
     // Check if the data has already been fetched
     if (!nationalityDataFetched) {
         showLoading(nationalitySuggestionsContainer);
@@ -670,7 +670,7 @@ function displayNationalitySuggestions() {
                 "Bangladeshi", "Pakistani", "Sri Lankan", "Maldivian",
                 "Burmese", "Thai", "Malaysian", "Other"
             ];
-            
+
             nationalityDataFetched = true;
             filterAndDisplayNationalitySuggestions(query, nationalitySuggestionsContainer);
         }, 500);
@@ -730,7 +730,7 @@ function displayReligionSuggestions() {
 
     religionSuggestionsContainer.style.display = "block";
     const query = religionInput.value.toLowerCase().trim();
-    
+
     // Check if the data has already been fetched
     if (!religionDataFetched) {
         showLoading(religionSuggestionsContainer);
@@ -742,7 +742,7 @@ function displayReligionSuggestions() {
                 "Sikh", "Parsi", "Jewish", "Baha'i", "Tribal/Animist",
                 "Atheist", "Agnostic", "Other"
             ];
-            
+
             religionDataFetched = true;
             filterAndDisplayReligionSuggestions(query, religionSuggestionsContainer);
         }, 500);
@@ -802,7 +802,7 @@ function displayCategorySuggestions() {
 
     categorySuggestionsContainer.style.display = "block";
     const query = categoryInput.value.toLowerCase().trim();
-    
+
     // Check if the data has already been fetched
     if (!categoryDataFetched) {
         showLoading(categorySuggestionsContainer);
@@ -814,7 +814,7 @@ function displayCategorySuggestions() {
                 "NTC", "NTB", "NTD", "SEBC", "EWS",
                 "VJ", "SBC", "GEN"
             ];
-            
+
             categoryDataFetched = true;
             filterAndDisplayCategorySuggestions(query, categorySuggestionsContainer);
         }, 500);
@@ -890,7 +890,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const query = casteInput.value.toLowerCase().trim();
         casteSuggestionsContainer.innerHTML = '';
         casteSuggestionsContainer.style.display = "block";
-        
+
         // Check if the data has already been fetched
         if (!casteDataFetched) {
             showLoading(casteSuggestionsContainer);
@@ -949,7 +949,7 @@ function displayMotherTongueSuggestions() {
 
     motherTongueSuggestionsContainer.style.display = "block";
     const query = motherTongueInput.value.toLowerCase().trim();
-    
+
     // Check if the data has already been fetched
     if (!motherTongueDataFetched) {
         showLoading(motherTongueSuggestionsContainer);
@@ -964,7 +964,7 @@ function displayMotherTongueSuggestions() {
                 "Lepcha", "Bhutia", "Santali", "Mundari", "Ho", "Khasi", "Korku",
                 "English", "Sanskrit", "Bengali", "Marwadi"
             ];
-            
+
             motherTongueDataFetched = true;
             filterAndDisplayMotherTongueSuggestions(query, motherTongueSuggestionsContainer);
         }, 500);
@@ -1312,7 +1312,7 @@ function fetchSections() {
 function displaySectionSuggestions() {
     const sectionInput = document.getElementById('section');
     const sectionSuggestionsContainer = document.getElementById('sectionSuggestions');
-    
+
     sectionSuggestionsContainer.style.display = "block";
     const query = sectionInput.value.toLowerCase().trim();
 
@@ -1650,20 +1650,23 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+
+////////////////////////////// CLASS COMPLETED SUGGESTION //////////////////
+
 // Cache for classes
 let classes = [
-    'Nursery', 
-    'LKG', 
-    'UKG', 
-    '1st', 
-    '2nd', 
-    '3rd', 
-    '4th', 
-    '5th', 
-    '6th', 
-    '7th', 
-    '8th', 
-    '9th', 
+    'Nursery',
+    'LKG',
+    'UKG',
+    '1st',
+    '2nd',
+    '3rd',
+    '4th',
+    '5th',
+    '6th',
+    '7th',
+    '8th',
+    '9th',
     '10th'
 ];
 let classesFetched = false;
@@ -1811,7 +1814,7 @@ function filterAndDisplayFeeCategories(query, suggestionsContainer, feeCategoryI
             feeCategoryInput.value = this.dataset.value;
             suggestionsContainer.innerHTML = '';
             suggestionsContainer.style.display = "none";
-            
+
             // Fetch and set the amount in packageAllotted field based on fee category and standard
             fetchAmount(feeCategoryInput.value, document.getElementById('standard').value.trim());
         });
@@ -1845,7 +1848,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const feeCategorySuggestionsContainer = document.getElementById('feeCategorySuggestions');
 
     // Add event listeners for input, focus, and click events
-    feeCategoryInput.addEventListener('input', function() {
+    feeCategoryInput.addEventListener('input', function () {
         displayFeeCategorySuggestions();
     });
     feeCategoryInput.addEventListener('focus', displayFeeCategorySuggestions);
@@ -2027,4 +2030,167 @@ document.addEventListener("DOMContentLoaded", function () {
             suggestionsContainer.innerHTML = '';
         }
     });
+});
+
+
+//////////////////////////////// VEHICLE RUNNING SUGGESTIONS /////////////////////
+
+// Cache for vehicle running suggestions
+let vehicleRunningFetched = false;
+let vehicleRunningCache = [];
+
+// Function to display vehicle running suggestions
+function displayVehicleRunningSuggestions() {
+    const vehicleRunningInput = document.getElementById('vehicleRunning');
+    const vehicleRunningSuggestionsContainer = document.getElementById('vehicleRunningSuggestions');
+
+    // Show suggestion box
+    vehicleRunningSuggestionsContainer.style.display = "block";
+    const query = vehicleRunningInput.value.toLowerCase().trim();
+
+    // Check the value in pickDropAddress before calling the API
+    const routeStops = document.getElementById('pickDropAddress').value.trim();
+
+    if (!routeStops) {
+        clearVehicleRunningInfo();
+        showNoResults(vehicleRunningSuggestionsContainer);
+        return;
+    }
+
+    if (!vehicleRunningFetched) {
+        showLoading(vehicleRunningSuggestionsContainer);
+
+        // Extract the values from the form inputs and combine them for classesAllotted
+        const standard = document.getElementById('transportStandard').value.trim();
+        const division = document.getElementById('transportDivision').value.trim();
+        const classesAllotted = `${standard} ${division}`;
+
+        if (!classesAllotted || !routeStops) {
+            showNoResults(vehicleRunningSuggestionsContainer);
+            return;
+        }
+
+        fetch('/getVehicleRunning', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ classesAllotted, routeStops })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    vehicleRunningCache = data.vehicles;
+                    vehicleRunningFetched = true;
+                    filterAndDisplayVehicleRunning(query, vehicleRunningSuggestionsContainer, vehicleRunningInput);
+                } else {
+                    showNoResults(vehicleRunningSuggestionsContainer);
+                }
+            })
+            .catch(error => {
+                vehicleRunningSuggestionsContainer.style.display = "none";
+            });
+    } else {
+        filterAndDisplayVehicleRunning(query, vehicleRunningSuggestionsContainer, vehicleRunningInput);
+    }
+}
+
+// Function to filter and display vehicle running suggestions
+function filterAndDisplayVehicleRunning(query, suggestionsContainer, vehicleRunningInput) {
+    const filteredVehicles = vehicleRunningCache.filter(vehicle =>
+        vehicle.vehicle_no.toLowerCase().includes(query) ||
+        vehicle.driver_name.toLowerCase().includes(query)
+    );
+    suggestionsContainer.innerHTML = '';
+
+    if (filteredVehicles.length > 0) {
+        filteredVehicles.forEach(vehicle => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = `${vehicle.vehicle_no} | ${vehicle.driver_name}`;
+            suggestionItem.dataset.value = vehicle.vehicle_no;
+            suggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        showNoResults(suggestionsContainer);
+    }
+
+    // Add event listeners for selection
+    suggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', function () {
+            vehicleRunningInput.value = this.dataset.value;
+            fetchVehicleInfo(this.dataset.value);
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.style.display = "none";
+        });
+    });
+}
+
+// Function to fetch vehicle info
+function fetchVehicleInfo(selectedVehicleNo) {
+    const vehicleInfoContainer = document.getElementById('vehicleInfo'); // Ensure this is defined
+
+    // Extract additional parameters
+    const route = document.getElementById('pickDropAddress').value.trim();
+    const standard = document.getElementById('transportStandard').value.trim();
+    const division = document.getElementById('transportDivision').value.trim();
+    const classAllotted = `${standard} ${division}`;
+
+    fetch(`/studentEnrollment_getVehicleInfo?vehicleNo=${encodeURIComponent(selectedVehicleNo)}&route=${encodeURIComponent(route)}&classAllotted=${encodeURIComponent(classAllotted)}`)
+        .then((response) => response.json())
+        .then((data) => {
+            // Clear any previous data
+            vehicleInfoContainer.innerHTML = '';
+
+            if (data.length > 0) {
+                const vehicleInfo = data[0];
+                vehicleInfoContainer.innerHTML = `
+                    <strong>Vehicle No:</strong> ${vehicleInfo.vehicle_no}<br>
+                    <strong>Driver Name:</strong> ${vehicleInfo.driver_name}<br>
+                    <strong>Total Capacity:</strong> ${vehicleInfo.vehicle_capacity}<br>
+                    <strong>Available Seats:</strong> ${vehicleInfo.available_seats}<br>
+                `;
+                vehicleInfoContainer.style.display = 'block'; // Show the container with data
+                vehicleInfoContainer.style.maxHeight = '100px';
+                vehicleInfoContainer.style.width = '90%';
+            } else {
+                vehicleInfoContainer.innerHTML = 'No vehicle info found';
+                vehicleInfoContainer.style.display = 'block'; // Show the container even if no data is found
+                vehicleInfoContainer.style.maxHeight = '65px';
+                vehicleInfoContainer.style.width = '90%';
+            }
+        })
+        .catch((error) => console.error('Error:', error));
+}
+
+// Function to clear vehicle running suggestions and container
+function clearVehicleRunningInfo() {
+    const vehicleRunningInput = document.getElementById('vehicleRunning');
+    const vehicleRunningSuggestionsContainer = document.getElementById('vehicleRunningSuggestions');
+    const vehicleInfoContainer = document.getElementById('vehicleInfo');
+
+    vehicleRunningInput.value = '';
+    vehicleRunningSuggestionsContainer.innerHTML = '';
+    vehicleRunningSuggestionsContainer.style.display = 'none';
+    vehicleInfoContainer.innerHTML = '';
+    vehicleInfoContainer.style.display = 'none';
+}
+
+// Initialization of vehicle running suggestion box
+document.addEventListener("DOMContentLoaded", function () {
+    const vehicleRunningInput = document.getElementById('vehicleRunning');
+    const vehicleRunningSuggestionsContainer = document.getElementById('vehicleRunningSuggestions');
+
+    // Add event listeners for input, focus, and click events
+    vehicleRunningInput.addEventListener('input', displayVehicleRunningSuggestions);
+    vehicleRunningInput.addEventListener('focus', displayVehicleRunningSuggestions);
+    vehicleRunningInput.addEventListener('click', displayVehicleRunningSuggestions);
+
+    document.addEventListener('click', function (event) {
+        if (!vehicleRunningSuggestionsContainer.contains(event.target) && !vehicleRunningInput.contains(event.target)) {
+            vehicleRunningSuggestionsContainer.style.display = "none";
+        }
+    });
+
+    // Add event listener for pickDropAddress change
+    const pickDropAddressInput = document.getElementById('pickDropAddress');
+    pickDropAddressInput.addEventListener('change', clearVehicleRunningInfo);
 });

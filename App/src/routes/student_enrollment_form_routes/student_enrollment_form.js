@@ -230,4 +230,78 @@ router.get('/getAmount', (req, res) => {
     });
 });
 
+
+
+// Endpoint to filter based on classes_alloted LIKE and route_stops LIKE
+router.post('/getVehicleRunning', (req, res) => {
+    let { classesAllotted, routeStops } = req.body;
+
+    // Ensure inputs are strings and trim them
+    if (typeof classesAllotted === 'string') {
+        classesAllotted = classesAllotted.trim();
+    }
+
+    if (typeof routeStops === 'string') {
+        routeStops = routeStops.trim();
+    }
+
+    // Check if classesAllotted or routeStops are empty and handle accordingly
+    if (classesAllotted.length === 0 || routeStops.length === 0) {
+        return res.status(400).json({ success: false, error: 'Invalid input data' });
+    }
+
+    const sql = `
+        SELECT vehicle_no, driver_name, classes_alloted, route_stops
+        FROM transport_schedule_details
+        WHERE classes_alloted LIKE ? AND route_stops LIKE ?
+        LIMIT 100;
+    `;
+
+    const queryParams = [`%${classesAllotted}%`, `%${routeStops}%`];
+
+    req.connectionPool.query(sql, queryParams, (error, results) => {
+        if (error) {
+            return res.status(500).json({ success: false, error: 'Database query failed' });
+        }
+
+        if (results.length > 0) {
+            res.status(200).json({ success: true, vehicles: results });
+        } else {
+            res.status(200).json({ success: false, vehicles: [] });
+        }
+    });
+});
+
+
+// Endpoint to get detailed vehicle info based on vehicle number, route, and class
+router.get('/studentEnrollment_getVehicleInfo', (req, res) => {
+    const { vehicleNo, route, classAllotted } = req.query;
+
+    if (!vehicleNo || !route || !classAllotted) {
+        return res.status(400).json({ success: false, error: 'Missing required parameters' });
+    }
+
+    const sql = `
+        SELECT vehicle_no, driver_name, vehicle_capacity, available_seats
+        FROM transport_schedule_details
+        WHERE vehicle_no = ? AND route_stops LIKE ? AND classes_alloted LIKE ?
+        LIMIT 1;
+    `;
+
+    const queryParams = [vehicleNo, `%${route}%`, `%${classAllotted}%`];
+
+    req.connectionPool.query(sql, queryParams, (error, results) => {
+        if (error) {
+            console.error('Database query failed:', error);
+            return res.status(500).json({ success: false, error: 'Database query failed' });
+        }
+
+        if (results.length > 0) {
+            res.status(200).json(results);
+        } else {
+            res.status(200).json([]);
+        }
+    });
+});
+
 module.exports = router;

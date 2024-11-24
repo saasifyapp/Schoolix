@@ -489,13 +489,13 @@
                         <div class="form-row">
                             <!-- Standard -->
                             <div class="form-group">
-                                <input type="text" class="form-control" id="transportStandard" placeholder=" ">
+                                <input type="text" class="form-control" id="transportStandard" placeholder=" " readonly>
                                 <span class="form-control-placeholder">Standard</span>
                             </div>
 
                             <!-- Division -->
                             <div class="form-group">
-                                <input type="text" class="form-control" id="transportDivision" placeholder=" ">
+                                <input type="text" class="form-control" id="transportDivision" placeholder=" " readonly>
                                 <span class="form-control-placeholder">Division</span>
                             </div>
 
@@ -512,12 +512,19 @@
                             <div class="form-group">
                                 <input type="text" class="form-control" id="vehicleRunning" placeholder=" ">
                                 <span class="form-control-placeholder">Vehicle Running</span>
+                                <div id="vehicleRunningSuggestions" class="suggestions"></div>
                             </div>
 
-                            <!-- Vehicle Details -->
+                            <!-- Vehicle Info Container -->
+                            <div id="vehicleInfo" class="info-container">
+                                <!-- Vehicle info will be displayed here -->
+                            </div>
+                        </div>
+
+                        <div class="form-row">
                             <div class="form-group">
-                                <textarea class="form-control" id="vehicleDetails" placeholder=" "></textarea>
-                                <span class="form-control-placeholder">Vehicle Details</span>
+                                <input type="checkbox" id="noVehicleFound">
+                                <label for="noVehicleFound">Select if no vehicle is found</label>
                             </div>
                         </div>
                     </div>

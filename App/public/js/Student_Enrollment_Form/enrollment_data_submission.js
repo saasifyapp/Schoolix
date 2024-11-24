@@ -129,6 +129,7 @@ document.getElementById('academic-next').addEventListener('click', function () {
 
 document.getElementById('fees-next').addEventListener('click', function () {
     collectFeesInformation();
+    prefillTransportDetails();
     document.getElementById('fees-information').style.display = 'none';
     document.getElementById('transport-information').style.display = 'block';
 });
@@ -169,7 +170,7 @@ document.getElementById('review-prev').addEventListener('click', function () {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+ 
 // Function to pre-fill Father's and Mother's last names, and full names
 function prefillGuardianNames() {
     const studentMiddleName = formData.studentInformation.middleName;
@@ -200,3 +201,12 @@ document.getElementById('academic-next').addEventListener('click', function () {
     document.getElementById('academic-information').style.display = 'none';
     document.getElementById('fees-information').style.display = 'block';
 });
+
+// Function to prefill Standard and Division in the Transport section
+function prefillTransportDetails() {
+    const standard = formData.academicInformation.standard;
+    const division = formData.academicInformation.division;
+
+    document.getElementById('transportStandard').value = standard || "";
+    document.getElementById('transportDivision').value = division || "";
+}
