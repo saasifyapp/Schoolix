@@ -7,7 +7,24 @@ const connectionManager = require('../../middleware/connectionManager'); // Adju
 // Use the connection manager middleware
 router.use(connectionManager);
 
+// New endpoint to get distinct addresses
+router.get('/getCityAddress', (req, res) => {
+    const sql = `
+        SELECT DISTINCT Address
+        FROM (
+            SELECT Address FROM pre_primary_student_details
+            UNION
+            SELECT Address FROM primary_student_details
+        ) AS combined_addresses;
+    `;
 
+    req.connectionPool.query(sql, (error, results) => {
+        if (error) {
+            return res.status(500).json({ error: 'Database query failed' });
+        }
+        res.status(200).json(results);
+    });
+});
 
 // GET Endpoint to fetch unique castes from combined tables
 router.get('/getUniqueCastes', (req, res) => {

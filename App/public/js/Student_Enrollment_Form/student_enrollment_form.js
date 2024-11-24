@@ -136,6 +136,26 @@ updateDoneIcons();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////// COMMON FUNCTIONS //////////////////////////
+
+// Function to display loading suggestions
+function showLoading(suggestionsContainer) {
+    suggestionsContainer.innerHTML = '';
+    const loadingItem = document.createElement('div');
+    loadingItem.classList.add('suggestion-item', 'no-results');
+    loadingItem.textContent = 'Loading...';
+    suggestionsContainer.appendChild(loadingItem);
+    suggestionsContainer.style.display = "block";
+}
+
+// Utility function to display no results found message
+function showNoResults(suggestionsContainer) {
+    suggestionsContainer.innerHTML = '';
+    const noResultsItem = document.createElement('div');
+    noResultsItem.classList.add('suggestion-item', 'no-results');
+    noResultsItem.textContent = 'No results found';
+    suggestionsContainer.appendChild(noResultsItem);
+}
 
 /////////////////////////////////// STUDENT INFORMATION SECTION ////////////////////////
 
@@ -209,35 +229,43 @@ document.getElementById('dob').addEventListener('input', updateAge);
 document.addEventListener("DOMContentLoaded", function () {
     const genderInput = document.getElementById('gender');
     const genderSuggestionsContainer = document.getElementById('genderSuggestions');
+    let genderSuggestionsLoaded = false;
 
     // Default gender values
     const genderValues = ['Male', 'Female', 'Other'];
 
     // Function to display suggestions
     function displayGenderSuggestions() {
-        genderSuggestionsContainer.style.display = "block";
-        const query = genderInput.value.toLowerCase();
-        genderSuggestionsContainer.innerHTML = '';
-
-        const filteredGenderValues = genderValues.filter(gender =>
-            gender.toLowerCase().includes(query)
-        );
-
-        if (filteredGenderValues.length > 0) {
-            filteredGenderValues.forEach(gender => {
-                const suggestionItem = document.createElement('div');
-                suggestionItem.classList.add('suggestion-item');
-                suggestionItem.textContent = gender;
-                suggestionItem.dataset.gender = gender;
-                genderSuggestionsContainer.appendChild(suggestionItem);
-            });
-        } else {
-            // If no results are found
-            const noResultsItem = document.createElement('div');
-            noResultsItem.classList.add('suggestion-item', 'no-results');
-            noResultsItem.textContent = 'No results found';
-            genderSuggestionsContainer.appendChild(noResultsItem);
+        if (!genderSuggestionsLoaded) {
+            showLoading(genderSuggestionsContainer);
+            genderSuggestionsLoaded = true;
         }
+
+        const query = genderInput.value.toLowerCase();
+
+        setTimeout(() => {
+            genderSuggestionsContainer.innerHTML = '';
+            const filteredGenderValues = genderValues.filter(gender =>
+                gender.toLowerCase().includes(query)
+            );
+
+            if (filteredGenderValues.length > 0) {
+                filteredGenderValues.forEach(gender => {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.classList.add('suggestion-item');
+                    suggestionItem.textContent = gender;
+                    suggestionItem.dataset.gender = gender;
+                    genderSuggestionsContainer.appendChild(suggestionItem);
+                });
+            } else {
+                // If no results are found
+                const noResultsItem = document.createElement('div');
+                noResultsItem.classList.add('suggestion-item', 'no-results');
+                noResultsItem.textContent = 'No results found';
+                genderSuggestionsContainer.appendChild(noResultsItem);
+            }
+            genderSuggestionsContainer.style.display = "block";
+        }, 500); // Simulate loading delay
     }
 
     // Add event listeners for input, focus, and click events
@@ -267,35 +295,43 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () {
     const bloodGroupInput = document.getElementById('bloodGroup');
     const bloodGroupSuggestionsContainer = document.getElementById('bloodGroupSuggestions');
+    let bloodGroupSuggestionsLoaded = false;
 
     // Default blood group values
     const bloodGroupValues = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
     // Function to display suggestions
     function displayBloodGroupSuggestions() {
-        bloodGroupSuggestionsContainer.style.display = "block";
-        const query = bloodGroupInput.value.toUpperCase();
-        bloodGroupSuggestionsContainer.innerHTML = '';
-
-        const filteredBloodGroupValues = bloodGroupValues.filter(bloodGroup =>
-            bloodGroup.includes(query)
-        );
-
-        if (filteredBloodGroupValues.length > 0) {
-            filteredBloodGroupValues.forEach(bloodGroup => {
-                const suggestionItem = document.createElement('div');
-                suggestionItem.classList.add('suggestion-item');
-                suggestionItem.textContent = bloodGroup;
-                suggestionItem.dataset.bloodGroup = bloodGroup;
-                bloodGroupSuggestionsContainer.appendChild(suggestionItem);
-            });
-        } else {
-            // If no results are found
-            const noResultsItem = document.createElement('div');
-            noResultsItem.classList.add('suggestion-item', 'no-results');
-            noResultsItem.textContent = 'No results found';
-            bloodGroupSuggestionsContainer.appendChild(noResultsItem);
+        if (!bloodGroupSuggestionsLoaded) {
+            showLoading(bloodGroupSuggestionsContainer);
+            bloodGroupSuggestionsLoaded = true;
         }
+
+        const query = bloodGroupInput.value.toUpperCase();
+
+        setTimeout(() => {
+            bloodGroupSuggestionsContainer.innerHTML = '';
+            const filteredBloodGroupValues = bloodGroupValues.filter(bloodGroup =>
+                bloodGroup.includes(query)
+            );
+
+            if (filteredBloodGroupValues.length > 0) {
+                filteredBloodGroupValues.forEach(bloodGroup => {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.classList.add('suggestion-item');
+                    suggestionItem.textContent = bloodGroup;
+                    suggestionItem.dataset.bloodGroup = bloodGroup;
+                    bloodGroupSuggestionsContainer.appendChild(suggestionItem);
+                });
+            } else {
+                // If no results are found
+                const noResultsItem = document.createElement('div');
+                noResultsItem.classList.add('suggestion-item', 'no-results');
+                noResultsItem.textContent = 'No results found';
+                bloodGroupSuggestionsContainer.appendChild(noResultsItem);
+            }
+            bloodGroupSuggestionsContainer.style.display = "block";
+        }, 500); // Simulate loading delay
     }
 
     // Add event listeners for input, focus, and click events
@@ -318,12 +354,18 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+
 ///////////////////////////////////////////////////////////////////////////////////////
 
 
 ///////////////////////// CONTACT AND ADDRESS DETAILS ////////////////////////
 
-// Debounce function: To limit the rate at which displayStateSuggestions is called
+// Utility function to convert strings to title case
+function toTitleCase(str) {
+    return str.replace(/\b\w/g, char => char.toUpperCase());
+}
+
+// Debounce function: To limit the rate at which suggestions are called
 function debounce(func, delay) {
     let debounceTimer;
     return function () {
@@ -345,12 +387,13 @@ async function fetchStateSuggestions() {
         redirect: 'follow'
     };
 
-    return fetch(`https://api.countrystatecity.in/v1/countries/IN/states`, requestOptions)
-        .then(response => response.json())
-        .catch(error => {
-            console.error('Error fetching state suggestions:', error);
-            return [];
-        });
+    try {
+        const response = await fetch(`https://api.countrystatecity.in/v1/countries/IN/states`, requestOptions);
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching state suggestions:', error);
+        return [];
+    }
 }
 
 async function prefetchStateSuggestions() {
@@ -360,7 +403,7 @@ prefetchStateSuggestions();
 
 // Function to display state suggestions from pre-fetched data
 function displayStateSuggestions(query, suggestionsContainer) {
-    suggestionsContainer.innerHTML = ''; // Clear previous suggestions
+    suggestionsContainer.innerHTML = ''; // Clear previous suggesting.
 
     const filteredStates = window.stateSuggestions.filter(state => state.name.toLowerCase().startsWith(query));
 
@@ -376,17 +419,18 @@ function displayStateSuggestions(query, suggestionsContainer) {
         // If no results are found
         const noResultsItem = document.createElement('div');
         noResultsItem.classList.add('suggestion-item', 'no-results');
+        noResultsItem.style.fontStyle = 'italic';
         noResultsItem.textContent = 'No results found';
         suggestionsContainer.appendChild(noResultsItem);
     }
 
-    suggestionsContainer.style.display = filteredStates.length > 0 ? "block" : "none";
+    suggestionsContainer.style.display = "block";
 }
 
-// Function to fetch and display city suggestions from API
+// Function to fetch city suggestions from external API
 async function fetchCitySuggestions() {
     const headers = new Headers();
-    headers.append("X-CSCAPI-KEY", "V2c2TU5yS2g4WlNXVDdLZ3d6Smh5cnZpTHpMODg0Y2ZZSnZjTmZ3WA=="); // Replace 'API_KEY' with your actual API key
+    headers.append("X-CSCAPI-KEY", "V2c2TU5yS2g4WlNXVDdLZ3d6Smh5cnZpTHpMODg0Y2ZZSnZjTmZ3WA=="); // Replace with your actual API key
 
     const requestOptions = {
         method: 'GET',
@@ -394,12 +438,13 @@ async function fetchCitySuggestions() {
         redirect: 'follow'
     };
 
-    return fetch(`https://api.countrystatecity.in/v1/countries/IN/cities`, requestOptions)
-        .then(response => response.json())
-        .catch(error => {
-            console.error('Error fetching city suggestions:', error);
-            return [];
-        });
+    try {
+        const response = await fetch(`https://api.countrystatecity.in/v1/countries/IN/cities`, requestOptions);
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching city suggestions:', error);
+        return [];
+    }
 }
 
 async function prefetchCitySuggestions() {
@@ -425,11 +470,81 @@ function displayPlaceSuggestions(query, suggestionsContainer) {
         // If no results are found
         const noResultsItem = document.createElement('div');
         noResultsItem.classList.add('suggestion-item', 'no-results');
+        noResultsItem.style.fontStyle = 'italic';
         noResultsItem.textContent = 'No results found';
         suggestionsContainer.appendChild(noResultsItem);
     }
 
-    suggestionsContainer.style.display = filteredCities.length > 0 ? "block" : "none";
+    suggestionsContainer.style.display = "block";
+}
+
+// Fetch distinct addresses from your API
+async function fetchCustomCitySuggestions() {
+    try {
+        const response = await fetch('/getCityAddress');
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching custom city suggestions:', error);
+        return [];
+    }
+}
+
+// Prefetch city suggestions and custom city suggestions, then store them in a global variable
+async function prefetchCombinedCitySuggestions() {
+    const [citySuggestions, customCitySuggestions] = await Promise.all([
+        fetchCitySuggestions(),
+        fetchCustomCitySuggestions()
+    ]);
+
+    const combined = [
+        ...citySuggestions.map(item => toTitleCase(item.name)),
+        ...customCitySuggestions.map(item => toTitleCase(item.Address))
+    ];
+    
+    window.combinedCitySuggestions = [...new Set(combined.map(item => item.toLowerCase()))].map(item => toTitleCase(item));
+}
+
+// Function to display loading suggestions
+function displayLoadingSuggestions(suggestionsContainer) {
+    // Clear previous suggestions
+    suggestionsContainer.innerHTML = '';
+    // Create and append the loading item
+    const loadingItem = document.createElement('div');
+    loadingItem.classList.add('suggestion-item', 'no-results');
+    loadingItem.style.fontStyle = 'italic';
+    loadingItem.textContent = 'Loading...';
+    suggestionsContainer.appendChild(loadingItem);
+    suggestionsContainer.style.display = "block";
+}
+
+// Function to display combined city suggestions
+function displayCombinedCitySuggestions(query, suggestionsContainer) {
+    suggestionsContainer.innerHTML = ''; // Clear previous suggestions
+
+    if (!window.combinedCitySuggestions) {
+        displayLoadingSuggestions(suggestionsContainer);
+        return;
+    }
+
+    const filteredSuggestions = window.combinedCitySuggestions.filter(item => item.toLowerCase().startsWith(query.toLowerCase()));
+
+    if (filteredSuggestions.length > 0) {
+        filteredSuggestions.forEach(item => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = item;
+            suggestionItem.dataset.place = item;
+            suggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        const noResultsItem = document.createElement('div');
+        noResultsItem.classList.add('suggestion-item', 'no-results');
+        noResultsItem.style.fontStyle = 'italic';
+        noResultsItem.textContent = 'No results found';
+        suggestionsContainer.appendChild(noResultsItem);
+    }
+
+    suggestionsContainer.style.display = "block";
 }
 
 // Combined initialization of suggestion boxes
@@ -438,12 +553,12 @@ document.addEventListener("DOMContentLoaded", function () {
         {
             inputId: 'placeOfBirth',
             suggestionsId: 'placeOfBirthSuggestions',
-            suggestionFunction: displayPlaceSuggestions
+            suggestionFunction: displayCombinedCitySuggestions // Use combined suggestions function
         },
         {
             inputId: 'city_village',
             suggestionsId: 'cityVillageSuggestions',
-            suggestionFunction: displayPlaceSuggestions
+            suggestionFunction: displayCombinedCitySuggestions // Use combined suggestions function
         },
         {
             inputId: 'taluka',
@@ -476,8 +591,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Add event listeners for input events
         inputField.addEventListener('input', () => debouncedDisplaySuggestions(inputField.value.toLowerCase().trim()));
-        inputField.addEventListener('focus', () => suggestionFunction(inputField.value.toLowerCase().trim(), suggestionsContainer));
-        inputField.addEventListener('click', () => suggestionFunction(inputField.value.toLowerCase().trim(), suggestionsContainer));
+        inputField.addEventListener('focus', () => {
+            if (!window.combinedCitySuggestions && (inputId === 'placeOfBirth' || inputId === 'city_village')) {
+                displayLoadingSuggestions(suggestionsContainer);
+                prefetchCombinedCitySuggestions().then(() => {
+                    debouncedDisplaySuggestions(inputField.value.toLowerCase().trim());
+                });
+            } else {
+                suggestionFunction(inputField.value.toLowerCase().trim(), suggestionsContainer);
+            }
+        });
+        inputField.addEventListener('click', () => {
+            if (!window.combinedCitySuggestions && (inputId === 'placeOfBirth' || inputId === 'city_village')) {
+                displayLoadingSuggestions(suggestionsContainer);
+                prefetchCombinedCitySuggestions().then(() => {
+                    debouncedDisplaySuggestions(inputField.value.toLowerCase().trim());
+                });
+            } else {
+                suggestionFunction(inputField.value.toLowerCase().trim(), suggestionsContainer);
+            }
+        });
 
         suggestionsContainer.addEventListener('click', function (event) {
             if (event.target.classList.contains('suggestion-item')) {
@@ -502,31 +635,53 @@ document.addEventListener("DOMContentLoaded", function () {
 
 ///////////// NATIONALITY SUGGESTIONS //////////////
 
+
+// Global caches for data
+let nationalityCache = [];
+let religionCache = [];
+let categoryCache = [];
+let casteCache = [];
+let motherTongueCache = [];
+let documentCache = [];
+
+let nationalityDataFetched = false;
+let religionDataFetched = false;
+let categoryDataFetched = false;
+let casteDataFetched = false;
+let motherTongueDataFetched = false;
+let documentDataFetched = false;
+
+// Function to display nationality suggestions
 function displayNationalitySuggestions() {
     const nationalityInput = document.getElementById('nationality');
     const nationalitySuggestionsContainer = document.getElementById('nationalitySuggestions');
 
     nationalitySuggestionsContainer.style.display = "block";
     const query = nationalityInput.value.toLowerCase().trim();
-    nationalitySuggestionsContainer.innerHTML = '';
+    
+    // Check if the data has already been fetched
+    if (!nationalityDataFetched) {
+        showLoading(nationalitySuggestionsContainer);
 
-    const nationalities = [
-        "Indian",
-        "Anglo-Indian",
-        "Tibetan",
-        "Nepali",
-        "Bhutanese",
-        "Bangladeshi",
-        "Pakistani",
-        "Sri Lankan",
-        "Maldivian",
-        "Burmese",
-        "Thai",
-        "Malaysian",
-        "Other"
-    ];
+        // Simulate an async data fetch
+        setTimeout(() => {
+            nationalityCache = [
+                "Indian", "Anglo-Indian", "Tibetan", "Nepali", "Bhutanese",
+                "Bangladeshi", "Pakistani", "Sri Lankan", "Maldivian",
+                "Burmese", "Thai", "Malaysian", "Other"
+            ];
+            
+            nationalityDataFetched = true;
+            filterAndDisplayNationalitySuggestions(query, nationalitySuggestionsContainer);
+        }, 500);
+    } else {
+        filterAndDisplayNationalitySuggestions(query, nationalitySuggestionsContainer);
+    }
+}
 
-    const filteredNationalities = nationalities.filter(nationality => nationality.toLowerCase().startsWith(query));
+function filterAndDisplayNationalitySuggestions(query, suggestionsContainer) {
+    const filteredNationalities = nationalityCache.filter(nationality => nationality.toLowerCase().startsWith(query));
+    suggestionsContainer.innerHTML = '';
 
     if (filteredNationalities.length > 0) {
         filteredNationalities.forEach(nationality => {
@@ -534,14 +689,10 @@ function displayNationalitySuggestions() {
             suggestionItem.classList.add('suggestion-item');
             suggestionItem.textContent = nationality;
             suggestionItem.dataset.value = nationality;
-            nationalitySuggestionsContainer.appendChild(suggestionItem);
+            suggestionsContainer.appendChild(suggestionItem);
         });
     } else {
-        // If no results are found
-        const noResultsItem = document.createElement('div');
-        noResultsItem.classList.add('suggestion-item', 'no-results');
-        noResultsItem.textContent = 'No results found';
-        nationalitySuggestionsContainer.appendChild(noResultsItem);
+        showNoResults(suggestionsContainer);
     }
 }
 
@@ -570,10 +721,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-///////////////////////////////////////////////////////////////////
-
 /////////////////// RELIGION SUGGESTIONS ///////////////////
-
 
 // Function to display religion suggestions
 function displayReligionSuggestions() {
@@ -582,25 +730,30 @@ function displayReligionSuggestions() {
 
     religionSuggestionsContainer.style.display = "block";
     const query = religionInput.value.toLowerCase().trim();
-    religionSuggestionsContainer.innerHTML = '';
+    
+    // Check if the data has already been fetched
+    if (!religionDataFetched) {
+        showLoading(religionSuggestionsContainer);
 
-    const religions = [
-        "Hindu",
-        "Muslim",
-        "Buddhist",
-        "Jain",
-        "Christian",
-        "Sikh",
-        "Parsi",
-        "Jewish",
-        "Baha'i",
-        "Tribal/Animist",
-        "Atheist",
-        "Agnostic",
-        "Other"
-    ];
+        // Simulate an async data fetch
+        setTimeout(() => {
+            religionCache = [
+                "Hindu", "Muslim", "Buddhist", "Jain", "Christian",
+                "Sikh", "Parsi", "Jewish", "Baha'i", "Tribal/Animist",
+                "Atheist", "Agnostic", "Other"
+            ];
+            
+            religionDataFetched = true;
+            filterAndDisplayReligionSuggestions(query, religionSuggestionsContainer);
+        }, 500);
+    } else {
+        filterAndDisplayReligionSuggestions(query, religionSuggestionsContainer);
+    }
+}
 
-    const filteredReligions = religions.filter(religion => religion.toLowerCase().startsWith(query));
+function filterAndDisplayReligionSuggestions(query, suggestionsContainer) {
+    const filteredReligions = religionCache.filter(religion => religion.toLowerCase().startsWith(query));
+    suggestionsContainer.innerHTML = '';
 
     if (filteredReligions.length > 0) {
         filteredReligions.forEach(religion => {
@@ -608,14 +761,10 @@ function displayReligionSuggestions() {
             suggestionItem.classList.add('suggestion-item');
             suggestionItem.textContent = religion;
             suggestionItem.dataset.value = religion;
-            religionSuggestionsContainer.appendChild(suggestionItem);
+            suggestionsContainer.appendChild(suggestionItem);
         });
     } else {
-        // If no results are found
-        const noResultsItem = document.createElement('div');
-        noResultsItem.classList.add('suggestion-item', 'no-results');
-        noResultsItem.textContent = 'No results found';
-        religionSuggestionsContainer.appendChild(noResultsItem);
+        showNoResults(suggestionsContainer);
     }
 }
 
@@ -644,7 +793,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-
 /////////////////////////////// CATEGORY SUGGESTIONS //////////////////////
 
 // Function to display category suggestions
@@ -654,25 +802,30 @@ function displayCategorySuggestions() {
 
     categorySuggestionsContainer.style.display = "block";
     const query = categoryInput.value.toLowerCase().trim();
-    categorySuggestionsContainer.innerHTML = '';
+    
+    // Check if the data has already been fetched
+    if (!categoryDataFetched) {
+        showLoading(categorySuggestionsContainer);
 
-    const categories = [
-        "SC",
-        "ST",
-        "OBC",
-        "NT",
-        "OPEN",
-        "NTC",
-        "NTB",
-        "NTD",
-        "SEBC",
-        "EWS",
-        "VJ",
-        "SBC",
-        "GEN"
-    ];
+        // Simulate an async data fetch
+        setTimeout(() => {
+            categoryCache = [
+                "SC", "ST", "OBC", "NT", "OPEN",
+                "NTC", "NTB", "NTD", "SEBC", "EWS",
+                "VJ", "SBC", "GEN"
+            ];
+            
+            categoryDataFetched = true;
+            filterAndDisplayCategorySuggestions(query, categorySuggestionsContainer);
+        }, 500);
+    } else {
+        filterAndDisplayCategorySuggestions(query, categorySuggestionsContainer);
+    }
+}
 
-    const filteredCategories = categories.filter(category => category.toLowerCase().startsWith(query));
+function filterAndDisplayCategorySuggestions(query, suggestionsContainer) {
+    const filteredCategories = categoryCache.filter(category => category.toLowerCase().startsWith(query));
+    suggestionsContainer.innerHTML = '';
 
     if (filteredCategories.length > 0) {
         filteredCategories.forEach(category => {
@@ -680,14 +833,10 @@ function displayCategorySuggestions() {
             suggestionItem.classList.add('suggestion-item');
             suggestionItem.textContent = category;
             suggestionItem.dataset.value = category;
-            categorySuggestionsContainer.appendChild(suggestionItem);
+            suggestionsContainer.appendChild(suggestionItem);
         });
     } else {
-        // If no results are found
-        const noResultsItem = document.createElement('div');
-        noResultsItem.classList.add('suggestion-item', 'no-results');
-        noResultsItem.textContent = 'No results found';
-        categorySuggestionsContainer.appendChild(noResultsItem);
+        showNoResults(suggestionsContainer);
     }
 }
 
@@ -716,14 +865,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-
 ////////////////////////// CASTE SUGGESTIONS /////////////////////////////////
 
 document.addEventListener("DOMContentLoaded", function () {
     const casteInput = document.getElementById('caste');
     const casteSuggestionsContainer = document.getElementById('casteSuggestions');
-
-    let castesList = [];
 
     async function fetchCastes() {
         try {
@@ -732,7 +878,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 throw new Error('Network response was not ok');
             }
             const castes = await response.json();
-            castesList = castes.map(caste => caste.Caste);
+            casteCache = castes.map(caste => caste.Caste);
+
+            casteDataFetched = true;
         } catch (error) {
             console.error('Error fetching castes:', error);
         }
@@ -742,8 +890,20 @@ document.addEventListener("DOMContentLoaded", function () {
         const query = casteInput.value.toLowerCase().trim();
         casteSuggestionsContainer.innerHTML = '';
         casteSuggestionsContainer.style.display = "block";
+        
+        // Check if the data has already been fetched
+        if (!casteDataFetched) {
+            showLoading(casteSuggestionsContainer);
 
-        const filteredCastes = castesList.filter(caste => caste.toLowerCase().startsWith(query));
+            await fetchCastes();
+        }
+
+        filterAndDisplayCasteSuggestions(query, casteSuggestionsContainer);
+    }
+
+    function filterAndDisplayCasteSuggestions(query, suggestionsContainer) {
+        const filteredCastes = casteCache.filter(caste => caste.toLowerCase().startsWith(query));
+        suggestionsContainer.innerHTML = '';
 
         if (filteredCastes.length > 0) {
             filteredCastes.forEach(caste => {
@@ -751,13 +911,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 suggestionItem.classList.add('suggestion-item');
                 suggestionItem.textContent = caste;
                 suggestionItem.dataset.value = caste;
-                casteSuggestionsContainer.appendChild(suggestionItem);
+                suggestionsContainer.appendChild(suggestionItem);
             });
         } else {
-            const noResultsItem = document.createElement('div');
-            noResultsItem.classList.add('suggestion-item', 'no-results');
-            noResultsItem.textContent = 'No results found';
-            casteSuggestionsContainer.appendChild(noResultsItem);
+            showNoResults(suggestionsContainer);
         }
     }
 
@@ -778,16 +935,10 @@ document.addEventListener("DOMContentLoaded", function () {
             casteSuggestionsContainer.innerHTML = '';
         }
     });
-
-    fetchCastes();
 });
 
 ////////////////////// DOMICILE SUGGESTIONS /////////////////
-
-///  Added in Contact and Address Suggestion API of STATES ///
-
-//////////////////////////////////////////////////////////
-
+//  Added in Contact and Address Suggestion API of STATES //
 
 ///////////////////// MOTHER-TONGUE SUGGESTIONS //////////////////////
 
@@ -798,18 +949,33 @@ function displayMotherTongueSuggestions() {
 
     motherTongueSuggestionsContainer.style.display = "block";
     const query = motherTongueInput.value.toLowerCase().trim();
-    motherTongueSuggestionsContainer.innerHTML = '';
+    
+    // Check if the data has already been fetched
+    if (!motherTongueDataFetched) {
+        showLoading(motherTongueSuggestionsContainer);
 
-    const motherTongues = [
-        "Hindi", "Marathi", "Urdu", "Gujarati", "Punjabi", "Konkani",
-        "Odia", "Assamese", "Rajasthani", "Sindhi", "Maithili", "Dogri", "Kashmiri",
-        "Nepali", "Chhattisgarhi", "Haryanvi", "Telugu", "Tamil", "Kannada",
-        "Malayalam", "Tulu", "Kodava", "Meitei", "Bodo", "Garo", "Mizo",
-        "Lepcha", "Bhutia", "Santali", "Mundari", "Ho", "Khasi", "Korku",
-        "English", "Sanskrit", "Bengali", "Marwadi"
-    ];
+        // Simulate an async data fetch
+        setTimeout(() => {
+            motherTongueCache = [
+                "Hindi", "Marathi", "Urdu", "Gujarati", "Punjabi", "Konkani",
+                "Odia", "Assamese", "Rajasthani", "Sindhi", "Maithili", "Dogri", "Kashmiri",
+                "Nepali", "Chhattisgarhi", "Haryanvi", "Telugu", "Tamil", "Kannada",
+                "Malayalam", "Tulu", "Kodava", "Meitei", "Bodo", "Garo", "Mizo",
+                "Lepcha", "Bhutia", "Santali", "Mundari", "Ho", "Khasi", "Korku",
+                "English", "Sanskrit", "Bengali", "Marwadi"
+            ];
+            
+            motherTongueDataFetched = true;
+            filterAndDisplayMotherTongueSuggestions(query, motherTongueSuggestionsContainer);
+        }, 500);
+    } else {
+        filterAndDisplayMotherTongueSuggestions(query, motherTongueSuggestionsContainer);
+    }
+}
 
-    const filteredMotherTongues = motherTongues.filter(motherTongue => motherTongue.toLowerCase().startsWith(query));
+function filterAndDisplayMotherTongueSuggestions(query, suggestionsContainer) {
+    const filteredMotherTongues = motherTongueCache.filter(motherTongue => motherTongue.toLowerCase().startsWith(query));
+    suggestionsContainer.innerHTML = '';
 
     if (filteredMotherTongues.length > 0) {
         filteredMotherTongues.forEach(motherTongue => {
@@ -817,14 +983,10 @@ function displayMotherTongueSuggestions() {
             suggestionItem.classList.add('suggestion-item');
             suggestionItem.textContent = motherTongue;
             suggestionItem.dataset.value = motherTongue;
-            motherTongueSuggestionsContainer.appendChild(suggestionItem);
+            suggestionsContainer.appendChild(suggestionItem);
         });
     } else {
-        // If no results are found
-        const noResultsItem = document.createElement('div');
-        noResultsItem.classList.add('suggestion-item', 'no-results');
-        noResultsItem.textContent = 'No results found';
-        motherTongueSuggestionsContainer.appendChild(noResultsItem);
+        showNoResults(suggestionsContainer);
     }
 }
 
@@ -888,7 +1050,6 @@ document.getElementById('aadhaar').addEventListener('input', function () {
     validateAadhaar(this.value.trim());
 });
 
-
 ///////////////////////// DOCUMENTS SUBMITTED SUGGESTIONS ///////////////////
 
 const documentValues = [
@@ -916,26 +1077,29 @@ let selectedDocuments = [];
 function displayDocumentSuggestions() {
     documentSuggestionsContainer.style.display = "block";
     const query = documentInput.value.toLowerCase();
-    documentSuggestionsContainer.innerHTML = '';
+    showLoading(documentSuggestionsContainer);
 
-    const filteredDocumentValues = documentValues.filter(doc =>
-        doc.toLowerCase().includes(query) && !selectedDocuments.includes(doc)
-    );
+    setTimeout(() => {
+        const filteredDocumentValues = documentValues.filter(doc =>
+            doc.toLowerCase().includes(query) && !selectedDocuments.includes(doc)
+        );
 
-    if (filteredDocumentValues.length > 0) {
-        filteredDocumentValues.forEach(doc => {
-            const suggestionItem = document.createElement('div');
-            suggestionItem.classList.add('suggestion-item');
-            suggestionItem.textContent = doc;
-            suggestionItem.dataset.doc = doc;
-            documentSuggestionsContainer.appendChild(suggestionItem);
-        });
-    } else {
-        const noResultsItem = document.createElement('div');
-        noResultsItem.classList.add('suggestion-item', 'no-results');
-        noResultsItem.textContent = 'No results found';
-        documentSuggestionsContainer.appendChild(noResultsItem);
-    }
+        documentSuggestionsContainer.innerHTML = '';
+        if (filteredDocumentValues.length > 0) {
+            filteredDocumentValues.forEach(doc => {
+                const suggestionItem = document.createElement('div');
+                suggestionItem.classList.add('suggestion-item');
+                suggestionItem.textContent = doc;
+                suggestionItem.dataset.doc = doc;
+                documentSuggestionsContainer.appendChild(suggestionItem);
+            });
+        } else {
+            const noResultsItem = document.createElement('div');
+            noResultsItem.classList.add('suggestion-item', 'no-results');
+            noResultsItem.textContent = 'No results found';
+            documentSuggestionsContainer.appendChild(noResultsItem);
+        }
+    }, 500);
 }
 
 function addDocument(doc) { // Renamed parameter
@@ -957,7 +1121,6 @@ function addDocument(doc) { // Renamed parameter
     displayDocumentSuggestions();
 }
 
-
 // Function to remove a selected document
 function removeDocument(document, docTag) {
     selectedDocuments = selectedDocuments.filter(doc => doc !== document);
@@ -978,14 +1141,12 @@ documentSuggestionsContainer.addEventListener("click", (e) => {
     }
 });
 
-
 // Hide suggestions on clicking outside
 document.addEventListener("click", (e) => {
     if (!e.target.closest(".form-group")) {
         documentSuggestionsContainer.style.display = "none";
     }
 });
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1050,6 +1211,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 ///////////////////////////// RELATION WITH GUARDIAN SUGGESTION ///////////
 
+// Cache for relationship data
+let relationshipCache = [];
+let relationshipDataFetched = false;
+
 // Function to display relationship suggestions
 function displayRelationshipSuggestions() {
     const relationshipInput = document.getElementById('guardianRelation');
@@ -1057,23 +1222,29 @@ function displayRelationshipSuggestions() {
 
     relationshipSuggestionsContainer.style.display = "block";
     const query = relationshipInput.value.toLowerCase().trim();
-    relationshipSuggestionsContainer.innerHTML = '';
 
-    const relationships = [
-        "Parent",
-        "Grandparent",
-        "Uncle",
-        "Aunt",
-        "Brother",
-        "Sister",
-        "Cousin",
-        "Legal Guardian",
-        "Godparent",
-        "Family Friend",
-        "Landlord"
-    ];
+    // Check if the data has already been fetched
+    if (!relationshipDataFetched) {
+        showLoading(relationshipSuggestionsContainer);
 
-    const filteredRelationships = relationships.filter(relationship => relationship.toLowerCase().startsWith(query));
+        // Simulate an async data fetch
+        setTimeout(() => {
+            relationshipCache = [
+                "Parent", "Grandparent", "Uncle", "Aunt", "Brother",
+                "Sister", "Cousin", "Legal Guardian", "Godparent", "Family Friend", "Landlord"
+            ];
+
+            relationshipDataFetched = true;
+            filterAndDisplayRelationshipSuggestions(query, relationshipSuggestionsContainer);
+        }, 500);
+    } else {
+        filterAndDisplayRelationshipSuggestions(query, relationshipSuggestionsContainer);
+    }
+}
+
+function filterAndDisplayRelationshipSuggestions(query, suggestionsContainer) {
+    const filteredRelationships = relationshipCache.filter(relationship => relationship.toLowerCase().startsWith(query));
+    suggestionsContainer.innerHTML = '';
 
     if (filteredRelationships.length > 0) {
         filteredRelationships.forEach(relationship => {
@@ -1081,14 +1252,10 @@ function displayRelationshipSuggestions() {
             suggestionItem.classList.add('suggestion-item');
             suggestionItem.textContent = relationship;
             suggestionItem.dataset.value = relationship;
-            relationshipSuggestionsContainer.appendChild(suggestionItem);
+            suggestionsContainer.appendChild(suggestionItem);
         });
     } else {
-        // If no results are found
-        const noResultsItem = document.createElement('div');
-        noResultsItem.classList.add('suggestion-item', 'no-results');
-        noResultsItem.textContent = 'No results found';
-        relationshipSuggestionsContainer.appendChild(noResultsItem);
+        showNoResults(suggestionsContainer);
     }
 }
 
@@ -1128,13 +1295,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Array to store sections fetched from the backend
 let sections = [];
+let sectionsFetched = false; // Flag to track if sections have been fetched
 
 // Function to fetch sections from the backend
 function fetchSections() {
-    fetch('/getSections')
+    return fetch('/getSections')
         .then(response => response.json())
         .then(data => {
             sections = data.sections;
+            sectionsFetched = true;
         })
         .catch(error => console.error('Error fetching sections:', error));
 }
@@ -1143,12 +1312,25 @@ function fetchSections() {
 function displaySectionSuggestions() {
     const sectionInput = document.getElementById('section');
     const sectionSuggestionsContainer = document.getElementById('sectionSuggestions');
-
+    
     sectionSuggestionsContainer.style.display = "block";
     const query = sectionInput.value.toLowerCase().trim();
-    sectionSuggestionsContainer.innerHTML = '';
 
+    if (!sectionsFetched) {
+        showLoading(sectionSuggestionsContainer);
+
+        fetchSections().then(() => {
+            filterAndDisplaySectionSuggestions(query, sectionSuggestionsContainer, sectionInput);
+        });
+    } else {
+        filterAndDisplaySectionSuggestions(query, sectionSuggestionsContainer, sectionInput);
+    }
+}
+
+// Function to filter and display section suggestions
+function filterAndDisplaySectionSuggestions(query, suggestionsContainer, sectionInput) {
     const filteredSections = sections.filter(section => section.toLowerCase().startsWith(query));
+    suggestionsContainer.innerHTML = '';
 
     if (filteredSections.length > 0) {
         filteredSections.forEach(section => {
@@ -1156,22 +1338,18 @@ function displaySectionSuggestions() {
             suggestionItem.classList.add('suggestion-item');
             suggestionItem.textContent = section;
             suggestionItem.dataset.value = section;
-            sectionSuggestionsContainer.appendChild(suggestionItem);
+            suggestionsContainer.appendChild(suggestionItem);
         });
     } else {
-        // If no results are found
-        const noResultsItem = document.createElement('div');
-        noResultsItem.classList.add('suggestion-item', 'no-results');
-        noResultsItem.textContent = 'No results found';
-        sectionSuggestionsContainer.appendChild(noResultsItem);
+        showNoResults(suggestionsContainer);
     }
 
     // Add event listeners for selection
-    sectionSuggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+    suggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
         item.addEventListener('click', function () {
             sectionInput.value = this.dataset.value;
-            sectionSuggestionsContainer.innerHTML = '';
-            sectionSuggestionsContainer.style.display = "none";
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.style.display = "none";
 
             // Fetch the next GR Number when a section is selected
             if (sectionInput.value) {
@@ -1212,9 +1390,6 @@ function clearStandardAndDivision() {
 document.addEventListener("DOMContentLoaded", function () {
     const sectionInput = document.getElementById('section');
     const sectionSuggestionsContainer = document.getElementById('sectionSuggestions');
-
-    // Fetch sections on page load
-    fetchSections();
 
     // Add event listeners for input, focus, and click events
     sectionInput.addEventListener('input', displaySectionSuggestions);
@@ -1271,6 +1446,10 @@ document.addEventListener('DOMContentLoaded', setAdmissionDate);
 
 /////////////////////// GET STANDARD SUGGESTIONS /////////
 
+// Variables to cache the data
+let standardsFetched = false;
+let standardsCache = [];
+
 // Function to display standard suggestions
 function displayStandardSuggestions() {
     const standardInput = document.getElementById('standard');
@@ -1287,56 +1466,67 @@ function displayStandardSuggestions() {
         return;
     }
 
-    fetch(`/getStandards?section=${sectionInput}`)
-        .then(response => response.json())
-        .then(data => {
-            const uniqueStandards = new Set();
-            const filteredStandards = data.standards.filter(standard => {
-                const normalizedStandard = standard.toLowerCase();
-                if (normalizedStandard.startsWith(query) && !uniqueStandards.has(normalizedStandard)) {
-                    uniqueStandards.add(normalizedStandard);
-                    return true;
-                }
-                return false;
-            });
+    if (!standardsFetched) {
+        showLoading(standardSuggestionsContainer);
 
-            if (filteredStandards.length > 0) {
-                filteredStandards.forEach(standard => {
-                    const suggestionItem = document.createElement('div');
-                    suggestionItem.classList.add('suggestion-item');
-                    suggestionItem.textContent = standard;
-                    suggestionItem.dataset.value = standard;
-                    standardSuggestionsContainer.appendChild(suggestionItem);
-                });
-            } else {
-                // If no results are found
-                const noResultsItem = document.createElement('div');
-                noResultsItem.classList.add('suggestion-item', 'no-results');
-                noResultsItem.textContent = 'No results found';
-                standardSuggestionsContainer.appendChild(noResultsItem);
-            }
-
-            // Add event listeners for selection
-            standardSuggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
-                item.addEventListener('click', function () {
-                    standardInput.value = this.dataset.value;
-                    standardSuggestionsContainer.innerHTML = '';
-                    standardSuggestionsContainer.style.display = "none";
-
-                    // Clear division field when standard changes
-                    clearDivision();
-                });
-            });
-        })
-        .catch(error => console.error('Error fetching standards:', error));
+        fetch(`/getStandards?section=${sectionInput}`)
+            .then(response => response.json())
+            .then(data => {
+                standardsCache = data.standards;
+                standardsFetched = true;
+                filterAndDisplayStandards(query, standardSuggestionsContainer);
+            })
+            .catch(error => console.error('Error fetching standards:', error));
+    } else {
+        filterAndDisplayStandards(query, standardSuggestionsContainer);
+    }
 }
 
-// Function to clear division and fee category fields
+// Function to filter and display standards
+function filterAndDisplayStandards(query, suggestionsContainer) {
+    const uniqueStandards = new Set();
+    const filteredStandards = standardsCache.filter(standard => {
+        const normalizedStandard = standard.toLowerCase();
+        if (normalizedStandard.startsWith(query) && !uniqueStandards.has(normalizedStandard)) {
+            uniqueStandards.add(normalizedStandard);
+            return true;
+        }
+        return false;
+    });
+
+    suggestionsContainer.innerHTML = '';
+
+    if (filteredStandards.length > 0) {
+        filteredStandards.forEach(standard => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = standard;
+            suggestionItem.dataset.value = standard;
+            suggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        showNoResults(suggestionsContainer);
+    }
+
+    // Add event listeners for selection
+    suggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', function () {
+            const standardInput = document.getElementById('standard');
+            standardInput.value = this.dataset.value;
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.style.display = "none";
+
+            // Clear division field when standard changes
+            clearDivision();
+        });
+    });
+}
+
 function clearDivision() {
     const divisionInput = document.getElementById('division');
-    const feeCategoryInput = document.getElementById('feeCategory'); // New field to clear
+    const feeCategoryInput = document.getElementById('feeCategory');
     divisionInput.value = '';
-    feeCategoryInput.value = ''; // Clear fee category input
+    feeCategoryInput.value = '';
 }
 
 // Initialization of standard suggestion box
@@ -1344,7 +1534,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const standardInput = document.getElementById('standard');
     const standardSuggestionsContainer = document.getElementById('standardSuggestions');
 
-    // Add event listeners for input, focus, and click events
     standardInput.addEventListener('input', displayStandardSuggestions);
     standardInput.addEventListener('focus', displayStandardSuggestions);
     standardInput.addEventListener('click', displayStandardSuggestions);
@@ -1355,23 +1544,25 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Add event listener to clear Division and fee category fields when Standard input is cleared
     standardInput.addEventListener('input', handleStandardInputChange);
 });
 
-// Clear Division and fee category if Standard input is cleared
 function handleStandardInputChange() {
     const standardInput = document.getElementById('standard');
     const divisionInput = document.getElementById('division');
-    const feeCategoryInput = document.getElementById('feeCategory'); // New field to clear
+    const feeCategoryInput = document.getElementById('feeCategory');
 
     if (!standardInput.value) {
         divisionInput.value = '';
-        feeCategoryInput.value = ''; // Clear fee category input
+        feeCategoryInput.value = '';
     }
 }
 
-/////////////////////////// GET DIVISIONS based on section and standard //////
+//////////////////// DIVISION SUGGESTION //////////
+
+// Variables to cache the data
+let divisionsFetched = false;
+let divisionsCache = [];
 
 // Function to display division suggestions
 function displayDivisionSuggestions() {
@@ -1380,10 +1571,8 @@ function displayDivisionSuggestions() {
     const sectionInput = document.getElementById('section').value.trim();
     const standardInput = document.getElementById('standard').value.trim();
 
-    // Clear existing suggestions
     divisionSuggestionsContainer.innerHTML = '';
 
-    // Show suggestion box
     divisionSuggestionsContainer.style.display = "block";
     const query = divisionInput.value.toLowerCase().trim();
 
@@ -1392,53 +1581,64 @@ function displayDivisionSuggestions() {
         return;
     }
 
-    fetch(`/getDivisions?section=${sectionInput}&standard=${standardInput}`)
-        .then(response => response.json())
-        .then(data => {
-            const uniqueDivisions = new Set();
-            const filteredDivisions = data.divisions.filter(division => {
-                const normalizedDivision = division.toLowerCase();
-                if (normalizedDivision.startsWith(query) && !uniqueDivisions.has(normalizedDivision)) {
-                    uniqueDivisions.add(normalizedDivision);
-                    return true;
-                }
-                return false;
-            });
+    if (!divisionsFetched) {
+        showLoading(divisionSuggestionsContainer);
 
-            if (filteredDivisions.length > 0) {
-                filteredDivisions.forEach(division => {
-                    const suggestionItem = document.createElement('div');
-                    suggestionItem.classList.add('suggestion-item');
-                    suggestionItem.textContent = division;
-                    suggestionItem.dataset.value = division;
-                    divisionSuggestionsContainer.appendChild(suggestionItem);
-                });
-            } else {
-                // If no results are found
-                const noResultsItem = document.createElement('div');
-                noResultsItem.classList.add('suggestion-item', 'no-results');
-                noResultsItem.textContent = 'No results found';
-                divisionSuggestionsContainer.appendChild(noResultsItem);
-            }
+        fetch(`/getDivisions?section=${sectionInput}&standard=${standardInput}`)
+            .then(response => response.json())
+            .then(data => {
+                divisionsCache = data.divisions;
+                divisionsFetched = true;
+                filterAndDisplayDivisions(query, divisionSuggestionsContainer);
+            })
+            .catch(error => console.error('Error fetching divisions:', error));
+    } else {
+        filterAndDisplayDivisions(query, divisionSuggestionsContainer);
+    }
+}
 
-            // Add event listeners for selection
-            divisionSuggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
-                item.addEventListener('click', function () {
-                    divisionInput.value = this.dataset.value;
-                    divisionSuggestionsContainer.innerHTML = '';
-                    divisionSuggestionsContainer.style.display = "none";
-                });
-            });
-        })
-        .catch(error => console.error('Error fetching divisions:', error));
+// Function to filter and display divisions
+function filterAndDisplayDivisions(query, suggestionsContainer) {
+    const uniqueDivisions = new Set();
+    const filteredDivisions = divisionsCache.filter(division => {
+        const normalizedDivision = division.toLowerCase();
+        if (normalizedDivision.startsWith(query) && !uniqueDivisions.has(normalizedDivision)) {
+            uniqueDivisions.add(normalizedDivision);
+            return true;
+        }
+        return false;
+    });
+
+    suggestionsContainer.innerHTML = '';
+
+    if (filteredDivisions.length > 0) {
+        filteredDivisions.forEach(division => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = division;
+            suggestionItem.dataset.value = division;
+            suggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        showNoResults(suggestionsContainer);
+    }
+
+    // Add event listeners for selection
+    suggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', function () {
+            const divisionInput = document.getElementById('division');
+            divisionInput.value = this.dataset.value;
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.style.display = "none";
+        });
+    });
 }
 
 // Initialization of division suggestion box
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener('DOMContentLoaded', function () {
     const divisionInput = document.getElementById('division');
     const divisionSuggestionsContainer = document.getElementById('divisionSuggestions');
 
-    // Add event listeners for input, focus, and click events
     divisionInput.addEventListener('input', displayDivisionSuggestions);
     divisionInput.addEventListener('focus', displayDivisionSuggestions);
     divisionInput.addEventListener('click', displayDivisionSuggestions);
@@ -1450,88 +1650,99 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// Cache for classes
+let classes = [
+    'Nursery', 
+    'LKG', 
+    'UKG', 
+    '1st', 
+    '2nd', 
+    '3rd', 
+    '4th', 
+    '5th', 
+    '6th', 
+    '7th', 
+    '8th', 
+    '9th', 
+    '10th'
+];
+let classesFetched = false;
 
-///////////////////////////////// CLASS COMPLETED SUGGESTIONS //////////
+// Function to display class completed suggestions
+function displayClassCompletedSuggestions() {
+    const classCompletedInput = document.getElementById('classCompleted');
+    const classCompletedSuggestionsContainer = document.getElementById('classCompletedSuggestions');
 
+    // Show suggestion box
+    classCompletedSuggestionsContainer.style.display = "block";
+    const query = classCompletedInput.value.toLowerCase().trim();
 
-        // Function to display class completed suggestions
-        function displayClassCompletedSuggestions() {
+    if (!classesFetched) {
+        showLoading(classCompletedSuggestionsContainer);
 
-            
-        // Classes available for suggestion
-        const classes = [
-            'Nursery', 
-            'LKG', 
-            'UKG', 
-            '1st', 
-            '2nd', 
-            '3rd', 
-            '4th', 
-            '5th', 
-            '6th', 
-            '7th', 
-            '8th', 
-            '9th', 
-            '10th'
-        ];
-            const classCompletedInput = document.getElementById('classCompleted');
-            const classCompletedSuggestionsContainer = document.getElementById('classCompletedSuggestions');
+        // Simulate an async data fetch
+        setTimeout(() => {
+            classesFetched = true;
+            filterAndDisplayClassCompletedSuggestions(query, classCompletedSuggestionsContainer);
+        }, 500);
+    } else {
+        filterAndDisplayClassCompletedSuggestions(query, classCompletedSuggestionsContainer);
+    }
+}
 
-            // Show suggestion box
-            classCompletedSuggestionsContainer.style.display = "block";
-            const query = classCompletedInput.value.toLowerCase().trim();
-            classCompletedSuggestionsContainer.innerHTML = '';
+// Function to filter and display class completed suggestions
+function filterAndDisplayClassCompletedSuggestions(query, suggestionsContainer) {
+    const filteredClasses = classes.filter(className => className.toLowerCase().startsWith(query));
+    suggestionsContainer.innerHTML = '';
 
-            const filteredClasses = classes.filter(className => className.toLowerCase().startsWith(query));
-
-            if (filteredClasses.length > 0) {
-                filteredClasses.forEach(className => {
-                    const suggestionItem = document.createElement('div');
-                    suggestionItem.classList.add('suggestion-item');
-                    suggestionItem.textContent = className;
-                    suggestionItem.dataset.value = className;
-                    classCompletedSuggestionsContainer.appendChild(suggestionItem);
-                });
-            } else {
-                // If no results are found
-                const noResultsItem = document.createElement('div');
-                noResultsItem.classList.add('suggestion-item', 'no-results');
-                noResultsItem.textContent = 'No results found';
-                classCompletedSuggestionsContainer.appendChild(noResultsItem);
-            }
-
-            // Add event listeners for selection
-            classCompletedSuggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
-                item.addEventListener('click', function () {
-                    classCompletedInput.value = this.dataset.value;
-                    classCompletedSuggestionsContainer.innerHTML = '';
-                    classCompletedSuggestionsContainer.style.display = "none";
-                });
-            });
-        }
-
-        // Initialization of class completed suggestion box
-        document.addEventListener("DOMContentLoaded", function () {
-            const classCompletedInput = document.getElementById('classCompleted');
-            const classCompletedSuggestionsContainer = document.getElementById('classCompletedSuggestions');
-
-            // Add event listeners for input, focus, and click events
-            classCompletedInput.addEventListener('input', displayClassCompletedSuggestions);
-            classCompletedInput.addEventListener('focus', displayClassCompletedSuggestions);
-            classCompletedInput.addEventListener('click', displayClassCompletedSuggestions);
-
-            document.addEventListener('click', function (event) {
-                if (!classCompletedSuggestionsContainer.contains(event.target) && !classCompletedInput.contains(event.target)) {
-                    classCompletedSuggestionsContainer.style.display = "none";
-                }
-            });
+    if (filteredClasses.length > 0) {
+        filteredClasses.forEach(className => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = className;
+            suggestionItem.dataset.value = className;
+            suggestionsContainer.appendChild(suggestionItem);
         });
+    } else {
+        showNoResults(suggestionsContainer);
+    }
 
+    // Add event listeners for selection
+    suggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', function () {
+            const classCompletedInput = document.getElementById('classCompleted');
+            classCompletedInput.value = this.dataset.value;
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.style.display = "none";
+        });
+    });
+}
+
+// Initialization of class completed suggestion box
+document.addEventListener("DOMContentLoaded", function () {
+    const classCompletedInput = document.getElementById('classCompleted');
+    const classCompletedSuggestionsContainer = document.getElementById('classCompletedSuggestions');
+
+    // Add event listeners for input, focus, and click events
+    classCompletedInput.addEventListener('input', displayClassCompletedSuggestions);
+    classCompletedInput.addEventListener('focus', displayClassCompletedSuggestions);
+    classCompletedInput.addEventListener('click', displayClassCompletedSuggestions);
+
+    document.addEventListener('click', function (event) {
+        if (!classCompletedSuggestionsContainer.contains(event.target) && !classCompletedInput.contains(event.target)) {
+            classCompletedSuggestionsContainer.style.display = "none";
+        }
+    });
+});
 
 ////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////// FEES AND PACKAGES ///////////////////
 /////////////// FEE CATEGORY SUGGESTIONS /////////////////
+
+// Cache for fee categories
+let feeCategoriesFetched = false;
+let feeCategoriesCache = [];
 
 // Function to display fee category suggestions
 function displayFeeCategorySuggestions() {
@@ -1542,60 +1753,69 @@ function displayFeeCategorySuggestions() {
     // Clear package allotted when fee category is empty or changed
     clearPackageAllotted();
 
-    // Clear existing suggestions
-    feeCategorySuggestionsContainer.innerHTML = '';
-
     // Show suggestion box
     feeCategorySuggestionsContainer.style.display = "block";
     const query = feeCategoryInput.value.toLowerCase().trim();
+    feeCategorySuggestionsContainer.innerHTML = '';
 
     if (!standardInput) {
         feeCategorySuggestionsContainer.innerHTML = '<div class="suggestion-item no-results">Please fill academic information</div>';
         return;
     }
 
-    fetch(`/getFeeCategory?standard=${standardInput}`)
-        .then(response => response.json())
-        .then(data => {
-            const uniqueCategories = new Set();
-            const filteredCategories = data.categories.filter(category => {
-                const normalizedCategory = category.toLowerCase();
-                if (normalizedCategory.startsWith(query) && !uniqueCategories.has(normalizedCategory)) {
-                    uniqueCategories.add(normalizedCategory);
-                    return true;
-                }
-                return false;
-            });
+    if (!feeCategoriesFetched) {
+        showLoading(feeCategorySuggestionsContainer);
 
-            if (filteredCategories.length > 0) {
-                filteredCategories.forEach(category => {
-                    const suggestionItem = document.createElement('div');
-                    suggestionItem.classList.add('suggestion-item');
-                    suggestionItem.textContent = category;
-                    suggestionItem.dataset.value = category;
-                    feeCategorySuggestionsContainer.appendChild(suggestionItem);
-                });
-            } else {
-                // If no results are found
-                const noResultsItem = document.createElement('div');
-                noResultsItem.classList.add('suggestion-item', 'no-results');
-                noResultsItem.textContent = 'No results found';
-                feeCategorySuggestionsContainer.appendChild(noResultsItem);
-            }
+        fetch(`/getFeeCategory?standard=${standardInput}`)
+            .then(response => response.json())
+            .then(data => {
+                feeCategoriesCache = data.categories;
+                feeCategoriesFetched = true;
+                filterAndDisplayFeeCategories(query, feeCategorySuggestionsContainer, feeCategoryInput);
+            })
+            .catch(error => console.error('Error fetching fee categories:', error));
+    } else {
+        filterAndDisplayFeeCategories(query, feeCategorySuggestionsContainer, feeCategoryInput);
+    }
+}
 
-            // Add event listeners for selection
-            feeCategorySuggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
-                item.addEventListener('click', function () {
-                    feeCategoryInput.value = this.dataset.value;
-                    feeCategorySuggestionsContainer.innerHTML = '';
-                    feeCategorySuggestionsContainer.style.display = "none";
-                    
-                    // Fetch and set the amount in packageAllotted field based on fee category and standard
-                    fetchAmount(feeCategoryInput.value, standardInput);
-                });
-            });
-        })
-        .catch(error => console.error('Error fetching fee categories:', error));
+// Function to filter and display fee categories
+function filterAndDisplayFeeCategories(query, suggestionsContainer, feeCategoryInput) {
+    const uniqueCategories = new Set();
+    const filteredCategories = feeCategoriesCache.filter(category => {
+        const normalizedCategory = category.toLowerCase();
+        if (normalizedCategory.startsWith(query) && !uniqueCategories.has(normalizedCategory)) {
+            uniqueCategories.add(normalizedCategory);
+            return true;
+        }
+        return false;
+    });
+
+    suggestionsContainer.innerHTML = '';
+
+    if (filteredCategories.length > 0) {
+        filteredCategories.forEach(category => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = category;
+            suggestionItem.dataset.value = category;
+            suggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        showNoResults(suggestionsContainer);
+    }
+
+    // Add event listeners for selection
+    suggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', function () {
+            feeCategoryInput.value = this.dataset.value;
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.style.display = "none";
+            
+            // Fetch and set the amount in packageAllotted field based on fee category and standard
+            fetchAmount(feeCategoryInput.value, document.getElementById('standard').value.trim());
+        });
+    });
 }
 
 // Function to fetch and set amount in packageAllotted field
@@ -1634,6 +1854,177 @@ document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener('click', function (event) {
         if (!feeCategorySuggestionsContainer.contains(event.target) && !feeCategoryInput.contains(event.target)) {
             feeCategorySuggestionsContainer.style.display = "none";
+        }
+    });
+});
+
+/////////////////// FEES TABLE (Pending) ///////////////////////
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////// TRANSPORT SERVICE SECTION ////////////////////////
+
+// Function to toggle visibility and disable transport details
+function toggleTransportDetails(isVisible) {
+    const transportDetails = document.getElementById('transportDetails');
+    const inputs = transportDetails.getElementsByTagName('input');
+    const textareas = transportDetails.getElementsByTagName('textarea');
+
+    if (isVisible) {
+        transportDetails.style.display = 'block';
+        for (let i = 0; i < inputs.length; i++) {
+            inputs[i].disabled = false;
+        }
+        for (let i = 0; i < textareas.length; i++) {
+            textareas[i].disabled = false;
+        }
+    } else {
+        transportDetails.style.display = 'none';
+        for (let i = 0; i < inputs.length; i++) {
+            inputs[i].disabled = true;
+        }
+        for (let i = 0; i < textareas.length; i++) {
+            textareas[i].disabled = true;
+        }
+    }
+}
+
+// Execute toggleTransportDetails with false to ensure initial state is applied correctly
+document.addEventListener('DOMContentLoaded', () => {
+    toggleTransportDetails(false);
+});
+
+
+/////////////////////// PICK DROP SUGGESTION ///////////////////////
+
+// Utility function to convert strings to title case
+function toTitleCase(str) {
+    return str.replace(/\b\w/g, char => char.toUpperCase());
+}
+
+// Debounce function: To limit the rate at which suggestions are called
+function debounce(func, delay) {
+    let debounceTimer;
+    return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => func.apply(context, args), delay);
+    };
+}
+
+// Fetch city suggestions from external API
+async function fetchPickDropAddressSuggestions() {
+    const headers = new Headers();
+    headers.append("X-CSCAPI-KEY", "V2c2TU5yS2g4WlNXVDdLZ3d6Smh5cnZpTHpMODg0Y2ZZSnZjTmZ3WA=="); // Replace with your actual API key
+
+    const requestOptions = {
+        method: 'GET',
+        headers: headers,
+        redirect: 'follow'
+    };
+
+    return fetch(`https://api.countrystatecity.in/v1/countries/IN/cities`, requestOptions)
+        .then(response => response.json())
+        .catch(error => {
+            console.error('Error fetching city suggestions:', error);
+            return [];
+        });
+}
+
+// Fetch distinct addresses from your API
+async function fetchDistinctPickDropAddresses() {
+    return fetch('/distinctAddresses')
+        .then(response => response.json())
+        .catch(error => {
+            console.error('Error fetching distinct addresses:', error);
+            return [];
+        });
+}
+
+// Global variable to track if data has been fetched
+let pickDropAddressDataFetched = false;
+
+// Prefetch and combine data, then store them in a global variable
+async function prefetchCombinedPickDropAddressSuggestions() {
+    const [citySuggestions, addressSuggestions] = await Promise.all([
+        fetchPickDropAddressSuggestions(),
+        fetchDistinctPickDropAddresses()
+    ]);
+
+    // Combine the results, convert to title case, and remove duplicates
+    const combined = [...citySuggestions.map(item => toTitleCase(item.name)), ...addressSuggestions.map(item => toTitleCase(item.transport_pickup_drop))];
+    window.pickDropAddressSuggestions = [...new Set(combined.map(item => item.toLowerCase()))].map(item => toTitleCase(item));
+    pickDropAddressDataFetched = true;
+}
+prefetchCombinedPickDropAddressSuggestions();
+
+// Utility function to display loading suggestions
+function showLoading(suggestionsContainer) {
+    suggestionsContainer.innerHTML = '';
+    const loadingItem = document.createElement('div');
+    loadingItem.classList.add('suggestion-item', 'no-results');
+    loadingItem.textContent = 'Loading...';
+    suggestionsContainer.appendChild(loadingItem);
+    suggestionsContainer.style.display = "block";
+}
+
+// Function to display combined suggestions from pre-fetched data
+function displayCombinedPickDropAddressSuggestions(query, suggestionsContainer) {
+    suggestionsContainer.innerHTML = ''; // Clear previous suggestions
+
+    // Show loading if data is not yet fetched
+    if (!pickDropAddressDataFetched) {
+        showLoading(suggestionsContainer);
+        return;
+    }
+
+    const filteredSuggestions = window.pickDropAddressSuggestions.filter(item => item.toLowerCase().startsWith(query.toLowerCase()));
+
+    if (filteredSuggestions.length > 0) {
+        filteredSuggestions.forEach(item => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = item;
+            suggestionItem.dataset.place = item;
+            suggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        // If no results are found
+        const noResultsItem = document.createElement('div');
+        noResultsItem.classList.add('suggestion-item', 'no-results');
+        noResultsItem.textContent = 'No results found';
+        suggestionsContainer.appendChild(noResultsItem);
+    }
+
+    suggestionsContainer.style.display = "block";
+}
+
+// Initialize suggestion box for pickDropAddress
+document.addEventListener("DOMContentLoaded", function () {
+    const inputField = document.getElementById('pickDropAddress');
+    const suggestionsContainer = document.getElementById('pickDropAddressSuggestions');
+
+    // Wrap the display function with debounce
+    const debouncedDisplaySuggestions = debounce(query => displayCombinedPickDropAddressSuggestions(query, suggestionsContainer), 300);
+
+    // Add event listeners for input events
+    inputField.addEventListener('input', () => debouncedDisplaySuggestions(inputField.value.toLowerCase().trim()));
+    inputField.addEventListener('focus', () => displayCombinedPickDropAddressSuggestions(inputField.value.toLowerCase().trim(), suggestionsContainer));
+    inputField.addEventListener('click', () => displayCombinedPickDropAddressSuggestions(inputField.value.toLowerCase().trim(), suggestionsContainer));
+
+    suggestionsContainer.addEventListener('click', function (event) {
+        if (event.target.classList.contains('suggestion-item')) {
+            const selectedPlace = event.target.dataset.place;
+            inputField.value = selectedPlace;
+            suggestionsContainer.innerHTML = '';
+        }
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!suggestionsContainer.contains(event.target) && !inputField.contains(event.target)) {
+            suggestionsContainer.innerHTML = '';
         }
     });
 });
