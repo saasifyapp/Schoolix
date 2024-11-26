@@ -9,6 +9,8 @@ let formData = {
 
 // Function to collect data from the Student Information section
 function collectStudentInformation() {
+    const selectedDocumentsString = selectedDocuments.join(','); // Convert the array to a comma-separated string
+
     formData.studentInformation = {
         firstName: document.getElementById('firstName').value.trim(),
         middleName: document.getElementById('middleName').value.trim(),
@@ -35,9 +37,10 @@ function collectStudentInformation() {
         domicile: document.getElementById('domicile').value.trim(),
         motherTongue: document.getElementById('motherTongue').value.trim(),
         aadharNo: document.getElementById('aadhaar').value.trim(),
-        documents: document.getElementById('documentInput').value.trim() // Adjusted for a single input field
+        documents: selectedDocumentsString // Use the comma-separated string of selected documents
     };
 }
+
 
 // Function to collect data from the Guardian Information section
 function collectGuardianInformation() {
@@ -95,20 +98,37 @@ function collectFeesInformation() {
     };
 }
 
-// Function to collect data from the Transport Services section
+// // Function to collect data from the Transport Services section
+// function collectTransportInformation() {
+//     formData.transportInformation = {
+//         transportNeeded: document.querySelector('input[name="transportNeeded"]:checked') ? document.querySelector('input[name="transportNeeded"]:checked').value : null,
+//         transportStandard: document.getElementById('transportStandard').value,
+//         transportDivision: document.getElementById('transportDivision').value,
+//         pickDropAddress: document.getElementById('pickDropAddress').value,
+//         vehicleRunning: document.getElementById('vehicleRunning').value,
+//         vehicleDetails: document.getElementById('vehicleDetails').value
+//     };
+// }
+
 function collectTransportInformation() {
     formData.transportInformation = {
-        transportNeeded: document.querySelector('input[name="transportNeeded"]:checked') ? document.querySelector('input[name="transportNeeded"]:checked').value : null,
-        transportStandard: document.getElementById('transportStandard').value,
-        transportDivision: document.getElementById('transportDivision').value,
-        pickDropAddress: document.getElementById('pickDropAddress').value,
-        vehicleRunning: document.getElementById('vehicleRunning').value,
-        vehicleDetails: document.getElementById('vehicleDetails').value
+        transportNeeded: document.querySelector('input[name="transportNeeded"]:checked') 
+            ? document.querySelector('input[name="transportNeeded"]:checked').value 
+            : null, // Ensure safe access to the checked value
+        transportStandard: document.getElementById('transportStandard').value.trim(),
+        transportDivision: document.getElementById('transportDivision').value.trim(),
+        pickDropAddress: document.getElementById('pickDropAddress').value.trim(),
+        vehicleRunning: document.getElementById('vehicleRunning').value.trim(),
+        vehicleDetails: document.getElementById('vehicleInfo') 
+            ? document.getElementById('vehicleInfo').innerText.trim() 
+            : null, // Collect vehicle information dynamically if available
+        noVehicleFound: document.getElementById('noVehicleFound').checked // Capture checkbox status
     };
 }
 
 // Collect data on "Next" button click and move to the next section
 document.getElementById('student-next').addEventListener('click', function () {
+    console.log(formData)
     collectStudentInformation();
     prefillGuardianNames();
     document.getElementById('student-information').style.display = 'none';
@@ -116,18 +136,21 @@ document.getElementById('student-next').addEventListener('click', function () {
 });
 
 document.getElementById('guardian-next').addEventListener('click', function () {
+    console.log(formData)
     collectGuardianInformation();
     document.getElementById('guardian-information').style.display = 'none';
     document.getElementById('academic-information').style.display = 'block';
 });
 
 document.getElementById('academic-next').addEventListener('click', function () {
+    console.log(formData)
     collectAcademicInformation();
     document.getElementById('academic-information').style.display = 'none';
     document.getElementById('fees-information').style.display = 'block';
 });
 
 document.getElementById('fees-next').addEventListener('click', function () {
+    console.log(formData)
     collectFeesInformation();
     prefillTransportDetails();
     document.getElementById('fees-information').style.display = 'none';
@@ -135,6 +158,7 @@ document.getElementById('fees-next').addEventListener('click', function () {
 });
 
 document.getElementById('transport-next').addEventListener('click', function () {
+    console.log(formData)
     collectTransportInformation();
     document.getElementById('transport-information').style.display = 'none';
     document.getElementById('review-information').style.display = 'block';
@@ -142,30 +166,30 @@ document.getElementById('transport-next').addEventListener('click', function () 
 });
 
 // Navigate back to previous sections (if needed)
-document.getElementById('guardian-prev').addEventListener('click', function () {
-    document.getElementById('guardian-information').style.display = 'none';
-    document.getElementById('student-information').style.display = 'block';
-});
+// document.getElementById('guardian-prev').addEventListener('click', function () {
+//     document.getElementById('guardian-information').style.display = 'none';
+//     document.getElementById('student-information').style.display = 'block';
+// });
 
-document.getElementById('academic-prev').addEventListener('click', function () {
-    document.getElementById('academic-information').style.display = 'none';
-    document.getElementById('guardian-information').style.display = 'block';
-});
+// document.getElementById('academic-prev').addEventListener('click', function () {
+//     document.getElementById('academic-information').style.display = 'none';
+//     document.getElementById('guardian-information').style.display = 'block';
+// });
 
-document.getElementById('fees-prev').addEventListener('click', function () {
-    document.getElementById('fees-information').style.display = 'none';
-    document.getElementById('academic-information').style.display = 'block';
-});
+// document.getElementById('fees-prev').addEventListener('click', function () {
+//     document.getElementById('fees-information').style.display = 'none';
+//     document.getElementById('academic-information').style.display = 'block';
+// });
 
-document.getElementById('transport-prev').addEventListener('click', function () {
-    document.getElementById('transport-information').style.display = 'none';
-    document.getElementById('fees-information').style.display = 'block';
-});
+// document.getElementById('transport-prev').addEventListener('click', function () {
+//     document.getElementById('transport-information').style.display = 'none';
+//     document.getElementById('fees-information').style.display = 'block';
+// });
 
-document.getElementById('review-prev').addEventListener('click', function () {
-    document.getElementById('review-information').style.display = 'none';
-    document.getElementById('transport-information').style.display = 'block';
-});
+// document.getElementById('review-prev').addEventListener('click', function () {
+//     document.getElementById('review-information').style.display = 'none';
+//     document.getElementById('transport-information').style.display = 'block';
+// });
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
