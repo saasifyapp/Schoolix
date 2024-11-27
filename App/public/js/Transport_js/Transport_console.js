@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const tagRouteShiftOverlay = document.getElementById('tagRouteShiftOverlay');
     const listStudentsOverlay = document.getElementById('listStudentsOverlay'); // Changed from listSchedulingOverlay
     const transportMonitoringOverlay = document.getElementById('transportMonitoringOverlay');
+    const transportEditStudentsOverlay = document.getElementById('transportEditStudents'); // New edit students overlay
+
 
     // Buttons
     const driverConductorButton = document.getElementById('driverConductorButton');
@@ -34,6 +36,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeListStudentsOverlay = document.getElementById('closeListStudentsOverlay'); // Changed from closeListSchedulingOverlay
     const trackingMonitoringButton = document.getElementById('trackingMonitoringButton');
     const closeTransportMonitoringOverlay = document.getElementById('closeTransportMonitoringOverlay');
+    const editStudentsButton = document.getElementById('editStudentsButton'); // New edit students button
+    const closeTransportEditStudentsOverlay = document.getElementById('closeTransportEditStudents'); // New close button
 
     // Show Driver/Conductor Selection Overlay
     driverConductorButton.addEventListener('click', function () {
@@ -100,6 +104,12 @@ document.addEventListener('DOMContentLoaded', function () {
         showOverlay('listStudentsOverlay'); // Changed from listSchedulingOverlay
     });
 
+     // Show Edit Students Overlay
+     editStudentsButton.addEventListener('click', function () {
+        hideAllOverlays();
+        showOverlay('transportEditStudents');
+    });
+
 
     // Close Driver/Conductor Overlay
     closeDriverConductorOverlay.addEventListener('click', function () {
@@ -163,6 +173,11 @@ document.addEventListener('DOMContentLoaded', function () {
         hideOverlay('transportMonitoringOverlay');
     });
 
+    // Close Edit Students Overlay
+    closeTransportEditStudentsOverlay.addEventListener('click', function () {
+        hideOverlay('transportEditStudents');
+    });
+
     // Utility Functions to Show/Hide Overlays
     function showOverlay(overlayId) {
         //console.log(`Showing overlay: ${overlayId}`);
@@ -181,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function () {
             'driverConductorOverlay', 'addDriverOverlay', 'searchDriverConductorOverlay',
             'routesShiftsOverlay', 'manageRoutesOverlay', 'manageShiftsOverlay',
             'busAllocationOverlay', 'allocateBusOverlay', 'tagRouteShiftOverlay',
-            'listStudentsOverlay', 'transportMonitoringOverlay' // Added transportMonitoringOverlay
+            'listStudentsOverlay', 'transportMonitoringOverlay', 'transportEditStudents'
         ];
         overlays.forEach(hideOverlay);
     }

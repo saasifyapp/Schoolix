@@ -717,7 +717,7 @@
 
     <!-- Overlay for Bus Allocation -->
     <div id="busAllocationOverlay" class="overlay">
-        <div class="overlay-content-inner">
+        <div class="overlay-content-inner" style="max-width: 400px;">
             <h2>Vehicle Allocation</h2>
             <button id="closeBusAllocationOverlay" class="close-button">&times;</button>
             <div class="button-container">
@@ -731,6 +731,12 @@
                     <span id="listStudentsButton">
                         <img src="../images/manage_schedule.gif" alt="">
                         List&nbsp;Students
+                    </span>
+                </div>
+                <div class="option-card bookvaltcard">
+                    <span id="editStudentsButton">
+                        <img src="../images/notes.gif" alt="">
+                        Edit&nbsp;Students
                     </span>
                 </div>
             </div>
@@ -914,6 +920,60 @@
         </div>
     </div>
 
+    <div id="transportEditStudents" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeTransportEditStudents" class="close-button">&times;</button>
+            <h2 class="overlay-search-head">Edit Students</h2>
+    
+            <div class="overlay-inner" style="height: calc(100% - 4rem);">
+                <!-- Left Side -->
+                <div class="tag-left" style="margin-bottom: 40px;">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+                    <dotlottie-player src="https://lottie.host/af47cbf7-35dd-4ed7-9bb2-2ce2fefeb77a/beUPxzCFGp.lottie" background="transparent" speed="1" style="width: 300px; height: 300px" loop autoplay></dotlottie-player>
+                </div>
+    
+                <!-- Right Side -->
+                <div class="tag-right">
+                    <div class="form-section">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="searchbyNamoeorGr" placeholder=" ">
+                            <span class="form-control-placeholder">Search by Name or Gr No</span>
+                            <div id="searchsuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="editGrNo" placeholder=" ">
+                            <span class="form-control-placeholder">Gr No</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="editStudentName" placeholder=" ">
+                            <span class="form-control-placeholder">Student Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="editClass" placeholder=" ">
+                            <span class="form-control-placeholder">Class</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="editDivision" placeholder=" ">
+                            <span class="form-control-placeholder">Division</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="editPickDropAddress" placeholder=" ">
+                            <span class="form-control-placeholder">Pick-Drop Address</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="editVehicleTagged" placeholder=" ">
+                            <span class="form-control-placeholder">Vehicle Tagged</span>
+                        </div>
+                        <div class="form-group">
+                            <button id="updateStudentButton" class="update-button">Update</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
     <!-- Transport Monitoring Overlay -->
     <div id="transportMonitoringOverlay" class="overlay-search">
         <div class="overlay-content-search">
@@ -946,6 +1006,7 @@
     <script src="/js/Transport_js/Transport_allocateVehicle.js"></script>
     <script src="/js/Transport_js/Transport_getStudentDetails.js"></script>
     <script src="/js/Transport_js/Transport_monitoring.js"></script>
+    <script src="/js/Transport_js/Transport_editStudents.js"></script>
 
 
 

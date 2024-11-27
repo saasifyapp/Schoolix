@@ -578,10 +578,14 @@ app.use('/', transportAllocateVehicle);
 const transportGetStudentsDetails = require('./src/routes/transport_routes/get_student_details.js');
 app.use('/', transportGetStudentsDetails);
 
-////// LIST STUDENTS ROUTE
+////// MONITOR STUDENTS ROUTE
 const transportMonitorTrack = require('./src/routes/transport_routes/monitor_track.js');
 app.use('/', transportMonitorTrack);
 
+
+////// EDIT STUDENTS ROUTE
+const transportEditStudents = require('./src/routes/transport_routes/edit_students.js');
+app.use('/', transportEditStudents);
 
 ///////////////////////////////// FEES ROUTES /////////////////////////////
 
