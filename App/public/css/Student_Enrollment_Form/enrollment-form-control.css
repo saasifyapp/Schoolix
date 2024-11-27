@@ -389,3 +389,57 @@ input[type="checkbox"]:focus {
     box-sizing: border-box; /* Ensure padding is included in the width calculation */
     white-space: nowrap; /* Prevent input text from wrapping */
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* reveiw form css */
+/* Main Content Styling */
+.main-content {
+    width: 98%;
+    padding: 20px;
+}
+
+.main-content h2 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 24px;
+}
+
+.review-section {
+    margin-bottom: 20px;
+}
+
+.review-section h3 {
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+.review-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    font-size: 16px;
+}
+
+.review-item span:first-child {
+    font-weight: bold;
+    color: #555;
+}
+
+.review-item span:last-child {
+    color: #333;
+}
+

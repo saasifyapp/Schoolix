@@ -158,6 +158,7 @@ document.getElementById('fees-next').addEventListener('click', function () {
 });
 
 document.getElementById('transport-next').addEventListener('click', function () {
+    populateReviewValues();
     console.log(formData)
     collectTransportInformation();
     document.getElementById('transport-information').style.display = 'none';
@@ -234,3 +235,58 @@ function prefillTransportDetails() {
     document.getElementById('transportStandard').value = standard || "";
     document.getElementById('transportDivision').value = division || "";
 }
+
+function populateReviewValues() {
+    // Helper function to set values or defaults
+    function setField(id, value) {
+        document.getElementById(id).textContent = value || "Not Provided";
+    }
+
+    // Student Information
+    const studentInfo = formData.studentInformation;
+    setField("review-fullName", studentInfo.fullName);
+    setField("review-dob", studentInfo.dob);
+    setField("review-placeOfBirth", studentInfo.placeOfBirth);
+    setField("review-age", studentInfo.age);
+    setField("review-gender", studentInfo.gender);
+    setField("review-bloodGroup", studentInfo.bloodGroup);
+    setField("review-studentContact", studentInfo.studentContact);
+
+    const address = `${studentInfo.currentAddress.cityVillage || ""}, ${studentInfo.currentAddress.taluka || ""}, ${studentInfo.currentAddress.district || ""}, ${studentInfo.currentAddress.state || ""} - ${studentInfo.currentAddress.pinCode || ""}`;
+    setField("review-address", address);
+
+    setField("review-nationality", studentInfo.nationality);
+    setField("review-religion", studentInfo.religion);
+    setField("review-category", studentInfo.category);
+    setField("review-caste", studentInfo.caste);
+    setField("review-domicile", studentInfo.domicile);
+    setField("review-motherTongue", studentInfo.motherTongue);
+    setField("review-aadharNo", studentInfo.aadharNo);
+    setField("review-documents", studentInfo.documents);
+
+    // Guardian Information
+    const guardianInfo = formData.guardianInformation;
+    setField("review-fatherName", guardianInfo.father.fullName || "Not Provided");
+    setField("review-motherName", guardianInfo.mother.fullName || "Not Provided");
+
+    const localGuardian = guardianInfo.localGuardian.name
+        ? guardianInfo.localGuardian.name
+        : "NO";
+    setField("review-localGuardian", localGuardian);
+
+    // Academic Information
+    const academicInfo = formData.academicInformation;
+    setField("review-section", academicInfo.section);
+    setField("review-standard", academicInfo.standard);
+    setField("review-division", academicInfo.division);
+    setField("review-lastSchool", academicInfo.lastSchoolAttended);
+    setField("review-percentage", academicInfo.percentage);
+
+    // Fees Information
+    const feesInfo = formData.feesInformation;
+    setField("review-feeSection", feesInfo.feeSection);
+    setField("review-feeStandard", feesInfo.feeStandard);
+    setField("review-package", feesInfo.packageAllotted);
+}
+
+

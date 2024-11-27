@@ -538,15 +538,152 @@
 
             <div id="review-information" class="form-section" style="display: none;">
                 <h2>Review Form</h2>
+                <div class="main-content">
+                    <div id="reviewContent">
+                        <!-- Student Information -->
+                        <div class="review-section">
+                            <h3>Student Information</h3>
+                            <div class="review-item"><span>Full Name:</span> <span id="review-fullName"></span></div>
+                            <div class="review-item"><span>Date of Birth:</span> <span id="review-dob"></span></div>
+                            <div class="review-item"><span>Place of Birth:</span> <span id="review-placeOfBirth"></span>
+                            </div>
+                            <div class="review-item"><span>Age:</span> <span id="review-age"></span></div>
+                            <div class="review-item"><span>Gender:</span> <span id="review-gender"></span></div>
+                            <div class="review-item"><span>Blood Group:</span> <span id="review-bloodGroup"></span>
+                            </div>
+                            <div class="review-item"><span>Contact:</span> <span id="review-studentContact"></span>
+                            </div>
+                            <div class="review-item"><span>Address:</span> <span id="review-address"></span></div>
+                            <div class="review-item"><span>Nationality:</span> <span id="review-nationality"></span>
+                            </div>
+                            <div class="review-item"><span>Religion:</span> <span id="review-religion"></span></div>
+                            <div class="review-item"><span>Category:</span> <span id="review-category"></span></div>
+                            <div class="review-item"><span>Caste:</span> <span id="review-caste"></span></div>
+                            <div class="review-item"><span>Domicile:</span> <span id="review-domicile"></span></div>
+                            <div class="review-item"><span>Mother Tongue:</span> <span id="review-motherTongue"></span>
+                            </div>
+                            <div class="review-item"><span>Aadhaar Number:</span> <span id="review-aadharNo"></span>
+                            </div>
+                            <div class="review-item"><span>Documents:</span> <span id="review-documents"></span></div>
+                        </div>
 
+                        <!-- Guardian Information -->
+                        <div class="review-section">
+                            <h3>Guardian Information</h3>
+                            <div class="review-item"><span>Father's Name:</span> <span id="review-fatherName"></span>
+                            </div>
+                            <div class="review-item"><span>Mother's Name:</span> <span id="review-motherName"></span>
+                            </div>
+                            <div class="review-item"><span>Local Guardian:</span> <span
+                                    id="review-localGuardian"></span></div>
+                        </div>
+
+                        <!-- Academic Information -->
+                        <div class="review-section">
+                            <h3>Academic Information</h3>
+                            <div class="review-item"><span>Section:</span> <span id="review-section"></span></div>
+                            <div class="review-item"><span>Standard:</span> <span id="review-standard"></span></div>
+                            <div class="review-item"><span>Division:</span> <span id="review-division"></span></div>
+                            <div class="review-item"><span>Last School Attended:</span> <span
+                                    id="review-lastSchool"></span></div>
+                            <div class="review-item"><span>Percentage:</span> <span id="review-percentage"></span></div>
+                        </div>
+
+                        <!-- Fees Information -->
+                        <div class="review-section">
+                            <h3>Fees Information</h3>
+                            <div class="review-item"><span>Fee Section:</span> <span id="review-feeSection"></span>
+                            </div>
+                            <div class="review-item"><span>Fee Standard:</span> <span id="review-feeStandard"></span>
+                            </div>
+                            <div class="review-item"><span>Package Allotted:</span> <span id="review-package"></span>
+                            </div>
+                        </div>
+
+                        <div class="review-section">
+                            <h3>Consent</h3>
+                            <div class="review-item">
+                                <span>
+                                    <label>
+                                        <input type="checkbox" id="consent-policies">
+                                        I agree to the School Policies</a>.
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="review-item">
+                                <span>
+                                    <label>
+                                        <input type="checkbox" id="consent-photo">
+                                        I consent to Photo/Video use in School Activities.
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="review-item">
+                                <span>
+                                    <label>
+                                        <input type="checkbox" id="consent-trips">
+                                        I consent to participation in Field Trips and Extracurricular Activities.
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="review-item">
+                                <span>
+                                    <label>
+                                        <input type="checkbox" id="consent-medical">
+                                        I consent to Emergency Medical Treatment.
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="review-item">
+                                <span>
+                                    <label>
+                                        <input type="checkbox" id="consent-medical">
+                                        Declaration that all provided information is accurate and complete.
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="review-item">
+                                <span>
+                                    <label>
+                                        <input type="checkbox" id="consent-medical">
+                                        Agreement to pay the required fees as per the chosen plan
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="review-item">
+                                <span>
+                                    <label>
+                                        <input type="checkbox" id="consent-medical">
+                                        Confirmation of understanding of school rules and regulations
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="review-section">
+                                <h3>Date of Submission</h3>
+                                <div class="review-item">
+                                    <span>Date of Submission:</span>
+                                    <span id="submission-date"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="form-navigation-buttons">
                     <button type="button" class="btn prev-button" id="review-prev">Previous</button>
                     <button type="button" class="btn next-button" id="review-next">Submit</button>
                 </div>
             </div>
 
+
         </div>
+
     </div>
+    </div>
+
+    <script>
+        // Automatically set today's date for the Date of Submission
+        document.getElementById('submission-date').textContent = new Date().toLocaleDateString();
+    </script>
 
     <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Universal_Components_JS/handle_session.js"></script>
