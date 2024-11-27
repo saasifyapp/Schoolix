@@ -145,6 +145,8 @@ router.delete('/deleteRoute/:routeId', (req, res) => {
     });
 });
 
+
+
 // Route to handle updating the transport route shift details
 router.post('/updateRoute', (req, res) => {
     const { routeShiftId, routeName, routeCities, routeType } = req.body;
@@ -153,25 +155,37 @@ router.post('/updateRoute', (req, res) => {
         return res.status(400).json({ error: 'All fields are required' });
     }
 
-    const query = `
+    // SQL query to update the route shift table
+    const updateRouteShiftQuery = `
         UPDATE transport_route_shift_details
         SET route_shift_name = ?, 
             route_shift_detail = ?, 
             route_shift_type = ?
         WHERE route_shift_id = ?`;
 
-        req.connectionPool.query(
-        query, 
-        [routeName, routeCities, routeType, routeShiftId], 
-        (error, results) => {
-            if (error) {
-                console.error('Error updating route shift details:', error);
+    req.connectionPool.query(updateRouteShiftQuery, [routeName, routeCities, routeType, routeShiftId], (routeShiftError, routeShiftResults) => {
+        if (routeShiftError) {
+            console.error('Error updating route shift details:', routeShiftError);
+            return res.status(500).json({ error: 'Database update failed' });
+        }
+
+        // If the first update is successful, execute the update for the schedule table
+        const updateScheduleQuery = `
+            UPDATE transport_schedule_details
+            SET route_name = ?, 
+                route_stops = ?
+            WHERE route_name = ?`;
+
+        req.connectionPool.query(updateScheduleQuery, [routeName, routeCities, routeName], (scheduleError, scheduleResults) => {
+            if (scheduleError) {
+                console.error('Error updating schedule details:', scheduleError);
                 return res.status(500).json({ error: 'Database update failed' });
             }
-            res.status(200).json({ message: 'Route updated successfully' });
-        }
-    );
-});
 
+            // If both updates are successful
+            res.status(200).json({ message: 'Route updated successfully' });
+        });
+    });
+});
 
 module.exports = router;

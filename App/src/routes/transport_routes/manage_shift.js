@@ -152,12 +152,12 @@ router.post('/updateShift', (req, res) => {
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
-    // Construct SQL query
-    const sql = `UPDATE transport_route_shift_details
-                 SET route_shift_name = ?, route_shift_detail = ?
-                 WHERE route_shift_id = ?`;
+    // Construct SQL query to update the route shift details
+    const updateRouteShiftQuery = `UPDATE transport_route_shift_details
+                                   SET route_shift_name = ?, route_shift_detail = ?
+                                   WHERE route_shift_id = ?`;
 
-    req.connectionPool.query(sql, [shiftName, shiftClasses, shiftId], (err, result) => {
+    req.connectionPool.query(updateRouteShiftQuery, [shiftName, shiftClasses, shiftId], (err, result) => {
         if (err) {
             console.error('Error updating shift:', err);
             return res.status(500).json({ message: 'Error updating shift' });
@@ -167,7 +167,21 @@ router.post('/updateShift', (req, res) => {
             return res.status(404).json({ message: 'Shift not found' });
         }
 
-        res.json({ message: 'Shift updated successfully' });
+        // After updating the route shift details,
+        // update the schedule details for the same shift
+        const updateScheduleQuery = `UPDATE transport_schedule_details
+                                     SET shift_name = ?, classes_alloted = ?
+                                     WHERE shift_name = ?`;
+
+        req.connectionPool.query(updateScheduleQuery, [shiftName, shiftClasses, shiftName], (scheduleErr, scheduleResult) => {
+            if (scheduleErr) {
+                console.error('Error updating schedule details:', scheduleErr);
+                return res.status(500).json({ message: 'Error updating schedule details' });
+            }
+
+            // Respond with a success message if both updates are successful
+            res.status(200).json({ message: 'Shift updated successfully' });
+        });
     });
 });
 

@@ -2115,11 +2115,12 @@ function filterAndDisplayVehicleRunning(query, suggestionsContainer, vehicleRunn
 
     // Add event listeners for selection
     suggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
-        item.addEventListener('click', function () {
+        item.addEventListener('click', function() {
             vehicleRunningInput.value = this.dataset.value;
             fetchVehicleInfo(this.dataset.value);
             suggestionsContainer.innerHTML = '';
             suggestionsContainer.style.display = "none";
+            document.getElementById('noVehicleFound').disabled = true;  // Disable the checkbox when an item is selected
         });
     });
 }
@@ -2166,31 +2167,35 @@ function clearVehicleRunningInfo() {
     const vehicleRunningInput = document.getElementById('vehicleRunning');
     const vehicleRunningSuggestionsContainer = document.getElementById('vehicleRunningSuggestions');
     const vehicleInfoContainer = document.getElementById('vehicleInfo');
+    const noVehicleFoundCheckbox = document.getElementById('noVehicleFound');
 
     vehicleRunningInput.value = '';
     vehicleRunningSuggestionsContainer.innerHTML = '';
     vehicleRunningSuggestionsContainer.style.display = 'none';
     vehicleInfoContainer.innerHTML = '';
     vehicleInfoContainer.style.display = 'none';
+    noVehicleFoundCheckbox.disabled = false; // Enable the checkbox
 }
 
 // Initialization of vehicle running suggestion box
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
     const vehicleRunningInput = document.getElementById('vehicleRunning');
     const vehicleRunningSuggestionsContainer = document.getElementById('vehicleRunningSuggestions');
+    const pickDropAddressInput = document.getElementById('pickDropAddress');
+    const noVehicleFoundCheckbox = document.getElementById('noVehicleFound');
+
+    // Enable the checkbox initially
+    noVehicleFoundCheckbox.disabled = false;
 
     // Add event listeners for input, focus, and click events
     vehicleRunningInput.addEventListener('input', displayVehicleRunningSuggestions);
     vehicleRunningInput.addEventListener('focus', displayVehicleRunningSuggestions);
     vehicleRunningInput.addEventListener('click', displayVehicleRunningSuggestions);
+    pickDropAddressInput.addEventListener('change', clearVehicleRunningInfo);
 
-    document.addEventListener('click', function (event) {
+    document.addEventListener('click', function(event) {
         if (!vehicleRunningSuggestionsContainer.contains(event.target) && !vehicleRunningInput.contains(event.target)) {
             vehicleRunningSuggestionsContainer.style.display = "none";
         }
     });
-
-    // Add event listener for pickDropAddress change
-    const pickDropAddressInput = document.getElementById('pickDropAddress');
-    pickDropAddressInput.addEventListener('change', clearVehicleRunningInfo);
 });
