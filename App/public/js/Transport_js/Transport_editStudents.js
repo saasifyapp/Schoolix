@@ -88,14 +88,23 @@ function fillFormDetails(selectedValue) {
     document.getElementById('editVehicleTagged').value = selectedValue.transport_tagged;
 }
 
-// Show loading indication
-function showLoading(container) {
-    container.innerHTML = '<div class="loading">Loading...</div>';
+// Function to display loading suggestions
+function showLoading(suggestionsContainer) {
+    suggestionsContainer.innerHTML = '';
+    const loadingItem = document.createElement('div');
+    loadingItem.classList.add('suggestion-item', 'no-results');
+    loadingItem.textContent = 'Loading...';
+    suggestionsContainer.appendChild(loadingItem);
+    suggestionsContainer.style.display = "block";
 }
 
-// Show no results indication
-function showNoResults(container) {
-    container.innerHTML = '<div class="no-results">No results found</div>';
+// Utility function to display no results found message
+function showNoResults(suggestionsContainer) {
+    suggestionsContainer.innerHTML = '';
+    const noResultsItem = document.createElement('div');
+    noResultsItem.classList.add('suggestion-item', 'no-results');
+    noResultsItem.textContent = 'No results found';
+    suggestionsContainer.appendChild(noResultsItem);
 }
 
 // Initialization of search suggestion box
@@ -114,3 +123,187 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+
+////////////////////////////////////// POPULATE VEHICLE SUGGESTIONS //////////////////
+
+// Cache for vehicle running suggestions for edit student overlay
+let editVehicleRunningFetched = false;
+let editVehicleRunningCache = [];
+let selectedDriverName = ''; // Variable to store the driver name
+
+// Function to display vehicle running suggestions for edit student overlay
+function displayEditVehicleRunningSuggestions() {
+    const vehicleRunningInput = document.getElementById('editVehicleTagged');
+    const vehicleRunningSuggestionsContainer = document.getElementById('edit_vehiclesuggestions');
+
+    // Show suggestion box
+    vehicleRunningSuggestionsContainer.style.display = "block";
+    const query = vehicleRunningInput.value.toLowerCase().trim();
+
+    // Check the value in pickDropAddress before calling the API
+    const routeStops = document.getElementById('editPickDropAddress').value.trim();
+    const classesAllotted = `${document.getElementById('editClass').value.trim()} ${document.getElementById('editDivision').value.trim()}`;
+
+    if (!routeStops || !classesAllotted) {
+        vehicleRunningSuggestionsContainer.innerHTML = '';
+        showNoResults(vehicleRunningSuggestionsContainer);
+        return;
+    }
+
+    if (!editVehicleRunningFetched) {
+        showLoading(vehicleRunningSuggestionsContainer);
+
+        fetch('/getVehicleRunning', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ classesAllotted, routeStops })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    editVehicleRunningCache = data.vehicles;
+                    editVehicleRunningFetched = true;
+                    filterAndDisplayEditVehicleRunning(query, vehicleRunningSuggestionsContainer, vehicleRunningInput);
+                } else {
+                    showNoResults(vehicleRunningSuggestionsContainer);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching vehicle data:', error);
+                vehicleRunningSuggestionsContainer.style.display = "none";
+            });
+    } else {
+        filterAndDisplayEditVehicleRunning(query, vehicleRunningSuggestionsContainer, vehicleRunningInput);
+    }
+}
+
+// Function to filter and display vehicle running suggestions for edit student overlay
+function filterAndDisplayEditVehicleRunning(query, suggestionsContainer, vehicleRunningInput) {
+    const filteredVehicles = editVehicleRunningCache.filter(vehicle =>
+        vehicle.vehicle_no.toLowerCase().includes(query) ||
+        vehicle.driver_name.toLowerCase().includes(query)
+    );
+    suggestionsContainer.innerHTML = '';
+
+    if (filteredVehicles.length > 0) {
+        filteredVehicles.forEach(vehicle => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = `${vehicle.vehicle_no} | ${vehicle.driver_name}`;
+            suggestionItem.dataset.value = vehicle.vehicle_no;
+            suggestionItem.dataset.driver = vehicle.driver_name; // Store the driver name in the dataset
+            suggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        showNoResults(suggestionsContainer);
+    }
+
+    // Add event listeners for selection
+    suggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', function() {
+            vehicleRunningInput.value = this.dataset.value;
+            selectedDriverName = this.dataset.driver; // Store the selected driver name
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.style.display = "none";
+        });
+    });
+}
+
+// Initialization of vehicle running suggestion box for edit student overlay
+document.addEventListener("DOMContentLoaded", function() {
+    const vehicleRunningInput = document.getElementById('editVehicleTagged');
+    const vehicleRunningSuggestionsContainer = document.getElementById('edit_vehiclesuggestions');
+
+    // Add event listeners for input, focus, and click events
+    vehicleRunningInput.addEventListener('input', displayEditVehicleRunningSuggestions);
+    vehicleRunningInput.addEventListener('focus', displayEditVehicleRunningSuggestions);
+    vehicleRunningInput.addEventListener('click', displayEditVehicleRunningSuggestions);
+
+    document.addEventListener('click', function(event) {
+        if (!vehicleRunningSuggestionsContainer.contains(event.target) && !vehicleRunningInput.contains(event.target)) {
+            vehicleRunningSuggestionsContainer.style.display = 'none';
+        }
+    });
+});
+
+// Function to handle the update button click
+function handleUpdateButtonClick() {
+    const grNo = document.getElementById('editGrNo').value.trim();
+    const studentName = document.getElementById('editStudentName').value.trim();
+    const standard = document.getElementById('editClass').value.trim();
+    const division = document.getElementById('editDivision').value.trim();
+    const vehicleTagged = document.getElementById('editVehicleTagged').value.trim();
+
+    if (!grNo || !studentName || !standard || !division || !vehicleTagged) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Incomplete Information',
+            text: 'Please fill in all fields before updating.'
+        });
+        return;
+    }
+
+    const payload = {
+        grNo,
+        studentName,
+        standard,
+        division,
+        vehicleTagged
+    };
+
+    fetch('/updateStudentTransport', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Update Successful',
+                    html: `Transport for student <b>${studentName}</b> updated successfully to <b>${vehicleTagged} | ${selectedDriverName}</b>`
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Update Failed',
+                    text: 'Failed to update transport tagged: ' + data.message
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error updating transport tagged:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'An Error Occurred',
+                text: 'An error occurred while updating transport tagged.'
+            });
+        });
+}
+
+// Add event listener to the update button
+document.addEventListener("DOMContentLoaded", function () {
+    const updateButton = document.getElementById('updateStudentButton');
+    updateButton.addEventListener('click', handleUpdateButtonClick);
+});
+
+// Function to display loading suggestions
+function showLoading(suggestionsContainer) {
+    suggestionsContainer.innerHTML = '';
+    const loadingItem = document.createElement('div');
+    loadingItem.classList.add('suggestion-item', 'no-results');
+    loadingItem.textContent = 'Loading...';
+    suggestionsContainer.appendChild(loadingItem);
+    suggestionsContainer.style.display = "block";
+}
+
+// Utility function to display no results found message
+function showNoResults(suggestionsContainer) {
+    suggestionsContainer.innerHTML = '';
+    const noResultsItem = document.createElement('div');
+    noResultsItem.classList.add('suggestion-item', 'no-results');
+    noResultsItem.textContent = 'No results found';
+    suggestionsContainer.appendChild(noResultsItem);
+}

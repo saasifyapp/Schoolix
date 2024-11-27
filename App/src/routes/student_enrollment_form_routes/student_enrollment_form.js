@@ -254,7 +254,7 @@ router.post('/getVehicleRunning', (req, res) => {
         SELECT vehicle_no, driver_name, classes_alloted, route_stops
         FROM transport_schedule_details
         WHERE classes_alloted LIKE ? AND route_stops LIKE ?
-        LIMIT 100;
+        LIMIT 1000;
     `;
 
     const queryParams = [`%${classesAllotted}%`, `%${routeStops}%`];

@@ -81,4 +81,49 @@ router.post('/fetch-student-suggestions', (req, res) => {
     });
 });
 
+
+// Endpoint to update student transport tagged details in both tables
+router.post('/updateStudentTransport', (req, res) => {
+    const { grNo, studentName, standard, division, vehicleTagged } = req.body;
+
+    if (!grNo || !studentName || !standard || !division || !vehicleTagged) {
+        return res.status(400).json({ success: false, error: 'Missing required fields' });
+    }
+
+    const queryPrimary = `
+        UPDATE primary_student_details
+        SET transport_tagged = ?
+        WHERE Grno = ? AND Name = ? AND standard = ? AND Division = ?
+    `;
+
+    const queryPrePrimary = `
+        UPDATE pre_primary_student_details
+        SET transport_tagged = ?
+        WHERE Grno = ? AND Name = ? AND standard = ? AND Division = ?
+    `;
+
+    const queryParams = [vehicleTagged, grNo, studentName, standard, division];
+
+    // Execute updates on both tables
+    req.connectionPool.query(queryPrimary, queryParams, (errorPrimary, resultsPrimary) => {
+        if (errorPrimary) {
+            console.error('Error updating primary transport tagged:', errorPrimary);
+            return res.status(500).json({ success: false, error: 'Database update failed for primary table' });
+        }
+
+        req.connectionPool.query(queryPrePrimary, queryParams, (errorPrePrimary, resultsPrePrimary) => {
+            if (errorPrePrimary) {
+                console.error('Error updating pre-primary transport tagged:', errorPrePrimary);
+                return res.status(500).json({ success: false, error: 'Database update failed for pre-primary table' });
+            }
+
+            if (resultsPrimary.affectedRows > 0 || resultsPrePrimary.affectedRows > 0) {
+                res.status(200).json({ success: true, message: 'Transport tagged updated successfully' });
+            } else {
+                res.status(404).json({ success: false, message: 'Student not found in either table' });
+            }
+        });
+    });
+});
+
 module.exports = router;
