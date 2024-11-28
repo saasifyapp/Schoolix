@@ -154,7 +154,7 @@ function displayEditVehicleRunningSuggestions() {
     if (!editVehicleRunningFetched) {
         showLoading(vehicleRunningSuggestionsContainer);
 
-        fetch('/getVehicleRunning', {
+        fetch('/edit_getRunningVehicle', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ classesAllotted, routeStops })
@@ -206,8 +206,71 @@ function filterAndDisplayEditVehicleRunning(query, suggestionsContainer, vehicle
             selectedDriverName = this.dataset.driver; // Store the selected driver name
             suggestionsContainer.innerHTML = '';
             suggestionsContainer.style.display = "none";
+            fetchEditVehicleInfo(this.dataset.value); // Fetch vehicle info when suggestion is selected
         });
     });
+}
+
+// Function to fetch vehicle info for edit student overlay
+function fetchEditVehicleInfo(selectedVehicleNo) {
+    const vehicleInfoContainer = document.getElementById('editVehicleInfo'); // Ensure this is defined
+
+    // Extract additional parameters
+    const route = document.getElementById('editPickDropAddress').value.trim();
+    const standard = document.getElementById('editClass').value.trim();
+    const division = document.getElementById('editDivision').value.trim();
+    const classAllotted = `${standard} ${division}`;
+
+    fetch(`/edit_getVehicleInfo?vehicleNo=${encodeURIComponent(selectedVehicleNo)}&route=${encodeURIComponent(route)}&classAllotted=${encodeURIComponent(classAllotted)}`)
+        .then((response) => response.json())
+        .then((data) => {
+            // Clear any previous data
+            vehicleInfoContainer.innerHTML = '';
+
+            if (data.length > 0) {
+                const vehicleInfo = data[0];
+                vehicleInfoContainer.innerHTML = `
+                    <strong>Vehicle No:</strong> ${vehicleInfo.vehicle_no}<br>
+                    <strong>Driver Name:</strong> ${vehicleInfo.driver_name}<br>
+                    <strong>Conductor Name:</strong> ${vehicleInfo.conductor_name}<br>
+                    <strong>Route Name:</strong> ${vehicleInfo.route_name}<br>
+                    <strong>Route Stops:</strong> ${vehicleInfo.route_stops}<br>
+                    <strong>Shift Name:</strong> ${vehicleInfo.shift_name}<br>
+                    <strong>Classes Allotted:</strong> ${vehicleInfo.classes_alloted}<br>
+                    <strong>Vehicle Capacity:</strong> ${vehicleInfo.vehicle_capacity}<br>
+                    <strong>Available Seats:</strong> ${vehicleInfo.available_seats}<br>
+                    <strong>Students Tagged:</strong> ${vehicleInfo.students_tagged}<br>
+                `;
+                vehicleInfoContainer.style.display = 'block'; // Show the container with data
+                vehicleInfoContainer.style.maxHeight = '200px';
+                vehicleInfoContainer.style.width = '90%';
+            } else {
+                vehicleInfoContainer.innerHTML = 'No vehicle info found';
+                vehicleInfoContainer.style.display = 'block'; // Show the container even if no data is found
+                vehicleInfoContainer.style.maxHeight = '65px';
+                vehicleInfoContainer.style.width = '90%';
+            }
+        })
+        .catch((error) => console.error('Error:', error));
+}
+
+
+// Function to show no results message
+function showNoResults(container) {
+    container.innerHTML = '<div class="no-results">No results found</div>';
+}
+
+// Function to show loading message
+function showLoading(container) {
+    container.innerHTML = '<div class="loading">Loading...</div>';
+}
+
+// Function to check if vehicle is tagged and display the info
+function checkAndDisplayVehicleInfo() {
+    const vehicleRunningInput = document.getElementById('editVehicleTagged');
+    if (vehicleRunningInput.value) {
+        fetchEditVehicleInfo(vehicleRunningInput.value); // Load vehicle info if value is present
+    }
 }
 
 // Initialization of vehicle running suggestion box for edit student overlay
@@ -225,7 +288,13 @@ document.addEventListener("DOMContentLoaded", function() {
             vehicleRunningSuggestionsContainer.style.display = 'none';
         }
     });
+
+    // Call checkAndDisplayVehicleInfo to handle autofilled data
+    checkAndDisplayVehicleInfo();
 });
+
+
+////////////////////// UPDATE BUTTON /////////////////////
 
 // Function to handle the update button click
 function handleUpdateButtonClick() {
@@ -234,12 +303,27 @@ function handleUpdateButtonClick() {
     const standard = document.getElementById('editClass').value.trim();
     const division = document.getElementById('editDivision').value.trim();
     const vehicleTagged = document.getElementById('editVehicleTagged').value.trim();
+    const routeStops = document.getElementById('editPickDropAddress').value.trim();
+    const classesAllotted = `${standard} ${division}`;
 
-    if (!grNo || !studentName || !standard || !division || !vehicleTagged) {
+    if (!grNo || !studentName || !standard || !division || !vehicleTagged || !routeStops) {
         Swal.fire({
             icon: 'warning',
             title: 'Incomplete Information',
             text: 'Please fill in all fields before updating.'
+        });
+        return;
+    }
+
+    // Check if available seats for selected vehicle is 0, don't update
+    const vehicleInfoContainer = document.getElementById('editVehicleInfo');
+    const availableSeats = getAvailableSeatsFromVehicleInfo(vehicleInfoContainer);
+
+    if (availableSeats === 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'No Available Seats',
+            text: 'The selected vehicle has no available seats. Please choose a different vehicle.'
         });
         return;
     }
@@ -249,7 +333,9 @@ function handleUpdateButtonClick() {
         studentName,
         standard,
         division,
-        vehicleTagged
+        vehicleTagged,
+        routeStops,
+        classesAllotted
     };
 
     fetch('/updateStudentTransport', {
@@ -257,33 +343,67 @@ function handleUpdateButtonClick() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
     })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Update Successful',
-                    html: `Transport for student <b>${studentName}</b> updated successfully to <b>${vehicleTagged} | ${selectedDriverName}</b>`
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Update Failed',
-                    text: 'Failed to update transport tagged: ' + data.message
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error updating transport tagged:', error);
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Update Successful',
+                html: `Transport for student <b>${studentName}</b> updated successfully to <b>${vehicleTagged} | ${selectedDriverName}</b>`
+            }).then(() => {
+                // Clear the form and associated data
+                clearForm();
+            });
+        } else {
             Swal.fire({
                 icon: 'error',
-                title: 'An Error Occurred',
-                text: 'An error occurred while updating transport tagged.'
+                title: 'Update Failed',
+                text: 'Failed to update transport tagged: ' + data.message
             });
+        }
+    })
+    .catch(error => {
+        console.error('Error updating transport tagged:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'An Error Occurred',
+            text: 'An error occurred while updating transport tagged.'
         });
+    });
 }
 
-// Add event listener to the update button
+function getAvailableSeatsFromVehicleInfo(vehicleInfoContainer) {
+    const vehicleInfoText = vehicleInfoContainer.textContent;
+    const availableSeatsMatch = vehicleInfoText.match(/Available Seats:\s*(\d+)/);
+    if (availableSeatsMatch) {
+        return parseInt(availableSeatsMatch[1], 10);
+    }
+    return -1; // Return a default value if not found
+}
+
+
+// Function to clear the form and associated data
+function clearForm() {
+    // Clear form inputs
+    document.getElementById('editGrNo').value = '';
+    document.getElementById('editStudentName').value = '';
+    document.getElementById('editClass').value = '';
+    document.getElementById('editDivision').value = '';
+    document.getElementById('editPickDropAddress').value = '';
+    document.getElementById('editVehicleTagged').value = '';
+
+    // Clear search input and suggestions
+    const searchInput = document.getElementById('searchbyNamoeorGr');
+    const searchSuggestionsContainer = document.getElementById('searchsuggestions');
+    searchInput.value = '';
+    searchSuggestionsContainer.innerHTML = '';
+    searchSuggestionsContainer.style.display = 'none';
+
+    // Clear vehicle info
+    document.getElementById('editVehicleInfo').innerHTML = '';
+    document.getElementById('editVehicleInfo').style.display = 'none';
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     const updateButton = document.getElementById('updateStudentButton');
     updateButton.addEventListener('click', handleUpdateButtonClick);
