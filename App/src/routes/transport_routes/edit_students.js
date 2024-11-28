@@ -177,12 +177,6 @@ router.post('/updateStudentTransport', async (req, res) => {
     `;
     const getOldVehicleParams = [grNo, studentName, standard, division, grNo, studentName, standard, division];
 
-    const getVehicleDetailsQuery = `
-        SELECT id, vehicle_no, route_name, shift_name, route_stops, classes_alloted
-        FROM transport_schedule_details
-        WHERE vehicle_no IN (?, ?) AND route_stops LIKE ? AND classes_alloted LIKE ?;
-    `;
-
     try {
         // Retrieve the old vehicle tagged to the student
         const oldVehicleResults = await new Promise((resolve, reject) => {
@@ -194,60 +188,100 @@ router.post('/updateStudentTransport', async (req, res) => {
 
         const oldVehicleNo = oldVehicleResults.length > 0 ? oldVehicleResults[0].vehicle_no : null;
 
-        // Use vehicleNo and additional filters to get both old and new vehicle IDs, route names, and shift names
-        const vehicleDetailsResults = await new Promise((resolve, reject) => {
-            req.connectionPool.query(getVehicleDetailsQuery, [oldVehicleNo, vehicleTagged, `%${routeStops}%`, `%${classesAllotted}%`], (error, results) => {
-                if (error) reject(error);
-                else resolve(results);
-            });
-        });
-
-        let oldVehicle = null;
-        let newVehicle = null;
-
-        vehicleDetailsResults.forEach(vehicle => {
-            if (vehicle.vehicle_no === oldVehicleNo) {
-                oldVehicle = vehicle;
-            } else if (vehicle.vehicle_no === vehicleTagged) {
-                newVehicle = vehicle;
-            }
-        });
-
-        // Handle the students_tagged logic: 0 as NULL and NULL as 0 for maths
-        if (oldVehicle && newVehicle) {
-            const updateSeatsQuery = `
-                UPDATE transport_schedule_details
-                SET available_seats = CASE
-                    WHEN id = ? AND classes_alloted LIKE ? THEN available_seats + 1
-                    WHEN id = ? AND classes_alloted LIKE ? THEN available_seats - 1
-                END,
-                students_tagged = CASE
-                    WHEN id = ? AND classes_alloted LIKE ? THEN
-                        CASE
-                            WHEN students_tagged - 1 = 0 THEN NULL
-                            ELSE students_tagged - 1
-                        END
-                    WHEN id = ? AND classes_alloted LIKE ? THEN
-                        COALESCE(students_tagged, 0) + 1
-                END
-                WHERE (id = ? AND classes_alloted LIKE ?)
-                   OR (id = ? AND classes_alloted LIKE ?)
+        if (oldVehicleNo) {
+            // If there is an old vehicle, perform the necessary updates for both old and new vehicles
+            const getVehicleDetailsQuery = `
+                SELECT id, vehicle_no, route_name, shift_name, route_stops, classes_alloted, available_seats, students_tagged
+                FROM transport_schedule_details
+                WHERE vehicle_no IN (?, ?) AND route_stops LIKE ? AND classes_alloted LIKE ?;
             `;
-            const updateSeatsParams = [
-                oldVehicle.id, oldVehicle.classes_alloted,
-                newVehicle.id, newVehicle.classes_alloted,
-                oldVehicle.id, oldVehicle.classes_alloted,
-                newVehicle.id, newVehicle.classes_alloted,
-                oldVehicle.id, oldVehicle.classes_alloted,
-                newVehicle.id, newVehicle.classes_alloted
-            ];
 
-            await new Promise((resolve, reject) => {
-                req.connectionPool.query(updateSeatsQuery, updateSeatsParams, (error, results) => {
+            const vehicleDetailsResults = await new Promise((resolve, reject) => {
+                req.connectionPool.query(getVehicleDetailsQuery, [oldVehicleNo, vehicleTagged, `%${routeStops}%`, `%${classesAllotted}%`], (error, results) => {
                     if (error) reject(error);
                     else resolve(results);
                 });
             });
+
+            let oldVehicle = null;
+            let newVehicle = null;
+
+            vehicleDetailsResults.forEach(vehicle => {
+                if (vehicle.vehicle_no === oldVehicleNo) {
+                    oldVehicle = vehicle;
+                } else if (vehicle.vehicle_no === vehicleTagged) {
+                    newVehicle = vehicle;
+                }
+            });
+
+            // Handle the students_tagged logic: 0 as NULL and NULL as 0 for maths
+            if (oldVehicle && newVehicle) {
+                const updateSeatsQuery = `
+                    UPDATE transport_schedule_details
+                    SET available_seats = CASE
+                        WHEN id = ? THEN available_seats + 1
+                        WHEN id = ? THEN available_seats - 1
+                    END,
+                    students_tagged = CASE
+                        WHEN id = ? THEN
+                            CASE
+                                WHEN students_tagged - 1 = 0 THEN NULL
+                                ELSE students_tagged - 1
+                            END
+                        WHEN id = ? THEN COALESCE(students_tagged, 0) + 1
+                    END
+                    WHERE id IN (?, ?);
+                `;
+
+                const updateSeatsParams = [
+                    oldVehicle.id,
+                    newVehicle.id,
+                    oldVehicle.id,
+                    newVehicle.id,
+                    oldVehicle.id,
+                    newVehicle.id
+                ];
+
+                await new Promise((resolve, reject) => {
+                    req.connectionPool.query(updateSeatsQuery, updateSeatsParams, (error, results) => {
+                        if (error) reject(error);
+                        else resolve(results);
+                    });
+                });
+            }
+        } else {
+            // If there is no old vehicle, just update the new vehicle's seats and students tagged
+            const getNewVehicleDetailsQuery = `
+                SELECT id, available_seats, students_tagged
+                FROM transport_schedule_details
+                WHERE vehicle_no = ? AND route_stops LIKE ? AND classes_alloted LIKE ?;
+            `;
+
+            const newVehicleResults = await new Promise((resolve, reject) => {
+                req.connectionPool.query(getNewVehicleDetailsQuery, [vehicleTagged, `%${routeStops}%`, `%${classesAllotted}%`], (error, results) => {
+                    if (error) reject(error);
+                    else resolve(results);
+                });
+            });
+
+            if (newVehicleResults.length > 0) {
+                const newVehicle = newVehicleResults[0];
+
+                const updateNewVehicleQuery = `
+                    UPDATE transport_schedule_details
+                    SET available_seats = available_seats - 1,
+                    students_tagged = COALESCE(students_tagged, 0) + 1
+                    WHERE id = ?;
+                `;
+                const updateNewVehicleParams = [newVehicle.id];
+
+                await new Promise((resolve, reject) => {
+                    req.connectionPool.query(updateNewVehicleQuery, updateNewVehicleParams, (error, results) => {
+                        if (error) reject(error);
+                        else resolve(results);
+                    });
+                });
+            }
         }
 
         // Update transport_tagged field for the student in primary and pre-primary tables
