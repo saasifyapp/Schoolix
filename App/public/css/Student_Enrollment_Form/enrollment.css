@@ -264,3 +264,59 @@ h3{
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     /* Stronger shadow on hover */
 }
+
+
+.styled-table {
+    border-collapse: collapse;
+    /* Ensure that the border radius is applied properly */
+    width: 100%;
+    box-shadow: 0 0 0 1px #dddddd;
+    margin: auto;
+    animation: fadeUp 0.5s ease-in-out;
+    animation-delay: 0.4s;
+    /* Delay to start after overlay animation */
+    animation-fill-mode: backwards;
+}
+
+.styled-table th,
+.styled-table td {
+    border: 1px solid #dddddd;
+    text-align: center;
+    padding: 0.5rem;
+    box-sizing: border-box;
+}
+
+.styled-table th {
+    background-color: lightblue;
+    color: black;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.styled-table td {
+    border: 1px solid #dddddd;
+    padding: 0px;
+    text-align: center;
+    height: 50px;
+    /* Fixed height */
+    overflow: hidden;
+    /* Hide content that overflows */
+}
+
+.styled-table td button {
+    max-height: 100%;
+}
+
+
+.styled-table tr {
+    background-color: #fff;
+}
+
+.styled-table tr:hover {
+    background-color: #D6DBDF;
+}
+
+.styled-table tr td {
+    transition: background-color 0.3s ease;
+}

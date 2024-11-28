@@ -436,22 +436,27 @@
                             <input type="text" class="form-control" id="feeDivision" placeholder=" " readonly>
                             <span class="form-control-placeholder">Division</span>
                         </div>
+
+                        <div class="form-row">
+                            <button type="button" class="btn generate-package-button" id="generatePackageBtn">Generate Package</button>
+                        </div>
+                        
                     </div>
+
                     <div class="form-row">
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="feeCategory" placeholder=" ">
-                            <span class="form-control-placeholder">Fee Category</span>
-                            <div id="feeCategorySuggestions" class="suggestions"></div>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="packageAllotted" placeholder=" " readonly>
-                            <span class="form-control-placeholder">Package Allotted</span>
-
-                            <button type="button" class="btn prev-button" id="addPackageBtn"
-                                style="margin-left: 10px;">Add Package</button>
-
-                        </div>
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Fee Category</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="feeCategoryAmountTable">
+                                <!-- Rows will be inserted here -->
+                            </tbody>
+                        </table>
                     </div>
+                   
                 </div>
                 <div class="form-navigation-buttons">
                     <button type="button" class="btn prev-button" id="fees-prev">Previous</button>

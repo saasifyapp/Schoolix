@@ -1366,24 +1366,37 @@ function handleSectionInputChange() {
     const grNoInput = document.getElementById('grNo');
     const standardInput = document.getElementById('standard');
     const divisionInput = document.getElementById('division');
-    const feeCategoryInput = document.getElementById('feeCategory'); // New field to clear
+    const divisionSuggestionsContainer = document.getElementById('divisionSuggestions');
 
     if (!sectionInput.value) {
         grNoInput.value = '';
         standardInput.value = '';
         divisionInput.value = '';
-        feeCategoryInput.value = ''; // Clear fee category input
+        divisionSuggestionsContainer.innerHTML = '';
+        divisionSuggestionsContainer.style.display = 'none';
     }
+
+    standardsFetched = false;
+    standardsCache = [];
+    divisionsFetched = false;
+    divisionsCache = [];
 }
 
-// Function to clear standard, division, and fee category fields
+// Function to clear standard and division fields
 function clearStandardAndDivision() {
     const standardInput = document.getElementById('standard');
     const divisionInput = document.getElementById('division');
-    const feeCategoryInput = document.getElementById('feeCategory'); // New field to clear
+    const divisionSuggestionsContainer = document.getElementById('divisionSuggestions');
+
     standardInput.value = '';
     divisionInput.value = '';
-    feeCategoryInput.value = ''; // Clear fee category input
+    divisionSuggestionsContainer.innerHTML = '';
+    divisionSuggestionsContainer.style.display = 'none';
+
+    standardsFetched = false;
+    standardsCache = [];
+    divisionsFetched = false;
+    divisionsCache = [];
 }
 
 // Initialization of section suggestion box
@@ -1428,7 +1441,6 @@ function fetchNextGrno(sectionValue) {
 }
 
 /////////////////////// SET ADMISSION DATE ///////////
-
 
 // Function to set today's date as the default value for the admission date input
 function setAdmissionDate() {
@@ -1524,9 +1536,14 @@ function filterAndDisplayStandards(query, suggestionsContainer) {
 
 function clearDivision() {
     const divisionInput = document.getElementById('division');
-    const feeCategoryInput = document.getElementById('feeCategory');
+    const divisionSuggestionsContainer = document.getElementById('divisionSuggestions');
+
     divisionInput.value = '';
-    feeCategoryInput.value = '';
+    divisionSuggestionsContainer.innerHTML = '';
+    divisionSuggestionsContainer.style.display = 'none';
+
+    divisionsFetched = false;
+    divisionsCache = [];
 }
 
 // Initialization of standard suggestion box
@@ -1550,12 +1567,16 @@ document.addEventListener("DOMContentLoaded", function () {
 function handleStandardInputChange() {
     const standardInput = document.getElementById('standard');
     const divisionInput = document.getElementById('division');
-    const feeCategoryInput = document.getElementById('feeCategory');
+    const divisionSuggestionsContainer = document.getElementById('divisionSuggestions');
 
     if (!standardInput.value) {
         divisionInput.value = '';
-        feeCategoryInput.value = '';
+        divisionSuggestionsContainer.innerHTML = '';
+        divisionSuggestionsContainer.style.display = 'none';
     }
+
+    divisionsFetched = false;
+    divisionsCache = [];
 }
 
 //////////////////// DIVISION SUGGESTION //////////
@@ -1650,7 +1671,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
 ////////////////////////////// CLASS COMPLETED SUGGESTION //////////////////
 
 // Cache for classes
@@ -1741,128 +1761,102 @@ document.addEventListener("DOMContentLoaded", function () {
 ////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////// FEES AND PACKAGES ///////////////////
-/////////////// FEE CATEGORY SUGGESTIONS /////////////////
 
-// Cache for fee categories
-let feeCategoriesFetched = false;
-let feeCategoriesCache = [];
 
-// Function to display fee category suggestions
-function displayFeeCategorySuggestions() {
-    const feeCategoryInput = document.getElementById('feeCategory');
-    const feeCategorySuggestionsContainer = document.getElementById('feeCategorySuggestions');
-    const standardInput = document.getElementById('standard').value.trim();
-
-    // Clear package allotted when fee category is empty or changed
-    clearPackageAllotted();
-
-    // Show suggestion box
-    feeCategorySuggestionsContainer.style.display = "block";
-    const query = feeCategoryInput.value.toLowerCase().trim();
-    feeCategorySuggestionsContainer.innerHTML = '';
-
-    if (!standardInput) {
-        feeCategorySuggestionsContainer.innerHTML = '<div class="suggestion-item no-results">Please fill academic information</div>';
-        return;
-    }
-
-    if (!feeCategoriesFetched) {
-        showLoading(feeCategorySuggestionsContainer);
-
-        fetch(`/getFeeCategory?standard=${standardInput}`)
-            .then(response => response.json())
-            .then(data => {
-                feeCategoriesCache = data.categories;
-                feeCategoriesFetched = true;
-                filterAndDisplayFeeCategories(query, feeCategorySuggestionsContainer, feeCategoryInput);
-            })
-            .catch(error => console.error('Error fetching fee categories:', error));
-    } else {
-        filterAndDisplayFeeCategories(query, feeCategorySuggestionsContainer, feeCategoryInput);
-    }
-}
-
-// Function to filter and display fee categories
-function filterAndDisplayFeeCategories(query, suggestionsContainer, feeCategoryInput) {
-    const uniqueCategories = new Set();
-    const filteredCategories = feeCategoriesCache.filter(category => {
-        const normalizedCategory = category.toLowerCase();
-        if (normalizedCategory.startsWith(query) && !uniqueCategories.has(normalizedCategory)) {
-            uniqueCategories.add(normalizedCategory);
-            return true;
-        }
-        return false;
-    });
-
-    suggestionsContainer.innerHTML = '';
-
-    if (filteredCategories.length > 0) {
-        filteredCategories.forEach(category => {
-            const suggestionItem = document.createElement('div');
-            suggestionItem.classList.add('suggestion-item');
-            suggestionItem.textContent = category;
-            suggestionItem.dataset.value = category;
-            suggestionsContainer.appendChild(suggestionItem);
-        });
-    } else {
-        showNoResults(suggestionsContainer);
-    }
-
-    // Add event listeners for selection
-    suggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
-        item.addEventListener('click', function () {
-            feeCategoryInput.value = this.dataset.value;
-            suggestionsContainer.innerHTML = '';
-            suggestionsContainer.style.display = "none";
-
-            // Fetch and set the amount in packageAllotted field based on fee category and standard
-            fetchAmount(feeCategoryInput.value, document.getElementById('standard').value.trim());
-        });
-    });
-}
-
-// Function to fetch and set amount in packageAllotted field
-function fetchAmount(categoryName, classGrade) {
-    fetch(`/getAmount?category_name=${categoryName}&class_grade=${classGrade}`)
+// Function to fetch and populate the Fee Category Amount Table
+function fetchAndPopulateFeeCategoryAmountTable(standard) {
+    fetch(`/getFeeCategoriesAndAmounts?standard=${standard}`)
         .then(response => response.json())
         .then(data => {
-            const packageAllottedInput = document.getElementById('packageAllotted');
-            if (data.amount) {
-                packageAllottedInput.value = data.amount;
+            const tableBody = document.getElementById('feeCategoryAmountTable');
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            let totalAmount = 0;
+
+            if (data.categoriesAndAmounts.length > 0) {
+                data.categoriesAndAmounts.forEach(item => {
+                    const row = document.createElement('tr');
+
+                    const categoryCell = document.createElement('td');
+                    categoryCell.textContent = item.category_name;
+                    row.appendChild(categoryCell);
+
+                    const amountCell = document.createElement('td');
+                    amountCell.textContent = item.amount;
+                    row.appendChild(amountCell);
+
+                    tableBody.appendChild(row);
+
+                    totalAmount += parseFloat(item.amount) || 0; // Sum the amounts
+                });
+
+                // Add the total row
+                const totalRow = document.createElement('tr');
+
+                const totalLabelCell = document.createElement('td');
+                totalLabelCell.textContent = 'Total Package';
+                totalLabelCell.style.fontWeight = 'bold';
+                totalRow.appendChild(totalLabelCell);
+
+                const totalAmountCell = document.createElement('td');
+                totalAmountCell.textContent = totalAmount.toFixed(2); // Display total amount
+                totalAmountCell.style.fontWeight = 'bold';
+                totalRow.appendChild(totalAmountCell);
+
+                tableBody.appendChild(totalRow);
             } else {
-                packageAllottedInput.value = 'Amount not found';
+                const row = document.createElement('tr');
+                const noDataCell = document.createElement('td');
+                noDataCell.textContent = 'No fee categories found';
+                noDataCell.colSpan = 2;
+                row.appendChild(noDataCell);
+                tableBody.appendChild(row);
             }
         })
-        .catch(error => console.error('Error fetching amount:', error));
+        .catch(error => console.error('Error fetching fee categories and amounts:', error));
 }
 
-// Function to clear the package allotted field
-function clearPackageAllotted() {
-    const packageAllottedInput = document.getElementById('packageAllotted');
-    packageAllottedInput.value = '';
+// Function to clear the Fee Category Amount Table
+function clearFeeCategoryAmountTable() {
+    const tableBody = document.getElementById('feeCategoryAmountTable');
+    tableBody.innerHTML = ''; // Clear existing rows
 }
 
-// Initialization of fee category suggestion box
-document.addEventListener("DOMContentLoaded", function () {
-    const feeCategoryInput = document.getElementById('feeCategory');
-    const feeCategorySuggestionsContainer = document.getElementById('feeCategorySuggestions');
+// Function to observe changes in the read-only fields
+function observeReadOnlyFields() {
+    const feeSectionInput = document.getElementById('feeSection');
+    const feeStandardInput = document.getElementById('feeStandard');
+    const feeDivisionInput = document.getElementById('feeDivision');
 
-    // Add event listeners for input, focus, and click events
-    feeCategoryInput.addEventListener('input', function () {
-        displayFeeCategorySuggestions();
-    });
-    feeCategoryInput.addEventListener('focus', displayFeeCategorySuggestions);
-    feeCategoryInput.addEventListener('click', displayFeeCategorySuggestions);
+    const observerConfig = { attributes: true, attributeFilter: ['value'] };
 
-    document.addEventListener('click', function (event) {
-        if (!feeCategorySuggestionsContainer.contains(event.target) && !feeCategoryInput.contains(event.target)) {
-            feeCategorySuggestionsContainer.style.display = "none";
-        }
+    const observer = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'value') {
+                clearFeeCategoryAmountTable();
+            }
+        });
     });
+
+    observer.observe(feeSectionInput, observerConfig);
+    observer.observe(feeStandardInput, observerConfig);
+    observer.observe(feeDivisionInput, observerConfig);
+}
+
+// Event listener for the "Generate Package" button
+document.getElementById('generatePackageBtn').addEventListener('click', function () {
+    const feeStandard = document.getElementById('feeStandard').value.trim();
+    if (feeStandard) {
+        fetchAndPopulateFeeCategoryAmountTable(feeStandard);
+    } else {
+        console.error('feeStandard is empty, cannot call API');
+    }
 });
 
-/////////////////// FEES TABLE (Pending) ///////////////////////
-
+// Initialize MutationObserver on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function () {
+    observeReadOnlyFields();
+});
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
