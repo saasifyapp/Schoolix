@@ -150,6 +150,34 @@ router.get('/student_counts', (req, res) => {
 router.get('/create_tables', async (req, res) => {
     const tableQueries = [
         {
+            query: `CREATE TABLE IF NOT EXISTS pre_adm_teacher_details (
+                teacher_name VARCHAR(25) NOT NULL,
+                mobile_no VARCHAR(10) NOT NULL,
+                res_address VARCHAR(30) NOT NULL,
+                dob VARCHAR(10) NOT NULL,
+                qualification VARCHAR(30) NOT NULL,
+                experience VARCHAR(30) NOT NULL,
+                references VARCHAR(50) DEFAULT NULL,
+                registration_date VARCHAR(10) DEFAULT NULL,
+                admission_date VARCHAR(10) DEFAULT NULL,
+                type ENUM('registered', 'admitted') DEFAULT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`
+        },
+        {
+            query: `CREATE TABLE IF NOT EXISTS pre_adm_student_details (
+                student_name VARCHAR(50) NOT NULL,
+                mobile_no VARCHAR(10) NOT NULL,
+                res_address VARCHAR(50) NOT NULL,
+                dob VARCHAR(10) NOT NULL,
+                standard VARCHAR(20) DEFAULT NULL,
+                references VARCHAR(50) DEFAULT NULL,
+                registration_date VARCHAR(10) DEFAULT NULL,
+                admission_date VARCHAR(10) DEFAULT NULL,
+                type ENUM('registered', 'admitted') DEFAULT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`
+        },
+        { 
+            
             query: `CREATE TABLE IF NOT EXISTS inventory_book_details (
                 sr_no INT(11) NOT NULL AUTO_INCREMENT,
                 title VARCHAR(35) DEFAULT NULL,

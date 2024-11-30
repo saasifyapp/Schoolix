@@ -458,15 +458,15 @@ const submitStudentRouter = require('./src/routes/pre_admission_console_routes/s
 app.use('/', submitStudentRouter);
 
 // Import the router for displaying student data
-const displayStudentRouter = require('./src/routes/pre_admission_console_routes/display_students');
-// Mount the student display router to the root path
-app.use('/', displayStudentRouter);
+// const displayStudentRouter = require('./src/routes/pre_admission_console_routes/display_students');
+// // Mount the student display router to the root path
+// app.use('/', displayStudentRouter);
 
-////////// ADMITTED STUDENTS
-// Import the router for displaying admitted students
-const displayadmStudentRouter = require('./src/routes/pre_admission_console_routes/admitted_student');
-// Mount the admitted student display router to the root path
-app.use('/', displayadmStudentRouter);
+// ////////// ADMITTED STUDENTS
+// // Import the router for displaying admitted students
+// const displayadmStudentRouter = require('./src/routes/pre_admission_console_routes/admitted_student');
+// // Mount the admitted student display router to the root path
+// app.use('/', displayadmStudentRouter);
 
 //////////////////////// TEACHER CONSOLE////////////////////////////////
 // Import the router for handling teacher details submission
@@ -474,16 +474,16 @@ const submitTeacherRouter = require('./src/routes/pre_admission_console_routes/t
 // Mount the teacher details submission router to the root path
 app.use('/', submitTeacherRouter);
 
-// Import the router for displaying teacher data
-const displayTeacherRouter = require('./src/routes/pre_admission_console_routes/display_teacher');
-// Mount the teacher display router to the root path
-app.use('/', displayTeacherRouter);
+// // Import the router for displaying teacher data
+// const displayTeacherRouter = require('./src/routes/pre_admission_console_routes/display_teacher');
+// // Mount the teacher display router to the root path
+// app.use('/', displayTeacherRouter);
 
-////////// ADMITTED TEACHERS
-// Import the router for displaying admitted teachers
-const displayadmTeacherRouter = require('./src/routes/pre_admission_console_routes/admitted_teacher');
-// Mount the admitted teacher display router to the root path
-app.use('/', displayadmTeacherRouter);
+// ////////// ADMITTED TEACHERS
+// // Import the router for displaying admitted teachers
+// const displayadmTeacherRouter = require('./src/routes/pre_admission_console_routes/admitted_teacher');
+// // Mount the admitted teacher display router to the root path
+// app.use('/', displayadmTeacherRouter);
 
 
 /////////////////////// ROUTES FOR INVENTORY MODULE ///////////////////////////////////////
