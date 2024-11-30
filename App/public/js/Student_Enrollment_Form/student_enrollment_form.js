@@ -23,10 +23,11 @@ document.querySelectorAll('.form-navigation li').forEach(item => {
     });
 });
 
+
 // Add event listeners for navigation buttons
 document.querySelectorAll('.form-section').forEach((section, index, sections) => {
     const prevButton = section.querySelector('.prev-button');
-    const nextButton = section.querySelector('.next-button');
+    // const nextButton = section.querySelector('.next-button');
 
     // Show the previous section
     if (prevButton) {
@@ -46,23 +47,23 @@ document.querySelectorAll('.form-section').forEach((section, index, sections) =>
         });
     }
 
-    // Show the next section
-    if (nextButton) {
-        nextButton.addEventListener('click', () => {
-            if (index < sections.length - 1) {
-                sections[index].style.display = 'none'; // Hide current section
-                sections[index + 1].style.display = 'block'; // Show next section
+    // // Show the next section
+    // if (nextButton) {
+    //     nextButton.addEventListener('click', () => {
+    //         if (index < sections.length - 1) {
+    //             // sections[index].style.display = 'none'; // Hide current section
+    //             // sections[index + 1].style.display = 'block'; // Show next section
 
-                // Update active navigation item
-                document.querySelectorAll('.form-navigation li').forEach(nav => {
-                    nav.classList.remove('active'); // Remove active class from all items
-                });
-                document
-                    .querySelectorAll('.form-navigation li')
-                [index + 1].classList.add('active'); // Set active class to the next item
-            }
-        });
-    }
+    //             // Update active navigation item
+    //             document.querySelectorAll('.form-navigation li').forEach(nav => {
+    //                 nav.classList.remove('active'); // Remove active class from all items
+    //             });
+    //             document
+    //                 .querySelectorAll('.form-navigation li')
+    //             [index + 1].classList.add('active'); // Set active class to the next item
+    //         }
+    //     });
+    // }
 });
 
 
@@ -104,35 +105,35 @@ document.querySelectorAll('.form-control, textarea').forEach(input => {
 updateProgressBar();
 
 
-// Function to check if all fields in a section are filled
-function checkSectionCompletion(sectionId) {
-    const section = document.getElementById(sectionId);
-    const inputs = section.querySelectorAll('.form-control, textarea'); // Select all input and textarea fields
-    return Array.from(inputs).every(input => input.value.trim() !== ""); // Check if all inputs are filled
-}
+    // Function to check if all fields in a section are filled
+    function checkSectionCompletion(sectionId) {
+        const section = document.getElementById(sectionId);
+        const inputs = section.querySelectorAll('.form-control, textarea'); // Select all input and textarea fields
+        return Array.from(inputs).every(input => input.value.trim() !== ""); // Check if all inputs are filled
+    }
 
-// Function to update the done icon for navigation items
-function updateDoneIcons() {
-    document.querySelectorAll('.form-navigation li').forEach(item => {
-        const sectionId = item.id.replace('-info', '-information'); // Map navigation ID to section ID
-        const isComplete = checkSectionCompletion(sectionId); // Check if the section is complete
-        const doneIcon = item.querySelector('.done-icon'); // Get the done icon for the current item
+    // Function to update the done icon for navigation items
+    function updateDoneIcons() {
+        document.querySelectorAll('.form-navigation li').forEach(item => {
+            const sectionId = item.id.replace('-info', '-information'); // Map navigation ID to section ID
+            const isComplete = checkSectionCompletion(sectionId); // Check if the section is complete
+            const doneIcon = item.querySelector('.done-icon'); // Get the done icon for the current item
 
-        if (isComplete) {
-            doneIcon.style.display = 'inline'; // Show the done icon if the section is complete
-        } else {
-            doneIcon.style.display = 'none'; // Hide the done icon if the section is incomplete
-        }
+            if (isComplete) {
+                doneIcon.style.display = 'inline'; // Show the done icon if the section is complete
+            } else {
+                doneIcon.style.display = 'none'; // Hide the done icon if the section is incomplete
+            }
+        });
+    }
+
+    // Add event listeners to all inputs to update the icons dynamically
+    document.querySelectorAll('.form-control, textarea').forEach(input => {
+        input.addEventListener('input', updateDoneIcons);
     });
-}
 
-// Add event listeners to all inputs to update the icons dynamically
-document.querySelectorAll('.form-control, textarea').forEach(input => {
-    input.addEventListener('input', updateDoneIcons);
-});
-
-// Initialize done icons on page load
-updateDoneIcons();
+    // Initialize done icons on page load
+    updateDoneIcons();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1847,7 +1848,33 @@ function observeReadOnlyFields() {
 document.getElementById('generatePackageBtn').addEventListener('click', function () {
     const feeStandard = document.getElementById('feeStandard').value.trim();
     if (feeStandard) {
+        // Assuming fetchAndPopulateFeeCategoryAmountTable is a function that fetches fee details
         fetchAndPopulateFeeCategoryAmountTable(feeStandard);
+
+        // Ensure feeCategory and packageAllotted are added only in the Fee Details section
+        setTimeout(() => {
+            // Get the Fee Details section specifically
+            const feeDetailsSection = document.querySelector('.input-container h3:contains("Fee Details")').parentElement;
+            const feeCategoryInputExists = feeDetailsSection.querySelector('#feeCategory');
+            const packageAllottedInputExists = feeDetailsSection.querySelector('#packageAllotted');
+            
+            // Only create the input fields if they don't already exist in the Fee Details section
+            if (!feeCategoryInputExists) {
+                const feeCategoryInput = document.createElement('input');
+                feeCategoryInput.id = 'feeCategory';
+                feeCategoryInput.className = 'form-control';
+                feeCategoryInput.placeholder = "Fee Category";
+                feeDetailsSection.appendChild(feeCategoryInput);
+            }
+
+            if (!packageAllottedInputExists) {
+                const packageAllottedInput = document.createElement('input');
+                packageAllottedInput.id = 'packageAllotted';
+                packageAllottedInput.className = 'form-control';
+                packageAllottedInput.placeholder = "Package Allotted";
+                feeDetailsSection.appendChild(packageAllottedInput);
+            }
+        }, 500);  // Delay to ensure the table is populated before adding fields
     } else {
         console.error('feeStandard is empty, cannot call API');
     }

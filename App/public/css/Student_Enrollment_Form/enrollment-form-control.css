@@ -443,3 +443,47 @@ input[type="checkbox"]:focus {
     color: #333;
 }
 
+/* Table Styles */
+#feeDetailsTable {
+    width: 100%;
+    border-collapse: collapse; /* Collapses borders for a cleaner look */
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+#feeDetailsTable th, #feeDetailsTable td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #ddd; /* Adds a border around each cell */
+}
+
+#feeDetailsTable th {
+    background-color: #f4f4f4; /* Light gray background for headers */
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#feeDetailsTable td {
+    font-size: 14px;
+    color: #555;
+}
+
+#feeDetailsTable tr:nth-child(even) {
+    background-color: #f9f9f9; /* Adds alternating row colors */
+}
+
+#feeDetailsTable tr:hover {
+    background-color: #f1f1f1; /* Highlight row on hover */
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+    #feeDetailsTable th, #feeDetailsTable td {
+        padding: 8px 10px; /* Adjust padding for smaller screens */
+    }
+
+    .review-item {
+        font-size: 14px; /* Smaller font size on smaller screens */
+    }
+}

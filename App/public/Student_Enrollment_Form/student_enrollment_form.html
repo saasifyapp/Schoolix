@@ -604,13 +604,24 @@
                         <!-- Fees Information -->
                         <div class="review-section">
                             <h3>Fees Information</h3>
-                            <div class="review-item"><span>Fee Section:</span> <span id="review-feeSection"></span>
-                            </div>
-                            <div class="review-item"><span>Fee Standard:</span> <span id="review-feeStandard"></span>
-                            </div>
-                            <div class="review-item"><span>Package Allotted:</span> <span id="review-package"></span>
-                            </div>
+                            <div class="review-item"><span>Fee Section:</span> <span id="review-feeSection"></span></div>
+                            <div class="review-item"><span>Fee Standard:</span> <span id="review-feeStandard"></span></div>
+                            <div class="review-item"><span>Package Allotted:</span> <span id="review-package"></span></div>
+                            
+                            <!-- Fee Details Table -->
+                            <table id="feeDetailsTable" class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Fee Category</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="feeDetailsTableBody">
+                                    <!-- Rows will be dynamically added here -->
+                                </tbody>
+                            </table>
                         </div>
+                        
 
                         <div class="review-section">
                             <h3>Consent</h3>
