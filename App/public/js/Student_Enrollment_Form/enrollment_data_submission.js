@@ -267,7 +267,7 @@ document.getElementById('guardian-next').addEventListener('click', function () {
         { id: 'fatherOccupation', label: "Father's Occupation" },
         { id: 'motherFirstName', label: "Mother's First Name" },
         { id: 'motherLastName', label: "Mother's Last Name" },
-        { id: 'motherContactNumber', label: "Mother's Contact Number" },
+        //{ id: 'motherContactNumber', label: "Mother's Contact Number" },
         { id: 'motherQualification', label: "Mother's Qualification" },
         { id: 'motherOccupation', label: "Mother's Occupation" },
     ];
