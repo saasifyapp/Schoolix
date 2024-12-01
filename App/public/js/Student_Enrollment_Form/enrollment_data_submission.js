@@ -175,7 +175,7 @@ document.getElementById('student-next').addEventListener('click', function () {
         { id: 'age', label: 'Age' },
         { id: 'gender', label: 'Gender' },
         { id: 'bloodGroup', label: 'Blood Group' },
-        { id: 'studentContact', label: 'Student Contact No' },
+        //{ id: 'studentContact', label: 'Student Contact No' },
         { id: 'city_village', label: 'City/Village' },
         { id: 'taluka', label: 'Taluka' },
         { id: 'district', label: 'District' },
