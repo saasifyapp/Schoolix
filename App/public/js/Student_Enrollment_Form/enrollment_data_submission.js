@@ -39,7 +39,7 @@ function collectStudentInformation() {
         aadharNo: document.getElementById('aadhaar').value.trim(),
         documents: selectedDocumentsString // Use the comma-separated string of selected documents
     };
-   // console.log('Collected student information:', formData);  // Debugging log
+    // console.log('Collected student information:', formData);  // Debugging log
     //return formData;
 }
 
@@ -85,10 +85,12 @@ function collectAcademicInformation() {
         division: document.getElementById('division').value.trim(),
         lastSchoolAttended: document.getElementById('lastSchoolAttended').value.trim(),
         classCompleted: document.getElementById('classCompleted').value.trim(),
-        percentage: document.getElementById('percentage').value.trim()
+        percentage: document.getElementById('percentage').value.trim(),
+        newAdmission: document.getElementById('newAdmission').checked // Capture checkbox status
     };
     //console.log('Collected academic information:', formData);  // Debugging log
 }
+
 
 // Function to collect data from the Fees and Packages section
 // function collectFeesInformation() {
@@ -511,6 +513,7 @@ document.getElementById('fees-next').addEventListener('click', function () {
 document.getElementById('transport-next').addEventListener('click', function () {
     let isFormValid = true; // Validation flag
     let missingFields = []; // Array to store missing fields
+    let errorMessage = ''; // String to hold the error message
 
     // Validate if Transport Needed is selected
     const transportNeeded = document.querySelector('input[name="transportNeeded"]:checked');
@@ -520,7 +523,7 @@ document.getElementById('transport-next').addEventListener('click', function () 
     }
 
     // If 'Yes' is selected for Transport Needed, check required fields
-    if (transportNeeded && transportNeeded.value === 'yes') {
+    if (transportNeeded && transportNeeded.value === 'Yes') {
         // Required fields for transport services section
         const transportFields = [
             { id: 'transportStandard', label: 'Standard' },
@@ -538,23 +541,50 @@ document.getElementById('transport-next').addEventListener('click', function () 
             }
         });
 
-        // Additional check for no vehicle found
+        // Validation for transport information
         const noVehicleFound = document.getElementById('noVehicleFound').checked;
-        if (noVehicleFound && !document.getElementById('vehicleRunning').value.trim()) {
-            missingFields.push('Vehicle Running (If no vehicle found, it should be specified)');
-            isFormValid = false; // Mark form as invalid
+        const vehicleRunningField = document.getElementById('vehicleRunning');
+        const vehicleRunning = vehicleRunningField.value.trim();
+
+        if (noVehicleFound) {
+            // If "No Vehicle Found" is checked, ensure "Vehicle Running" is empty
+            if (vehicleRunning !== "") {
+                // Clear the vehicle running field if it's not empty
+                vehicleRunningField.value = "";
+                console.log("Vehicle Running field cleared as 'No Vehicle Found' is checked.");
+            }
+            // Skip further validation for "Vehicle Running"
+            isFormValid = true;
+        } else {
+            // If "No Vehicle Found" is not checked, validate "Vehicle Running"
+            if (!vehicleRunning) {
+                missingFields.push('Vehicle Running (Specify if no vehicle is found)');
+                isFormValid = false; // Mark form as invalid
+            }
         }
+
+
     }
 
-    // If the form is invalid, show an alert with the missing fields
-    if (!isFormValid) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Incomplete Form',
-            html: `<p>The following fields are required:</p><ul>${missingFields.map(field => `<li>${field}</li>`).join('')}</ul>`,
-        });
-        return; // Stop execution if form is invalid
+   // If the form is invalid, show an alert with the missing fields
+   if (!isFormValid) {
+    let errorContent = '';
+
+    if (errorMessage) {
+        errorContent = `<p>${errorMessage}</p>`;
     }
+
+    if (missingFields.length > 0) {
+        errorContent += `<p>The following fields are required:</p><ul>${missingFields.map(field => `<li>${field}</li>`).join('')}</ul>`;
+    }
+
+    Swal.fire({
+        icon: 'error',
+        title: 'Incomplete Form',
+        html: errorContent,
+    });
+    return; // Stop execution if form is invalid
+}
 
     // If form is valid, proceed to the next section
     if (isFormValid) {
@@ -621,14 +651,106 @@ function prefillTransportDetails() {
     document.getElementById('transportDivision').value = division || "";
 }
 
+// function populateReviewValues() {
+//     // Helper function to set values or defaults
+//     function setField(id, value) {
+//         document.getElementById(id).textContent = value || "Not Provided";
+//     }
+
+//     // Student Information
+//     const studentInfo = formData.studentInformation;
+//     setField("review-fullName", studentInfo.fullName);
+//     setField("review-dob", studentInfo.dob);
+//     setField("review-placeOfBirth", studentInfo.placeOfBirth);
+//     setField("review-age", studentInfo.age);
+//     setField("review-gender", studentInfo.gender);
+//     setField("review-bloodGroup", studentInfo.bloodGroup);
+//     setField("review-studentContact", studentInfo.studentContact);
+
+//     const address = `${studentInfo.currentAddress.cityVillage || ""}, ${studentInfo.currentAddress.taluka || ""}, ${studentInfo.currentAddress.district || ""}, ${studentInfo.currentAddress.state || ""} - ${studentInfo.currentAddress.pinCode || ""}`;
+//     setField("review-address", address);
+
+//     setField("review-nationality", studentInfo.nationality);
+//     setField("review-religion", studentInfo.religion);
+//     setField("review-category", studentInfo.category);
+//     setField("review-caste", studentInfo.caste);
+//     setField("review-domicile", studentInfo.domicile);
+//     setField("review-motherTongue", studentInfo.motherTongue);
+//     setField("review-aadharNo", studentInfo.aadharNo);
+//     setField("review-documents", studentInfo.documents);
+
+//     // Guardian Information
+//     const guardianInfo = formData.guardianInformation;
+//     setField("review-fatherName", guardianInfo.father.fullName || "Not Provided");
+//     setField("review-motherName", guardianInfo.mother.fullName || "Not Provided");
+
+//     const localGuardian = guardianInfo.localGuardian.name
+//         ? guardianInfo.localGuardian.name
+//         : "NO";
+//     setField("review-localGuardian", localGuardian);
+
+//     // Academic Information
+//     const academicInfo = formData.academicInformation;
+//     setField("review-section", academicInfo.section);
+//     setField("review-standard", academicInfo.standard);
+//     setField("review-division", academicInfo.division);
+//     setField("review-lastSchool", academicInfo.lastSchoolAttended);
+//     setField("review-percentage", academicInfo.percentage);
+
+//     // Fees Information
+//     const feesInfo = formData.feesInformation;
+//     setField("review-feeSection", feesInfo.feeSection);
+//     setField("review-feeStandard", feesInfo.feeStandard);
+//     // setField("review-package", feesInfo.packageAllotted);
+
+//     // Populate Fee Details Table
+//     const feeDetailsTable = document.getElementById("feeDetailsTableBody");
+//     feeDetailsTable.innerHTML = ""; // Clear existing rows
+
+//     if (feesInfo.feeDetails.length > 0) {
+//         feesInfo.feeDetails.forEach(detail => {
+//             const row = document.createElement("tr");
+//             row.innerHTML = `
+//                 <td>${detail.categoryName}</td>
+//                 <td>${detail.amount.toFixed(2)}</td>
+//             `;
+//             feeDetailsTable.appendChild(row);
+//         });
+
+//         // Add Total Package Amount
+//         const totalRow = document.createElement("tr");
+//         totalRow.innerHTML = `
+//             <td><strong>Total</strong></td>
+//             <td><strong>${feesInfo.totalPackageAmount.toFixed(2)}</strong></td>
+//         `;
+//         feeDetailsTable.appendChild(totalRow);
+//     } else {
+//         // If no fee details are available
+//         const emptyRow = document.createElement("tr");
+//         emptyRow.innerHTML = `<td colspan="2">No Fee Details Available</td>`;
+//         feeDetailsTable.appendChild(emptyRow);
+//     }
+// }
+
 function populateReviewValues() {
     // Helper function to set values or defaults
     function setField(id, value) {
-        document.getElementById(id).textContent = value || "Not Provided";
+        const element = document.getElementById(id);
+        if (element) {
+            const displayValue = value === null || value === undefined || value.trim() === "" ? "Not Provided" : value;
+
+            if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                element.value = displayValue;
+            } else {
+                element.textContent = displayValue;
+            }
+        } else {
+            console.error(`Element with id "${id}" not found.`);
+        }
     }
 
     // Student Information
-    const studentInfo = formData.studentInformation;
+    const studentInfo = formData.studentInformation || {}; // Ensure studentInfo is an object
     setField("review-fullName", studentInfo.fullName);
     setField("review-dob", studentInfo.dob);
     setField("review-placeOfBirth", studentInfo.placeOfBirth);
@@ -637,7 +759,9 @@ function populateReviewValues() {
     setField("review-bloodGroup", studentInfo.bloodGroup);
     setField("review-studentContact", studentInfo.studentContact);
 
-    const address = `${studentInfo.currentAddress.cityVillage || ""}, ${studentInfo.currentAddress.taluka || ""}, ${studentInfo.currentAddress.district || ""}, ${studentInfo.currentAddress.state || ""} - ${studentInfo.currentAddress.pinCode || ""}`;
+    // Ensure currentAddress exists and is an object
+    const currentAddress = studentInfo.currentAddress || {};
+    const address = `${currentAddress.cityVillage || "Not Provided"}, ${currentAddress.taluka || "Not Provided"}, ${currentAddress.district || "Not Provided"}, ${currentAddress.state || "Not Provided"} - ${currentAddress.pinCode || "Not Provided"}`;
     setField("review-address", address);
 
     setField("review-nationality", studentInfo.nationality);
@@ -650,34 +774,66 @@ function populateReviewValues() {
     setField("review-documents", studentInfo.documents);
 
     // Guardian Information
-    const guardianInfo = formData.guardianInformation;
-    setField("review-fatherName", guardianInfo.father.fullName || "Not Provided");
-    setField("review-motherName", guardianInfo.mother.fullName || "Not Provided");
+    const guardianInfo = formData.guardianInformation || {};
+    setField("review-fatherName", guardianInfo.father?.fullName || "N/A");
+    setField("review-motherName", guardianInfo.mother?.fullName || "N/A");
 
-    const localGuardian = guardianInfo.localGuardian.name
-        ? guardianInfo.localGuardian.name
-        : "NO";
+    const localGuardian = guardianInfo.localGuardian?.name || "N/A";
     setField("review-localGuardian", localGuardian);
 
     // Academic Information
-    const academicInfo = formData.academicInformation;
+    const academicInfo = formData.academicInformation || {};
     setField("review-section", academicInfo.section);
     setField("review-standard", academicInfo.standard);
     setField("review-division", academicInfo.division);
-    setField("review-lastSchool", academicInfo.lastSchoolAttended);
-    setField("review-percentage", academicInfo.percentage);
+
+    // Check if previous school details should be displayed
+    const previousSchoolDetails = document.getElementById("previousSchoolDetails");
+    if (academicInfo.newAdmission) {
+        previousSchoolDetails.style.display = "none"; // Hide previous school details
+        document.getElementById("review-academic-tag").style.display = "block";
+        setField("review-academics", "No Academic History");
+    } else {
+        previousSchoolDetails.style.display = "block"; // Show previous school details
+        setField("review-lastSchool", academicInfo.lastSchoolAttended || "N/A");
+        setField("review-classCompleted", academicInfo.classCompleted || "N/A");
+        setField("review-percentage", academicInfo.percentage || "N/A");
+    }
+
 
     // Fees Information
-    const feesInfo = formData.feesInformation;
+    const feesInfo = formData.feesInformation || {};
     setField("review-feeSection", feesInfo.feeSection);
     setField("review-feeStandard", feesInfo.feeStandard);
-    // setField("review-package", feesInfo.packageAllotted);
+
+    // Transport Information
+    const transportInfo = formData.transportInformation || {};
+
+    // Set Transport Needed field
+    const transportNeeded = document.querySelector('input[name="transportNeeded"]:checked')?.value || "No";
+    setField("review-transportNeeded", transportNeeded);
+
+    // Show or hide the transport details section based on transportNeeded value
+    const transportDetailsSection = document.getElementById("transportDetailsSection");
+    if (transportNeeded === "Yes") {
+        transportDetailsSection.style.display = "block";
+        // setField("review-transportStandard", transportInfo.transportStandard || "N/A");
+        // setField("review-transportDivision", transportInfo.transportDivision || "N/A");
+        setField("review-pickDropAddress", transportInfo.transport_pickup_drop || "N/A");
+        // setField("review-vehicleRunning", transportInfo.vehicleRunning || "N/A");
+        setField("review-vehicleDetails", transportInfo.vehicleDetails || "N/A");
+        // setField("review-noVehicleFound", transportInfo.noVehicleFound ? "Yes" : "No");
+    } else {
+        transportDetailsSection.style.display = "none";
+        setField("review-transportNeeded", "Student doesn't need transport.");
+    }
+
 
     // Populate Fee Details Table
     const feeDetailsTable = document.getElementById("feeDetailsTableBody");
     feeDetailsTable.innerHTML = ""; // Clear existing rows
 
-    if (feesInfo.feeDetails.length > 0) {
+    if (feesInfo.feeDetails && feesInfo.feeDetails.length > 0) {
         feesInfo.feeDetails.forEach(detail => {
             const row = document.createElement("tr");
             row.innerHTML = `
@@ -703,73 +859,74 @@ function populateReviewValues() {
 }
 
 
+
 function autofillFormFields() {
     // Autofill Student Information
-    document.getElementById('firstName').value = "John";
-    document.getElementById('middleName').value = "Michael";
-    document.getElementById('lastName').value = "Doe";
-    document.getElementById('fullName').value = "John Michael Doe";
-    document.getElementById('dob').value = "2005-01-15";
-    document.getElementById('placeOfBirth').value = "New York";
-    document.getElementById('age').value = "19";
+    document.getElementById('firstName').value = "Tapu";
+    document.getElementById('middleName').value = "Jethalal";
+    document.getElementById('lastName').value = "Gada";
+    document.getElementById('fullName').value = "Tapu Jethalal Gada";
+    document.getElementById('dob').value = "2012-05-10";
+    document.getElementById('placeOfBirth').value = "Mumbai";
+    document.getElementById('age').value = "12";
     document.getElementById('gender').value = "Male";
-    document.getElementById('bloodGroup').value = "O+";
+    document.getElementById('bloodGroup').value = "B+";
     document.getElementById('studentContact').value = "9876543210";
 
     // Autofill Current Address
-    document.getElementById('city_village').value = "Brooklyn";
-    document.getElementById('taluka').value = "Kings";
-    document.getElementById('district').value = "New York";
-    document.getElementById('state').value = "New York";
-    document.getElementById('landmak').value = "Near Central Park";
-    document.getElementById('pinCode').value = "10001";
+    document.getElementById('city_village').value = "Mumbai";
+    document.getElementById('taluka').value = "Borivali";
+    document.getElementById('district').value = "Mumbai Suburban";
+    document.getElementById('state').value = "Maharashtra";
+    document.getElementById('landmak').value = "Near Gokuldham Society";
+    document.getElementById('pinCode').value = "400092";
 
     // Autofill Other Student Details
-    document.getElementById('nationality').value = "American";
-    document.getElementById('religion').value = "Christian";
+    document.getElementById('nationality').value = "Indian";
+    document.getElementById('religion').value = "Hindu";
     document.getElementById('category').value = "General";
     document.getElementById('caste').value = "Not Applicable";
-    document.getElementById('domicile').value = "New York";
-    document.getElementById('motherTongue').value = "English";
+    document.getElementById('domicile').value = "Maharashtra";
+    document.getElementById('motherTongue').value = "Gujarati";
     document.getElementById('aadhaar').value = "123456789012";
 
     // Autofill Guardian Information
-    document.getElementById('fatherFirstName').value = "Robert";
-    document.getElementById('fatherMiddleName').value = "James";
-    document.getElementById('fatherLastName').value = "Doe";
-    document.getElementById('fatherFullName').value = "Robert James Doe";
+    document.getElementById('fatherFirstName').value = "Jethalal";
+    document.getElementById('fatherMiddleName').value = "Champaklal";
+    document.getElementById('fatherLastName').value = "Gada";
+    // document.getElementById('fatherFullName').value = "Jethalal Champaklal Gada";
     document.getElementById('fatherContactNumber').value = "9876543211";
-    document.getElementById('fatherQualification').value = "MBA";
-    document.getElementById('fatherOccupation').value = "Engineer";
+    document.getElementById('fatherQualification').value = "B.Com";
+    document.getElementById('fatherOccupation').value = "Businessman";
 
-    document.getElementById('motherFirstName').value = "Jane";
-    document.getElementById('motherLastName').value = "Doe";
-    document.getElementById('motherFullName').value = "Jane Doe";
+    document.getElementById('motherFirstName').value = "Daya";
+    document.getElementById('motherLastName').value = "Gada";
+    // document.getElementById('motherFullName').value = "Daya Jethalal Gada";  
     document.getElementById('motherContactNumber').value = "9876543212";
-    document.getElementById('motherQualification').value = "MSc";
-    document.getElementById('motherOccupation').value = "Doctor";
+    document.getElementById('motherQualification').value = "Housewife";
+    document.getElementById('motherOccupation').value = "Not Applicable";
 
-    document.getElementById('guardianName').value = "Michael Smith";
+    document.getElementById('guardianName').value = "Champaklal Gada";
     document.getElementById('guardianContact').value = "9876543213";
-    document.getElementById('guardianRelation').value = "Uncle";
-    document.getElementById('guardian_fullAddress').value = "123 Guardian Lane";
-    document.getElementById('guardianAddressLandmark').value = "Near Guardian Park";
-    document.getElementById('guardianpinCode').value = "20002";
+    document.getElementById('guardianRelation').value = "Grandfather";
+    document.getElementById('guardian_fullAddress').value = "Gokuldham Society, Mumbai";
+    document.getElementById('guardianAddressLandmark').value = "Near Club House";
+    document.getElementById('guardianpinCode').value = "400092";
 
     // Autofill Academic Information
-    document.getElementById('section').value = "A";
-    document.getElementById('grNo').value = "12345";
-    document.getElementById('admissionDate').value = "2022-06-15";
-    document.getElementById('standard').value = "10";
-    document.getElementById('division').value = "B";
-    document.getElementById('lastSchoolAttended').value = "St. Michael High School";
-    document.getElementById('classCompleted').value = "9";
-    document.getElementById('percentage').value = "85%";
+    document.getElementById('section').value = "Primary";
+    document.getElementById('grNo').value = "1615"; // No GR number autofilled
+    // document.getElementById('admissionDate').value = ""; // No admission date autofilled
+    document.getElementById('standard').value = "5th";
+    document.getElementById('division').value = "Red";
+    document.getElementById('lastSchoolAttended').value = "Gokuldham Primary School";
+    document.getElementById('classCompleted').value = "4";
+    document.getElementById('percentage').value = "90%";
 
     // Autofill Fees Information
-    document.getElementById('feeSection').value = "A";
-    document.getElementById('feeStandard').value = "10";
-    document.getElementById('feeDivision').value = "B";
+    document.getElementById('feeSection').value = "Primary";
+    document.getElementById('feeStandard').value = "5th";
+    document.getElementById('feeDivision').value = "Red";
     document.getElementById('feeCategory').value = "General";
     document.getElementById('packageAllotted').value = "Full Year Plan";
 
@@ -778,10 +935,11 @@ function autofillFormFields() {
 }
 
 
+
 ///////////////////////////////////   SUBMIT DATA TO SERVER (FORM SUBMISSION) ////////////////////////////////////
 
 document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("review-next").addEventListener("click", function(event) {
+    document.getElementById("review-next").addEventListener("click", function (event) {
         event.preventDefault();  // Prevent the default button behavior
 
         submitForm();
@@ -805,18 +963,18 @@ function submitForm() {
         },
         body: JSON.stringify(formData)
     })
-    .then(response => {
-        console.log('Server response:', response);
-        return response.json();
-    })
-    .then(data => {
-        if (data.error) {
-            console.error('Error:', data.error);
-        } else {
-            console.log('Success:', data.message);
-        }
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
+        .then(response => {
+            console.log('Server response:', response);
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                console.error('Error:', data.error);
+            } else {
+                console.log('Success:', data.message);
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
 }

@@ -1495,6 +1495,16 @@ function displayStandardSuggestions() {
     }
 }
 
+// Get references to the standard input field and fee table body
+const standardInput = document.getElementById('standard');
+// const feeCategoryAmountTableBody = document.getElementById('feeCategoryAmountTable');
+// Add an event listener to the standard input field
+standardInput.addEventListener('input', function () {
+    // Clear the fee table whenever the standard value is changed
+    // clearFeeTable();
+    clearFeeCategoryAmountTable()
+});
+
 // Function to filter and display standards
 function filterAndDisplayStandards(query, suggestionsContainer) {
     const uniqueStandards = new Set();
@@ -1880,6 +1890,8 @@ document.getElementById('generatePackageBtn').addEventListener('click', function
     }
 });
 
+
+
 // Initialize MutationObserver on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', function () {
     observeReadOnlyFields();
@@ -2145,6 +2157,21 @@ function filterAndDisplayVehicleRunning(query, suggestionsContainer, vehicleRunn
         });
     });
 }
+
+// Add event listener to the checkbox to enable/disable input
+document.getElementById('noVehicleFound').addEventListener('change', function () {
+    const vehicleRunningInput = document.getElementById('vehicleRunning');
+    
+    if (this.checked) {
+        // Disable the input field and clear its value
+        vehicleRunningInput.disabled = true;
+        vehicleRunningInput.value = '';
+    } else {
+        // Enable the input field
+        vehicleRunningInput.disabled = false;
+    }
+});
+
 
 // Function to fetch vehicle info
 function fetchVehicleInfo(selectedVehicleNo) {
