@@ -157,7 +157,7 @@ router.get('/create_tables', async (req, res) => {
                 dob VARCHAR(10) NOT NULL,
                 qualification VARCHAR(30) NOT NULL,
                 experience VARCHAR(30) NOT NULL,
-                references VARCHAR(50) DEFAULT NULL,
+        \`references\` VARCHAR(50) DEFAULT NULL,
                 registration_date VARCHAR(10) DEFAULT NULL,
                 admission_date VARCHAR(10) DEFAULT NULL,
                 type ENUM('registered', 'admitted') DEFAULT NULL
@@ -170,14 +170,14 @@ router.get('/create_tables', async (req, res) => {
                 res_address VARCHAR(50) NOT NULL,
                 dob VARCHAR(10) NOT NULL,
                 standard VARCHAR(20) DEFAULT NULL,
-                references VARCHAR(50) DEFAULT NULL,
+        \`references\` VARCHAR(50) DEFAULT NULL,
                 registration_date VARCHAR(10) DEFAULT NULL,
                 admission_date VARCHAR(10) DEFAULT NULL,
                 type ENUM('registered', 'admitted') DEFAULT NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`
         },
-        { 
-            
+        {
+
             query: `CREATE TABLE IF NOT EXISTS inventory_book_details (
                 sr_no INT(11) NOT NULL AUTO_INCREMENT,
                 title VARCHAR(35) DEFAULT NULL,
