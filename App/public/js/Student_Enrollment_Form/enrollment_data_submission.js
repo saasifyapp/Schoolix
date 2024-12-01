@@ -39,6 +39,8 @@ function collectStudentInformation() {
         aadharNo: document.getElementById('aadhaar').value.trim(),
         documents: selectedDocumentsString // Use the comma-separated string of selected documents
     };
+   // console.log('Collected student information:', formData);  // Debugging log
+    //return formData;
 }
 
 
@@ -76,15 +78,16 @@ function collectGuardianInformation() {
 // Function to collect data from the Academic Information section
 function collectAcademicInformation() {
     formData.academicInformation = {
-        section: document.getElementById('section').value,
-        grNo: document.getElementById('grNo').value,
-        admissionDate: document.getElementById('admissionDate').value,
-        standard: document.getElementById('standard').value,
-        division: document.getElementById('division').value,
-        lastSchoolAttended: document.getElementById('lastSchoolAttended').value,
-        classCompleted: document.getElementById('classCompleted').value,
-        percentage: document.getElementById('percentage').value
+        section: document.getElementById('section').value.trim(),
+        grNo: document.getElementById('grNo').value.trim(),
+        admissionDate: document.getElementById('admissionDate').value.trim(),
+        standard: document.getElementById('standard').value.trim(),
+        division: document.getElementById('division').value.trim(),
+        lastSchoolAttended: document.getElementById('lastSchoolAttended').value.trim(),
+        classCompleted: document.getElementById('classCompleted').value.trim(),
+        percentage: document.getElementById('percentage').value.trim()
     };
+    //console.log('Collected academic information:', formData);  // Debugging log
 }
 
 // Function to collect data from the Fees and Packages section
@@ -99,13 +102,16 @@ function collectAcademicInformation() {
 // }
 
 function collectFeesInformation() {
+    // Initialize the formData object if it doesn't already exist
+    if (!formData) {
+        formData = {};
+    }
+
     // Collecting basic fee-related information
     formData.feesInformation = {
         feeSection: document.getElementById('feeSection')?.value.trim() || "",
         feeStandard: document.getElementById('feeStandard')?.value.trim() || "",
         feeDivision: document.getElementById('feeDivision')?.value.trim() || "",
-        // feeCategory: document.getElementById('feeCategory') ? document.getElementById('feeCategory').value.trim() : "",  // Handling dynamic field
-        // packageAllotted: document.getElementById('packageAllotted') ? document.getElementById('packageAllotted').value.trim() : "",  // Handling dynamic field
         feeDetails: [],
         totalPackageAmount: 0
     };
@@ -126,6 +132,16 @@ function collectFeesInformation() {
             formData.feesInformation.totalPackageAmount = parseFloat(totalAmountCell.textContent.trim()) || 0;
         }
     });
+
+    // Convert feeDetails to a comma-separated string for package_breakup
+    formData.package_breakup = formData.feesInformation.feeDetails
+        .map(detail => `${detail.categoryName}: ${detail.amount}`)
+        .join(', ');
+
+    // Set total_package
+    formData.total_package = formData.feesInformation.totalPackageAmount;
+
+    console.log('Collected fees information:', formData);  // Debugging log
 }
 
 
@@ -143,21 +159,36 @@ function collectFeesInformation() {
 // }
 
 function collectTransportInformation() {
-    formData.transportInformation = {
-        transportNeeded: document.querySelector('input[name="transportNeeded"]:checked')
-            ? document.querySelector('input[name="transportNeeded"]:checked').value
-            : null, // Ensure safe access to the checked value
-        transportStandard: document.getElementById('transportStandard').value.trim(),
-        transportDivision: document.getElementById('transportDivision').value.trim(),
-        pickDropAddress: document.getElementById('pickDropAddress').value.trim(),
-        vehicleRunning: document.getElementById('vehicleRunning').value.trim(),
-        vehicleDetails: document.getElementById('vehicleInfo')
-            ? document.getElementById('vehicleInfo').innerText.trim()
-            : null, // Collect vehicle information dynamically if available
-        noVehicleFound: document.getElementById('noVehicleFound').checked // Capture checkbox status
-    };
-}
+    const transportNeeded = document.querySelector('input[name="transportNeeded"]:checked')
+        ? document.querySelector('input[name="transportNeeded"]:checked').value
+        : null;
 
+    if (transportNeeded === "No") {
+        formData.transportInformation = {
+            transport_needed: 0,
+            transport_tagged: null,
+            transport_pickup_drop: null
+        };
+    } else if (transportNeeded === "Yes") {
+        formData.transportInformation = {
+            transport_needed: 1,
+            transportStandard: document.getElementById('transportStandard').value.trim(),
+            transportDivision: document.getElementById('transportDivision').value.trim(),
+            pickDropAddress: document.getElementById('pickDropAddress').value.trim(),
+            vehicleRunning: document.getElementById('vehicleRunning').value.trim(),
+            vehicleDetails: document.getElementById('vehicleInfo')
+                ? document.getElementById('vehicleInfo').innerText.trim()
+                : null,
+            noVehicleFound: document.getElementById('noVehicleFound').checked
+        };
+    } else {
+        formData.transportInformation = {
+            transport_needed: null,
+            transport_tagged: null,
+            transport_pickup_drop: null
+        };
+    }
+}
 // let isFormValid = true; // Global form validation flag
 
 // Collect data on "Next" button click and move to the next section
@@ -749,3 +780,45 @@ function autofillFormFields() {
 }
 
 
+///////////////////////////////////   SUBMIT DATA TO SERVER (FORM SUBMISSION) ////////////////////////////////////
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("review-next").addEventListener("click", function(event) {
+        event.preventDefault();  // Prevent the default button behavior
+
+        submitForm();
+    });
+});
+
+
+function submitForm() {
+    formData = {}; // Initialize formData as an empty object
+    collectStudentInformation();
+    collectGuardianInformation();
+    collectAcademicInformation(); // Collect Academic Information
+    collectFeesInformation(); // Collect Fees Information
+    collectTransportInformation();
+
+
+    fetch('/submitEnrollmentForm', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => {
+        console.log('Server response:', response);
+        return response.json();
+    })
+    .then(data => {
+        if (data.error) {
+            console.error('Error:', data.error);
+        } else {
+            console.log('Success:', data.message);
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}

@@ -282,4 +282,202 @@ router.get('/studentEnrollment_getVehicleInfo', (req, res) => {
     });
 });
 
+
+///////////////////////////////////   SUBMIT DATA TO STUDENT TABLE (FORM SUBMISSION) ////////////////////////////////////
+
+router.post('/submitEnrollmentForm', (req, res) => {
+    const formData = req.body;
+
+    // Log the received data for debugging
+    console.log('Received data:', JSON.stringify(formData, null, 2)); 
+
+    if (!formData || !formData.studentInformation || !formData.guardianInformation || !formData.academicInformation || !formData.feesInformation || !formData.transportInformation) {
+        return res.status(400).json({ error: 'Invalid data received' });
+    }
+
+    const {
+        firstName,
+        middleName,
+        lastName,
+        fullName,
+        dob,
+        placeOfBirth,
+        age,
+        gender,
+        bloodGroup,
+        studentContact,
+        currentAddress,
+        nationality,
+        religion,
+        category,
+        caste,
+        domicile,
+        motherTongue,
+        aadharNo,
+        documents
+    } = formData.studentInformation;
+
+    const { father, mother, localGuardian } = formData.guardianInformation;
+
+    const {
+        section,
+        grNo,
+        admissionDate,
+        standard,
+        division,
+        lastSchoolAttended,
+        classCompleted,
+        percentage
+    } = formData.academicInformation;
+
+    const {
+        package_breakup,
+        total_package
+    } = formData;
+
+    const {
+        transport_needed,
+        transport_tagged,
+        transport_pickup_drop
+    } = formData.transportInformation;
+
+    const studentDetails = {
+        Firstname: firstName,
+        Middlename: middleName,
+        Surname: lastName,
+        Name: fullName,
+        DOB: dob,
+        Age: age,
+        POB: placeOfBirth,
+        Gender: gender,
+        Blood_Group: bloodGroup,
+        Address: currentAddress.cityVillage,
+        landmark: currentAddress.landmark,
+        taluka: currentAddress.taluka,
+        district: currentAddress.district,
+        state: currentAddress.state,
+        pin_code: currentAddress.pinCode,
+        student_phone_no: studentContact,
+        Adhar_no: aadharNo,
+        Religion: religion,
+        Nationality: nationality,
+        Category: category,
+        Caste: caste,
+        Domicile: domicile,
+        Mother_Tongue: motherTongue,
+        Documents_Submitted: documents,
+        Father_name: father.firstName,
+        F_qualification: father.qualification,
+        f_occupation: father.occupation,
+        f_mobile_no: father.contactNumber,
+        Grand_father: father.middleName,
+        Mother_name: mother.fullName,
+        M_Qualification: mother.qualification,
+        M_occupation: mother.occupation,
+        M_mobile_no: mother.contactNumber,
+        guardian_name: localGuardian.name,
+        guardian_contact: localGuardian.contact,
+        guardian_relation: localGuardian.relation,
+        guardian_address: localGuardian.fullAddress,
+        guardian_landmark: localGuardian.landmark,
+        guardian_pin_code: localGuardian.pinCode,
+        Section: section,
+        Grno: grNo,
+        Admission_Date: admissionDate,
+        Standard: standard,
+        Division: division,
+        Last_School: lastSchoolAttended,
+        class_completed: classCompleted,
+        percentage_last_school: percentage.toString(),
+        package_breakup: package_breakup,
+        total_package: total_package,
+        transport_needed: transport_needed,
+        transport_tagged: transport_tagged,
+        transport_pickup_drop: transport_pickup_drop
+    };
+
+    const query = `INSERT INTO test_student_details (
+        Firstname, Middlename, Surname, Name, DOB, Age, POB, Gender, Blood_Group, Address, 
+        landmark, taluka, district, state, pin_code, student_phone_no, Adhar_no, Religion, Nationality, 
+        Category, Caste, Domicile, Mother_Tongue, Documents_Submitted, Father_name, F_qualification, 
+        f_occupation, f_mobile_no, Grand_father, Mother_name, M_Qualification, M_occupation, M_mobile_no, 
+        guardian_name, guardian_contact, guardian_relation, guardian_address, guardian_landmark, guardian_pin_code, 
+        Section, Grno, Admission_Date, Standard, Division, Last_School, class_completed, percentage_last_school, 
+        package_breakup, total_package, transport_needed, transport_tagged, transport_pickup_drop
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    const values = [
+        studentDetails.Firstname,
+        studentDetails.Middlename,
+        studentDetails.Surname,
+        studentDetails.Name,
+        studentDetails.DOB,
+        studentDetails.Age,
+        studentDetails.POB,
+        studentDetails.Gender,
+        studentDetails.Blood_Group,
+        studentDetails.Address,
+        studentDetails.landmark,
+        studentDetails.taluka,
+        studentDetails.district,
+        studentDetails.state,
+        studentDetails.pin_code,
+        studentDetails.student_phone_no,
+        studentDetails.Adhar_no,
+        studentDetails.Religion,
+        studentDetails.Nationality,
+        studentDetails.Category,
+        studentDetails.Caste,
+        studentDetails.Domicile,
+        studentDetails.Mother_Tongue,
+        studentDetails.Documents_Submitted,
+        studentDetails.Father_name,
+        studentDetails.F_qualification,
+        studentDetails.f_occupation,
+        studentDetails.f_mobile_no,
+        studentDetails.Grand_father,
+        studentDetails.Mother_name,
+        studentDetails.M_Qualification,
+        studentDetails.M_occupation,
+        studentDetails.M_mobile_no,
+        studentDetails.guardian_name,
+        studentDetails.guardian_contact,
+        studentDetails.guardian_relation,
+        studentDetails.guardian_address,
+        studentDetails.guardian_landmark,
+        studentDetails.guardian_pin_code,
+        studentDetails.Section,
+        studentDetails.Grno,
+        studentDetails.Admission_Date,
+        studentDetails.Standard,
+        studentDetails.Division,
+        studentDetails.Last_School,
+        studentDetails.class_completed,
+        studentDetails.percentage_last_school,
+        studentDetails.package_breakup,
+        studentDetails.total_package,
+        studentDetails.transport_needed,
+        studentDetails.transport_tagged,
+        studentDetails.transport_pickup_drop
+    ];
+
+    console.log('Executing query:', query);
+    console.log('With values:', values);
+
+    req.connectionPool.query(query, values, (error, result) => {
+        if (error) {
+            console.error('Error submitting enrollment form:', error);
+            return res.status(500).json({ error: 'Error submitting enrollment form' });
+        }
+
+        console.log('Query executed successfully:', result);
+
+        if (result.affectedRows > 0) {
+            res.status(200).json({ message: 'Enrollment form submitted successfully' });
+        } else {
+            res.status(500).json({ error: 'Failed to insert data into database' });
+        }
+    });
+});
+
 module.exports = router;
