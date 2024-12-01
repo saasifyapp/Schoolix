@@ -172,10 +172,8 @@ function collectTransportInformation() {
     } else if (transportNeeded === "Yes") {
         formData.transportInformation = {
             transport_needed: 1,
-            transportStandard: document.getElementById('transportStandard').value.trim(),
-            transportDivision: document.getElementById('transportDivision').value.trim(),
-            pickDropAddress: document.getElementById('pickDropAddress').value.trim(),
-            vehicleRunning: document.getElementById('vehicleRunning').value.trim(),
+            transport_tagged: document.getElementById('vehicleRunning').value.trim(), // Assuming 'vehicleRunning' is now 'transport_tagged'
+            transport_pickup_drop: document.getElementById('pickDropAddress').value.trim(), // Assuming 'pickDropAddress' is 'transport_pickup_drop'
             vehicleDetails: document.getElementById('vehicleInfo')
                 ? document.getElementById('vehicleInfo').innerText.trim()
                 : null,
