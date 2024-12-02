@@ -2046,7 +2046,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const debouncedDisplaySuggestions = debounce(query => displayCombinedPickDropAddressSuggestions(query, suggestionsContainer), 300);
 
     // Add event listeners for input events
-    inputField.addEventListener('input', () => debouncedDisplaySuggestions(inputField.value.toLowerCase().trim()));
+    inputField.addEventListener('input', () => {
+        resetVehicleRunningCache(); // Clear cache when input changes
+        debouncedDisplaySuggestions(inputField.value.toLowerCase().trim());
+    });
     inputField.addEventListener('focus', () => displayCombinedPickDropAddressSuggestions(inputField.value.toLowerCase().trim(), suggestionsContainer));
     inputField.addEventListener('click', () => displayCombinedPickDropAddressSuggestions(inputField.value.toLowerCase().trim(), suggestionsContainer));
 
@@ -2071,6 +2074,12 @@ document.addEventListener("DOMContentLoaded", function () {
 // Cache for vehicle running suggestions
 let vehicleRunningFetched = false;
 let vehicleRunningCache = [];
+
+// Function to reset vehicle running cache
+function resetVehicleRunningCache() {
+    vehicleRunningFetched = false;
+    vehicleRunningCache = [];
+}
 
 // Function to display vehicle running suggestions
 function displayVehicleRunningSuggestions() {
@@ -2119,6 +2128,7 @@ function displayVehicleRunningSuggestions() {
                 }
             })
             .catch(error => {
+                console.error('Error fetching vehicle data:', error);
                 vehicleRunningSuggestionsContainer.style.display = "none";
             });
     } else {

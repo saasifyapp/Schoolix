@@ -45,7 +45,7 @@ async function displaySearchSuggestions() {
 function filterAndDisplaySearchSuggestions(query, suggestions, suggestionsContainer) {
     const isNumericQuery = !isNaN(query);
     const filteredSuggestions = suggestions.filter(suggestion =>
-        suggestion.name.toLowerCase().includes(query.toLowerCase()) || 
+        suggestion.name.toLowerCase().includes(query.toLowerCase()) ||
         (isNumericQuery && suggestion.gr_no === parseInt(query, 10))
     );
     suggestionsContainer.innerHTML = '';
@@ -151,6 +151,12 @@ function displayEditVehicleRunningSuggestions() {
         return;
     }
 
+    // Clear the cache and fetch new data if routeStops or classesAllotted change
+    if (editVehicleRunningCache.routeStops !== routeStops || editVehicleRunningCache.classesAllotted !== classesAllotted) {
+        editVehicleRunningCache = { routeStops, classesAllotted, vehicles: [] }; // Clear and reset cache
+        editVehicleRunningFetched = false; // Reset fetched flag
+    }
+
     if (!editVehicleRunningFetched) {
         showLoading(vehicleRunningSuggestionsContainer);
 
@@ -201,7 +207,7 @@ function filterAndDisplayEditVehicleRunning(query, suggestionsContainer, vehicle
 
     // Add event listeners for selection
     suggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
-        item.addEventListener('click', function() {
+        item.addEventListener('click', function () {
             vehicleRunningInput.value = this.dataset.value;
             selectedDriverName = this.dataset.driver; // Store the selected driver name
             suggestionsContainer.innerHTML = '';
@@ -274,7 +280,7 @@ function checkAndDisplayVehicleInfo() {
 }
 
 // Initialization of vehicle running suggestion box for edit student overlay
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const vehicleRunningInput = document.getElementById('editVehicleTagged');
     const vehicleRunningSuggestionsContainer = document.getElementById('edit_vehiclesuggestions');
 
@@ -283,7 +289,7 @@ document.addEventListener("DOMContentLoaded", function() {
     vehicleRunningInput.addEventListener('focus', displayEditVehicleRunningSuggestions);
     vehicleRunningInput.addEventListener('click', displayEditVehicleRunningSuggestions);
 
-    document.addEventListener('click', function(event) {
+    document.addEventListener('click', function (event) {
         if (!vehicleRunningSuggestionsContainer.contains(event.target) && !vehicleRunningInput.contains(event.target)) {
             vehicleRunningSuggestionsContainer.style.display = 'none';
         }
@@ -343,33 +349,33 @@ function handleUpdateButtonClick() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Update Successful',
-                html: `Transport for student <b>${studentName}</b> updated successfully to <b>${vehicleTagged} | ${selectedDriverName}</b>`
-            }).then(() => {
-                // Clear the form and associated data
-                clearForm();
-            });
-        } else {
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Update Successful',
+                    html: `Transport for student <b>${studentName}</b> updated successfully to <b>${vehicleTagged} | ${selectedDriverName}</b>`
+                }).then(() => {
+                    // Clear the form and associated data
+                    clearForm();
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Update Failed',
+                    text: 'Failed to update transport tagged: ' + data.message
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error updating transport tagged:', error);
             Swal.fire({
                 icon: 'error',
-                title: 'Update Failed',
-                text: 'Failed to update transport tagged: ' + data.message
+                title: 'An Error Occurred',
+                text: 'An error occurred while updating transport tagged.'
             });
-        }
-    })
-    .catch(error => {
-        console.error('Error updating transport tagged:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'An Error Occurred',
-            text: 'An error occurred while updating transport tagged.'
         });
-    });
 }
 
 function getAvailableSeatsFromVehicleInfo(vehicleInfoContainer) {

@@ -4,7 +4,8 @@ let formData = {
     guardianInformation: {},
     academicInformation: {},
     feesInformation: {},
-    transportInformation: {}
+    transportInformation: {},
+    consent:{}
 };
 
 // Function to collect data from the Student Information section
@@ -940,12 +941,70 @@ function autofillFormFields() {
 
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("review-next").addEventListener("click", function (event) {
-        event.preventDefault();  // Prevent the default button behavior
+        event.preventDefault(); // Prevent the default button behavior
 
-        submitForm();
+        // Validate that all consents are checked
+        const allChecked = validateConsents();
+
+        if (!allChecked) {
+            // Display an alert if any checkbox is not checked
+            Swal.fire({
+                title: "Incomplete Consent",
+                text: "Please ensure all consents are checked before proceeding.",
+                icon: "warning",
+                confirmButtonText: "OK"
+            });
+            return; // Prevent submission
+        }
+
+        // If all consents are checked, proceed with collectConsent and form submission
+        collectConsent();
+        //Submit all the form data
+        submitForm(); 
     });
 });
 
+// Function to validate consents
+function validateConsents() {
+    // List of consent checkbox IDs
+    const consentIds = [
+        "consent-policies",
+        "consent-photo",
+        "consent-trips",
+        "consent-medical",
+        "consent-accuracy",
+        "consent-fees",
+        "consent-rules"
+    ];
+
+    // Check if all consents are checked
+    return consentIds.every(id => {
+        const checkbox = document.getElementById(id);
+        return checkbox && checkbox.checked;
+    });
+}
+
+// Function to collect all selected consents
+function collectConsent() {
+    const consents = [
+        { id: "consent-policies", text: "I agree to the School Policies" },
+        { id: "consent-photo", text: "I consent to Photo/Video use in School Activities" },
+        { id: "consent-trips", text: " I consent to Participate in Field Trips and Extracurricular Activities" },
+        { id: "consent-medical", text: "I consent to Emergency Medical Treatment" },
+        { id: "consent-accuracy", text: "Declaration of Information Accuracy" },
+        { id: "consent-fees", text: "Agreement to Pay Fees as per the chosen plan" },
+        { id: "consent-rules", text: "Confirmation of understanding of school rules and regulations" }
+    ];
+
+    const selectedConsents = consents
+        .filter(consent => document.getElementById(consent.id).checked) // Only include checked boxes
+        .map(consent => consent.text) // Get the text of each selected consent
+        .join(", "); // Combine the texts into a comma-separated string
+
+    // Store the collected consents in the formData object
+    formData.consent.selected = selectedConsents;
+    console.log(formData);
+}
 
 function submitForm() {
     formData = {}; // Initialize formData as an empty object
