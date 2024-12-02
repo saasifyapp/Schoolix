@@ -5,7 +5,9 @@ let formData = {
     academicInformation: {},
     feesInformation: {},
     transportInformation: {},
-    consent:{}
+    consent: {
+        selected: '' // Initialize consent.selected with an empty string
+    }
 };
 
 // Function to collect data from the Student Information section
@@ -1001,19 +1003,24 @@ function collectConsent() {
         .map(consent => consent.text) // Get the text of each selected consent
         .join(", "); // Combine the texts into a comma-separated string
 
+          // Ensure that formData.consent is initialized
+    if (!formData.consent) {
+        formData.consent = {};
+    }
+
     // Store the collected consents in the formData object
     formData.consent.selected = selectedConsents;
     console.log(formData);
 }
 
 function submitForm() {
-    formData = {}; // Initialize formData as an empty object
-    collectStudentInformation();
-    collectGuardianInformation();
-    collectAcademicInformation(); // Collect Academic Information
-    collectFeesInformation(); // Collect Fees Information
-    collectTransportInformation();
-
+    // formData = {}; // Initialize formData as an empty object
+    // collectStudentInformation();
+    // collectGuardianInformation();
+    // collectAcademicInformation(); // Collect Academic Information
+    // collectFeesInformation(); // Collect Fees Information
+    // collectTransportInformation();
+    // collectConsent();
 
     fetch('/submitEnrollmentForm', {
         method: 'POST',

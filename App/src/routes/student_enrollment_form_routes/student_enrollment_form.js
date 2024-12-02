@@ -65,21 +65,21 @@ router.get('/getSections', (req, res) => {
             });
         })
     ])
-    .then(([primarySections, prePrimarySections]) => {
-        const sections = [...new Set([...primarySections, ...prePrimarySections])]; // Combine and remove duplicates
-        res.status(200).json({ sections });
-    })
-    .catch(error => {
-        console.error('Error fetching sections:', error);
-        res.status(500).json({ error: 'Error fetching sections' });
-    });
+        .then(([primarySections, prePrimarySections]) => {
+            const sections = [...new Set([...primarySections, ...prePrimarySections])]; // Combine and remove duplicates
+            res.status(200).json({ sections });
+        })
+        .catch(error => {
+            console.error('Error fetching sections:', error);
+            res.status(500).json({ error: 'Error fetching sections' });
+        });
 });
 
 
 // New endpoint to fetch the next GR Number based on section
 router.get('/getNextGrno', (req, res) => {
     const { section } = req.query; // Get the section parameter from query string
-   // console.log(`Received section: ${section}`); // For testing, just log the section value
+    // console.log(`Received section: ${section}`); // For testing, just log the section value
 
     // Map section values to corresponding table names
     const tableMap = {
@@ -289,11 +289,13 @@ router.post('/submitEnrollmentForm', (req, res) => {
     const formData = req.body;
 
     // Log the received data for debugging
-    console.log('Received data:', JSON.stringify(formData, null, 2)); 
+    console.log('Received data:', JSON.stringify(formData, null, 2));
 
     if (!formData || !formData.studentInformation || !formData.guardianInformation || !formData.academicInformation || !formData.feesInformation || !formData.transportInformation) {
         return res.status(400).json({ error: 'Invalid data received' });
     }
+
+    const consentText = formData.consent.selected;
 
     const {
         firstName,
@@ -393,7 +395,8 @@ router.post('/submitEnrollmentForm', (req, res) => {
         total_package: total_package,
         transport_needed: transport_needed,
         transport_tagged: transport_tagged,
-        transport_pickup_drop: transport_pickup_drop
+        transport_pickup_drop: transport_pickup_drop,
+        Consent: consentText
     };
 
     const query = `INSERT INTO test_student_details (
@@ -403,8 +406,8 @@ router.post('/submitEnrollmentForm', (req, res) => {
         f_occupation, f_mobile_no, Grand_father, Mother_name, M_Qualification, M_occupation, M_mobile_no, 
         guardian_name, guardian_contact, guardian_relation, guardian_address, guardian_landmark, guardian_pin_code, 
         Section, Grno, Admission_Date, Standard, Division, Last_School, class_completed, percentage_last_school, 
-        package_breakup, total_package, transport_needed, transport_tagged, transport_pickup_drop
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        package_breakup, total_package, transport_needed, transport_tagged, transport_pickup_drop, consent_text 
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     const values = [
         studentDetails.Firstname,
@@ -458,7 +461,8 @@ router.post('/submitEnrollmentForm', (req, res) => {
         studentDetails.total_package,
         studentDetails.transport_needed,
         studentDetails.transport_tagged,
-        studentDetails.transport_pickup_drop
+        studentDetails.transport_pickup_drop,
+        studentDetails.Consent // Correct field
     ];
 
     console.log('Executing query:', query);
@@ -477,6 +481,48 @@ router.post('/submitEnrollmentForm', (req, res) => {
         } else {
             res.status(500).json({ error: 'Failed to insert data into database' });
         }
+
+        // Execute query for generating student android credentials
+        req.connectionPool.query(query, values, (error, result) => {
+            if (error) {
+                console.error('Error submitting enrollment form:', error);
+                return res.status(500).json({ error: 'Error submitting enrollment form' });
+            }
+
+            if (result.affectedRows > 0) {
+                console.log('Student data inserted successfully. Generating credentials.');
+
+                // Generate student credentials
+                const username = `${fullName.toLowerCase().replace(/\s+/g, '')}`;
+                const password = `std@${username}`;
+                // const schoolName = 'Demo School'; // Replace with actual school data if available
+                const schoolName = req.cookies.schoolName;
+                const userType = 'student';
+                const uid = `${schoolName.toLowerCase().replace(/\s+/g, '')}_student_${result.insertId}`;
+
+                const credentialsQuery = `INSERT INTO android_app_users (
+                username, password, school_name, type, name, uid
+            ) VALUES (?, ?, ?, ?, ?, ?)`;
+
+                const credentialsValues = [username, password, schoolName, userType, fullName, uid];
+
+                req.connectionPool.query(credentialsQuery, credentialsValues, (credentialsError, credentialsResult) => {
+                    if (credentialsError) {
+                        console.error('Error generating student credentials:', credentialsError);
+                        return res.status(500).json({ error: 'Error generating student credentials' });
+                    }
+
+                    if (credentialsResult.affectedRows > 0) {
+                        console.log('Student credentials generated successfully.');
+                        res.status(200).json({ message: 'Enrollment form submitted and credentials generated successfully' });
+                    } else {
+                        res.status(500).json({ error: 'Failed to generate student credentials' });
+                    }
+                });
+            } else {
+                res.status(500).json({ error: 'Failed to insert student data into database' });
+            }
+        });
     });
 });
 
