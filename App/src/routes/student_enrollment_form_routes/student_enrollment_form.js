@@ -471,59 +471,77 @@ router.post('/submitEnrollmentForm', (req, res) => {
     req.connectionPool.query(query, values, (error, result) => {
         if (error) {
             console.error('Error submitting enrollment form:', error);
-            return res.status(500).json({ error: 'Error submitting enrollment form' });
+            return res.status(500).json({ error: 'Error submitting enrollment form' }); // Return to stop execution
         }
-
+    
         console.log('Query executed successfully:', result);
-
+    
         if (result.affectedRows > 0) {
-            res.status(200).json({ message: 'Enrollment form submitted successfully' });
+            // Execute query for generating student android credentials
+            req.connectionPool.query(query, values, (error, result) => {
+                if (error) {
+                    console.error('Error submitting enrollment form:', error);
+                    return res.status(500).json({ error: 'Error submitting enrollment form' }); // Return to stop execution
+                }
+    
+                if (result.affectedRows > 0) {
+                    console.log('Student data inserted successfully. Generating credentials.');
+    
+                    // Generate student credentials
+                    const schoolName = req.cookies.schoolName;
+                    const { username, password } = generateUsernameAndPassword(fullName, schoolName);
+    
+                    const userType = 'student';
+                    const uid = `${schoolName.toLowerCase().replace(/\s+/g, '')}_student_${result.insertId}`;
+    
+                    const credentialsQuery = `INSERT INTO android_app_users (
+                        username, password, school_name, type, name, uid
+                    ) VALUES (?, ?, ?, ?, ?, ?)`;
+    
+                    const credentialsValues = [username, password, schoolName, userType, fullName, uid];
+    
+                    req.connectionPool.query(credentialsQuery, credentialsValues, (credentialsError, credentialsResult) => {
+                        if (credentialsError) {
+                            console.error('Error generating student credentials:', credentialsError);
+                            return res.status(500).json({ error: 'Error generating student credentials' }); // Return to stop execution
+                        }
+    
+                        if (credentialsResult.affectedRows > 0) {
+                            console.log('Student credentials generated successfully.');
+                            return res.status(200).json({ message: 'Enrollment form submitted and credentials generated successfully' }); // Final response, no further response sent
+                        } else {
+                            return res.status(500).json({ error: 'Failed to generate student credentials' }); // Return here
+                        }
+                    });
+                } else {
+                    return res.status(500).json({ error: 'Failed to insert student data into database' }); // Return here
+                }
+            });
         } else {
-            res.status(500).json({ error: 'Failed to insert data into database' });
+            return res.status(500).json({ error: 'Failed to insert data into database' }); // Return here
         }
-
-        // Execute query for generating student android credentials
-        req.connectionPool.query(query, values, (error, result) => {
-            if (error) {
-                console.error('Error submitting enrollment form:', error);
-                return res.status(500).json({ error: 'Error submitting enrollment form' });
-            }
-
-            if (result.affectedRows > 0) {
-                console.log('Student data inserted successfully. Generating credentials.');
-
-                // Generate student credentials
-                const username = `${fullName.toLowerCase().replace(/\s+/g, '')}`;
-                const password = `std@${username}`;
-                // const schoolName = 'Demo School'; // Replace with actual school data if available
-                const schoolName = req.cookies.schoolName;
-                const userType = 'student';
-                const uid = `${schoolName.toLowerCase().replace(/\s+/g, '')}_student_${result.insertId}`;
-
-                const credentialsQuery = `INSERT INTO android_app_users (
-                username, password, school_name, type, name, uid
-            ) VALUES (?, ?, ?, ?, ?, ?)`;
-
-                const credentialsValues = [username, password, schoolName, userType, fullName, uid];
-
-                req.connectionPool.query(credentialsQuery, credentialsValues, (credentialsError, credentialsResult) => {
-                    if (credentialsError) {
-                        console.error('Error generating student credentials:', credentialsError);
-                        return res.status(500).json({ error: 'Error generating student credentials' });
-                    }
-
-                    if (credentialsResult.affectedRows > 0) {
-                        console.log('Student credentials generated successfully.');
-                        res.status(200).json({ message: 'Enrollment form submitted and credentials generated successfully' });
-                    } else {
-                        res.status(500).json({ error: 'Failed to generate student credentials' });
-                    }
-                });
-            } else {
-                res.status(500).json({ error: 'Failed to insert student data into database' });
-            }
-        });
-    });
+    });    
 });
+
+function generateUsernameAndPassword(fullName, schoolName) {
+    // Split the full name by spaces to extract the name parts
+    const nameParts = fullName.split(/\s+/);
+
+    // Get the first letter from the first name and the first three letters from the last name
+    const firstPart = nameParts[0].slice(0, 2).toLowerCase();  // First two letter of first name
+    const secondPart = nameParts[1].slice(0, 2).toLowerCase(); // First two letters of last name
+    const lastPart = nameParts[2].slice(0, 2).toLowerCase();   // First two letters of last name 
+
+    // Combine the parts to form the username
+    const username = `${firstPart}${secondPart}${lastPart}`;
+
+    // Get the first three letters of the school name
+    const schoolAbbr = schoolName.split(" ").map(word => word[0]).join("").toLowerCase();
+
+    // Create the password by combining the school abbreviation and the username
+    const password = `${schoolAbbr}@${username}`;
+
+    return { username, password };
+}
 
 module.exports = router;
