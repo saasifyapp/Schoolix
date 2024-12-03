@@ -370,10 +370,10 @@ router.post('/submitEnrollmentForm', (req, res) => {
         Documents_Submitted: documents,
         Father_name: father.firstName,
         F_qualification: father.qualification,
-        f_occupation: father.occupation,
-        f_mobile_no: father.contactNumber,
+        F_occupation: father.occupation,
+        F_mobile_no: father.contactNumber,
         Grand_father: father.middleName,
-        Mother_name: mother.fullName,
+        Mother_name: mother.firstName, // Only mother's first name
         M_Qualification: mother.qualification,
         M_occupation: mother.occupation,
         M_mobile_no: mother.contactNumber,
@@ -399,128 +399,146 @@ router.post('/submitEnrollmentForm', (req, res) => {
         Consent: consentText
     };
 
-    const query = `INSERT INTO test_student_details (
-        Firstname, Middlename, Surname, Name, DOB, Age, POB, Gender, Blood_Group, Address, 
-        landmark, taluka, district, state, pin_code, student_phone_no, Adhar_no, Religion, Nationality, 
-        Category, Caste, Domicile, Mother_Tongue, Documents_Submitted, Father_name, F_qualification, 
-        f_occupation, f_mobile_no, Grand_father, Mother_name, M_Qualification, M_occupation, M_mobile_no, 
-        guardian_name, guardian_contact, guardian_relation, guardian_address, guardian_landmark, guardian_pin_code, 
-        Section, Grno, Admission_Date, Standard, Division, Last_School, class_completed, percentage_last_school, 
-        package_breakup, total_package, transport_needed, transport_tagged, transport_pickup_drop, consent_text 
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    // Retrieve school name from cookie
+    const schoolName = req.cookies.schoolName;
+    if (!schoolName) {
+        return res.status(400).json({ error: 'School name is required' });
+    }
 
-    const values = [
-        studentDetails.Firstname,
-        studentDetails.Middlename,
-        studentDetails.Surname,
-        studentDetails.Name,
-        studentDetails.DOB,
-        studentDetails.Age,
-        studentDetails.POB,
-        studentDetails.Gender,
-        studentDetails.Blood_Group,
-        studentDetails.Address,
-        studentDetails.landmark,
-        studentDetails.taluka,
-        studentDetails.district,
-        studentDetails.state,
-        studentDetails.pin_code,
-        studentDetails.student_phone_no,
-        studentDetails.Adhar_no,
-        studentDetails.Religion,
-        studentDetails.Nationality,
-        studentDetails.Category,
-        studentDetails.Caste,
-        studentDetails.Domicile,
-        studentDetails.Mother_Tongue,
-        studentDetails.Documents_Submitted,
-        studentDetails.Father_name,
-        studentDetails.F_qualification,
-        studentDetails.f_occupation,
-        studentDetails.f_mobile_no,
-        studentDetails.Grand_father,
-        studentDetails.Mother_name,
-        studentDetails.M_Qualification,
-        studentDetails.M_occupation,
-        studentDetails.M_mobile_no,
-        studentDetails.guardian_name,
-        studentDetails.guardian_contact,
-        studentDetails.guardian_relation,
-        studentDetails.guardian_address,
-        studentDetails.guardian_landmark,
-        studentDetails.guardian_pin_code,
-        studentDetails.Section,
-        studentDetails.Grno,
-        studentDetails.Admission_Date,
-        studentDetails.Standard,
-        studentDetails.Division,
-        studentDetails.Last_School,
-        studentDetails.class_completed,
-        studentDetails.percentage_last_school,
-        studentDetails.package_breakup,
-        studentDetails.total_package,
-        studentDetails.transport_needed,
-        studentDetails.transport_tagged,
-        studentDetails.transport_pickup_drop,
-        studentDetails.Consent // Correct field
-    ];
+    // Format school name to lowercase and replace spaces with underscores
+    const formattedSchoolName = schoolName.replace(/\s+/g, '_').toLowerCase();
 
-    console.log('Executing query:', query);
-    console.log('With values:', values);
-
-    req.connectionPool.query(query, values, (error, result) => {
-        if (error) {
-            console.error('Error submitting enrollment form:', error);
-            return res.status(500).json({ error: 'Error submitting enrollment form' }); // Return to stop execution
+    // Start a transaction
+    req.connectionPool.getConnection((err, connection) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database connection failed' });
         }
-    
-        console.log('Query executed successfully:', result);
-    
-        if (result.affectedRows > 0) {
-            // Execute query for generating student android credentials
-            req.connectionPool.query(query, values, (error, result) => {
-                if (error) {
-                    console.error('Error submitting enrollment form:', error);
-                    return res.status(500).json({ error: 'Error submitting enrollment form' }); // Return to stop execution
-                }
-    
-                if (result.affectedRows > 0) {
-                    console.log('Student data inserted successfully. Generating credentials.');
-    
-                    // Generate student credentials
-                    const schoolName = req.cookies.schoolName;
-                    const { username, password } = generateUsernameAndPassword(fullName, schoolName);
-    
-                    const userType = 'student';
-                    const uid = `${schoolName.toLowerCase().replace(/\s+/g, '')}_student_${result.insertId}`;
-    
-                    const credentialsQuery = `INSERT INTO android_app_users (
-                        username, password, school_name, type, name, uid
-                    ) VALUES (?, ?, ?, ?, ?, ?)`;
-    
-                    const credentialsValues = [username, password, schoolName, userType, fullName, uid];
-    
-                    req.connectionPool.query(credentialsQuery, credentialsValues, (credentialsError, credentialsResult) => {
-                        if (credentialsError) {
-                            console.error('Error generating student credentials:', credentialsError);
-                            return res.status(500).json({ error: 'Error generating student credentials' }); // Return to stop execution
-                        }
-    
-                        if (credentialsResult.affectedRows > 0) {
-                            console.log('Student credentials generated successfully.');
-                            return res.status(200).json({ message: 'Enrollment form submitted and credentials generated successfully' }); // Final response, no further response sent
-                        } else {
-                            return res.status(500).json({ error: 'Failed to generate student credentials' }); // Return here
-                        }
+
+        connection.beginTransaction(error => {
+            if (error) {
+                return res.status(500).json({ error: 'Transaction initiation failed' });
+            }
+
+            // Query to get the current highest student_id and increment it by 1
+            const incrementStudentIdQuery = `SELECT MAX(student_id) AS maxStudentId FROM test_student_details`;
+
+            connection.query(incrementStudentIdQuery, (incrementError, incrementResult) => {
+                if (incrementError) {
+                    return connection.rollback(() => {
+                        console.error('Error retrieving student_id:', incrementError);
+                        res.status(500).json({ error: 'Error retrieving student_id' });
                     });
-                } else {
-                    return res.status(500).json({ error: 'Failed to insert student data into database' }); // Return here
                 }
+
+                const newStudentId = (incrementResult[0].maxStudentId || 0) + 1;
+                console.log(`Fetched student_id: ${incrementResult[0].maxStudentId}, New student_id: ${newStudentId}`);
+
+                const query = `INSERT INTO test_student_details (
+                    student_id, Firstname, Middlename, Surname, Name, DOB, Age, POB, Gender, Blood_Group, Address, 
+                    landmark, taluka, district, state, pin_code, student_phone_no, Adhar_no, Religion, Nationality, 
+                    Category, Caste, Domicile, Mother_Tongue, Documents_Submitted, Father_name, F_qualification, 
+                    F_occupation, F_mobile_no, Grand_father, Mother_name, M_Qualification, M_occupation, M_mobile_no, 
+                    guardian_name, guardian_contact, guardian_relation, guardian_address, guardian_landmark, guardian_pin_code, 
+                    Section, Grno, Admission_Date, Standard, Division, Last_School, class_completed, percentage_last_school, 
+                    package_breakup, total_package, transport_needed, transport_tagged, transport_pickup_drop, consent_text
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+                const values = [
+                    newStudentId,
+                    studentDetails.Firstname,
+                    studentDetails.Middlename,
+                    studentDetails.Surname,
+                    studentDetails.Name,
+                    studentDetails.DOB,
+                    studentDetails.Age,
+                    studentDetails.POB,
+                    studentDetails.Gender,
+                    studentDetails.Blood_Group,
+                    studentDetails.Address,
+                    studentDetails.landmark,
+                    studentDetails.taluka,
+                    studentDetails.district,
+                    studentDetails.state,
+                    studentDetails.pin_code,
+                    studentDetails.student_phone_no,
+                    studentDetails.Adhar_no,
+                    studentDetails.Religion,
+                    studentDetails.Nationality,
+                    studentDetails.Category,
+                    studentDetails.Caste,
+                    studentDetails.Domicile,
+                    studentDetails.Mother_Tongue,
+                    studentDetails.Documents_Submitted,
+                    studentDetails.Father_name,
+                    studentDetails.F_qualification,
+                    studentDetails.F_occupation,
+                    studentDetails.F_mobile_no,
+                    studentDetails.Grand_father,
+                    studentDetails.Mother_name, // Only mother's first name
+                    studentDetails.M_Qualification,
+                    studentDetails.M_occupation,
+                    studentDetails.M_mobile_no,
+                    studentDetails.guardian_name,
+                    studentDetails.guardian_contact,
+                    studentDetails.guardian_relation,
+                    studentDetails.guardian_address,
+                    studentDetails.guardian_landmark,
+                    studentDetails.guardian_pin_code,
+                    studentDetails.Section,
+                    studentDetails.Grno,
+                    studentDetails.Admission_Date,
+                    studentDetails.Standard,
+                    studentDetails.Division,
+                    studentDetails.Last_School,
+                    studentDetails.class_completed,
+                    studentDetails.percentage_last_school,
+                    studentDetails.package_breakup,
+                    studentDetails.total_package,
+                    studentDetails.transport_needed,
+                    studentDetails.transport_tagged,
+                    studentDetails.transport_pickup_drop,
+                    studentDetails.Consent // Correct field
+                ];
+
+                connection.query(query, values, (error, result) => {
+                    if (error) {
+                        return connection.rollback(() => {
+                            console.error('Error submitting enrollment form:', error);
+                            res.status(500).json({ error: 'Error submitting enrollment form' });
+                        });
+                    }
+
+                    // Generate the UID for insertion using the previously stored newStudentId and log it
+                    const appUid = `${formattedSchoolName}_student_${newStudentId}`;
+                    console.log(`Generated app_uid: ${appUid}`);
+
+                    // Update the test_student_details table with the app_uid
+                    const updateQuery = `UPDATE test_student_details SET app_uid = ? WHERE student_id = ?`;
+                    connection.query(updateQuery, [appUid, newStudentId], (updateError) => {
+                        if (updateError) {
+                            return connection.rollback(() => {
+                                console.error('Error updating app_uid:', updateError);
+                                res.status(500).json({ error: 'Error updating app_uid' });
+                            });
+                        }
+
+                        // Commit the transaction after all queries succeed
+                        connection.commit(commitError => {
+                            if (commitError) {
+                                return connection.rollback(() => {
+                                    console.error('Transaction commit failed:', commitError);
+                                    res.status(500).json({ error: 'Transaction commit failed' });
+                                });
+                            }
+
+                            console.log('Transaction committed successfully.');
+                            res.status(200).json({ message: 'Enrollment form submitted successfully', appUid });
+                        });
+                    });
+                });
             });
-        } else {
-            return res.status(500).json({ error: 'Failed to insert data into database' }); // Return here
-        }
-    });    
+        });
+    });
 });
 
 function generateUsernameAndPassword(fullName, schoolName) {
