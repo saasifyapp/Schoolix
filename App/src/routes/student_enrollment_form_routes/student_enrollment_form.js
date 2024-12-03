@@ -522,7 +522,7 @@ router.post('/submitEnrollmentForm', (req, res) => {
                             });
                         }
 
-                        const { username, password } = generateUsernameAndPassword(fullName, schoolName);
+                        const { username, password } = generateUsernameAndPassword(fullName, schoolName, grNo);
 
                         // Insert into android_app_users table
                         const insertIntoAndroidAppUsersQuery = `
@@ -530,10 +530,10 @@ router.post('/submitEnrollmentForm', (req, res) => {
                             VALUES (?, ?, ?, ?, ?, ?)
                         `;
 
-                        const type = 'student'; // Assuming the type is 'student'
+                        const userType = 'student'; // Assuming the type is 'student'
                         const studentName = `${firstName} ${middleName} ${lastName}`;
 
-                        connection.query(insertIntoAndroidAppUsersQuery, [username, password, schoolName, type, studentName, appUid], (androidAppUsersError) => {
+                        connection.query(insertIntoAndroidAppUsersQuery, [username, password, schoolName, userType, studentName, appUid], (androidAppUsersError) => {
                             if (androidAppUsersError) {
                                 return connection.rollback(() => {
                                     console.error('Error inserting into android_app_users:', androidAppUsersError);
@@ -561,7 +561,7 @@ router.post('/submitEnrollmentForm', (req, res) => {
     });
 });
 
-function generateUsernameAndPassword(fullName, schoolName) {
+function generateUsernameAndPassword(fullName, schoolName, grNo) {
     // Split the full name by spaces to extract the name parts
     const nameParts = fullName.split(/\s+/);
 
@@ -571,10 +571,10 @@ function generateUsernameAndPassword(fullName, schoolName) {
     const lastPart = nameParts[2] ? nameParts[2].toLowerCase() : nameParts[1] ? nameParts[1].toLowerCase() : "";
 
     // Combine the parts to form the username
-    const username = `${firstPart}${lastPart}`;
+    const username = `${firstPart}${lastPart}${grNo}`;
 
     // Get the first two letters of the school name
-    const schoolAbbr = schoolName.split(" ").map(word => word[0]).join("").toLowerCase();
+    const schoolAbbr = schoolName.split(" ").map(word => word.slice(0, 1)).join("").toLowerCase();
 
     // Create the username in the format username@schoolAbbr
     const userWithSchool = `${username}@${schoolAbbr}`;
