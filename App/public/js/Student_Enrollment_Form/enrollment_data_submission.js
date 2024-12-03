@@ -1014,13 +1014,36 @@ function collectConsent() {
 }
 
 function submitForm() {
-    // formData = {}; // Initialize formData as an empty object
-    // collectStudentInformation();
-    // collectGuardianInformation();
-    // collectAcademicInformation(); // Collect Academic Information
-    // collectFeesInformation(); // Collect Fees Information
-    // collectTransportInformation();
-    // collectConsent();
+    // Show the loading animation
+    const overlay = document.getElementById('loadingOverlay');
+    const loadingText = document.getElementById('loadingText');
+    overlay.style.visibility = 'visible';
+
+    // Steps to display
+    const steps = [
+        'Submitting student information...',
+        'Submitting guardian information...',
+        'Submitting academic information...',
+        'Submitting fees information...',
+        'Submitting transport information...',
+        'Submitting consent...'
+    ];
+
+    // Display each step with a delay
+    let stepIndex = 0;
+    const stepInterval = 1000; // 1 second per step
+    const displaySteps = setInterval(() => {
+        if (stepIndex < steps.length) {
+            loadingText.textContent = steps[stepIndex];
+            stepIndex++;
+        } else {
+            clearInterval(displaySteps);
+        }
+    }, stepInterval);
+
+    // Simulate loading duration (minimum 6 seconds)
+    const minimumLoadingTime = 6000; // 6 seconds
+    const startTime = Date.now();
 
     fetch('/submitEnrollmentForm', {
         method: 'POST',
@@ -1029,18 +1052,39 @@ function submitForm() {
         },
         body: JSON.stringify(formData)
     })
-        .then(response => {
-            console.log('Server response:', response);
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             if (data.error) {
-                console.error('Error:', data.error);
-            } else {
-                console.log('Success:', data.message);
+                throw new Error(data.error); // Trigger the error handler
             }
+
+            // Calculate remaining time for the animation
+            const elapsedTime = Date.now() - startTime;
+            const remainingTime = Math.max(0, minimumLoadingTime - elapsedTime);
+
+            setTimeout(() => {
+                // Hide the loading animation
+                overlay.style.visibility = 'hidden';
+
+                // Display success alert
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Form submitted successfully!',
+                    confirmButtonText: 'OK'
+                });
+            }, remainingTime); // Ensure animation lasts at least 6 seconds
         })
-        .catch((error) => {
-            console.error('Error:', error);
+        .catch(error => {
+            // Hide the loading animation immediately on error
+            overlay.style.visibility = 'hidden';
+
+            // Display error alert
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'Failed to submit form',
+                confirmButtonText: 'OK'
+            });
         });
 }
