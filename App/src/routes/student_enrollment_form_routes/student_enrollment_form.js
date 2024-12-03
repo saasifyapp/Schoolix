@@ -522,17 +522,37 @@ router.post('/submitEnrollmentForm', (req, res) => {
                             });
                         }
 
-                        // Commit the transaction after all queries succeed
-                        connection.commit(commitError => {
-                            if (commitError) {
+                        const { username, password } = generateUsernameAndPassword(fullName, schoolName);
+
+                        // Insert into android_app_users table
+                        const insertIntoAndroidAppUsersQuery = `
+                            INSERT INTO android_app_users (username, password, school_name, type, name, uid)
+                            VALUES (?, ?, ?, ?, ?, ?)
+                        `;
+
+                        const type = 'student'; // Assuming the type is 'student'
+                        const studentName = `${firstName} ${middleName} ${lastName}`;
+
+                        connection.query(insertIntoAndroidAppUsersQuery, [username, password, schoolName, type, studentName, appUid], (androidAppUsersError) => {
+                            if (androidAppUsersError) {
                                 return connection.rollback(() => {
-                                    console.error('Transaction commit failed:', commitError);
-                                    res.status(500).json({ error: 'Transaction commit failed' });
+                                    console.error('Error inserting into android_app_users:', androidAppUsersError);
+                                    res.status(500).json({ error: 'Error inserting into android_app_users' });
                                 });
                             }
 
-                            console.log('Transaction committed successfully.');
-                            res.status(200).json({ message: 'Enrollment form submitted successfully', appUid });
+                            // Commit the transaction after all queries succeed
+                            connection.commit(commitError => {
+                                if (commitError) {
+                                    return connection.rollback(() => {
+                                        console.error('Transaction commit failed:', commitError);
+                                        res.status(500).json({ error: 'Transaction commit failed' });
+                                    });
+                                }
+
+                                console.log('Transaction committed successfully.');
+                                res.status(200).json({ message: 'Enrollment form submitted successfully', appUid });
+                            });
                         });
                     });
                 });
@@ -545,21 +565,24 @@ function generateUsernameAndPassword(fullName, schoolName) {
     // Split the full name by spaces to extract the name parts
     const nameParts = fullName.split(/\s+/);
 
-    // Get the first letter from the first name and the first three letters from the last name
-    const firstPart = nameParts[0].slice(0, 2).toLowerCase();  // First two letter of first name
-    const secondPart = nameParts[1].slice(0, 2).toLowerCase(); // First two letters of last name
-    const lastPart = nameParts[2].slice(0, 2).toLowerCase();   // First two letters of last name 
+    // Get the first part from the first name, middle name, and last name
+    const firstPart = nameParts[0] ? nameParts[0].toLowerCase() : "";
+    const middlePart = nameParts[1] ? nameParts[1].toLowerCase() : "";
+    const lastPart = nameParts[2] ? nameParts[2].toLowerCase() : nameParts[1] ? nameParts[1].toLowerCase() : "";
 
     // Combine the parts to form the username
-    const username = `${firstPart}${secondPart}${lastPart}`;
+    const username = `${firstPart}${lastPart}`;
 
-    // Get the first three letters of the school name
+    // Get the first two letters of the school name
     const schoolAbbr = schoolName.split(" ").map(word => word[0]).join("").toLowerCase();
 
-    // Create the password by combining the school abbreviation and the username
-    const password = `${schoolAbbr}@${username}`;
+    // Create the username in the format username@schoolAbbr
+    const userWithSchool = `${username}@${schoolAbbr}`;
 
-    return { username, password };
+    // Create the password by combining the school abbreviation and the first two letters of the name parts
+    const password = `${schoolAbbr}@${firstPart.slice(0, 2)}${middlePart.slice(0, 2)}${lastPart.slice(0, 2)}`;
+
+    return { username: userWithSchool, password };
 }
 
 module.exports = router;
