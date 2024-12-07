@@ -73,6 +73,13 @@ body {
 h2{   
     font-size: 30px;
     color: var(--grey-color);
+    position: sticky;
+    top: 0; /* Distance from the top of the container */
+    background-color: #f8f9fa; /* Optional: Match the background to avoid overlap issues */
+    z-index: 10; /* Ensure it stays above other elements */
+    padding: 10px; /* Optional: Add padding for better aesthetics */
+    margin: 0; /* Reset margin if needed */
+    border-bottom: 1px solid #ddd; /* Optional: Add a separator line */
 }
 
 h3{   
