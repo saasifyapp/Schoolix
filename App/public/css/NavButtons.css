@@ -10,6 +10,22 @@
   }
 }
 
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0000;
+  border-radius: 30px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1C4ED8;
+  border-radius: 30px;
+  border: 20px solid #555777;
+}
+
 /* .corner-button {
     position: absolute;
     top: 10px;
