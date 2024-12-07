@@ -359,6 +359,35 @@ h3{
     opacity: 0; /* Start invisible */
 }
 
+/* Apply staggered delay for each li element */
+.form-navigation li:nth-child(1) {
+    animation-delay: 0s; /* First item starts immediately */
+}
+
+.form-navigation li:nth-child(2) {
+    animation-delay: 0.1s; /* Second item starts after 0.2s */
+}
+
+.form-navigation li:nth-child(3) {
+    animation-delay: 0.2s; /* Third item starts after 0.4s */
+}
+
+.form-navigation li:nth-child(4) {
+    animation-delay: 0.3s; /* Fourth item starts after 0.6s */
+}
+
+.form-navigation li:nth-child(5) {
+    animation-delay: 0.4s; /* Fourth item starts after 0.6s */
+}
+
+.form-navigation li:nth-child(6) {
+    animation-delay: 0.5s; /* Fourth item starts after 0.6s */
+}
+
+
+/* Add more delays as needed for additional items */
+
+
 @keyframes fadeUp {
     0% {
         transform: translateY(20px); /* Start slightly below */
