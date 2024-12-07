@@ -82,6 +82,14 @@ h2{
     border-bottom: 1px solid #ddd; /* Optional: Add a separator line */
 }
 
+.heading-icon {
+    width: 35px; /* Adjust the size of the icon */
+    height: 35px;
+    vertical-align: middle; /* Align it with the text baseline */
+    margin-right: 5px; /* Space between icon and text */
+}
+
+
 h3{   
     font-size: 20px;
     color: var(--grey-color);
@@ -326,4 +334,45 @@ h3{
 
 .styled-table tr td {
     transition: background-color 0.3s ease;
+}
+
+
+
+
+/* ///////////////////////////Animation///////////////////////////// */
+
+@keyframes slideInFromLeft {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Apply animation to all li items */
+.form-navigation li {
+    animation: slideInFromLeft 0.6s ease-out;
+    animation-fill-mode: forwards; /* Ensure the animation state persists */
+    opacity: 0; /* Start invisible */
+}
+
+@keyframes fadeUp {
+    0% {
+        transform: translateY(20px); /* Start slightly below */
+        opacity: 0; /* Start fully transparent */
+    }
+    100% {
+        transform: translateY(0); /* End at its original position */
+        opacity: 1; /* Fully visible */
+    }
+}
+
+/* Apply fade-up animation */
+.form-section {
+    opacity: 0; /* Initially hidden */
+    animation: fadeUp 0.8s ease-out;
+    animation-fill-mode: forwards; /* Persist the final state */
 }
