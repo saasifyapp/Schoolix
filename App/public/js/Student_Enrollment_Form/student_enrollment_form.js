@@ -105,35 +105,35 @@ document.querySelectorAll('.form-control, textarea').forEach(input => {
 updateProgressBar();
 
 
-    // Function to check if all fields in a section are filled
-    function checkSectionCompletion(sectionId) {
-        const section = document.getElementById(sectionId);
-        const inputs = section.querySelectorAll('.form-control, textarea'); // Select all input and textarea fields
-        return Array.from(inputs).every(input => input.value.trim() !== ""); // Check if all inputs are filled
-    }
+// Function to check if all fields in a section are filled
+function checkSectionCompletion(sectionId) {
+    const section = document.getElementById(sectionId);
+    const inputs = section.querySelectorAll('.form-control, textarea'); // Select all input and textarea fields
+    return Array.from(inputs).every(input => input.value.trim() !== ""); // Check if all inputs are filled
+}
 
-    // Function to update the done icon for navigation items
-    function updateDoneIcons() {
-        document.querySelectorAll('.form-navigation li').forEach(item => {
-            const sectionId = item.id.replace('-info', '-information'); // Map navigation ID to section ID
-            const isComplete = checkSectionCompletion(sectionId); // Check if the section is complete
-            const doneIcon = item.querySelector('.done-icon'); // Get the done icon for the current item
+// Function to update the done icon for navigation items
+function updateDoneIcons() {
+    document.querySelectorAll('.form-navigation li').forEach(item => {
+        const sectionId = item.id.replace('-info', '-information'); // Map navigation ID to section ID
+        const isComplete = checkSectionCompletion(sectionId); // Check if the section is complete
+        const doneIcon = item.querySelector('.done-icon'); // Get the done icon for the current item
 
-            if (isComplete) {
-                doneIcon.style.display = 'inline'; // Show the done icon if the section is complete
-            } else {
-                doneIcon.style.display = 'none'; // Hide the done icon if the section is incomplete
-            }
-        });
-    }
-
-    // Add event listeners to all inputs to update the icons dynamically
-    document.querySelectorAll('.form-control, textarea').forEach(input => {
-        input.addEventListener('input', updateDoneIcons);
+        if (isComplete) {
+            doneIcon.style.display = 'inline'; // Show the done icon if the section is complete
+        } else {
+            doneIcon.style.display = 'none'; // Hide the done icon if the section is incomplete
+        }
     });
+}
 
-    // Initialize done icons on page load
-    updateDoneIcons();
+// Add event listeners to all inputs to update the icons dynamically
+document.querySelectorAll('.form-control, textarea').forEach(input => {
+    input.addEventListener('input', updateDoneIcons);
+});
+
+// Initialize done icons on page load
+updateDoneIcons();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1867,7 +1867,7 @@ document.getElementById('generatePackageBtn').addEventListener('click', function
             const feeDetailsSection = document.querySelector('.input-container h3:contains("Fee Details")').parentElement;
             const feeCategoryInputExists = feeDetailsSection.querySelector('#feeCategory');
             const packageAllottedInputExists = feeDetailsSection.querySelector('#packageAllotted');
-            
+
             // Only create the input fields if they don't already exist in the Fee Details section
             if (!feeCategoryInputExists) {
                 const feeCategoryInput = document.createElement('input');
@@ -2158,7 +2158,7 @@ function filterAndDisplayVehicleRunning(query, suggestionsContainer, vehicleRunn
 
     // Add event listeners for selection
     suggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
-        item.addEventListener('click', function() {
+        item.addEventListener('click', function () {
             vehicleRunningInput.value = this.dataset.value;
             fetchVehicleInfo(this.dataset.value);
             suggestionsContainer.innerHTML = '';
@@ -2171,7 +2171,7 @@ function filterAndDisplayVehicleRunning(query, suggestionsContainer, vehicleRunn
 // Add event listener to the checkbox to enable/disable input
 document.getElementById('noVehicleFound').addEventListener('change', function () {
     const vehicleRunningInput = document.getElementById('vehicleRunning');
-    
+
     if (this.checked) {
         // Disable the input field and clear its value
         vehicleRunningInput.disabled = true;
@@ -2236,7 +2236,7 @@ function clearVehicleRunningInfo() {
 }
 
 // Initialization of vehicle running suggestion box
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const vehicleRunningInput = document.getElementById('vehicleRunning');
     const vehicleRunningSuggestionsContainer = document.getElementById('vehicleRunningSuggestions');
     const pickDropAddressInput = document.getElementById('pickDropAddress');
@@ -2251,9 +2251,35 @@ document.addEventListener("DOMContentLoaded", function() {
     vehicleRunningInput.addEventListener('click', displayVehicleRunningSuggestions);
     pickDropAddressInput.addEventListener('change', clearVehicleRunningInfo);
 
-    document.addEventListener('click', function(event) {
+    document.addEventListener('click', function (event) {
         if (!vehicleRunningSuggestionsContainer.contains(event.target) && !vehicleRunningInput.contains(event.target)) {
             vehicleRunningSuggestionsContainer.style.display = "none";
         }
+    });
+});
+
+// function to check all the consent at once
+// Select All checkbox
+const selectAllCheckbox = document.getElementById('select-all-checkbox');
+
+// Individual consent checkboxes
+const consentCheckboxes = document.querySelectorAll('.consent-checkbox');
+
+// Toggle all checkboxes when "Select All" is clicked
+selectAllCheckbox.addEventListener('change', () => {
+    const isChecked = selectAllCheckbox.checked;
+    consentCheckboxes.forEach(checkbox => {
+        checkbox.checked = isChecked;
+    });
+});
+
+// Update "Select All" checkbox state when individual checkboxes are clicked
+consentCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', () => {
+        const allChecked = Array.from(consentCheckboxes).every(cb => cb.checked);
+        const noneChecked = Array.from(consentCheckboxes).every(cb => !cb.checked);
+
+        selectAllCheckbox.checked = allChecked;
+        selectAllCheckbox.indeterminate = !allChecked && !noneChecked;
     });
 });
