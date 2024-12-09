@@ -175,15 +175,61 @@
     cursor: pointer;
 }
 
-.prev-button {
-    background-color: #f0ad4e; /* Amber color */
-    color: white;
+.prev-button,
+.next-button {
+    margin-bottom: 15px;
+    /* Add margin between the buttons */
+    cursor: pointer;
+    background-color: #f0ad4e;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    color: black;
+    border: none;
+    border-radius: 20px;
+    height: 2.3rem;
+    width: 6.5rem;
+    font-size: 1rem;
+    /* Reduce the font size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    /* Add padding to fit content */
+    transition: all 0.3s;
+    /* Add transition for smooth hover effect */
+    font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
 }
 
-.next-button {
-    background-color: #5cb85c; /* Green color */
-    color: white;
+.prev-button img,
+.next-button  img {
+    height: 80%;
+    /* Set image height to fit button */
+    margin-right: 5px;
+    /* Add a 5px margin to the right of the image */
 }
+
+.prev-button img{
+    transform: rotate(180deg);
+}
+
+
+.prev-button:hover {
+    background-color: #27AE60;
+    /* Change background color on hover */
+    transform: scale(1.05);
+    /* Increase size on hover */
+}
+
+.next-button:hover {
+    background-color: #5cb85c;
+    /* Change background color on hover */
+    transform: scale(1.05);
+    /* Increase size on hover */
+}
+
+
+
+
 
 .btn:hover {
     opacity: 0.8;
