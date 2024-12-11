@@ -411,6 +411,10 @@ app.get('/Student_Enrollment_Form/student_enrollment_form', authenticateToken, (
     res.sendFile(path.join(__dirname, 'public', 'Student_Enrollment_Form', 'student_enrollment_form.html'));
 });
 
+app.get('/Student_Enrollment_Form/manage_student', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Student_Enrollment_Form', 'manage_student.html'));
+});
+
 /////////////////////// ROUTES FOR MAIN DASHBOARD COMPONENTS ///////////////////////////////////////
 
 // const main_dashboard_dataRouter = require('./src/routes/main_dashboard_data');
