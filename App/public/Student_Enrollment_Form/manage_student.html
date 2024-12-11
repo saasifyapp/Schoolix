@@ -45,7 +45,7 @@
 
     <div class="cards-container">
         <div class="card">
-            <button id="updateStudent">
+            <a href="/Student_Enrollment_Form/update_student">
                 <div class="dotlottie-container">
                     <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
                         type="module"></script>
@@ -54,7 +54,7 @@
                         loop autoplay></dotlottie-player>
                 </div>
                 <h3>Update Student</h3>
-            </button>
+            </a>
         </div>
 
         <div class="card">
@@ -84,31 +84,7 @@
         </div>
     </div>
 
-    <div id="updateStudentOverlay" class="overlay-search">
-        <div class="overlay-content-search">
-            <button id="closeOverlayUpdate" class="close-button">&times;</button>
-            <img src="/images/test.gif" alt="Overlay Icon" class="overlay-icon">
-            <h2 class="overlay-search-head">Update Student</h2>
-            <div class="search-container">
-                <div class="form-Searchgroup">
-                    <div class="form-Searchgroup">
-                        <img class="Icon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
-                        <input type="text" class="form-control" id="searchBar" name="" placeholder=" " oninput=""
-                            style="width: 400px; height: 1.7rem !important;">
-                        <span class="form-control-placeholder" style="left: 3.75rem;">Search Student...</span>
-                    </div>
-                    <button class="refreshButton" id="" style="margin-top: 10px;">
-                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
-                    </button>
-                </div>
-            </div>
-            <button class="export_registered_students" id="" onclick="exportFeeCategoryTable()">
-                <img src="/images/export.png" alt="Export Icon"> Export
-            </button>
-
-
-        </div>
-    </div>
+    
 
     <!-- Search Student Overlay -->
     <div id="searchStudentOverlay" class="overlay-search">
