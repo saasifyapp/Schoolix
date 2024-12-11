@@ -10,6 +10,7 @@ body {
     background-color: #f2f2f2;
     margin: 0;
     padding: 0;
+    overflow-y: auto !important ;
 }
 
 .main {
@@ -116,7 +117,7 @@ label {
     color: #555;
 }
 
-#name, #mobile, #address, #dateofbirth, #qualification, #experience,
+#name, #mobile, #address, #dateofbirth, #qualification, #experience,#references,
 select {
     background-color: transparent;
     width: 70%;

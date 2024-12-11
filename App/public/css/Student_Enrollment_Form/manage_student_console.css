@@ -341,7 +341,7 @@ body {
     /* Allow it to take up remaining space */
 }
 
-.vendorIcon {
+.Icon {
     position: relative;
     width: 2rem;
     height: 2rem;

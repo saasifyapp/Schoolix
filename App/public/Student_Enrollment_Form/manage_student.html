@@ -45,20 +45,20 @@
 
     <div class="cards-container">
         <div class="card">
-            <button id="feeCategoryButton">
+            <button id="updateStudent">
                 <div class="dotlottie-container">
                     <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
                         type="module"></script>
                     <dotlottie-player src="https://lottie.host/65e8551a-f44b-48e1-acec-1ced97cdc83c/0XsoVpU2gc.lottie"
-                        background="transparent" speed="1" style="width: 270px; height: 200px; margin-bottom: 20px;" loop
-                        autoplay></dotlottie-player>
+                        background="transparent" speed="1" style="width: 270px; height: 200px; margin-bottom: 20px;"
+                        loop autoplay></dotlottie-player>
                 </div>
                 <h3>Update Student</h3>
             </button>
         </div>
 
         <div class="card">
-            <button id="feeAmountButton">
+            <button id="searchStudent">
                 <div class="dotlottie-container">
                     <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
                         type="module"></script>
@@ -71,16 +71,79 @@
         </div>
 
         <div class="card">
-            <button id="feeReportButton">
+            <button id="deleteStudent">
                 <div class="dotlottie-container" style="padding: 10px">
                     <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
                         type="module"></script>
                     <dotlottie-player src="https://lottie.host/5abc2152-752a-4c97-87d2-75d9d66edd85/gYLwbJuOgf.lottie"
-                        background="transparent" speed="1" style="width: 260px; height: 200px; margin-bottom: 10px;" loop
-                        autoplay></dotlottie-player>
+                        background="transparent" speed="1" style="width: 260px; height: 200px; margin-bottom: 10px;"
+                        loop autoplay></dotlottie-player>
                 </div>
                 <h3>Delete Student</h3>
             </button>
+        </div>
+    </div>
+
+    <div id="updateStudentOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeOverlayUpdate" class="close-button">&times;</button>
+            <img src="/images/test.gif" alt="Overlay Icon" class="overlay-icon">
+            <h2 class="overlay-search-head">Update Student</h2>
+            <div class="search-container">
+                <div class="form-Searchgroup">
+                    <div class="form-Searchgroup">
+                        <img class="Icon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                        <input type="text" class="form-control" id="searchBar" name="" placeholder=" " oninput=""
+                            style="width: 400px; height: 1.7rem !important;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search Student...</span>
+                    </div>
+                    <button class="refreshButton" id="" style="margin-top: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
+                </div>
+            </div>
+            <button class="export_registered_students" id="" onclick="exportFeeCategoryTable()">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+
+
+        </div>
+    </div>
+
+    <!-- Search Student Overlay -->
+    <div id="searchStudentOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeOverlaySearch" class="close-button">&times;</button>
+            <img src="/images/search.gif" alt="Overlay Icon" class="overlay-icon">
+            <h2 class="overlay-search-head">Search Student</h2>
+            <div class="search-container">
+                <div class="form-Searchgroup">
+                    <img class="Icon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                    <input type="text" class="form-control" id="searchBarSearch" name="" placeholder=" " oninput=""
+                        style="width: 400px; height: 1.7rem !important;">
+                    <span class="form-control-placeholder" style="left: 3.75rem;">Search Student...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Student Overlay -->
+    <div id="deleteStudentOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeOverlayDelete" class="close-button">&times;</button>
+            <img src="/images/delete.gif" alt="Overlay Icon" class="overlay-icon">
+            <h2 class="overlay-search-head">Delete Student</h2>
+            <div class="delete-container">
+                <div class="form-Searchgroup">
+                    <img class="Icon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                    <input type="text" class="form-control" id="searchBarDelete" name="" placeholder=" " oninput=""
+                        style="width: 400px; height: 1.7rem !important;">
+                    <span class="form-control-placeholder" style="left: 3.75rem;">Enter Student ID...</span>
+                </div>
+                <button class="deleteButton" id="deleteButton" style="margin-top: 10px;">
+                    <img src="/images/delete.png" alt="Delete Icon"> Delete
+                </button>
+            </div>
         </div>
     </div>
 
@@ -88,7 +151,12 @@
 
 
 
+
+
+
+
     <script src="/js/Inventory_js/All.js"></script>
+    <script src="/js/Student_Enrollment_Form/manage_student.js"></script>
 
 
 
