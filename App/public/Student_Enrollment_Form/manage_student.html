@@ -84,24 +84,119 @@
         </div>
     </div>
 
-    
-
-    <!-- Search Student Overlay -->
+    <!-- Overlay for Search Student -->
     <div id="searchStudentOverlay" class="overlay-search">
         <div class="overlay-content-search">
-            <button id="closeOverlaySearch" class="close-button">&times;</button>
-            <img src="/images/search.gif" alt="Overlay Icon" class="overlay-icon">
+            <button id="closeSearchStudentOverlay" class="close-button">&times;</button>
+            <img src="/images/searchstudent.gif" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
             <h2 class="overlay-search-head">Search Student</h2>
             <div class="search-container">
                 <div class="form-Searchgroup">
-                    <img class="Icon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
-                    <input type="text" class="form-control" id="searchBarSearch" name="" placeholder=" " oninput=""
-                        style="width: 400px; height: 1.7rem !important;">
-                    <span class="form-control-placeholder" style="left: 3.75rem;">Search Student...</span>
+                    <div class="form-Searchgroup">
+                        <img class="searchIcon" src="/images/search.gif" alt="Search Icon"
+                            style="right: 25px; left: 405px;">
+                        <input type="text" class="form-control" id="searchStudentInput" name="studentSearch"
+                            placeholder=" " oninput="searchStudentDetails()" style="width: 400px;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search by Name or GR Number</span>
+                    </div>
+
+
+
+                    <select id="studentFilter" class="form-control"
+                        style="width: 200px; margin-right: 10px;margin-left: 10px;">
+                        <option value="all">All Students</option>
+                        <option value="active">Active Students</option>
+                        <option value="inactive">Inactive Students</option>
+                    </select>
+
+                    <button class="filterButton" onclick="applyFilter()" style="margin-top: 10px; margin-left: 10px;">
+                        <img src="/images/filter.png" alt="Refresh Icon"> Filter
+                    </button>
+
+                    <button class="refreshButton" onclick="refreshStudentsData()"
+                        style="margin-top: 10px; margin-left: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
+                </div>
+
+            </div>
+            <button class="export_registered_students" onclick="exportStudentsTable()">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+            <div class="table-container">
+                <table id="studentsTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Student Name</th>
+                            <th>Class</th>
+                            <th>Contact</th>
+                            <th>Gender</th>
+                            <th>Address</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTablebody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Overlay -->
+    <div id="filterOverlay" class="overlay">
+        <div class="overlay-content">
+            <button id="closeFilterOverlay" class="close-button">&times;</button>
+            <h2>Add Filters</h2>
+            <div class="overlay-inner">
+                <div class="left-side">
+                    <div class="select-section">
+                        <h3>Select Section</h3>
+                        <label>
+                            <input type="checkbox" name="section" value="primary" onclick="updateRightSide()"> Primary
+                        </label>
+                        <label>
+                            <input type="checkbox" name="section" value="preprimary" onclick="updateRightSide()">
+                            Preprimary
+                        </label>
+                        <label>
+                            <input type="checkbox" name="section" value="all" onclick="updateRightSide()"> All
+                        </label>
+                    </div>
+
+                    <div class="select-filter">
+                        <h3>Select Filters</h3>
+                        <label>
+                            <input type="checkbox" name="filter" value="Name" onclick="updateRightSide()"> Name
+                        </label>
+                        <label>
+                            <input type="checkbox" name="filter" value="Contact" onclick="updateRightSide()"> Contact
+                        </label>
+                        <label>
+                            <input type="checkbox" name="filter" value="Address" onclick="updateRightSide()"> Address
+                        </label>
+                    </div>
+                </div>
+
+                <div class="right-side">
+                    <h3>Selected Filters</h3>
+                    <div id="selectedFilters"></div>
+                    <!-- Apply Button -->
+
+
+                    <button id="applyFiltersButton" class="apply-button" onclick="">
+                        <img src="/images/checked.png" alt="Refresh Icon"> Apply</button>
                 </div>
             </div>
         </div>
     </div>
+
+
+
+
+
+
+
 
     <!-- Delete Student Overlay -->
     <div id="deleteStudentOverlay" class="overlay-search">
@@ -111,7 +206,7 @@
             <h2 class="overlay-search-head">Delete Student</h2>
             <div class="delete-container">
                 <div class="form-Searchgroup">
-                    <img class="Icon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                    <img class="searchIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
                     <input type="text" class="form-control" id="searchBarDelete" name="" placeholder=" " oninput=""
                         style="width: 400px; height: 1.7rem !important;">
                     <span class="form-control-placeholder" style="left: 3.75rem;">Enter Student ID...</span>
@@ -122,6 +217,9 @@
             </div>
         </div>
     </div>
+
+
+
 
 
 
