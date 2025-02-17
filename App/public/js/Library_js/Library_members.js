@@ -1,6 +1,27 @@
 let membersData = {}; // Object to store members by ID
 let memberNamesInClass = {}; // Object to store member names by class
 
+async function autoGenerateLibraryMembers() {
+    try {
+        const response = await fetch('/library/autoGenerate_library_members', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log('Library members auto-generated successfully:', data);
+    } catch (error) {
+        console.error('Error auto-generating library members:', error);
+    }
+}
+
+
 async function refreshMembersData() {
     document.getElementById('searchMemberInput').value = '';
     try {
@@ -18,6 +39,153 @@ async function refreshMembersData() {
         console.error('Error fetching members:', error);
     }
 }
+
+
+function displayMembers(data) {
+    const memberTableBody = document.getElementById('membersTablebody');
+    memberTableBody.innerHTML = ''; // Clear existing rows
+
+    // Reverse the data array
+    data.reverse();
+
+    if (data.length === 0) {
+        hidelibraryLoadingAnimation();
+        const noResultsRow = document.createElement('tr');
+        noResultsRow.innerHTML = '<td colspan="5">No results found</td>';
+        memberTableBody.appendChild(noResultsRow);
+    } else {
+        data.forEach(member => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${member.memberID}</td>
+                <td>${member.member_name}</td>
+                <td>${member.member_class}</td>
+                <td>${member.member_contact}</td>
+                <td>${member.books_issued}</td>
+                 <td>
+<!--                 
+                        <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
+    <button style="background-color: transparent;
+        border: none;
+        color: black;
+        padding: 0;
+        text-align: center;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        cursor: pointer;
+        max-height: 100%;
+        border-radius: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin-bottom: 10px;"
+        onclick="editMember('${member.memberID}')"
+        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+        <img src="../images/edit.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+        <span style="margin-right: 10px;">Edit</span>
+    </button>
+    <button style="background-color: transparent;
+        border: none;
+        color: black;
+        padding: 0;
+        text-align: center;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        cursor: pointer;
+        max-height: 100%;
+        border-radius: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin-bottom: 10px;"
+        onclick="deleteMember('${member.memberID}')"
+        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+        <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
+        <span style="margin-right: 10px;">Delete</span>
+    </button>
+</div>
+-->
+                    </td>
+            `;
+            memberTableBody.appendChild(row);
+            hidelibraryLoadingAnimation();
+        });
+    }
+}
+
+function searchMemberDetails() {
+    const searchTerm = document.getElementById("searchMemberInput").value.trim().toLowerCase();
+
+    // Check if the search term is empty
+    if (!searchTerm) {
+        // showToast("Please enter a search term.", true);
+        displayMembers(Object.values(membersData)); // Display all members if no search term
+        return;
+    }
+
+    // Filter membersData based on the search term
+    const filteredMembers = Object.values(membersData).filter(member =>
+        member.member_name.toLowerCase().includes(searchTerm) ||
+        member.memberID.toLowerCase().includes(searchTerm)
+    );
+
+    displayMembers(filteredMembers); // Display filtered members
+
+    // Check if no results were found
+    if (filteredMembers.length === 0) {
+        const membersTableBody = document.getElementById("membersTablebody");
+        membersTableBody.innerHTML = '<tr><td colspan="7">No results found</td></tr>';
+    }
+}
+
+
+function exportTmemberableToCSV(tableId, filename) {
+    const table = document.getElementById(tableId);
+    const rows = table.querySelectorAll('tr');
+
+    let csvContent = '';
+    const headers = table.querySelectorAll('th');
+    const headerData = [];
+    headers.forEach((header) => {
+        headerData.push(`"${header.textContent}"`);
+    });
+    csvContent += headerData.join(',') + '\n';
+
+    rows.forEach((row) => {
+        const cells = row.querySelectorAll('td');
+        const rowData = [];
+        cells.forEach((cell) => {
+            rowData.push(`"${cell.textContent}"`);
+        });
+        csvContent += rowData.join(',') + '\n';
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(blob, filename);
+    } else {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+}
+
+function exportMembersTable() {
+    exportTmemberableToCSV('membersTable', 'Library_Members.csv');
+}
+
+
 
 function storeMembersData(data) {
     membersData = {}; // Clear existing data
@@ -52,40 +220,18 @@ function isValidMobileNumber(number) {
     return /^\d{10}$/.test(formattedNumber);
 }
 
-// async function updateMemberID() {
-//     showLibraryLoadingAnimation();
-
-//     try {
-//         await refreshMembersData(); // Ensure data is up-to-date
-
-//         const existingMemberIDs = Object.keys(membersData);
-//         let newMemberID;
-
-//         if (existingMemberIDs.length === 0) {
-//             // If there are no existing members, start with M001
-//             newMemberID = 'M001';
-//         } else {
-//             // Extract the numeric part from existing IDs and find the highest one
-//             const maxID = existingMemberIDs.reduce((max, id) => {
-//                 const numericPart = parseInt(id.substring(1), 10);
-//                 return numericPart > max ? numericPart : max;
-//             }, 0);
-
-//             // Increment the highest ID by 1 and pad it to 3 digits
-//             newMemberID = `M${String(maxID + 1).padStart(3, '0')}`;
-//         }
-
-//         // Set the new member ID to the form field
-//         document.getElementById('memberID').value = newMemberID;
-//         hidelibraryLoadingAnimation();
-
-//     } catch (error) {
-//         hidelibraryLoadingAnimation();
-//         console.error('Error updating member ID:', error);
-//     }
-// }
 
 
+
+
+////////////////////////////////// BELOW CODE OF ADD/UPDATE/DELETE MEMBER IS ORPHANED FOR NOW ///////////////////////////
+
+// Date - 17/FEB/2025
+// ADDED BY YASH INGALE
+//  AUTOGENERATE FUNCTIONALITY SKIPS MANUALL ADDING OF LIBRARY MEMBERS
+
+
+/*
 document.addEventListener('DOMContentLoaded', () => {
     // Form and overlay elements
     const addMemberForm = document.getElementById('addMemberForm');
@@ -162,83 +308,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+*/
 
-function displayMembers(data) {
-    const memberTableBody = document.getElementById('membersTablebody');
-    memberTableBody.innerHTML = ''; // Clear existing rows
 
-    // Reverse the data array
-    data.reverse();
 
-    if (data.length === 0) {
-        hidelibraryLoadingAnimation();
-        const noResultsRow = document.createElement('tr');
-        noResultsRow.innerHTML = '<td colspan="5">No results found</td>';
-        memberTableBody.appendChild(noResultsRow);
-    } else {
-        data.forEach(member => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${member.memberID}</td>
-                <td>${member.member_name}</td>
-                <td>${member.member_class}</td>
-                <td>${member.member_contact}</td>
-                <td>${member.books_issued}</td>
-                 <td>
-                        <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
-    <button style="background-color: transparent;
-        border: none;
-        color: black;
-        padding: 0;
-        text-align: center;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 14px;
-        cursor: pointer;
-        max-height: 100%;
-        border-radius: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        transition: transform 0.2s, box-shadow 0.2s;
-        margin-bottom: 10px;"
-        onclick="editMember('${member.memberID}')"
-        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-        <img src="../images/edit.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-        <span style="margin-right: 10px;">Edit</span>
-    </button>
-    <button style="background-color: transparent;
-        border: none;
-        color: black;
-        padding: 0;
-        text-align: center;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 14px;
-        cursor: pointer;
-        max-height: 100%;
-        border-radius: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        transition: transform 0.2s, box-shadow 0.2s;
-        margin-bottom: 10px;"
-        onclick="deleteMember('${member.memberID}')"
-        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-        <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-        <span style="margin-right: 10px;">Delete</span>
-    </button>
-</div>
-
-                    </td>
-            `;
-            memberTableBody.appendChild(row);
-            hidelibraryLoadingAnimation();
-        });
-    }
-}
+/*
 
 // Function to edit member details
 async function editMember(memberID) {
@@ -333,6 +407,10 @@ async function editMember(memberID) {
     });
 }
 
+*/
+
+/*
+
 // Function to update member details
 async function updateMember(memberID, originalMemberDetails) {
     // showLibraryLoadingAnimation();
@@ -415,96 +493,11 @@ async function updateMember(memberID, originalMemberDetails) {
     }
 }
 
+*/
 
 
-// async function searchMemberDetails() {
-//     const searchTerm = document.getElementById("searchMemberInput").value.trim();
 
-//     // Check if the search term is empty
-//     if (!searchTerm) {
-//         if (memberssearchField !== document.activeElement) {
-//             showToast("Please enter a search term.", true);
-//         }
-//         refreshMembersData();
-//         return;
-//     }
-
-//     // Fetch data from the server based on the search term
-//     await fetch(`/library/members/search?search=${encodeURIComponent(searchTerm)}`)
-//         .then((response) => response.json())
-//         .then((data) => {
-//             const membersTableBody = document.getElementById("membersTablebody");
-//             membersTableBody.innerHTML = ""; // Clear previous data
-
-//             if (data.length === 0) {
-//                 // If no results found, display a message
-//                 const noResultsRow = document.createElement("tr");
-//                 noResultsRow.innerHTML = '<td colspan="6">No results found</td>';
-//                 membersTableBody.appendChild(noResultsRow);
-//             } else {
-//                 // Append member data to the table
-//                 data.forEach((member) => {
-//                     const row = document.createElement("tr");
-//                     row.innerHTML = `
-//                         <td>${member.memberID}</td>
-//                         <td>${member.member_name}</td>
-//                         <td>${member.member_class}</td>
-//                         <td>${member.member_contact}</td>
-//                         <td>${member.books_issued}</td>
-//                         <td style="text-align: center;">
-//                             <div class="button-container" style="display: flex; justify-content: center; gap: 20px;">
-//                                 <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-//                                     onclick="showMemberUpdateModal('${member.memberID}')"
-//                                     onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-//                                     onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-//                                     <img src="/images/edit.png" alt="Edit" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-//                                     <span style="margin-right: 10px;">Edit</span>
-//                                 </button>
-//                                 <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-//                                     onclick="deleteMember('${member.memberID}')"
-//                                     onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-//                                     onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-//                                     <img src="/images/delete.png" alt="Delete" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
-//                                     <span style="margin-right: 10px;">Delete</span>
-//                                 </button>
-//                             </div>
-//                         </td>
-//                     `;
-//                     membersTableBody.appendChild(row);
-//                 });
-//             }
-//         })
-//         .catch((error) => {
-//             console.error("Error:", error);
-//         });
-// }
-
-function searchMemberDetails() {
-    const searchTerm = document.getElementById("searchMemberInput").value.trim().toLowerCase();
-
-    // Check if the search term is empty
-    if (!searchTerm) {
-        // showToast("Please enter a search term.", true);
-        displayMembers(Object.values(membersData)); // Display all members if no search term
-        return;
-    }
-
-    // Filter membersData based on the search term
-    const filteredMembers = Object.values(membersData).filter(member =>
-        member.member_name.toLowerCase().includes(searchTerm) ||
-        member.memberID.toLowerCase().includes(searchTerm)
-    );
-
-    displayMembers(filteredMembers); // Display filtered members
-
-    // Check if no results were found
-    if (filteredMembers.length === 0) {
-        const membersTableBody = document.getElementById("membersTablebody");
-        membersTableBody.innerHTML = '<tr><td colspan="7">No results found</td></tr>';
-    }
-}
-
-
+/*
 function deleteMember(memberID) {
     const confirmation = confirm(
         `Are you sure you want to delete the book with ID "${memberID}"?`
@@ -527,45 +520,8 @@ function deleteMember(memberID) {
             .catch(error => console.error('Error deleting member:', error));
     }
 }
+*/
 
-function exportTmemberableToCSV(tableId, filename) {
-    const table = document.getElementById(tableId);
-    const rows = table.querySelectorAll('tr');
 
-    let csvContent = '';
-    const headers = table.querySelectorAll('th');
-    const headerData = [];
-    headers.forEach((header) => {
-        headerData.push(`"${header.textContent}"`);
-    });
-    csvContent += headerData.join(',') + '\n';
-
-    rows.forEach((row) => {
-        const cells = row.querySelectorAll('td');
-        const rowData = [];
-        cells.forEach((cell) => {
-            rowData.push(`"${cell.textContent}"`);
-        });
-        csvContent += rowData.join(',') + '\n';
-    });
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    if (navigator.msSaveBlob) { // IE 10+
-        navigator.msSaveBlob(blob, filename);
-    } else {
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', filename);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-}
-
-function exportMembersTable() {
-    exportTmemberableToCSV('membersTable', 'Library_Members.csv');
-}
 
 // refreshMembersData();
