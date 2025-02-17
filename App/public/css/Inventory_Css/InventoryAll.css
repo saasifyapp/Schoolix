@@ -219,6 +219,60 @@ body {
     border-radius: 4px;
     animation: jump7456 0.5s linear infinite;
   }
+
+
+  .refreshButton,
+    .export_registered_students {
+        margin-bottom: 15px;
+        /* Add margin between the buttons */
+        cursor: pointer;
+        background-color: transparent;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        color: black;
+        border: none;
+        border-radius: 20px;
+        height: 2.3rem;
+        width: 6rem;
+        font-size: 14px;
+        /* Reduce the font size */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 8px;
+        /* Add padding to fit content */
+        transition: all 0.3s;
+        /* Add transition for smooth hover effect */
+        font-family: 'Open Sans', sans-serif;
+        font-weight: bold;
+    }
+
+    .refreshButton img,
+    .export_registered_students img {
+        height: 80%;
+        /* Set image height to fit button */
+        margin-right: 5px;
+        /* Add a 5px margin to the right of the image */
+    }
+
+
+    .export_registered_students:hover {
+        background-color: #27AE60;
+        /* Change background color on hover */
+        transform: scale(1.05);
+        /* Increase size on hover */
+    }
+
+    .refreshButton:hover {
+        background-color: #76D7C4;
+        /* Change background color on hover */
+        transform: scale(1.05);
+        /* Increase size on hover */
+    }
+
+    .export_registered_students {
+        position: absolute;       
+        right: -106px;
+    }
   
   @keyframes jump7456 {
     15% {
