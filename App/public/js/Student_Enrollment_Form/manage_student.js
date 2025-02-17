@@ -71,3 +71,24 @@ function updateRightSide() {
         selectedFiltersDiv.appendChild(newDiv);
     });
 }
+
+
+function openUpdateStudentOverlay() {
+    document.getElementById("updateStudentOverlay").style.display = "flex";
+}
+
+document.getElementById("closeUpdateStudentOverlay").addEventListener("click", function() {
+    document.getElementById("updateStudentOverlay").style.display = "none";
+});
+
+document.querySelector(".search-button").addEventListener("click", function () {
+    let searchType = document.querySelector('input[name="searchType"]:checked').value;
+    let searchValue = document.getElementById("searchInput").value.trim();
+
+    if (searchValue) {
+        // Redirect with query parameters
+        window.location.href = `/Student_Enrollment_Form/update_student?${searchType}=${encodeURIComponent(searchValue)}`;
+    } else {
+        alert("Please enter a valid search value.");
+    }
+});

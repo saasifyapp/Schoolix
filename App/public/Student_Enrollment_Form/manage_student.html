@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fee Structure</title>
+    <title>Manage Student</title>
     <link rel="stylesheet" href="/css/NavButtons.css">
     <link rel="stylesheet" href="/css/Student_Enrollment_Form/manage_student_console.css">
     <link rel="stylesheet" href="/css/Student_Enrollment_Form/enrollment-form-control.css">
@@ -44,18 +44,16 @@
     </div>
 
     <div class="cards-container">
-        <div class="card">
-            <a href="/Student_Enrollment_Form/update_student">
-                <div class="dotlottie-container">
-                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
-                        type="module"></script>
-                    <dotlottie-player src="https://lottie.host/65e8551a-f44b-48e1-acec-1ced97cdc83c/0XsoVpU2gc.lottie"
-                        background="transparent" speed="1" style="width: 270px; height: 200px; margin-bottom: 20px;"
-                        loop autoplay></dotlottie-player>
-                </div>
-                <h3>Update Student</h3>
-            </a>
+        <div class="card" onclick="openUpdateStudentOverlay()">
+            <div class="dotlottie-container">
+                <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+                <dotlottie-player src="https://lottie.host/65e8551a-f44b-48e1-acec-1ced97cdc83c/0XsoVpU2gc.lottie"
+                    background="transparent" speed="1" style="width: 270px; height: 200px; margin-bottom: 20px;"
+                    loop autoplay></dotlottie-player>
+            </div>
+            <h3>Update Student</h3>
         </div>
+        
 
         <div class="card">
             <button id="searchStudent">
@@ -83,6 +81,22 @@
             </button>
         </div>
     </div>
+
+    <div id="updateStudentOverlay" class="overlay">
+        <div class="overlay-content">
+            <button id="closeUpdateStudentOverlay" class="close-button">&times;</button>
+            <div class="overlay-inner">
+                <h2>SEARCH USING</h2>
+                <div class="radio-buttons">
+                    <label><input type="radio" name="searchType" value="grno" checked> GR NO</label>
+                    <label><input type="radio" name="searchType" value="name"> STUDENT NAME</label>
+                </div>
+                <input type="text" id="searchInput" placeholder="Enter GR NO or Name">
+                <button class="search-button">SEARCH</button>
+            </div>
+        </div>
+    </div>
+    
 
     <!-- Overlay for Search Student -->
     <div id="searchStudentOverlay" class="overlay-search">
