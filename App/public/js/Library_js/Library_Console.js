@@ -59,20 +59,36 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     manageMemberButton.addEventListener('click', function () {
-        showOverlay('manageMemberOverlay');
+        //showOverlay('manageMemberOverlay'); Changing overlay from Manage Member to Search Member
+        autoGenerateLibraryMembers();
+        showOverlay('searchMemberOverlay');
+        refreshMembersData();
     });
 
+    ////////////////////////////////// BELOW CODE OF ADD/UPDATE/DELETE MEMBER IS ORPHANED FOR NOW ///////////////////////////
+
+    // Date - 17/FEB/2025
+    // ADDED BY YASH INGALE
+    //  AUTOGENERATE FUNCTIONALITY SKIPS MANUALL ADDING OF LIBRARY MEMBERS
+
+    /*
     addMemberButton.addEventListener('click', function () {
         hideOverlay('manageMemberOverlay');
         showOverlay('addMemberOverlay');
         // updateMemberID();
     });
+    */
 
+    /*
     searchMemberButton.addEventListener('click', function () {
         hideOverlay('manageMemberOverlay');
         showOverlay('searchMemberOverlay');
         refreshMembersData();
     });
+    */
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     closeManageMemberOverlay.addEventListener('click', function () {
         hideOverlay('manageMemberOverlay');

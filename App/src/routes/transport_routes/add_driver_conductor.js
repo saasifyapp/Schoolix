@@ -246,8 +246,9 @@ router.post('/addDriverConductor', (req, res) => {
     const schoolInitials = getInitials(schoolName);
 
     // Generate username and password
-    const username = name.replace(/\s+/g, '').toLowerCase(); // Remove spaces and convert to lowercase
-    const password = `${schoolInitials}@${username}`;
+    const usernameOnly = name.replace(/\s+/g, '').toLowerCase(); // Remove spaces and convert to lowercase
+    const username = `${usernameOnly}@${schoolInitials}`;
+    const password = `${schoolInitials}@${usernameOnly}`;
     const userType = type.toLowerCase() === 'driver' ? 'driver' : 'conductor'; // Determine user type based on the type from client
 
     // Start a transaction
@@ -524,8 +525,10 @@ router.put('/updateAllDetails', (req, res) => {
         }
 
         // Declare all SQL queries
-        const username = name.replace(/\s+/g, '').toLowerCase();
-        const password = `${schoolInitials}@${username}`;
+        // Generate username and password
+        const usernameOnly = name.replace(/\s+/g, '').toLowerCase(); // Remove spaces and convert to lowercase
+        const username = `${usernameOnly}@${schoolInitials}`;
+        const password = `${schoolInitials}@${usernameOnly}`;
 
         const sqlSelectUid = `
             SELECT uid

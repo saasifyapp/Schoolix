@@ -21,7 +21,29 @@ let studentCount = 0;
 let teacherCount = 0;
 let selectedVehicleCapacity = 0;
 
+// Utility function to display loading suggestions
+function showLoading(suggestionsContainer) {
+    suggestionsContainer.innerHTML = '';
+    const loadingItem = document.createElement('div');
+    loadingItem.classList.add('suggestion-item', 'no-results');
+    loadingItem.textContent = 'Loading...';
+    suggestionsContainer.appendChild(loadingItem);
+    suggestionsContainer.style.display = 'flex';
+}
+
+// Utility function to display no results found message
+function showNoResults(suggestionsContainer) {
+    suggestionsContainer.innerHTML = '';
+    const noResultsItem = document.createElement('div');
+    noResultsItem.classList.add('suggestion-item', 'no-results');
+    noResultsItem.textContent = 'No results found';
+    suggestionsContainer.appendChild(noResultsItem);
+}
+
+// Function to fetch route details
 function fetchRouteDetails(query = '') {
+    showLoading(routeSuggestionsContainerallocate); // Show loading indicator
+
     fetch(`/allocate_getRouteDetails`)
         .then((response) => response.json())
         .then((data) => {
@@ -33,10 +55,7 @@ function fetchRouteDetails(query = '') {
                 : data;
 
             if (filteredData.length === 0) {
-                const noResultsItem = document.createElement('div');
-                noResultsItem.classList.add('suggestion-item', 'no-results');
-                noResultsItem.textContent = 'No results found';
-                routeSuggestionsContainerallocate.appendChild(noResultsItem);
+                showNoResults(routeSuggestionsContainerallocate);
             } else {
                 filteredData.forEach((route) => {
                     const suggestionItem = document.createElement('div');
@@ -48,7 +67,10 @@ function fetchRouteDetails(query = '') {
                 });
             }
         })
-        .catch((error) => console.error('Error:', error));
+        .catch((error) => {
+            console.error('Error:', error);
+            showNoResults(routeSuggestionsContainerallocate);
+        });
 }
 
 routeInputallocate.addEventListener('focus', function () {
@@ -59,24 +81,22 @@ routeInputallocate.addEventListener('input', function () {
     fetchRouteDetails(this.value);
 });
 
+// Function to fetch shift details
 function fetchShiftDetails(routeName, query = '') {
+    showLoading(shiftSuggestionsContainerallocate); // Show loading indicator
+
     fetch(`/allocate_getShiftDetails?routeName=${encodeURIComponent(routeName)}`)
         .then((response) => response.json())
         .then((data) => {
             shiftSuggestionsContainerallocate.style.display = 'flex'; // Show suggestions container
             shiftSuggestionsContainerallocate.innerHTML = '';
 
-
-
             const filteredData = query
                 ? data.filter(shift => shift.route_shift_name.toLowerCase().includes(query.toLowerCase()))
                 : data;
 
             if (filteredData.length === 0) {
-                const noResultsItem = document.createElement('div');
-                noResultsItem.classList.add('suggestion-item', 'no-results');
-                noResultsItem.textContent = 'No results found';
-                shiftSuggestionsContainerallocate.appendChild(noResultsItem);
+                showNoResults(shiftSuggestionsContainerallocate);
             } else {
                 filteredData.forEach((shift) => {
                     const suggestionItem = document.createElement('div');
@@ -88,7 +108,10 @@ function fetchShiftDetails(routeName, query = '') {
                 });
             }
         })
-        .catch((error) => console.error('Error:', error));
+        .catch((error) => {
+            console.error('Error:', error);
+            showNoResults(shiftSuggestionsContainerallocate);
+        });
 }
 
 shiftInputallocate.addEventListener('focus', function () {
@@ -103,7 +126,10 @@ shiftInputallocate.addEventListener('input', function () {
     }
 });
 
+// Function to fetch vehicle details
 function fetchVehicleDetails(routeName, shiftName, query = '') {
+    showLoading(vehicleSuggestionsContainerallocate); // Show loading indicator
+
     fetch(`/allocate_getVehicleDetails?q=${encodeURIComponent(query)}&routeName=${encodeURIComponent(routeName)}&shiftName=${encodeURIComponent(shiftName)}`)
         .then((response) => response.json())
         .then((data) => {
@@ -111,10 +137,7 @@ function fetchVehicleDetails(routeName, shiftName, query = '') {
             vehicleSuggestionsContainerallocate.innerHTML = '';
 
             if (data.length === 0) {
-                const noResultsItem = document.createElement('div');
-                noResultsItem.classList.add('suggestion-item', 'no-results');
-                noResultsItem.textContent = 'No results found';
-                vehicleSuggestionsContainerallocate.appendChild(noResultsItem);
+                showNoResults(vehicleSuggestionsContainerallocate);
             } else {
                 data.forEach((driver) => {
                     const suggestionItem = document.createElement('div');
@@ -129,7 +152,10 @@ function fetchVehicleDetails(routeName, shiftName, query = '') {
                 });
             }
         })
-        .catch((error) => console.error('Error:', error));
+        .catch((error) => {
+            console.error('Error:', error);
+            showNoResults(vehicleSuggestionsContainerallocate);
+        });
 }
 
 vehicleInputallocate.addEventListener('focus', function () {

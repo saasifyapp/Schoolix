@@ -35,19 +35,37 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Utility function to display loading suggestions
+    function showLoading(suggestionsContainer) {
+        suggestionsContainer.innerHTML = '';
+        const loadingItem = document.createElement('div');
+        loadingItem.classList.add('suggestion-item', 'no-results');
+        loadingItem.textContent = 'Loading...';
+        suggestionsContainer.appendChild(loadingItem);
+        suggestionsContainer.style.display = 'flex';
+    }
+
+    // Utility function to display no results found message
+    function showNoResults(suggestionsContainer) {
+        suggestionsContainer.innerHTML = '';
+        const noResultsItem = document.createElement('div');
+        noResultsItem.classList.add('suggestion-item', 'no-results');
+        noResultsItem.textContent = 'No results found';
+        suggestionsContainer.appendChild(noResultsItem);
+    }
+
     // Function to fetch vehicle suggestions
     function fetchVehicleSuggestions(query) {
+        showLoading(vehicleSuggestionsContainer); // Show loading indicator before fetch
+
         fetch(`/listStudents_getVehicleDetails?q=${encodeURIComponent(query)}`)
             .then((response) => response.json())
             .then((data) => {
+                vehicleSuggestionsContainer.innerHTML = ''; // Clear previous suggestions
                 vehicleSuggestionsContainer.style.display = 'flex'; // Show suggestions container
-                vehicleSuggestionsContainer.innerHTML = '';
 
                 if (!Array.isArray(data) || data.length === 0) {
-                    const noResultsItem = document.createElement('div');
-                    noResultsItem.classList.add('suggestion-item', 'no-results');
-                    noResultsItem.textContent = 'No results found';
-                    vehicleSuggestionsContainer.appendChild(noResultsItem);
+                    showNoResults(vehicleSuggestionsContainer); // Show no results found message
                 } else {
                     data.forEach((driver) => {
                         const suggestionItem = document.createElement('div');
@@ -59,7 +77,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                 }
             })
-            .catch((error) => console.error('Error:', error));
+            .catch((error) => {
+                console.error('Error:', error);
+                showNoResults(vehicleSuggestionsContainer); // Show no results found message on error
+            });
     }
 
     // Show vehicle suggestions when input is focused
@@ -121,17 +142,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to fetch shift suggestions
     function fetchShiftSuggestions(vehicleNo) {
+        showLoading(shiftSuggestionsContainer); // Show loading indicator before fetch
+
         fetch(`/listStudents_shiftDetails?vehicleNo=${encodeURIComponent(vehicleNo)}`)
             .then((response) => response.json())
             .then((data) => {
+                shiftSuggestionsContainer.innerHTML = ''; // Clear previous suggestions
                 shiftSuggestionsContainer.style.display = 'flex'; // Show suggestions container
-                shiftSuggestionsContainer.innerHTML = '';
 
                 if (!Array.isArray(data) || data.length === 0) {
-                    const noResultsItem = document.createElement('div');
-                    noResultsItem.classList.add('suggestion-item', 'no-results');
-                    noResultsItem.textContent = 'No results found';
-                    shiftSuggestionsContainer.appendChild(noResultsItem);
+                    showNoResults(shiftSuggestionsContainer); // Show no results found message
                 } else {
                     data.forEach((shift) => {
                         const suggestionItem = document.createElement('div');
@@ -143,9 +163,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                 }
             })
-            .catch((error) => console.error('Error:', error));
+            .catch((error) => {
+                console.error('Error:', error);
+                showNoResults(shiftSuggestionsContainer); // Show no results found message on error
+            });
     }
-
     // Handle shift suggestion click
     shiftSuggestionsContainer.addEventListener('click', function (event) {
         if (event.target.classList.contains('suggestion-item')) {
@@ -159,42 +181,42 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Function to fetch vehicle info
-   // Function to fetch vehicle info
-function fetchVehicleInfo() {
-    const vehicleInfoContainer = document.getElementById('listStudents_vehicleInfo'); // Ensure this is defined
-    
-    // Check if both vehicle number and shift name are selected
-    if (selectedVehicleNo && selectedShiftName) {
-        fetch(`/listStudents_getVehicleInfo?vehicleNo=${encodeURIComponent(selectedVehicleNo)}&shiftName=${encodeURIComponent(selectedShiftName)}`)
-            .then((response) => response.json())
-            .then((data) => {
-                // Clear any previous data
-                vehicleInfoContainer.innerHTML = '';
+    // Function to fetch vehicle info
+    function fetchVehicleInfo() {
+        const vehicleInfoContainer = document.getElementById('listStudents_vehicleInfo'); // Ensure this is defined
 
-                if (data.length > 0) {
-                    const vehicleInfo = data[0];
-                    vehicleInfoContainer.innerHTML = `
+        // Check if both vehicle number and shift name are selected
+        if (selectedVehicleNo && selectedShiftName) {
+            fetch(`/listStudents_getVehicleInfo?vehicleNo=${encodeURIComponent(selectedVehicleNo)}&shiftName=${encodeURIComponent(selectedShiftName)}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    // Clear any previous data
+                    vehicleInfoContainer.innerHTML = '';
+
+                    if (data.length > 0) {
+                        const vehicleInfo = data[0];
+                        vehicleInfoContainer.innerHTML = `
                         <strong>Vehicle No:</strong> ${vehicleInfo.vehicle_no}<br>
                         <strong>Driver Name:</strong> ${vehicleInfo.driver_name}<br>
                         <strong>Total Capacity:</strong> ${vehicleInfo.vehicle_capacity}<br>
                         <strong>Available Seats:</strong> ${vehicleInfo.available_seats}<br>
                     `;
-                    vehicleInfoContainer.style.display = 'block'; // Show the container with data
-                    vehicleInfoContainer.style.maxHeight = '100px';
-                    vehicleInfoContainer.style.width = '90%';
-                } else {
-                    vehicleInfoContainer.innerHTML = 'No vehicle info found';
-                    vehicleInfoContainer.style.display = 'block'; // Show the container even if no data is found
-                    vehicleInfoContainer.style.maxHeight = '65px';
-                    vehicleInfoContainer.style.width = '90%';
-                }
-            })
-            .catch((error) => console.error('Error:', error));
-    } else {
-        // Hide container if either vehicle number or shift name is missing
-        vehicleInfoContainer.style.display = 'none';
+                        vehicleInfoContainer.style.display = 'block'; // Show the container with data
+                        vehicleInfoContainer.style.maxHeight = '100px';
+                        vehicleInfoContainer.style.width = '90%';
+                    } else {
+                        vehicleInfoContainer.innerHTML = 'No vehicle info found';
+                        vehicleInfoContainer.style.display = 'block'; // Show the container even if no data is found
+                        vehicleInfoContainer.style.maxHeight = '65px';
+                        vehicleInfoContainer.style.width = '90%';
+                    }
+                })
+                .catch((error) => console.error('Error:', error));
+        } else {
+            // Hide container if either vehicle number or shift name is missing
+            vehicleInfoContainer.style.display = 'none';
+        }
     }
-}
 
 
     // Fetch stop suggestions when stop input is focused
@@ -213,17 +235,16 @@ function fetchVehicleInfo() {
 
     // Function to fetch stop suggestions
     function fetchStopSuggestions(vehicleNo, shiftName) {
+        showLoading(stopSuggestionsContainer); // Show loading indicator before fetch
+
         fetch(`/listStudents_getStops?vehicleNo=${encodeURIComponent(vehicleNo)}&shiftName=${encodeURIComponent(shiftName)}`)
             .then((response) => response.json())
             .then((data) => {
+                stopSuggestionsContainer.innerHTML = ''; // Clear previous suggestions
                 stopSuggestionsContainer.style.display = 'block'; // Show suggestions container
-                stopSuggestionsContainer.innerHTML = '';
 
                 if (!data.route_stops) {
-                    const noResultsItem = document.createElement('div');
-                    noResultsItem.classList.add('suggestion-item', 'no-results');
-                    noResultsItem.textContent = 'No results found';
-                    stopSuggestionsContainer.appendChild(noResultsItem);
+                    showNoResults(stopSuggestionsContainer); // Show no results found message
                 } else {
                     const stopsArray = data.route_stops.split(', ');
                     stopsArray.forEach((stop) => {
@@ -235,7 +256,10 @@ function fetchVehicleInfo() {
                     });
                 }
             })
-            .catch((error) => console.error('Error:', error));
+            .catch((error) => {
+                console.error('Error:', error);
+                showNoResults(stopSuggestionsContainer); // Show no results found message on error
+            });
     }
 
     // Handle stop suggestion click
@@ -266,17 +290,16 @@ function fetchVehicleInfo() {
 
     // Function to fetch class suggestions
     function fetchClassSuggestions(vehicleNo, shiftName) {
+        showLoading(classSuggestionsContainer); // Show loading indicator before fetch
+
         fetch(`/listStudents_getClass?vehicleNo=${encodeURIComponent(vehicleNo)}&shiftName=${encodeURIComponent(shiftName)}`)
             .then((response) => response.json())
             .then((data) => {
+                classSuggestionsContainer.innerHTML = ''; // Clear previous suggestions
                 classSuggestionsContainer.style.display = 'block'; // Show suggestions container
-                classSuggestionsContainer.innerHTML = '';
 
                 if (!data.classes_alloted) {
-                    const noResultsItem = document.createElement('div');
-                    noResultsItem.classList.add('suggestion-item', 'no-results');
-                    noResultsItem.textContent = 'No results found';
-                    classSuggestionsContainer.appendChild(noResultsItem);
+                    showNoResults(classSuggestionsContainer); // Show no results found message
                 } else {
                     const classesArray = data.classes_alloted.split(', ');
                     const groupedClasses = {};
@@ -298,7 +321,10 @@ function fetchVehicleInfo() {
                     }
                 }
             })
-            .catch((error) => console.error('Error:', error));
+            .catch((error) => {
+                console.error('Error:', error);
+                showNoResults(classSuggestionsContainer); // Show no results found message on error
+            });
     }
 
     // Handle class suggestion click
@@ -480,7 +506,7 @@ function fetchVehicleInfo() {
         }
     });
 
-    document.getElementById('closeListStudentsOverlay').addEventListener('click', function(){
+    document.getElementById('closeListStudentsOverlay').addEventListener('click', function () {
         scheduleTableBody.innerHTML = '';
         studentCountElement.innerHTML = 0;
         teacherCountElement.innerHTML = 0;

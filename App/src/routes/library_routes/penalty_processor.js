@@ -130,4 +130,97 @@ router.post('/library/pay_penalty', (req, res) => {
     });
 });
 
+
+
+// Fetch Book MRP Endpoint
+router.post('/library/get_book_mrp', (req, res) => {
+    const { bookID } = req.body;
+
+    if (!bookID) {
+        return res.status(400).json({ error: 'Missing book ID' });
+    }
+
+    const getBookMRPQuery = `
+        SELECT sr_no, bookID, book_name, book_author, book_publication, book_price, ordered_quantity, description, available_quantity
+        FROM library_book_details
+        WHERE bookID = ?;
+    `;
+
+    req.connectionPool.query(getBookMRPQuery, [bookID], (err, bookResult) => {
+        if (err) {
+            console.error('Error fetching book details:', err);
+            return res.status(500).json({ error: 'Error fetching book details' });
+        }
+
+        if (bookResult.length === 0) {
+            return res.status(404).json({ error: 'Book not found' });
+        }
+
+        const bookMRP = bookResult[0].book_price;
+
+        return res.status(200).json({ bookMRP });
+    });
+});
+
+
+// Endpoint to mark book as lost and update transaction logs
+router.post('/library/mark_lost', (req, res) => {
+    const { transactionID, bookMRP } = req.body;
+
+    const getPenaltyQuery = `SELECT * FROM library_transactions WHERE id = ?`;
+    const deletePenaltyQuery = `DELETE FROM library_transactions WHERE id = ?`;
+    const updateMemberQuery = `UPDATE library_member_details SET books_issued = books_issued - 1 WHERE memberID = ?`;
+    const updateBookQuery = `UPDATE library_book_details SET ordered_quantity = ordered_quantity - 1 WHERE bookID = ?`;
+    const logLostBookQuery = `
+        INSERT INTO library_transaction_log (transaction_type, memberID, bookID, transaction_date, penalty_status, penalty_paid, book_lost) 
+        VALUES ('lost', ?, ?, ?, 'paid', ?, 1)
+    `;
+
+    req.connectionPool.query(getPenaltyQuery, [transactionID], (err, penaltyResult) => {
+        if (err) {
+            console.error('Error fetching penalty details:', err);
+            return res.status(500).json({ error: 'Error fetching penalty details' });
+        }
+
+        if (penaltyResult.length === 0) {
+            console.error('Penalty record not found');
+            return res.status(404).json({ error: 'Penalty record not found' });
+        }
+
+        const penalty = penaltyResult[0];
+        
+        req.connectionPool.query(deletePenaltyQuery, [transactionID], (err) => {
+            if (err) {
+                console.error('Error deleting penalty record:', err);
+                return res.status(500).json({ error: 'Error deleting penalty record' });
+            }
+
+            req.connectionPool.query(updateMemberQuery, [penalty.memberID], (err) => {
+                if (err) {
+                    console.error('Error updating member details:', err);
+                    return res.status(500).json({ error: 'Error updating member details' });
+                }
+
+                req.connectionPool.query(updateBookQuery, [penalty.bookID], (err) => {
+                    if (err) {
+                        console.error('Error updating book details:', err);
+                        return res.status(500).json({ error: 'Error updating book details' });
+                    }
+
+                    const transactionDate = formatDateToIST(new Date()); // Define this function if not already defined
+
+                    req.connectionPool.query(logLostBookQuery, [penalty.memberID, penalty.bookID, transactionDate, bookMRP], (err) => {
+                        if (err) {
+                            console.error('Error logging lost book markup:', err);
+                            return res.status(500).json({ error: 'Error logging lost book markup' });
+                        }
+
+                        res.status(200).json({ success: true, message: 'The book has been marked as lost and penalty has been updated.' });
+                    });
+                });
+            });
+        });
+    });
+});
+
 module.exports = router;

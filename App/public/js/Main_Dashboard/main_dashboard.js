@@ -405,7 +405,7 @@ async function sendLocationToServer(loginName, latitude, longitude) {
 fetch("/main_dashboard_library_data")
   .then((response) => response.json())
   .then((data) => {
-    console.log(data);
+    //console.log(data);
 
     // Update counts with the fetched data
     document.getElementById('totalBooksCount').textContent = data.totalBooks;
@@ -729,3 +729,5 @@ async function confirmSchoolLocation(loginName) {
 
 // Call this function when the user logs in, passing the login name
 confirmSchoolLocation(username); // Replace with the actual login name
+
+

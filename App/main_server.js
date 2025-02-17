@@ -407,6 +407,19 @@ app.get('/FeeStructure/feeStructure', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Fees', 'feeStructure.html'));
 });
 
+app.get('/Student_Enrollment_Form/student_enrollment_form', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Student_Enrollment_Form', 'student_enrollment_form.html'));
+});
+
+app.get('/Student_Enrollment_Form/manage_student', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Student_Enrollment_Form', 'manage_student.html'));
+});
+
+app.get('/Student_Enrollment_Form/update_student', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Student_Enrollment_Form', 'update_student.html'));
+});
+
+
 /////////////////////// ROUTES FOR MAIN DASHBOARD COMPONENTS ///////////////////////////////////////
 
 // const main_dashboard_dataRouter = require('./src/routes/main_dashboard_data');
@@ -454,15 +467,15 @@ const submitStudentRouter = require('./src/routes/pre_admission_console_routes/s
 app.use('/', submitStudentRouter);
 
 // Import the router for displaying student data
-const displayStudentRouter = require('./src/routes/pre_admission_console_routes/display_students');
-// Mount the student display router to the root path
-app.use('/', displayStudentRouter);
+// const displayStudentRouter = require('./src/routes/pre_admission_console_routes/display_students');
+// // Mount the student display router to the root path
+// app.use('/', displayStudentRouter);
 
-////////// ADMITTED STUDENTS
-// Import the router for displaying admitted students
-const displayadmStudentRouter = require('./src/routes/pre_admission_console_routes/admitted_student');
-// Mount the admitted student display router to the root path
-app.use('/', displayadmStudentRouter);
+// ////////// ADMITTED STUDENTS
+// // Import the router for displaying admitted students
+// const displayadmStudentRouter = require('./src/routes/pre_admission_console_routes/admitted_student');
+// // Mount the admitted student display router to the root path
+// app.use('/', displayadmStudentRouter);
 
 //////////////////////// TEACHER CONSOLE////////////////////////////////
 // Import the router for handling teacher details submission
@@ -470,16 +483,16 @@ const submitTeacherRouter = require('./src/routes/pre_admission_console_routes/t
 // Mount the teacher details submission router to the root path
 app.use('/', submitTeacherRouter);
 
-// Import the router for displaying teacher data
-const displayTeacherRouter = require('./src/routes/pre_admission_console_routes/display_teacher');
-// Mount the teacher display router to the root path
-app.use('/', displayTeacherRouter);
+// // Import the router for displaying teacher data
+// const displayTeacherRouter = require('./src/routes/pre_admission_console_routes/display_teacher');
+// // Mount the teacher display router to the root path
+// app.use('/', displayTeacherRouter);
 
-////////// ADMITTED TEACHERS
-// Import the router for displaying admitted teachers
-const displayadmTeacherRouter = require('./src/routes/pre_admission_console_routes/admitted_teacher');
-// Mount the admitted teacher display router to the root path
-app.use('/', displayadmTeacherRouter);
+// ////////// ADMITTED TEACHERS
+// // Import the router for displaying admitted teachers
+// const displayadmTeacherRouter = require('./src/routes/pre_admission_console_routes/admitted_teacher');
+// // Mount the admitted teacher display router to the root path
+// app.use('/', displayadmTeacherRouter);
 
 
 /////////////////////// ROUTES FOR INVENTORY MODULE ///////////////////////////////////////
@@ -574,10 +587,14 @@ app.use('/', transportAllocateVehicle);
 const transportGetStudentsDetails = require('./src/routes/transport_routes/get_student_details.js');
 app.use('/', transportGetStudentsDetails);
 
-////// LIST STUDENTS ROUTE
+////// MONITOR STUDENTS ROUTE
 const transportMonitorTrack = require('./src/routes/transport_routes/monitor_track.js');
 app.use('/', transportMonitorTrack);
 
+
+////// EDIT STUDENTS ROUTE
+const transportEditStudents = require('./src/routes/transport_routes/edit_students.js');
+app.use('/', transportEditStudents);
 
 ///////////////////////////////// FEES ROUTES /////////////////////////////
 
@@ -590,6 +607,10 @@ app.use('/', feeStructure);
 const feeAmount = require('./src/routes/fees_routes/fee_set_amount.js');
 app.use('/', feeAmount);
 
+
+///////////////////////////STUDENT ENROLLMENT FORM ROUTES//////////////////
+const studentenrollment = require('./src/routes/student_enrollment_form_routes/student_enrollment_form.js');
+app.use('/', studentenrollment);
 
 
 // Start the server
