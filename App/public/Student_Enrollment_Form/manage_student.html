@@ -118,12 +118,11 @@
 
                     <select id="studentFilter" class="form-control"
                         style="width: 200px; margin-right: 10px;margin-left: 10px;">
-                        <option value="all">All Students</option>
-                        <option value="active">Active Students</option>
-                        <option value="inactive">Inactive Students</option>
+                        <option value="primary">Primary</option>
+                        <option value="pre_primary">Pre-primary</option>
                     </select>
 
-                    <button class="filterButton" onclick="applyFilter()" style="margin-top: 10px; margin-left: 10px;">
+                    <button class="filterButton" onclick="" style="margin-top: 10px; margin-left: 10px;">
                         <img src="/images/filter.png" alt="Refresh Icon"> Filter
                     </button>
 
@@ -148,7 +147,7 @@
                             <th>Gender</th>
                             <th>Address</th>
                         </tr>
-                    </thead>
+                    </thead> 
                     <tbody id="studentsTablebody">
                         <!-- Table rows will be populated here -->
                     </tbody>
@@ -157,59 +156,33 @@
         </div>
     </div>
 
-    <!-- Filter Overlay -->
-    <div id="filterOverlay" class="overlay">
-        <div class="overlay-content">
-            <button id="closeFilterOverlay" class="close-button">&times;</button>
-            <h2>Add Filters</h2>
-            <div class="overlay-inner">
-                <div class="left-side">
-                    <div class="select-section">
-                        <h3>Select Section</h3>
-                        <label>
-                            <input type="checkbox" name="section" value="primary" onclick="updateRightSide()"> Primary
-                        </label>
-                        <label>
-                            <input type="checkbox" name="section" value="preprimary" onclick="updateRightSide()">
-                            Preprimary
-                        </label>
-                        <label>
-                            <input type="checkbox" name="section" value="all" onclick="updateRightSide()"> All
-                        </label>
-                    </div>
 
-                    <div class="select-filter">
-                        <h3>Select Filters</h3>
-                        <label>
-                            <input type="checkbox" name="filter" value="Name" onclick="updateRightSide()"> Name
-                        </label>
-                        <label>
-                            <input type="checkbox" name="filter" value="Contact" onclick="updateRightSide()"> Contact
-                        </label>
-                        <label>
-                            <input type="checkbox" name="filter" value="Address" onclick="updateRightSide()"> Address
-                        </label>
-                    </div>
+
+<!-- Filter Overlay -->
+<div id="filterOverlay" class="overlay">
+    <div class="overlay-content">
+        <button id="closeFilterOverlay" class="close-button">&times;</button>
+        <h2 id="filterHeading">Filters for (section) section</h2> <!-- Dynamic heading -->
+        <p id="filterMessage"></p> <!-- Message indicating the selected section -->
+        <div class="overlay-inner">
+            <div class="left-side">
+                <div class="select-filter">
+                    <h3>Select Filters</h3>
+                    <!-- Filter checkboxes will be dynamically populated here -->
                 </div>
-
-                <div class="right-side">
-                    <h3>Selected Filters</h3>
-                    <div id="selectedFilters"></div>
-                    <!-- Apply Button -->
-
-
-                    <button id="applyFiltersButton" class="apply-button" onclick="">
-                        <img src="/images/checked.png" alt="Refresh Icon"> Apply</button>
-                </div>
+                <!-- Previous Filters Button -->
+                <button id="previousFiltersButton" class="reset-button" onclick="applyPreviousFilters()" disabled>Previous Filters</button>
+                <button id="resetFiltersButton" class="reset-button" onclick="resetFilters()">Reset Filters</button>
+            </div>
+            <div class="right-side">
+                <h3>Selected Filters</h3>
+                <div id="selectedFilters"></div>
+                <!-- Apply Button -->
+                <button id="applyFiltersButton" class="apply-button" onclick="applyFilters()">Apply</button>
             </div>
         </div>
     </div>
-
-
-
-
-
-
+</div>
 
 
     <!-- Delete Student Overlay -->
@@ -245,6 +218,7 @@
 
     <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Student_Enrollment_Form/manage_student.js"></script>
+    <script src="/js/Student_Enrollment_Form/enrollment_search_student.js"></script>
 
 
 
