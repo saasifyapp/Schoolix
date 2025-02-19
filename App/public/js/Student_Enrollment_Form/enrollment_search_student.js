@@ -153,7 +153,7 @@ function fetchAndUpdateFilterOptions() {
         .then(response => response.json())
         .then(columns => {
             // Limit the columns array to the first 10 columns
-            const limitedColumns = columns.slice(0, 10);
+            const limitedColumns = columns.slice(0, 50);
             availableColumns = limitedColumns;
             updateFilterOptions(limitedColumns);
         })
@@ -165,7 +165,7 @@ function fetchAndUpdateFilterOptions() {
 
 function updateFilterOptions(columns) {
     const selectFilterDiv = document.querySelector('.select-filter');
-    selectFilterDiv.innerHTML = '<h3>Select Filters</h3>'; // Clear existing filters and add heading
+    selectFilterDiv.innerHTML = ''; // Clear existing filters and add heading
 
     columns.forEach(column => {
         const isChecked = selectedColumns.includes(column);
