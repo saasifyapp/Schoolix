@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/NavButtons.css">
     <link rel="stylesheet" href="/css/Student_Enrollment_Form/manage_student_console.css">
     <link rel="stylesheet" href="/css/Student_Enrollment_Form/enrollment-form-control.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 </head>
@@ -185,26 +186,50 @@
 </div>
 
 
-    <!-- Delete Student Overlay -->
-    <div id="deleteStudentOverlay" class="overlay-search">
-        <div class="overlay-content-search">
-            <button id="closeOverlayDelete" class="close-button">&times;</button>
-            <img src="/images/delete.gif" alt="Overlay Icon" class="overlay-icon">
-            <h2 class="overlay-search-head">Delete Student</h2>
-            <div class="delete-container">
+<!-- Delete Student Overlay -->
+<div id="deleteStudentOverlay" class="overlay-search">
+    <div class="overlay-content-search">
+        <button id="closeOverlayDelete" class="close-button">&times;</button>
+        <img src="/images/delete_student.gif" alt="Overlay Icon" class="overlay-icon">
+        <h2 class="overlay-search-head">Delete Student</h2>
+        <div class="delete-container">
+            <div class="search-container">
                 <div class="form-Searchgroup">
-                    <img class="searchIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
-                    <input type="text" class="form-control" id="searchBarDelete" name="" placeholder=" " oninput=""
-                        style="width: 400px; height: 1.7rem !important;">
-                    <span class="form-control-placeholder" style="left: 3.75rem;">Enter Student ID...</span>
+                    <img class="searchIcon" src="/images/search.gif" alt="Search Icon"
+                        style="right: 25px; left: 405px;">
+                    <input type="text" class="form-control" id="deleteStudentSearch" name="studentSearch"
+                        placeholder=" " oninput="deleteStudentEnrolled()" style="width: 400px;">
+                    <span class="form-control-placeholder" style="left: 3.75rem;">Search by Name or GR Number</span>      
                 </div>
-                <button class="deleteButton" id="deleteButton" style="margin-top: 10px;">
-                    <img src="/images/delete.png" alt="Delete Icon"> Delete
-                </button>
+
+                <select id="deleteStudentFilter" class="form-control"
+                style="width: 200px; margin-right: 10px;margin-left: 10px;">
+                    <option value="primary">Primary</option>
+                    <option value="pre_primary">Pre-primary</option>
+                </select>
+
             </div>
+
+        </div>
+        <div class="table-container">
+            <table id="deleteStudentsTable" class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th>Class</th>
+                        <th>Contact</th>
+                        <th>Gender</th>
+                        <th>Address</th>
+                    </tr>
+                </thead> 
+                <tbody id="deleteStudentsTablebody">
+                    <!-- Table rows will be populated here -->
+                </tbody>
+            </table>
         </div>
     </div>
-
+</div>
 
 
 
@@ -219,6 +244,7 @@
     <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Student_Enrollment_Form/manage_student.js"></script>
     <script src="/js/Student_Enrollment_Form/enrollment_search_student.js"></script>
+    <script src="/js/Student_Enrollment_Form/enrollment_delete_student.js"></script>
 
 
 

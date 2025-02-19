@@ -619,6 +619,12 @@ const enrollment_search_student = require('./src/routes/student_enrollment_form_
 app.use('/', enrollment_search_student);
 
 
+////// DELETE STUDENT ROUTES ///
+const enrollment_delete_student = require('./src/routes/student_enrollment_form_routes/enrollment_delete_student.js');
+app.use('/', enrollment_delete_student);
+
+
+
 // Start the server
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
