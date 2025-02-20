@@ -928,4 +928,44 @@ function generateUsernameAndPassword(fullName, schoolName, grNo) {
     return { username: userWithSchool, password };
 }
 
+router.get("/fetch-student", (req, res) => {
+    const { grno, name, section } = req.query;
+
+    if (!section || (!grno && !name)) {
+        return res.status(400).json({ error: "Invalid search parameters" });
+    }
+
+    // Determine table based on section
+    let tableName = section === "primary" ? "primary_student_details" : "pre_primary_student_details";
+    
+    //Demo student table 
+    //change it before production////////////////////////////////////////////////////////////////////////////////////
+    // let tableName = section === "test_student_details"
+
+    let query = `SELECT * FROM ${tableName} WHERE `;
+    let queryParams = [];
+
+    if (grno) {
+        query += "Grno = ?";
+        queryParams.push(grno);
+    } else if (name) {
+        query += "Name LIKE ?";
+        queryParams.push(`%${name}%`);
+    }
+
+    req.connectionPool.query(query, queryParams, (error, results) => {
+        if (error) {
+            console.error("Error fetching student details:", error);
+            return res.status(500).json({ error: "Database error" });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: "No student found" });
+        }
+
+        res.json(results);
+    });
+});
+
+
 module.exports = router;
