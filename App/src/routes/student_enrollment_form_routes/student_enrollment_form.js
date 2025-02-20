@@ -3,6 +3,8 @@ const router = express.Router();
 const mysql = require('mysql');
 
 const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
+const { connection_auth } = require('../../../main_server'); // Adjust the path as needed
+
 
 // Use the connection manager middleware
 router.use(connectionManager);
@@ -684,6 +686,14 @@ router.post('/submitEnrollmentForm', (req, res) => {
     // Format school name to lowercase and replace spaces with underscores
     const formattedSchoolName = schoolName.replace(/\s+/g, '_').toLowerCase();
 
+    // Determine the table name based on the section
+    let tableName = 'test_student_details';
+    if (section.toLowerCase() === 'primary') {
+        tableName = 'primary_student_details';
+    } else if (section.toLowerCase() === 'pre-primary') {
+        tableName = 'pre_primary_student_details';
+    }
+
     // Start a transaction
     req.connectionPool.getConnection((err, connection) => {
         if (err) {
@@ -696,7 +706,7 @@ router.post('/submitEnrollmentForm', (req, res) => {
             }
 
             // Query to get the current highest student_id and increment it by 1
-            const incrementStudentIdQuery = `SELECT MAX(student_id) AS maxStudentId FROM test_student_details`;
+            const incrementStudentIdQuery = `SELECT MAX(student_id) AS maxStudentId FROM ${tableName}`;
 
             connection.query(incrementStudentIdQuery, (incrementError, incrementResult) => {
                 if (incrementError) {
@@ -709,15 +719,19 @@ router.post('/submitEnrollmentForm', (req, res) => {
                 const newStudentId = (incrementResult[0].maxStudentId || 0) + 1;
                 console.log(`Fetched student_id: ${incrementResult[0].maxStudentId}, New student_id: ${newStudentId}`);
 
-                const query = `INSERT INTO test_student_details (
+                // Generate the UID for insertion using the new student_id and school name
+                const appUid = `${formattedSchoolName}_student_${newStudentId}`;
+                console.log(`Generated app_uid: ${appUid}`);
+
+                const query = `INSERT INTO ${tableName} (
                     student_id, Firstname, Middlename, Surname, Name, DOB, Age, POB, Gender, Blood_Group, Address, 
                     landmark, taluka, district, state, pin_code, student_phone_no, Adhar_no, Religion, Nationality, 
                     Category, Caste, Domicile, Mother_Tongue, Documents_Submitted, Father_name, F_qualification, 
                     F_occupation, F_mobile_no, Grand_father, Mother_name, M_Qualification, M_occupation, M_mobile_no, 
                     guardian_name, guardian_contact, guardian_relation, guardian_address, guardian_landmark, guardian_pin_code, 
                     Section, Grno, Admission_Date, Standard, Division, Last_School, class_completed, percentage_last_school, 
-                    package_breakup, total_package, transport_needed, transport_tagged, transport_pickup_drop, consent_text
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                    package_breakup, total_package, transport_needed, transport_tagged, transport_pickup_drop, consent_text, app_uid
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
                 const values = [
                     newStudentId,
@@ -773,7 +787,8 @@ router.post('/submitEnrollmentForm', (req, res) => {
                     studentDetails.transport_needed,
                     studentDetails.transport_tagged,
                     studentDetails.transport_pickup_drop,
-                    studentDetails.Consent // Correct field
+                    studentDetails.Consent,
+                    appUid // Added appUid to INSERT query
                 ];
 
                 connection.query(query, values, (error, result) => {
@@ -784,120 +799,104 @@ router.post('/submitEnrollmentForm', (req, res) => {
                         });
                     }
 
-                    // Generate the UID for insertion using the previously stored newStudentId and log it
-                    const appUid = `${formattedSchoolName}_student_${newStudentId}`;
-                    console.log(`Generated app_uid: ${appUid}`);
+                    const { username, password } = generateUsernameAndPassword(fullName, schoolName, grNo);
 
-                    // Update the test_student_details table with the app_uid
-                    const updateQuery = `UPDATE test_student_details SET app_uid = ? WHERE student_id = ?`;
-                    connection.query(updateQuery, [appUid, newStudentId], (updateError) => {
-                        if (updateError) {
+                    // Insert into android_app_users table
+                    const insertIntoAndroidAppUsersQuery = `
+                        INSERT INTO android_app_users (username, password, school_name, type, name, uid)
+                        VALUES (?, ?, ?, ?, ?, ?)
+                    `;
+
+                    const userType = 'student';
+                    const studentName = `${firstName} ${middleName} ${lastName}`;
+
+                    connection_auth.query(insertIntoAndroidAppUsersQuery, [username, password, schoolName, userType, studentName, appUid], (userError) => {
+                        if (userError) {
                             return connection.rollback(() => {
-                                console.error('Error updating app_uid:', updateError);
-                                res.status(500).json({ error: 'Error updating app_uid' });
+                                console.error('Error inserting into android_app_users:', userError);
+                                res.status(500).json({ error: 'Error inserting into android_app_users' });
                             });
                         }
 
-                        const { username, password } = generateUsernameAndPassword(fullName, schoolName, grNo);
+                        // If transport-related information is needed, insert into the transport schedule table
+                        if (transport_needed === 1) {
+                            const concatenatedClass = `${standard} ${division}`; // e.g., '5th Red'
+                            const transportPickDropAddress = formData.transportInformation.transport_pickup_drop; // Getting transport pick-up/drop-off address
+                            const vehicleNo = formData.transportInformation.transport_tagged; // Getting vehicle number (vehicle tagged)
 
-                        // Insert into android_app_users table
-                        const insertIntoAndroidAppUsersQuery = `
-                            INSERT INTO android_app_users (username, password, school_name, type, name, uid)
-                            VALUES (?, ?, ?, ?, ?, ?)
-                        `;
+                            console.log(concatenatedClass, transportPickDropAddress, vehicleNo, transport_needed);
 
-                        const userType = 'student'; // Assuming the type is 'student'
-                        const studentName = `${firstName} ${middleName} ${lastName}`;
+                            // First, get the id using vehicle_no, classes_alloted, and route_stops
+                            const getIdQuery = `
+                                SELECT id 
+                                FROM transport_schedule_details
+                                WHERE vehicle_no = ? 
+                                AND classes_alloted LIKE ? 
+                                AND route_stops LIKE ?
+                            `;
 
-                        connection.query(insertIntoAndroidAppUsersQuery, [username, password, schoolName, userType, studentName, appUid], (userError) => {
-                            if (userError) {
-                                return connection.rollback(() => {
-                                    console.error('Error inserting into android_app_users:', userError);
-                                    res.status(500).json({ error: 'Error inserting into android_app_users' });
-                                });
-                            }
+                            connection.query(getIdQuery, [vehicleNo, `%${concatenatedClass}%`, `%${transportPickDropAddress}%`], (getIdError, results) => {
+                                if (getIdError) {
+                                    return connection.rollback(() => {
+                                        console.error('Error fetching transport schedule id:', getIdError);
+                                        res.status(500).json({ error: 'Error fetching transport schedule id' });
+                                    });
+                                }
 
-                            // If transport-related information is needed, insert into the transport schedule table
-                            if (transport_needed === 1) {
-                                const concatenatedClass = `${standard} ${division}`; // e.g., '5th Red'
-                                const transportPickDropAddress = formData.transportInformation.transport_pickup_drop; // Getting transport pick-up/drop-off address
-                                const vehicleNo = formData.transportInformation.transport_tagged; // Getting vehicle number (vehicle tagged)
-                            
-                                console.log(concatenatedClass, transportPickDropAddress, vehicleNo, transport_needed);
-                            
-                                // First, get the id using vehicle_no, classes_alloted, and route_stops
-                                const getIdQuery = `
-                                    SELECT id 
-                                    FROM transport_schedule_details
-                                    WHERE vehicle_no = ? 
-                                    AND classes_alloted LIKE ? 
-                                    AND route_stops LIKE ?
+                                if (results.length === 0) {
+                                    console.log('No matching records found for the given parameters.');
+                                    return res.status(404).json({ error: 'No transport schedule found for the provided details' });
+                                }
+
+                                const transportId = results[0].id; // Getting the id
+
+                                // Now, update the transport_schedule_details using the retrieved id
+                                const transportUpdateQuery = `
+                                    UPDATE transport_schedule_details
+                                    SET available_seats = available_seats - 1,
+                                        students_tagged = COALESCE(students_tagged, 0) + 1
+                                    WHERE id = ?
                                 `;
-                            
-                                connection.query(getIdQuery, [vehicleNo, `%${concatenatedClass}%`, `%${transportPickDropAddress}%`], (getIdError, results) => {
-                                    if (getIdError) {
+
+                                connection.query(transportUpdateQuery, [transportId], (transportUpdateError, updateResult) => {
+                                    if (transportUpdateError) {
                                         return connection.rollback(() => {
-                                            console.error('Error fetching transport schedule id:', getIdError);
-                                            res.status(500).json({ error: 'Error fetching transport schedule id' });
+                                            console.error('Error updating transport schedule:', transportUpdateError);
+                                            res.status(500).json({ error: 'Error updating transport schedule' });
                                         });
                                     }
-                            
-                                    if (results.length === 0) {
-                                        console.log('No matching records found for the given parameters.');
-                                        return res.status(404).json({ error: 'No transport schedule found for the provided details' });
+
+                                    console.log('Rows affected:', updateResult.affectedRows);
+                                    if (updateResult.affectedRows === 0) {
+                                        console.log('No records were updated.');
                                     }
-                            
-                                    const transportId = results[0].id; // Getting the id
-                            
-                                    // Now, update the transport_schedule_details using the retrieved id
-                                    const transportUpdateQuery = `
-                                        UPDATE transport_schedule_details
-                                        SET available_seats = available_seats - 1,
-                                            students_tagged = students_tagged + 1
-                                        WHERE id = ?
-                                    `;
-                            
-                                    connection.query(transportUpdateQuery, [transportId], (transportUpdateError, updateResult) => {
-                                        if (transportUpdateError) {
+
+                                    // Commit transaction after all queries are successful
+                                    connection.commit(commitError => {
+                                        if (commitError) {
                                             return connection.rollback(() => {
-                                                console.error('Error updating transport schedule:', transportUpdateError);
-                                                res.status(500).json({ error: 'Error updating transport schedule' });
+                                                console.error('Transaction commit failed:', commitError);
+                                                res.status(500).json({ error: 'Transaction commit failed' });
                                             });
                                         }
-                            
-                                        console.log('Rows affected:', updateResult.affectedRows);
-                                        if (updateResult.affectedRows === 0) {
-                                            console.log('No records were updated.');
-                                        }
-                            
-                                        // Commit transaction after all queries are successful
-                                        connection.commit(commitError => {
-                                            if (commitError) {
-                                                return connection.rollback(() => {
-                                                    console.error('Transaction commit failed:', commitError);
-                                                    res.status(500).json({ error: 'Transaction commit failed' });
-                                                });
-                                            }
-                            
-                                            res.status(200).json({ success: 'Enrollment submitted successfully' });
-                                        });
+
+                                        res.status(200).json({ success: 'Enrollment submitted successfully' });
                                     });
                                 });
-                            }
-                            else {
-                                // Commit transaction without transport-related insertion
-                                connection.commit(commitError => {
-                                    if (commitError) {
-                                        return connection.rollback(() => {
-                                            console.error('Error committing transaction:', commitError);
-                                            res.status(500).json({ error: 'Error committing transaction' });
-                                        });
-                                    }
+                            });
+                        } else {
+                            // Commit transaction without transport-related insertion
+                            connection.commit(commitError => {
+                                if (commitError) {
+                                    return connection.rollback(() => {
+                                        console.error('Error committing transaction:', commitError);
+                                        res.status(500).json({ error: 'Error committing transaction' });
+                                    });
+                                }
 
-                                    res.json({ message: 'Enrollment form submitted successfully!' });
-                                });
-                            }
-                        });
+                                res.json({ message: 'Enrollment form submitted successfully!' });
+                            });
+                        }
                     });
                 });
             });

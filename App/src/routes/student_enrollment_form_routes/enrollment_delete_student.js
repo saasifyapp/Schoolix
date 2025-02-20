@@ -3,6 +3,7 @@ const router = express.Router();
 const mysql = require('mysql');
 
 const connectionManager = require('../../middleware/connectionManager'); // Adjust relative path
+const { connection_auth } = require('../../../main_server'); // Adjust the path as needed
 
 // Use the connection manager middleware
 router.use(connectionManager);
@@ -32,7 +33,7 @@ router.post('/deleteEnrolledStudent', (req, res) => {
 
     // SQL query to select student details
     const selectSql = `
-    SELECT transport_needed, transport_tagged, transport_pickup_drop, Standard, Division 
+    SELECT transport_needed, transport_tagged, transport_pickup_drop, Standard, Division, app_uid, Name 
     FROM ${tableName}
     WHERE 
         student_id = ? AND
@@ -41,10 +42,6 @@ router.post('/deleteEnrolledStudent', (req, res) => {
 
     const selectQueryParams = [student_id, Grno];
 
-    // Log the SQL query and parameters
-    // console.log('Select SQL query:', selectSql);
-    // console.log('Select query parameters:', selectQueryParams);
-
     req.connectionPool.query(selectSql, selectQueryParams, (error, results) => {
         if (error) {
             return res.status(500).json({ error: 'Database query failed', details: error });
@@ -52,7 +49,7 @@ router.post('/deleteEnrolledStudent', (req, res) => {
 
         if (results.length > 0) {
             const studentDetails = results[0];
-            //console.log('Student Details:', studentDetails);
+            const { app_uid, Name } = studentDetails;
 
             const deleteSql = `
             DELETE FROM ${tableName}
@@ -63,13 +60,38 @@ router.post('/deleteEnrolledStudent', (req, res) => {
 
             const deleteQueryParams = [student_id, Grno];
 
+            const deleteAndroidUserQuery = `
+                DELETE FROM android_app_users
+                WHERE uid = ? AND name = ?
+            `;
+
+            const androidQueryParams = [app_uid, Name];
+
+            // Function to delete from android_app_users table
+            const deleteFromAndroidUsers = (callback) => {
+                connection_auth.query(deleteAndroidUserQuery, androidQueryParams, (androidDeleteError, androidDeleteResults) => {
+                    if (androidDeleteError) {
+                        return callback({ error: 'Android user delete failed', details: androidDeleteError });
+                    }
+                    callback(null, { success: true, message: 'Android user deleted successfully' });
+                });
+            };
+
             if (studentDetails.transport_needed == 0 || studentDetails.transport_tagged == null) {
                 // Perform deletion if transport_needed is 0 or transport_tagged is null
                 req.connectionPool.query(deleteSql, deleteQueryParams, (deleteError, deleteResults) => {
                     if (deleteError) {
                         return res.status(500).json({ error: 'Database query failed', details: deleteError });
                     }
-                    res.status(200).json({ success: true, message: 'Student deleted successfully (no transport update needed)' });
+
+                    // Delete from android_app_users table
+                    deleteFromAndroidUsers((error, result) => {
+                        if (error) {
+                            return res.status(500).json(error);
+                        }
+
+                        res.status(200).json({ success: true, message: 'Student and associated Android user deleted successfully (no transport update needed)', ...result });
+                    });
                 });
             } else {
                 // If transport is needed and transport_tagged is not null, update the transport details
@@ -83,33 +105,23 @@ router.post('/deleteEnrolledStudent', (req, res) => {
 
                 const vehicleQueryParams = [studentDetails.transport_tagged, studentDetails.transport_pickup_drop, studentDetails.Standard, studentDetails.Division];
 
-               // console.log('Vehicle Info SQL query:', vehicleInfoSql);
-               // console.log('Vehicle query parameters:', vehicleQueryParams);
-
-                // Fetch vehicle info
                 req.connectionPool.query(vehicleInfoSql, vehicleQueryParams, (vehicleError, vehicleResults) => {
                     if (vehicleError) {
                         return res.status(500).json({ error: 'Database query failed', details: vehicleError });
                     }
-
-                    console.log('Vehicle Details:', vehicleResults);
 
                     if (vehicleResults.length > 0) {
                         const vehicleUpdateSql = `
                         UPDATE transport_schedule_details 
                         SET 
                             available_seats = available_seats + 1,
-                            students_tagged = students_tagged - 1
+                            students_tagged = COALESCE(students_tagged, 0) - 1
                         WHERE 
                             id = ?
                         `;
 
                         const vehicleUpdateParams = [vehicleResults[0].id];
 
-                        //console.log('Vehicle Update SQL query:', vehicleUpdateSql);
-                        //console.log('Vehicle update parameters:', vehicleUpdateParams);
-
-                        // Perform the update on the transport schedule details
                         req.connectionPool.query(vehicleUpdateSql, vehicleUpdateParams, (updateError, updateResults) => {
                             if (updateError) {
                                 return res.status(500).json({ error: 'Database update failed', details: updateError });
@@ -120,21 +132,47 @@ router.post('/deleteEnrolledStudent', (req, res) => {
                                 if (deleteError) {
                                     return res.status(500).json({ error: 'Database query failed', details: deleteError });
                                 }
-                                res.status(200).json({ 
-                                    success: true, 
-                                    message: 'Student deleted successfully and transport details updated', 
-                                    vehicleDetails: vehicleResults 
+
+                                // Delete from android_app_users table
+                                deleteFromAndroidUsers((error, result) => {
+                                    if (error) {
+                                        return res.status(500).json(error);
+                                    }
+
+                                    res.status(200).json({ 
+                                        success: true, 
+                                        message: 'Student deleted successfully and transport details updated, and associated Android user deleted', 
+                                        vehicleDetails: vehicleResults,
+                                        ...result
+                                    });
                                 });
                             });
                         });
                     } else {
-                        res.status(404).json({ success: false, message: 'Vehicle details not found for update', vehicleDetails: vehicleResults });
+                        // Even if vehicle details are not found, still delete the student and associated Android user
+                        req.connectionPool.query(deleteSql, deleteQueryParams, (deleteError, deleteResults) => {
+                            if (deleteError) {
+                                return res.status(500).json({ error: 'Database query failed', details: deleteError });
+                            }
+
+                            // Delete from android_app_users table
+                            deleteFromAndroidUsers((error, result) => {
+                                if (error) {
+                                    return res.status(500).json(error);
+                                }
+
+                                res.status(200).json({ 
+                                    success: true, 
+                                    message: 'Student deleted successfully, but no transport details were updated. Associated Android user also deleted', 
+                                    ...result 
+                                });
+                            });
+                        });
                     }
                 });
             }
         } else {
             res.status(404).json({ error: 'Student not found' });
-            return;
         }
     });
 });
