@@ -45,7 +45,7 @@
     </div>
 
     <div class="cards-container">
-        <div class="card" onclick="openUpdateStudentOverlay()">
+        <div class="card" id="updateStudentCard">
             <div class="dotlottie-container">
                 <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
                     type="module"></script>
@@ -55,6 +55,7 @@
             </div>
             <h3>Update Student</h3>
         </div>
+        
 
 
         <div class="card">
@@ -87,17 +88,22 @@
     <div id="updateStudentOverlay" class="overlay">
         <div class="overlay-content">
             <button id="closeUpdateStudentOverlay" class="close-button">&times;</button>
-            <div class="overlay-inner">
-                <h2>SEARCH USING</h2>
-                <div class="radio-buttons">
-                    <label><input type="radio" name="searchType" value="grno" checked> GR NO</label>
-                    <label><input type="radio" name="searchType" value="name"> STUDENT NAME</label>
-                </div>
-                <input type="text" id="searchInput" placeholder="Enter GR NO or Name">
-                <button class="search-button">SEARCH</button>
-            </div>
+            
+            <h2 class="overlay-title">SEARCH USING</h2>
+            
+            <!-- Dropdown for Section Selection -->
+            <select id="sectionSelect" class="section-dropdown">
+                <option value="primary">Primary</option>
+                <option value="preprimary">Pre-primary</option>
+            </select>
+    
+            <!-- Input Field for Search -->
+            <input type="text" id="searchInput" class="search-input" placeholder="Search by Name or GR No (Input Field)">
+            
+            <button class="search-button">SEARCH</button>
         </div>
     </div>
+    
 
 
     <!-- Overlay for Search Student -->
@@ -174,14 +180,15 @@
                     </div>
                     <!-- Previous Filters Button -->
                     <div class="reset-button-container">
-                        <button id="previousFiltersButton" class="reset-button" onclick="applyPreviousFilters()" disabled>
+                        <button id="previousFiltersButton" class="reset-button" onclick="applyPreviousFilters()"
+                            disabled>
                             Previous Filters
                         </button>
                         <button id="resetFiltersButton" class="reset-button" onclick="resetFilters()">
                             Reset Filters
                         </button>
                     </div>
-                    
+
                 </div>
                 <div class="right-side">
                     <h3>Selected Filters</h3>
@@ -194,50 +201,50 @@
     </div>
 
 
-<!-- Delete Student Overlay -->
-<div id="deleteStudentOverlay" class="overlay-search">
-    <div class="overlay-content-search">
-        <button id="closeOverlayDelete" class="close-button">&times;</button>
-        <img src="/images/delete_student.gif" alt="Overlay Icon" class="overlay-icon">
-        <h2 class="overlay-search-head">Delete Student</h2>
-        <div class="delete-container">
-            <div class="search-container">
-                <div class="form-Searchgroup">
-                    <img class="searchIcon" src="/images/search.gif" alt="Search Icon"
-                        style="right: 25px; left: 405px;">
-                    <input type="text" class="form-control" id="deleteStudentSearch" name="studentSearch"
-                        placeholder=" " oninput="deleteStudentEnrolled()" style="width: 400px;">
-                    <span class="form-control-placeholder" style="left: 3.75rem;">Search by Name or GR Number</span>      
+    <!-- Delete Student Overlay -->
+    <div id="deleteStudentOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeOverlayDelete" class="close-button">&times;</button>
+            <img src="/images/delete_student.gif" alt="Overlay Icon" class="overlay-icon">
+            <h2 class="overlay-search-head">Delete Student</h2>
+            <div class="delete-container">
+                <div class="search-container">
+                    <div class="form-Searchgroup">
+                        <img class="searchIcon" src="/images/search.gif" alt="Search Icon"
+                            style="right: 25px; left: 405px;">
+                        <input type="text" class="form-control" id="deleteStudentSearch" name="studentSearch"
+                            placeholder=" " oninput="deleteStudentEnrolled()" style="width: 400px;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search by Name or GR Number</span>
+                    </div>
+
+                    <select id="deleteStudentFilter" class="form-control"
+                        style="width: 200px; margin-right: 10px;margin-left: 10px;">
+                        <option value="primary">Primary</option>
+                        <option value="pre_primary">Pre-primary</option>
+                    </select>
+
                 </div>
 
-                <select id="deleteStudentFilter" class="form-control"
-                style="width: 200px; margin-right: 10px;margin-left: 10px;">
-                    <option value="primary">Primary</option>
-                    <option value="pre_primary">Pre-primary</option>
-                </select>
-
             </div>
-
-        </div>
-        <div class="table-container">
-            <table id="deleteStudentsTable" class="styled-table">
-                <thead>
-                    <tr>
-                        <th>Student ID</th>
-                        <th>Student Name</th>
-                        <th>Class</th>
-                        <th>Contact</th>
-                        <th>Gender</th>
-                        <th>Address</th>
-                    </tr>
-                </thead> 
-                <tbody id="deleteStudentsTablebody">
-                    <!-- Table rows will be populated here -->
-                </tbody>
-            </table>
+            <div class="table-container">
+                <table id="deleteStudentsTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Student Name</th>
+                            <th>Class</th>
+                            <th>Contact</th>
+                            <th>Gender</th>
+                            <th>Address</th>
+                        </tr>
+                    </thead>
+                    <tbody id="deleteStudentsTablebody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 
 
 
