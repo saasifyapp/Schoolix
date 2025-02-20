@@ -1018,14 +1018,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
 ///////////////////////////////// AADHAR NO VALIDATIONS /////////////
 
+document.getElementById('aadhaar').addEventListener('input', function() {
+    validateAadhaar(this.value);
+});
+
+
 // Function to validate Aadhaar number
 function validateAadhaar(aadhaar) {
+    const aadhaarInput = document.getElementById('aadhaar');
     const aadhaarError = document.getElementById('aadhaarError');
-    aadhaarError.innerHTML = '';
+
+    aadhaarError.innerHTML = ''; // Clear previous error message
+    aadhaarInput.classList.remove('error'); // Remove existing error styles
 
     // Check for empty input
     if (aadhaar.length === 0) {
         aadhaarError.style.display = 'none'; // Hide error message
+        aadhaarInput.classList.remove('error');
         return true;
     } else {
         aadhaarError.style.display = 'block'; // Show error message container
@@ -1033,18 +1042,22 @@ function validateAadhaar(aadhaar) {
 
     // Length Check
     if (aadhaar.length !== 12) {
-        aadhaarError.innerHTML = `Aadhaar number must be exactly 12 digits long. Current length: ${aadhaar.length}`;
+        aadhaarError.innerHTML = `Aadhaar number must be exactly 12 digits long.`;
+        aadhaarInput.classList.add('error'); // Apply error styles
         return false;
     }
 
     // Numeric Check
     if (!/^\d{12}$/.test(aadhaar)) {
         aadhaarError.innerHTML = 'Aadhaar number must contain only numeric digits.';
+        aadhaarInput.classList.add('error'); // Apply error styles
         return false;
     }
 
+    aadhaarInput.classList.remove('error'); // Remove error styles on success
     return true;
 }
+
 
 // Event listener for Aadhaar input
 document.getElementById('aadhaar').addEventListener('input', function () {
