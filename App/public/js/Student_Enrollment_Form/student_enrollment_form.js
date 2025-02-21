@@ -2095,6 +2095,39 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+
+//////////////////////// PERCENTAGE VALIDATION ////////////////////////
+
+// Function to validate Percentage
+function validatePercentage(percentage) {
+    const percentageInput = document.getElementById('percentage');
+    const percentageError = document.getElementById('percentageError');
+
+    percentageError.innerHTML = ''; // Clear previous error message
+    percentageInput.classList.remove('error'); // Remove existing error styles
+
+    // Regular expression to ensure percentage is between 0 and 100 with up to two decimal places
+    const percentageRegex = /^(100(\.0{1,2})?|(\d{1,2})(\.\d{0,2})?)$/;
+
+    // Validate the percentage
+    if (!percentageRegex.test(percentage)) {
+        percentageError.innerHTML = 'Percentage must be a number between 0 and 100, and can have up to two decimal places.';
+        percentageInput.classList.add('error'); // Apply error styles
+        return false;
+    }
+
+    percentageInput.classList.remove('error'); // Remove error styles on success
+    return true;
+}
+
+// Individual validation handler for Percentage
+function handlePercentageInput(event) {
+    validatePercentage(event.target.value);
+}
+
+// Event listener for Percentage input
+document.getElementById('percentage').addEventListener('input', handlePercentageInput);
+
 ////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////// FEES AND PACKAGES ///////////////////
