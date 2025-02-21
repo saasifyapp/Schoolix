@@ -624,6 +624,11 @@ input[type="checkbox"]:focus {
     line-height: 1.5;
 }
 
+.dropdown{
+    text-align: center;
+}
+
+
 
 
 

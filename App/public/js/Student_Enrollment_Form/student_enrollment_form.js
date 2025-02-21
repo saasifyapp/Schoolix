@@ -2642,3 +2642,77 @@ consentCheckboxes.forEach(checkbox => {
         selectAllCheckbox.indeterminate = !allChecked && !noneChecked;
     });
 });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const medicalStatus = document.getElementById("medicalStatus");
+    const medicalDescription = document.getElementById("medicalDescription");
+
+    medicalStatus.addEventListener("change", function () {
+        if (medicalStatus.value === "Unfit") {
+            medicalDescription.removeAttribute("readonly");
+        } else {
+            medicalDescription.setAttribute("readonly", true);
+            medicalDescription.value = "";
+        }
+    });
+});
+
+// Function to validate ID inputs
+function validateInput(inputId, errorId, length) {
+    const inputField = document.getElementById(inputId);
+    const errorField = document.getElementById(errorId);
+
+    errorField.innerHTML = '';
+    inputField.classList.remove('error');
+
+    const value = inputField.value.trim();
+
+    if (value.length === 0) {
+        errorField.style.display = 'none';
+        return true;
+    } else if (/\s/.test(value)) {
+        errorField.style.display = 'block';
+        errorField.innerHTML = `${inputField.placeholder} must not contain spaces.`;
+        inputField.classList.add('error');
+        return false;
+    } else if (value.length !== length) {
+        errorField.style.display = 'block';
+        errorField.innerHTML = `${inputField.placeholder} must be exactly ${length} digits long.`;
+        inputField.classList.add('error');
+        return false;
+    } else if (!/^\d+$/.test(value)) {
+        errorField.style.display = 'block';
+        errorField.innerHTML = `${inputField.placeholder} must contain only numeric digits.`;
+        inputField.classList.add('error');
+        return false;
+    }
+
+    errorField.style.display = 'none';
+    return true;
+}
+
+// Function to add event listeners
+function addValidationListeners(inputId, errorId, length) {
+    const inputField = document.getElementById(inputId);
+
+    inputField.addEventListener('input', function () {
+        validateInput(inputId, errorId, length);
+    });
+
+    inputField.addEventListener('focus', function () {
+        if (!validateInput(inputId, errorId, length)) {
+            document.getElementById(errorId).style.display = 'block';
+        }
+    });
+
+    inputField.addEventListener('blur', function () {
+        validateInput(inputId, errorId, length);
+    });
+}
+
+// Add event listeners for each field
+addValidationListeners('saralId', 'saralIdError', 19);
+addValidationListeners('aaparId', 'aaparIdError', 12);
+addValidationListeners('penId', 'penIdError', 11);
+addValidationListeners('aadhaar', 'aadhaarError', 12);

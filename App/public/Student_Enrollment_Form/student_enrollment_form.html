@@ -210,6 +210,14 @@
                             <span class="form-control-placeholder">Caste</span>
                             <div id="casteSuggestions" class="suggestions"></div>
                         </div>
+                        <div class="form-group">
+                            <select class="form-control dropdown" id="alpsankhyak">
+                                <option value="" selected disabled hidden></option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                            <span class="form-control-placeholder">Alpsankhyak</span>
+                        </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
@@ -233,6 +241,28 @@
                                 <input type="text" id="documentInput" placeholder="Select Documents">
                             </div>
                             <div id="documentSuggestions" class="suggestions"></div>
+                        </div>                       
+                    </div>
+                   
+                </div>
+                
+                <div class="input-container">
+                    <h3>Medical Information</h3>
+                    <div class="form-row">
+                        <!-- Medical Status Dropdown -->
+                        <div class="form-group" style="flex: 0.3;">
+                            <select class="form-control dropdown" id="medicalStatus">
+                                <option value="" selected disabled hidden></option>
+                                <option value="Fit">Fit</option>
+                                <option value="Unfit">Unfit</option>
+                            </select>
+                            <span class="form-control-placeholder">Medical Status</span>
+                        </div>
+                        
+                        <!-- Medical Description Textarea -->
+                        <div class="form-group">
+                            <input class="form-control" id="medicalDescription" placeholder=" " readonly></input>
+                            <span class="form-control-placeholder">Medical Description</span>
                         </div>
                     </div>
                 </div>
@@ -419,6 +449,29 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="input-container">
+                    <h3>Identification Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="saralId" placeholder=" " maxlength="19">
+                            <span class="form-control-placeholder">Saral ID (19 Digits)</span>
+                            <div id="saralIdError" class="error-message"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="aaparId" placeholder=" " maxlength="12">
+                            <span class="form-control-placeholder">Aapar ID (12 Digits)</span>
+                            <div id="aaparIdError" class="error-message"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="penId" placeholder=" " maxlength="11">
+                            <span class="form-control-placeholder">PEN ID (11 Digits)</span>
+                            <div id="penIdError" class="error-message"></div>
+                        </div>
+                    </div>
+                </div>
+                
+
 
                 <div class="input-container">
                     <h3>Previous Academic Records</h3>
