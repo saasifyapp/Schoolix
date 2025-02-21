@@ -687,16 +687,24 @@ function exportbooksTableToCSV(tableId, filename) {
   let csvContent = "";
   const headers = table.querySelectorAll("th");
   const headerData = [];
-  headers.forEach((header) => {
-    headerData.push(`"${header.textContent}"`);
+  
+  // Exclude last header column
+  headers.forEach((header, index) => {
+    if (index < headers.length - 1) { // Exclude the last column
+      headerData.push(`"${header.textContent}"`);
+    }
   });
   csvContent += headerData.join(",") + "\n";
 
   rows.forEach((row) => {
     const cells = row.querySelectorAll("td");
     const rowData = [];
-    cells.forEach((cell) => {
-      rowData.push(`"${cell.textContent}"`);
+    
+    // Exclude last cell in each row
+    cells.forEach((cell, index) => {
+      if (index < cells.length - 1) { // Exclude the last column
+        rowData.push(`"${cell.textContent}"`);
+      }
     });
     csvContent += rowData.join(",") + "\n";
   });
@@ -716,6 +724,7 @@ function exportbooksTableToCSV(tableId, filename) {
     document.body.removeChild(link);
   }
 }
+
 
 function exportBooksTable() {
   exportbooksTableToCSV("booksTable", "Library_Books.csv");
