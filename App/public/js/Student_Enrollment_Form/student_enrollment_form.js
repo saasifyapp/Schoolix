@@ -160,21 +160,88 @@ function showNoResults(suggestionsContainer) {
 
 /////////////////////////////////// STUDENT INFORMATION SECTION ////////////////////////
 
+//////////////////////// NAME VALIDATION ////////////////////////
 
-/////////////////////// AUTOMATIC FULL NAME ////////////////////////
+//////////////////////// NAME VALIDATION ////////////////////////
 
-// Function to update the full name
-function updateStudentFullName() {
+// Function to validate name fields
+function validateName(name, id) {
+    const nameInput = document.getElementById(id);
+    const nameError = document.getElementById(id + 'Error');
+
+    const trimmedName = name.trim(); // Trim leading/trailing spaces
+
+    nameError.innerHTML = ''; // Clear previous error message
+    nameInput.classList.remove('error'); // Remove existing error styles
+
+    // No special characters, numbers, leading/trailing spaces, or internal spaces allowed
+    if (name !== trimmedName || /[^a-zA-Z]/.test(trimmedName) || /\s/.test(trimmedName)) {
+        if (name !== trimmedName) {
+            nameError.innerHTML = 'Name must not have leading or trailing spaces.';
+        } else if (/\s/.test(trimmedName)) {
+            nameError.innerHTML = 'Name must not contain spaces.';
+        } else {
+            nameError.innerHTML = 'Name must not contain special characters or numbers.';
+        }
+        nameInput.classList.add('error'); // Apply error styles
+        return false;
+    }
+
+    nameInput.classList.remove('error'); // Remove error styles on success
+    return true;
+}
+
+// Function to enable or disable fields based on validation
+function updateFieldAccessibility() {
+    const firstNameValid = validateName(document.getElementById('firstName').value, 'firstName');
+
+    if (firstNameValid) {
+        document.getElementById('middleName').removeAttribute('readonly');
+    } else {
+        document.getElementById('middleName').setAttribute('readonly', true);
+        document.getElementById('lastName').setAttribute('readonly', true);
+    }
+
+    const middleNameValid = firstNameValid && validateName(document.getElementById('middleName').value, 'middleName');
+
+    if (middleNameValid) {
+        document.getElementById('lastName').removeAttribute('readonly');
+    } else {
+        document.getElementById('lastName').setAttribute('readonly', true);
+    }
+
+    if (firstNameValid && middleNameValid && validateName(document.getElementById('lastName').value, 'lastName')) {
+        updateFullName();
+    } else {
+        document.getElementById('fullName').value = '';
+    }
+}
+
+// Function to concatenate full name
+function updateFullName() {
     const firstName = document.getElementById('firstName').value.trim();
     const middleName = document.getElementById('middleName').value.trim();
     const lastName = document.getElementById('lastName').value.trim();
-    document.getElementById('fullName').value = `${firstName} ${middleName} ${lastName}`.trim(); // Update full name field
+
+    const fullName = `${firstName} ${middleName} ${lastName}`.trim();
+    document.getElementById('fullName').value = fullName;
 }
 
-// Add event listeners to the first name, middle name, and last name input fields
-document.getElementById('firstName').addEventListener('input', updateStudentFullName);
-document.getElementById('middleName').addEventListener('input', updateStudentFullName);
-document.getElementById('lastName').addEventListener('input', updateStudentFullName);
+// Individual validation handlers
+function handleInput(event) {
+    const fieldId = event.target.id;
+    validateName(event.target.value, fieldId);
+    updateFieldAccessibility();
+}
+
+// Event listeners for name inputs
+document.getElementById('firstName').addEventListener('input', handleInput);
+document.getElementById('middleName').addEventListener('input', handleInput);
+document.getElementById('lastName').addEventListener('input', handleInput);
+
+// Initial setup
+document.getElementById('middleName').setAttribute('readonly', true);
+document.getElementById('lastName').setAttribute('readonly', true);
 
 
 ////////////////////////////////// AUTOMATIC AGE  ///////////////////////////////////////////
@@ -360,6 +427,43 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 ///////////////////////// CONTACT AND ADDRESS DETAILS ////////////////////////
+
+////////////////// PHONE NO VALIDATION /////////////
+
+//////////////////////// PHONE NUMBER VALIDATION ////////////////////////
+
+// Function to validate phone number field
+function validatePhoneNumber(phone, id) {
+    const phoneInput = document.getElementById(id);
+    const phoneError = document.getElementById(id + 'Error');
+
+    phoneError.innerHTML = ''; // Clear previous error message
+    phoneInput.classList.remove('error'); // Remove existing error styles
+
+    // Ensure only digits and exactly 10 digits long
+    if (!/^\d{10}$/.test(phone)) {
+        phoneError.innerHTML = 'Phone number must be exactly 10 digits long and contain only numbers.';
+        phoneInput.classList.add('error'); // Apply error styles
+        return false;
+    }
+
+    phoneInput.classList.remove('error'); // Remove error styles on success
+    return true;
+}
+
+// Individual validation handler for phone number
+function handlePhoneInput(event) {
+    const fieldId = event.target.id;
+    validatePhoneNumber(event.target.value, fieldId);
+}
+
+// Event listener for phone number input
+document.getElementById('studentContact').addEventListener('input', handlePhoneInput);
+
+
+
+
+//////////////////////////// ADDRESS /////////////////////////
 
 // Utility function to convert strings to title case
 function toTitleCase(str) {
@@ -630,6 +734,36 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 //////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////// PIN CODE VALIDATION ////////////////////////
+
+// Function to validate PIN Code
+function validatePinCode(pin, id) {
+    const pinInput = document.getElementById(id);
+    const pinError = document.getElementById(id + 'Error');
+
+    pinError.innerHTML = ''; // Clear previous error message
+    pinInput.classList.remove('error'); // Remove existing error styles
+
+    // Ensure only digits and a maximum length of 6 digits
+    if (!/^\d{6}$/.test(pin)) {
+        pinError.innerHTML = 'PIN Code must be up to 6 digits long and contain only numbers.';
+        pinInput.classList.add('error'); // Apply error styles
+        return false;
+    }
+
+    pinInput.classList.remove('error'); // Remove error styles on success
+    return true;
+}
+
+// Individual validation handler for PIN Code
+function handlePinInput(event) {
+    const fieldId = event.target.id;
+    validatePinCode(event.target.value, fieldId);
+}
+
+// Event listener for PIN Code input
+document.getElementById('pinCode').addEventListener('input', handlePinInput);
 
 
 ////////////////////////////// IDENTITY DETAILS /////////////////////////
@@ -1018,10 +1152,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 ///////////////////////////////// AADHAR NO VALIDATIONS /////////////
 
-document.getElementById('aadhaar').addEventListener('input', function() {
+// Event listener for Aadhaar input
+document.getElementById('aadhaar').addEventListener('input', function () {
     validateAadhaar(this.value);
 });
-
 
 // Function to validate Aadhaar number
 function validateAadhaar(aadhaar) {
@@ -1031,18 +1165,23 @@ function validateAadhaar(aadhaar) {
     aadhaarError.innerHTML = ''; // Clear previous error message
     aadhaarInput.classList.remove('error'); // Remove existing error styles
 
-    // Check for empty input
+    // Check for empty input or spaces
     if (aadhaar.length === 0) {
         aadhaarError.style.display = 'none'; // Hide error message
         aadhaarInput.classList.remove('error');
         return true;
+    } else if (/\s/.test(aadhaar)) {
+        aadhaarError.style.display = 'block'; // Show error message container
+        aadhaarError.innerHTML = 'Aadhaar number must not contain spaces.';
+        aadhaarInput.classList.add('error'); // Apply error styles
+        return false;
     } else {
         aadhaarError.style.display = 'block'; // Show error message container
     }
 
     // Length Check
     if (aadhaar.length !== 12) {
-        aadhaarError.innerHTML = `Aadhaar number must be exactly 12 digits long.`;
+        aadhaarError.innerHTML = 'Aadhaar number must be exactly 12 digits long.';
         aadhaarInput.classList.add('error'); // Apply error styles
         return false;
     }
@@ -1055,14 +1194,9 @@ function validateAadhaar(aadhaar) {
     }
 
     aadhaarInput.classList.remove('error'); // Remove error styles on success
+    aadhaarError.innerHTML = '';
     return true;
 }
-
-
-// Event listener for Aadhaar input
-document.getElementById('aadhaar').addEventListener('input', function () {
-    validateAadhaar(this.value.trim());
-});
 
 ///////////////////////// DOCUMENTS SUBMITTED SUGGESTIONS ///////////////////
 
