@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/NavButtons.css">
     <link rel="stylesheet" href="/css/Student_Enrollment_Form/manage_student_console.css">
     <link rel="stylesheet" href="/css/Student_Enrollment_Form/enrollment-form-control.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 </head>
@@ -44,16 +45,18 @@
     </div>
 
     <div class="cards-container">
-        <div class="card" onclick="openUpdateStudentOverlay()">
+        <div class="card" id="updateStudentCard">
             <div class="dotlottie-container">
-                <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+                <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                    type="module"></script>
                 <dotlottie-player src="https://lottie.host/65e8551a-f44b-48e1-acec-1ced97cdc83c/0XsoVpU2gc.lottie"
-                    background="transparent" speed="1" style="width: 270px; height: 200px; margin-bottom: 20px;"
-                    loop autoplay></dotlottie-player>
+                    background="transparent" speed="1" style="width: 270px; height: 200px; margin-bottom: 20px;" loop
+                    autoplay></dotlottie-player>
             </div>
             <h3>Update Student</h3>
         </div>
         
+
 
         <div class="card">
             <button id="searchStudent">
@@ -85,18 +88,23 @@
     <div id="updateStudentOverlay" class="overlay">
         <div class="overlay-content">
             <button id="closeUpdateStudentOverlay" class="close-button">&times;</button>
-            <div class="overlay-inner">
-                <h2>SEARCH USING</h2>
-                <div class="radio-buttons">
-                    <label><input type="radio" name="searchType" value="grno" checked> GR NO</label>
-                    <label><input type="radio" name="searchType" value="name"> STUDENT NAME</label>
-                </div>
-                <input type="text" id="searchInput" placeholder="Enter GR NO or Name">
-                <button class="search-button">SEARCH</button>
-            </div>
+            
+            <h2 class="overlay-title">SEARCH USING</h2>
+            
+            <!-- Dropdown for Section Selection -->
+            <select id="sectionSelect" class="section-dropdown">
+                <option value="primary">Primary</option>
+                <option value="preprimary">Pre-primary</option>
+            </select>
+    
+            <!-- Input Field for Search -->
+            <input type="text" id="searchInput" class="search-input" placeholder="Search by Name or GR No (Input Field)">
+            
+            <button class="search-button">SEARCH</button>
         </div>
     </div>
     
+
 
     <!-- Overlay for Search Student -->
     <div id="searchStudentOverlay" class="overlay-search">
@@ -118,12 +126,11 @@
 
                     <select id="studentFilter" class="form-control"
                         style="width: 200px; margin-right: 10px;margin-left: 10px;">
-                        <option value="all">All Students</option>
-                        <option value="active">Active Students</option>
-                        <option value="inactive">Inactive Students</option>
+                        <option value="primary">Primary</option>
+                        <option value="pre_primary">Pre-primary</option>
                     </select>
 
-                    <button class="filterButton" onclick="applyFilter()" style="margin-top: 10px; margin-left: 10px;">
+                    <button class="filterButton" onclick="" style="margin-top: 10px; margin-left: 10px;">
                         <img src="/images/filter.png" alt="Refresh Icon"> Filter
                     </button>
 
@@ -157,81 +164,87 @@
         </div>
     </div>
 
+
+
     <!-- Filter Overlay -->
     <div id="filterOverlay" class="overlay">
         <div class="overlay-content">
             <button id="closeFilterOverlay" class="close-button">&times;</button>
-            <h2>Add Filters</h2>
+            <h2 id="filterHeading">Filters for (section) section</h2> <!-- Dynamic heading -->
+            <p id="filterMessage"></p> <!-- Message indicating the selected section -->
             <div class="overlay-inner">
                 <div class="left-side">
-                    <div class="select-section">
-                        <h3>Select Section</h3>
-                        <label>
-                            <input type="checkbox" name="section" value="primary" onclick="updateRightSide()"> Primary
-                        </label>
-                        <label>
-                            <input type="checkbox" name="section" value="preprimary" onclick="updateRightSide()">
-                            Preprimary
-                        </label>
-                        <label>
-                            <input type="checkbox" name="section" value="all" onclick="updateRightSide()"> All
-                        </label>
-                    </div>
-
+                    <h3>Select Filters</h3>
                     <div class="select-filter">
-                        <h3>Select Filters</h3>
-                        <label>
-                            <input type="checkbox" name="filter" value="Name" onclick="updateRightSide()"> Name
-                        </label>
-                        <label>
-                            <input type="checkbox" name="filter" value="Contact" onclick="updateRightSide()"> Contact
-                        </label>
-                        <label>
-                            <input type="checkbox" name="filter" value="Address" onclick="updateRightSide()"> Address
-                        </label>
+                        <!-- Filter checkboxes will be dynamically populated here -->
                     </div>
-                </div>
+                    <!-- Previous Filters Button -->
+                    <div class="reset-button-container">
+                        <button id="previousFiltersButton" class="reset-button" onclick="applyPreviousFilters()"
+                            disabled>
+                            Previous Filters
+                        </button>
+                        <button id="resetFiltersButton" class="reset-button" onclick="resetFilters()">
+                            Reset Filters
+                        </button>
+                    </div>
 
+                </div>
                 <div class="right-side">
                     <h3>Selected Filters</h3>
                     <div id="selectedFilters"></div>
                     <!-- Apply Button -->
-
-
-                    <button id="applyFiltersButton" class="apply-button" onclick="">
-                        <img src="/images/checked.png" alt="Refresh Icon"> Apply</button>
+                    <button id="applyFiltersButton" class="apply-button" onclick="applyFilters()">Apply</button>
                 </div>
             </div>
         </div>
     </div>
-
-
-
-
-
-
 
 
     <!-- Delete Student Overlay -->
     <div id="deleteStudentOverlay" class="overlay-search">
         <div class="overlay-content-search">
             <button id="closeOverlayDelete" class="close-button">&times;</button>
-            <img src="/images/delete.gif" alt="Overlay Icon" class="overlay-icon">
+            <img src="/images/delete_student.gif" alt="Overlay Icon" class="overlay-icon">
             <h2 class="overlay-search-head">Delete Student</h2>
             <div class="delete-container">
-                <div class="form-Searchgroup">
-                    <img class="searchIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
-                    <input type="text" class="form-control" id="searchBarDelete" name="" placeholder=" " oninput=""
-                        style="width: 400px; height: 1.7rem !important;">
-                    <span class="form-control-placeholder" style="left: 3.75rem;">Enter Student ID...</span>
+                <div class="search-container">
+                    <div class="form-Searchgroup">
+                        <img class="searchIcon" src="/images/search.gif" alt="Search Icon"
+                            style="right: 25px; left: 405px;">
+                        <input type="text" class="form-control" id="deleteStudentSearch" name="studentSearch"
+                            placeholder=" " oninput="deleteStudentEnrolled()" style="width: 400px;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search by Name or GR Number</span>
+                    </div>
+
+                    <select id="deleteStudentFilter" class="form-control"
+                        style="width: 200px; margin-right: 10px;margin-left: 10px;">
+                        <option value="primary">Primary</option>
+                        <option value="pre_primary">Pre-primary</option>
+                    </select>
+
                 </div>
-                <button class="deleteButton" id="deleteButton" style="margin-top: 10px;">
-                    <img src="/images/delete.png" alt="Delete Icon"> Delete
-                </button>
+
+            </div>
+            <div class="table-container">
+                <table id="deleteStudentsTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Student Name</th>
+                            <th>Class</th>
+                            <th>Contact</th>
+                            <th>Gender</th>
+                            <th>Address</th>
+                        </tr>
+                    </thead>
+                    <tbody id="deleteStudentsTablebody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-
 
 
 
@@ -245,6 +258,9 @@
 
     <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Student_Enrollment_Form/manage_student.js"></script>
+    <script src="/js/Student_Enrollment_Form/enrollment_search_student.js"></script>
+    <script src="/js/Student_Enrollment_Form/enrollment_delete_student.js"></script>
+    <script src="/js/Student_Enrollment_Form/populate_update_student_form.js"></script>
 
 
 

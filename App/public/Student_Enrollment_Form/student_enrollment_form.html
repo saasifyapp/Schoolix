@@ -98,14 +98,17 @@
                         <div class="form-group">
                             <input type="text" class="form-control" id="firstName" placeholder=" ">
                             <span class="form-control-placeholder">First Name</span>
+                            <div id="firstNameError" class="error-message"></div>
                         </div>
                         <div class="form-group">
                             <input type="text" class="form-control" id="middleName" placeholder=" ">
                             <span class="form-control-placeholder">Middle Name</span>
+                            <div id="middleNameError" class="error-message"></div>
                         </div>
                         <div class="form-group">
                             <input type="text" class="form-control" id="lastName" placeholder=" ">
                             <span class="form-control-placeholder">Last Name</span>
+                            <div id="lastNameError" class="error-message"></div>
                         </div>
                         <div class="form-group">
                             <input type="text" class="form-control" id="fullName" placeholder=" " readonly>
@@ -144,6 +147,7 @@
                         <div class="form-group">
                             <input type="text" class="form-control" id="studentContact" placeholder=" ">
                             <span class="form-control-placeholder">Student Contact No</span>
+                            <div id="studentContactError" class="error-message"></div>
                         </div>
 
                         <div class="form-group">
@@ -151,6 +155,7 @@
                             <span class="form-control-placeholder">City/Village</span>
                             <div id="cityVillageSuggestions" class="suggestions"></div>
                         </div>
+                        
                         <div class="form-group">
                             <input type="text" class="form-control" id="taluka" placeholder=" ">
                             <span class="form-control-placeholder">Taluka</span>
@@ -177,6 +182,7 @@
                         <div class="form-group">
                             <input type="text" class="form-control" id="pinCode" placeholder=" ">
                             <span class="form-control-placeholder">PIN Code</span>
+                            <div id="pinCodeError" class="error-message"></div>
                         </div>
 
                     </div>
@@ -255,6 +261,7 @@
                         <div class="form-group">
                             <input type="text" class="form-control" id="fatherMiddleName" placeholder=" ">
                             <span class="form-control-placeholder">Father's Middle Name</span>
+                            <div id="fatherMiddleNameError" class="error-message"></div>
                         </div>
                         <div class="form-group">
                             <input type="text" class="form-control" id="fatherLastName" placeholder=" " readonly>
@@ -269,6 +276,7 @@
                         <div class="form-group">
                             <input type="text" class="form-control" id="fatherContactNumber" placeholder=" ">
                             <span class="form-control-placeholder">Father's Contact Number</span>
+                            <div id="fatherContactNumberError" class="error-message"></div>
                         </div>
                         <div class="form-group">
                             <input type="text" class="form-control" id="fatherQualification" placeholder=" ">
@@ -287,6 +295,7 @@
                         <div class="form-group">
                             <input type="text" class="form-control" id="motherFirstName" placeholder=" ">
                             <span class="form-control-placeholder">Mother's First Name</span>
+                            <div id="motherFirstNameError" class="error-message"></div>
                         </div>
                         <div class="form-group">
                             <input type="text" class="form-control" id="motherLastName" placeholder=" " readonly>
@@ -301,6 +310,7 @@
                         <div class="form-group">
                             <input type="text" class="form-control" id="motherContactNumber" placeholder=" ">
                             <span class="form-control-placeholder">Mother's Contact Number</span>
+                            <div id="motherContactNumberError" class="error-message"></div>
                         </div>
                         <div class="form-group">
                             <input type="text" class="form-control" id="motherQualification" placeholder=" ">
@@ -341,6 +351,7 @@
                             <div class="form-group">
                                 <input type="text" class="form-control" id="guardianContact" placeholder=" ">
                                 <span class="form-control-placeholder">Guardian's Contact</span>
+                                <div id="guardianContactError" class="error-message"></div>
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="guardianRelation" placeholder=" ">
@@ -362,6 +373,7 @@
                             <div class="form-group">
                                 <input type="text" class="form-control" id="guardianpinCode" placeholder=" ">
                                 <span class="form-control-placeholder">PIN Code</span>
+                                <div id="guardianpinCodeError" class="error-message"></div>
                             </div>
                         </div>
                     </div>
@@ -424,6 +436,8 @@
                             <input type="text" class="form-control" id="percentage" placeholder=" ">
                             <span class="form-control-placeholder">Percentage</span>
                             <span class="percentage-icon">%</span>
+                            <div id="percentageError" class="error-message"></div>
+
                         </div>
                     </div>
                     <div class="form-row">

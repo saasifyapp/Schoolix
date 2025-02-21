@@ -148,6 +148,24 @@
     margin-right: 0;
 }
 
+.error-message {
+    color: #d9534f; /* Red color */
+    font-size: 14px;
+    margin-top: 67px;
+    display: block;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    text-align: left;
+}
+  
+.form-control.error {
+    border: 2px solid #d9534f !important;
+    background-color: #fbe9e7 !important;
+    margin-bottom: 25px; /* Space for error message */
+}
+
+
 .radio-group {
     display: flex;
     gap: 1rem;
