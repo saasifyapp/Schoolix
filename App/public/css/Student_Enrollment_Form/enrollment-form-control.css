@@ -491,8 +491,8 @@ input[type="checkbox"]:focus {
 
 .review-section:hover {
     transform: scale(1.02);
+    box-shadow: 0px 0px 8px 4px #aed6f1;
 }
-
 /* Headings */
 .main-content h2 {
     color: #222;

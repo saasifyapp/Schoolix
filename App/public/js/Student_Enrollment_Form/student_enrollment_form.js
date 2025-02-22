@@ -166,15 +166,15 @@ function showNoResults(suggestionsContainer) {
 function validateInput(inputId, errorId, length) {
     const inputField = document.getElementById(inputId);
     const errorElement = document.getElementById(errorId);
-    const value = inputField.value.trim();
+    const value = inputField.value;
 
     errorElement.innerHTML = ''; // Clear previous error message
     inputField.classList.remove('error'); // Remove existing error styles
 
-    // Check for leading, trailing, or internal spaces
+    // Check for any spaces
     if (/\s/.test(value)) {
         errorElement.style.display = 'block'; // Show error message container
-        errorElement.innerHTML = 'Input must not contain leading, trailing, or internal spaces.';
+        errorElement.innerHTML = 'Input must not contain any spaces.';
         inputField.classList.add('error'); // Apply error styles
         return false;
     }
@@ -200,11 +200,12 @@ function validateInput(inputId, errorId, length) {
     return true;
 }
 
-// Function to add event listeners
+// Function to add validation listeners and remove spaces in real-time
 function addValidationListeners(inputId, errorId, length) {
     const inputField = document.getElementById(inputId);
 
     inputField.addEventListener('input', function () {
+        inputField.value = inputField.value.replace(/\s/g, ''); // Remove any spaces
         validateInput(inputId, errorId, length);
     });
 
@@ -228,6 +229,7 @@ addValidationListeners('motherContactNumber', 'motherContactNumberError', 10);
 addValidationListeners('guardianContact', 'guardianContactError', 10);
 addValidationListeners('guardianpinCode', 'guardianpinCodeError', 6);
 
+////////////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////// ALL NAME VALIDATION //////////////////////
@@ -1902,6 +1904,11 @@ function validatePercentage(percentage) {
     percentageError.innerHTML = ''; // Clear previous error message
     percentageInput.classList.remove('error'); // Remove existing error styles
 
+    // If the input is empty, do not show any error
+    if (percentage === '') {
+        return true;
+    }
+
     // Regular expression to ensure percentage is between 0 and 100 with up to two decimal places
     const percentageRegex = /^(100(\.0{1,2})?|(\d{1,2})(\.\d{0,2})?)$/;
 
@@ -1925,6 +1932,7 @@ function handlePercentageInput(event) {
 document.getElementById('percentage').addEventListener('input', handlePercentageInput);
 
 ////////////////////////////////////////////////////////////////////////////////////
+
 
 //////////////////// FEES AND PACKAGES ///////////////////
 
@@ -2319,6 +2327,7 @@ function filterAndDisplayVehicleRunning(query, suggestionsContainer, vehicleRunn
             suggestionsContainer.innerHTML = '';
             suggestionsContainer.style.display = "none";
             document.getElementById('noVehicleFound').disabled = true;  // Disable the checkbox when an item is selected
+            noVehicleCheckbox.checked = false;  // Uncheck the checkbox
         });
     });
 }
@@ -2496,7 +2505,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const newAdmission = document.getElementById("newAdmission");
 
     function checkFields() {
-        if (lastSchoolAttended.value.trim() && classCompleted.value.trim() && percentage.value.trim()) {
+        if (lastSchoolAttended.value.trim() || classCompleted.value.trim() || percentage.value.trim()) {
             newAdmission.disabled = true;
         } else {
             newAdmission.disabled = false;

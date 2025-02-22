@@ -184,13 +184,13 @@ body {
     padding-right: 20px;
     display: flex;
     flex-direction: column;
-    /* Align items vertically */
-    justify-content: center;
-    /* Align the content at the top */
-    align-items:center;
-    /* Align content to the left */
-    height: 100%;
-    /* Ensure the container takes up full height */
+    justify-content: center; /* Align items vertically */
+    align-items: center; /* Align the content at the top */
+    height: 100%; /* Ensure the container takes up full height */
+    background-color: white; /* Change background to white */
+    border-radius: 10px; /* Add rounded corners */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+
 }
 
 .select-section,
@@ -251,6 +251,10 @@ input[type="checkbox"] {
     padding-left: 20px;
     position: relative;
     /* Allow absolute positioning of the button inside */
+    background-color: white; /* Change background to white */
+    border-radius: 10px; /* Add rounded corners */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+
 }
 
 #selectedFilters div {
