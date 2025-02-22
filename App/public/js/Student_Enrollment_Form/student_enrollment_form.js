@@ -2489,3 +2489,76 @@ function validateInput(inputId, errorId, length) {
 }
 
 
+document.addEventListener("DOMContentLoaded", function () {
+    const lastSchoolAttended = document.getElementById("lastSchoolAttended");
+    const classCompleted = document.getElementById("classCompleted");
+    const percentage = document.getElementById("percentage");
+    const newAdmission = document.getElementById("newAdmission");
+
+    function checkFields() {
+        if (lastSchoolAttended.value.trim() && classCompleted.value.trim() && percentage.value.trim()) {
+            newAdmission.disabled = true;
+        } else {
+            newAdmission.disabled = false;
+        }
+    }
+
+    function resetFields() {
+        if (newAdmission.checked) {
+            lastSchoolAttended.value = "";
+            classCompleted.value = "";
+            percentage.value = "";
+
+            lastSchoolAttended.disabled = true;
+            classCompleted.disabled = true;
+            percentage.disabled = true;
+        } else {
+            lastSchoolAttended.disabled = false;
+            classCompleted.disabled = false;
+            percentage.disabled = false;
+        }
+    }
+
+    lastSchoolAttended.addEventListener("input", checkFields);
+    classCompleted.addEventListener("input", checkFields);
+    percentage.addEventListener("input", checkFields);
+    newAdmission.addEventListener("change", resetFields);
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const transportStandard = document.getElementById("transportStandard");
+    const transportDivision = document.getElementById("transportDivision");
+    const pickDropAddress = document.getElementById("pickDropAddress");
+    const vehicleRunning = document.getElementById("vehicleRunning");
+    const noVehicleFound = document.getElementById("noVehicleFound");
+
+    function checkFields() {
+        if (pickDropAddress.value.trim() && vehicleRunning.value.trim()) {
+            noVehicleFound.disabled = true;
+        } else {
+            noVehicleFound.disabled = false;
+        }
+    }
+
+    function resetFields() {
+        if (noVehicleFound.checked) {
+            pickDropAddress.value = "";
+            vehicleRunning.value = "";
+
+            pickDropAddress.disabled = true;
+            vehicleRunning.disabled = true;
+        } else {
+            pickDropAddress.disabled = false;
+            vehicleRunning.disabled = false;
+        }
+    }
+
+    pickDropAddress.addEventListener("input", checkFields);
+    vehicleRunning.addEventListener("input", checkFields);
+    noVehicleFound.addEventListener("change", resetFields);
+});
+
+
+
+
