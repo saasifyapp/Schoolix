@@ -591,9 +591,12 @@ router.post('/submitEnrollmentForm', (req, res) => {
         religion,
         category,
         caste,
+        alpsankhyak,
         domicile,
         motherTongue,
         aadharNo,
+        medicalStatus,
+        medicalDescription,
         documents
     } = formData.studentInformation;
 
@@ -605,6 +608,9 @@ router.post('/submitEnrollmentForm', (req, res) => {
         admissionDate,
         standard,
         division,
+        saralId,
+        aaparId,
+        penId,
         lastSchoolAttended,
         classCompleted,
         percentage
@@ -613,7 +619,7 @@ router.post('/submitEnrollmentForm', (req, res) => {
     const {
         package_breakup,
         total_package
-    } = formData;
+    } = formData.feesInformation;
 
     const {
         transport_needed,
@@ -669,12 +675,21 @@ router.post('/submitEnrollmentForm', (req, res) => {
         Last_School: lastSchoolAttended,
         class_completed: classCompleted,
         percentage_last_school: percentage.toString(),
-        package_breakup: package_breakup,
-        total_package: total_package,
+        package_breakup: formData.package_breakup,
+        total_package: formData.total_package,
+        current_outstanding: formData.total_package,  // For new enrollment, initially current outstanding is the total package
         transport_needed: transport_needed,
         transport_tagged: transport_tagged,
         transport_pickup_drop: transport_pickup_drop,
-        Consent: consentText
+        Consent: consentText,
+        medical_status: medicalStatus,
+        medical_description: medicalDescription,
+        alpsankhyak: alpsankhyak,
+        saral_id: saralId,
+        apar_id: aaparId,
+        pen_id: penId,
+        admitted_class: standard,
+        status: 1
     };
 
     // Retrieve school name from cookie
@@ -730,8 +745,8 @@ router.post('/submitEnrollmentForm', (req, res) => {
                     F_occupation, F_mobile_no, Grand_father, Mother_name, M_Qualification, M_occupation, M_mobile_no, 
                     guardian_name, guardian_contact, guardian_relation, guardian_address, guardian_landmark, guardian_pin_code, 
                     Section, Grno, Admission_Date, Standard, Division, Last_School, class_completed, percentage_last_school, 
-                    package_breakup, total_package, transport_needed, transport_tagged, transport_pickup_drop, consent_text, app_uid
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                    package_breakup, total_package, current_outstanding, transport_needed, transport_tagged, transport_pickup_drop, consent_text, app_uid, medical_status, medical_description, alpsankhyak, saral_id, apar_id, pen_id, admitted_class, status
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`;
 
                 const values = [
                     newStudentId,
@@ -784,11 +799,20 @@ router.post('/submitEnrollmentForm', (req, res) => {
                     studentDetails.percentage_last_school,
                     studentDetails.package_breakup,
                     studentDetails.total_package,
+                    studentDetails.current_outstanding,
                     studentDetails.transport_needed,
                     studentDetails.transport_tagged,
                     studentDetails.transport_pickup_drop,
                     studentDetails.Consent,
-                    appUid // Added appUid to INSERT query
+                    appUid,
+                    studentDetails.medical_status, 
+                    studentDetails.medical_description, 
+                    studentDetails.alpsankhyak, 
+                    studentDetails.saral_id, 
+                    studentDetails.apar_id, 
+                    studentDetails.pen_id,
+                    studentDetails.admitted_class,
+                    studentDetails.status, // status is always set to 1
                 ];
 
                 connection.query(query, values, (error, result) => {
@@ -880,7 +904,7 @@ router.post('/submitEnrollmentForm', (req, res) => {
                                             });
                                         }
 
-                                        res.status(200).json({ success: 'Enrollment submitted successfully' });
+                                        res.status(200).json({ success: 'Enrollment submitted successfully', data: studentDetails });
                                     });
                                 });
                             });
@@ -894,7 +918,7 @@ router.post('/submitEnrollmentForm', (req, res) => {
                                     });
                                 }
 
-                                res.json({ message: 'Enrollment form submitted successfully!' });
+                                res.json({ message: 'Enrollment form submitted successfully!', data: studentDetails });
                             });
                         }
                     });

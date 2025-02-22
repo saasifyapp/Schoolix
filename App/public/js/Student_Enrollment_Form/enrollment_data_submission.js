@@ -10,16 +10,27 @@ let formData = {
     }
 };
 
+// Function to format the date from yyyy-mm-dd to dd-mm-yyyy
+function formatDateToDDMMYYYY(dateString) {
+    if (!dateString) return '';
+    const [year, month, day] = dateString.split('-');
+    return `${day}-${month}-${year}`;
+}
+
+
 // Function to collect data from the Student Information section
 function collectStudentInformation() {
     const selectedDocumentsString = selectedDocuments.join(','); // Convert the array to a comma-separated string
+
+    const dob = document.getElementById('dob').value;
+    const formattedDob = formatDateToDDMMYYYY(dob);
 
     formData.studentInformation = {
         firstName: document.getElementById('firstName').value.trim(),
         middleName: document.getElementById('middleName').value.trim(),
         lastName: document.getElementById('lastName').value.trim(),
         fullName: document.getElementById('fullName').value.trim(),
-        dob: document.getElementById('dob').value,
+        dob: formattedDob,
         placeOfBirth: document.getElementById('placeOfBirth').value.trim(),
         age: document.getElementById('age').value.trim(),
         gender: document.getElementById('gender').value.trim(),
@@ -37,9 +48,12 @@ function collectStudentInformation() {
         religion: document.getElementById('religion').value.trim(),
         category: document.getElementById('category').value.trim(),
         caste: document.getElementById('caste').value.trim(),
+        alpsankhyak: document.getElementById('alpsankhyak').value.trim(),
         domicile: document.getElementById('domicile').value.trim(),
         motherTongue: document.getElementById('motherTongue').value.trim(),
         aadharNo: document.getElementById('aadhaar').value.trim(),
+        medicalStatus: document.getElementById('medicalStatus').value.trim(),
+        medicalDescription: document.getElementById('medicalDescription').value.trim(),
         documents: selectedDocumentsString // Use the comma-separated string of selected documents
     };
     // console.log('Collected student information:', formData);  // Debugging log
@@ -80,12 +94,20 @@ function collectGuardianInformation() {
 
 // Function to collect data from the Academic Information section
 function collectAcademicInformation() {
+
+    const admissionDate = document.getElementById('admissionDate').value;
+    const formattedAdmissionDate = formatDateToDDMMYYYY(admissionDate);
+
+
     formData.academicInformation = {
         section: document.getElementById('section').value.trim(),
         grNo: document.getElementById('grNo').value.trim(),
-        admissionDate: document.getElementById('admissionDate').value.trim(),
+        admissionDate: formattedAdmissionDate,
         standard: document.getElementById('standard').value.trim(),
         division: document.getElementById('division').value.trim(),
+        saralId: document.getElementById('saralId').value.trim(),
+        aaparId: document.getElementById('aaparId').value.trim(),
+        penId: document.getElementById('penId').value.trim(),
         lastSchoolAttended: document.getElementById('lastSchoolAttended').value.trim(),
         classCompleted: document.getElementById('classCompleted').value.trim(),
         percentage: document.getElementById('percentage').value.trim(),
@@ -222,7 +244,9 @@ document.getElementById('student-next').addEventListener('click', function () {
         { id: 'caste', label: 'Caste' },
         { id: 'domicile', label: 'Domicile' },
         { id: 'motherTongue', label: 'Mother Tongue' },
-        { id: 'aadhaar', label: 'Aadhar Number' },
+       // { id: 'aadhaar', label: 'Aadhar Number' },
+        { id: 'medicalStatus', label: 'Medical Status' },
+        { id: 'alpsankhyak', label: 'Alpsankhyak' },
     ];
 
     // Array to store missing fields
@@ -297,13 +321,13 @@ document.getElementById('guardian-next').addEventListener('click', function () {
         { id: 'fatherMiddleName', label: "Father's Middle Name" },
         { id: 'fatherLastName', label: "Father's Last Name" },
         { id: 'fatherContactNumber', label: "Father's Contact Number" },
-        { id: 'fatherQualification', label: "Father's Qualification" },
-        { id: 'fatherOccupation', label: "Father's Occupation" },
+        //{ id: 'fatherQualification', label: "Father's Qualification" },
+        //{ id: 'fatherOccupation', label: "Father's Occupation" },
         { id: 'motherFirstName', label: "Mother's First Name" },
         { id: 'motherLastName', label: "Mother's Last Name" },
         //{ id: 'motherContactNumber', label: "Mother's Contact Number" },
-        { id: 'motherQualification', label: "Mother's Qualification" },
-        { id: 'motherOccupation', label: "Mother's Occupation" },
+       // { id: 'motherQualification', label: "Mother's Qualification" },
+       // { id: 'motherOccupation', label: "Mother's Occupation" },
     ];
 
     // Validate each field
@@ -771,10 +795,12 @@ function populateReviewValues() {
     setField("review-religion", studentInfo.religion);
     setField("review-category", studentInfo.category);
     setField("review-caste", studentInfo.caste);
+    setField("review-alpasankhyak", studentInfo.alpsankhyak);
     setField("review-domicile", studentInfo.domicile);
     setField("review-motherTongue", studentInfo.motherTongue);
     setField("review-aadharNo", studentInfo.aadharNo);
     setField("review-documents", studentInfo.documents);
+    setField("review-medicalStatus", studentInfo.medicalStatus);
 
     // Guardian Information
     const guardianInfo = formData.guardianInformation || {};
@@ -787,8 +813,15 @@ function populateReviewValues() {
     // Academic Information
     const academicInfo = formData.academicInformation || {};
     setField("review-section", academicInfo.section);
+    setField("review-grNo", academicInfo.grNo);
     setField("review-standard", academicInfo.standard);
     setField("review-division", academicInfo.division);
+    setField("review-saralId", academicInfo.saralId);
+    setField("review-aaparId", academicInfo.aaparId);
+    setField("review-penId", academicInfo.penId);
+    setField("review-admissionDate", academicInfo.admissionDate);
+
+
 
     // Check if previous school details should be displayed
     const previousSchoolDetails = document.getElementById("previousSchoolDetails");
@@ -862,7 +895,7 @@ function populateReviewValues() {
 }
 
 
-
+/*
 function autofillFormFields() {
     // Autofill Student Information
     document.getElementById('firstName').value = "Tapu";
@@ -937,7 +970,7 @@ function autofillFormFields() {
     populateReviewValues();
 }
 
-
+*/
 
 ///////////////////////////////////   SUBMIT DATA TO SERVER (FORM SUBMISSION) ////////////////////////////////////
 
