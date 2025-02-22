@@ -9,27 +9,76 @@ router.use(connectionManager);
 
 
 // Auto-generate Library Members
-router.post('/library/autoGenerate_library_members', (req, res) => {
-    const query = `
+router.post('/library/autoGenerateLibraryMembers', (req, res) => {
+    const insertOrUpdateQuery = `
         INSERT INTO library_member_details (memberID, member_name, member_contact, member_class, books_issued)
-        SELECT CONCAT('M', LPAD(student_id, (SELECT LENGTH(MAX(student_id)) FROM primary_student_details), '0')) AS memberID, 
-                Name AS member_name, 
-                f_mobile_no AS member_contact, 
-                Standard AS member_class, 
-                0 AS books_issued -- Assuming no books issued by default, adjust as necessary
+        SELECT 
+            CONCAT('M', LPAD(student_id, (SELECT LENGTH(MAX(student_id)) FROM primary_student_details), '0')) AS memberID, 
+            Name AS member_name, 
+            f_mobile_no AS member_contact, 
+            Standard AS member_class, 
+            0 AS books_issued -- Assuming no books issued by default, adjust as necessary
         FROM primary_student_details
         ON DUPLICATE KEY UPDATE
             member_name = VALUES(member_name),
             member_contact = VALUES(member_contact),
-            member_class = VALUES(member_class)
+            member_class = VALUES(member_class);
     `;
 
-    req.connectionPool.query(query, (err, results) => {
+    const deleteQuery = `
+        DELETE FROM library_member_details
+        WHERE memberID NOT IN (
+            SELECT CONCAT('M', LPAD(student_id, (SELECT LENGTH(MAX(student_id)) FROM primary_student_details), '0'))
+            FROM primary_student_details
+        );
+    `;
+
+    req.connectionPool.getConnection((err, connection) => {
         if (err) {
-            console.error('Error auto-generating members:', err);
-            return res.status(500).json({ error: 'Error auto-generating members' });
+            console.error('Error getting database connection:', err);
+            return res.status(500).json({ error: 'Database connection error' });
         }
-        res.status(200).json({ message: 'Library members auto-generated successfully', results });
+
+        connection.beginTransaction(err => {
+            if (err) {
+                connection.release();
+                console.error('Error starting transaction:', err);
+                return res.status(500).json({ error: 'Transaction error' });
+            }
+
+            connection.query(insertOrUpdateQuery, (err, results) => {
+                if (err) {
+                    console.error('Error auto-generating members:', err);
+                    return connection.rollback(() => {
+                        connection.release();
+                        res.status(500).json({ error: 'Error auto-generating members' });
+                    });
+                }
+
+                connection.query(deleteQuery, (err, results) => {
+                    if (err) {
+                        console.error('Error deleting members:', err);
+                        return connection.rollback(() => {
+                            connection.release();
+                            res.status(500).json({ error: 'Error deleting members' });
+                        });
+                    }
+
+                    connection.commit(err => {
+                        if (err) {
+                            console.error('Error committing transaction:', err);
+                            return connection.rollback(() => {
+                                connection.release();
+                                res.status(500).json({ error: 'Transaction commit error' });
+                            });
+                        }
+
+                        connection.release();
+                        res.status(200).json({ message: 'Library members auto-generated and synchronized successfully', results });
+                    });
+                });
+            });
+        });
     });
 });
 

@@ -745,7 +745,7 @@ router.post('/submitEnrollmentForm', (req, res) => {
                     F_occupation, F_mobile_no, Grand_father, Mother_name, M_Qualification, M_occupation, M_mobile_no, 
                     guardian_name, guardian_contact, guardian_relation, guardian_address, guardian_landmark, guardian_pin_code, 
                     Section, Grno, Admission_Date, Standard, Division, Last_School, class_completed, percentage_last_school, 
-                    package_breakup, total_package, current_outstanding, transport_needed, transport_tagged, transport_pickup_drop, consent_text, app_uid, medical_status, medical_description, alpsankhyak, saral_id, apar_id, pen_id, admitted_class, status
+                    package_breakup, total_package, current_outstanding, transport_needed, transport_tagged, transport_pickup_drop, consent_text, app_uid, medical_status, medical_description, alpsankhyak, saral_id, apar_id, pen_id, admitted_class, is_active
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`;
 
                 const values = [
