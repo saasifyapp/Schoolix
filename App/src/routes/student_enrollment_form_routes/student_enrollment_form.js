@@ -987,6 +987,11 @@ router.get("/fetch-student", (req, res) => {
             return res.status(404).json({ message: "No student found" });
         }
 
+        // Check if the student is inactive
+        if (results[0].is_active === 0) {
+            return res.status(200).json({ message: "Student is inactive", student: results[0] });
+        }
+
         res.json(results);
     });
 });
