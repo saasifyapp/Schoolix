@@ -966,7 +966,7 @@ router.get("/fetch-student", (req, res) => {
     //change it before production////////////////////////////////////////////////////////////////////////////////////
     // let tableName = section === "test_student_details"
 
-    let query = `SELECT * FROM ${tableName} WHERE `;
+    let query = `SELECT * FROM ${tableName} WHERE is_active = 1`;
     let queryParams = [];
 
     if (grno) {
