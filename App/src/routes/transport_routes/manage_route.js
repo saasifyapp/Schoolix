@@ -12,9 +12,9 @@ router.get('/distinctAddresses', (req, res) => {
     const sql = `
         SELECT DISTINCT transport_pickup_drop
         FROM (
-            SELECT transport_pickup_drop FROM pre_primary_student_details WHERE transport_pickup_drop IS NOT NULL
+            SELECT transport_pickup_drop FROM pre_primary_student_details WHERE transport_pickup_drop IS NOT NULL AND is_active = 1
             UNION
-            SELECT transport_pickup_drop FROM primary_student_details WHERE transport_pickup_drop IS NOT NULL
+            SELECT transport_pickup_drop FROM primary_student_details WHERE transport_pickup_drop IS NOT NULL AND is_active = 1
         ) AS combined_addresses;
     `;
 
