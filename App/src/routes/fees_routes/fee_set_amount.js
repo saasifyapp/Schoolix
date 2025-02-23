@@ -26,8 +26,8 @@ router.get('/setFee_getCategoryName', (req, res) => {
 // Route to get distinct grades (standards) from both tables
 router.get('/setFee_getGrades', async (req, res) => {
     try {
-        const primaryQuery = `SELECT DISTINCT Standard FROM primary_student_details ORDER BY Standard`;
-        const prePrimaryQuery = `SELECT DISTINCT Standard FROM pre_primary_student_details ORDER BY Standard`;
+        const primaryQuery = `SELECT DISTINCT Standard FROM primary_student_details WHERE is_active = 1 ORDER BY Standard`;
+        const prePrimaryQuery = `SELECT DISTINCT Standard FROM pre_primary_student_details WHERE is_active = 1 ORDER BY Standard`;
 
         // Execute both queries
         const primaryPromise = new Promise((resolve, reject) => {

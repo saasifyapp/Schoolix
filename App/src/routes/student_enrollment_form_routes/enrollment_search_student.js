@@ -21,7 +21,7 @@ router.get('/search_enrolled_students', (req, res) => {
         return res.status(400).json({ error: 'Invalid student type provided' });
     }
 
-    const sql = `SELECT * FROM ${table}`;
+    const sql = `SELECT * FROM ${table} WHERE is_active = 1`;
 
     //console.log('Executing query:', sql);
 
@@ -68,7 +68,7 @@ router.post('/fetchFilteredData', (req, res) => {
     const tableName = type === 'primary' ? 'primary_student_details' : 'pre_primary_student_details';
     const selectedColumns = columns.join(', ');  // Join columns for SQL query
 
-    const sql = `SELECT ${selectedColumns} FROM ${tableName}`;
+    const sql = `SELECT ${selectedColumns} FROM ${tableName} WHERE is_active = 1`;
     
     req.connectionPool.query(sql, (error, results) => {
         if (error) {

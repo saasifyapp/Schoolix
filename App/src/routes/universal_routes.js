@@ -14,8 +14,8 @@ router.get('/get_student_details', async (req, res) => {
         // console.log('Incoming request query:', req.query);
 
         const searchTerm = req.query.q;
-        const primaryQuery = `SELECT * FROM primary_student_details WHERE Name LIKE ?`;
-        const prePrimaryQuery = `SELECT * FROM pre_primary_student_details WHERE Name LIKE ?`;
+        const primaryQuery = `SELECT * FROM primary_student_details WHERE Name LIKE ? AND is_active = 1`;
+        const prePrimaryQuery = `SELECT * FROM pre_primary_student_details WHERE Name LIKE ? AND is_active = 1`;
         const values = [`${searchTerm}%`];
 
         // Execute both queries

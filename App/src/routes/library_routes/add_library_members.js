@@ -19,6 +19,7 @@ router.post('/library/autoGenerateLibraryMembers', (req, res) => {
             Standard AS member_class, 
             0 AS books_issued -- Assuming no books issued by default, adjust as necessary
         FROM primary_student_details
+        WHERE is_active = 1
         ON DUPLICATE KEY UPDATE
             member_name = VALUES(member_name),
             member_contact = VALUES(member_contact),
@@ -30,6 +31,8 @@ router.post('/library/autoGenerateLibraryMembers', (req, res) => {
         WHERE memberID NOT IN (
             SELECT CONCAT('M', LPAD(student_id, (SELECT LENGTH(MAX(student_id)) FROM primary_student_details), '0'))
             FROM primary_student_details
+            WHERE is_active = 1
+
         );
     `;
 
