@@ -88,22 +88,41 @@
 
     <div id="updateStudentOverlay" class="overlay">
         <div class="overlay-content">
+            <div class="icon-container">
+                <i><img class="topicon" src="/images/search.gif" alt="Search Icon"></i>
+              </div>
             <button id="closeUpdateStudentOverlay" class="close-button">&times;</button>
 
             <h2 class="overlay-title">SEARCH USING</h2>
 
             <!-- Dropdown for Section Selection -->
-            <select id="sectionSelect" class="section-dropdown">
-                <option value="primary">Primary</option>
-                <option value="preprimary">Pre-primary</option>
-            </select>
+            <div class="form-row">
+                <div class="form-group">
+                    <select id="sectionSelect" name="sectionSelect" class="form-control"
+                        style="text-align: center; width: 120px; background-color: white;">
+                        <option value="" disabled selected>Select Section</option>
+                        <option value="primary">Primary</option>
+                        <option value="preprimary">Pre-primary</option>
+                    </select>
+                </div>
+    
+                <!-- Input Field for Search -->
+                <div class="form-group">
+                    <input type="text" id="searchInput" name="searchInput" class="form-control" placeholder=" ">
+                    <span class="form-control-placeholder">Search by Name or GR No</span>
+                    <div id="suggestions" class="suggestions"></div>
+                </div>
+               
+            </div>
 
-            <!-- Input Field for Search -->
-            <input type="text" id="searchInput" class="search-input"
-                placeholder="Search by Name or GR No (Input Field)">
-                <div id="suggestions" class="suggestions"></div> 
 
-            <button class="search-button">SEARCH</button>
+           
+
+           
+            <button type="submit" class="search-button">
+                <img src="/images/search.gif" alt="Search Button">
+                <span>Search</span>
+              </button>
         </div>
     </div>
 
@@ -174,7 +193,7 @@
         <div class="overlay-content" style="max-width: 1000px;top: 0;">
             <button id="closeFilterOverlay" class="close-button">&times;</button>
             <img src="/images/filter.gif" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
-            <h2 id="filterHeading" class="overlay-search-head">Filters for (section) section</h2> <!-- Dynamic heading -->
+            <h2 id="filterHeading" class="overlay-title">Filters for (section) section</h2> <!-- Dynamic heading -->
             <p id="filterMessage"></p> <!-- Message indicating the selected section -->
             <div class="overlay-inner" style="justify-content: space-between;">
                 <div class="left-side">
@@ -186,10 +205,10 @@
                     <div class="reset-button-container">
                         <button id="previousFiltersButton" class="reset-button" onclick="applyPreviousFilters()"
                             disabled><img src="/images/return-to-the-past.png" alt="Refresh Icon">
-                            Previous 
+                            Previous
                         </button>
                         <button id="resetFiltersButton" class="reset-button" onclick="resetFilters()">
-                            <img src="/images/undo.png" alt="Refresh Icon"> Reset 
+                            <img src="/images/undo.png" alt="Refresh Icon"> Reset
                         </button>
                     </div>
                 </div>
@@ -207,7 +226,8 @@
                     <h3>Selected Filters</h3>
                     <div id="selectedFilters"></div>
                     <!-- Apply Button -->
-                    <button id="applyFiltersButton" class="apply-button" onclick="applyFilters()"><img src="/images/addVendor.gif" alt="Apply Icon"> Apply</button>
+                    <button id="applyFiltersButton" class="apply-button" onclick="applyFilters()"><img
+                            src="/images/addVendor.gif" alt="Apply Icon"> Apply</button>
                 </div>
             </div>
         </div>
