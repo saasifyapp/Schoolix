@@ -66,7 +66,7 @@ function populateStudentForm(studentData) {
     setValue("transportNeeded", studentData.transport_needed);
     setValue("transportTagged", studentData.transport_tagged);
     setValue("transportPickupDrop", studentData.transport_pickup_drop);
-    setValue("landmark", studentData.landmark);
+    setValue("landmak", studentData.landmark);
     setValue("taluka", studentData.taluka);
     setValue("district", studentData.district);
     setValue("state", studentData.state);
@@ -119,5 +119,5 @@ function populateNameFields(fullName) {
     document.getElementById("middleName").value = nameParts[1] || ""; 
     document.getElementById("lastName").value = nameParts[2] || ""; 
 
-    updateStudentFullName(); // Ensure the fullName field is updated correctly
+    updateFullName(); // Ensure the fullName field is updated correctly
 }
