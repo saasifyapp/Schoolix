@@ -135,7 +135,7 @@ document.querySelector(".search-button").addEventListener("click", function () {
             } else {
                 sessionStorage.setItem("studentData", JSON.stringify(data[0]));
                 sessionStorage.setItem("selectedSection", section);
-                window.location.href = `/Student_Enrollment_Form/student_enrollment_form?section=${encodeURIComponent(section)}&search=${encodeURIComponent(searchValue)}`;
+                window.location.href = `/Student_Enrollment_Form/student_enrollment_form?section=${encodeURIComponent(section)}&search=${encodeURIComponent(searchValue)}&mode=update`;
                 document.getElementById("updateStudentOverlay").style.display = "none";
                   // Change form mode to "update"
             // document.getElementById("formMode").value = "update";

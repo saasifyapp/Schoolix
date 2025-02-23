@@ -1,3 +1,24 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const mode = urlParams.get('mode');
+    const formModeInput = document.getElementById('formMode');
+
+    if (mode === 'update') {
+        formModeInput.value = 'update';
+    } else if (mode === 'enroll') {
+        formModeInput.value = 'insert';
+    } else {
+        // Optionally handle other modes or set a default
+        formModeInput.value = 'insert'; // Or whatever default mode you want
+    }
+
+    // For debugging purposes, log the form mode to the console
+    if (formModeInput) {
+        console.log("Form mode:", formModeInput.value);
+    }
+});
+
+
 // Select all navigation items and add event listeners
 document.querySelectorAll('.form-navigation li').forEach(item => {
     item.addEventListener('click', () => {
@@ -2567,7 +2588,4 @@ document.addEventListener("DOMContentLoaded", function () {
     vehicleRunning.addEventListener("input", checkFields);
     noVehicleFound.addEventListener("change", resetFields);
 });
-
-
-
 

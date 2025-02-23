@@ -1,3 +1,6 @@
+
+
+
 // ✅ Populate form when update page loads
 document.addEventListener("DOMContentLoaded", function () {
     const studentDataString = sessionStorage.getItem("studentData");
