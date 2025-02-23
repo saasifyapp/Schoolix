@@ -24,10 +24,12 @@ function populateStudentForm(studentData) {
         }
     }
 
-    setValue("fulllName", studentData.Name);
+    // setValue("fulllName", studentData.Name);
+    setValue("fulllName", populateNameFields(studentData.Name));
     setValue("grNo", studentData.Grno);
     setValue("dob", formatDateForInput(studentData.DOB));
     setValue("city_village", studentData.Address);
+    setValue("selectedDocuments", displaySelectedDocuments(studentData.Documents_Submitted));
 
     setValue("gender", studentData.Gender);
     setValue("lastName", studentData.Surname);
@@ -83,6 +85,7 @@ function populateStudentForm(studentData) {
     console.log("Student data successfully populated!");
 }
 
+/////////////////////Converting Date in to DD-MM-YYYY/////////////////////////////////////
 function formatDateForInput(dateString) {
     if (!dateString) return "";
     
@@ -91,4 +94,30 @@ function formatDateForInput(dateString) {
 
     const [day, month, year] = parts;
     return `${year}-${month}-${day}`; // Convert to "yyyy-MM-dd"
+}
+
+//////////////////////////Displaying the Submitted Docment////////////////////////////////////////////
+function displaySelectedDocuments(documentsString) {
+    if (!documentsString) return; // Exit if no documents
+
+    selectedDocumentsContainer.innerHTML = ""; // Clear previous selections
+    selectedDocuments = []; // Reset selected documents array
+
+    const documents = documentsString.split(",").map(doc => doc.trim()); // Convert string to array
+
+    documents.forEach(doc => {
+        addDocument(doc); // Use the existing function to add documents properly
+    });
+}
+
+///////////////////Display Full Name////////////////////////////////////////
+function populateNameFields(fullName) {
+    if (!fullName) return; // Exit if no name found
+
+    const nameParts = fullName.trim().split(" "); // Split full name into parts
+    document.getElementById("firstName").value = nameParts[0] || ""; 
+    document.getElementById("middleName").value = nameParts[1] || ""; 
+    document.getElementById("lastName").value = nameParts[2] || ""; 
+
+    updateStudentFullName(); // Ensure the fullName field is updated correctly
 }
