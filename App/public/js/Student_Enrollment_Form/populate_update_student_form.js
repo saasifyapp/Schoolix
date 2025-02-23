@@ -27,6 +27,7 @@ function populateStudentForm(studentData) {
     setValue("fulllName", studentData.Name);
     setValue("grNo", studentData.Grno);
     setValue("dob", formatDateForInput(studentData.DOB));
+    setValue("city_village", studentData.Address);
 
     setValue("gender", studentData.Gender);
     setValue("lastName", studentData.Surname);

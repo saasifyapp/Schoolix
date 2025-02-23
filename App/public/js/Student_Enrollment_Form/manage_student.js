@@ -87,15 +87,17 @@ document.querySelector(".search-button").addEventListener("click", function () {
                     text: "No matching student details were found.",
                     confirmButtonText: "OK"
                 });
+            } else if (data.message === "Student is inactive") {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Inactive Student",
+                    text: "This student is inactive. Please contact the administration.",
+                    confirmButtonText: "OK"
+                });
             } else {
-                // ✅ Store student data & section in sessionStorage
                 sessionStorage.setItem("studentData", JSON.stringify(data[0]));
                 sessionStorage.setItem("selectedSection", section);
-
-                // 🔀 Redirect to update page
                 window.location.href = `/Student_Enrollment_Form/update_student?section=${encodeURIComponent(section)}&search=${encodeURIComponent(searchValue)}`;
-
-                // 🔄 Close the overlay
                 document.getElementById("updateStudentOverlay").style.display = "none";
             }
         })
