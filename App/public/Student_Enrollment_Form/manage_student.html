@@ -55,7 +55,7 @@
             </div>
             <h3>Update Student</h3>
         </div>
-        
+
 
 
         <div class="card">
@@ -88,22 +88,23 @@
     <div id="updateStudentOverlay" class="overlay">
         <div class="overlay-content">
             <button id="closeUpdateStudentOverlay" class="close-button">&times;</button>
-            
+
             <h2 class="overlay-title">SEARCH USING</h2>
-            
+
             <!-- Dropdown for Section Selection -->
             <select id="sectionSelect" class="section-dropdown">
                 <option value="primary">Primary</option>
                 <option value="preprimary">Pre-primary</option>
             </select>
-    
+
             <!-- Input Field for Search -->
-            <input type="text" id="searchInput" class="search-input" placeholder="Search by Name or GR No (Input Field)">
-            
+            <input type="text" id="searchInput" class="search-input"
+                placeholder="Search by Name or GR No (Input Field)">
+
             <button class="search-button">SEARCH</button>
         </div>
     </div>
-    
+
 
 
     <!-- Overlay for Search Student -->
@@ -167,12 +168,13 @@
 
 
     <!-- Filter Overlay -->
-    <div id="filterOverlay" class="overlay">
-        <div class="overlay-content">
+    <div id="filterOverlay" class="overlay-search">
+        <div class="overlay-content-search">
             <button id="closeFilterOverlay" class="close-button">&times;</button>
-            <h2 id="filterHeading">Filters for (section) section</h2> <!-- Dynamic heading -->
+            <img src="/images/filter.gif" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
+            <h2 id="filterHeading" class="overlay-search-head">Filters for (section) section</h2> <!-- Dynamic heading -->
             <p id="filterMessage"></p> <!-- Message indicating the selected section -->
-            <div class="overlay-inner">
+            <div class="overlay-inner" style="justify-content: space-between;">
                 <div class="left-side">
                     <h3>Select Filters</h3>
                     <div class="select-filter">
@@ -181,20 +183,29 @@
                     <!-- Previous Filters Button -->
                     <div class="reset-button-container">
                         <button id="previousFiltersButton" class="reset-button" onclick="applyPreviousFilters()"
-                            disabled>
-                            Previous Filters
+                            disabled><img src="/images/return-to-the-past.png" alt="Refresh Icon">
+                            Previous 
                         </button>
                         <button id="resetFiltersButton" class="reset-button" onclick="resetFilters()">
-                            Reset Filters
+                            <img src="/images/undo.png" alt="Refresh Icon"> Reset 
                         </button>
                     </div>
-
                 </div>
+
+                <!-- Animated Filter Icon (GIF or Lottie) -->
+                <div class="filter-animation">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/48ec87da-7427-4994-bdc1-1e98820c620f/1gy99Dk7Hj.lottie"
+                        background="transparent" speed="1" style="width: 300px; height: 300px" loop
+                        autoplay></dotlottie-player>
+                </div>
+
                 <div class="right-side">
                     <h3>Selected Filters</h3>
                     <div id="selectedFilters"></div>
                     <!-- Apply Button -->
-                    <button id="applyFiltersButton" class="apply-button" onclick="applyFilters()">Apply</button>
+                    <button id="applyFiltersButton" class="apply-button" onclick="applyFilters()"><img src="/images/addVendor.gif" alt="Apply Icon"> Apply</button>
                 </div>
             </div>
         </div>
