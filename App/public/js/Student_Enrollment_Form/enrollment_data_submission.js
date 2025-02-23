@@ -978,26 +978,34 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("review-next").addEventListener("click", function (event) {
         event.preventDefault(); // Prevent the default button behavior
 
-        // Validate that all consents are checked
-        const allChecked = validateConsents();
+        const formModeInput = document.getElementById('formMode');
+        const formMode = formModeInput ? formModeInput.value : '';
 
-        if (!allChecked) {
-            // Display an alert if any checkbox is not checked
-            Swal.fire({
-                title: "Incomplete Consent",
-                text: "Please ensure all consents are checked before proceeding.",
-                icon: "warning",
-                confirmButtonText: "OK"
-            });
-            return; // Prevent submission
+        if (formMode === 'insert') {
+            // Validate that all consents are checked
+            const allChecked = validateConsents();
+
+            if (!allChecked) {
+                // Display an alert if any checkbox is not checked
+                Swal.fire({
+                    title: "Incomplete Consent",
+                    text: "Please ensure all consents are checked before proceeding.",
+                    icon: "warning",
+                    confirmButtonText: "OK"
+                });
+                return; // Prevent submission
+            }
+
+            // If all consents are checked, proceed with collectConsent and form submission
+            collectConsent();
+            // Submit all the form data
+            submitForm(); 
+        } else {
+            console.log("Form mode is not 'insert'. Current mode:", formMode);
         }
-
-        // If all consents are checked, proceed with collectConsent and form submission
-        collectConsent();
-        //Submit all the form data
-        submitForm(); 
     });
 });
+
 
 // Function to validate consents
 function validateConsents() {

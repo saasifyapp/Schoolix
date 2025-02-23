@@ -952,20 +952,34 @@ function generateUsernameAndPassword(fullName, schoolName, grNo) {
     return { username: userWithSchool, password };
 }
 
+
+
 router.get("/fetch-student", (req, res) => {
     const { grno, name, section } = req.query;
 
+    // Log the received query parameters
+    console.log("Received query parameters:", { grno, name, section });
+
+    // Validate input parameters
     if (!section || (!grno && !name)) {
         return res.status(400).json({ error: "Invalid search parameters" });
     }
 
-    // Determine table based on section
-    let tableName = section === "primary" ? "primary_student_details" : "pre_primary_student_details";
+    // Determine the appropriate table based on section
+    let tableName;
+    if (section === "primary") {
+        tableName = "primary_student_details";
+    } else if (section === "pre_primary") {
+        tableName = "pre_primary_student_details";
+    } else {
+        // If section is not recognized
+        return res.status(400).json({ error: "Invalid section parameter" });
+    }
     
-    //Demo student table 
-    //change it before production////////////////////////////////////////////////////////////////////////////////////
-    // let tableName = section === "test_student_details"
+    // Log the determined table name
+    console.log("Using table:", tableName);
 
+    // Construct the SQL query
     let query = `SELECT * FROM ${tableName} WHERE is_active = 1 AND `;
     let queryParams = [];
 
@@ -977,11 +991,18 @@ router.get("/fetch-student", (req, res) => {
         queryParams.push(`%${name}%`);
     }
 
+    // Log the constructed query and parameters
+    console.log("Constructed query:", query);
+    console.log("Query parameters:", queryParams);
+
+    // Execute the query
     req.connectionPool.query(query, queryParams, (error, results) => {
         if (error) {
-            console.error("Error fetching student details:", error);
             return res.status(500).json({ error: "Database error" });
         }
+
+        // Log the query results
+        console.log("Query results:", results);
 
         if (results.length === 0) {
             return res.status(404).json({ message: "No student found" });
@@ -992,9 +1013,11 @@ router.get("/fetch-student", (req, res) => {
             return res.status(200).json({ message: "Student is inactive", student: results[0] });
         }
 
+        // Return the results
         res.json(results);
     });
 });
+
 
 
 module.exports = router;

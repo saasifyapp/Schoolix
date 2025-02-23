@@ -1,18 +1,42 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const mode = urlParams.get('mode');
+    const formModeInput = document.getElementById('formMode');
 
+    if (mode === 'update') {
+        formModeInput.value = 'update';
 
+        // ✅ Populate form when update page loads
+        const studentDataString = sessionStorage.getItem("studentData");
+        if (studentDataString) {
+            const studentData = JSON.parse(studentDataString);
+            populateStudentForm(studentData);
 
-// ✅ Populate form when update page loads
-document.addEventListener("DOMContentLoaded", function () {
-    const studentDataString = sessionStorage.getItem("studentData");
+            updateButtonText();
 
-    if (studentDataString) {
-        const studentData = JSON.parse(studentDataString);
-        populateStudentForm(studentData);
+        
+            // 🗑️ Clear session storage after using it
+            sessionStorage.removeItem("studentData");
+        }
 
-        // 🗑️ Clear session storage after using it
-        sessionStorage.removeItem("studentData");
+        // For debugging purposes, log the form mode to the console
+        if (formModeInput) {
+            console.log("Form mode:", formModeInput.value);
+        }
     }
 });
+
+
+//// Change Submit to Update ////
+
+function updateButtonText() {
+    const reviewNextButton = document.getElementById('review-next');
+    if (reviewNextButton) {
+        const buttonText = reviewNextButton.innerHTML;
+        const updatedButtonText = buttonText.replace('Submit', 'Update');
+        reviewNextButton.innerHTML = updatedButtonText;
+    }
+}
 
 // Function to populate the form fields
 function populateStudentForm(studentData) {
@@ -23,75 +47,122 @@ function populateStudentForm(studentData) {
         if (element) {
             element.value = value || "";
         } else {
-            console.warn(`Element with ID '${id}' not found.`);
+           // console.warn(`Element with ID '${id}' not found.`);
         }
     }
 
-    // setValue("fulllName", studentData.Name);
-    setValue("fulllName", populateNameFields(studentData.Name));
-    setValue("grNo", studentData.Grno);
-    setValue("dob", formatDateForInput(studentData.DOB));
-    setValue("city_village", studentData.Address);
-    setValue("selectedDocuments", displaySelectedDocuments(studentData.Documents_Submitted));
 
-    setValue("gender", studentData.Gender);
-    setValue("lastName", studentData.Surname);
-    setValue("middleName", studentData.Middlename);
+    /////////////// STUDENT INFORMATION ///////////////
+
     setValue("firstName", studentData.Firstname);
-    setValue("division", studentData.Division);
-    setValue("standard", studentData.Standard);
+    setValue("middleName", studentData.Middlename);
+    setValue("lastName", studentData.Surname);
+    setValue("fullName", studentData.Name);
+    setValue("dob", formatDateForInput(studentData.DOB));
     setValue("age", studentData.Age);
-    setValue("section", studentData.Section);
     setValue("placeOfBirth", studentData.POB);
-    setValue("studentContact", studentData.student_phone_no);
-    setValue("motherTongue", studentData.Mother_Tongue);
-    setValue("category", studentData.Category);
-    setValue("caste", studentData.Caste);
-    setValue("lastSchoolAttended", studentData.Last_School);
-    setValue("admissionDate", formatDateForInput(studentData.Admission_Date));
-
-
-    setValue("pickDropAddress", studentData.Address);
-    setValue("aadhaar", studentData.Adhar_no);
-    setValue("religion", studentData.Religion);
-    setValue("nationality", studentData.Nationality);
-    setValue("domicile", studentData.Domicile);
-    setValue("bus", studentData.Buss);
-    setValue("fatherFirstName", studentData.Father_name);
-    setValue("fatherQualification", studentData.F_qualification);
-    setValue("fatherOccupation", studentData.f_occupation);
-    setValue("fatherContact", studentData.f_mobile_no);
-    setValue("motherFirstName", studentData.Mother_name);
-    setValue("motherQualification", studentData.M_Qualification);
-    setValue("motherOccupation", studentData.M_occupation);
-    setValue("motherContact", studentData.M_mobile_no);
+    setValue("gender", studentData.Gender);
     setValue("bloodGroup", studentData.Blood_Group);
-    setValue("transportNeeded", studentData.transport_needed);
-    setValue("transportTagged", studentData.transport_tagged);
-    setValue("transportPickupDrop", studentData.transport_pickup_drop);
-    setValue("landmak", studentData.landmark);
+
+    setValue("studentContact", studentData.student_phone_no);
+    setValue("city_village", studentData.Address);
     setValue("taluka", studentData.taluka);
     setValue("district", studentData.district);
     setValue("state", studentData.state);
     setValue("pinCode", studentData.pin_code);
+    setValue("landmak", studentData.landmark);
+
+    setValue("nationality", studentData.Nationality);
+    setValue("religion", studentData.Religion);
+    setValue("category", studentData.Category);
+    setValue("caste", studentData.Caste);
+    setValue("alpsankhyak", studentData.alpsankhyak);
+    setValue("domicile", studentData.Domicile);
+    setValue("motherTongue", studentData.Mother_Tongue);
+    setValue("aadhaar", studentData.Adhar_no);
+    setValue("selectedDocuments", displaySelectedDocuments(studentData.Documents_Submitted));
+
+    setValue("medicalStatus", studentData.medical_status);
+    setValue("medicalDescription", studentData.medical_description);
+
+
+    ////////////// GUARDIAN INFORMATION /////////////////
+
+    const fatherFullName = setFullName(studentData.Father_name, studentData.Grand_father, studentData.Surname);
+    const motherFullName = setFullName(studentData.Mother_name, "", studentData.Surname);
+
+    setValue("fatherFirstName", studentData.Father_name);
+    setValue("fatherMiddleName", studentData.Grand_father);
+    setValue("fatherLastName", studentData.Surname);
+    setValue("fatherFullName", fatherFullName);
+    setValue("fatherContactNumber", studentData.f_mobile_no);
+    setValue("fatherQualification", studentData.F_qualification);
+    setValue("fatherOccupation", studentData.f_occupation);
+    setValue("fatherContact", studentData.f_mobile_no);
+
+    setValue("motherFirstName", studentData.Mother_name);
+    setValue("motherLastName", studentData.Surname);
+    setValue("motherFullName", motherFullName);
+    setValue("motherContactNumber", studentData.M_mobile_no);
+    setValue("motherQualification", studentData.M_Qualification);
+    setValue("motherOccupation", studentData.M_occupation);
+
     setValue("guardianName", studentData.guardian_name);
     setValue("guardianContact", studentData.guardian_contact);
     setValue("guardianRelation", studentData.guardian_relation);
     setValue("guardianAddress", studentData.guardian_address);
     setValue("guardianLandmark", studentData.guardian_landmark);
-    setValue("guardianPinCode", studentData.guardian_pin_code);
+    setValue("guardianpinCode", studentData.guardian_pin_code);
+
+    // Validate and set the local guardian toggle
+    validateLocalGuardianFields(studentData);
+
+    //////////// ACADEMIC INFORMATION //////////////
+
+    setValue("section", studentData.Section);
+    setValue("grNo", studentData.Grno);
+    setValue("admissionDate", formatDateForInput(studentData.Admission_Date));
+    setValue("standard", studentData.Standard);
+    setValue("division", studentData.Division);
+
+    setValue("saralId", studentData.saral_id);
+    setValue("aaparId", studentData.apar_id);
+    setValue("penId", studentData.pen_id);
+
+    
+    setValue("lastSchoolAttended", studentData.Last_School);
     setValue("classCompleted", studentData.class_completed);
-    setValue("percentageLastSchool", studentData.percentage_last_school);
-    setValue("studentPhone", studentData.student_phone_no);
-    setValue("totalPackage", studentData.total_package);
+    setValue("percentage", studentData.percentage_last_school);
+
+    // Validate and set the new admission checkbox
+    validateAcademicRecords(studentData);
+
+    /////////////// FEES AND PACKAGE //////////// 
+
+    populateFeeCategoryAmountTable(studentData.package_breakup, studentData.total_package);
+    addChangeListeners();
+
+
+    /////////////// TRANSPORT SERVICE ////////////////////
+
+    setValue("pickDropAddress", studentData.transport_pickup_drop);
+    setValue("vehicleRunning", studentData.transport_tagged);
+
+    // Validate and set the transport needed toggle
+    validateTransportRequirement(studentData);
+
+    /////////////// CONSENT REVIEW ////////////
+
+    toggleAllCheckboxes(true);
 
     console.log("Student data successfully populated!");
 }
 
-/////////////////////Converting Date in to DD-MM-YYYY/////////////////////////////////////
+/////////////////////Converting Date in to YYYY-MM-DD/////////////////////////////////////
+
 function formatDateForInput(dateString) {
     if (!dateString) return "";
-    
+
     const parts = dateString.split("-");
     if (parts.length !== 3) return ""; // Ensure valid date format
 
@@ -99,7 +170,8 @@ function formatDateForInput(dateString) {
     return `${year}-${month}-${day}`; // Convert to "yyyy-MM-dd"
 }
 
-//////////////////////////Displaying the Submitted Docment////////////////////////////////////////////
+//////////////////////////Displaying the Submitted Document////////////////////////////////////////////
+
 function displaySelectedDocuments(documentsString) {
     if (!documentsString) return; // Exit if no documents
 
@@ -111,16 +183,228 @@ function displaySelectedDocuments(documentsString) {
     documents.forEach(doc => {
         addDocument(doc); // Use the existing function to add documents properly
     });
+
+    documentSuggestionsContainer.style.display = "none"; // Ensure suggestions container is hidden
+
+    // Log the populated documents for debugging
+   // console.log("Populated Documents:", selectedDocuments);
 }
 
-///////////////////Display Full Name////////////////////////////////////////
-function populateNameFields(fullName) {
-    if (!fullName) return; // Exit if no name found
 
-    const nameParts = fullName.trim().split(" "); // Split full name into parts
-    document.getElementById("firstName").value = nameParts[0] || ""; 
-    document.getElementById("middleName").value = nameParts[1] || ""; 
-    document.getElementById("lastName").value = nameParts[2] || ""; 
+////////////////// SET FULL NAME ////////////
 
-    updateFullName(); // Ensure the fullName field is updated correctly
+function setFullName(firstName, middleName, lastName) {
+    let fullName = firstName || "";
+    if (middleName) fullName += " " + middleName;
+    if (lastName) fullName += " " + lastName;
+    return fullName;
 }
+
+//////////////// VALIDATE LOCAL GUARDIAN FIELDS ////////////
+
+function validateLocalGuardianFields(studentData) {
+    const guardianFields = [
+        studentData.guardian_name,
+        studentData.guardian_contact,
+        studentData.guardian_relation,
+        studentData.guardian_address,
+        studentData.guardian_landmark,
+        studentData.guardian_pin_code
+    ];
+
+    const hasGuardianDetails = guardianFields.some(field => field && field.trim() !== "");
+
+    const yesRadio = document.querySelector('input[name="localGuardianNeeded"][value="yes"]');
+    const noRadio = document.querySelector('input[name="localGuardianNeeded"][value="no"]');
+
+    if (hasGuardianDetails) {
+        yesRadio.checked = true;
+        toggleLocalGuardianDetails(true);
+    } else {
+        noRadio.checked = true;
+        toggleLocalGuardianDetails(false);
+    }
+}
+
+// Function to toggle the visibility of local guardian details
+function toggleLocalGuardianDetails(isVisible) {
+    const localGuardianDetails = document.getElementById('localGuardianDetails');
+    if (localGuardianDetails) {
+        localGuardianDetails.style.display = isVisible ? 'block' : 'none';
+    }
+}
+
+
+////////////// VALIDATE PREVIOUS ACADEMIC RECORDS /////////////////
+
+function validateAcademicRecords(studentData) {
+    const academicFields = [
+        studentData.Last_School,
+        studentData.class_completed,
+        studentData.percentage_last_school
+    ];
+
+    // Check if NONE of the fields have data
+    const allFieldsEmpty = academicFields.every(field => !field || field.trim() === "");
+
+    const newAdmissionCheckbox = document.getElementById('newAdmission');
+    const fieldsToToggle = [
+        document.getElementById('lastSchoolAttended'),
+        document.getElementById('classCompleted'),
+        document.getElementById('percentage')
+    ];
+
+    if (allFieldsEmpty) {
+        newAdmissionCheckbox.checked = true;
+        fieldsToToggle.forEach(field => field.disabled = true);
+    } else {
+        newAdmissionCheckbox.checked = false;
+        fieldsToToggle.forEach(field => field.disabled = false);
+    }
+}
+
+
+///////////// CREATE FEES AND PACKAGE TABLE ///////////
+
+function populateFeeCategoryAmountTable(packageBreakup, totalPackage) {
+    const tableBody = document.getElementById('feeCategoryAmountTable');
+    
+    // Clear any existing rows
+    tableBody.innerHTML = '';
+    
+    // Parse the package_breakup string and create rows
+    if (packageBreakup) {
+        const breakupItems = packageBreakup.split(',').map(item => item.trim());
+
+        breakupItems.forEach(item => {
+            const [category, amount] = item.split(':').map(i => i.trim());
+
+            if (category && amount) {
+                const row = document.createElement('tr');
+
+                const categoryCell = document.createElement('td');
+                categoryCell.textContent = category;
+                row.appendChild(categoryCell);
+
+                const amountCell = document.createElement('td');
+                amountCell.textContent = amount;
+                row.appendChild(amountCell);
+
+                tableBody.appendChild(row);
+            }
+        });
+    }
+
+    // Add row for Total Package
+    if (totalPackage) {
+        const row = document.createElement('tr');
+
+        const categoryCell = document.createElement('td');
+        categoryCell.textContent = 'Total Package';
+        categoryCell.style.fontWeight = 'bold';
+        row.appendChild(categoryCell);
+
+        const amountCell = document.createElement('td');
+        amountCell.textContent = totalPackage;
+        amountCell.style.fontWeight = 'bold';
+        row.appendChild(amountCell);
+
+        tableBody.appendChild(row);
+    }
+}
+
+
+function clearFeeCategoryAmountTable() {
+    const tableBody = document.getElementById('feeCategoryAmountTable');
+    tableBody.innerHTML = ''; // Clear the table content
+}
+
+
+function addChangeListeners() {
+    const sectionField = document.getElementById('section');
+    const standardField = document.getElementById('standard');
+    const divisionField = document.getElementById('division');
+
+    if (sectionField) {
+        sectionField.addEventListener('change', clearFeeCategoryAmountTable);
+    }
+    if (standardField) {
+        standardField.addEventListener('change', clearFeeCategoryAmountTable);
+    }
+    if (divisionField) {
+        divisionField.addEventListener('change', clearFeeCategoryAmountTable);
+    }
+}
+
+////////////// VALIDATE TRANSPORT SERVICES /////////////////
+
+
+function validateTransportRequirement(studentData) {
+    const transportFields = [
+        studentData.transport_pickup_drop,
+        studentData.transport_tagged
+    ];
+
+    const yesRadio = document.querySelector('input[name="transportNeeded"][value="Yes"]');
+    const noRadio = document.querySelector('input[name="transportNeeded"][value="No"]');
+    const pickDropField = document.getElementById('pickDropAddress');
+    const vehicleRunningField = document.getElementById('vehicleRunning');
+
+    // Check if transport_needed is 1 or any transport field has value
+    const hasTransportDetails = studentData.transport_needed === 1 || transportFields.some(field => field && field.trim() !== "");
+
+    if (hasTransportDetails) {
+        yesRadio.checked = true;
+        toggleTransportDetails(true);
+    } else {
+        noRadio.checked = true;
+        toggleTransportDetails(false);
+    }
+
+    // Enable radio buttons but keep them unchecked until user clicks
+    yesRadio.disabled = false;
+    noRadio.disabled = false;
+    
+    if (vehicleRunningField.value.trim() === "") {
+        yesRadio.checked = false;
+        noRadio.checked = false;
+    }
+}
+
+
+////////////////// CONSENT SETTING ///////////
+
+function toggleAllCheckboxes(isChecked) {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = isChecked;
+    });
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////// CALL THE UPDATE FUNCTION ////////////////////
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("review-next").addEventListener("click", function (event) {
+        event.preventDefault(); // Prevent the default button behavior
+
+        const formModeInput = document.getElementById('formMode');
+        const formMode = formModeInput ? formModeInput.value : '';
+
+        if (formMode === 'update') {
+            // Show Swal alert indicating that this is an update
+            Swal.fire({
+                title: "Update Mode",
+                text: "This is an update. No endpoint call will be made.",
+                icon: "info",
+                confirmButtonText: "OK"
+            });
+        } else {
+            console.log("Form mode is not 'update'. Current mode:", formMode);
+        }
+    });
+});
