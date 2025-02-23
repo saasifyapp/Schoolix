@@ -21,6 +21,7 @@ router.post('/library/autoGenerateLibraryMembers', (req, res) => {
             0 AS books_issued -- Assuming no books issued by default, adjust as necessary
         FROM primary_student_details
         WHERE is_active = 1
+        ORDER BY student_id
         ON DUPLICATE KEY UPDATE
             member_name = VALUES(member_name),
             member_contact = VALUES(member_contact),
@@ -48,6 +49,7 @@ router.post('/library/autoGenerateLibraryMembers', (req, res) => {
             0 AS books_issued -- Assuming no books issued by default, adjust as necessary
         FROM teacher_details
         WHERE is_active = 1
+        ORDER BY id
         ON DUPLICATE KEY UPDATE
             member_name = VALUES(member_name),
             member_contact = VALUES(member_contact),
@@ -140,7 +142,7 @@ router.post('/library/autoGenerateLibraryMembers', (req, res) => {
 
 // Display All Members
 router.get('/library/members', (req, res) => {
-    const query = `SELECT * FROM library_member_details`;
+    const query = `SELECT * FROM library_member_details ORDER BY memberID`;
 
     req.connectionPool.query(query, (err, results) => {
         if (err) {
