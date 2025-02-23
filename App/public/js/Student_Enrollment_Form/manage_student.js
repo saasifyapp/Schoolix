@@ -15,6 +15,11 @@ document.addEventListener("DOMContentLoaded", () => {
             overlayId: "deleteStudentOverlay",
             closeButtonId: "closeOverlayDelete",
         },
+        {
+            buttonId: "generateTC",
+            overlayId: "generateTCOverlay",
+            closeButtonId: "closeGenerateTCOverlay",
+        },
     ];
 
     overlayConfig.forEach(({ buttonId, overlayId, closeButtonId }) => {
@@ -33,6 +38,39 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const overlays = [        
+        {
+            buttonId: "generateTCButton",
+            overlayId: "generateTCFormOverlay",
+            closeButtonId: "closeGenerateTCFormOverlay",
+        },
+        {
+            buttonId: "searchTCButton",
+            overlayId: "searchTCFormOverlay",
+            closeButtonId: "closeSearchTCFormOverlay",
+        },
+    ];
+
+    overlays.forEach(({ buttonId, overlayId, closeButtonId }) => {
+        const button = document.getElementById(buttonId);
+        const overlay = document.getElementById(overlayId);
+        const closeButton = document.getElementById(closeButtonId);
+
+        if (button && overlay && closeButton) {
+            button.addEventListener("click", () => {
+                overlay.style.display = "flex";
+            });
+
+            closeButton.addEventListener("click", () => {
+                overlay.style.display = "none";
+            });
+        }
+    });
+});
+
 
 document.addEventListener("DOMContentLoaded", () => {
     const updateStudentCard = document.getElementById("updateStudentCard");
@@ -110,6 +148,13 @@ document.querySelector(".search-button").addEventListener("click", function () {
                 confirmButtonText: "OK"
             });
         });
+});
+
+
+
+document.getElementById("nextStep").addEventListener("click", function() {
+    document.getElementById("studentDetails").style.display = "none";
+    document.getElementById("identificationInfo").style.display = "block";
 });
 
 

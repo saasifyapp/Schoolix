@@ -73,6 +73,20 @@
         </div>
 
         <div class="card">
+            <button id="generateTC">
+                <div class="dotlottie-container">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/2eeb8dcd-cd3a-487c-a31c-d3f8128d3359/mQAJqL1oA1.lottie"
+                        background="transparent" speed="1" style="width: 280px; height: 270px" loop
+                        autoplay></dotlottie-player>
+                </div>
+                <h3>Transfer Student(TC)</h3>
+            </button>
+        </div>
+
+
+        <div class="card">
             <button id="deleteStudent">
                 <div class="dotlottie-container" style="padding: 10px">
                     <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
@@ -90,7 +104,7 @@
         <div class="overlay-content">
             <div class="icon-container">
                 <i><img class="topicon" src="/images/search.gif" alt="Search Icon"></i>
-              </div>
+            </div>
             <button id="closeUpdateStudentOverlay" class="close-button">&times;</button>
 
             <h2 class="overlay-title">SEARCH USING</h2>
@@ -105,24 +119,24 @@
                         <option value="preprimary">Pre-primary</option>
                     </select>
                 </div>
-    
+
                 <!-- Input Field for Search -->
                 <div class="form-group">
                     <input type="text" id="searchInput" name="searchInput" class="form-control" placeholder=" ">
                     <span class="form-control-placeholder">Search by Name or GR No</span>
                     <div id="suggestions" class="suggestions"></div>
                 </div>
-               
+
             </div>
 
 
-           
 
-           
+
+
             <button type="submit" class="search-button">
                 <img src="/images/search.gif" alt="Search Button">
                 <span>Search</span>
-              </button>
+            </button>
         </div>
     </div>
 
@@ -232,6 +246,208 @@
             </div>
         </div>
     </div>
+
+    <!-- Overlay for Generate TC -->
+    <div id="generateTCOverlay" class="overlay" style="z-index: 1;">
+        <div class="overlay-content-inner">
+            <h2>Generate TC </h2>
+            <button id="closeGenerateTCOverlay" class="close-button">&times;</button>
+            <div class="button-container">
+                <div class="option-card">
+                    <span id="generateTCButton">
+                        <img src="/images/generate.gif" alt="">
+                        Generate TC
+                    </span>
+                </div>
+                <div class="option-card">
+                    <span id="searchTCButton">
+                        <img src="/images/search.gif" alt="">
+                        Search TC
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Overlay for Generate TC Form -->
+    <div id="generateTCFormOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <h2>Generate Transfer Certificate</h2>
+            <button id="closeGenerateTCFormOverlay" class="close-button">&times;</button>
+
+            <form>
+                <!-- Student Information -->
+                <div class="input-container">
+                    <h3>Student Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="studentName" placeholder=" ">
+                            <span class="form-control-placeholder">Student Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="motherName" placeholder=" ">
+                            <span class="form-control-placeholder">Mother's Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="date" class="form-control" id="dob">
+                            <span class="form-control-placeholder">DOB</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="placeOfBirth" placeholder=" ">
+                            <span class="form-control-placeholder">Place of Birth</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Identification Information -->
+                <div class="input-container">
+                    <h3>Identification Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="nationality" placeholder=" ">
+                            <span class="form-control-placeholder">Nationality</span>
+                            <div id="nationalitySuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="religion" placeholder=" ">
+                            <span class="form-control-placeholder">Religion</span>
+                            <div id="religionSuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="category" placeholder=" ">
+                            <span class="form-control-placeholder">Category</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="caste" placeholder=" ">
+                            <span class="form-control-placeholder">Caste</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="aadharId" placeholder=" ">
+                            <span class="form-control-placeholder">Aadhar ID</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Academic Information -->
+                <div class="input-container">
+                    <h3>Academic Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="saralId" placeholder=" ">
+                            <span class="form-control-placeholder">Saral ID</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="aaparId" placeholder=" ">
+                            <span class="form-control-placeholder">Aapar ID</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="penId" placeholder=" ">
+                            <span class="form-control-placeholder">PEN ID</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="lastSchool" placeholder=" ">
+                            <span class="form-control-placeholder">Last School</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="date" class="form-control" id="dateOfAdmission">
+                            <span class="form-control-placeholder">Date of Admission</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="classOfAdmission" placeholder=" ">
+                            <span class="form-control-placeholder">Class of Admission</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transfer Information -->
+                <div class="input-container">
+                    <h3>Transfer Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="tcNo" placeholder=" ">
+                            <span class="form-control-placeholder">TC NO</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="date" class="form-control" id="dateOfLeaving">
+                            <span class="form-control-placeholder">Date of Leaving</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="standardLeaving" placeholder=" ">
+                            <span class="form-control-placeholder">Standard when Leaving</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="reasonLeaving" placeholder=" ">
+                            <span class="form-control-placeholder">Reason of Leaving</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="progress" placeholder=" ">
+                            <span class="form-control-placeholder">Progress</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="conduct" placeholder=" ">
+                            <span class="form-control-placeholder">Conduct</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="result" placeholder=" ">
+                            <span class="form-control-placeholder">Result</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="remark" placeholder=" ">
+                            <span class="form-control-placeholder">Remark</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="generate-button">Generate</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Overlay for Search TC Form -->
+    <div id="searchTCFormOverlay" class="overlay">
+        <div class="overlay-content">
+            <div class="icon-container">
+                <i><img class="topicon" src="/images/search.gif" alt="Search Icon"></i>
+            </div>
+            <button id="closeSearchTCFormOverlay" class="close-button">&times;</button>
+
+            <h2 class="overlay-title">SEARCH USING</h2>
+
+            <!-- Dropdown for Section Selection -->
+            <div class="form-row">
+                <div class="form-group">
+                    <select id="" name="sectionSelect" class="form-control"
+                        style="text-align: center; width: 120px; background-color: white;">
+                        <option value="" disabled selected>Select Section</option>
+                        <option value="primary">Primary</option>
+                        <option value="preprimary">Pre-primary</option>
+                    </select>
+                </div>
+
+                <!-- Input Field for Search -->
+                <div class="form-group">
+                    <input type="text" id="" name="searchInput" class="form-control" placeholder=" ">
+                    <span class="form-control-placeholder">Search by Name or GR No</span>
+                    <div id="suggestions" class="suggestions"></div>
+                </div>
+
+            </div>
+
+            <button type="submit" class="search-button">
+                <img src="/images/search.gif" alt="Search Button">
+                <span>Search</span>
+            </button>
+        </div>
+    </div>
+
+
+
 
 
     <!-- Delete Student Overlay -->

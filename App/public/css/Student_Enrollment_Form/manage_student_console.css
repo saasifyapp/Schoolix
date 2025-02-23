@@ -41,36 +41,27 @@ body {
 }
 
 .overlay {
-    display: none;
-    /* Hidden by default */
-    position: fixed;
-    /* Stay in place */
-    z-index: 1000;
-    /* Sit on top */
+    display: none;   
+    position: fixed;    
+    z-index: 1000;   
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
-    /* Enable scroll if needed */
-    background-color: rgba(0, 0, 0, 0.4);
-    /* Black w/ opacity */
-    justify-content: center;
-    /* Center horizontally */
+    overflow: auto;    
+    background-color: rgba(0, 0, 0, 0.4);   
+    justify-content: center;    
     align-items: center;
-    /* Center vertically */
+   
 }
 
 .overlay-content {
     background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
-    /* Could be more or less, depending on screen size */
-    max-width: 750px;
-    /* Optional: maximum width for better control */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    /* Optional: shadow effect */
+    width: 80%;    
+    max-width: 750px;   
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  
     position: relative;
     top: 2rem;
     bottom: 2rem;
@@ -83,12 +74,9 @@ body {
     background-color: #fefefe;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
-    /* Could be more or less, depending on screen size */
-    max-width: 350px;
-    /* Optional: maximum width for better control */
+    width: 80%;   
+    max-width: 350px;   
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    /* Optional: shadow effect */
     position: relative;
     top: 2rem;
     bottom: 2rem;
@@ -105,8 +93,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    max-width: 100%;
-    /* Adjust as necessary */
+    max-width: 100%;    
     backdrop-filter: blur(5px);
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
@@ -806,6 +793,79 @@ input[type="checkbox"] {
 }
 
 
+
+
+.option-card {
+    position: relative;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    height: 82px;
+    width: 100px;
+}
+
+.option-card:hover {
+    transform: scale(1.05);
+    background-color: #FFDEE9;
+    background-image: linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 100%);
+    box-shadow: 0 0 8px #023047;
+    outline: none;
+}
+
+.option-card::after {
+    content: "";
+    position: absolute;
+    background: inherit;
+    inset: -10px;
+    scale: 0.8;
+    filter: blur(36px) brightness(1) contrast(0.85) saturate(1.4);
+    z-index: 0;
+    transition: 0.3s ease;
+}
+
+.option-card:hover::after {
+    scale: 0.9;
+    filter: blur(36px) brightness(1) contrast(1) saturate(1);
+}
+
+.option-card span {
+    position: relative;
+    z-index: 1;
+    /* background-color: #007bff; */
+    /* color: black; */
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 15px;
+    color: var(--grey-color);
+    font-weight: 700;
+    mix-blend-mode: multiply;
+}
+
+.option-card img {
+    height: 93px;
+    width: 100px;
+    background-color: transparent
+}
+
+
+
+.input-container {
+    margin-bottom: 20px;   
+    padding: 10px;
+    border: 1px solid #5DADE2;
+    margin-bottom: 20px;
+    border-radius: 10px; 
+    background-color: white;
+    box-shadow: 0 0 4px #808B96;
+}
 
 
 
