@@ -31,7 +31,7 @@ router.post('/fetch-student-suggestions', (req, res) => {
                 transport_pickup_drop, 
                 transport_tagged 
             FROM pre_primary_student_details 
-            WHERE Grno = ? AND transport_needed = 1
+            WHERE Grno = ? AND transport_needed = 1 AND is_active = 1
             UNION
             SELECT 
                 name, 
@@ -42,7 +42,7 @@ router.post('/fetch-student-suggestions', (req, res) => {
                 transport_pickup_drop, 
                 transport_tagged 
             FROM primary_student_details 
-            WHERE Grno = ? AND transport_needed = 1;
+            WHERE Grno = ? AND transport_needed = 1 AND is_active = 1 ;
         `;
         values = [grnoSearchQuery, grnoSearchQuery];
     } else {
@@ -56,7 +56,7 @@ router.post('/fetch-student-suggestions', (req, res) => {
                 transport_pickup_drop, 
                 transport_tagged 
             FROM pre_primary_student_details 
-            WHERE name LIKE ? AND transport_needed = 1
+            WHERE name LIKE ? AND transport_needed = 1 AND is_active = 1
             UNION
             SELECT 
                 name, 
@@ -67,7 +67,7 @@ router.post('/fetch-student-suggestions', (req, res) => {
                 transport_pickup_drop, 
                 transport_tagged 
             FROM primary_student_details 
-            WHERE name LIKE ? AND transport_needed = 1;
+            WHERE name LIKE ? AND transport_needed = 1 AND is_active = 1;
         `;
         values = [nameSearchQuery, nameSearchQuery];
     }
@@ -168,11 +168,11 @@ router.post('/updateStudentTransport', async (req, res) => {
         FROM (
             SELECT transport_tagged
             FROM primary_student_details
-            WHERE Grno = ? AND Name = ? AND standard = ? AND Division = ?
+            WHERE Grno = ? AND Name = ? AND standard = ? AND Division = ? AND is_active = 1
             UNION
             SELECT transport_tagged
             FROM pre_primary_student_details
-            WHERE Grno = ? AND Name = ? AND standard = ? AND Division = ?
+            WHERE Grno = ? AND Name = ? AND standard = ? AND Division = ? AND is_active = 1
         ) AS combined;
     `;
     const getOldVehicleParams = [grNo, studentName, standard, division, grNo, studentName, standard, division];
@@ -288,12 +288,12 @@ router.post('/updateStudentTransport', async (req, res) => {
         const queryPrimary = `
             UPDATE primary_student_details
             SET transport_tagged = ?
-            WHERE Grno = ? AND Name = ? AND standard = ? AND Division = ?
+            WHERE Grno = ? AND Name = ? AND standard = ? AND Division = ? AND is_active = 1
         `;
         const queryPrePrimary = `
             UPDATE pre_primary_student_details
             SET transport_tagged = ?
-            WHERE Grno = ? AND Name = ? AND standard = ? AND Division = ?
+            WHERE Grno = ? AND Name = ? AND standard = ? AND Division = ? AND is_active = 1
         `;
         const queryParams = [vehicleTagged, grNo, studentName, standard, division];
 

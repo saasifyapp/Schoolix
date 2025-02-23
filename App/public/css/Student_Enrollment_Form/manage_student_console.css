@@ -180,17 +180,17 @@ body {
 }
 
 .left-side {
-    flex: 0 0 50%;
+    flex: 0 0 35%;
     padding-right: 20px;
     display: flex;
     flex-direction: column;
-    /* Align items vertically */
-    justify-content: center;
-    /* Align the content at the top */
-    align-items:center;
-    /* Align content to the left */
-    height: 100%;
-    /* Ensure the container takes up full height */
+    justify-content: center; /* Align items vertically */
+    align-items: center; /* Align the content at the top */
+    height: 100%; /* Ensure the container takes up full height */
+    background-color: white; /* Change background to white */
+    border-radius: 10px; /* Add rounded corners */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+
 }
 
 .select-section,
@@ -237,7 +237,7 @@ input[type="checkbox"] {
 }
 
 .select-filter{
-    max-height: 60vh; /* Adjust height as needed */
+    max-height: 58vh; /* Adjust height as needed */
     overflow-y: auto;
 }
 
@@ -247,11 +247,24 @@ input[type="checkbox"] {
 }
 
 .right-side {
-    flex: 0 0 50%;
+    flex: 0 0 35%;
     padding-left: 20px;
     position: relative;
     /* Allow absolute positioning of the button inside */
+    background-color: white; /* Change background to white */
+    border-radius: 10px; /* Add rounded corners */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+
 }
+
+.filter-animation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    mix-blend-mode: multiply;
+}
+
 
 #selectedFilters div {
     margin-bottom: 10px;
@@ -424,7 +437,7 @@ input[type="checkbox"] {
     /* Positions it relative to the .right-side container */
     bottom:  10px;
     /* 20px from the bottom of the container */
-    margin-left: 50%;
+    margin-left: 35%;
     cursor: pointer;
     background-color: transparent;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -483,6 +496,7 @@ input[type="checkbox"] {
     /* Set image height to fit button */
     margin-right: 5px;
     /* Add a 5px margin to the right of the image */
+    mix-blend-mode: multiply;
 }
 
 
@@ -525,8 +539,8 @@ input[type="checkbox"] {
 .reset-button-container {
     display: flex;
     justify-content: center;
-    gap: 10px; /* Adjust the spacing between buttons */
-    margin-top: 10px; /* Add some space from the content above */
+    gap: 10px; 
+    margin-bottom: 5px;
 }
 
 .reset-button {
@@ -551,6 +565,12 @@ input[type="checkbox"] {
 .reset-button:hover {
     background-color: #f39c12; /* Hover effect */
     transform: scale(1.05);
+}
+
+.reset-button img {
+    height: 80%;
+    margin-right: 5px;
+    mix-blend-mode: multiply;
 }
 
 

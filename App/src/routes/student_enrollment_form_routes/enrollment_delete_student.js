@@ -15,7 +15,7 @@ router.get('/delete_enrolled_students', (req, res) => {
 
     const sql = `
         SELECT student_id, Grno, Name, Section, Gender, Standard, Division, DOB 
-        FROM ${tableName}`;
+        FROM ${tableName} WHERE is_active = 1`;
     
     req.connectionPool.query(sql, (error, results) => {
         if (error) {
@@ -37,7 +37,9 @@ router.post('/deleteEnrolledStudent', (req, res) => {
     FROM ${tableName}
     WHERE 
         student_id = ? AND
-        Grno = ?
+        Grno = ? AND
+        is_active = 1
+
     `;
 
     const selectQueryParams = [student_id, Grno];
@@ -55,7 +57,8 @@ router.post('/deleteEnrolledStudent', (req, res) => {
             DELETE FROM ${tableName}
             WHERE 
                 student_id = ? AND
-                Grno = ?
+                Grno = ? AND
+                is_active = 1
             `;
 
             const deleteQueryParams = [student_id, Grno];

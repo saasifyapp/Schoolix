@@ -3,7 +3,7 @@ let memberNamesInClass = {}; // Object to store member names by class
 
 async function autoGenerateLibraryMembers() {
     try {
-        const response = await fetch('/library/autoGenerate_library_members', {
+        const response = await fetch('/library/autoGenerateLibraryMembers', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -16,6 +16,10 @@ async function autoGenerateLibraryMembers() {
 
         const data = await response.json();
         console.log('Library members auto-generated successfully:', data);
+
+        // After successful auto-generation, refresh the members data
+        await refreshMembersData();
+        
     } catch (error) {
         console.error('Error auto-generating library members:', error);
     }

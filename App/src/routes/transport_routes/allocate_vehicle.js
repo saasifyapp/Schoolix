@@ -88,11 +88,11 @@ router.get('/allocate_getStudentCount', (req, res) => {
              FROM (
                  SELECT transport_pickup_drop, Standard, Division
                  FROM pre_primary_student_details
-                 WHERE transport_needed = 1 AND transport_tagged IS NULL
+                 WHERE transport_needed = 1 AND transport_tagged IS NULL AND is_active = 1
                  UNION ALL
                  SELECT transport_pickup_drop, Standard, Division
                  FROM primary_student_details
-                 WHERE transport_needed = 1 AND transport_tagged IS NULL
+                 WHERE transport_needed = 1 AND transport_tagged IS NULL AND is_active = 1
              ) AS combined
              WHERE combined.transport_pickup_drop IN (?)
              AND CONCAT(combined.Standard, ' ', combined.Division) IN (?)
@@ -101,7 +101,7 @@ router.get('/allocate_getStudentCount', (req, res) => {
             (SELECT COUNT(*)
              FROM teacher_details
              WHERE transport_needed = 1 AND transport_tagged IS NULL
-             AND transport_pickup_drop IN (?)
+             AND transport_pickup_drop IN (?) AND is_active = 1
              AND (${classesArray.map(() => `FIND_IN_SET(?, classes_alloted)`).join(' > 0 OR ')} > 0)
             ) AS teacherCount
     `;
@@ -156,12 +156,12 @@ router.post('/allocate_tagStudentsToBus', (req, res) => {
         SELECT Student_id, Name, transport_pickup_drop, Standard, Division
         FROM pre_primary_student_details
         WHERE transport_needed = 1 AND transport_tagged IS NULL
-          AND transport_pickup_drop IN (?) AND CONCAT(Standard, ' ', Division) IN (?)
+          AND transport_pickup_drop IN (?) AND CONCAT(Standard, ' ', Division) IN (?) AND is_active = 1
         UNION ALL
         SELECT Student_id, Name, transport_pickup_drop, Standard, Division
         FROM primary_student_details
         WHERE transport_needed = 1 AND transport_tagged IS NULL
-          AND transport_pickup_drop IN (?) AND CONCAT(Standard, ' ', Division) IN (?)
+          AND transport_pickup_drop IN (?) AND CONCAT(Standard, ' ', Division) IN (?) AND is_active = 1
         ORDER BY transport_pickup_drop ASC
     `;
 
@@ -169,7 +169,7 @@ router.post('/allocate_tagStudentsToBus', (req, res) => {
     const sqlFetchTeachers = `
         SELECT id AS Teacher_id, name AS Name, transport_pickup_drop
         FROM teacher_details
-        WHERE transport_needed = 1 AND transport_tagged IS NULL
+        WHERE transport_needed = 1 AND transport_tagged IS NULL AND is_active = 1
           AND transport_pickup_drop IN (?) AND (${classesArray.map(() => `FIND_IN_SET(?, classes_alloted)`).join(' > 0 OR ')} > 0)
     `;
 
@@ -212,12 +212,12 @@ router.post('/allocate_tagStudentsToBus', (req, res) => {
             const sqlUpdateStudentsPrePrimary = `
                 UPDATE pre_primary_student_details
                 SET transport_tagged = ?
-                WHERE transport_pickup_drop IN (?) AND (${whereClauseStudents}) AND transport_needed = 1
+                WHERE transport_pickup_drop IN (?) AND (${whereClauseStudents}) AND transport_needed = 1 AND is_active = 1
             `;
             const sqlUpdateStudentsPrimary = `
                 UPDATE primary_student_details
                 SET transport_tagged = ?
-                WHERE transport_pickup_drop IN (?) AND (${whereClauseStudents}) AND transport_needed = 1
+                WHERE transport_pickup_drop IN (?) AND (${whereClauseStudents}) AND transport_needed = 1 AND is_active = 1
             `;
             const valuesUpdateStudents = [vehicleNo, routeStopsStudents];
 
@@ -237,7 +237,7 @@ router.post('/allocate_tagStudentsToBus', (req, res) => {
                         SET transport_tagged = ?
                         WHERE transport_pickup_drop IN (?)
                           AND (${classesArray.map(() => `FIND_IN_SET(?, classes_alloted)`).join(' > 0 OR ')} > 0)
-                          AND transport_needed = 1
+                          AND transport_needed = 1 AND is_active = 1
                     `;
                     const valuesUpdateTeachers = [vehicleNo, stopsArray, ...classesArray];
 
@@ -320,12 +320,12 @@ router.post('/allocate_detagBus', (req, res) => {
     const sqlUpdateStudentsPrePrimary = `
         UPDATE pre_primary_student_details
         SET transport_tagged = NULL
-        WHERE transport_tagged = ? AND (${whereClause}) AND transport_needed = 1
+        WHERE transport_tagged = ? AND (${whereClause}) AND transport_needed = 1 AND is_active = 1
     `;
     const sqlUpdateStudentsPrimary = `
         UPDATE primary_student_details
         SET transport_tagged = NULL
-        WHERE transport_tagged = ? AND (${whereClause}) AND transport_needed = 1
+        WHERE transport_tagged = ? AND (${whereClause}) AND transport_needed = 1 AND is_active = 1
     `;
     const valuesUpdateStudents = [vehicleNo];
 
@@ -346,7 +346,7 @@ router.post('/allocate_detagBus', (req, res) => {
             const sqlUpdateTeachers = `
                 UPDATE teacher_details
                 SET transport_tagged = NULL
-                WHERE transport_tagged = ? AND transport_needed = 1
+                WHERE transport_tagged = ? AND transport_needed = 1 AND is_active = 1
                 AND (${classesArray.map(() => `FIND_IN_SET(?, classes_alloted)`).join(' > 0 OR ')} > 0)
             `;
             const valuesUpdateTeachers = [vehicleNo, ...classesArray.map(cls => `${cls.standard} ${cls.division}`)];
@@ -416,19 +416,19 @@ router.post('/handle_overflow_students', (req, res) => {
         SELECT Student_id, Name, transport_pickup_drop, Standard, Division
         FROM pre_primary_student_details
         WHERE transport_needed = 1 AND transport_tagged IS NULL
-          AND transport_pickup_drop IN (?) AND CONCAT(Standard, ' ', Division) IN (?)
+          AND transport_pickup_drop IN (?) AND CONCAT(Standard, ' ', Division) IN (?) AND is_active = 1
         UNION ALL
         SELECT Student_id, Name, transport_pickup_drop, Standard, Division
         FROM primary_student_details
         WHERE transport_needed = 1 AND transport_tagged IS NULL
-          AND transport_pickup_drop IN (?) AND CONCAT(Standard, ' ', Division) IN (?)
+          AND transport_pickup_drop IN (?) AND CONCAT(Standard, ' ', Division) IN (?) AND is_active = 1
         ORDER BY transport_pickup_drop ASC
     `;
 
     const sqlFetchTeachers = `
         SELECT id AS Teacher_id, name AS Name, transport_pickup_drop
         FROM teacher_details
-        WHERE transport_needed = 1 AND transport_tagged IS NULL
+        WHERE transport_needed = 1 AND transport_tagged IS NULL AND is_active = 1
           AND transport_pickup_drop IN (?) AND (${classesArray.map(() => `FIND_IN_SET(?, classes_alloted)`).join(' > 0 OR ')} > 0)
     `;
 
@@ -508,12 +508,12 @@ const allocatePrimaryBus = (students, teachers, vehicleNo, availableSeats, route
     const sqlUpdateStudentsPrePrimary = `
         UPDATE pre_primary_student_details
         SET transport_tagged = ?
-        WHERE transport_pickup_drop IN (?) AND (${whereClause}) AND transport_needed = 1
+        WHERE transport_pickup_drop IN (?) AND (${whereClause}) AND transport_needed = 1 AND is_active = 1
     `;
     const sqlUpdateStudentsPrimary = `
         UPDATE primary_student_details
         SET transport_tagged = ?
-        WHERE transport_pickup_drop IN (?) AND (${whereClause}) AND transport_needed = 1
+        WHERE transport_pickup_drop IN (?) AND (${whereClause}) AND transport_needed = 1 AND is_active = 1
     `;
     const valuesUpdateStudents = [vehicleNo, routeStops];
 
@@ -535,7 +535,7 @@ const allocatePrimaryBus = (students, teachers, vehicleNo, availableSeats, route
                 const sqlUpdateTeachers = `
                     UPDATE teacher_details
                     SET transport_tagged = ?
-                    WHERE id IN (?)
+                    WHERE id IN (?) AND is_active = 1
                 `;
                 const valuesUpdateTeachers = [vehicleNo, teacherIds];
 
@@ -661,12 +661,12 @@ const allocateSecondaryBus = async (unallocatedStudents, unallocatedTeachers, pr
             const sqlUpdateStudentsPrePrimary = `
                 UPDATE pre_primary_student_details
                 SET transport_tagged = ?
-                WHERE transport_pickup_drop IN (?) AND (${whereClause}) AND transport_needed = 1
+                WHERE transport_pickup_drop IN (?) AND (${whereClause}) AND transport_needed = 1 AND is_active = 1
             `;
             const sqlUpdateStudentsPrimary = `
                 UPDATE primary_student_details
                 SET transport_tagged = ?
-                WHERE transport_pickup_drop IN (?) AND (${whereClause}) AND transport_needed = 1
+                WHERE transport_pickup_drop IN (?) AND (${whereClause}) AND transport_needed = 1 AND is_active = 1
             `;
             const valuesUpdateStudents = [vehicleNo, routeStops];
 
@@ -691,7 +691,7 @@ const allocateSecondaryBus = async (unallocatedStudents, unallocatedTeachers, pr
                 const sqlUpdateTeachers = `
                     UPDATE teacher_details
                     SET transport_tagged = ?
-                    WHERE id IN (?)
+                    WHERE id IN (?) AND is_active = 1
                 `;
                 const valuesUpdateTeachers = [vehicleNo, teacherIds];
 

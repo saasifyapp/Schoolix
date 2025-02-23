@@ -12,9 +12,9 @@ router.get('/distinctStandardsDivisions', (req, res) => {
     const sql = `
         SELECT DISTINCT CONCAT(Standard, ' ', Division) AS standard_with_division
         FROM (
-            SELECT Standard, Division FROM pre_primary_student_details
+            SELECT Standard, Division FROM pre_primary_student_details WHERE is_active = 1
             UNION
-            SELECT Standard, Division FROM primary_student_details
+            SELECT Standard, Division FROM primary_student_details WHERE is_active = 1
         ) AS combined_standards
         ORDER BY Standard;
     `; 

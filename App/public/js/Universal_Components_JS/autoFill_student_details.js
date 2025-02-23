@@ -95,3 +95,27 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+//////////////////////////Update Student Enrollment Form (SMALLPOPUP)
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById('searchInput');
+    const suggestionsContainer = document.getElementById('suggestions');
+
+    searchInput.addEventListener('input', function () {
+        const query = this.value.trim();
+        if (!query) {
+            suggestionsContainer.innerHTML = '';
+            return;
+        }
+
+        fetchAndDisplaySuggestions(query, suggestionsContainer, searchInput, (selectedItem) => {
+            searchInput.value = selectedItem.dataset.name;
+        });
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!suggestionsContainer.contains(event.target) && !searchInput.contains(event.target)) {
+            suggestionsContainer.innerHTML = '';
+        }
+    });
+});

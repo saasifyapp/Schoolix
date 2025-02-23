@@ -16,8 +16,8 @@
 }
 
 body {
-    background-color: #F7F9F9; 
-    /*background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);*/
+    /* background-color: #F7F9F9;  */
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
     transition: all 0.5s ease;
 }
 

@@ -145,7 +145,7 @@
                     <h3>Contact and Permanent Address Details</h3>
                     <div class="form-row">
                         <div class="form-group">
-                            <input type="text" class="form-control" id="studentContact" placeholder=" ">
+                            <input type="text" class="form-control" id="studentContact" placeholder=" " maxlength="10">
                             <span class="form-control-placeholder">Student Contact No</span>
                             <div id="studentContactError" class="error-message"></div>
                         </div>
@@ -180,7 +180,7 @@
                         </div>
 
                         <div class="form-group">
-                            <input type="text" class="form-control" id="pinCode" placeholder=" ">
+                            <input type="text" class="form-control" id="pinCode" placeholder=" " maxlength="6">
                             <span class="form-control-placeholder">PIN Code</span>
                             <div id="pinCodeError" class="error-message"></div>
                         </div>
@@ -210,6 +210,14 @@
                             <span class="form-control-placeholder">Caste</span>
                             <div id="casteSuggestions" class="suggestions"></div>
                         </div>
+                        <div class="form-group">
+                            <select class="form-control dropdown" id="alpsankhyak">
+                                <option value="" selected disabled hidden></option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                            <span class="form-control-placeholder">Alpsankhyak</span>
+                        </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
@@ -223,7 +231,7 @@
                             <div id="motherTongueSuggestions" class="suggestions"></div>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" id="aadhaar" placeholder=" ">
+                            <input type="text" class="form-control" id="aadhaar" placeholder=" " maxlength="12">
                             <span class="form-control-placeholder">Aadhar Number</span>
                             <div id="aadhaarError" class="error-message"></div>
                         </div>
@@ -233,6 +241,28 @@
                                 <input type="text" id="documentInput" placeholder="Select Documents">
                             </div>
                             <div id="documentSuggestions" class="suggestions"></div>
+                        </div>                       
+                    </div>
+                   
+                </div>
+                
+                <div class="input-container">
+                    <h3>Medical Information</h3>
+                    <div class="form-row">
+                        <!-- Medical Status Dropdown -->
+                        <div class="form-group" style="flex: 0.3;">
+                            <select class="form-control dropdown" id="medicalStatus">
+                                <option value="" selected disabled hidden></option>
+                                <option value="Fit">Fit</option>
+                                <option value="Unfit">Unfit</option>
+                            </select>
+                            <span class="form-control-placeholder">Medical Status</span>
+                        </div>
+                        
+                        <!-- Medical Description Textarea -->
+                        <div class="form-group">
+                            <input class="form-control" id="medicalDescription" placeholder=" " readonly></input>
+                            <span class="form-control-placeholder">Medical Description</span>
                         </div>
                     </div>
                 </div>
@@ -274,7 +304,7 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <input type="text" class="form-control" id="fatherContactNumber" placeholder=" ">
+                            <input type="text" class="form-control" id="fatherContactNumber" placeholder=" " maxlength="10">
                             <span class="form-control-placeholder">Father's Contact Number</span>
                             <div id="fatherContactNumberError" class="error-message"></div>
                         </div>
@@ -293,7 +323,7 @@
                     <h3>Mother Details</h3>
                     <div class="form-row">
                         <div class="form-group">
-                            <input type="text" class="form-control" id="motherFirstName" placeholder=" ">
+                            <input type="text" class="form-control" id="motherFirstName" placeholder=" " >
                             <span class="form-control-placeholder">Mother's First Name</span>
                             <div id="motherFirstNameError" class="error-message"></div>
                         </div>
@@ -308,7 +338,7 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <input type="text" class="form-control" id="motherContactNumber" placeholder=" ">
+                            <input type="text" class="form-control" id="motherContactNumber" placeholder=" " maxlength="10">
                             <span class="form-control-placeholder">Mother's Contact Number</span>
                             <div id="motherContactNumberError" class="error-message"></div>
                         </div>
@@ -349,7 +379,7 @@
                                 <span class="form-control-placeholder">Guardian's Name</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="guardianContact" placeholder=" ">
+                                <input type="text" class="form-control" id="guardianContact" placeholder=" " maxlength="10">
                                 <span class="form-control-placeholder">Guardian's Contact</span>
                                 <div id="guardianContactError" class="error-message"></div>
                             </div>
@@ -371,7 +401,7 @@
                                 <span class="form-control-placeholder">Landmark</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="guardianpinCode" placeholder=" ">
+                                <input type="text" class="form-control" id="guardianpinCode" placeholder=" " maxlength="6">
                                 <span class="form-control-placeholder">PIN Code</span>
                                 <div id="guardianpinCodeError" class="error-message"></div>
                             </div>
@@ -421,6 +451,29 @@
                 </div>
 
                 <div class="input-container">
+                    <h3>Identification Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="saralId" placeholder=" " maxlength="19">
+                            <span class="form-control-placeholder">Saral ID (19 Digits)</span>
+                            <div id="saralIdError" class="error-message"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="aaparId" placeholder=" " maxlength="12">
+                            <span class="form-control-placeholder">Aapar ID (12 Digits)</span>
+                            <div id="aaparIdError" class="error-message"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="penId" placeholder=" " maxlength="11">
+                            <span class="form-control-placeholder">PEN ID (11 Digits)</span>
+                            <div id="penIdError" class="error-message"></div>
+                        </div>
+                    </div>
+                </div>
+                
+
+
+                <div class="input-container">
                     <h3>Previous Academic Records</h3>
                     <div class="form-row">
                         <div class="form-group">
@@ -433,20 +486,22 @@
                             <div id="classCompletedSuggestions" class="suggestions"></div>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" id="percentage" placeholder=" ">
+                            <input type="text" class="form-control" id="percentage" placeholder=" " maxlength="5">
                             <span class="form-control-placeholder">Percentage</span>
                             <span class="percentage-icon">%</span>
                             <div id="percentageError" class="error-message"></div>
 
                         </div>
                     </div>
-                    <div class="form-row">
+                    <div class="form-row"> 
                         <div class="form-group">
                             <input type="checkbox" id="newAdmission">
                             <label for="noVehicleFound">Select if no academic history / First time admission.</label>
                         </div>
                     </div>
                 </div>
+
+                
                 <div class="form-navigation-buttons">
                     <button type="button" class="btn prev-button" id="academic-prev"><img src="/images/nextPrev.png" alt="Next Icon">Previous</button>
                     <button type="button" class="btn next-button" id="academic-next"><img src="/images/nextPrev.png" alt="Next Icon">Next</button>
@@ -594,7 +649,7 @@
                             <div class="review-item"><span>Gender:</span> <span id="review-gender"></span></div>
                             <div class="review-item"><span>Blood Group:</span> <span id="review-bloodGroup"></span>
                             </div>
-                            <div class="review-item"><span>Contact:</span> <span id="review-studentContact"></span>
+                            <div class="review-item"><span>Student Contact:</span> <span id="review-studentContact"></span>
                             </div>
                             <div class="review-item"><span>Address:</span> <span id="review-address"></span></div>
                             <div class="review-item"><span>Nationality:</span> <span id="review-nationality"></span>
@@ -602,12 +657,14 @@
                             <div class="review-item"><span>Religion:</span> <span id="review-religion"></span></div>
                             <div class="review-item"><span>Category:</span> <span id="review-category"></span></div>
                             <div class="review-item"><span>Caste:</span> <span id="review-caste"></span></div>
+                            <div class="review-item"><span>Alpsankhyak:</span> <span id="review-alpasankhyak"></span></div>
                             <div class="review-item"><span>Domicile:</span> <span id="review-domicile"></span></div>
                             <div class="review-item"><span>Mother Tongue:</span> <span id="review-motherTongue"></span>
                             </div>
                             <div class="review-item"><span>Aadhaar Number:</span> <span id="review-aadharNo"></span>
                             </div>
                             <div class="review-item"><span>Documents:</span> <span id="review-documents"></span></div>
+                            <div class="review-item"><span>Medical Status:</span> <span id="review-medicalStatus"></span></div>
                         </div>
 
                         <!-- Guardian Information -->
@@ -625,8 +682,14 @@
                         <div class="review-section">
                             <h3>Academic Information</h3>
                             <div class="review-item"><span>Section:</span> <span id="review-section"></span></div>
+                            <div class="review-item"><span>Gr No:</span> <span id="review-grNo"></span></div>
                             <div class="review-item"><span>Standard:</span> <span id="review-standard"></span></div>
                             <div class="review-item"><span>Division:</span> <span id="review-division"></span></div>
+                            <div class="review-item"><span>Saral ID:</span> <span id="review-saralId"></span></div>
+                            <div class="review-item"><span>Aapar ID:</span> <span id="review-aaparId"></span></div>
+                            <div class="review-item"><span>PEN ID:</span> <span id="review-penId"></span></div>
+                            <div class="review-item"><span>Admission Date:</span> <span id="review-admissionDate"></span></div>
+
                             <div id="review-academic-tag" style="display: none;">
                                 <div class="review-item"><span>Academic History:</span> <span id="review-academics"></span></div>
                             </div>

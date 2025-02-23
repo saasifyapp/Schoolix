@@ -136,13 +136,13 @@ function updateFilterHeadingAndMessage() {
 
     if (studentType === 'primary') {
         filterHeading.textContent = 'Filters for Primary Section';
-        filterMessage.textContent = 'Showing filters for the Primary section';
+        //filterMessage.textContent = 'Showing filters for the Primary section';
     } else if (studentType === 'pre_primary') {
         filterHeading.textContent = 'Filters for Pre-primary Section';
-        filterMessage.textContent = 'Showing filters for the Pre-primary section';
+        //filterMessage.textContent = 'Showing filters for the Pre-primary section';
     } else {
         filterHeading.textContent = 'Filters for (section) section';
-        filterMessage.textContent = '';
+       // filterMessage.textContent = '';
     }
 }
 
@@ -152,10 +152,8 @@ function fetchAndUpdateFilterOptions() {
     fetch(`/getTableColumns?type=${studentType}`)
         .then(response => response.json())
         .then(columns => {
-            // Limit the columns array to the first 10 columns
-            const limitedColumns = columns.slice(0, 50);
-            availableColumns = limitedColumns;
-            updateFilterOptions(limitedColumns);
+            availableColumns = columns; // Use all columns without limiting
+            updateFilterOptions(columns);
         })
         .catch(error => {
             console.error('Error fetching table columns:', error);

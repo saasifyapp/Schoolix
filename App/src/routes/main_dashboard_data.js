@@ -121,12 +121,12 @@ router.post('/confirm-location', async (req, res) => {
 router.get('/student_counts', (req, res) => {
     const counts = {};
     const queries = {
-        primary_totalStudents: 'SELECT COUNT(*) AS count FROM primary_student_details',
-        primary_maleStudents: "SELECT COUNT(*) AS count FROM primary_student_details WHERE Gender = 'Male'",
-        primary_femaleStudents: "SELECT COUNT(*) AS count FROM primary_student_details WHERE Gender = 'Female'",
-        pre_primary_totalStudents: 'SELECT COUNT(*) AS count FROM pre_primary_student_details',
-        pre_primary_maleStudents: "SELECT COUNT(*) AS count FROM pre_primary_student_details WHERE Gender = 'Male'",
-        pre_primary_femaleStudents: "SELECT COUNT(*) AS count FROM pre_primary_student_details WHERE Gender = 'Female'"
+        primary_totalStudents: 'SELECT COUNT(*) AS count FROM primary_student_details WHERE is_active = 1',
+        primary_maleStudents: "SELECT COUNT(*) AS count FROM primary_student_details WHERE Gender = 'Male' AND is_active = 1",
+        primary_femaleStudents: "SELECT COUNT(*) AS count FROM primary_student_details WHERE Gender = 'Female' AND is_active = 1",
+        pre_primary_totalStudents: 'SELECT COUNT(*) AS count FROM pre_primary_student_details WHERE is_active = 1',
+        pre_primary_maleStudents: "SELECT COUNT(*) AS count FROM pre_primary_student_details WHERE Gender = 'Male' AND is_active = 1",
+        pre_primary_femaleStudents: "SELECT COUNT(*) AS count FROM pre_primary_student_details WHERE Gender = 'Female' AND is_active = 1"
     };
 
     const promises = Object.keys(queries).map(key => {
