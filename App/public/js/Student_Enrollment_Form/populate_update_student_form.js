@@ -408,3 +408,108 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+
+
+
+///////////////////////////////////NEW//////////////////////////////////////////
+// document.addEventListener("DOMContentLoaded", () => {
+//     document.getElementById("review-next").addEventListener("click", function (event) {
+//         event.preventDefault();
+//         console.log("Update")
+
+//         const formMode = document.getElementById('formMode')?.value || '';
+//         console.log('Form mode:', formMode); // Debug log to confirm mode
+
+//         if (formMode === 'insert') {
+//             const allChecked = validateConsents();
+//             if (!allChecked) {
+//                 Swal.fire({
+//                     title: "Incomplete Consent",
+//                     text: "Please ensure all consents are checked before proceeding.",
+//                     icon: "warning",
+//                     confirmButtonText: "OK"
+//                 });
+//                 return;
+//             }
+//             collectConsent();
+//             submitForm('/submitEnrollmentForm', 'Enrollment submitted successfully!');
+//         } else if (formMode === 'update') {
+//             collectConsent(); // Optional: remove if consents don’t change on update
+//             submitForm('/updateStudentDetails', 'Student details updated successfully!');
+//         } else {
+//             console.log("Unknown form mode:", formMode);
+//             Swal.fire({
+//                 icon: 'error',
+//                 title: 'Error',
+//                 text: 'Invalid form mode',
+//                 confirmButtonText: 'OK'
+//             });
+//         }
+//     });
+// });
+
+// // Reusable submit function
+// function submitForm(endpoint, successMessage) {
+//     const overlay = document.getElementById('loadingOverlay');
+//     const loadingText = document.getElementById('loadingText');
+//     overlay.style.visibility = 'visible';
+
+//     const steps = [
+//         'Submitting student information...',
+//         'Submitting guardian information...',
+//         'Submitting academic information...',
+//         'Submitting fees information...',
+//         'Submitting transport information...',
+//         'Submitting consent...'
+//     ];
+
+//     let stepIndex = 0;
+//     const stepInterval = setInterval(() => {
+//         if (stepIndex < steps.length) {
+//             loadingText.textContent = steps[stepIndex++];
+//         } else {
+//             clearInterval(stepInterval);
+//         }
+//     }, 1000);
+
+//     console.log(`Submitting to ${endpoint} with data:`, JSON.stringify(formData, null, 2)); // Debug log
+
+//     const minimumLoadingTime = 6000;
+//     const startTime = Date.now();
+
+//     fetch(endpoint, {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify(formData)
+//     })
+//         .then(response => {
+//             if (!response.ok) throw new Error(`Server error: ${response.status}`);
+//             return response.json();
+//         })
+//         .then(data => {
+//             if (data.error) throw new Error(data.error);
+//             const elapsedTime = Date.now() - startTime;
+//             const remainingTime = Math.max(0, minimumLoadingTime - elapsedTime);
+
+//             setTimeout(() => {
+//                 overlay.style.visibility = 'hidden';
+//                 Swal.fire({
+//                     icon: 'success',
+//                     title: 'Success',
+//                     text: successMessage,
+//                     confirmButtonText: 'OK'
+//                 });
+//             }, remainingTime);
+//         })
+//         .catch(error => {
+//             console.error('Submission error:', error);
+//             overlay.style.visibility = 'hidden';
+//             Swal.fire({
+//                 icon: 'error',
+//                 title: 'Error',
+//                 text: error.message || 'Failed to submit form',
+//                 confirmButtonText: 'OK'
+//             });
+//         });
+// }

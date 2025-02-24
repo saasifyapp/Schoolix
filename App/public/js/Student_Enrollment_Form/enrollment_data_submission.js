@@ -977,7 +977,7 @@ function autofillFormFields() {
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("review-next").addEventListener("click", function (event) {
         event.preventDefault(); // Prevent the default button behavior
-
+console.log("Enroll")
         const formModeInput = document.getElementById('formMode');
         const formMode = formModeInput ? formModeInput.value : '';
 
