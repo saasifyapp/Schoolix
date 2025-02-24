@@ -939,6 +939,17 @@ input[type="checkbox"] {
 }
 
 
+.vendorIcon {
+    position: relative;
+    width: 2rem;
+    height: 2rem;
+    mix-blend-mode: multiply;
+    left: 417px;
+    /* Add this property */
+}
+
+
+
 
 @keyframes slideInRight {
     from {

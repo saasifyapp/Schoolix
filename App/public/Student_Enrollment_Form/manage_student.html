@@ -303,7 +303,8 @@
 
                 <!-- Identification Information -->
                 <div class="input-container">
-                    <h3><img src="/images/id-card.gif" alt="Identification Icon" class="heading-icon">Identification Information</h3>
+                    <h3><img src="/images/id-card.gif" alt="Identification Icon" class="heading-icon">Identification
+                        Information</h3>
                     <div class="form-row">
                         <div class="form-group">
                             <input type="text" class="form-control" id="nationality" placeholder=" ">
@@ -332,7 +333,8 @@
 
                 <!-- Academic Information -->
                 <div class="input-container">
-                    <h3><img src="/images/addbook.gif" alt="Academic Icon" class="heading-icon">Academic Information</h3>
+                    <h3><img src="/images/addbook.gif" alt="Academic Icon" class="heading-icon">Academic Information
+                    </h3>
                     <div class="form-row">
                         <div class="form-group">
                             <input type="text" class="form-control" id="saralId" placeholder=" ">
@@ -365,7 +367,8 @@
 
                 <!-- Transfer Information -->
                 <div class="input-container">
-                    <h3><img src="/images/transfer.gif" alt="Transfer Icon" class="heading-icon">Transfer Information</h3>
+                    <h3><img src="/images/transfer.gif" alt="Transfer Icon" class="heading-icon">Transfer Information
+                    </h3>
                     <div class="form-row">
                         <div class="form-group">
                             <input type="text" class="form-control" id="tcNo" placeholder=" ">
@@ -408,7 +411,7 @@
                 <button type="submit" class="generate-button">
                     <img src="/images/generate.gif" alt="Generate TC">
                     <span>Generate TC</span>
-                  </button>
+                </button>
             </form>
         </div>
     </div>
@@ -449,6 +452,49 @@
             </button>
         </div>
     </div>
+
+    <!-- Overlay for Search TC -->
+    <div id="searchTCOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeSearchTCOverlay" class="close-button">&times;</button>
+            <img src="/images/searchTc.gif" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
+            <h2 class="overlay-search-head">Search TC</h2>
+            <div class="search-container">
+                <div class="form-Searchgroup">
+                    <div class="form-Searchgroup">
+                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon"
+                            style="right: 25px; left: 405px;">
+                        <input type="text" class="form-control" id="searchTCInput" name="tcSearch" placeholder=" "
+                            oninput="searchTCDetails()" style="width: 400px;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search by student name</span>
+                    </div>
+                    <button class="refreshButton" onclick="refreshTCData()" style="margin-top: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
+                </div>
+            </div>
+            <button class="export_registered_students" onclick="exportTCTable()">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+            <div class="table-container">
+                <table id="tcTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>TC ID</th>
+                            <th>Student Name</th>
+                            <th>Class</th>
+                            <th>Issue Date</th>
+                            <th>Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tcTablebody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 
 
 

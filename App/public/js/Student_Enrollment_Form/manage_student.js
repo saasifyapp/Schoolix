@@ -40,36 +40,98 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-document.addEventListener("DOMContentLoaded", () => {
-    const overlays = [        
-        {
-            buttonId: "generateTCButton",
-            overlayId: "generateTCFormOverlay",
-            closeButtonId: "closeGenerateTCFormOverlay",
-        },
-        {
-            buttonId: "searchTCButton",
-            overlayId: "searchTCFormOverlay",
-            closeButtonId: "closeSearchTCFormOverlay",
-        },
-    ];
+// document.addEventListener("DOMContentLoaded", () => {
+//     const overlays = [        
+//         {
+//             buttonId: "generateTCButton",
+//             overlayId: "generateTCFormOverlay",
+//             closeButtonId: "closeGenerateTCFormOverlay",
+//         },
+//         {
+//             buttonId: "searchTCButton",
+//             overlayId: "searchTCFormOverlay",
+//             closeButtonId: "closeSearchTCFormOverlay",
+//         },
+//     ];
 
-    overlays.forEach(({ buttonId, overlayId, closeButtonId }) => {
+//     overlays.forEach(({ buttonId, overlayId, closeButtonId }) => {
+//         const button = document.getElementById(buttonId);
+//         const overlay = document.getElementById(overlayId);
+//         const closeButton = document.getElementById(closeButtonId);
+
+//         if (button && overlay && closeButton) {
+//             button.addEventListener("click", () => {
+//                 overlay.style.display = "flex";
+//             });
+
+//             closeButton.addEventListener("click", () => {
+//                 overlay.style.display = "none";
+//             });
+//         }
+//     });
+// });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const overlayMappings = {        
+        generateTCButton: "searchTCFormOverlay",  // Clicking "Generate TC" opens "Search TC Form"
+        searchTCButton: "generateTCOverlay",      // Clicking "Search TC" opens "Generate TC Overlay"
+    };
+
+    Object.entries(overlayMappings).forEach(([buttonId, overlayId]) => {
         const button = document.getElementById(buttonId);
         const overlay = document.getElementById(overlayId);
-        const closeButton = document.getElementById(closeButtonId);
+        const closeButton = overlay?.querySelector(".close-button");
 
-        if (button && overlay && closeButton) {
+        if (button && overlay) {
             button.addEventListener("click", () => {
+                // Close all overlays first
+                Object.values(overlayMappings).forEach(id => {
+                    document.getElementById(id).style.display = "none";
+                });
+
+                // Open the correct overlay
                 overlay.style.display = "flex";
             });
 
-            closeButton.addEventListener("click", () => {
+            closeButton?.addEventListener("click", () => {
                 overlay.style.display = "none";
             });
         }
     });
+
+    // Open Generate TC Form from Search TC Form
+    const searchButton = document.querySelector("#searchTCFormOverlay .search-button");
+    const generateTCFormOverlay = document.getElementById("generateTCFormOverlay");
+    const closeGenerateTCForm = generateTCFormOverlay?.querySelector(".close-button");
+
+    if (searchButton && generateTCFormOverlay) {
+        searchButton.addEventListener("click", () => {
+            document.getElementById("searchTCFormOverlay").style.display = "none"; // Close Search TC Form
+            generateTCFormOverlay.style.display = "flex"; // Open Generate TC Form
+        });
+
+        closeGenerateTCForm?.addEventListener("click", () => {
+            generateTCFormOverlay.style.display = "none";
+        });
+    }
+
+    // Open Search TC Overlay from Generate TC Overlay
+    const searchTCButtonInGenerateTC = document.querySelector("#generateTCOverlay #searchTCButton");
+    const searchTCOverlay = document.getElementById("searchTCOverlay");
+    const closeSearchTCOverlay = searchTCOverlay?.querySelector(".close-button");
+
+    if (searchTCButtonInGenerateTC && searchTCOverlay) {
+        searchTCButtonInGenerateTC.addEventListener("click", () => {
+            document.getElementById("generateTCOverlay").style.display = "none"; // Close Generate TC Overlay
+            searchTCOverlay.style.display = "flex"; // Open Search TC Overlay
+        });
+
+        closeSearchTCOverlay?.addEventListener("click", () => {
+            searchTCOverlay.style.display = "none";
+        });
+    }
 });
+
 
 
 document.addEventListener("DOMContentLoaded", () => {
