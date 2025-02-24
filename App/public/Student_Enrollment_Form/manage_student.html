@@ -273,13 +273,14 @@
     <!-- Overlay for Generate TC Form -->
     <div id="generateTCFormOverlay" class="overlay-search">
         <div class="overlay-content-search">
-            <h2>Generate Transfer Certificate</h2>
+            <img src="/images/generate.gif" alt="Overlay Icon" class="overlay-icon">
+            <h2 class="overlay-search-head">Generate Transfer Certificate</h2>
             <button id="closeGenerateTCFormOverlay" class="close-button">&times;</button>
 
-            <form>
+            <form class="generate-tc-form">
                 <!-- Student Information -->
                 <div class="input-container">
-                    <h3>Student Information</h3>
+                    <h3><img src="/images/student.gif" alt="Student Icon" class="heading-icon">Student Information</h3>
                     <div class="form-row">
                         <div class="form-group">
                             <input type="text" class="form-control" id="studentName" placeholder=" ">
@@ -302,7 +303,7 @@
 
                 <!-- Identification Information -->
                 <div class="input-container">
-                    <h3>Identification Information</h3>
+                    <h3><img src="/images/id-card.gif" alt="Identification Icon" class="heading-icon">Identification Information</h3>
                     <div class="form-row">
                         <div class="form-group">
                             <input type="text" class="form-control" id="nationality" placeholder=" ">
@@ -331,7 +332,7 @@
 
                 <!-- Academic Information -->
                 <div class="input-container">
-                    <h3>Academic Information</h3>
+                    <h3><img src="/images/addbook.gif" alt="Academic Icon" class="heading-icon">Academic Information</h3>
                     <div class="form-row">
                         <div class="form-group">
                             <input type="text" class="form-control" id="saralId" placeholder=" ">
@@ -364,7 +365,7 @@
 
                 <!-- Transfer Information -->
                 <div class="input-container">
-                    <h3>Transfer Information</h3>
+                    <h3><img src="/images/transfer.gif" alt="Transfer Icon" class="heading-icon">Transfer Information</h3>
                     <div class="form-row">
                         <div class="form-group">
                             <input type="text" class="form-control" id="tcNo" placeholder=" ">
@@ -404,7 +405,10 @@
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" class="generate-button">Generate</button>
+                <button type="submit" class="generate-button">
+                    <img src="/images/generate.gif" alt="Generate TC">
+                    <span>Generate TC</span>
+                  </button>
             </form>
         </div>
     </div>

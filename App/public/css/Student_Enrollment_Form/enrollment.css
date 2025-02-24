@@ -87,6 +87,7 @@ h2{
     height: 35px;
     vertical-align: middle; /* Align it with the text baseline */
     margin-right: 5px; /* Space between icon and text */
+    mix-blend-mode: multiply;
 }
 
 
