@@ -106,12 +106,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (searchButton && generateTCFormOverlay) {
         searchButton.addEventListener("click", () => {
-            document.getElementById("searchTCFormOverlay").style.display = "none"; // Close Search TC Form
-            generateTCFormOverlay.style.display = "flex"; // Open Generate TC Form
+            // document.getElementById("searchTCFormOverlay").style.display = "none"; // Close Search TC Form
+            // generateTCFormOverlay.style.display = "flex"; // Open Generate TC Form
+            searchStudentAndHandleTC();
         });
 
         closeGenerateTCForm?.addEventListener("click", () => {
             generateTCFormOverlay.style.display = "none";
+            clearTCForm(); // Clear form fields
         });
     }
 
