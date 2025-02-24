@@ -624,6 +624,11 @@ const enrollment_delete_student = require('./src/routes/student_enrollment_form_
 app.use('/', enrollment_delete_student);
 
 
+////// TRANSFER CERTIFICATE ROUTES ///
+const student_transfer_form = require('./src/routes/student_enrollment_form_routes/transfer_certificate.js');
+app.use('/', student_transfer_form);
+
+
 
 // Start the server
 const PORT = process.env.PORT || 4000;
