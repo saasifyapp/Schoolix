@@ -110,8 +110,8 @@ function populateStudentForm(studentData) {
     setValue("guardianName", studentData.guardian_name);
     setValue("guardianContact", studentData.guardian_contact);
     setValue("guardianRelation", studentData.guardian_relation);
-    setValue("guardianAddress", studentData.guardian_address);
-    setValue("guardianLandmark", studentData.guardian_landmark);
+    setValue("guardian_fullAddress", studentData.guardian_address);
+    setValue("guardianAddressLandmark", studentData.guardian_landmark);
     setValue("guardianpinCode", studentData.guardian_pin_code);
 
     // Validate and set the local guardian toggle
@@ -237,15 +237,19 @@ function toggleLocalGuardianDetails(isVisible) {
 
 ////////////// VALIDATE PREVIOUS ACADEMIC RECORDS /////////////////
 
-function validateAcademicRecords(studentData) {
-    const academicFields = [
-        studentData.Last_School,
-        studentData.class_completed,
-        studentData.percentage_last_school
-    ];
+function validateAcademicRecords() {
+    const formMode = document.getElementById('formMode').value;
+
+    if (formMode !== 'update') {
+        return; // Return early if the form is not in "Update" mode
+    }
+    
+    const lastSchoolAttended = document.getElementById('lastSchoolAttended').value;
+    const classCompleted = document.getElementById('classCompleted').value;
+    const percentage = document.getElementById('percentage').value;
 
     // Check if NONE of the fields have data
-    const allFieldsEmpty = academicFields.every(field => !field || field.trim() === "");
+    const allFieldsEmpty = [lastSchoolAttended, classCompleted, percentage].every(field => !field || field.trim() === "");
 
     const newAdmissionCheckbox = document.getElementById('newAdmission');
     const fieldsToToggle = [
@@ -255,14 +259,46 @@ function validateAcademicRecords(studentData) {
     ];
 
     if (allFieldsEmpty) {
+        // If all fields are empty, check the 'newAdmissionCheckbox' and disable academic fields
         newAdmissionCheckbox.checked = true;
-        fieldsToToggle.forEach(field => field.disabled = true);
+        newAdmissionCheckbox.disabled = false;
+        fieldsToToggle.forEach(field => {
+            field.disabled = true;
+        });
     } else {
+        // If any field has a value, uncheck the 'newAdmissionCheckbox' and enable academic fields
         newAdmissionCheckbox.checked = false;
-        fieldsToToggle.forEach(field => field.disabled = false);
+        newAdmissionCheckbox.disabled = true;
+        fieldsToToggle.forEach(field => {
+            field.disabled = false;
+        });
     }
 }
 
+document.addEventListener('DOMContentLoaded', (event) => {
+    // Listen for changes to dynamically populated fields
+    const targetNode = document.body;
+    const config = { childList: true, subtree: true, characterData: true };
+
+    // Create an observer instance linked to the callback function
+    const observer = new MutationObserver((mutationsList, observer) => {
+        for (const mutation of mutationsList) {
+            if (mutation.type === 'childList' || mutation.type === 'characterData') {
+                validateAcademicRecords();
+            }
+        }
+    });
+
+    // Start observing the target node for configured mutations
+    observer.observe(targetNode, config);
+
+    validateAcademicRecords(); // Initial validation
+});
+
+// Listen for changes to the fields directly
+document.getElementById('lastSchoolAttended').addEventListener('input', validateAcademicRecords);
+document.getElementById('classCompleted').addEventListener('input', validateAcademicRecords);
+document.getElementById('percentage').addEventListener('input', validateAcademicRecords);
 
 ///////////// CREATE FEES AND PACKAGE TABLE ///////////
 
@@ -340,18 +376,12 @@ function addChangeListeners() {
 
 
 function validateTransportRequirement(studentData) {
-    const transportFields = [
-        studentData.transport_pickup_drop,
-        studentData.transport_tagged
-    ];
-
     const yesRadio = document.querySelector('input[name="transportNeeded"][value="Yes"]');
     const noRadio = document.querySelector('input[name="transportNeeded"][value="No"]');
     const pickDropField = document.getElementById('pickDropAddress');
-    const vehicleRunningField = document.getElementById('vehicleRunning');
 
-    // Check if transport_needed is 1 or any transport field has value
-    const hasTransportDetails = studentData.transport_needed === 1 || transportFields.some(field => field && field.trim() !== "");
+    // Check if transport_needed is 1
+    const hasTransportDetails = studentData.transport_needed === 1;
 
     if (hasTransportDetails) {
         yesRadio.checked = true;
@@ -361,15 +391,32 @@ function validateTransportRequirement(studentData) {
         toggleTransportDetails(false);
     }
 
-    // Enable radio buttons but keep them unchecked until user clicks
+    // Enable radio buttons so the user can change the selection
     yesRadio.disabled = false;
     noRadio.disabled = false;
-    
-    if (vehicleRunningField.value.trim() === "") {
-        yesRadio.checked = false;
-        noRadio.checked = false;
+}
+
+// Function to toggle the visibility of transport details
+function toggleTransportDetails(isVisible) {
+    const transportDetails = document.getElementById('transportDetails');
+    if (transportDetails) {
+        transportDetails.style.display = isVisible ? 'block' : 'none';
     }
 }
+
+// Add event listeners for the pickDropAddress field
+document.getElementById('pickDropAddress').addEventListener('input', () => {
+    const pickDropValue = document.getElementById('pickDropAddress').value.trim();
+    const hasTransportDetails = pickDropValue !== "";
+
+    if (hasTransportDetails) {
+        toggleTransportDetails(true);
+        document.querySelector('input[name="transportNeeded"][value="Yes"]').checked = true;
+    } else {
+        toggleTransportDetails(false);
+        document.querySelector('input[name="transportNeeded"][value="No"]').checked = true;
+    }
+});
 
 
 ////////////////// CONSENT SETTING ///////////
@@ -386,130 +433,113 @@ function toggleAllCheckboxes(isChecked) {
 
 
 
-////////////////////////// CALL THE UPDATE FUNCTION ////////////////////
+////////////////// UPDATE STUDENT FUNCTION (Send data to SERVER) /////////////////////////////////////
+
 
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("review-next").addEventListener("click", function (event) {
-        event.preventDefault(); // Prevent the default button behavior
+        event.preventDefault();
 
-        const formModeInput = document.getElementById('formMode');
-        const formMode = formModeInput ? formModeInput.value : '';
+        const formMode = document.getElementById('formMode')?.value || '';
 
         if (formMode === 'update') {
-            // Show Swal alert indicating that this is an update
-            Swal.fire({
-                title: "Update Mode",
-                text: "This is an update. No endpoint call will be made.",
-                icon: "info",
-                confirmButtonText: "OK"
-            });
+            collectConsent(); // Optional: remove if consents don’t change on update
+            submitForm('/updateStudentDetails', 'Student details updated successfully!');
         } else {
-            console.log("Form mode is not 'update'. Current mode:", formMode);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Invalid form mode',
+                confirmButtonText: 'OK'
+            });
         }
     });
 });
 
+// Reusable submit function
+function submitForm(endpoint, successMessage) {
+    const overlay = document.getElementById('loadingOverlay');
+    const loadingText = document.getElementById('loadingText');
+    overlay.style.visibility = 'visible';
 
+    const steps = [
+        'Updating student information...',
+        'Updating guardian information...',
+        'Updating academic information...',
+        'Updating fees information...',
+        'Updating transport information...',
+        'Updating consent...'
+    ];
 
+    let stepIndex = 0;
+    const stepInterval = setInterval(() => {
+        if (stepIndex < steps.length) {
+            loadingText.textContent = steps[stepIndex++];
+        } else {
+            clearInterval(stepInterval);
+        }
+    }, 1000);
 
-///////////////////////////////////NEW//////////////////////////////////////////
-// document.addEventListener("DOMContentLoaded", () => {
-//     document.getElementById("review-next").addEventListener("click", function (event) {
-//         event.preventDefault();
-//         console.log("Update")
+    console.log(`Submitting to ${endpoint} with data:`, JSON.stringify(formData, null, 2)); // Debug log
 
-//         const formMode = document.getElementById('formMode')?.value || '';
-//         console.log('Form mode:', formMode); // Debug log to confirm mode
+    const minimumLoadingTime = 6000;
+    const startTime = Date.now();
 
-//         if (formMode === 'insert') {
-//             const allChecked = validateConsents();
-//             if (!allChecked) {
-//                 Swal.fire({
-//                     title: "Incomplete Consent",
-//                     text: "Please ensure all consents are checked before proceeding.",
-//                     icon: "warning",
-//                     confirmButtonText: "OK"
-//                 });
-//                 return;
-//             }
-//             collectConsent();
-//             submitForm('/submitEnrollmentForm', 'Enrollment submitted successfully!');
-//         } else if (formMode === 'update') {
-//             collectConsent(); // Optional: remove if consents don’t change on update
-//             submitForm('/updateStudentDetails', 'Student details updated successfully!');
-//         } else {
-//             console.log("Unknown form mode:", formMode);
-//             Swal.fire({
-//                 icon: 'error',
-//                 title: 'Error',
-//                 text: 'Invalid form mode',
-//                 confirmButtonText: 'OK'
-//             });
-//         }
-//     });
-// });
+    fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+    })
+        .then(response => {
+            if (!response.ok) throw new Error(`Server error: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) throw new Error(data.error);
+            const elapsedTime = Date.now() - startTime;
+            const remainingTime = Math.max(0, minimumLoadingTime - elapsedTime);
 
-// // Reusable submit function
-// function submitForm(endpoint, successMessage) {
-//     const overlay = document.getElementById('loadingOverlay');
-//     const loadingText = document.getElementById('loadingText');
-//     overlay.style.visibility = 'visible';
+            setTimeout(() => {
+                overlay.style.visibility = 'hidden';
 
-//     const steps = [
-//         'Submitting student information...',
-//         'Submitting guardian information...',
-//         'Submitting academic information...',
-//         'Submitting fees information...',
-//         'Submitting transport information...',
-//         'Submitting consent...'
-//     ];
+                let changeDetails = '';
+                if (data.changes) {
+                    changeDetails = '<p>Changes made:</p><ul style="text-align: left; margin: 0; padding: 0 0 0 20px;">';
+                    for (const [key, value] of Object.entries(data.changes)) {
+                        changeDetails += `<li style="margin-bottom: 10px;"><b>${key}</b>: ${value.old} → ${value.new}</li>`;
+                    }
+                    changeDetails += '</ul>';
+                }
 
-//     let stepIndex = 0;
-//     const stepInterval = setInterval(() => {
-//         if (stepIndex < steps.length) {
-//             loadingText.textContent = steps[stepIndex++];
-//         } else {
-//             clearInterval(stepInterval);
-//         }
-//     }, 1000);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    html: `${successMessage}${changeDetails ? '<br>' + changeDetails : ''}`,
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        popup: 'swal-wide'
+                    }
+                }).then(() => {
+                    window.location.href = '/student_Enrollment_Form/manage_student';
+                });
+            }, remainingTime);
+        })
+        .catch(error => {
+            console.error('Submission error:', error);
+            overlay.style.visibility = 'hidden';
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'Failed to submit form',
+                confirmButtonText: 'OK'
+            });
+        });
+}
 
-//     console.log(`Submitting to ${endpoint} with data:`, JSON.stringify(formData, null, 2)); // Debug log
-
-//     const minimumLoadingTime = 6000;
-//     const startTime = Date.now();
-
-//     fetch(endpoint, {
-//         method: 'POST',
-//         headers: { 'Content-Type': 'application/json' },
-//         body: JSON.stringify(formData)
-//     })
-//         .then(response => {
-//             if (!response.ok) throw new Error(`Server error: ${response.status}`);
-//             return response.json();
-//         })
-//         .then(data => {
-//             if (data.error) throw new Error(data.error);
-//             const elapsedTime = Date.now() - startTime;
-//             const remainingTime = Math.max(0, minimumLoadingTime - elapsedTime);
-
-//             setTimeout(() => {
-//                 overlay.style.visibility = 'hidden';
-//                 Swal.fire({
-//                     icon: 'success',
-//                     title: 'Success',
-//                     text: successMessage,
-//                     confirmButtonText: 'OK'
-//                 });
-//             }, remainingTime);
-//         })
-//         .catch(error => {
-//             console.error('Submission error:', error);
-//             overlay.style.visibility = 'hidden';
-//             Swal.fire({
-//                 icon: 'error',
-//                 title: 'Error',
-//                 text: error.message || 'Failed to submit form',
-//                 confirmButtonText: 'OK'
-//             });
-//         });
-// }
+const swalStyles = document.createElement('style');
+swalStyles.innerHTML = `
+    .swal-wide {
+        width: auto !important;
+    }
+`;
+document.head.appendChild(swalStyles);

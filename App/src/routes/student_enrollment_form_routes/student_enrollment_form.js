@@ -567,7 +567,7 @@ router.post('/submitEnrollmentForm', (req, res) => {
     const formData = req.body;
 
     // Log the received data for debugging
-    console.log('Received data:', JSON.stringify(formData, null, 2));
+   // console.log('Received data:', JSON.stringify(formData, null, 2));
 
     if (!formData || !formData.studentInformation || !formData.guardianInformation || !formData.academicInformation || !formData.feesInformation || !formData.transportInformation) {
         return res.status(400).json({ error: 'Invalid data received' });
@@ -732,11 +732,11 @@ router.post('/submitEnrollmentForm', (req, res) => {
                 }
 
                 const newStudentId = (incrementResult[0].maxStudentId || 0) + 1;
-                console.log(`Fetched student_id: ${incrementResult[0].maxStudentId}, New student_id: ${newStudentId}`);
+                //console.log(`Fetched student_id: ${incrementResult[0].maxStudentId}, New student_id: ${newStudentId}`);
 
                 // Generate the UID for insertion using the new student_id and school name
                 const appUid = `${formattedSchoolName}_student_${newStudentId}`;
-                console.log(`Generated app_uid: ${appUid}`);
+                //console.log(`Generated app_uid: ${appUid}`);
 
                 const query = `INSERT INTO ${tableName} (
                     student_id, Firstname, Middlename, Surname, Name, DOB, Age, POB, Gender, Blood_Group, Address, 
@@ -953,12 +953,13 @@ function generateUsernameAndPassword(fullName, schoolName, grNo) {
 }
 
 
+////////////////////////// FETCH STUDENTS BASED ON SECTION AND GR ////////////////
 
 router.get("/fetch-student", (req, res) => {
     const { grno, name, section } = req.query;
 
     // Log the received query parameters
-    console.log("Received query parameters:", { grno, name, section });
+    //console.log("Received query parameters:", { grno, name, section });
 
     // Validate input parameters
     if (!section || (!grno && !name)) {
@@ -977,7 +978,7 @@ router.get("/fetch-student", (req, res) => {
     }
     
     // Log the determined table name
-    console.log("Using table:", tableName);
+    //console.log("Using table:", tableName);
 
     // Construct the SQL query
     let query = `SELECT * FROM ${tableName} WHERE is_active = 1 AND `;
@@ -1018,196 +1019,351 @@ router.get("/fetch-student", (req, res) => {
     });
 });
 
-// router.post('/updateStudentDetails', (req, res) => {
-//     const formData = req.body;
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//     console.log('Received update data:', JSON.stringify(formData, null, 2));
 
-//     if (!formData || !formData.academicInformation || !formData.academicInformation.grNo) {
-//         return res.status(400).json({ error: 'Invalid data received or grNo missing' });
-//     }
 
-//     const {
-//         studentInformation, guardianInformation, academicInformation, feesInformation,
-//         transportInformation, consent, package_breakup, total_package
-//     } = formData;
 
-//     const { firstName, middleName, lastName, fullName, dob, placeOfBirth, age, gender, bloodGroup,
-//         studentContact, currentAddress, nationality, religion, category, caste, alpsankhyak,
-//         domicile, motherTongue, aadharNo, medicalStatus, medicalDescription, documents } = studentInformation;
+//////////////////////////// UPDATE STUDENT ENDPOINT ///////////////////////////////////////////
 
-//     const { father, mother, localGuardian } = guardianInformation;
 
-//     const { section, grNo, admissionDate, standard, division, saralId, aaparId, penId,
-//         lastSchoolAttended, classCompleted, percentage } = academicInformation;
+router.post('/updateStudentDetails', (req, res) => {
+    const formData = req.body;
 
-//     const { transport_needed, transport_tagged, transport_pickup_drop } = transportInformation;
+    console.log('Received update data:', JSON.stringify(formData, null, 2));
 
-//     const consentText = consent.selected;
+    if (!formData || !formData.academicInformation || !formData.academicInformation.grNo) {
+        return res.status(400).json({ error: 'Invalid data received or grNo missing' });
+    }
 
-//     const studentDetails = {
-//         Firstname: firstName, Middlename: middleName, Surname: lastName, Name: fullName,
-//         DOB: dob, Age: age, POB: placeOfBirth, Gender: gender, Blood_Group: bloodGroup,
-//         Address: currentAddress.cityVillage, landmark: currentAddress.landmark, taluka: currentAddress.taluka,
-//         district: currentAddress.district, state: currentAddress.state, pin_code: currentAddress.pinCode,
-//         student_phone_no: studentContact, Adhar_no: aadharNo, Religion: religion, Nationality: nationality,
-//         Category: category, Caste: caste, Domicile: domicile, Mother_Tongue: motherTongue,
-//         Documents_Submitted: documents, Father_name: father.firstName, F_qualification: father.qualification,
-//         F_occupation: father.occupation, F_mobile_no: father.contactNumber, Grand_father: father.middleName,
-//         Mother_name: mother.firstName, M_Qualification: mother.qualification, M_occupation: mother.occupation,
-//         M_mobile_no: mother.contactNumber, guardian_name: localGuardian.name, guardian_contact: localGuardian.contact,
-//         guardian_relation: localGuardian.relation, guardian_address: localGuardian.fullAddress,
-//         guardian_landmark: localGuardian.landmark, guardian_pin_code: localGuardian.pinCode,
-//         Section: section, Grno: grNo, Admission_Date: admissionDate, Standard: standard, Division: division,
-//         Last_School: lastSchoolAttended, class_completed: classCompleted, percentage_last_school: percentage?.toString() || '',
-//         package_breakup: package_breakup, total_package: total_package, transport_needed: transport_needed,
-//         transport_tagged: transport_tagged, transport_pickup_drop: transport_pickup_drop, Consent: consentText,
-//         medical_status: medicalStatus, medical_description: medicalDescription, alpsankhyak: alpsankhyak,
-//         saral_id: saralId, apar_id: aaparId, pen_id: penId, admitted_class: standard
-//     };
+    const {
+        studentInformation,
+        guardianInformation,
+        academicInformation,
+        feesInformation,
+        transportInformation,
+        consent,
+        package_breakup,
+        total_package
+    } = formData;
 
-//     const schoolName = req.cookies.schoolName;
-//     if (!schoolName) {
-//         return res.status(400).json({ error: 'School name is required' });
-//     }
+    const {
+        firstName,
+        middleName,
+        lastName,
+        fullName,
+        dob,
+        placeOfBirth,
+        age,
+        gender,
+        bloodGroup,
+        studentContact,
+        currentAddress,
+        nationality,
+        religion,
+        category,
+        caste,
+        alpsankhyak,
+        domicile,
+        motherTongue,
+        aadharNo,
+        medicalStatus,
+        medicalDescription,
+        documents
+    } = studentInformation;
 
-//     let tableName = 'test_student_details';
-//     if (section.toLowerCase() === 'primary') {
-//         tableName = 'primary_student_details';
-//     } else if (section.toLowerCase() === 'pre-primary') {
-//         tableName = 'pre_primary_student_details';
-//     }
+    const {
+        father,
+        mother,
+        localGuardian
+    } = guardianInformation;
 
-//     req.connectionPool.getConnection((err, connection) => {
-//         if (err) {
-//             return res.status(500).json({ error: 'Database connection failed' });
-//         }
+    const {
+        section,
+        grNo,
+        admissionDate,
+        standard,
+        division,
+        saralId,
+        aaparId,
+        penId,
+        lastSchoolAttended,
+        classCompleted,
+        percentage
+    } = academicInformation;
 
-//         connection.beginTransaction(error => {
-//             if (error) {
-//                 connection.release();
-//                 return res.status(500).json({ error: 'Transaction initiation failed' });
-//             }
+    const {
+        transport_needed,
+        transport_tagged,
+        transport_pickup_drop
+    } = transportInformation;
 
-//             const updateQuery = `
-//                 UPDATE ${tableName} SET
-//                     Firstname = ?, Middlename = ?, Surname = ?, Name = ?, DOB = ?, Age = ?, POB = ?, Gender = ?, 
-//                     Blood_Group = ?, Address = ?, landmark = ?, taluka = ?, district = ?, state = ?, pin_code = ?, 
-//                     student_phone_no = ?, Adhar_no = ?, Religion = ?, Nationality = ?, Category = ?, Caste = ?, 
-//                     Domicile = ?, Mother_Tongue = ?, Documents_Submitted = ?, Father_name = ?, F_qualification = ?, 
-//                     F_occupation = ?, F_mobile_no = ?, Grand_father = ?, Mother_name = ?, M_Qualification = ?, 
-//                     M_occupation = ?, M_mobile_no = ?, guardian_name = ?, guardian_contact = ?, guardian_relation = ?, 
-//                     guardian_address = ?, guardian_landmark = ?, guardian_pin_code = ?, Section = ?, Admission_Date = ?, 
-//                     Standard = ?, Division = ?, Last_School = ?, class_completed = ?, percentage_last_school = ?, 
-//                     package_breakup = ?, total_package = ?, transport_needed = ?, transport_tagged = ?, 
-//                     transport_pickup_drop = ?, consent_text = ?, medical_status = ?, medical_description = ?, 
-//                     alpsankhyak = ?, saral_id = ?, apar_id = ?, pen_id = ?, admitted_class = ?
-//                 WHERE Grno = ?
-//             `;
+    const consentText = consent.selected;
 
-//             const values = [
-//                 studentDetails.Firstname, studentDetails.Middlename, studentDetails.Surname, studentDetails.Name,
-//                 studentDetails.DOB, studentDetails.Age, studentDetails.POB, studentDetails.Gender,
-//                 studentDetails.Blood_Group, studentDetails.Address, studentDetails.landmark, studentDetails.taluka,
-//                 studentDetails.district, studentDetails.state, studentDetails.pin_code, studentDetails.student_phone_no,
-//                 studentDetails.Adhar_no, studentDetails.Religion, studentDetails.Nationality, studentDetails.Category,
-//                 studentDetails.Caste, studentDetails.Domicile, studentDetails.Mother_Tongue, studentDetails.Documents_Submitted,
-//                 studentDetails.Father_name, studentDetails.F_qualification, studentDetails.F_occupation, studentDetails.F_mobile_no,
-//                 studentDetails.Grand_father, studentDetails.Mother_name, studentDetails.M_Qualification, studentDetails.M_occupation,
-//                 studentDetails.M_mobile_no, studentDetails.guardian_name, studentDetails.guardian_contact, studentDetails.guardian_relation,
-//                 studentDetails.guardian_address, studentDetails.guardian_landmark, studentDetails.guardian_pin_code,
-//                 studentDetails.Section, studentDetails.Admission_Date, studentDetails.Standard, studentDetails.Division,
-//                 studentDetails.Last_School, studentDetails.class_completed, studentDetails.percentage_last_school,
-//                 studentDetails.package_breakup, studentDetails.total_package, studentDetails.transport_needed,
-//                 studentDetails.transport_tagged, studentDetails.transport_pickup_drop, studentDetails.Consent,
-//                 studentDetails.medical_status, studentDetails.medical_description, studentDetails.alpsankhyak,
-//                 studentDetails.saral_id, studentDetails.apar_id, studentDetails.pen_id, studentDetails.admitted_class,
-//                 studentDetails.Grno
-//             ];
+    const studentDetails = {
+        Firstname: firstName,
+        Middlename: middleName,
+        Surname: lastName,
+        Name: fullName,
+        DOB: dob,
+        Age: age,
+        POB: placeOfBirth,
+        Gender: gender,
+        Blood_Group: bloodGroup,
+        Address: currentAddress.cityVillage,
+        landmark: currentAddress.landmark,
+        taluka: currentAddress.taluka,
+        district: currentAddress.district,
+        state: currentAddress.state,
+        pin_code: currentAddress.pinCode,
+        student_phone_no: studentContact,
+        Adhar_no: aadharNo,
+        Religion: religion,
+        Nationality: nationality,
+        Category: category,
+        Caste: caste,
+        Domicile: domicile,
+        Mother_Tongue: motherTongue,
+        Documents_Submitted: documents,
+        Father_name: father.firstName,
+        F_qualification: father.qualification,
+        F_occupation: father.occupation,
+        F_mobile_no: father.contactNumber,
+        Grand_father: father.middleName,
+        Mother_name: mother.firstName,
+        M_Qualification: mother.qualification,
+        M_occupation: mother.occupation,
+        M_mobile_no: mother.contactNumber,
+        guardian_name: localGuardian.name,
+        guardian_contact: localGuardian.contact,
+        guardian_relation: localGuardian.relation,
+        guardian_address: localGuardian.fullAddress,
+        guardian_landmark: localGuardian.landmark,
+        guardian_pin_code: localGuardian.pinCode,
+        Section: section,
+        Grno: grNo,
+        Admission_Date: admissionDate,
+        Standard: standard,
+        Division: division,
+        Last_School: lastSchoolAttended,
+        class_completed: classCompleted,
+        percentage_last_school: percentage?.toString() || '',
+        package_breakup: package_breakup,
+        total_package: total_package,
+        transport_needed: transport_needed,
+        transport_tagged: transport_tagged,
+        transport_pickup_drop: transport_pickup_drop,
+        Consent: consentText,
+        medical_status: medicalStatus,
+        medical_description: medicalDescription,
+        alpsankhyak: alpsankhyak,
+        saral_id: saralId,
+        apar_id: aaparId,
+        pen_id: penId,
+        admitted_class: standard,
+        status: 1
+    };
 
-//             connection.query(updateQuery, values, (error, result) => {
-//                 if (error) {
-//                     return connection.rollback(() => {
-//                         console.error('Error updating student details:', error);
-//                         connection.release();
-//                         res.status(500).json({ error: 'Error updating student details' });
-//                     });
-//                 }
+    const schoolName = req.cookies.schoolName;
+    if (!schoolName) {
+        return res.status(400).json({ error: 'School name is required' });
+    }
 
-//                 if (result.affectedRows === 0) {
-//                     return connection.rollback(() => {
-//                         connection.release();
-//                         res.status(404).json({ error: 'No student found with the provided Grno' });
-//                     });
-//                 }
+    let tableName = 'test_student_details';
+    if (section.toLowerCase() === 'primary') {
+        tableName = 'primary_student_details';
+    } else if (section.toLowerCase() === 'pre-primary') {
+        tableName = 'pre_primary_student_details';
+    }
 
-//                 console.log(`Updated ${result.affectedRows} row(s) for Grno: ${grNo}`);
+    req.connectionPool.getConnection((err, connection) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database connection failed' });
+        }
 
-//                 // Handle transport updates if needed
-//                 if (transport_needed === 1) {
-//                     const concatenatedClass = `${standard} ${division}`;
-//                     const transportPickDropAddress = transport_pickup_drop;
-//                     const vehicleNo = transport_tagged;
+        connection.beginTransaction(error => {
+            if (error) {
+                connection.release();
+                return res.status(500).json({ error: 'Transaction initiation failed' });
+            }
 
-//                     const getIdQuery = `
-//                         SELECT id 
-//                         FROM transport_schedule_details
-//                         WHERE vehicle_no = ? 
-//                         AND classes_allotted LIKE ? 
-//                         AND route_stops LIKE ?
-//                     `;
+            // Select all current student data
+            const selectQuery = `
+                SELECT * 
+                FROM ${tableName} 
+                WHERE Grno = ? AND Section = ?
+            `;
 
-//                     connection.query(getIdQuery, [vehicleNo, `%${concatenatedClass}%`, `%${transportPickDropAddress}%`], (getIdError, results) => {
-//                         if (getIdError) {
-//                             return connection.rollback(() => {
-//                                 console.error('Error fetching transport schedule id:', getIdError);
-//                                 connection.release();
-//                                 res.status(500).json({ error: 'Error fetching transport schedule id' });
-//                             });
-//                         }
+            connection.query(selectQuery, [grNo, section], (selectError, results) => {
+                if (selectError) {
+                    return connection.rollback(() => {
+                        console.error('Error selecting current student data:', selectError);
+                        connection.release();
+                        res.status(500).json({ error: 'Error selecting current student data' });
+                    });
+                }
 
-//                         if (results.length > 0) {
-//                             const transportId = results[0].id;
-//                             const transportUpdateQuery = `
-//                                 UPDATE transport_schedule_details
-//                                 SET students_tagged = COALESCE(students_tagged, 0) + 1
-//                                 WHERE id = ?
-//                             `;
+                if (results.length === 0) {
+                    return connection.rollback(() => {
+                        connection.release();
+                        res.status(404).json({ error: 'No student found with the provided Grno and section' });
+                    });
+                }
 
-//                             connection.query(transportUpdateQuery, [transportId], (transportUpdateError) => {
-//                                 if (transportUpdateError) {
-//                                     return connection.rollback(() => {
-//                                         console.error('Error updating transport schedule:', transportUpdateError);
-//                                         connection.release();
-//                                         res.status(500).json({ error: 'Error updating transport schedule' });
-//                                     });
-//                                 }
-//                                 commitTransaction(connection, res, studentDetails);
-//                             });
-//                         } else {
-//                             commitTransaction(connection, res, studentDetails);
-//                         }
-//                     });
-//                 } else {
-//                     commitTransaction(connection, res, studentDetails);
-//                 }
-//             });
-//         });
-//     });
-// });
+                const currentStudentData = results[0];
 
-// function commitTransaction(connection, res, studentDetails) {
-//     connection.commit(commitError => {
-//         if (commitError) {
-//             return connection.rollback(() => {
-//                 console.error('Transaction commit failed:', commitError);
-//                 connection.release();
-//                 res.status(500).json({ error: 'Transaction commit failed' });
-//             });
-//         }
-//         connection.release();
-//         res.json({ message: 'Student details updated successfully!', data: studentDetails });
-//     });
-// }
+                // Compare current data with new data and identify changes
+                const changes = {};
+                for (const key in currentStudentData) {
+                    if (currentStudentData.hasOwnProperty(key) && studentDetails.hasOwnProperty(key)) {
+                        const oldValue = currentStudentData[key] != null ? currentStudentData[key].toString() : '';
+                        const newValue = studentDetails[key] != null ? studentDetails[key].toString() : '';
+                        if (oldValue !== newValue) {
+                            changes[key] = {
+                                old: currentStudentData[key],
+                                new: studentDetails[key]
+                            };
+                        }
+                    }
+                }
+
+                console.log('Changes:', JSON.stringify(changes, null, 2));
+
+                // Generate the new username and password
+                const { username, password } = generateUsernameAndPassword(fullName, schoolName, grNo);
+                const studentName = `${firstName} ${middleName} ${lastName}`;
+
+                // Perform the update
+                const updateQuery = `
+                    UPDATE ${tableName} SET
+                        Firstname = ?, Middlename = ?, Surname = ?, Name = ?, DOB = ?, Age = ?, POB = ?, Gender = ?, 
+                        Blood_Group = ?, Address = ?, landmark = ?, taluka = ?, district = ?, state = ?, pin_code = ?, 
+                        student_phone_no = ?, Adhar_no = ?, Religion = ?, Nationality = ?, Category = ?, Caste = ?, 
+                        Domicile = ?, Mother_Tongue = ?, Documents_Submitted = ?, Father_name = ?, F_qualification = ?, 
+                        F_occupation = ?, F_mobile_no = ?, Grand_father = ?, Mother_name = ?, M_Qualification = ?, 
+                        M_occupation = ?, M_mobile_no = ?, guardian_name = ?, guardian_contact = ?, guardian_relation = ?, 
+                        guardian_address = ?, guardian_landmark = ?, guardian_pin_code = ?, Section = ?, Admission_Date = ?, 
+                        Standard = ?, Division = ?, Last_School = ?, class_completed = ?, percentage_last_school = ?, 
+                        package_breakup = ?, total_package = ?, transport_needed = ?, transport_tagged = ?, 
+                        transport_pickup_drop = ?, consent_text = ?, medical_status = ?, medical_description = ?, 
+                        alpsankhyak = ?, saral_id = ?, apar_id = ?, pen_id = ?, admitted_class = ?
+                    WHERE Grno = ?
+                `;
+
+                const updateValues = [
+                    studentDetails.Firstname,
+                    studentDetails.Middlename,
+                    studentDetails.Surname,
+                    studentDetails.Name,
+                    studentDetails.DOB,
+                    studentDetails.Age,
+                    studentDetails.POB,
+                    studentDetails.Gender,
+                    studentDetails.Blood_Group,
+                    studentDetails.Address,
+                    studentDetails.landmark,
+                    studentDetails.taluka,
+                    studentDetails.district,
+                    studentDetails.state,
+                    studentDetails.pin_code,
+                    studentDetails.student_phone_no,
+                    studentDetails.Adhar_no,
+                    studentDetails.Religion,
+                    studentDetails.Nationality,
+                    studentDetails.Category,
+                    studentDetails.Caste,
+                    studentDetails.Domicile,
+                    studentDetails.Mother_Tongue,
+                    studentDetails.Documents_Submitted,
+                    studentDetails.Father_name,
+                    studentDetails.F_qualification,
+                    studentDetails.F_occupation,
+                    studentDetails.F_mobile_no,
+                    studentDetails.Grand_father,
+                    studentDetails.Mother_name,
+                    studentDetails.M_Qualification,
+                    studentDetails.M_occupation,
+                    studentDetails.M_mobile_no,
+                    studentDetails.guardian_name,
+                    studentDetails.guardian_contact,
+                    studentDetails.guardian_relation,
+                    studentDetails.guardian_address,
+                    studentDetails.guardian_landmark,
+                    studentDetails.guardian_pin_code,
+                    studentDetails.Section,
+                    studentDetails.Admission_Date,
+                    studentDetails.Standard,
+                    studentDetails.Division,
+                    studentDetails.Last_School,
+                    studentDetails.class_completed,
+                    studentDetails.percentage_last_school,
+                    studentDetails.package_breakup,
+                    studentDetails.total_package,
+                    studentDetails.transport_needed,
+                    studentDetails.transport_tagged,
+                    studentDetails.transport_pickup_drop,
+                    studentDetails.Consent,
+                    studentDetails.medical_status,
+                    studentDetails.medical_description,
+                    studentDetails.alpsankhyak,
+                    studentDetails.saral_id,
+                    studentDetails.apar_id,
+                    studentDetails.pen_id,
+                    studentDetails.admitted_class,
+                    grNo
+                ];
+
+                connection.query(updateQuery, updateValues, (updateError, updateResult) => {
+                    if (updateError) {
+                        return connection.rollback(() => {
+                            console.error('Error updating student details:', updateError);
+                            connection.release();
+                            res.status(500).json({ error: 'Error updating student details' });
+                        });
+                    }
+
+                    if (updateResult.affectedRows === 0) {
+                        return connection.rollback(() => {
+                            connection.release();
+                            res.status(404).json({ error: 'No student found with the provided Grno' });
+                        });
+                    }
+
+                    const updateAndroidQuery = `
+                    UPDATE android_app_users SET
+                        username = ?, 
+                        password = ?,
+                        name = ?
+                    WHERE uid = ?
+                    `;
+
+                    const androidUpdateValues = [username, password, studentName, currentStudentData.app_uid];
+
+                    connection_auth.query(updateAndroidQuery, androidUpdateValues, (androidUpdateError, androidUpdateResult) => {
+                        if (androidUpdateError) {
+                            return connection.rollback(() => {
+                                console.error('Error updating android_app_users:', androidUpdateError);
+                                connection.release();
+                                res.status(500).json({ error: 'Error updating android_app_users' });
+                            });
+                        }
+
+                        connection.commit(commitError => {
+                            if (commitError) {
+                                return connection.rollback(() => {
+                                    console.error('Transaction commit failed:', commitError);
+                                    connection.release();
+                                    res.status(500).json({ error: 'Transaction commit failed' });
+                                });
+                            }
+                            connection.release();
+                            res.json({ message: 'Student details and Android app user updated successfully!', changes });
+                        });
+                    });
+                });
+            });
+        });
+    });
+});
 
 module.exports = router;

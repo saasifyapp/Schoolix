@@ -2556,36 +2556,84 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+
 document.addEventListener("DOMContentLoaded", function () {
     const transportStandard = document.getElementById("transportStandard");
     const transportDivision = document.getElementById("transportDivision");
     const pickDropAddress = document.getElementById("pickDropAddress");
     const vehicleRunning = document.getElementById("vehicleRunning");
     const noVehicleFound = document.getElementById("noVehicleFound");
+    const vehicleInfo = document.getElementById("vehicleInfo");
 
     function checkFields() {
-        if (pickDropAddress.value.trim() && vehicleRunning.value.trim()) {
+        if (vehicleRunning.value.trim()) {
+            noVehicleFound.checked = false;
             noVehicleFound.disabled = true;
         } else {
             noVehicleFound.disabled = false;
+            noVehicleFound.checked = true;
         }
     }
 
     function resetFields() {
         if (noVehicleFound.checked) {
-            pickDropAddress.value = "";
+            // Do not clear or disable pickDropAddress
             vehicleRunning.value = "";
-
-            pickDropAddress.disabled = true;
             vehicleRunning.disabled = true;
+            clearAndHideVehicleInfo();
         } else {
             pickDropAddress.disabled = false;
             vehicleRunning.disabled = false;
         }
     }
 
-    pickDropAddress.addEventListener("input", checkFields);
-    vehicleRunning.addEventListener("input", checkFields);
-    noVehicleFound.addEventListener("change", resetFields);
-});
+    function clearAndHideVehicleInfo() {
+        vehicleInfo.innerHTML = "";
+        vehicleInfo.style.display = "none";
+    }
 
+    function showVehicleInfo() {
+        vehicleInfo.style.display = "block";
+    }
+
+    pickDropAddress.addEventListener("input", checkFields);
+    vehicleRunning.addEventListener("input", function() {
+        checkFields();
+        if (vehicleRunning.value.trim() === "") {
+            clearAndHideVehicleInfo();
+        } else {
+            showVehicleInfo();
+        }
+    });
+    noVehicleFound.addEventListener("change", resetFields);
+
+    // Initial check on page load
+    checkFields();
+
+    // Custom event to be dispatched when vehicleRunning is updated programmatically
+    const vehicleRunningEvent = new Event('vehicleRunningUpdate', {
+        bubbles: true,
+        cancelable: true
+    });
+
+    // Add a listener for the custom event
+    vehicleRunning.addEventListener('vehicleRunningUpdate', function() {
+        checkFields();
+        if (vehicleRunning.value.trim() === "") {
+            clearAndHideVehicleInfo();
+        } else {
+            showVehicleInfo();
+        }
+    });
+
+    // Example function to demonstrate programmatically setting the value
+    function updateFields() {
+        // Populate the field programmatically
+        vehicleRunning.value = "Some Value"; // This is just an example, set your actual value
+        // Dispatch the custom event to ensure checkFields is called
+        vehicleRunning.dispatchEvent(vehicleRunningEvent);
+    }
+
+    // Simulate programmatically updating the field
+    updateFields();
+});

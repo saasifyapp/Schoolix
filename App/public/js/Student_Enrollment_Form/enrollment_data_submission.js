@@ -202,7 +202,7 @@ function collectTransportInformation() {
             transport_tagged: document.getElementById('vehicleRunning').value.trim(), // Assuming 'vehicleRunning' is now 'transport_tagged'
             transport_pickup_drop: document.getElementById('pickDropAddress').value.trim(), // Assuming 'pickDropAddress' is 'transport_pickup_drop'
             vehicleDetails: document.getElementById('vehicleInfo')
-                ? document.getElementById('vehicleInfo').innerText.trim()
+                ? document.getElementById('vehicleRunning').innerText.trim()
                 : null,
             noVehicleFound: document.getElementById('noVehicleFound').checked
         };
@@ -399,7 +399,58 @@ document.getElementById('guardian-next').addEventListener('click', function () {
 
         document.getElementById('guardian-information').style.display = 'none';
         document.getElementById('academic-information').style.display = 'block';
-    }
+    } 
+});
+
+
+// Add event listener for Local Guardian radio buttons to clear fields when "No" is selected
+const localGuardianRadios = document.querySelectorAll('input[name="localGuardianNeeded"]');
+localGuardianRadios.forEach(radio => {
+    radio.addEventListener('change', function () {
+        if (this.value === 'no') {
+            const localGuardianFields = [
+                'guardianName',
+                'guardianContact',
+                'guardianRelation',
+                'guardian_fullAddress',
+                'guardianAddressLandmark',
+                'guardianpinCode',
+            ];
+
+            localGuardianFields.forEach(fieldId => {
+                const inputElement = document.getElementById(fieldId);
+                if (inputElement) {
+                    inputElement.value = ''; // Clear the field value
+                }
+            });
+        }
+    });
+});
+
+// Add event listener for Transport radio buttons to clear fields when "No" is selected
+const transportRadios = document.querySelectorAll('input[name="transportNeeded"]');
+transportRadios.forEach(radio => {
+    radio.addEventListener('change', function () {
+        if (this.value === 'No') {
+            const transportFields = [
+                'pickDropAddress',
+                'vehicleRunning',
+            ];
+
+            transportFields.forEach(fieldId => {
+                const inputElement = document.getElementById(fieldId);
+                if (inputElement) {
+                    inputElement.value = ''; // Clear the field value
+                }
+            });
+
+            // Additional: Hide the transport details section when 'No' is selected
+            toggleTransportDetails(false);
+        } else if (this.value === 'Yes') {
+            // Show the transport details section when 'Yes' is selected
+            toggleTransportDetails(true);
+        }
+    });
 });
 
 document.getElementById('academic-next').addEventListener('click', function () {
@@ -555,8 +606,7 @@ document.getElementById('transport-next').addEventListener('click', function () 
         const transportFields = [
             { id: 'transportStandard', label: 'Standard' },
             { id: 'transportDivision', label: 'Division' },
-            { id: 'pickDropAddress', label: 'Pick/Drop Address' },
-            { id: 'vehicleRunning', label: 'Vehicle Running' }
+            { id: 'pickDropAddress', label: 'Pick/Drop Address' }
         ];
 
         // Validate each transport-related field
@@ -569,16 +619,25 @@ document.getElementById('transport-next').addEventListener('click', function () 
         });
 
         // Validation for transport information
-        const noVehicleFound = document.getElementById('noVehicleFound').checked;
+        const noVehicleFoundCheckbox = document.getElementById('noVehicleFound');
         const vehicleRunningField = document.getElementById('vehicleRunning');
         const vehicleRunning = vehicleRunningField.value.trim();
 
-        if (noVehicleFound) {
-            // If "No Vehicle Found" is checked, ensure "Vehicle Running" is empty
+        if (vehicleRunning) {
+            // If vehicleRunning has value, uncheck and disable the checkbox
+            noVehicleFoundCheckbox.checked = false;
+            noVehicleFoundCheckbox.disabled = true;
+        } else {
+            // If vehicleRunning is empty, enable the checkbox
+            noVehicleFoundCheckbox.disabled = false;
+            noVehicleFoundCheckbox.checked = true;
+        }
+
+        if (noVehicleFoundCheckbox.checked) {
+            // Clear the vehicle running field if "No Vehicle Found" is checked
             if (vehicleRunning !== "") {
-                // Clear the vehicle running field if it's not empty
                 vehicleRunningField.value = "";
-                console.log("Vehicle Running field cleared as 'No Vehicle Found' is checked.");
+                //console.log("Vehicle Running field cleared as 'No Vehicle Found' is checked.");
             }
             // Skip further validation for "Vehicle Running"
             isFormValid = true;
@@ -589,33 +648,31 @@ document.getElementById('transport-next').addEventListener('click', function () 
                 isFormValid = false; // Mark form as invalid
             }
         }
-
-
     }
 
-   // If the form is invalid, show an alert with the missing fields
-   if (!isFormValid) {
-    let errorContent = '';
+    // If the form is invalid, show an alert with the missing fields
+    if (!isFormValid) {
+        let errorContent = '';
 
-    if (errorMessage) {
-        errorContent = `<p>${errorMessage}</p>`;
+        if (errorMessage) {
+            errorContent = `<p>${errorMessage}</p>`;
+        }
+
+        if (missingFields.length > 0) {
+            errorContent += `<p>The following fields are required:</p><ul>${missingFields.map(field => `<li>${field}</li>`).join('')}</ul>`;
+        }
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Incomplete Form',
+            html: errorContent,
+        });
+        return; // Stop execution if form is invalid
     }
-
-    if (missingFields.length > 0) {
-        errorContent += `<p>The following fields are required:</p><ul>${missingFields.map(field => `<li>${field}</li>`).join('')}</ul>`;
-    }
-
-    Swal.fire({
-        icon: 'error',
-        title: 'Incomplete Form',
-        html: errorContent,
-    });
-    return; // Stop execution if form is invalid
-}
 
     // If form is valid, proceed to the next section
     if (isFormValid) {
-        console.log(formData);
+        console.log('Form Data:', formData);
         collectTransportInformation(); // Collect transport data
         populateReviewValues(); // Populate review section with collected data
 
@@ -977,7 +1034,7 @@ function autofillFormFields() {
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("review-next").addEventListener("click", function (event) {
         event.preventDefault(); // Prevent the default button behavior
-console.log("Enroll")
+
         const formModeInput = document.getElementById('formMode');
         const formMode = formModeInput ? formModeInput.value : '';
 
@@ -1000,8 +1057,11 @@ console.log("Enroll")
             collectConsent();
             // Submit all the form data
             submitForm(); 
+
+            console.log("Current mode:", formMode)
+
         } else {
-            console.log("Form mode is not 'insert'. Current mode:", formMode);
+            //console.log("Form mode is not 'insert'. Current mode:", formMode);
         }
     });
 });
