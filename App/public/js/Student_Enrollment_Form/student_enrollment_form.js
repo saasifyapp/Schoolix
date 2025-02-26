@@ -329,15 +329,21 @@ function addFullNameUpdateListeners() {
     const nameFields = ['firstName', 'middleName', 'lastName'];
 
     nameFields.forEach(field => {
-        document.getElementById(field).addEventListener('input', function () {
-            updateFullName();
-        });
+        document.getElementById(field).addEventListener('input', updateFullName);
     });
+}
+
+// Function to manually trigger the 'input' event
+function triggerInputEvent(elementId) {
+    const event = new Event('input', {
+        bubbles: true,
+        cancelable: true,
+    });
+    document.getElementById(elementId).dispatchEvent(event);
 }
 
 // Add event listeners to update full name when any name fields are modified
 addFullNameUpdateListeners();
-
 
 
 ////////////////////////////////// AUTOMATIC AGE  ///////////////////////////////////////////
@@ -1298,16 +1304,46 @@ function updateFatherFullName() {
     const fatherFirstName = document.getElementById('fatherFirstName').value.trim();
     const fatherMiddleName = document.getElementById('fatherMiddleName').value.trim();
     const fatherLastName = document.getElementById('fatherLastName').value.trim();
-    document.getElementById('fatherFullName').value = `${fatherFirstName} ${fatherMiddleName} ${fatherLastName}`.trim(); // Update father's full name field
+
+    // Concatenate the names with a space in between, handling cases where middleName might be empty
+    const fullName = [fatherFirstName, fatherMiddleName, fatherLastName].filter(Boolean).join(' ');
+
+    document.getElementById('fatherFullName').value = fullName; // Update father's full name field
 }
 
-// Add event listeners to the father's first name, middle name, and last name input fields
-document.getElementById('fatherFirstName').addEventListener('input', updateFatherFullName);
-document.getElementById('fatherMiddleName').addEventListener('input', updateFatherFullName);
-document.getElementById('fatherLastName').addEventListener('input', updateFatherFullName);
+// Function to add event listeners for father's name inputs to update full name
+function addFatherFullNameUpdateListeners() {
+    const fatherNameFields = ['fatherFirstName', 'fatherMiddleName', 'fatherLastName'];
 
+    fatherNameFields.forEach(field => {
+        document.getElementById(field).addEventListener('input', () => {
+            updateFatherFullName();
+            periodicallyUpdateFullName(); // Reset the periodic update on input
+        });
+    });
+}
 
+// Periodically check and update the full name
+function periodicallyUpdateFullName() {
+    // Clear any existing intervals to avoid multiple intervals running simultaneously
+    if (window.fatherIntervalId) {
+        clearInterval(window.fatherIntervalId);
+    }
 
+    window.fatherIntervalId = setInterval(() => {
+        updateFatherFullName();
+    }, 1000); // Adjust the interval time as needed
+
+    // Stop the periodic function after 5 seconds
+    setTimeout(() => {
+        clearInterval(window.fatherIntervalId);
+        window.fatherIntervalId = null; // Clear the stored interval ID
+    }, 60000); // 5000 milliseconds = 60 seconds
+}
+
+// Add event listeners to update father's full name when any name fields are modified
+addFatherFullNameUpdateListeners();
+periodicallyUpdateFullName();
 
 
 ///////////////// MOTHERS DETAILS ////////////////////
@@ -1316,15 +1352,51 @@ document.getElementById('fatherLastName').addEventListener('input', updateFather
 // Function to update the mother's full name
 function updateMotherFullName() {
     const motherFirstName = document.getElementById('motherFirstName').value.trim();
+    const motherMiddleName = document.getElementById('motherMiddleName')?.value.trim(); // Handle potential middle name field
     const motherLastName = document.getElementById('motherLastName').value.trim();
-    document.getElementById('motherFullName').value = `${motherFirstName} ${motherLastName}`.trim(); // Update mother's full name field
+
+    // Concatenate the names with a space in-between, handling the case where middleName might be empty
+    const fullName = [motherFirstName, motherMiddleName, motherLastName].filter(Boolean).join(' ');
+
+    document.getElementById('motherFullName').value = fullName; // Update mother's full name field
 }
 
-// Add event listeners to the mother's first name, middle name, and last name input fields
-document.getElementById('motherFirstName').addEventListener('input', updateMotherFullName);
-document.getElementById('motherLastName').addEventListener('input', updateMotherFullName);
+// Function to add event listeners for mother's name inputs to update full name
+function addMotherFullNameUpdateListeners() {
+    const motherNameFields = ['motherFirstName', 'motherMiddleName', 'motherLastName'];
 
+    motherNameFields.forEach(field => {
+        const element = document.getElementById(field);
+        if (element) { // Check if the element exists
+            element.addEventListener('input', () => {
+                updateMotherFullName();
+                periodicallyUpdateMotherFullName(); // Reset the periodic update on input
+            });
+        }
+    });
+}
 
+// Periodically check and update the full name
+function periodicallyUpdateMotherFullName() {
+    // Clear any existing intervals to avoid multiple intervals running simultaneously
+    if (window.motherIntervalId) {
+        clearInterval(window.motherIntervalId);
+    }
+
+    window.motherIntervalId = setInterval(() => {
+        updateMotherFullName();
+    }, 1000); // Adjust the interval time as needed
+
+    // Stop the periodic function after 60 seconds
+    setTimeout(() => {
+        clearInterval(window.motherIntervalId);
+        window.motherIntervalId = null; // Clear the stored interval ID
+    }, 60000); // 60000 milliseconds = 60 seconds
+}
+
+// Add event listeners to update mother's full name when any name fields are modified
+addMotherFullNameUpdateListeners();
+periodicallyUpdateMotherFullName();
 
 ///////////////////////////////// LOCAL GUARDIAN DETAILS ////////////////////
 
@@ -2469,20 +2541,47 @@ consentCheckboxes.forEach(checkbox => {
     });
 });
 
+////////////////////////// MEDICAL STATUS AND DESCRIPTION //////////////
 
 document.addEventListener("DOMContentLoaded", function () {
     const medicalStatus = document.getElementById("medicalStatus");
     const medicalDescription = document.getElementById("medicalDescription");
 
-    medicalStatus.addEventListener("change", function () {
+    // Function to update medical description field based on the status
+    function updateMedicalDescription() {
         if (medicalStatus.value === "Unfit") {
             medicalDescription.removeAttribute("readonly");
+            medicalDescription.removeAttribute("disabled");
         } else {
             medicalDescription.setAttribute("readonly", true);
+            medicalDescription.setAttribute("disabled", true);
             medicalDescription.value = "";
         }
-    });
+    }
+
+    // Attach the change event listener for manual changes
+    medicalStatus.addEventListener("change", updateMedicalDescription);
+
+    // Initial call to update the field state based on pre-existing value
+    updateMedicalDescription();
 });
+
+// Helper function to set values with appropriate event dispatching
+function setValue(elementId, value) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.value = value;
+
+        // Manually trigger the change event if it's a select element
+        if (element.tagName === 'SELECT') {
+            const event = new Event('change');
+            element.dispatchEvent(event);
+        }
+    }
+}
+
+
+/////////////////////////////////////////////////
 
 // Function to validate ID inputs
 function validateInput(inputId, errorId, length) {

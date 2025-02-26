@@ -194,11 +194,17 @@ function displaySelectedDocuments(documentsString) {
 ////////////////// SET FULL NAME ////////////
 
 function setFullName(firstName, middleName, lastName) {
-    let fullName = firstName || "";
-    if (middleName) fullName += " " + middleName;
-    if (lastName) fullName += " " + lastName;
+    // Ensure that each part of the name is a string, even if it's null or undefined
+    firstName = firstName || "";
+    middleName = middleName || "";
+    lastName = lastName || "";
+
+    // Concatenate the parts and trim any extra spaces
+    const fullName = `${firstName} ${middleName} ${lastName}`.trim().replace(/\s+/g, ' ');
+    
     return fullName;
 }
+
 
 //////////////// VALIDATE LOCAL GUARDIAN FIELDS ////////////
 

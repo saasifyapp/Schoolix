@@ -45,14 +45,14 @@
             <div id="loadingText" class="loading-text"></div>
         </div>
     </div>
-    
+
 
 
     <div class="enrollment-form">
         <!-- Left Navigation Section -->
-         <!-- Add this hidden input field to your form -->
+        <!-- Add this hidden input field to your form -->
         <input type="hidden" id="formMode" name="formMode" value="insert"> <!-- Default to "insert" -->
-        
+
         <div class="form-navigation">
             <ul>
                 <li id="student-info" class="active">
@@ -159,7 +159,7 @@
                             <span class="form-control-placeholder">City/Village</span>
                             <div id="cityVillageSuggestions" class="suggestions"></div>
                         </div>
-                        
+
                         <div class="form-group">
                             <input type="text" class="form-control" id="taluka" placeholder=" ">
                             <span class="form-control-placeholder">Taluka</span>
@@ -245,27 +245,27 @@
                                 <input type="text" id="documentInput" placeholder="Select Documents">
                             </div>
                             <div id="documentSuggestions" class="suggestions"></div>
-                        </div>                       
+                        </div>
                     </div>
-                   
+
                 </div>
-                
+
                 <div class="input-container">
                     <h3>Medical Information</h3>
                     <div class="form-row">
                         <!-- Medical Status Dropdown -->
                         <div class="form-group" style="flex: 0.3;">
                             <select class="form-control dropdown" id="medicalStatus">
-                                <option value="" selected disabled hidden></option>
+                                <option value="">Select Status</option>
                                 <option value="Fit">Fit</option>
                                 <option value="Unfit">Unfit</option>
                             </select>
                             <span class="form-control-placeholder">Medical Status</span>
                         </div>
-                        
+
                         <!-- Medical Description Textarea -->
                         <div class="form-group">
-                            <input class="form-control" id="medicalDescription" placeholder=" " readonly></input>
+                            <input class="form-control" id="medicalDescription" placeholder=" " readonly disabled></input>
                             <span class="form-control-placeholder">Medical Description</span>
                         </div>
                     </div>
@@ -308,7 +308,8 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <input type="text" class="form-control" id="fatherContactNumber" placeholder=" " maxlength="10">
+                            <input type="text" class="form-control" id="fatherContactNumber" placeholder=" "
+                                maxlength="10">
                             <span class="form-control-placeholder">Father's Contact Number</span>
                             <div id="fatherContactNumberError" class="error-message"></div>
                         </div>
@@ -327,7 +328,7 @@
                     <h3>Mother Details</h3>
                     <div class="form-row">
                         <div class="form-group">
-                            <input type="text" class="form-control" id="motherFirstName" placeholder=" " >
+                            <input type="text" class="form-control" id="motherFirstName" placeholder=" ">
                             <span class="form-control-placeholder">Mother's First Name</span>
                             <div id="motherFirstNameError" class="error-message"></div>
                         </div>
@@ -342,7 +343,8 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <input type="text" class="form-control" id="motherContactNumber" placeholder=" " maxlength="10">
+                            <input type="text" class="form-control" id="motherContactNumber" placeholder=" "
+                                maxlength="10">
                             <span class="form-control-placeholder">Mother's Contact Number</span>
                             <div id="motherContactNumberError" class="error-message"></div>
                         </div>
@@ -383,7 +385,8 @@
                                 <span class="form-control-placeholder">Guardian's Name</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="guardianContact" placeholder=" " maxlength="10">
+                                <input type="text" class="form-control" id="guardianContact" placeholder=" "
+                                    maxlength="10">
                                 <span class="form-control-placeholder">Guardian's Contact</span>
                                 <div id="guardianContactError" class="error-message"></div>
                             </div>
@@ -405,7 +408,8 @@
                                 <span class="form-control-placeholder">Landmark</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="guardianpinCode" placeholder=" " maxlength="6">
+                                <input type="text" class="form-control" id="guardianpinCode" placeholder=" "
+                                    maxlength="6">
                                 <span class="form-control-placeholder">PIN Code</span>
                                 <div id="guardianpinCodeError" class="error-message"></div>
                             </div>
@@ -414,8 +418,10 @@
                 </div>
 
                 <div class="form-navigation-buttons">
-                    <button type="button" class="btn prev-button" id="guardian-prev"><img src="/images/nextPrev.png" alt="Next Icon">Previous</button>
-                    <button type="button" class="btn next-button" id="guardian-next"><img src="/images/nextPrev.png" alt="Next Icon">Next</button>
+                    <button type="button" class="btn prev-button" id="guardian-prev"><img src="/images/nextPrev.png"
+                            alt="Next Icon">Previous</button>
+                    <button type="button" class="btn next-button" id="guardian-next"><img src="/images/nextPrev.png"
+                            alt="Next Icon">Next</button>
                 </div>
             </div>
 
@@ -474,7 +480,7 @@
                         </div>
                     </div>
                 </div>
-                
+
 
 
                 <div class="input-container">
@@ -497,7 +503,7 @@
 
                         </div>
                     </div>
-                    <div class="form-row"> 
+                    <div class="form-row">
                         <div class="form-group">
                             <input type="checkbox" id="newAdmission">
                             <label for="noVehicleFound">Select if no academic history / First time admission.</label>
@@ -505,10 +511,12 @@
                     </div>
                 </div>
 
-                
+
                 <div class="form-navigation-buttons">
-                    <button type="button" class="btn prev-button" id="academic-prev"><img src="/images/nextPrev.png" alt="Next Icon">Previous</button>
-                    <button type="button" class="btn next-button" id="academic-next"><img src="/images/nextPrev.png" alt="Next Icon">Next</button>
+                    <button type="button" class="btn prev-button" id="academic-prev"><img src="/images/nextPrev.png"
+                            alt="Next Icon">Previous</button>
+                    <button type="button" class="btn next-button" id="academic-next"><img src="/images/nextPrev.png"
+                            alt="Next Icon">Next</button>
                 </div>
             </div>
 
@@ -533,9 +541,10 @@
                         </div>
 
                         <div class="form-row">
-                            <button type="button" class="btn generate-package-button" id="generatePackageBtn">Generate Package</button>
+                            <button type="button" class="btn generate-package-button" id="generatePackageBtn">Generate
+                                Package</button>
                         </div>
-                        
+
                     </div>
 
                     <div class="form-row">
@@ -551,13 +560,15 @@
                             </tbody>
                         </table>
                     </div>
-                   
+
                 </div>
                 <div class="form-navigation-buttons">
 
-                  
-                    <button type="button" class="btn prev-button" id="fees-prev"> <img src="/images/nextPrev.png" alt="Next Icon">Previous</button>
-                    <button type="button" class="btn next-button" id="fees-next"> <img src="/images/nextPrev.png" alt="Next Icon">Next</button>
+
+                    <button type="button" class="btn prev-button" id="fees-prev"> <img src="/images/nextPrev.png"
+                            alt="Next Icon">Previous</button>
+                    <button type="button" class="btn next-button" id="fees-next"> <img src="/images/nextPrev.png"
+                            alt="Next Icon">Next</button>
                 </div>
             </div>
 
@@ -632,8 +643,10 @@
                     </div>
 
                     <div class="form-navigation-buttons">
-                        <button type="button" class="btn prev-button" id="transport-prev"><img src="/images/nextPrev.png" alt="Next Icon">Previous</button>
-                        <button type="button" class="btn next-button" id="transport-next"><img src="/images/nextPrev.png" alt="Next Icon">Next</button>
+                        <button type="button" class="btn prev-button" id="transport-prev"><img
+                                src="/images/nextPrev.png" alt="Next Icon">Previous</button>
+                        <button type="button" class="btn next-button" id="transport-next"><img
+                                src="/images/nextPrev.png" alt="Next Icon">Next</button>
                     </div>
                 </div>
             </div>
@@ -653,7 +666,8 @@
                             <div class="review-item"><span>Gender:</span> <span id="review-gender"></span></div>
                             <div class="review-item"><span>Blood Group:</span> <span id="review-bloodGroup"></span>
                             </div>
-                            <div class="review-item"><span>Student Contact:</span> <span id="review-studentContact"></span>
+                            <div class="review-item"><span>Student Contact:</span> <span
+                                    id="review-studentContact"></span>
                             </div>
                             <div class="review-item"><span>Address:</span> <span id="review-address"></span></div>
                             <div class="review-item"><span>Nationality:</span> <span id="review-nationality"></span>
@@ -661,14 +675,16 @@
                             <div class="review-item"><span>Religion:</span> <span id="review-religion"></span></div>
                             <div class="review-item"><span>Category:</span> <span id="review-category"></span></div>
                             <div class="review-item"><span>Caste:</span> <span id="review-caste"></span></div>
-                            <div class="review-item"><span>Alpsankhyak:</span> <span id="review-alpasankhyak"></span></div>
+                            <div class="review-item"><span>Alpsankhyak:</span> <span id="review-alpasankhyak"></span>
+                            </div>
                             <div class="review-item"><span>Domicile:</span> <span id="review-domicile"></span></div>
                             <div class="review-item"><span>Mother Tongue:</span> <span id="review-motherTongue"></span>
                             </div>
                             <div class="review-item"><span>Aadhaar Number:</span> <span id="review-aadharNo"></span>
                             </div>
                             <div class="review-item"><span>Documents:</span> <span id="review-documents"></span></div>
-                            <div class="review-item"><span>Medical Status:</span> <span id="review-medicalStatus"></span></div>
+                            <div class="review-item"><span>Medical Status:</span> <span
+                                    id="review-medicalStatus"></span></div>
                         </div>
 
                         <!-- Guardian Information -->
@@ -692,66 +708,71 @@
                             <div class="review-item"><span>Saral ID:</span> <span id="review-saralId"></span></div>
                             <div class="review-item"><span>Aapar ID:</span> <span id="review-aaparId"></span></div>
                             <div class="review-item"><span>PEN ID:</span> <span id="review-penId"></span></div>
-                            <div class="review-item"><span>Admission Date:</span> <span id="review-admissionDate"></span></div>
+                            <div class="review-item"><span>Admission Date:</span> <span
+                                    id="review-admissionDate"></span></div>
 
                             <div id="review-academic-tag" style="display: none;">
-                                <div class="review-item"><span>Academic History:</span> <span id="review-academics"></span></div>
+                                <div class="review-item"><span>Academic History:</span> <span
+                                        id="review-academics"></span></div>
                             </div>
                             <div id="previousSchoolDetails">
-                                <div class="review-item"><span>Last School Attended:</span> <span id="review-lastSchool"></span></div>
-                                <div class="review-item"><span>Class Completed:</span> <span id="review-classCompleted"></span></div>
-                                <div class="review-item"><span>Percentage:</span> <span id="review-percentage"></span></div>
+                                <div class="review-item"><span>Last School Attended:</span> <span
+                                        id="review-lastSchool"></span></div>
+                                <div class="review-item"><span>Class Completed:</span> <span
+                                        id="review-classCompleted"></span></div>
+                                <div class="review-item"><span>Percentage:</span> <span id="review-percentage"></span>
+                                </div>
                             </div>
                         </div>
-                        
 
-                      <!-- Fees Information -->
-                      <div class="review-section">
-                        <h3>Fees Information</h3>
-                        <div class="review-item"><span>Fee Section:</span> <span id="review-feeSection"></span>
-                        </div>
-                        <div class="review-item"><span>Fee Standard:</span> <span id="review-feeStandard"></span>
-                        </div>
-                        <div class="review-item"><span>Package Allotted:</span> <span id="review-package"></span>
+
+                        <!-- Fees Information -->
+                        <div class="review-section">
+                            <h3>Fees Information</h3>
+                            <div class="review-item"><span>Fee Section:</span> <span id="review-feeSection"></span>
+                            </div>
+                            <div class="review-item"><span>Fee Standard:</span> <span id="review-feeStandard"></span>
+                            </div>
+                            <div class="review-item"><span>Package Allotted:</span> <span id="review-package"></span>
+                            </div>
+
+                            <!-- Fee Details Table -->
+                            <table id="feeDetailsTable" class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Fee Category</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="feeDetailsTableBody">
+                                    <!-- Rows will be dynamically added here -->
+                                </tbody>
+                            </table>
                         </div>
 
-                        <!-- Fee Details Table -->
-                        <table id="feeDetailsTable" class="table">
-                            <thead>
-                                <tr>
-                                    <th>Fee Category</th>
-                                    <th>Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody id="feeDetailsTableBody">
-                                <!-- Rows will be dynamically added here -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Transport Information -->
-                    <div class="review-section">
-                        <h3>Transport Information</h3>
-                        <div class="review-item">
-                            <span>Transport Needed:</span> <span id="review-transportNeeded"></span>
-                        </div>
-                        <div id="transportDetailsSection" style="display: none;">
-                            <!-- <div class="review-item"><span>Transport Standard:</span> <span
+                        <!-- Transport Information -->
+                        <div class="review-section">
+                            <h3>Transport Information</h3>
+                            <div class="review-item">
+                                <span>Transport Needed:</span> <span id="review-transportNeeded"></span>
+                            </div>
+                            <div id="transportDetailsSection" style="display: none;">
+                                <!-- <div class="review-item"><span>Transport Standard:</span> <span
                                     id="review-transportStandard"></span></div>
                             <div class="review-item"><span>Transport Division:</span> <span
                                     id="review-transportDivision"></span></div> -->
-                            <div class="review-item"><span>Pick/Drop Address:</span> <span
-                                    id="review-pickDropAddress"></span></div>
-                            <!-- <div class="review-item"><span>Vehicle Running:</span> <span
+                                <div class="review-item"><span>Pick/Drop Address:</span> <span
+                                        id="review-pickDropAddress"></span></div>
+                                <!-- <div class="review-item"><span>Vehicle Running:</span> <span
                                     id="review-vehicleRunning"></span></div> -->
-                            <div class="review-item"><span>Vehicle Details:</span> <span
-                                    id="review-vehicleDetails"></span></div>
-                            <!-- <div class="review-item"><span>No Vehicle Found:</span> <span
+                                <div class="review-item"><span>Vehicle Details:</span> <span
+                                        id="review-vehicleDetails"></span></div>
+                                <!-- <div class="review-item"><span>No Vehicle Found:</span> <span
                                     id="review-noVehicleFound"></span></div> -->
+                            </div>
                         </div>
-                    </div>
 
-                        
+
 
                         <div class="review-section">
                             <h3>Consent</h3>
@@ -830,8 +851,10 @@
                     </div>
                 </div>
                 <div class="form-navigation-buttons">
-                    <button type="button" class="btn prev-button" id="review-prev"><img src="/images/nextPrev.png" alt="Next Icon">Previous</button>
-                    <button type="button" class="btn next-button" id="review-next"><img src="/images/nextPrev.png" alt="Next Icon">Submit</button>
+                    <button type="button" class="btn prev-button" id="review-prev"><img src="/images/nextPrev.png"
+                            alt="Next Icon">Previous</button>
+                    <button type="button" class="btn next-button" id="review-next"><img src="/images/nextPrev.png"
+                            alt="Next Icon">Submit</button>
                 </div>
             </div>
 
@@ -856,4 +879,4 @@
     <script src="/js/Student_Enrollment_Form/populate_update_student_form.js"></script>
 </body>
 
-</html> 
+</html>
