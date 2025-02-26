@@ -186,6 +186,44 @@ router.get('/getDivisions', (req, res) => {
 });
 
 
+// Endpoint to check outstanding and total package amounts
+router.get('/checkOutstandingAndTotalPackage', (req, res) => {
+    const { section, grNo } = req.query;
+
+    if (!section || !grNo) {
+        return res.status(400).json({ error: 'Section and GR no are required' });
+    }
+
+    // Determine the table name based on the section
+    let studentDetailsTable = 'test_student_details';
+    if (section.toLowerCase() === 'primary') {
+        studentDetailsTable = 'primary_student_details';
+    } else if (section.toLowerCase() === 'pre-primary') {
+        studentDetailsTable = 'pre_primary_student_details';
+    }
+
+    const query = `SELECT current_outstanding, total_package FROM ${studentDetailsTable} WHERE Grno = ?`;
+
+    req.connectionPool.query(query, [grNo], (error, results) => {
+        if (error) {
+            console.error('Error fetching current outstanding and total package:', error);
+            return res.status(500).json({ error: 'Error fetching current outstanding and total package' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'No record found for the provided GR no' });
+        }
+
+        const { current_outstanding, total_package } = results[0];
+        // Console log the values on the server
+        console.log('Current Outstanding from DB:', current_outstanding);
+        console.log('Total Package from DB:', total_package);
+
+        res.status(200).json({ current_outstanding, total_package });
+    });
+});
+
+
 // New combined endpoint to fetch Fee Categories and Amounts based on Standard (class grade)
 router.get('/getFeeCategoriesAndAmounts', (req, res) => {
     const { standard } = req.query; // Get the standard parameter from the query string

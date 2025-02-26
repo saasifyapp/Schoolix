@@ -1035,37 +1035,54 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("review-next").addEventListener("click", function (event) {
         event.preventDefault(); // Prevent the default button behavior
 
-        const formModeInput = document.getElementById('formMode');
-        const formMode = formModeInput ? formModeInput.value : '';
+        const formMode = document.getElementById('formMode')?.value || '';
 
         if (formMode === 'insert') {
-            // Validate that all consents are checked
-            const allChecked = validateConsents();
-
-            if (!allChecked) {
-                // Display an alert if any checkbox is not checked
-                Swal.fire({
-                    title: "Incomplete Consent",
-                    text: "Please ensure all consents are checked before proceeding.",
-                    icon: "warning",
-                    confirmButtonText: "OK"
-                });
-                return; // Prevent submission
-            }
-
-            // If all consents are checked, proceed with collectConsent and form submission
-            collectConsent();
-            // Submit all the form data
-            submitForm(); 
-
-            console.log("Current mode:", formMode)
-
+            handleInsertMode();
+        } else if (formMode === 'update') {
+            handleUpdateMode();
         } else {
-            //console.log("Form mode is not 'insert'. Current mode:", formMode);
+            handleInvalidMode();
         }
+
+        console.log("Current mode:", formMode);
     });
 });
 
+function handleInsertMode() {
+    // Validate that all consents are checked
+    const allChecked = validateConsents();
+    if (!allChecked) {
+        // Display an alert if any checkbox is not checked
+        Swal.fire({
+            title: "Incomplete Consent",
+            text: "Please ensure all consents are checked before proceeding.",
+            icon: "warning",
+            confirmButtonText: "OK"
+        });
+        return; // Prevent submission
+    }
+
+    // If all consents are checked, proceed with collectConsent and form submission
+    collectConsent();
+    submitForm('/submitEnrollmentForm', 'Form submitted successfully!');
+}
+
+function handleUpdateMode() {
+    // Optional: collect consent if consents don’t change on update
+    collectConsent();
+    submitForm('/updateStudentDetails', 'Student details updated successfully!', true);
+}
+
+function handleInvalidMode() {
+    // Handle invalid form mode
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Invalid form mode',
+        confirmButtonText: 'OK'
+    });
+}
 
 // Function to validate consents
 function validateConsents() {
@@ -1092,7 +1109,7 @@ function collectConsent() {
     const consents = [
         { id: "consent-policies", text: "I agree to the School Policies" },
         { id: "consent-photo", text: "I consent to Photo/Video use in School Activities" },
-        { id: "consent-trips", text: " I consent to Participate in Field Trips and Extracurricular Activities" },
+        { id: "consent-trips", text: "I consent to Participate in Field Trips and Extracurricular Activities" },
         { id: "consent-medical", text: "I consent to Emergency Medical Treatment" },
         { id: "consent-accuracy", text: "Declaration of Information Accuracy" },
         { id: "consent-fees", text: "Agreement to Pay Fees as per the chosen plan" },
@@ -1104,7 +1121,7 @@ function collectConsent() {
         .map(consent => consent.text) // Get the text of each selected consent
         .join(", "); // Combine the texts into a comma-separated string
 
-          // Ensure that formData.consent is initialized
+    // Ensure that formData.consent is initialized
     if (!formData.consent) {
         formData.consent = {};
     }
@@ -1114,14 +1131,22 @@ function collectConsent() {
     console.log(formData);
 }
 
-function submitForm() {
+// Reusable submit function
+function submitForm(endpoint, successMessage, isUpdate = false) {
     // Show the loading animation
     const overlay = document.getElementById('loadingOverlay');
     const loadingText = document.getElementById('loadingText');
     overlay.style.visibility = 'visible';
 
     // Steps to display
-    const steps = [
+    const steps = isUpdate ? [
+        'Updating student information...',
+        'Updating guardian information...',
+        'Updating academic information...',
+        'Updating fees information...',
+        'Updating transport information...',
+        'Updating consent...'
+    ] : [
         'Submitting student information...',
         'Submitting guardian information...',
         'Submitting academic information...',
@@ -1146,18 +1171,17 @@ function submitForm() {
     const minimumLoadingTime = 6000; // 6 seconds
     const startTime = Date.now();
 
-    fetch('/submitEnrollmentForm', {
+    fetch(endpoint, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
     })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) throw new Error(`Server error: ${response.status}`);
+            return response.json();
+        })
         .then(data => {
-            if (data.error) {
-                throw new Error(data.error); // Trigger the error handler
-            }
+            if (data.error) throw new Error(data.error);
 
             // Calculate remaining time for the animation
             const elapsedTime = Date.now() - startTime;
@@ -1167,16 +1191,39 @@ function submitForm() {
                 // Hide the loading animation
                 overlay.style.visibility = 'hidden';
 
-                // Display success alert
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Form submitted successfully!',
-                    confirmButtonText: 'OK'
-                });
+                if (isUpdate && data.changes) {
+                    let changeDetails = '<p>Changes made:</p><ul style="text-align: left; margin: 0; padding: 0 0 0 20px;">';
+                    for (const [key, value] of Object.entries(data.changes)) {
+                        changeDetails += `<li style="margin-bottom: 10px;"><b>${key}</b>: ${value.old} → ${value.new}</li>`;
+                    }
+                    changeDetails += '</ul>';
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        html: `${successMessage}<br>${changeDetails}`,
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            popup: 'swal-wide'
+                        }
+                    }).then(() => {
+                        window.location.href = '/student_Enrollment_Form/manage_student';
+                    });
+                } else {
+                    // Display success alert for non-update submissions
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: successMessage,
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = '/student_Enrollment_Form/manage_student';
+                    });
+                }
             }, remainingTime); // Ensure animation lasts at least 6 seconds
         })
         .catch(error => {
+            console.error('Submission error:', error);
+
             // Hide the loading animation immediately on error
             overlay.style.visibility = 'hidden';
 
@@ -1189,3 +1236,11 @@ function submitForm() {
             });
         });
 }
+
+const swalStyles = document.createElement('style');
+swalStyles.innerHTML = `
+    .swal-wide {
+        width: auto !important;
+    }
+`;
+document.head.appendChild(swalStyles);
