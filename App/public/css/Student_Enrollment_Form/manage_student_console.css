@@ -867,10 +867,9 @@ input[type="checkbox"] {
     transition: all 0.3s ease-in-out;
 }
 
-.input-container:hover {
-    border-color: #2E86C1;
-    box-shadow: 0 0 8px #5DADE2;
-    transform: scale(1.01);
+.input-container:hover {   
+    box-shadow: 0 0 12px #5DADE2;
+    transform: scale(1.002); 
 }
 
 
@@ -890,8 +889,9 @@ input[type="checkbox"] {
 }
 
 .generate-tc-form{
-    max-height: 78vh;
+    max-height: 70vh;
     overflow: scroll;
+    padding: 20px;
 }
 
 
