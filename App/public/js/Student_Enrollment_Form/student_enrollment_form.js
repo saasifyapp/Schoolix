@@ -1900,6 +1900,105 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+
+
+////////////////////////////// CLASS OF ADMISSION SUGGESTION ////////////////
+
+// Cache for classes of admission
+let classesOfAdmission = [
+    'Nursery',
+    'LKG',
+    'UKG',
+    '1st',
+    '2nd',
+    '3rd',
+    '4th',
+    '5th',
+    '6th',
+    '7th',
+    '8th',
+    '9th',
+    '10th'
+];
+let classesOfAdmissionFetched = false;
+
+// Function to display class of admission suggestions
+function displayClassOfAdmissionSuggestions() {
+    const classOfAdmissionInput = document.getElementById('class_of_admission');
+    const classOfAdmissionSuggestionsContainer = document.getElementById('classOfAdmissionSuggestion');
+
+    // Show suggestion box
+    classOfAdmissionSuggestionsContainer.style.display = "block";
+    const query = classOfAdmissionInput.value.toLowerCase().trim();
+
+    if (!classesOfAdmissionFetched) {
+        showLoading(classOfAdmissionSuggestionsContainer);
+
+        // Simulate an async data fetch
+        setTimeout(() => {
+            classesOfAdmissionFetched = true;
+            filterAndDisplayClassOfAdmissionSuggestions(query, classOfAdmissionSuggestionsContainer);
+        }, 500);
+    } else {
+        filterAndDisplayClassOfAdmissionSuggestions(query, classOfAdmissionSuggestionsContainer);
+    }
+}
+
+// Function to filter and display class of admission suggestions
+function filterAndDisplayClassOfAdmissionSuggestions(query, suggestionsContainer) {
+    const filteredClasses = classesOfAdmission.filter(className => className.toLowerCase().startsWith(query));
+    suggestionsContainer.innerHTML = '';
+
+    if (filteredClasses.length > 0) {
+        filteredClasses.forEach(className => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = className;
+            suggestionItem.dataset.value = className;
+            suggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        showNoResults(suggestionsContainer);
+    }
+
+    // Add event listeners for selection
+    suggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', function () {
+            const classOfAdmissionInput = document.getElementById('class_of_admission');
+            classOfAdmissionInput.value = this.dataset.value;
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.style.display = "none";
+        });
+    });
+}
+
+// Function to show a loading indicator
+function showLoading(container) {
+    container.innerHTML = '<div class="loading">Loading...</div>';
+}
+
+// Function to show "No Results" message
+function showNoResults(container) {
+    container.innerHTML = '<div class="no-results">No results found</div>';
+}
+
+// Initialization of class of admission suggestion box
+document.addEventListener("DOMContentLoaded", function () {
+    const classOfAdmissionInput = document.getElementById('class_of_admission');
+    const classOfAdmissionSuggestionsContainer = document.getElementById('classOfAdmissionSuggestion');
+
+    // Add event listeners for input, focus, and click events
+    classOfAdmissionInput.addEventListener('input', displayClassOfAdmissionSuggestions);
+    classOfAdmissionInput.addEventListener('focus', displayClassOfAdmissionSuggestions);
+    classOfAdmissionInput.addEventListener('click', displayClassOfAdmissionSuggestions);
+
+    document.addEventListener('click', function (event) {
+        if (!classOfAdmissionSuggestionsContainer.contains(event.target) && !classOfAdmissionInput.contains(event.target)) {
+            classOfAdmissionSuggestionsContainer.style.display = "none";
+        }
+    });
+});
+
 ////////////////////////////// CLASS COMPLETED SUGGESTION //////////////////
 
 // Cache for classes

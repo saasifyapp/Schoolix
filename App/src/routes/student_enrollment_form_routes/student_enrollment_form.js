@@ -640,11 +640,12 @@ router.post('/submitEnrollmentForm', (req, res) => {
         admissionDate,
         standard,
         division,
+        classOfAdmission,
         saralId,
         aaparId,
         penId,
         lastSchoolAttended,
-        classCompleted,
+        last_school_class_completed ,
         percentage
     } = formData.academicInformation;
 
@@ -704,8 +705,9 @@ router.post('/submitEnrollmentForm', (req, res) => {
         Admission_Date: admissionDate,
         Standard: standard,
         Division: division,
+        admitted_class: classOfAdmission,
         Last_School: lastSchoolAttended,
-        class_completed: classCompleted,
+        last_school_class_completed: last_school_class_completed,
         percentage_last_school: percentage.toString(),
         package_breakup: formData.package_breakup,
         total_package: formData.total_package,
@@ -720,7 +722,6 @@ router.post('/submitEnrollmentForm', (req, res) => {
         saral_id: saralId,
         apar_id: aaparId,
         pen_id: penId,
-        admitted_class: standard,
         status: 1
     };
 
@@ -776,7 +777,7 @@ router.post('/submitEnrollmentForm', (req, res) => {
                     Category, Caste, Domicile, Mother_Tongue, Documents_Submitted, Father_name, F_qualification, 
                     F_occupation, F_mobile_no, Grand_father, Mother_name, M_Qualification, M_occupation, M_mobile_no, 
                     guardian_name, guardian_contact, guardian_relation, guardian_address, guardian_landmark, guardian_pin_code, 
-                    Section, Grno, Admission_Date, Standard, Division, Last_School, class_completed, percentage_last_school, 
+                    Section, Grno, Admission_Date, Standard, Division, Last_School, last_school_class_completed, percentage_last_school, 
                     package_breakup, total_package, current_outstanding, transport_needed, transport_tagged, transport_pickup_drop, consent_text, app_uid, medical_status, medical_description, alpsankhyak, saral_id, apar_id, pen_id, admitted_class, is_active
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`;
 
@@ -827,7 +828,7 @@ router.post('/submitEnrollmentForm', (req, res) => {
                     studentDetails.Standard,
                     studentDetails.Division,
                     studentDetails.Last_School,
-                    studentDetails.class_completed,
+                    studentDetails.last_school_class_completed,
                     studentDetails.percentage_last_school,
                     studentDetails.package_breakup,
                     studentDetails.total_package,
@@ -1116,11 +1117,12 @@ router.post('/updateStudentDetails', (req, res) => {
         admissionDate,
         standard,
         division,
+        classOfAdmission,
         saralId,
         aaparId,
         penId,
         lastSchoolAttended,
-        classCompleted,
+        last_school_class_completed,
         percentage
     } = academicInformation;
 
@@ -1177,8 +1179,9 @@ router.post('/updateStudentDetails', (req, res) => {
         Admission_Date: admissionDate,
         Standard: standard,
         Division: division,
+        admitted_class: classOfAdmission,
         Last_School: lastSchoolAttended,
-        class_completed: classCompleted,
+        last_school_class_completed: last_school_class_completed,
         percentage_last_school: percentage?.toString() || '',
         package_breakup: package_breakup,
         total_package: total_package,
@@ -1193,7 +1196,6 @@ router.post('/updateStudentDetails', (req, res) => {
         saral_id: saralId,
         apar_id: aaparId,
         pen_id: penId,
-        admitted_class: standard,
         status: 1
     };
 
@@ -1276,7 +1278,7 @@ router.post('/updateStudentDetails', (req, res) => {
                         F_occupation = ?, F_mobile_no = ?, Grand_father = ?, Mother_name = ?, M_Qualification = ?, 
                         M_occupation = ?, M_mobile_no = ?, guardian_name = ?, guardian_contact = ?, guardian_relation = ?, 
                         guardian_address = ?, guardian_landmark = ?, guardian_pin_code = ?, Section = ?, Admission_Date = ?, 
-                        Standard = ?, Division = ?, Last_School = ?, class_completed = ?, percentage_last_school = ?, 
+                        Standard = ?, Division = ?, Last_School = ?, last_school_class_completed = ?, percentage_last_school = ?, 
                         package_breakup = ?, total_package = ?, current_outstanding = ?, transport_needed = ?, transport_tagged = ?, 
                         transport_pickup_drop = ?, consent_text = ?, medical_status = ?, medical_description = ?, 
                         alpsankhyak = ?, saral_id = ?, apar_id = ?, pen_id = ?, admitted_class = ?
@@ -1328,7 +1330,7 @@ router.post('/updateStudentDetails', (req, res) => {
                     studentDetails.Standard,
                     studentDetails.Division,
                     studentDetails.Last_School,
-                    studentDetails.class_completed,
+                    studentDetails.last_school_class_completed,
                     studentDetails.percentage_last_school,
                     studentDetails.package_breakup,
                     studentDetails.total_package,

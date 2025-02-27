@@ -105,11 +105,12 @@ function collectAcademicInformation() {
         admissionDate: formattedAdmissionDate,
         standard: document.getElementById('standard').value.trim(),
         division: document.getElementById('division').value.trim(),
+        classOfAdmission: document.getElementById('class_of_admission').value.trim(), // Added new field
         saralId: document.getElementById('saralId').value.trim(),
         aaparId: document.getElementById('aaparId').value.trim(),
         penId: document.getElementById('penId').value.trim(),
         lastSchoolAttended: document.getElementById('lastSchoolAttended').value.trim(),
-        classCompleted: document.getElementById('classCompleted').value.trim(),
+        last_school_class_completed: document.getElementById('classCompleted').value.trim(),
         percentage: document.getElementById('percentage').value.trim(),
         newAdmission: document.getElementById('newAdmission').checked // Capture checkbox status
     };
@@ -463,6 +464,7 @@ document.getElementById('academic-next').addEventListener('click', function () {
         { id: 'admissionDate', label: 'Admission Date' },
         { id: 'standard', label: 'Standard' },
         { id: 'division', label: 'Division' },
+        { id: 'class_of_admission', label: 'Class of Admission' },
     ];
 
     // Validate each field
@@ -873,6 +875,7 @@ function populateReviewValues() {
     setField("review-grNo", academicInfo.grNo);
     setField("review-standard", academicInfo.standard);
     setField("review-division", academicInfo.division);
+    setField("review-classofAdmission", academicInfo.classOfAdmission);
     setField("review-saralId", academicInfo.saralId);
     setField("review-aaparId", academicInfo.aaparId);
     setField("review-penId", academicInfo.penId);
@@ -889,7 +892,7 @@ function populateReviewValues() {
     } else {
         previousSchoolDetails.style.display = "block"; // Show previous school details
         setField("review-lastSchool", academicInfo.lastSchoolAttended || "N/A");
-        setField("review-classCompleted", academicInfo.classCompleted || "N/A");
+        setField("review-classCompleted", academicInfo.last_school_class_completed || "N/A");
         setField("review-percentage", academicInfo.percentage || "N/A");
     }
 

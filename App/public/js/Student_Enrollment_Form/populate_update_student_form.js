@@ -124,6 +124,8 @@ function populateStudentForm(studentData) {
     setValue("admissionDate", formatDateForInput(studentData.Admission_Date));
     setValue("standard", studentData.Standard);
     setValue("division", studentData.Division);
+    setValue("class_of_admission", studentData.admitted_class);
+
 
     setValue("saralId", studentData.saral_id);
     setValue("aaparId", studentData.apar_id);
@@ -131,7 +133,7 @@ function populateStudentForm(studentData) {
 
     
     setValue("lastSchoolAttended", studentData.Last_School);
-    setValue("classCompleted", studentData.class_completed);
+    setValue("classCompleted", studentData.last_school_class_completed);
     setValue("percentage", studentData.percentage_last_school);
 
     // Validate and set the new admission checkbox
