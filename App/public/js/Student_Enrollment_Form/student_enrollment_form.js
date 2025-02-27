@@ -2460,7 +2460,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //////////////////////////////// VEHICLE RUNNING SUGGESTIONS /////////////////////
 
-// Cache for vehicle running suggestions
 let vehicleRunningFetched = false;
 let vehicleRunningCache = [];
 
@@ -2474,6 +2473,7 @@ function resetVehicleRunningCache() {
 function displayVehicleRunningSuggestions() {
     const vehicleRunningInput = document.getElementById('vehicleRunning');
     const vehicleRunningSuggestionsContainer = document.getElementById('vehicleRunningSuggestions');
+    const noVehicleCheckbox = document.getElementById('noVehicleFound');
 
     // Show suggestion box
     vehicleRunningSuggestionsContainer.style.display = "block";
@@ -2561,17 +2561,19 @@ function filterAndDisplayVehicleRunning(query, suggestionsContainer, vehicleRunn
 // Add event listener to the checkbox to enable/disable input
 document.getElementById('noVehicleFound').addEventListener('change', function () {
     const vehicleRunningInput = document.getElementById('vehicleRunning');
+    const vehicleInfoContainer = document.getElementById('vehicleInfo');
 
     if (this.checked) {
         // Disable the input field and clear its value
         vehicleRunningInput.disabled = true;
         vehicleRunningInput.value = '';
+        vehicleInfoContainer.innerHTML = '';
+        vehicleInfoContainer.style.display = 'none';
     } else {
         // Enable the input field
         vehicleRunningInput.disabled = false;
     }
 });
-
 
 // Function to fetch vehicle info
 function fetchVehicleInfo(selectedVehicleNo) {
@@ -2625,21 +2627,38 @@ function clearVehicleRunningInfo() {
     noVehicleFoundCheckbox.disabled = false; // Enable the checkbox
 }
 
+// Add event listener to the vehicleRunning input to handle enabling/disabling of the checkbox
+function handleVehicleRunningInput() {
+    const vehicleRunningInput = document.getElementById('vehicleRunning');
+    const noVehicleFoundCheckbox = document.getElementById('noVehicleFound');
+
+    if (vehicleRunningInput.value.trim() === '') {
+        noVehicleFoundCheckbox.disabled = false;
+    } else {
+        noVehicleFoundCheckbox.disabled = true;
+        noVehicleFoundCheckbox.checked = false;
+    }
+}
+
 // Initialization of vehicle running suggestion box
 document.addEventListener("DOMContentLoaded", function () {
     const vehicleRunningInput = document.getElementById('vehicleRunning');
     const vehicleRunningSuggestionsContainer = document.getElementById('vehicleRunningSuggestions');
     const pickDropAddressInput = document.getElementById('pickDropAddress');
     const noVehicleFoundCheckbox = document.getElementById('noVehicleFound');
-
+    
     // Enable the checkbox initially
     noVehicleFoundCheckbox.disabled = false;
 
     // Add event listeners for input, focus, and click events
-    vehicleRunningInput.addEventListener('input', displayVehicleRunningSuggestions);
+    vehicleRunningInput.addEventListener('input', () => {
+        displayVehicleRunningSuggestions();
+        handleVehicleRunningInput();
+    });
     vehicleRunningInput.addEventListener('focus', displayVehicleRunningSuggestions);
     vehicleRunningInput.addEventListener('click', displayVehicleRunningSuggestions);
     pickDropAddressInput.addEventListener('change', clearVehicleRunningInfo);
+    vehicleRunningInput.addEventListener('change', clearVehicleRunningInfo);
 
     document.addEventListener('click', function (event) {
         if (!vehicleRunningSuggestionsContainer.contains(event.target) && !vehicleRunningInput.contains(event.target)) {
@@ -2813,83 +2832,3 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-document.addEventListener("DOMContentLoaded", function () {
-    const transportStandard = document.getElementById("transportStandard");
-    const transportDivision = document.getElementById("transportDivision");
-    const pickDropAddress = document.getElementById("pickDropAddress");
-    const vehicleRunning = document.getElementById("vehicleRunning");
-    const noVehicleFound = document.getElementById("noVehicleFound");
-    const vehicleInfo = document.getElementById("vehicleInfo");
-
-    function checkFields() {
-        if (vehicleRunning.value.trim()) {
-            noVehicleFound.checked = false;
-            noVehicleFound.disabled = true;
-        } else {
-            noVehicleFound.disabled = false;
-            noVehicleFound.checked = true;
-        }
-    }
-
-    function resetFields() {
-        if (noVehicleFound.checked) {
-            // Do not clear or disable pickDropAddress
-            vehicleRunning.value = "";
-            vehicleRunning.disabled = true;
-            clearAndHideVehicleInfo();
-        } else {
-            pickDropAddress.disabled = false;
-            vehicleRunning.disabled = false;
-        }
-    }
-
-    function clearAndHideVehicleInfo() {
-        vehicleInfo.innerHTML = "";
-        vehicleInfo.style.display = "none";
-    }
-
-    function showVehicleInfo() {
-        vehicleInfo.style.display = "block";
-    }
-
-    pickDropAddress.addEventListener("input", checkFields);
-    vehicleRunning.addEventListener("input", function() {
-        checkFields();
-        if (vehicleRunning.value.trim() === "") {
-            clearAndHideVehicleInfo();
-        } else {
-            showVehicleInfo();
-        }
-    });
-    noVehicleFound.addEventListener("change", resetFields);
-
-    // Initial check on page load
-    checkFields();
-
-    // Custom event to be dispatched when vehicleRunning is updated programmatically
-    const vehicleRunningEvent = new Event('vehicleRunningUpdate', {
-        bubbles: true,
-        cancelable: true
-    });
-
-    // Add a listener for the custom event
-    vehicleRunning.addEventListener('vehicleRunningUpdate', function() {
-        checkFields();
-        if (vehicleRunning.value.trim() === "") {
-            clearAndHideVehicleInfo();
-        } else {
-            showVehicleInfo();
-        }
-    });
-
-    // Example function to demonstrate programmatically setting the value
-    function updateFields() {
-        // Populate the field programmatically
-        vehicleRunning.value = "Some Value"; // This is just an example, set your actual value
-        // Dispatch the custom event to ensure checkFields is called
-        vehicleRunning.dispatchEvent(vehicleRunningEvent);
-    }
-
-    // Simulate programmatically updating the field
-    updateFields();
-});

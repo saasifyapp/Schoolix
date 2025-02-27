@@ -608,7 +608,7 @@ document.getElementById('transport-next').addEventListener('click', function () 
         const transportFields = [
             { id: 'transportStandard', label: 'Standard' },
             { id: 'transportDivision', label: 'Division' },
-            { id: 'pickDropAddress', label: 'Pick/Drop Address' }
+            { id: 'pickDropAddress', label: 'Pick/Drop Address' },
         ];
 
         // Validate each transport-related field
@@ -625,29 +625,17 @@ document.getElementById('transport-next').addEventListener('click', function () 
         const vehicleRunningField = document.getElementById('vehicleRunning');
         const vehicleRunning = vehicleRunningField.value.trim();
 
-        if (vehicleRunning) {
-            // If vehicleRunning has value, uncheck and disable the checkbox
-            noVehicleFoundCheckbox.checked = false;
-            noVehicleFoundCheckbox.disabled = true;
+        // Validate the checkbox status and vehicle running field based on your new rules
+        if ((noVehicleFoundCheckbox.checked && vehicleRunning === "") || (!noVehicleFoundCheckbox.checked && vehicleRunning !== "")) {
+            // This condition passes as per the user's new rule
         } else {
-            // If vehicleRunning is empty, enable the checkbox
-            noVehicleFoundCheckbox.disabled = false;
-            noVehicleFoundCheckbox.checked = true;
-        }
-
-        if (noVehicleFoundCheckbox.checked) {
-            // Clear the vehicle running field if "No Vehicle Found" is checked
-            if (vehicleRunning !== "") {
-                vehicleRunningField.value = "";
-                //console.log("Vehicle Running field cleared as 'No Vehicle Found' is checked.");
+            // If checked and has value OR unchecked and empty
+            isFormValid = false;
+            if (noVehicleFoundCheckbox.checked && vehicleRunning !== "") {
+                missingFields.push('Vehicle Running should be empty if "No Vehicle Found" is checked.');
             }
-            // Skip further validation for "Vehicle Running"
-            isFormValid = true;
-        } else {
-            // If "No Vehicle Found" is not checked, validate "Vehicle Running"
-            if (!vehicleRunning) {
-                missingFields.push('Vehicle Running (Specify if no vehicle is found)');
-                isFormValid = false; // Mark form as invalid
+            if (!noVehicleFoundCheckbox.checked && vehicleRunning === "") {
+                missingFields.push('Vehicle Running must be specified. If "No Vehicle Found", please check the checkbox.');
             }
         }
     }
@@ -674,6 +662,7 @@ document.getElementById('transport-next').addEventListener('click', function () 
 
     // If form is valid, proceed to the next section
     if (isFormValid) {
+        // Assuming formData is defined somewhere before
         console.log('Form Data:', formData);
         collectTransportInformation(); // Collect transport data
         populateReviewValues(); // Populate review section with collected data

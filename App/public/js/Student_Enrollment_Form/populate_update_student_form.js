@@ -383,6 +383,15 @@ function addChangeListeners() {
 ////////////// VALIDATE TRANSPORT SERVICES /////////////////
 
 
+// Function to get the value of a URL parameter
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    const results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
+// Function to validate the transport requirement field
 function validateTransportRequirement(studentData) {
     const yesRadio = document.querySelector('input[name="transportNeeded"][value="Yes"]');
     const noRadio = document.querySelector('input[name="transportNeeded"][value="No"]');
@@ -412,20 +421,48 @@ function toggleTransportDetails(isVisible) {
     }
 }
 
-// Add event listeners for the pickDropAddress field
-document.getElementById('pickDropAddress').addEventListener('input', () => {
-    const pickDropValue = document.getElementById('pickDropAddress').value.trim();
-    const hasTransportDetails = pickDropValue !== "";
+// Periodic function to check if vehicleRunning has a value
+function checkVehicleRunningInput() {
+    const vehicleRunningInput = document.getElementById('vehicleRunning');
+    const noVehicleFoundCheckbox = document.getElementById('noVehicleFound');
 
-    if (hasTransportDetails) {
-        toggleTransportDetails(true);
-        document.querySelector('input[name="transportNeeded"][value="Yes"]').checked = true;
+    if (vehicleRunningInput.value.trim() !== '') {
+        noVehicleFoundCheckbox.checked = false;
+        noVehicleFoundCheckbox.disabled = true;
     } else {
-        toggleTransportDetails(false);
-        document.querySelector('input[name="transportNeeded"][value="No"]').checked = true;
+        noVehicleFoundCheckbox.disabled = false;
+    }
+}
+
+// Initialization of vehicle running suggestion box
+document.addEventListener("DOMContentLoaded", function() {
+    const vehicleRunningInput = document.getElementById('vehicleRunning');
+    const vehicleRunningSuggestionsContainer = document.getElementById('vehicleRunningSuggestions');
+    const pickDropAddressInput = document.getElementById('pickDropAddress');
+    const noVehicleFoundCheckbox = document.getElementById('noVehicleFound');
+
+    // Add event listeners for input, focus, and click events
+    vehicleRunningInput.addEventListener('input', displayVehicleRunningSuggestions);
+    vehicleRunningInput.addEventListener('focus', displayVehicleRunningSuggestions);
+    vehicleRunningInput.addEventListener('click', displayVehicleRunningSuggestions);
+    pickDropAddressInput.addEventListener('change', clearVehicleRunningInfo);
+    vehicleRunningInput.addEventListener('change', clearVehicleRunningInfo);
+
+    document.addEventListener('click', function(event) {
+        if (!vehicleRunningSuggestionsContainer.contains(event.target) && !vehicleRunningInput.contains(event.target)) {
+            vehicleRunningSuggestionsContainer.style.display = "none";
+        }
+    });
+
+    // Custom behavior based on mode
+    const mode = getUrlParameter('mode');
+    if (mode === 'update') {
+        setInterval(checkVehicleRunningInput, 1000);  // Check every second
+    } else if (mode === 'enroll') {
+        noVehicleFoundCheckbox.checked = false;
+        //noVehicleFoundCheckbox.disabled = true;  // Disable the checkbox in enroll mode
     }
 });
-
 
 ////////////////// CONSENT SETTING ///////////
 
