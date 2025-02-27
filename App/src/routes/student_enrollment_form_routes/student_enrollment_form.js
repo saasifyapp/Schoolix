@@ -186,7 +186,6 @@ router.get('/getDivisions', (req, res) => {
 });
 
 
-// Endpoint to check outstanding and total package amounts
 router.get('/checkOutstandingAndTotalPackage', (req, res) => {
     const { section, grNo } = req.query;
 
@@ -206,23 +205,18 @@ router.get('/checkOutstandingAndTotalPackage', (req, res) => {
 
     req.connectionPool.query(query, [grNo], (error, results) => {
         if (error) {
-            console.error('Error fetching current outstanding and total package:', error);
             return res.status(500).json({ error: 'Error fetching current outstanding and total package' });
         }
 
         if (results.length === 0) {
-            return res.status(404).json({ error: 'No record found for the provided GR no' });
+            // No record found, proceed with package generation
+            return res.status(200).json({ proceedWithPackageGeneration: true });
         }
 
         const { current_outstanding, total_package } = results[0];
-        // Console log the values on the server
-        console.log('Current Outstanding from DB:', current_outstanding);
-        console.log('Total Package from DB:', total_package);
-
         res.status(200).json({ current_outstanding, total_package });
     });
 });
-
 
 // New combined endpoint to fetch Fee Categories and Amounts based on Standard (class grade)
 router.get('/getFeeCategoriesAndAmounts', (req, res) => {
@@ -1188,6 +1182,7 @@ router.post('/updateStudentDetails', (req, res) => {
         percentage_last_school: percentage?.toString() || '',
         package_breakup: package_breakup,
         total_package: total_package,
+        current_outsntanding : total_package, 
         transport_needed: transport_needed,
         transport_tagged: transport_tagged,
         transport_pickup_drop: transport_pickup_drop,
@@ -1282,7 +1277,7 @@ router.post('/updateStudentDetails', (req, res) => {
                         M_occupation = ?, M_mobile_no = ?, guardian_name = ?, guardian_contact = ?, guardian_relation = ?, 
                         guardian_address = ?, guardian_landmark = ?, guardian_pin_code = ?, Section = ?, Admission_Date = ?, 
                         Standard = ?, Division = ?, Last_School = ?, class_completed = ?, percentage_last_school = ?, 
-                        package_breakup = ?, total_package = ?, transport_needed = ?, transport_tagged = ?, 
+                        package_breakup = ?, total_package = ?, current_outstanding = ?, transport_needed = ?, transport_tagged = ?, 
                         transport_pickup_drop = ?, consent_text = ?, medical_status = ?, medical_description = ?, 
                         alpsankhyak = ?, saral_id = ?, apar_id = ?, pen_id = ?, admitted_class = ?
                     WHERE Grno = ?
@@ -1336,6 +1331,7 @@ router.post('/updateStudentDetails', (req, res) => {
                     studentDetails.class_completed,
                     studentDetails.percentage_last_school,
                     studentDetails.package_breakup,
+                    studentDetails.total_package,
                     studentDetails.total_package,
                     studentDetails.transport_needed,
                     studentDetails.transport_tagged,

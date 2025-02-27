@@ -1311,7 +1311,7 @@ function updateFatherFullName() {
     document.getElementById('fatherFullName').value = fullName; // Update father's full name field
 }
 
-// Function to add event listeners for father's name inputs to update full name
+// Function to add event listeners for father's name inputs to update the full name
 function addFatherFullNameUpdateListeners() {
     const fatherNameFields = ['fatherFirstName', 'fatherMiddleName', 'fatherLastName'];
 
@@ -1334,15 +1334,16 @@ function periodicallyUpdateFullName() {
         updateFatherFullName();
     }, 1000); // Adjust the interval time as needed
 
-    // Stop the periodic function after 5 seconds
+    // Stop the periodic function after 60 seconds
     setTimeout(() => {
         clearInterval(window.fatherIntervalId);
         window.fatherIntervalId = null; // Clear the stored interval ID
-    }, 60000); // 5000 milliseconds = 60 seconds
+    }, 60000); // 60000 milliseconds = 60 seconds
 }
 
 // Add event listeners to update father's full name when any name fields are modified
 addFatherFullNameUpdateListeners();
+updateFatherFullName(); // Initial call to update the full name based on pre-existing values
 periodicallyUpdateFullName();
 
 
@@ -2029,6 +2030,9 @@ document.getElementById('percentage').addEventListener('input', handlePercentage
 
 //////////////////// FEES AND PACKAGES ///////////////////
 
+document.addEventListener("DOMContentLoaded", function () {
+    observeReadOnlyFields();
+});
 
 // Function to fetch and populate the Fee Category Amount Table
 function fetchAndPopulateFeeCategoryAmountTable(standard) {
@@ -2101,6 +2105,14 @@ function observeReadOnlyFields() {
         mutations.forEach(mutation => {
             if (mutation.type === 'attributes' && mutation.attributeName === 'value') {
                 clearFeeCategoryAmountTable();
+
+                if (!feeSectionInput.value.trim() || !feeStandardInput.value.trim() || !feeDivisionInput.value.trim()) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Section, Standard, and Division fields must not be empty!',
+                        icon: 'error'
+                    });
+                }
             }
         });
     });
@@ -2110,47 +2122,69 @@ function observeReadOnlyFields() {
     observer.observe(feeDivisionInput, observerConfig);
 }
 
+// Function to check outstanding and total package amounts
+function checkOutstandingAndTotalPackage(section, grNo) {
+    return fetch(`/checkOutstandingAndTotalPackage?section=${section}&grNo=${grNo}`)
+        .then(response => response.json().then(data => ({ status: response.status, body: data })))  // fetch does not reject on HTTP errors, so we wrap and handle it properly
+        .then(({ status, body }) => {
+            if (status !== 200) {
+                return { error: body.error };
+            }
+            if (body.proceedWithPackageGeneration) {
+                return { proceedWithPackageGeneration: true };
+            }
+            const { current_outstanding, total_package } = body;
+            return { current_outstanding, total_package };
+        })
+        .catch(error => ({ error: 'Error fetching outstanding and total package amounts' }));
+}
+
 // Event listener for the "Generate Package" button
 document.getElementById('generatePackageBtn').addEventListener('click', function () {
     const feeStandard = document.getElementById('feeStandard').value.trim();
-    if (feeStandard) {
-        // Assuming fetchAndPopulateFeeCategoryAmountTable is a function that fetches fee details
-        fetchAndPopulateFeeCategoryAmountTable(feeStandard);
-
-        // Ensure feeCategory and packageAllotted are added only in the Fee Details section
-        setTimeout(() => {
-            // Get the Fee Details section specifically
-            const feeDetailsSection = document.querySelector('.input-container h3:contains("Fee Details")').parentElement;
-            const feeCategoryInputExists = feeDetailsSection.querySelector('#feeCategory');
-            const packageAllottedInputExists = feeDetailsSection.querySelector('#packageAllotted');
-
-            // Only create the input fields if they don't already exist in the Fee Details section
-            if (!feeCategoryInputExists) {
-                const feeCategoryInput = document.createElement('input');
-                feeCategoryInput.id = 'feeCategory';
-                feeCategoryInput.className = 'form-control';
-                feeCategoryInput.placeholder = "Fee Category";
-                feeDetailsSection.appendChild(feeCategoryInput);
-            }
-
-            if (!packageAllottedInputExists) {
-                const packageAllottedInput = document.createElement('input');
-                packageAllottedInput.id = 'packageAllotted';
-                packageAllottedInput.className = 'form-control';
-                packageAllottedInput.placeholder = "Package Allotted";
-                feeDetailsSection.appendChild(packageAllottedInput);
-            }
-        }, 500);  // Delay to ensure the table is populated before adding fields
-    } else {
-        console.error('feeStandard is empty, cannot call API');
+    const section = document.getElementById('section').value.trim();
+    const grNo = document.getElementById('grNo').value.trim();
+    
+    if (!feeStandard) {
+        Swal.fire('Error', 'Fee Standard is required', 'error');
+        return;
     }
-});
 
+    if (!section) {
+        Swal.fire('Error', 'Section is required', 'error');
+        return;
+    }
 
+    if (!grNo) {
+        Swal.fire('Error', 'GR No is required', 'error');
+        return;
+    }
 
-// Initialize MutationObserver on DOMContentLoaded
-document.addEventListener('DOMContentLoaded', function () {
-    observeReadOnlyFields();
+    // Directly check outstanding and total package amounts
+    checkOutstandingAndTotalPackage(section, grNo)
+        .then(result => {
+            if (result.error) {
+                // Display error message using SweetAlert
+                Swal.fire('Error', result.error, 'error');
+                return;
+            }
+
+            if (result.proceedWithPackageGeneration || result.current_outstanding === result.total_package) {
+                // Fetch and populate fee details if the amounts are the same or no record found
+                fetchAndPopulateFeeCategoryAmountTable(feeStandard);
+            } else {
+                // Show SweetAlert if the amounts are not the same
+                Swal.fire({
+                    title: 'Receipt Generated',
+                    html: 'A receipt has already been issued for this user. Hence, the package cannot be updated.<br><br><strong>Please delete the receipt to regenerate package.</strong>',
+                    icon: 'warning'
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire('Error', 'An error occurred while checking amounts.', 'error');
+            console.error('Error:', error);
+        });
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -2547,7 +2581,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const medicalStatus = document.getElementById("medicalStatus");
     const medicalDescription = document.getElementById("medicalDescription");
 
-    // Function to update medical description field based on the status
+    // Function to update the medical description field based on the status
     function updateMedicalDescription() {
         if (medicalStatus.value === "Unfit") {
             medicalDescription.removeAttribute("readonly");
@@ -2559,11 +2593,36 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Attach the change event listener for manual changes
-    medicalStatus.addEventListener("change", updateMedicalDescription);
+    // Function to add event listeners for medical status to update the description
+    function addMedicalStatusUpdateListeners() {
+        medicalStatus.addEventListener("change", () => {
+            updateMedicalDescription();
+            periodicallyUpdateMedicalDescription(); // Restart the periodic update on change
+        });
+    }
 
-    // Initial call to update the field state based on pre-existing value
-    updateMedicalDescription();
+    // Periodically check and update the medical description based on the status
+    function periodicallyUpdateMedicalDescription() {
+        // Clear any existing intervals to avoid multiple intervals running simultaneously
+        if (window.medicalIntervalId) {
+            clearInterval(window.medicalIntervalId);
+        }
+
+        window.medicalIntervalId = setInterval(() => {
+            updateMedicalDescription();
+        }, 1000); // Adjust the interval time as needed
+
+        // Stop the periodic function after 60 seconds
+        setTimeout(() => {
+            clearInterval(window.medicalIntervalId);
+            window.medicalIntervalId = null; // Clear the stored interval ID
+        }, 10000); // 60000 milliseconds = 60 seconds
+    }
+
+    // Add event listeners to update the medical description when the status changes
+    addMedicalStatusUpdateListeners();
+    updateMedicalDescription(); // Initial call to update the field state based on pre-existing value
+    periodicallyUpdateMedicalDescription();
 });
 
 // Helper function to set values with appropriate event dispatching
@@ -2579,7 +2638,6 @@ function setValue(elementId, value) {
         }
     }
 }
-
 
 /////////////////////////////////////////////////
 
