@@ -836,6 +836,10 @@ document.getElementById('submitGenerateTCForm').addEventListener('click', async 
                     text: 'All fields are filled correctly, data has been sent to the server, and student, Android user, and transport allotment processing has started.',
                 });
 
+                // Show the overlay here
+                // Call your overlay display function here
+                // Example: showOverlay();
+
             } catch (error) {
                 Swal.fire({
                     icon: 'error',
@@ -852,6 +856,7 @@ document.getElementById('submitGenerateTCForm').addEventListener('click', async 
         }
     }
 });
+
 
 async function deactivateStudent(section, grno) {
     console.log('Deactivate Student called with:', { section, grno }); // Log for debugging

@@ -209,20 +209,23 @@ router.post('/delete-transport-alloted', (req, res) => {
         return res.status(400).json({ error: "Invalid section parameter" });
     }
 
-    // Construct the SQL query to fetch transport details
-    const fetchTransportDetailsQuery = `SELECT transport_needed, transport_tagged, transport_pickup_drop FROM ${tableName} WHERE Grno = ?`;
-    connection_auth.query(fetchTransportDetailsQuery, [grno], (error, results) => {
-        if (error) {
-            console.error('Database query failed', error);
-            return res.status(500).json({ error: 'Database query failed', details: error });
+    // Construct the SQL query to fetch transport details and class details (standard and division)
+    const fetchDetailsQuery = `SELECT transport_needed, transport_tagged, transport_pickup_drop, Standard, Division FROM ${tableName} WHERE Grno = ?`;
+    console.log('Executing query:', fetchDetailsQuery, 'with params:', [grno]);
+    connection_auth.query(fetchDetailsQuery, [grno], (fetchError, fetchResults) => {
+        if (fetchError) {
+            console.error('Database query failed:', fetchError);
+            return res.status(500).json({ error: 'Database query failed', details: fetchError });
         }
 
-        if (results.length === 0) {
-            return res.status(404).json({ error: 'Transport details not found for the given Gr No' });
+        console.log('Fetch Transport and Class Details Result:', fetchResults);
+
+        if (fetchResults.length === 0) {
+            return res.status(404).json({ error: 'Details not found for the given Gr No' });
         }
 
-        const { transport_needed, transport_tagged, transport_pickup_drop } = results[0];
-        const concatenatedClass = `${section}`;
+        const { transport_needed, transport_tagged, transport_pickup_drop, Standard, Division } = fetchResults[0];
+        const concatenatedClass = `${Standard} ${Division}`;
 
         if (transport_needed) {
             // Fetch vehicle ID from transport_schedule_details
@@ -234,8 +237,10 @@ router.post('/delete-transport-alloted', (req, res) => {
                     WHERE vehicle_no = ? AND classes_alloted LIKE ? AND route_stops LIKE ?
                 `;
                 const params = [vehicle_no, `%${concatenatedClass}%`, `%${transportPickupDrop}%`];
+                console.log('Executing query:', getIdQuery, 'with params:', params);
                 connection_auth.query(getIdQuery, params, (getIdError, results) => {
                     if (getIdError) return callback(getIdError);
+                    console.log('Get Vehicle ID Result:', results);
                     callback(null, results.length > 0 ? results[0].id : null);
                 });
             };
@@ -254,8 +259,10 @@ router.post('/delete-transport-alloted', (req, res) => {
                             END
                     WHERE id = ?
                 `;
+                console.log('Executing query:', updateSeatsQuery, 'with params:', [vehicleId]);
                 connection_auth.query(updateSeatsQuery, [vehicleId], (updateError) => {
                     if (updateError) return callback(updateError);
+                    console.log('Update Seats Result for vehicleId:', vehicleId);
                     callback(null);
                 });
             };
@@ -263,7 +270,7 @@ router.post('/delete-transport-alloted', (req, res) => {
             // Perform the operations sequentially
             getVehicleId(transport_tagged, transport_pickup_drop, (getIdError, vehicleId) => {
                 if (getIdError) {
-                    console.error('Database query failed', getIdError);
+                    console.error('Database query failed:', getIdError);
                     return res.status(500).json({ error: 'Database query failed', details: getIdError });
                 }
 
@@ -273,7 +280,7 @@ router.post('/delete-transport-alloted', (req, res) => {
 
                 updateSeats(vehicleId, (updateSeatsError) => {
                     if (updateSeatsError) {
-                        console.error('Database query failed', updateSeatsError);
+                        console.error('Database query failed:', updateSeatsError);
                         return res.status(500).json({ error: 'Database query failed', details: updateSeatsError });
                     }
 
