@@ -224,69 +224,69 @@ document.querySelector(".search-button").addEventListener("click", function () {
 // });
 
 
-document.getElementById("generateTCOnOverlay").addEventListener("click", function () {
-    // Fill TC preview with form data
-    const formData = {
-        studentName: document.getElementById("studentName").value.trim(),
-        motherName: document.getElementById("motherName").value.trim(),
-        dob: document.getElementById("dob").value,
-        placeOfBirth: document.getElementById("placeOfBirth").value.trim(),
-        nationality: document.getElementById("nationality").value.trim(),
-        religion: document.getElementById("religion").value.trim(),
-        category: document.getElementById("category").value.trim(),
-        caste: document.getElementById("caste").value.trim(),
-        aadharId: document.getElementById("aadharId").value.trim(),
-        lastSchool: document.getElementById("lastSchool").value.trim(),
-        dateOfAdmission: document.getElementById("dateOfAdmission").value,
-        classOfAdmission: document.getElementById("classOfAdmission").value.trim(),
-        tcNo: document.getElementById("tcNo").value.trim(),
-        dateOfLeaving: document.getElementById("dateOfLeaving").value,
-        standardLeaving: document.getElementById("standardLeaving").value.trim(),
-        reasonLeaving: document.getElementById("reasonLeaving").value.trim(),
-        progress: document.getElementById("progress").value.trim(),
-        conduct: document.getElementById("conduct").value.trim(),
-        result: document.getElementById("result").value.trim(),
-        remark: document.getElementById("remark").value.trim()
-    };
+// document.getElementById("generateTCOnOverlay").addEventListener("click", function () {
+//     // Fill TC preview with form data
+//     const formData = {
+//         studentName: document.getElementById("studentName").value.trim(),
+//         motherName: document.getElementById("motherName").value.trim(),
+//         dob: document.getElementById("dob").value,
+//         placeOfBirth: document.getElementById("placeOfBirth").value.trim(),
+//         nationality: document.getElementById("nationality").value.trim(),
+//         religion: document.getElementById("religion").value.trim(),
+//         category: document.getElementById("category").value.trim(),
+//         caste: document.getElementById("caste").value.trim(),
+//         aadharId: document.getElementById("aadharId").value.trim(),
+//         lastSchool: document.getElementById("lastSchool").value.trim(),
+//         dateOfAdmission: document.getElementById("dateOfAdmission").value,
+//         classOfAdmission: document.getElementById("classOfAdmission").value.trim(),
+//         tcNo: document.getElementById("tcNo").value.trim(),
+//         dateOfLeaving: document.getElementById("dateOfLeaving").value,
+//         standardLeaving: document.getElementById("standardLeaving").value.trim(),
+//         reasonLeaving: document.getElementById("reasonLeaving").value.trim(),
+//         progress: document.getElementById("progress").value.trim(),
+//         conduct: document.getElementById("conduct").value.trim(),
+//         result: document.getElementById("result").value.trim(),
+//         remark: document.getElementById("remark").value.trim()
+//     };
 
-    // Populate the HTML with the form data
-    document.getElementById("tcStudentName").innerText = formData.studentName;
-    document.getElementById("tcMotherName").innerText = formData.motherName;
-    document.getElementById("tcDOB").innerText = formData.dob;
-    document.getElementById("tcPlaceOfBirth").innerText = formData.placeOfBirth;
-    document.getElementById("tcNationality").innerText = formData.nationality;
-    document.getElementById("tcReligion").innerText = formData.religion;
-    document.getElementById("tcCategory").innerText = formData.category;
-    document.getElementById("tcCaste").innerText = formData.caste;
-    document.getElementById("tcAadharId").innerText = formData.aadharId;
-    document.getElementById("tcLastSchool").innerText = formData.lastSchool;
-    document.getElementById("tcDateOfAdmission").innerText = formData.dateOfAdmission;
-    document.getElementById("tcClassOfAdmission").innerText = formData.classOfAdmission;
-    document.getElementById("tcDateOfLeaving").innerText = formData.dateOfLeaving;
-    document.getElementById("tcStandardLeaving").innerText = formData.standardLeaving;
-    document.getElementById("tcReasonLeaving").innerText = formData.reasonLeaving;
-    document.getElementById("tcProgress").innerText = formData.progress;
-    document.getElementById("tcConduct").innerText = formData.conduct;
-    document.getElementById("tcResult").innerText = formData.result;
-    document.getElementById("tcRemark").innerText = formData.remark;
+//     // Populate the HTML with the form data
+//     document.getElementById("tcStudentName").innerText = formData.studentName;
+//     document.getElementById("tcMotherName").innerText = formData.motherName;
+//     document.getElementById("tcDOB").innerText = formData.dob;
+//     document.getElementById("tcPlaceOfBirth").innerText = formData.placeOfBirth;
+//     document.getElementById("tcNationality").innerText = formData.nationality;
+//     document.getElementById("tcReligion").innerText = formData.religion;
+//     document.getElementById("tcCategory").innerText = formData.category;
+//     document.getElementById("tcCaste").innerText = formData.caste;
+//     document.getElementById("tcAadharId").innerText = formData.aadharId;
+//     document.getElementById("tcLastSchool").innerText = formData.lastSchool;
+//     document.getElementById("tcDateOfAdmission").innerText = formData.dateOfAdmission;
+//     document.getElementById("tcClassOfAdmission").innerText = formData.classOfAdmission;
+//     document.getElementById("tcDateOfLeaving").innerText = formData.dateOfLeaving;
+//     document.getElementById("tcStandardLeaving").innerText = formData.standardLeaving;
+//     document.getElementById("tcReasonLeaving").innerText = formData.reasonLeaving;
+//     document.getElementById("tcProgress").innerText = formData.progress;
+//     document.getElementById("tcConduct").innerText = formData.conduct;
+//     document.getElementById("tcResult").innerText = formData.result;
+//     document.getElementById("tcRemark").innerText = formData.remark;
 
-    // Show the overlay
-    document.getElementById("previewTCOverlay").style.display = "flex";
-});
+//     // Show the overlay
+//     document.getElementById("previewTCOverlay").style.display = "flex";
+// });
 
-// Close overlay
-document.getElementById("closePreviewTCOverlay").addEventListener("click", function () {
-    document.getElementById("previewTCOverlay").style.display = "none";
-});
+// // Close overlay
+// document.getElementById("closePreviewTCOverlay").addEventListener("click", function () {
+//     document.getElementById("previewTCOverlay").style.display = "none";
+// });
 
-// Download TC as Image
-document.getElementById("downloadTC").addEventListener("click", function () {
-    html2canvas(document.getElementById("tcContainer")).then(canvas => {
-        let link = document.createElement("a");
-        link.href = canvas.toDataURL("image/png");
-        link.download = "Transfer_Certificate.png";
-        link.click();
-    });
-});
+// // Download TC as Image
+// document.getElementById("downloadTC").addEventListener("click", function () {
+//     html2canvas(document.getElementById("tcContainer")).then(canvas => {
+//         let link = document.createElement("a");
+//         link.href = canvas.toDataURL("image/png");
+//         link.download = "Transfer_Certificate.png";
+//         link.click();
+//     });
+// });
 
 
