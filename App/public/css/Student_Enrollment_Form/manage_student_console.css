@@ -939,6 +939,7 @@ input[type="checkbox"] {
 }
 
 
+
 .vendorIcon {
     position: relative;
     width: 2rem;
@@ -947,6 +948,73 @@ input[type="checkbox"] {
     left: 417px;
     /* Add this property */
 }
+
+.tc-design {
+    width: 70%;
+    margin: 20px auto;
+    padding: 20px;
+    border: 2px solid black;
+    font-family: Arial, sans-serif;
+    max-height: 58vh;
+    overflow-y: auto;
+}
+
+.tc-header {
+    text-align: center;
+    border-bottom: 2px solid black;
+    padding-bottom: 10px;
+}
+
+.school-logo {
+    width: 80px;
+    height: auto;
+}
+
+.tc-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.tc-table td {
+    padding: 8px;
+    border: 1px solid black;
+}
+
+.tc-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tc-table td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.tc-table td strong {
+    display: inline-block;
+    width: 30%;
+    text-align: left;
+}
+
+.tc-table td span {
+    display: inline-block;
+    width: 65%;
+    text-align: left;
+}
+
+
+.tc-footer {
+    margin-top: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.signatures {
+    text-align: right;
+    margin-top: 50px;
+}
+
 
 
 
