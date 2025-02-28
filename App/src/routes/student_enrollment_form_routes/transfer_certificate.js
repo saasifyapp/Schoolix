@@ -129,7 +129,7 @@ router.post('/deactivate-student', (req, res) => {
     }
 
     // Construct the SQL query to update is_active to 0
-    const query = `UPDATE ${tableName} SET is_active = 0 WHERE Grno = ?`;
+    const query = `UPDATE ${tableName} SET is_active = 1 WHERE Grno = ?`;
     req.connectionPool.query(query, [grno], (error, results) => {
         if (error) {
             console.error('Database query failed', error);
