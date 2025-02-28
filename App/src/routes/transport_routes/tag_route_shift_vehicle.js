@@ -223,7 +223,7 @@ router.delete('/delete_transport_schedule/:id', (req, res) => {
 
         const { vehicle_no, students_tagged, driver_name, route_name, shift_name } = checkResults[0];
 
-        if (students_tagged !== null) {
+        if (students_tagged !== null && students_tagged !== 0) {
             return res.status(400).json({
                 error: 'Cannot delete record with students tagged',
                 vehicle_no: vehicle_no,

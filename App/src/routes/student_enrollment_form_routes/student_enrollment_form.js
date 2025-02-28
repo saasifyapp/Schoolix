@@ -599,7 +599,7 @@ router.post('/submitEnrollmentForm', (req, res) => {
     const formData = req.body;
 
     // Log the received data for debugging
-   // console.log('Received data:', JSON.stringify(formData, null, 2));
+    // console.log('Received data:', JSON.stringify(formData, null, 2));
 
     if (!formData || !formData.studentInformation || !formData.guardianInformation || !formData.academicInformation || !formData.feesInformation || !formData.transportInformation) {
         return res.status(400).json({ error: 'Invalid data received' });
@@ -645,7 +645,7 @@ router.post('/submitEnrollmentForm', (req, res) => {
         aaparId,
         penId,
         lastSchoolAttended,
-        last_school_class_completed ,
+        last_school_class_completed,
         percentage
     } = formData.academicInformation;
 
@@ -838,11 +838,11 @@ router.post('/submitEnrollmentForm', (req, res) => {
                     studentDetails.transport_pickup_drop,
                     studentDetails.Consent,
                     appUid,
-                    studentDetails.medical_status, 
-                    studentDetails.medical_description, 
-                    studentDetails.alpsankhyak, 
-                    studentDetails.saral_id, 
-                    studentDetails.apar_id, 
+                    studentDetails.medical_status,
+                    studentDetails.medical_description,
+                    studentDetails.alpsankhyak,
+                    studentDetails.saral_id,
+                    studentDetails.apar_id,
                     studentDetails.pen_id,
                     studentDetails.admitted_class,
                     studentDetails.status, // status is always set to 1
@@ -881,7 +881,7 @@ router.post('/submitEnrollmentForm', (req, res) => {
                             const transportPickDropAddress = formData.transportInformation.transport_pickup_drop; // Getting transport pick-up/drop-off address
                             const vehicleNo = formData.transportInformation.transport_tagged; // Getting vehicle number (vehicle tagged)
 
-                            console.log(concatenatedClass, transportPickDropAddress, vehicleNo, transport_needed);
+                            //console.log(concatenatedClass, transportPickDropAddress, vehicleNo, transport_needed);
 
                             // First, get the id using vehicle_no, classes_alloted, and route_stops
                             const getIdQuery = `
@@ -901,7 +901,7 @@ router.post('/submitEnrollmentForm', (req, res) => {
                                 }
 
                                 if (results.length === 0) {
-                                    console.log('No matching records found for the given parameters.');
+                                   // console.log('No matching records found for the given parameters.');
                                     return res.status(404).json({ error: 'No transport schedule found for the provided details' });
                                 }
 
@@ -923,9 +923,9 @@ router.post('/submitEnrollmentForm', (req, res) => {
                                         });
                                     }
 
-                                    console.log('Rows affected:', updateResult.affectedRows);
+                                    //console.log('Rows affected:', updateResult.affectedRows);
                                     if (updateResult.affectedRows === 0) {
-                                        console.log('No records were updated.');
+                                       // console.log('No records were updated.');
                                     }
 
                                     // Commit transaction after all queries are successful
@@ -1009,7 +1009,7 @@ router.get("/fetch-student", (req, res) => {
         // If section is not recognized
         return res.status(400).json({ error: "Invalid section parameter" });
     }
-    
+
     // Log the determined table name
     //console.log("Using table:", tableName);
 
@@ -1026,8 +1026,8 @@ router.get("/fetch-student", (req, res) => {
     }
 
     // Log the constructed query and parameters
-    console.log("Constructed query:", query);
-    console.log("Query parameters:", queryParams);
+    //console.log("Constructed query:", query);
+    //console.log("Query parameters:", queryParams);
 
     // Execute the query
     req.connectionPool.query(query, queryParams, (error, results) => {
@@ -1036,7 +1036,7 @@ router.get("/fetch-student", (req, res) => {
         }
 
         // Log the query results
-        console.log("Query results:", results);
+        //console.log("Query results:", results);
 
         if (results.length === 0) {
             return res.status(404).json({ message: "No student found" });
@@ -1063,140 +1063,34 @@ router.get("/fetch-student", (req, res) => {
 router.post('/updateStudentDetails', (req, res) => {
     const formData = req.body;
 
-    console.log('Received update data:', JSON.stringify(formData, null, 2));
+    //console.log('Received update data:', JSON.stringify(formData, null, 2));
 
+    // Validate input data
     if (!formData || !formData.academicInformation || !formData.academicInformation.grNo) {
         return res.status(400).json({ error: 'Invalid data received or grNo missing' });
     }
 
-    const {
-        studentInformation,
-        guardianInformation,
-        academicInformation,
-        feesInformation,
-        transportInformation,
-        consent,
-        package_breakup,
-        total_package
-    } = formData;
-
-    const {
-        firstName,
-        middleName,
-        lastName,
-        fullName,
-        dob,
-        placeOfBirth,
-        age,
-        gender,
-        bloodGroup,
-        studentContact,
-        currentAddress,
-        nationality,
-        religion,
-        category,
-        caste,
-        alpsankhyak,
-        domicile,
-        motherTongue,
-        aadharNo,
-        medicalStatus,
-        medicalDescription,
-        documents
-    } = studentInformation;
-
-    const {
-        father,
-        mother,
-        localGuardian
-    } = guardianInformation;
-
-    const {
-        section,
-        grNo,
-        admissionDate,
-        standard,
-        division,
-        classOfAdmission,
-        saralId,
-        aaparId,
-        penId,
-        lastSchoolAttended,
-        last_school_class_completed,
-        percentage
-    } = academicInformation;
-
-    const {
-        transport_needed,
-        transport_tagged,
-        transport_pickup_drop
-    } = transportInformation;
-
+    // Destructure form data
+    const { studentInformation, guardianInformation, academicInformation, feesInformation, transportInformation, consent, package_breakup, total_package } = formData;
+    const { firstName, middleName, lastName, fullName, dob, placeOfBirth, age, gender, bloodGroup, studentContact, currentAddress, nationality, religion, category, caste, alpsankhyak, domicile, motherTongue, aadharNo, medicalStatus, medicalDescription, documents } = studentInformation;
+    const { father, mother, localGuardian } = guardianInformation;
+    const { section, grNo, admissionDate, standard, division, classOfAdmission, saralId, aaparId, penId, lastSchoolAttended, last_school_class_completed, percentage } = academicInformation;
+    const { transport_needed, transport_tagged, transport_pickup_drop } = transportInformation;
     const consentText = consent.selected;
 
+    // Prepare student details for update
     const studentDetails = {
-        Firstname: firstName,
-        Middlename: middleName,
-        Surname: lastName,
-        Name: fullName,
-        DOB: dob,
-        Age: age,
-        POB: placeOfBirth,
-        Gender: gender,
-        Blood_Group: bloodGroup,
-        Address: currentAddress.cityVillage,
-        landmark: currentAddress.landmark,
-        taluka: currentAddress.taluka,
-        district: currentAddress.district,
-        state: currentAddress.state,
-        pin_code: currentAddress.pinCode,
-        student_phone_no: studentContact,
-        Adhar_no: aadharNo,
-        Religion: religion,
-        Nationality: nationality,
-        Category: category,
-        Caste: caste,
-        Domicile: domicile,
-        Mother_Tongue: motherTongue,
-        Documents_Submitted: documents,
-        Father_name: father.firstName,
-        F_qualification: father.qualification,
-        F_occupation: father.occupation,
-        F_mobile_no: father.contactNumber,
-        Grand_father: father.middleName,
-        Mother_name: mother.firstName,
-        M_Qualification: mother.qualification,
-        M_occupation: mother.occupation,
-        M_mobile_no: mother.contactNumber,
-        guardian_name: localGuardian.name,
-        guardian_contact: localGuardian.contact,
-        guardian_relation: localGuardian.relation,
-        guardian_address: localGuardian.fullAddress,
-        guardian_landmark: localGuardian.landmark,
-        guardian_pin_code: localGuardian.pinCode,
-        Section: section,
-        Grno: grNo,
-        Admission_Date: admissionDate,
-        Standard: standard,
-        Division: division,
-        admitted_class: classOfAdmission,
-        Last_School: lastSchoolAttended,
-        last_school_class_completed: last_school_class_completed,
-        percentage_last_school: percentage?.toString() || '',
-        package_breakup: package_breakup,
-        total_package: total_package,
-        current_outsntanding : total_package, 
-        transport_needed: transport_needed,
-        transport_tagged: transport_tagged,
-        transport_pickup_drop: transport_pickup_drop,
-        Consent: consentText,
-        medical_status: medicalStatus,
-        medical_description: medicalDescription,
-        alpsankhyak: alpsankhyak,
-        saral_id: saralId,
-        apar_id: aaparId,
-        pen_id: penId,
-        status: 1
+        Firstname: firstName, Middlename: middleName, Surname: lastName, Name: fullName, DOB: dob, Age: age, POB: placeOfBirth, Gender: gender, Blood_Group: bloodGroup,
+        Address: currentAddress.cityVillage, landmark: currentAddress.landmark, taluka: currentAddress.taluka, district: currentAddress.district, state: currentAddress.state,
+        pin_code: currentAddress.pinCode, student_phone_no: studentContact, Adhar_no: aadharNo, Religion: religion, Nationality: nationality, Category: category, Caste: caste,
+        Domicile: domicile, Mother_Tongue: motherTongue, Documents_Submitted: documents, Father_name: father.firstName, F_qualification: father.qualification, F_occupation:
+            father.occupation, F_mobile_no: father.contactNumber, Grand_father: father.middleName, Mother_name: mother.firstName, M_Qualification: mother.qualification, M_occupation:
+            mother.occupation, M_mobile_no: mother.contactNumber, guardian_name: localGuardian.name, guardian_contact: localGuardian.contact, guardian_relation: localGuardian.relation,
+        guardian_address: localGuardian.fullAddress, guardian_landmark: localGuardian.landmark, guardian_pin_code: localGuardian.pinCode, Section: section, Grno: grNo,
+        Admission_Date: admissionDate, Standard: standard, Division: division, admitted_class: classOfAdmission, Last_School: lastSchoolAttended,
+        last_school_class_completed: last_school_class_completed, percentage_last_school: percentage?.toString() || '', package_breakup: package_breakup, total_package: total_package,
+        current_outsntanding: total_package, transport_needed: transport_needed, transport_tagged: transport_tagged, transport_pickup_drop: transport_pickup_drop, Consent: consentText,
+        medical_status: medicalStatus, medical_description: medicalDescription, alpsankhyak: alpsankhyak, saral_id: saralId, apar_id: aaparId, pen_id: penId, status: 1
     };
 
     const schoolName = req.cookies.schoolName;
@@ -1204,6 +1098,7 @@ router.post('/updateStudentDetails', (req, res) => {
         return res.status(400).json({ error: 'School name is required' });
     }
 
+    // Determine the table name based on the section
     let tableName = 'test_student_details';
     if (section.toLowerCase() === 'primary') {
         tableName = 'primary_student_details';
@@ -1211,23 +1106,21 @@ router.post('/updateStudentDetails', (req, res) => {
         tableName = 'pre_primary_student_details';
     }
 
+    // Establish a database connection
     req.connectionPool.getConnection((err, connection) => {
         if (err) {
             return res.status(500).json({ error: 'Database connection failed' });
         }
 
+        // Begin transaction
         connection.beginTransaction(error => {
             if (error) {
                 connection.release();
                 return res.status(500).json({ error: 'Transaction initiation failed' });
             }
 
-            // Select all current student data
-            const selectQuery = `
-                SELECT * 
-                FROM ${tableName} 
-                WHERE Grno = ? AND Section = ?
-            `;
+            // Select current student data
+            const selectQuery = `SELECT * FROM ${tableName} WHERE Grno = ? AND Section = ?`;
 
             connection.query(selectQuery, [grNo, section], (selectError, results) => {
                 if (selectError) {
@@ -1254,15 +1147,11 @@ router.post('/updateStudentDetails', (req, res) => {
                         const oldValue = currentStudentData[key] != null ? currentStudentData[key].toString() : '';
                         const newValue = studentDetails[key] != null ? studentDetails[key].toString() : '';
                         if (oldValue !== newValue) {
-                            changes[key] = {
-                                old: currentStudentData[key],
-                                new: studentDetails[key]
-                            };
+                            changes[key] = { old: currentStudentData[key], new: studentDetails[key] };
                         }
                     }
                 }
-
-                console.log('Changes:', JSON.stringify(changes, null, 2));
+                //console.log('Changes:', JSON.stringify(changes, null, 2));
 
                 // Generate the new username and password
                 const { username, password } = generateUsernameAndPassword(fullName, schoolName, grNo);
@@ -1286,67 +1175,21 @@ router.post('/updateStudentDetails', (req, res) => {
                 `;
 
                 const updateValues = [
-                    studentDetails.Firstname,
-                    studentDetails.Middlename,
-                    studentDetails.Surname,
-                    studentDetails.Name,
-                    studentDetails.DOB,
-                    studentDetails.Age,
-                    studentDetails.POB,
-                    studentDetails.Gender,
-                    studentDetails.Blood_Group,
-                    studentDetails.Address,
-                    studentDetails.landmark,
-                    studentDetails.taluka,
-                    studentDetails.district,
-                    studentDetails.state,
-                    studentDetails.pin_code,
-                    studentDetails.student_phone_no,
-                    studentDetails.Adhar_no,
-                    studentDetails.Religion,
-                    studentDetails.Nationality,
-                    studentDetails.Category,
-                    studentDetails.Caste,
-                    studentDetails.Domicile,
-                    studentDetails.Mother_Tongue,
-                    studentDetails.Documents_Submitted,
-                    studentDetails.Father_name,
-                    studentDetails.F_qualification,
-                    studentDetails.F_occupation,
-                    studentDetails.F_mobile_no,
-                    studentDetails.Grand_father,
-                    studentDetails.Mother_name,
-                    studentDetails.M_Qualification,
-                    studentDetails.M_occupation,
-                    studentDetails.M_mobile_no,
-                    studentDetails.guardian_name,
-                    studentDetails.guardian_contact,
-                    studentDetails.guardian_relation,
-                    studentDetails.guardian_address,
-                    studentDetails.guardian_landmark,
-                    studentDetails.guardian_pin_code,
-                    studentDetails.Section,
-                    studentDetails.Admission_Date,
-                    studentDetails.Standard,
-                    studentDetails.Division,
-                    studentDetails.Last_School,
-                    studentDetails.last_school_class_completed,
-                    studentDetails.percentage_last_school,
-                    studentDetails.package_breakup,
-                    studentDetails.total_package,
-                    studentDetails.total_package,
-                    studentDetails.transport_needed,
-                    studentDetails.transport_tagged,
-                    studentDetails.transport_pickup_drop,
-                    studentDetails.Consent,
-                    studentDetails.medical_status,
-                    studentDetails.medical_description,
-                    studentDetails.alpsankhyak,
-                    studentDetails.saral_id,
-                    studentDetails.apar_id,
-                    studentDetails.pen_id,
-                    studentDetails.admitted_class,
-                    grNo
+                    studentDetails.Firstname, studentDetails.Middlename, studentDetails.Surname, studentDetails.Name, studentDetails.DOB,
+                    studentDetails.Age, studentDetails.POB, studentDetails.Gender, studentDetails.Blood_Group, studentDetails.Address,
+                    studentDetails.landmark, studentDetails.taluka, studentDetails.district, studentDetails.state, studentDetails.pin_code,
+                    studentDetails.student_phone_no, studentDetails.Adhar_no, studentDetails.Religion, studentDetails.Nationality,
+                    studentDetails.Category, studentDetails.Caste, studentDetails.Domicile, studentDetails.Mother_Tongue,
+                    studentDetails.Documents_Submitted, studentDetails.Father_name, studentDetails.F_qualification,
+                    studentDetails.F_occupation, studentDetails.F_mobile_no, studentDetails.Grand_father, studentDetails.Mother_name,
+                    studentDetails.M_Qualification, studentDetails.M_occupation, studentDetails.M_mobile_no, studentDetails.guardian_name,
+                    studentDetails.guardian_contact, studentDetails.guardian_relation, studentDetails.guardian_address, studentDetails.guardian_landmark,
+                    studentDetails.guardian_pin_code, studentDetails.Section, studentDetails.Admission_Date, studentDetails.Standard,
+                    studentDetails.Division, studentDetails.Last_School, studentDetails.last_school_class_completed, studentDetails.percentage_last_school,
+                    studentDetails.package_breakup, studentDetails.total_package, studentDetails.total_package, studentDetails.transport_needed,
+                    studentDetails.transport_tagged, studentDetails.transport_pickup_drop, studentDetails.Consent, studentDetails.medical_status,
+                    studentDetails.medical_description, studentDetails.alpsankhyak, studentDetails.saral_id, studentDetails.apar_id,
+                    studentDetails.pen_id, studentDetails.admitted_class, grNo
                 ];
 
                 connection.query(updateQuery, updateValues, (updateError, updateResult) => {
@@ -1365,12 +1208,13 @@ router.post('/updateStudentDetails', (req, res) => {
                         });
                     }
 
+                    // Update Android app user details
                     const updateAndroidQuery = `
-                    UPDATE android_app_users SET
-                        username = ?, 
-                        password = ?,
-                        name = ?
-                    WHERE uid = ?
+                        UPDATE android_app_users SET
+                            username = ?, 
+                            password = ?,
+                            name = ?
+                        WHERE uid = ?
                     `;
 
                     const androidUpdateValues = [username, password, studentName, currentStudentData.app_uid];
@@ -1384,17 +1228,219 @@ router.post('/updateStudentDetails', (req, res) => {
                             });
                         }
 
-                        connection.commit(commitError => {
-                            if (commitError) {
-                                return connection.rollback(() => {
-                                    console.error('Transaction commit failed:', commitError);
-                                    connection.release();
-                                    res.status(500).json({ error: 'Transaction commit failed' });
+
+                        //////////////////////////////////////////
+
+
+                        // Perform Transport table update if necessary
+                        // Perform Transport table update if necessary
+                        const performTransportUpdate = (done) => {
+                            const oldTransportNeeded = currentStudentData.transport_needed;
+                            const newTransportNeeded = transport_needed;
+                            const oldTransportTagged = currentStudentData.transport_tagged;
+                            const newTransportTagged = transport_tagged;
+
+                            //console.log('Performing transport update...');
+                            //console.log('Old Transport Needed:', oldTransportNeeded, 'New Transport Needed:', newTransportNeeded);
+                            //console.log('Old Transport Tagged:', oldTransportTagged, 'New Transport Tagged:', newTransportTagged);
+
+                            const concatenatedClass = `${standard} ${division}`;
+                            const transportPickDropAddress = formData.transportInformation.transport_pickup_drop;
+
+                            const getVehicleId = (vehicle_no, transportPickupDrop, callback) => {
+                                //console.log('Fetching vehicle id for vehicle_no:', vehicle_no);
+                                if (!vehicle_no) return callback(null, null);
+                                const getIdQuery = `
+            SELECT id FROM transport_schedule_details
+            WHERE vehicle_no = ? AND classes_alloted LIKE ? AND route_stops LIKE ?
+        `;
+                                const params = [vehicle_no, `%${concatenatedClass}%`, `%${transportPickupDrop}%`];
+                               // console.log('Executing query:', getIdQuery, 'with params:', params);
+                                connection.query(getIdQuery, params, (getIdError, results) => {
+                                    if (getIdError) {
+                                        return callback(getIdError);
+                                    }
+                                    //console.log('Query Result:', results);
+                                    callback(null, results.length > 0 ? results[0].id : null);
                                 });
+                            };
+
+                            const updateSeats = (vehicleId, increment, callback) => {
+                                //console.log('Updating seats for vehicle ID:', vehicleId, 'Increment:', increment);
+                                if (!vehicleId) return callback(null);
+                                const updateSeatsQuery = `
+            UPDATE transport_schedule_details
+            SET available_seats = available_seats + ?, 
+                students_tagged = COALESCE(students_tagged, 0) + ?
+            WHERE id = ?
+        `;
+                                //console.log('Executing query:', updateSeatsQuery, 'with params:', [increment, -increment, vehicleId]);
+                                connection.query(updateSeatsQuery, [increment, -increment, vehicleId], (updateError) => {
+                                    if (updateError) {
+                                      //  console.log('Error updating seats for vehicle ID:', vehicleId);
+                                        return callback(updateError);
+                                    }
+                                    //console.log('Seats updated for vehicle ID:', vehicleId);
+                                    callback(null);
+                                });
+                            };
+
+                            // Case 1: Both are 0 - do nothing
+                            if (oldTransportNeeded === 0 && newTransportNeeded === 0) {
+                               // console.log('No transport needed for old and new. No update required.');
+                                return done();
+
+                                // Case 2: Old is 0, new is 1 - only update the new vehicle
+                            } else if (oldTransportNeeded === 0 && newTransportNeeded === 1) {
+                                if (newTransportTagged) {
+                                    getVehicleId(newTransportTagged, transportPickDropAddress, (getIdError, newVehicleId) => {
+                                        if (getIdError) {
+                                            return connection.rollback(() => {
+                                                console.error('Error fetching vehicle id for new vehicle:', getIdError);
+                                                connection.release();
+                                                res.status(500).json({ error: 'Error fetching vehicle id for new vehicle' });
+                                            });
+                                        }
+                                        if (newVehicleId) {
+                                            updateSeats(newVehicleId, -1, (updateError) => {
+                                                if (updateError) {
+                                                    return connection.rollback(() => {
+                                                        console.error('Error updating transport schedule for new vehicle:', updateError);
+                                                        connection.release();
+                                                        res.status(500).json({ error: 'Error updating transport schedule for new vehicle' });
+                                                    });
+                                                }
+                                                done();
+                                            });
+                                        } else {
+                                           // console.log('No new vehicle found to update.');
+                                            done();
+                                        }
+                                    });
+                                } else {
+                                   // console.log('No new vehicle to update.');
+                                    return done();
+                                }
+
+                                // Case 3: Both are 1 - check if there is any change in the vehicle and update
+                            } else if (oldTransportNeeded === 1 && newTransportNeeded === 1) {
+                                if (oldTransportTagged === newTransportTagged) {
+                                    //console.log('Same vehicle. No update required.');
+                                    return done();
+                                } else {
+                                    // Update old vehicle
+                                    getVehicleId(oldTransportTagged, currentStudentData.transport_pickup_drop, (getIdError, oldVehicleId) => {
+                                        if (getIdError) {
+                                            return connection.rollback(() => {
+                                                console.error('Error fetching vehicle id for old vehicle:', getIdError);
+                                                connection.release();
+                                                res.status(500).json({ error: 'Error fetching vehicle id for old vehicle' });
+                                            });
+                                        }
+                                        if (oldVehicleId) {
+                                            updateSeats(oldVehicleId, 1, (updateError) => {
+                                                if (updateError) {
+                                                    return connection.rollback(() => {
+                                                        console.error('Error updating transport schedule for old vehicle:', updateError);
+                                                        connection.release();
+                                                        res.status(500).json({ error: 'Error updating transport schedule for old vehicle' });
+                                                    });
+                                                }
+                                                // Update new vehicle
+                                                if (newTransportTagged) {
+                                                    getVehicleId(newTransportTagged, transportPickDropAddress, (getIdError, newVehicleId) => {
+                                                        if (getIdError) {
+                                                            return connection.rollback(() => {
+                                                                console.error('Error fetching vehicle id for new vehicle:', getIdError);
+                                                                connection.release();
+                                                                res.status(500).json({ error: 'Error fetching vehicle id for new vehicle' });
+                                                            });
+                                                        }
+                                                        if (newVehicleId) {
+                                                            updateSeats(newVehicleId, -1, (updateError) => {
+                                                                if (updateError) {
+                                                                    return connection.rollback(() => {
+                                                                        console.error('Error updating transport schedule for new vehicle:', updateError);
+                                                                        connection.release();
+                                                                        res.status(500).json({ error: 'Error updating transport schedule for new vehicle' });
+                                                                    });
+                                                                }
+                                                                done();
+                                                            });
+                                                        } else {
+                                                           // console.log('No new vehicle found to update.');
+                                                            done();
+                                                        }
+                                                    });
+                                                } else {
+                                                    done();
+                                                }
+                                            });
+                                        } else {
+                                           // console.log('No old vehicle found to update.');
+                                            done();
+                                        }
+                                    });
+                                }
+
+                                // Case 4: Old is 1, new is 0 - only update the old vehicle
+                            } else if (oldTransportNeeded === 1 && newTransportNeeded === 0) {
+                                if (oldTransportTagged) {
+                                    const query = `
+                SELECT id FROM transport_schedule_details
+                WHERE vehicle_no = ? AND classes_alloted LIKE ? AND route_stops LIKE ?
+            `;
+                                    const params = [oldTransportTagged, `%${concatenatedClass}%`, `%${currentStudentData.transport_pickup_drop}%`];
+                                   // console.log('Executing query:', query, 'with params:', params);
+                                    connection.query(query, params, (err, results) => {
+                                        if (err) {
+                                            return connection.rollback(() => {
+                                                console.error('Error fetching vehicle id for previous vehicle:', err);
+                                                connection.release();
+                                                res.status(500).json({ error: 'Error fetching vehicle id for previous vehicle' });
+                                            });
+                                        }
+                                       // console.log('Query Result:', results);
+                                        if (results && results.length > 0) {
+                                            const oldVehicleId = results[0].id;
+                                            updateSeats(oldVehicleId, 1, (updateError) => {
+                                                if (updateError) {
+                                                    return connection.rollback(() => {
+                                                        console.error('Error updating transport schedule for previous vehicle:', updateError);
+                                                        connection.release();
+                                                        res.status(500).json({ error: 'Error updating transport schedule for previous vehicle' });
+                                                    });
+                                                }
+                                                done();
+                                            });
+                                        } else {
+                                           // console.log('No previous vehicle found to update.');
+                                            done();
+                                        }
+                                    });
+                                } else {
+                                   // console.log('No previous vehicle to update.');
+                                    return done();
+                                }
                             }
-                            connection.release();
-                            res.json({ message: 'Student details and Android app user updated successfully!', changes });
+                        };
+                        /////////////////////////////////////////////////////
+
+                        // Commit the transaction once all operations complete
+                        performTransportUpdate(() => {
+                            connection.commit((commitError) => {
+                                if (commitError) {
+                                    return connection.rollback(() => {
+                                        console.error('Transaction commit failed:', commitError);
+                                        connection.release();
+                                        res.status(500).json({ error: 'Transaction commit failed' });
+                                    });
+                                }
+                                connection.release();
+                                res.json({ message: 'Student details, Android app user, and transport schedule updated successfully!', changes });
+                            });
                         });
+
                     });
                 });
             });

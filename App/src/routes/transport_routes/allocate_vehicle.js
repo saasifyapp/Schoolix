@@ -288,7 +288,7 @@ router.get('/allocate_getScheduleDetails', (req, res) => {
             available_seats, 
             students_tagged 
         FROM transport_schedule_details
-        WHERE students_tagged IS NOT NULL
+        WHERE students_tagged IS NOT NULL AND students_tagged <> 0
  
     `;
 
