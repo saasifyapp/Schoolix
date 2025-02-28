@@ -428,7 +428,7 @@
                             <input type="text" class="form-control" id="remark" placeholder=" ">
                             <span class="form-control-placeholder">Remark</span>
                             <div id="remarkSuggestion" class="suggestions"></div>
-                        </div>                  
+                        </div>
                     </div>
                 </div>
 
@@ -441,6 +441,112 @@
             </form>
         </div>
     </div>
+
+
+    <!-- Overlay for TC Preview -->
+    <div id="previewTCOverlay" class="overlay">
+        <div class="overlay-content" style="top: 0;">
+            <div class="icon-container">
+                <i><img class="topicon" src="/images/preview.gif" alt="Preview Icon"></i>
+            </div>
+            <button id="closePreviewTCOverlay" class="close-button">&times;</button>
+
+            <h2 class="overlay-title">TRANSFER CERTIFICATE PREVIEW</h2>
+
+            <div id="tcContainer" class="tc-design">
+                <div class="tc-header">
+                    <img id="logo" alt="School Logo" class="school-logo">
+                    <div class="school-details">
+                        <h2 id="schoolName"></h2>
+                        <p>Bhausaheb Hivale Nagar Dhanaj (Bk), Tq Karanja, Washim, PIN: 444110</p>
+                        <p>Phone: 9552012987, 07256 220214 | UDSE No.: 2706101105 | Board Index No.: 10.04.059</p>
+                        <h3>SCHOOL LEAVING CERTIFICATE</h3>
+                    </div>
+                </div>
+
+                <table class="tc-table">
+                    <tr>
+                        <td><strong>1. Certificate No:</strong> <span id="tcNo"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. General Register No:</strong> <span id="tc_grNo"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. Student Name:</strong> <span id="tcStudentName"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. Mother's Name:</strong> <span id="tcMotherName"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>5. Date of Birth:</strong> <span id="tcDOB"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>6. Place of Birth:</strong> <span id="tcPlaceOfBirth"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>7. Nationality:</strong> <span id="tcNationality"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>8. Religion:</strong> <span id="tcReligion"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>9. Caste & Sub-Caste:</strong> <span id="tcCategory"></span> (<span
+                                id="tcCaste"></span>)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>10. Aadhar ID:</strong> <span id="tcAadharId"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>11. Last School Attended:</strong> <span id="tcLastSchool"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>12. Date of Admission:</strong> <span id="tcDateOfAdmission"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>13. Class of Admission:</strong> <span id="tcClassOfAdmission"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>14. Date of Leaving:</strong> <span id="tcDateOfLeaving"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>15. Standard Leaving:</strong> <span id="tcStandardLeaving"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>16. Reason for Leaving:</strong> <span id="tcReasonLeaving"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>17. Progress:</strong> <span id="tcProgress"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>18. Conduct:</strong> <span id="tcConduct"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>19. Result:</strong> <span id="tcResult"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>20. Remark:</strong> <span id="tcRemark"></span></td>
+                    </tr>
+                </table>
+
+
+                <div class="tc-footer">
+                    <p>Certified that the above information is in accordance with the School Admission Register.</p>
+                    <p><strong>Place:</strong> Dhanaj (Bk)</p>
+                    <p><strong>Date:</strong> <span id="tcIssueDate"></span></p>
+                    <div class="signatures">
+                        <p><strong>Head Mistress</strong></p>
+                    </div>
+                </div>
+            </div>
+
+
+            <button id="downloadTC" class="download-button">
+                <img src="/images/download.gif" alt="Download TC">
+                <span>Download TC</span>
+            </button>
+        </div>
+    </div>
+
 
 
 

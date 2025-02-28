@@ -825,9 +825,7 @@ document.getElementById('submitGenerateTCForm').addEventListener('click', async 
                 console.log('TC Form Data:', tcformdata);
 
                 await deactivateStudent(tcformdata.tc_section.toLowerCase(), tcformdata.tc_grNo);
-
                 await deleteAndroidUser(tcformdata.tc_section.toLowerCase(), tcformdata.tc_grNo);
-
                 await deleteTransportAlloted(tcformdata.tc_section.toLowerCase(), tcformdata.tc_grNo);
 
                 Swal.fire({
@@ -836,9 +834,8 @@ document.getElementById('submitGenerateTCForm').addEventListener('click', async 
                     text: 'All fields are filled correctly, data has been sent to the server, and student, Android user, and transport allotment processing has started.',
                 });
 
-                // Show the overlay here
-                // Call your overlay display function here
-                // Example: showOverlay();
+                // Populate the HTML and display overlay
+                populateTCFormData(tcformdata);
 
             } catch (error) {
                 Swal.fire({
@@ -856,6 +853,54 @@ document.getElementById('submitGenerateTCForm').addEventListener('click', async 
         }
     }
 });
+
+// Function to populate HTML with form data and show preview
+function populateTCFormData(formData) {
+    // Set school name dynamically
+    document.getElementById("schoolName").innerText = formData.schoolName;
+    
+
+
+    document.getElementById("tcStudentName").innerText = formData.studentName;
+    document.getElementById("tcMotherName").innerText = formData.motherName;
+    document.getElementById("tcDOB").innerText = formData.dob;
+    document.getElementById("tcPlaceOfBirth").innerText = formData.placeOfBirth;
+    document.getElementById("tcNationality").innerText = formData.nationality;
+    document.getElementById("tcReligion").innerText = formData.religion;
+    document.getElementById("tcCategory").innerText = formData.category;
+    document.getElementById("tcCaste").innerText = formData.caste;
+    document.getElementById("tcAadharId").innerText = formData.aadharId;
+    document.getElementById("tcLastSchool").innerText = formData.lastSchool;
+    document.getElementById("tcDateOfAdmission").innerText = formData.dateOfAdmission;
+    document.getElementById("tcClassOfAdmission").innerText = formData.classOfAdmission;
+    document.getElementById("tcDateOfLeaving").innerText = formData.dateOfLeaving;
+    document.getElementById("tcStandardLeaving").innerText = formData.standardLeaving;
+    document.getElementById("tcReasonLeaving").innerText = formData.reasonLeaving;
+    document.getElementById("tcProgress").innerText = formData.progress;
+    document.getElementById("tcConduct").innerText = formData.conduct;
+    document.getElementById("tcResult").innerText = formData.result;
+    document.getElementById("tcRemark").innerText = formData.remark;
+
+    // Show the overlay
+    document.getElementById("previewTCOverlay").style.display = "flex";
+}
+
+// Close overlay
+document.getElementById("closePreviewTCOverlay").addEventListener("click", function () {
+    document.getElementById("previewTCOverlay").style.display = "none";
+});
+
+// Download TC as Image
+document.getElementById("downloadTC").addEventListener("click", function () {
+    html2canvas(document.getElementById("tcContainer")).then(canvas => {
+        let link = document.createElement("a");
+        link.href = canvas.toDataURL("image/png");
+        link.download = "Transfer_Certificate.png";
+        link.click();
+    });
+});
+
+
 
 
 async function deactivateStudent(section, grno) {
