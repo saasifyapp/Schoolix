@@ -943,29 +943,35 @@ document
     }
   });
 
-// Function to populate HTML with form data and show preview
+  
 function populateTCFormData(formData) {
-  // Get the base school logo URL
+  const setText = (selector, value) => {
+    const element = document.querySelector(selector);
+    if (element) {
+      element.innerText = value;
+    } else {
+      console.warn(`Element with selector "${selector}" not found.`);
+    }
+  };
+
+  // ✅ Get school logo URL based on school name
   const logoUrl = getSchoolLogoUrl("schoolName");
 
   if (logoUrl) {
-    // Set the first logo
     const logoElement1 = document.getElementById("schoolLogo");
     if (logoElement1) {
       logoElement1.src = logoUrl;
-      logoElement1.alt = "School Logo"; // Optional alt text
+      logoElement1.alt = "School Logo";
     } else {
       console.error("First logo element not found in HTML");
     }
 
-    // Construct the second logo URL (appending '2' before file extension)
-    const logoUrl2 = logoUrl.replace(/(\.[a-z]+)$/, "2$1"); // Adds "2" before file extension
+    const logoUrl2 = logoUrl.replace(/(\.[a-z]+)$/, "2$1");
 
-    // Set the second logo
     const logoElement2 = document.getElementById("schoolLogo2");
     if (logoElement2) {
       logoElement2.src = logoUrl2;
-      logoElement2.alt = "School Logo 2"; // Optional alt text
+      logoElement2.alt = "School Logo 2";
     } else {
       console.error("Second logo element not found in HTML");
     }
@@ -973,33 +979,53 @@ function populateTCFormData(formData) {
     console.error("School logo URL not found");
   }
 
-  document.getElementById("schoolName").innerText = formData.schoolName;
+  // ✅ Update school details
+  setText("#schoolName", formData.schoolName);
+  setText(".left-detail strong", formData.udise_no);
+  setText(".right-detail strong", formData.board_index_no);
+  setText("#contact", `Contact No: ${formData.contact_no}`);
+  setText("#email", `Email: ${formData.email_address}`);
 
-  document.getElementById("tcStudentName").innerText = formData.studentName;
-  document.getElementById("tcMotherName").innerText = formData.motherName;
-  document.getElementById("tcDOB").innerText = formData.dob;
-  document.getElementById("tcPlaceOfBirth").innerText = formData.placeOfBirth;
-  document.getElementById("tcNationality").innerText = formData.nationality;
-  document.getElementById("tcReligion").innerText = formData.religion;
-  document.getElementById("tcCategory").innerText = formData.category;
-  document.getElementById("tcCaste").innerText = formData.caste;
-  document.getElementById("tcAadharId").innerText = formData.aadharId;
-  document.getElementById("tcLastSchool").innerText = formData.lastSchool;
-  document.getElementById("tcDateOfAdmission").innerText =
-    formData.dateOfAdmission;
-  document.getElementById("tcClassOfAdmission").innerText =
-    formData.classOfAdmission;
-  document.getElementById("tcDateOfLeaving").innerText = formData.dateOfLeaving;
-  document.getElementById("tcStandardLeaving").innerText =
-    formData.standardLeaving;
-  document.getElementById("tcReasonLeaving").innerText = formData.reasonLeaving;
-  document.getElementById("tcProgress").innerText = formData.progress;
-  document.getElementById("tcConduct").innerText = formData.conduct;
-  document.getElementById("tcResult").innerText = formData.result;
-  document.getElementById("tcRemark").innerText = formData.remark;
+  // ✅ Populate Address in Two Lines
+  if (formData.detailed_address) {
+    const addressLines = formData.detailed_address.split(", ");
+    setText("#schoolAddressLine1", addressLines.slice(0, 2).join(", ")); // First two parts
+    setText("#schoolAddressLine2", addressLines.slice(2).join(", ")); // Remaining parts
+  }
+  console.log(formData); // Debugging: Ensure `tcNo` and `tc_grNo` exist
+  console.log(formData.tcNo); // Should log "1"
+  console.log(formData.tc_grNo); // Should log "1615"
 
-  // Show the overlay
-  document.getElementById("previewTCOverlay").style.display = "flex";
+  // ✅ Update student details
+  setText("#tc_No", formData.tcNo);
+  setText("#tcgrNo",formData.tc_grNo);
+  setText("#tcStudentName", formData.studentName);
+  setText("#tcMotherName", formData.motherName);  
+  setText("#tcDOB", formData.dob);
+  setText("#tcPlaceOfBirth", formData.placeOfBirth);
+  setText("#tcNationality", formData.nationality);
+  setText("#tcReligion", formData.religion);
+  setText("#tcCategory", formData.category);
+  setText("#tcCaste", formData.caste);
+  setText("#tcAadharId", formData.aadharId);
+  setText("#tcLastSchool", formData.lastSchool);
+  setText("#tcDateOfAdmission", formData.dateOfAdmission);
+  setText("#tcClassOfAdmission", formData.classOfAdmission);
+  setText("#tcDateOfLeaving", formData.dateOfLeaving);
+  setText("#tcStandardLeaving", formData.standardLeaving);
+  setText("#tcReasonLeaving", formData.reasonLeaving);
+  setText("#tcProgress", formData.progress);
+  setText("#tcConduct", formData.conduct);
+  setText("#tcResult", formData.result);
+  setText("#tcRemark", formData.remark);
+
+  // ✅ Show the overlay if available
+  const overlay = document.getElementById("previewTCOverlay");
+  if (overlay) {
+    overlay.style.display = "flex";
+  } else {
+    console.warn("previewTCOverlay element not found.");
+  }
 }
 
 // Close overlay
@@ -1009,13 +1035,52 @@ document
     document.getElementById("previewTCOverlay").style.display = "none";
   });
 
+  
 // Download TC as Image
+// document.getElementById("downloadTC").addEventListener("click", function () {
+//   html2canvas(document.getElementById("tcContainer")).then((canvas) => {
+//     let link = document.createElement("a");
+//     link.href = canvas.toDataURL("image/png");
+//     link.download = "Transfer_Certificate.png";
+//     link.click();
+//   });
+// });
+
 document.getElementById("downloadTC").addEventListener("click", function () {
-  html2canvas(document.getElementById("tcContainer")).then((canvas) => {
-    let link = document.createElement("a");
-    link.href = canvas.toDataURL("image/png");
-    link.download = "Transfer_Certificate.png";
-    link.click();
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF('p', 'mm', 'a4'); 
+  const tcContainer = document.getElementById("tcContainer");
+
+  // Clone the tcContainer and remove scrolling
+  let clonedContainer = tcContainer.cloneNode(true);
+  clonedContainer.style.maxHeight = "none";
+  clonedContainer.style.overflowY = "visible";
+  clonedContainer.style.position = "absolute";
+  clonedContainer.style.left = "-9999px"; // Move off-screen
+
+  document.body.appendChild(clonedContainer); // Append it to the body
+
+  html2canvas(clonedContainer, { scale: 2 }).then(canvas => {
+      const imgData = canvas.toDataURL("image/png");
+      const imgWidth = 190; // mm (A4 width)
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+      pdf.save("Transfer_Certificate.pdf");
+
+      // Remove cloned container
+      document.body.removeChild(clonedContainer);
+
+      // Close overlay
+      document.getElementById("previewTCOverlay").style.display = "none";
+
+      // Show SweetAlert
+      Swal.fire({
+          icon: "success",
+          title: "TC Downloaded!",
+          text: "Your Transfer Certificate has been successfully downloaded.",
+          confirmButtonColor: "#007bff"
+      });
   });
 });
 

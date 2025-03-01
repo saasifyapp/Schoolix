@@ -445,7 +445,7 @@
 
     <!-- Overlay for TC Preview -->
     <div id="previewTCOverlay" class="overlay">
-        <div class="overlay-content" style="top: 0;">
+        <div class="overlay-content" style="top: 0;max-width: 1700px;width: 85%;">
             <div class="icon-container">
                 <i><img class="topicon" src="/images/preview.gif" alt="Preview Icon"></i>
             </div>
@@ -455,25 +455,43 @@
 
             <div id="tcContainer" class="tc-design">
                 <div class="tc-header">
-                    <img id="schoolLogo" alt="School Logo" class="school-logo">
-
+                    <div class="logo-container">
+                        <img id="schoolLogo" src="logo1.png" alt="School Logo" class="school-logo">
+                    </div>
+                
                     <div class="school-details">
-                        <h2 id="schoolName"></h2>
-                        <p>Bhausaheb Hivale Nagar Dhanaj (Bk), Tq Karanja, Washim, PIN: 444110</p>
-                        <p>Phone: 9552012987, 07256 220214 | UDSE No.: 2706101105 | Board Index No.: 10.04.059</p>
+                        <h2 id="schoolName">TARANGAN ENGLISH SCHOOL</h2>
+                        <p id="schoolAddressLine1"></p>
+                        <p id="schoolAddressLine2"></p>
+                        
+                        <div class="info-container-detail">
+                            <div class="info-row-detail">
+                                <span class="left-detail">UDISE No: <strong>2706011105</strong></span>
+                                <span class="right-detail">Board Index No: <strong>10.04.059</strong></span>
+                            </div>
+                            <div class="info-row-detail">
+                                <span class="left-detail" id="contact">Contact No: 8308474371</span>
+                                <span class="right-detail" id="email">Email: tarangan.english.school@gmail.com</span>
+                            </div>
+                        </div>
+                        
                         <h3>SCHOOL LEAVING CERTIFICATE</h3>
                     </div>
-                    <img id="schoolLogo2" alt="School Logo" class="school-logo">
-
+                
+                    <div class="logo-container">
+                        <img id="schoolLogo2" src="logo2.png" alt="School Logo" class="school-logo">
+                    </div>
                 </div>
+                
+                
 
                 <table class="tc-table">
                     <tr>
-                        <td><strong>1. Certificate No:</strong> <span id="tcNo"></span></td>
+                        <td><strong>1. Certificate No:</strong> <span id="tc_No" ></span></td>
                     </tr>
                     <tr>
-                        <td><strong>2. General Register No:</strong> <span id="tc_grNo"></span></td>
-                    </tr>
+                        <td><strong>2. General Register No:</strong> <span id="tcgrNo"></span></td>
+                    </tr>                    
                     <tr>
                         <td><strong>3. Student Name:</strong> <span id="tcStudentName"></span></td>
                     </tr>
@@ -493,8 +511,7 @@
                         <td><strong>8. Religion:</strong> <span id="tcReligion"></span></td>
                     </tr>
                     <tr>
-                        <td><strong>9. Caste & Sub-Caste:</strong> <span id="tcCategory"></span> (<span
-                                id="tcCaste"></span>)</td>
+                        <td><strong>9. Caste & Sub-Caste:</strong> <span id="tcCategory">(<span id="tcCaste"></span>)</span></td>
                     </tr>
                     <tr>
                         <td><strong>10. Aadhar ID:</strong> <span id="tcAadharId"></span></td>
@@ -533,19 +550,22 @@
 
 
                 <div class="tc-footer">
-                    <p>Certified that the above information is in accordance with the School Admission Register.</p>
-                    <p><strong>Place:</strong> Dhanaj (Bk)</p>
-                    <p><strong>Date:</strong> <span id="tcIssueDate"></span></p>
-                    <div class="signatures">
-                        <p><strong>Head Mistress</strong></p>
+                    <div class="footer-content">
+                        <p><strong>DATE :</strong> <span id="tcIssueDate">01-01-2025</span></p>
+                        <p class="signature"><strong>Signature</strong></p>
                     </div>
+                    <p class="notice">
+                        No changes shall be made to any entry in this certificate except by the title authority issuing it. 
+                        Any infringement of this certificate will be treated as a violation of school policy and may result 
+                        in a penalty and legal action as per the applicable rules and regulations.
+                    </p>
                 </div>
+                
             </div>
 
 
             <button id="downloadTC" class="download-button">
-                <img src="/images/download.gif" alt="Download TC">
-                <span>Download TC</span>
+                <img src="/images/download.gif" alt="Download TC">                
             </button>
         </div>
     </div>
@@ -700,7 +720,10 @@
     <script src="/js/Student_Enrollment_Form/populate_update_student_form.js"></script>
     <script src="/js/Student_Enrollment_Form/transfer_certificate.js"></script>
     <script src="/js/Universal_Components_JS/autoFill_student_details.js"></script>
+    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 
 
