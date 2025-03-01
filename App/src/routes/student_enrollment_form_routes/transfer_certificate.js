@@ -90,7 +90,8 @@ router.get('/fetch-tc-school-details', (req, res) => {
             contact_no,
             email_address,
             udise_no,
-            board_index_no 
+            board_index_no ,
+            detailed_address
         FROM user_details
         WHERE LoginName = ? AND schoolName = ?
     `;
