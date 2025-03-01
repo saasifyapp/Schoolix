@@ -1035,13 +1035,52 @@ document
     document.getElementById("previewTCOverlay").style.display = "none";
   });
 
+  
 // Download TC as Image
+// document.getElementById("downloadTC").addEventListener("click", function () {
+//   html2canvas(document.getElementById("tcContainer")).then((canvas) => {
+//     let link = document.createElement("a");
+//     link.href = canvas.toDataURL("image/png");
+//     link.download = "Transfer_Certificate.png";
+//     link.click();
+//   });
+// });
+
 document.getElementById("downloadTC").addEventListener("click", function () {
-  html2canvas(document.getElementById("tcContainer")).then((canvas) => {
-    let link = document.createElement("a");
-    link.href = canvas.toDataURL("image/png");
-    link.download = "Transfer_Certificate.png";
-    link.click();
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF('p', 'mm', 'a4'); 
+  const tcContainer = document.getElementById("tcContainer");
+
+  // Clone the tcContainer and remove scrolling
+  let clonedContainer = tcContainer.cloneNode(true);
+  clonedContainer.style.maxHeight = "none";
+  clonedContainer.style.overflowY = "visible";
+  clonedContainer.style.position = "absolute";
+  clonedContainer.style.left = "-9999px"; // Move off-screen
+
+  document.body.appendChild(clonedContainer); // Append it to the body
+
+  html2canvas(clonedContainer, { scale: 2 }).then(canvas => {
+      const imgData = canvas.toDataURL("image/png");
+      const imgWidth = 190; // mm (A4 width)
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+      pdf.save("Transfer_Certificate.pdf");
+
+      // Remove cloned container
+      document.body.removeChild(clonedContainer);
+
+      // Close overlay
+      document.getElementById("previewTCOverlay").style.display = "none";
+
+      // Show SweetAlert
+      Swal.fire({
+          icon: "success",
+          title: "TC Downloaded!",
+          text: "Your Transfer Certificate has been successfully downloaded.",
+          confirmButtonColor: "#007bff"
+      });
   });
 });
 

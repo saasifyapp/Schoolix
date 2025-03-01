@@ -963,6 +963,10 @@ input[type="checkbox"] {
     /* Add this property */
 }
 
+.hidden {
+    display: none; /* Hide the original while capturing */
+}
+
 .tc-design {
     width: 90%;
     margin: 20px auto;
@@ -1071,7 +1075,7 @@ input[type="checkbox"] {
 .tc-table td span {
     display: inline-block;
     width: 65%;
-    text-align: left;
+    text-align: center;
 }
 
 .tc-footer {
