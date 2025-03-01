@@ -857,8 +857,21 @@ document.getElementById('submitGenerateTCForm').addEventListener('click', async 
 // Function to populate HTML with form data and show preview
 function populateTCFormData(formData) {
     // Set school name dynamically
-    document.getElementById("schoolName").innerText = formData.schoolName;
-    
+    const logoUrl = getSchoolLogoUrl("schoolName");
+
+    if (logoUrl) {
+        const logoElement = document.getElementById("schoolLogo");
+        if (logoElement) {
+            logoElement.src = logoUrl;
+            logoElement.alt = "School Logo"; // Optional: set alt text            
+        } else {
+            console.error("Logo element not found in HTML");
+        }
+    } else {
+        console.error("School logo URL not found");
+    }
+
+    document.getElementById("schoolName").innerText = formData.schoolName; 
 
 
     document.getElementById("tcStudentName").innerText = formData.studentName;
@@ -899,6 +912,27 @@ document.getElementById("downloadTC").addEventListener("click", function () {
         link.click();
     });
 });
+
+// Function to get school logo URL dynamically
+function getSchoolLogoUrl(cookieName) {
+    const cookies = document.cookie.split(';');
+    let schoolName;
+
+    for (let cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === cookieName) {
+            schoolName = decodeURIComponent(value);
+            break;
+        }
+    }
+
+    if (schoolName) {
+        return `../images/logo/${schoolName.toLowerCase().replace(/\s+/g, '_')}.png`; // Construct logo URL
+    }
+    return null; // Return null if school name is not found
+}
+
+
 
 
 
