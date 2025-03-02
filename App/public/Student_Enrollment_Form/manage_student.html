@@ -622,8 +622,8 @@
                     <div class="form-Searchgroup">
                         <img class="vendorIcon" src="/images/search.gif" alt="Search Icon"
                             style="right: 25px; left: 405px;">
-                        <input type="text" class="form-control" id="searchTCInput" name="tcSearch" placeholder=" "
-                            oninput="searchTCDetails()" style="width: 400px;">
+                        <input type="text" class="form-control" id="searchLeaveStudentInput" name="tcSearch" placeholder=" "
+                            oninput="searchLeaveStudent()" style="width: 400px;">
                         <span class="form-control-placeholder" style="left: 3.75rem;">Search by student name</span>
                     </div>
                     <button class="refreshButton" onclick="refreshTCData()" style="margin-top: 10px;">
@@ -643,6 +643,7 @@
                             <th>Class</th>
                             <th>Issue Date</th>
                             <th>Reason</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="tcTablebody">

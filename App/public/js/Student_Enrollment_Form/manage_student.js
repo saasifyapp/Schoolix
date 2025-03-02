@@ -223,3 +223,138 @@ document.querySelector(".search-button").addEventListener("click", function () {
 //     document.getElementById("identificationInfo").style.display = "block";
 // });
 
+////////////////////////////SEARCH TC//////////////////////////////////////////////////////////
+document.addEventListener("DOMContentLoaded", function () {
+    refreshTCData(); // Load students with TC on page load
+});
+
+let tcData = []; // Store fetched TC data globally
+
+function refreshTCData() {
+    fetch(`/fetch-all-leave-students`)
+        .then(response => response.json())
+        .then(data => {
+            tcData = data; // Store data in global object
+            displayStudentsHavingTC(tcData);
+        })
+        .catch(error => {
+            console.error("Error fetching TC data:", error);
+            document.getElementById("tcTableBody").innerHTML = 
+                `<tr><td colspan="5">Error loading data</td></tr>`;
+        });
+}
+
+function displayStudentsHavingTC(data) {
+    const tableBody = document.getElementById("tcTablebody");
+    tableBody.innerHTML = ""; // Clear previous rows
+
+    if (!Array.isArray(data) || data.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="6">No students found</td></tr>`; // Adjusted colspan for the extra action column
+        return;
+    }
+
+    console.log(data);
+
+    data.forEach(student => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${student.tc_no || "N/A"}</td>
+            <td>${student.student_name || "N/A"}</td>
+            <td>${student.standard_of_leaving || "N/A"}</td>
+            <td>${student.issue_date || "N/A"}</td>
+            <td>${student.reason_of_leaving || "N/A"}</td>
+            <td>
+                <div class="button-container" style="display: flex; justify-content: center; gap: 10px;">
+                    <!-- Edit Button -->
+                    <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; 
+                        text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px;
+                        cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                        transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+                        onclick="editStudent('${student.tc_no}', '${student.student_name}', '${student.standard_of_leaving}', '${student.issue_date}', '${student.reason_of_leaving}')"
+                        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                        <img src="../images/edit_icon.png" alt="Edit" style="width: 25px; height: 25px; margin: 5px;">
+                        <span>Edit</span>
+                    </button>
+
+                    <!-- Delete Button -->
+                    <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; 
+                        text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px;
+                        cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                        transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+                        onclick="deleteStudent('${student.tc_no}', '${student.student_name}')"
+                        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                        <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; margin: 5px;">
+                        <span>Delete</span>
+                    </button>
+
+                    <!-- Print Button -->
+                    <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; 
+                        text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px;
+                        cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                        transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+                        onclick="printStudent('${student.tc_no}')"
+                        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                        <img src="../images/print_icon.png" alt="Print" style="width: 25px; height: 25px; margin: 5px;">
+                        <span>Print</span>
+                    </button>
+                </div>
+            </td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
+
+function searchLeaveStudent() {
+    const inputField = document.getElementById("searchLeaveStudentInput");
+    const query = inputField.value.trim().toLowerCase();
+    
+    if (query.length < 1) {
+        refreshTCData();
+        return;
+    }
+
+    const isNumeric = /^\d+$/.test(query); // Check if input is a number (GR No)
+    
+    const filteredData = tcData.filter(student => {
+        if (isNumeric) {
+            return student.gr_no && student.gr_no.toString().includes(query);
+        } else {
+            return student.student_name && student.student_name.toLowerCase().includes(query);
+        }
+    });
+
+    displayStudentsHavingTC(filteredData);
+}
+
+function exportTCTable() {
+    const table = document.getElementById("tcTable");
+    const rows = table.querySelectorAll("tr");
+    let csvContent = [];
+
+    // Extract headers
+    const headers = [];
+    table.querySelectorAll("thead th").forEach(th => headers.push(th.textContent.trim()));
+    csvContent.push(headers.join(",")); // Add headers to CSV
+
+    // Extract table rows
+    rows.forEach((row, index) => {
+        if (index === 0) return; // Skip header row already added
+        const rowData = [];
+        row.querySelectorAll("td").forEach(td => rowData.push(`"${td.textContent.trim()}"`));
+        if (rowData.length) csvContent.push(rowData.join(",")); // Add row to CSV
+    });
+
+    // Convert array to CSV format
+    const csvString = csvContent.join("\n");
+    const blob = new Blob([csvString], { type: "text/csv" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "TC_Student_Data.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}

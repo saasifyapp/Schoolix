@@ -296,4 +296,67 @@ router.post('/delete-transport-alloted', (req, res) => {
     });
 });
 
+// Endpoint to fetch all students who have left school with TC
+router.get("/fetch-all-leave-students", async (req, res) => {
+    try {
+        const query = `SELECT * FROM transfer_certificates`;
+
+        // Execute query
+        req.connectionPool.query(query, (error, results) => {
+            if (error) {
+                console.error("Database error:", error);
+                return res.status(500).json({ error: "Database error" });
+            }
+
+            if (results.length === 0) {
+                return res.status(404).json({ message: "No transfer certificate records found" });
+            }
+
+            res.json(results);
+        });
+    } catch (error) {
+        console.error("Server error:", error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+
+// // Endpoint to fetch students who have LEFT SCHOOL WITH TC
+// router.get("/search-leave-student", async (req, res) => {
+//     const { grno, name } = req.query;
+
+//     // Validate input parameters
+//     if (!grno && !name) {
+//         return res.status(400).json({ error: "Invalid search parameters" });
+//     }
+
+//     let query, values;
+
+//     if (grno) { // Search by Grno
+//         query = `SELECT * FROM primary_student_details WHERE is_active = 0 AND Grno = ?
+//                  UNION
+//                  SELECT * FROM pre_primary_student_details WHERE is_active = 0 AND Grno = ?`;
+//         values = [grno, grno]; // Pass same value for both queries
+//     } else { // Search by Name
+//         query = `SELECT * FROM primary_student_details WHERE is_active = 0 AND Name LIKE ?
+//                  UNION
+//                  SELECT * FROM pre_primary_student_details WHERE is_active = 0 AND Name LIKE ?`;
+//         values = [`%${name}%`, `%${name}%`]; // Pass same value for both queries
+//     }
+
+//     // Execute the query
+//     req.connectionPool.query(query, values, (error, results) => {
+//         if (error) {
+//             return res.status(500).json({ error: "Database error", details: error });
+//         }
+
+//         if (results.length === 0) {
+//             return res.status(404).json({ message: "No student found" });
+//         }
+
+//         res.json(results);
+//     });
+// });
+
+
 module.exports = router;
