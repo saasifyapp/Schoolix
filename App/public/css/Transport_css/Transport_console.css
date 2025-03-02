@@ -859,7 +859,8 @@ svg path {
     border-radius: 5px;
     /* Rounded corners */
     max-height: 10rem;
-    width: 18.7rem;
+    width: 17rem;
+    max-width  : 18.7rem;
     overflow-y: auto;
     position: absolute;
     background: white;
@@ -870,6 +871,11 @@ svg path {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     /* Optional: Add a subtle shadow */
     color: black;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5%;
+    top: 3.3rem;
+    border-radius: 0px 0px 25px 25px;
 }
 
 /* Style for each suggestion item */
@@ -887,7 +893,7 @@ svg path {
 
 .suggestion-item:hover {
     background: #D6EAF8;
-    font-weight: bold;
+    font-weight: bold; /* Make text bold on hover */
     /* Make text bold on hover */
 }
 
@@ -933,11 +939,15 @@ svg path {
     align-items: center;
     flex-wrap: wrap;
     gap: 5px;
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
     border-radius: 5px;
     padding: 5px;
-    background: white;
+    background: transparent;
     box-sizing: border-box;
+    overflow: auto;
+    /* height: 100px; */
+    max-height: 120px;
+    
 }
 
 /* Style for the input field */
@@ -951,6 +961,8 @@ svg path {
     /* Ensures it doesn't overflow */
     padding: 5px;
     box-sizing: border-box;
+   
+   
 }
 
 /* Style for the suggestions container */
@@ -960,7 +972,7 @@ svg path {
     max-height: 200px;
     width: 100%;
     overflow-y: auto;
-    position: absolute;
+    /* position: absolute; */
     top: 45px;
     /* Adjust based on the height of the input field and padding */
     background: white;
@@ -1054,6 +1066,7 @@ svg path {
     padding: 20px;
     border-radius: 20px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    flex: 0.7 !important;
 }
 
 
@@ -1071,6 +1084,7 @@ svg path {
 }
 
 .info-container {
+    color: black;
     margin-bottom: 20px;
     padding: 15px;
     border: 1px solid #ddd;
@@ -1105,6 +1119,47 @@ svg path {
     stroke-opacity: 1.0 !important;
     stroke-dasharray: none !important; /* Ensure the line is continuous */
 }
+
+.student-teacher-count {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;   
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    color: var(--grey-color); /* Text color */
+    margin: 10px; /* Optional: space around the card */
+    animation: fadeUp 0.5s ease-in-out;
+    animation-delay: 0.4s;
+    animation-fill-mode: backwards;
+}
+
+.student-teacher-count h3 {
+    display: flex;
+    align-items: center;
+    margin: 0px 40px; /* Horizontal margin between h3 */
+    font-size: 1.2em; /* Adjust size as needed */
+}
+
+.student-teacher-count .student-icon,
+.student-teacher-count .teacher-icon {
+    display: inline-block;
+    width: 24px; /* Icon width */
+    height: 24px; /* Icon height */
+    margin-right: 10px; /* Space between icon and text */
+    background-size: contain;
+    background-repeat: no-repeat;    
+}
+
+.student-teacher-count .student-icon {
+    background-image: url('/images/students.png'); /* Replace with the actual path to the student icon */
+}
+
+.student-teacher-count .teacher-icon {
+    background-image: url('/images/teacher.png'); /* Replace with the actual path to the teacher icon */
+}
+
+
 
 @keyframes fadeUp {
     from {

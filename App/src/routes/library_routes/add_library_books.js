@@ -56,7 +56,7 @@ router.post('/library/add_book', (req, res) => {
 
 // Display All Books
 router.get('/library/books', (req, res) => {
-    const query = `SELECT * FROM library_book_details`;
+    const query = `SELECT * FROM library_book_details ORDER BY CAST(bookID AS UNSIGNED) ASC`;
 
     req.connectionPool.query(query, (err, results) => {
         if (err) {

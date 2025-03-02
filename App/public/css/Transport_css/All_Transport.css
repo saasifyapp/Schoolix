@@ -46,7 +46,7 @@ body {
     height: 260px;
     /* Adjust height as needed */
     outline: none;
-    margin: 0 15px;
+    margin: 0 25px;
     font-family: 'Open Sans', sans-serif;
     font-size: 12px;
 }
@@ -438,8 +438,8 @@ body {
     display: flex;
     flex-wrap: wrap;
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    /* border: 1px solid #ccc; */
+    border-radius: 20px;
 }
 
 .tag {
@@ -464,6 +464,7 @@ body {
     outline: none;
     flex-grow: 1;
     padding: 5px;
+    border-radius: 20px;
 }
 
 .suggestions-container {
@@ -479,15 +480,6 @@ body {
     border-radius: 4px;
     flex-direction: column;
     top: 6rem;
-}
-
-.suggestion-item {
-    padding: 10px;
-    cursor: pointer;
-}
-
-.suggestion-item:hover {
-    background-color: #f0f0f0;
 }
 
 

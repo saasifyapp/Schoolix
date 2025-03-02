@@ -1,0 +1,297 @@
+/* Ensure the HTML and body take up the entire height of the viewport */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+/* Apply styles to the body */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* Main content container styles */
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    margin: 0 20px;
+}
+
+/* Dynamic container that changes size based on selected radio button */
+#tc-layout {
+    background-color: white;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column; 
+    justify-content: space-between;
+    align-items: stretch; 
+    max-width: 90%;
+    max-height: 95%;
+}
+
+/* A4 aspect ratio: 1:1.414, scaled up */
+#tc-layout[data-size="A4"] {
+    width: 420px;
+    height: 594px;
+}
+
+/* Letter aspect ratio: 1:1.294, scaled up */
+#tc-layout[data-size="Letter"] {
+    width: 432px;
+    height: 558px;
+}
+
+/* Legal aspect ratio: 1:1.647, scaled up */
+#tc-layout[data-size="Legal"] {
+    width: 432px;
+    height: 713px;
+}
+
+/* Header container styles */
+#tc-header {
+    display: flex;
+    width: 100%;
+    height: 20%;
+    border: 1px solid black;
+    box-sizing: border-box;
+}
+
+/* Logo1 container styles */
+#logo1-container {
+    background-color: transparent;
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* School details container styles */
+#school-detail-container {
+    width: 60%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* Common styles for text elements */
+.school-detail-text {
+    width: 100%; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    padding: 5px 0; 
+}
+
+/* Adjust individual element styles */
+#school-name {
+    font-weight: bold;
+    font-size: 1.8em; 
+    text-align: center;
+}
+
+#school-address {
+    font-size: 0.9em; 
+    text-align: center;
+}
+
+#school-contact {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%; 
+    font-size: 0.9em;
+    padding: 5px 0; 
+}
+
+#school-contact span {
+    display: block;
+    flex: 1;
+    width: 100%;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+}
+
+#school-contact span.bold {
+    font-weight: bold;
+}
+
+#school-leaving-certificate {
+    font-weight: bold;
+    font-size: 1rem; 
+    text-align: center; 
+}
+
+@media (max-width: 600px) {
+    #school-name, #school-leaving-certificate {
+        font-size: 3vw; 
+    }
+}
+
+/* Logo2 container styles */
+#logo2-container {
+    background-color: transparent;
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Ensure the images fit within their containers */
+#logo1-container img, #logo2-container img {
+    max-width: 90%;
+    max-height: 90%; 
+    object-fit: contain; 
+}
+
+/* Content container styles */
+#tc-content {
+    width: 100%;
+    flex-grow: 1; 
+    border: 1px solid black;
+    position: relative; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#watermark {
+    position: absolute;
+    width: 50%; 
+    opacity: 0.1; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+/* Footer container that is 20% height of the tc-layout */
+#tc-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    box-sizing: border-box;
+    border: 1px solid black;
+    height: 20%;
+    overflow: hidden;  /* Ensure no overflow */
+}
+
+/* Common styles for each footer section */
+.footer-section {
+    width: 100%;
+    flex: 1;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 10px;  /* Add some padding for all sections */
+    box-sizing: border-box;  /* Ensure padding is included in width */
+    text-align: center;  /* Center-align the text */
+    overflow: hidden;  /* Ensure no overflow */
+}
+
+/* Specific styles for the authenticity container */
+#authenticity-container {
+    background-color: transparent;  /* Set background to transparent */
+    font-size: 8px;  /* Hardcoded font size */
+    color: black;  /* Set text color to black */
+    align-items: flex-start;  /* Align to the top */
+    padding: 5px 10px;  /* Add padding */
+    white-space: normal;  /* Allow text to wrap */
+}
+
+/* Specific styles for the date-sign container */
+#date-sign-container {
+    background-color: transparent;  /* Set background to transparent */
+    display: flex;
+    justify-content: space-between;  /* Space items evenly horizontally */
+    align-items: flex-start;  /* Align items to the top */
+    padding: 10px 20px;  /* Add padding to all sides */
+    font-size: 10px;  /* Hardcoded font size */
+    color: black;  /* Match text color */
+    margin-top: -15px; /* Adjust this value to move content up */
+
+}
+
+/* Styles for the left section within date-sign-container */
+.date-sign-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;  /* Align text to the top */
+    color: black;  /* Set text color to black */
+    text-align: left;  /* Align text to the left */
+    margin-right: 20px;  /* Add margin to separate date and place */
+}
+
+/* Add gap between Date and Place */
+.date-sign-left > div:first-child {
+    margin-bottom: 10px;  /* Adjust gap size as needed */
+}
+
+/* Styles for the right section within date-sign-container */
+.date-sign-right {
+    display: flex;
+    align-items: flex-start;  /* Align text to the top */
+    color: black;  /* Set text color to black */
+    text-align: center;  /* Align text to the right */
+}
+/* Specific styles for the voilation container */
+#voilation-container {
+    background-color: transparent;  /* Set background to transparent */
+    font-size: 8px;  /* Hardcoded font size */
+    color: black;  /* Set text color to black */
+    align-items: flex-start;  /* Align to the top */
+    padding: 5px 10px;  /* Add padding */
+    white-space: normal;  /* Allow text to wrap */
+}
+
+/* Ensure no footer section content overflows */
+.footer-section span {
+    white-space: normal;
+    word-wrap: break-word;  /* Break long words */
+    overflow: hidden;
+    text-align: center;  /* Center-align the text */
+}
+
+/* Container for radio buttons, positioned at the right center of the screen */
+.page-sizes {
+    display: flex;
+    justify-content: flex-start;
+    position: absolute;
+    right: 25%; 
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Form styles */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Label styles */
+label {
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+/* Input radio button styles */
+input[type="radio"] {
+    margin-right: 5px;
+}

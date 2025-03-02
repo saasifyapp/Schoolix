@@ -232,8 +232,22 @@ function staytuned() {
 }
 
 
-////////////////// LOCATION FUNCTIONALITY ///////////
+////////////////// LOCATION FUNCTIONALITY AND AUTO CREATE TABLE ENDPOINTS CALLS ///////////
 document.addEventListener('DOMContentLoaded', () => {
+
+    // Call the endpoint to create tables if they do not exist
+    fetch('/create_tables')
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        console.log('Tables created or already exist.');
+      } else {
+        console.error('Error creating tables:', data.error);
+      }
+    })
+    .catch(error => console.error('Error creating tables:', error));
+
+    
   const locationDropbtn = document.querySelector('.location_dropbtn');
   const locationDropdownContent = document.querySelector('.location_dropdown-content');
   
@@ -385,13 +399,13 @@ async function sendLocationToServer(loginName, latitude, longitude) {
   }
 }
 
-///////////////////////////////////////// GET VALUES FOR PREADMISSION CONSOLE ON DASHBOARD ////////////////////////////
+///////////////////////////////////////// GET VALUES FOR LIBRARY CONSOLE ON DASHBOARD ////////////////////////////
 
 // Get Library Details //
 fetch("/main_dashboard_library_data")
   .then((response) => response.json())
   .then((data) => {
-    console.log(data);
+    //console.log(data);
 
     // Update counts with the fetched data
     document.getElementById('totalBooksCount').textContent = data.totalBooks;
@@ -715,3 +729,5 @@ async function confirmSchoolLocation(loginName) {
 
 // Call this function when the user logs in, passing the login name
 confirmSchoolLocation(username); // Replace with the actual login name
+
+

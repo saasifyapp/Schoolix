@@ -213,3 +213,5 @@ function displayUserInfo(cookieName, usernameElementId, logoElementId) {
 // Call the function to display the dynamic username and logo
 displayUserInfo('schoolName', 'user_name', 'logo');
 
+
+

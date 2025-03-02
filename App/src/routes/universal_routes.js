@@ -6,17 +6,21 @@ const connectionManager = require('../middleware/connectionManager'); // Adjust 
 // Use the connection manager middleware
 router.use(connectionManager);
 
-
 // Route to search for students
 router.get('/get_student_details', async (req, res) => {
     try {
-        // Log the incoming request parameters
-        // console.log('Incoming request query:', req.query);
+        const searchTerm = req.query.q.trim();
+        let primaryQuery, prePrimaryQuery, values;
 
-        const searchTerm = req.query.q;
-        const primaryQuery = `SELECT * FROM primary_student_details WHERE Name LIKE ?`;
-        const prePrimaryQuery = `SELECT * FROM pre_primary_student_details WHERE Name LIKE ?`;
-        const values = [`${searchTerm}%`];
+        if (/^\d+$/.test(searchTerm)) { // If input is a number, search by Grno
+            primaryQuery = `SELECT * FROM primary_student_details WHERE Grno LIKE ? AND is_active = 1`;
+            prePrimaryQuery = `SELECT * FROM pre_primary_student_details WHERE Grno LIKE ? AND is_active = 1`;
+            values = [`${searchTerm}%`];  // Partial match for Grno
+        } else { // Otherwise, search by Name
+            primaryQuery = `SELECT * FROM primary_student_details WHERE Name LIKE ? AND is_active = 1`;
+            prePrimaryQuery = `SELECT * FROM pre_primary_student_details WHERE Name LIKE ? AND is_active = 1`;
+            values = [`${searchTerm}%`];  // Partial match for Name
+        }
 
         // Execute both queries
         const primaryPromise = new Promise((resolve, reject) => {
@@ -46,9 +50,6 @@ router.get('/get_student_details', async (req, res) => {
 
         // Combine the results
         const combinedResults = [...primaryResults, ...prePrimaryResults];
-
-        // Log the fetched details
-        // console.log('Fetched student details:', combinedResults);
 
         res.json(combinedResults);
     } catch (error) {

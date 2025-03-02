@@ -1057,4 +1057,50 @@ async function isUniformNameDuplicate(uniformItem, sizeOfItem, sr_no) {
     }
 }
 
+
+function exportTableToCSV(tableId, filename) {
+    const table = document.getElementById(tableId);
+    const rows = table.querySelectorAll('tr');
+
+    let csvContent = '';
+    
+    const headers = table.querySelectorAll('th');
+    const headerData = [];
+    headers.forEach(header => {
+        headerData.push(`"${header.textContent}"`);
+    });
+    csvContent += headerData.join(',') + '\n';
+
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if(cells.length === 0) {
+            return; // Skip rows without cells (e.g., header row)
+        }
+        const rowData = [];
+        cells.forEach(cell => {
+            rowData.push(`"${cell.textContent}"`);
+        });
+        csvContent += rowData.join(',') + '\n';
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(blob, filename);
+    } else {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+}
+
+function exportUniformTable() {
+    exportTableToCSV('uniformTable', 'Inventory_Uniform_Extract.csv');
+}
+
+
 refreshUniformsData();

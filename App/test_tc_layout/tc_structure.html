@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document Type Selection</title>
+    <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="tc_structure.css">
+</head>
+
+<body>
+    <!-- Main content container -->
+    <div class="content">
+        <!-- Main container with thick border and margin -->
+        <div id="main-container">
+            <!-- Dynamic container which size changes based on selected radio button -->
+            <div id="tc-layout">
+                <!-- Header container that is 20% height of tc-layout -->
+                <div id="tc-header">
+                    <div id="logo1-container">
+                        <img src="../public/images/logo/tarangan_english_school.png" alt="Logo 1">
+                    </div>
+                    <div id="school-detail-container">
+                        <div id="school-name" class="school-detail-text">
+                            TARANGAN ENGLISH SCHOOL
+                        </div>
+                        <div id="school-address" class="school-detail-text">
+                            Bhausaheb Hiwale Nagar, Dhanaj (Bk) <br>
+                            Taluka: Karanja (Lad), District: Washim, Pin: 444110
+                        </div>
+                        <div id="school-contact" class="school-detail-text">
+                            UDISE No: 27060101105 &nbsp;&nbsp;&nbsp;&nbsp; Board Index No: 10.04.059 <br>
+                            Contact No: 8308474371 &nbsp;&nbsp;&nbsp;Email: tarangan.english.school@gmail.com
+                        </div>
+                        <div id="school-leaving-certificate" class="school-detail-text">
+                            SCHOOL LEAVING CERTIFICATE
+                        </div>
+                    </div>
+                    <div id="logo2-container">
+                        <img src="../public/images/logo/tarangan_english_school2.png" alt="Logo 2">
+                    </div>
+                </div>
+                <!-- Content container that occupies remaining space -->
+                <div id="tc-content">
+                    <img id="watermark" src="../public/images/logo/tarangan_english_school.png" alt="Watermark">
+                </div> 
+                <!-- Footer container that is 20% height of tc-layout -->
+                <div id="tc-footer">
+                    <div id="authenticity-container" class="footer-section">
+                        Certified that the above information is in accordance with School Admission Register
+                    </div>
+                    <div id="date-sign-container" class="footer-section">
+                        <div class="date-sign-left">
+                            <div>Date: 01-01-2025</div>
+                            <div>Place: Dhanaj (BK)</div>
+                        </div>
+                        <div class="date-sign-right">
+                            Signature
+                        </div>
+                    </div>
+                    <div id="voilation-container" class="footer-section">
+                        No changes shall be made to any entry in this certificate except by the title authority issuing it. Any infringement of this certificate will be treated as a violation of school policy and may result in a penalty and legal action as per the applicable rules and regulations.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Container for radio buttons -->
+        <div class="page-sizes">
+            <!-- Form containing radio buttons for selecting document type -->
+            <form>
+                <label>
+                    <!-- Radio button for A4 size -->
+                    <input type="radio" name="documentType" value="A4" checked>
+                    A4
+                </label>
+                <label>
+                    <!-- Radio button for Letter size -->
+                    <input type="radio" name="documentType" value="Letter">
+                    Letter
+                </label>
+                <label>
+                    <!-- Radio button for Legal size -->
+                    <input type="radio" name="documentType" value="Legal">
+                    Legal
+                </label>
+            </form>
+        </div>
+    </div>
+    <!-- Link to the external JavaScript file -->
+    <script src="tc_structure.js"></script>
+</body>
+
+</html>

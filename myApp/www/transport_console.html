@@ -12,11 +12,11 @@
 <body>
 
     <!-- Spinner Container -->
-    <div id="spinnerContainer" class="spinner-container">
-        <div id="spinner" class="spinner"></div>
+    <div id="spinnerContainer">
+        <div class="spinner"></div>
     </div>
 
-    <div id="driver-console" class="container"> <!-- Added id="driver-console" here -->
+    <div id="driver-console" class="container">
         <div class="blue-section">
             <div class="driver-details">
                 <div class="driver-greeting">
@@ -41,24 +41,6 @@
         </div>
     </div>
 
-    <div id="driver-details-screen" class="screen hidden">
-        <div id="shift-details-container">
-            <h2>Shift Details</h2>
-            <p><strong>Selected Shift:</strong> <span id="selected-shift"></span></p>
-            <p><strong>Total Stops:</strong> <span id="total-stops"></span></p>
-            <p><strong>Total Passengers:</strong> <span id="total-students"></span></p>
-        </div>
-        <!-- Search Bar -->
-        <div id="search-container">
-            <input type="text" id="search-bar" placeholder="Search students...">
-        </div>
-        <div id="student-details-container">
-            <h2>Student Details</h2>
-            <ul id="detailed-driver-list"></ul>
-        </div>
-        <button id="back-to-console-button">Back</button>
-    </div>
-
     <!-- Modal Structure -->
     <div id="locationModal" class="modal">
         <div class="modal-content">
@@ -71,7 +53,7 @@
     <script src="cordova.js"></script>
     <script src="./js/transport_console.js"></script>
     <script src="./js/universal_components.js"></script>
-
+ 
 </body>
 
 </html>

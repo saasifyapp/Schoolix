@@ -12,8 +12,9 @@ body {
 /* Container for login screen */
 .container {
     width: 100%;
-    max-width: 400px;
-    height: 100%;
+    /* max-width: 400px; */
+    height: 100vh; /* Make container height flexible based on viewport height */
+    overflow: hidden; /* Prevent any overflow when keyboard appears */
     display: flex;
     flex-direction: column;
 }

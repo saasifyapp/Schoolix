@@ -138,8 +138,6 @@ router.get('/listStudents_getVehicleInfo', (req, res) => {
 });
 
 
-
-// Endpoint to fetch student and teacher details based on vehicle number, shift name, route, and class
 // Endpoint to fetch student and teacher details based on vehicle number, shift name, route, and class
 router.get('/fetch_getStudentsList', (req, res) => {
     const vehicleNo = req.query.vehicleNo;
@@ -159,7 +157,6 @@ router.get('/fetch_getStudentsList', (req, res) => {
 
     req.connectionPool.query(scheduleSql, scheduleValues, (scheduleError, scheduleResults) => {
         if (scheduleError) {
-            console.error('Database query failed:', scheduleError); // Log the error details
             return res.status(500).json({ error: 'Database query failed' });
         }
 
@@ -190,7 +187,7 @@ router.get('/fetch_getStudentsList', (req, res) => {
                     f_mobile_no, 
                     transport_pickup_drop 
                 FROM pre_primary_student_details 
-                WHERE standard IN (?) AND division IN (?) AND transport_pickup_drop IN (?) AND transport_tagged = ?
+                WHERE standard IN (?) AND division IN (?) AND transport_pickup_drop IN (?) AND transport_tagged = ? AND is_active = 1
                 UNION
                 SELECT 
                     name, 
@@ -199,7 +196,7 @@ router.get('/fetch_getStudentsList', (req, res) => {
                     f_mobile_no, 
                     transport_pickup_drop 
                 FROM primary_student_details 
-                WHERE standard IN (?) AND division IN (?) AND transport_pickup_drop IN (?) AND transport_tagged = ?
+                WHERE standard IN (?) AND division IN (?) AND transport_pickup_drop IN (?) AND transport_tagged = ? AND is_active = 1
                 UNION
                 SELECT 
                     name, 
@@ -208,12 +205,12 @@ router.get('/fetch_getStudentsList', (req, res) => {
                     mobile_no AS f_mobile_no, 
                     transport_pickup_drop 
                 FROM teacher_details 
-                WHERE transport_pickup_drop IN (?) AND transport_tagged = ?
+                WHERE transport_pickup_drop IN (?) AND transport_tagged = ? AND is_active = 1 AND (${classesAlloted.map(cls => `FIND_IN_SET(?, classes_alloted) > 0`).join(' OR ')})
             `;
             const studentTeacherValues = [
                 standards, divisions, routeStops, vehicleNo, 
                 standards, divisions, routeStops, vehicleNo, 
-                routeStops, vehicleNo
+                routeStops, vehicleNo, ...classesAlloted
             ];
 
             // Add filtering for route if provided
@@ -227,6 +224,10 @@ router.get('/fetch_getStudentsList', (req, res) => {
                 const [standard, division] = classFilter.split(' ');
                 studentTeacherSql += ' AND standard = ? AND division = ?';
                 studentTeacherValues.push(standard, division);
+
+                // Add class filter for teachers as well
+                studentTeacherSql += ' AND FIND_IN_SET(?, classes_alloted) > 0';
+                studentTeacherValues.push(`${standard} ${division}`);
             }
 
             // Add sorting based on route_stops
@@ -237,7 +238,6 @@ router.get('/fetch_getStudentsList', (req, res) => {
 
             req.connectionPool.query(studentTeacherSql, studentTeacherValues, (studentTeacherError, studentTeacherResults) => {
                 if (studentTeacherError) {
-                    console.error('Database query failed:', studentTeacherError); // Log the error details
                     return res.status(500).json({ error: 'Database query failed' });
                 }
 

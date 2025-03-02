@@ -137,7 +137,7 @@ router.get('/android/get-student-details', connectionManagerAndroid, (req, res) 
                     f_mobile_no, 
                     transport_pickup_drop 
                 FROM pre_primary_student_details 
-                WHERE standard IN (?) AND division IN (?) AND transport_pickup_drop IN (?) AND transport_tagged = ?
+                WHERE standard IN (?) AND division IN (?) AND transport_pickup_drop IN (?) AND transport_tagged = ? AND is_active = 1
                 UNION
                 SELECT 
                     name, 
@@ -145,7 +145,7 @@ router.get('/android/get-student-details', connectionManagerAndroid, (req, res) 
                     f_mobile_no, 
                     transport_pickup_drop 
                 FROM primary_student_details 
-                WHERE standard IN (?) AND division IN (?) AND transport_pickup_drop IN (?) AND transport_tagged = ?
+                WHERE standard IN (?) AND division IN (?) AND transport_pickup_drop IN (?) AND transport_tagged = ? AND is_active = 1
                 UNION
                 SELECT 
                     name, 
@@ -153,7 +153,7 @@ router.get('/android/get-student-details', connectionManagerAndroid, (req, res) 
                     mobile_no AS f_mobile_no, 
                     transport_pickup_drop 
                 FROM teacher_details 
-                WHERE transport_pickup_drop IN (?) AND transport_tagged = ? AND (${classesAlloted.map(cls => `FIND_IN_SET(?, classes_alloted) > 0`).join(' OR ')})
+                WHERE transport_pickup_drop IN (?) AND transport_tagged = ? AND is_active = 1 AND (${classesAlloted.map(cls => `FIND_IN_SET(?, classes_alloted) > 0`).join(' OR ')})
             `;
             const studentTeacherValues = [
                 standards, divisions, routeStops, vehicleNo, 

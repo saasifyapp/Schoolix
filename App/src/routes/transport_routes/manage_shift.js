@@ -12,9 +12,9 @@ router.get('/distinctStandardsDivisions', (req, res) => {
     const sql = `
         SELECT DISTINCT CONCAT(Standard, ' ', Division) AS standard_with_division
         FROM (
-            SELECT Standard, Division FROM pre_primary_student_details
+            SELECT Standard, Division FROM pre_primary_student_details WHERE is_active = 1
             UNION
-            SELECT Standard, Division FROM primary_student_details
+            SELECT Standard, Division FROM primary_student_details WHERE is_active = 1
         ) AS combined_standards
         ORDER BY Standard;
     `; 
@@ -106,23 +106,41 @@ router.get('/displayShifts', (req, res) => {
 // Endpoint to delete a shift by its ID
 router.delete('/deleteShift/:shiftId', (req, res) => {
     const { shiftId } = req.params;
+    const { shiftName } = req.body;
 
-    // Query to delete the shift from the database (example using MySQL)
-    const deleteQuery = 'DELETE FROM transport_route_shift_details WHERE route_shift_id = ?';
+    // Query to check if the shift name exists in the transport_schedule_details table
+    const checkQuery = `
+        SELECT COUNT(*) AS count
+        FROM transport_schedule_details
+        WHERE shift_name = ?
+    `;
 
-    req.connectionPool.query(deleteQuery, [shiftId], (error, results) => {
-        if (error) {
-            console.error('Error deleting shift:', error);
-            return res.status(500).json({ message: 'Error deleting shift' });
+    req.connectionPool.query(checkQuery, [shiftName], (checkError, checkResults) => {
+        if (checkError) {
+            return res.status(500).json({ message: 'Error checking shift in schedule' });
         }
 
-        // Check if any rows were affected (i.e., if the shift existed)
-        if (results.affectedRows === 0) {
-            return res.status(404).json({ message: 'Shift not found' });
+        if (checkResults[0].count > 0) {
+            // Shift is tagged in the schedule, cannot delete
+            return res.status(400).json({ message: 'Cannot delete shift. It is tagged to a vehicle. Please untag from Tagging Console.' });
         }
 
-        // If successful, send a success message
-        res.status(200).json({ message: 'Shift deleted successfully' });
+        // If no record is found in the schedule table, proceed with deletion
+        const deleteQuery = 'DELETE FROM transport_route_shift_details WHERE route_shift_id = ?';
+
+        req.connectionPool.query(deleteQuery, [shiftId], (deleteError, deleteResults) => {
+            if (deleteError) {
+                return res.status(500).json({ message: 'Error deleting shift' });
+            }
+
+            // Check if any rows were affected (i.e., if the shift existed)
+            if (deleteResults.affectedRows === 0) {
+                return res.status(404).json({ message: 'Shift not found' });
+            }
+
+            // If successful, send a success message
+            res.status(200).json({ message: 'Shift deleted successfully' });
+        });
     });
 });
 
@@ -134,12 +152,12 @@ router.post('/updateShift', (req, res) => {
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
-    // Construct SQL query
-    const sql = `UPDATE transport_route_shift_details
-                 SET route_shift_name = ?, route_shift_detail = ?
-                 WHERE route_shift_id = ?`;
+    // Construct SQL query to update the route shift details
+    const updateRouteShiftQuery = `UPDATE transport_route_shift_details
+                                   SET route_shift_name = ?, route_shift_detail = ?
+                                   WHERE route_shift_id = ?`;
 
-    req.connectionPool.query(sql, [shiftName, shiftClasses, shiftId], (err, result) => {
+    req.connectionPool.query(updateRouteShiftQuery, [shiftName, shiftClasses, shiftId], (err, result) => {
         if (err) {
             console.error('Error updating shift:', err);
             return res.status(500).json({ message: 'Error updating shift' });
@@ -149,7 +167,21 @@ router.post('/updateShift', (req, res) => {
             return res.status(404).json({ message: 'Shift not found' });
         }
 
-        res.json({ message: 'Shift updated successfully' });
+        // After updating the route shift details,
+        // update the schedule details for the same shift
+        const updateScheduleQuery = `UPDATE transport_schedule_details
+                                     SET shift_name = ?, classes_alloted = ?
+                                     WHERE shift_name = ?`;
+
+        req.connectionPool.query(updateScheduleQuery, [shiftName, shiftClasses, shiftName], (scheduleErr, scheduleResult) => {
+            if (scheduleErr) {
+                console.error('Error updating schedule details:', scheduleErr);
+                return res.status(500).json({ message: 'Error updating schedule details' });
+            }
+
+            // Respond with a success message if both updates are successful
+            res.status(200).json({ message: 'Shift updated successfully' });
+        });
     });
 });
 

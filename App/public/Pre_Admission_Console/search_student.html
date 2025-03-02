@@ -154,7 +154,7 @@
 
                         <div style="position: relative; display: inline-block; margin-right: 10px;">
                             <input type="text" id="searchField" placeholder="Enter Student Name..."
-                            oninput="debouncedSearchDetails()">
+                                oninput="debouncedSearchDetails()">
 
                             <!-- <button id="searchButton" class="search-button" onclick="searchDetails()">
                                 <img src="../images/search.gif" alt="Search Icon" style="height: 100%;">
@@ -193,6 +193,8 @@
                                 <th>Address</th>
                                 <th>Date of Birth</th>
                                 <th>Standard</th>
+                                <th>Date of Registeration</th>
+                                <th>References</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -285,6 +287,8 @@
             <td>${student.res_address}</td>
             <td>${student.dob}</td>
             <td>${student.standard}</td>
+            <td>${student.registeration_date}</td>
+            <td>${student.references}</td>
             <td>
     <button style="background-color: transparent; 
                     border: none;
@@ -488,6 +492,8 @@
                         <td>${student.res_address}</td>
                         <td>${student.dob}</td>
                         <td>${student.standard}</td>
+                        <td>${student.registeration_date}</td>
+            <td>${student.references}</td>
                         <td>
     <button style="background-color: transparent; 
                     border: none;
@@ -641,6 +647,8 @@
                         <td>${student.res_address}</td>
                         <td>${student.dob}</td>
                         <td>${student.standard}</td>
+                        <td>${student.registeration_date}</td>
+            <td>${student.references}</td>
                         <td>
     <button style="background-color: transparent; 
                     border: none;
@@ -769,8 +777,8 @@
 
     </script>
 
-<script src="/js/Universal_Components_JS/handle_session.js"></script>
-<script src="/js/Pre_Admission_Console_js/age_calculator.js"></script>
+    <script src="/js/Universal_Components_JS/handle_session.js"></script>
+    <script src="/js/Pre_Admission_Console_js/age_calculator.js"></script>
 
 </body>
 

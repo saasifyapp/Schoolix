@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/NavButtons.css">
+    <link rel="stylesheet" href="/css/Student_Enrollment_Form/enrollment.css">
+    <link rel="stylesheet" href="/css/Student_Enrollment_Form/enrollment-form-control.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+    <title>Update Student </title>
+</head>
+
+<body>
+
+
+
+    <nav class="navbar">
+        <div class="logo_item">
+            <!-- <i class="bx bx-menu" id="sidebarOpen"></i> -->
+            <img id="logo" src="" alt="Logo">
+            <!-- <div class="user_name" id="user_name"></div> -->
+        </div>
+
+        <div class="navbar_center">
+            <button onclick="window.location.href='/Student_Enrollment_Form/manage_student'"> <i class='bx' id="backButton"> <img
+                        src="/images/back.png" alt="Previous Icon"></i></button>
+            <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img
+                        src="/images/homeicon.png" alt="Dashboard Icon"></i></button>
+            <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
+                        alt="Signout Icon"></i></button>
+        </div>
+
+        <div class="navbar_content">
+            <!-- <i class="bi bi-grid"></i>
+      <i class='bx bx-bell'></i> -->
+        </div>
+
+    </nav>
+
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-box">
+            <div class="spinner"></div>
+            <div id="loadingText" class="loading-text"></div>
+        </div>
+    </div>
+    
+
+
+    <div class="enrollment-form">
+        <!-- Left Navigation Section -->
+        <div class="form-navigation">
+            <ul>
+                <li id="student-info" class="active">
+                    <img src="/images/student.gif" alt="Student Icon" class="nav-icon">
+                    Student Information <span class="done-icon" style="display: none;">✔</span>
+                </li>
+                <li id="guardian-info">
+                    <img src="/images/professor.gif" alt="Guardian Icon" class="nav-icon">
+                    Guardian Information <span class="done-icon" style="display: none;">✔</span>
+                </li>
+                <li id="academic-info">
+                    <img src="/images/addbook.gif" alt="Academic Icon" class="nav-icon">
+                    Academic Information <span class="done-icon" style="display: none;">✔</span>
+                </li>
+                <li id="fees-info">
+                    <img src="/images/profitLoss.gif" alt="Fees Icon" class="nav-icon">
+                    Fees and Packages <span class="done-icon" style="display: none;">✔</span>
+                </li>
+                <li id="transport-info">
+                    <img src="/images/busIcon.png" alt="Transport Icon" class="nav-icon">
+                    Transport Service <span class="done-icon" style="display: none;">✔</span>
+                </li>
+                <li id="review-info">
+                    <img src="/images/cheque.gif" alt="Review Icon" class="nav-icon">
+                    Review and Consent <span class="done-icon" style="display: none;">✔</span>
+                </li>
+            </ul>
+            <div class="progress-bar-container">
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" id="progress-bar-fill"></div>
+                </div>
+                <span class="progress-bar-text" id="progress-bar-text">0%</span>
+            </div>
+        </div>
+
+
+
+        <!-- Right Dynamic Content Section -->
+        <div class="form-content">
+            <!-- Student Information Section -->
+            <div id="student-information" class="form-section">
+                <h2> <img src="/images/student.gif" alt="Student Icon" class="heading-icon">Student Information</h2>
+                <div class="input-container">
+                    <h3>Basic Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="firstName" placeholder=" ">
+                            <span class="form-control-placeholder">First Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="middleName" placeholder=" ">
+                            <span class="form-control-placeholder">Middle Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="lastName" placeholder=" ">
+                            <span class="form-control-placeholder">Last Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="fullName" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Full Name</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="date" class="form-control" id="dob" placeholder=" ">
+                            <span class="form-control-placeholder">Date of Birth</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="age" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Age</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="placeOfBirth" placeholder=" ">
+                            <span class="form-control-placeholder">Place of Birth</span>
+                            <div id="placeOfBirthSuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="gender" placeholder=" ">
+                            <span class="form-control-placeholder">Gender</span>
+                            <div id="genderSuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="bloodGroup" placeholder=" ">
+                            <span class="form-control-placeholder">Blood Group</span>
+                            <div id="bloodGroupSuggestions" class="suggestions"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-container">
+                    <h3>Contact and Permanent Address Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="studentContact" placeholder=" ">
+                            <span class="form-control-placeholder">Student Contact No</span>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="city_village" placeholder=" ">
+                            <span class="form-control-placeholder">City/Village</span>
+                            <div id="cityVillageSuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="taluka" placeholder=" ">
+                            <span class="form-control-placeholder">Taluka</span>
+                            <div id="talukaSuggestions" class="suggestions"></div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="district" placeholder=" ">
+                            <span class="form-control-placeholder">District</span>
+                            <div id="districtSuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="state" placeholder=" ">
+                            <span class="form-control-placeholder">State</span>
+                            <div id="stateSuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="landmark" placeholder=" ">
+                            <span class="form-control-placeholder">Landmark</span>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="pinCode" placeholder=" ">
+                            <span class="form-control-placeholder">PIN Code</span>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="input-container">
+                    <h3>Identity Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="nationality" placeholder=" ">
+                            <span class="form-control-placeholder">Nationality</span>
+                            <div id="nationalitySuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="religion" placeholder=" ">
+                            <span class="form-control-placeholder">Religion</span>
+                            <div id="religionSuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="category" placeholder=" ">
+                            <span class="form-control-placeholder">Category</span>
+                            <div id="categorySuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="caste" placeholder=" ">
+                            <span class="form-control-placeholder">Caste</span>
+                            <div id="casteSuggestions" class="suggestions"></div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="domicile" placeholder=" ">
+                            <span class="form-control-placeholder">Domicile</span>
+                            <div id="domicileSuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="motherTongue" placeholder=" ">
+                            <span class="form-control-placeholder">Mother Tongue</span>
+                            <div id="motherTongueSuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="aadhaar" placeholder=" ">
+                            <span class="form-control-placeholder">Aadhar Number</span>
+                            <div id="aadhaarError" class="error-message"></div>
+                        </div>
+                        <div class="form-group">
+                            <div id="multiSelectContainer" class="form-control">
+                                <span id="selectedDocuments"></span>
+                                <input type="text" id="documentInput" placeholder="Select Documents">
+                            </div>
+                            <div id="documentSuggestions" class="suggestions"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-navigation-buttons" style="justify-content: flex-end;">
+                    <!-- <button type="button" class="btn next-button" id="student-next">Next</button> -->
+
+                    <button class="btn next-button" type="button" id="student-next">
+                        <img src="/images/nextPrev.png" alt="Next Icon"> Next
+                    </button>
+
+
+
+                </div>
+            </div>
+
+            <!-- Guardian Information Section -->
+            <div id="guardian-information" class="form-section" style="display: none;">
+                <h2> <img src="/images/professor.gif" alt="Guardian Icon" class="heading-icon">Guardian Information</h2>
+                <div class="input-container">
+                    <h3>Father Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="fatherFirstName" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Father's First Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="fatherMiddleName" placeholder=" ">
+                            <span class="form-control-placeholder">Father's Middle Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="fatherLastName" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Father's Last Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="fatherFullName" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Father's Full Name</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="fatherContactNumber" placeholder=" ">
+                            <span class="form-control-placeholder">Father's Contact Number</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="fatherQualification" placeholder=" ">
+                            <span class="form-control-placeholder">Father's Qualification</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="fatherOccupation" placeholder=" ">
+                            <span class="form-control-placeholder">Father's Occupation</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <h3>Mother Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="motherFirstName" placeholder=" ">
+                            <span class="form-control-placeholder">Mother's First Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="motherLastName" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Mother's Last Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="motherFullName" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Mother's Full Name</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="motherContactNumber" placeholder=" ">
+                            <span class="form-control-placeholder">Mother's Contact Number</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="motherQualification" placeholder=" ">
+                            <span class="form-control-placeholder">Mother's Qualification</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="motherOccupation" placeholder=" ">
+                            <span class="form-control-placeholder">Mother's Occupation</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <h3>Local Guardian Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <span class="">Local Guardian, if any</span>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="localGuardianNeeded" value="yes"
+                                        onclick="toggleLocalGuardianDetails(true)">
+                                    Yes
+                                </label>
+                                <label>
+                                    <input type="radio" name="localGuardianNeeded" value="no"
+                                        onclick="toggleLocalGuardianDetails(false)">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="localGuardianDetails">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="guardianName" placeholder=" ">
+                                <span class="form-control-placeholder">Guardian's Name</span>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="guardianContact" placeholder=" ">
+                                <span class="form-control-placeholder">Guardian's Contact</span>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="guardianRelation" placeholder=" ">
+                                <span class="form-control-placeholder">Relationship with Guardian</span>
+                                <div id="relationshipSuggestions" class="suggestions"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="guardian_fullAddress" placeholder=" ">
+                                <span class="form-control-placeholder">Guardian's Address</span>
+                                <div id="guardianCitySuggestions" class="suggestions"></div>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="guardianAddressLandmark" placeholder=" ">
+                                <span class="form-control-placeholder">Landmark</span>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="guardianpinCode" placeholder=" ">
+                                <span class="form-control-placeholder">PIN Code</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-navigation-buttons">
+                    <button type="button" class="btn prev-button" id="guardian-prev"><img src="/images/nextPrev.png" alt="Next Icon">Previous</button>
+                    <button type="button" class="btn next-button" id="guardian-next"><img src="/images/nextPrev.png" alt="Next Icon">Next</button>
+                </div>
+            </div>
+
+            <!-- Academic Information Section -->
+            <div id="academic-information" class="form-section" style="display: none;">
+                <h2><img src="/images/addbook.gif" alt="Academic Icon" class="heading-icon">Academic Information</h2>
+
+                <div class="input-container">
+                    <h3>Admission Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="section" placeholder=" ">
+                            <span class="form-control-placeholder">Section</span>
+                            <div id="sectionSuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="grNo" placeholder=" " readonly>
+                            <span class="form-control-placeholder">GR Number</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="date" class="form-control" id="admissionDate" placeholder=" ">
+                            <span class="form-control-placeholder">Admission Date</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="standard" placeholder="">
+                            <span class="form-control-placeholder">Standard</span>
+                            <div id="standardSuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="division" placeholder=" ">
+                            <span class="form-control-placeholder">Division</span>
+                            <div id="divisionSuggestions" class="suggestions"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <h3>Previous Academic Records</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="lastSchoolAttended" placeholder=" ">
+                            <span class="form-control-placeholder">Last School Attended</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="classCompleted" placeholder=" ">
+                            <span class="form-control-placeholder">Class Completed</span>
+                            <div id="classCompletedSuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="percentage" placeholder=" ">
+                            <span class="form-control-placeholder">Percentage</span>
+                            <span class="percentage-icon">%</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="checkbox" id="newAdmission">
+                            <label for="noVehicleFound">Select if no academic history / First time admission.</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-navigation-buttons">
+                    <button type="button" class="btn prev-button" id="academic-prev"><img src="/images/nextPrev.png" alt="Next Icon">Previous</button>
+                    <button type="button" class="btn next-button" id="academic-next"><img src="/images/nextPrev.png" alt="Next Icon">Next</button>
+                </div>
+            </div>
+
+            <!-- Fees and Packages Section -->
+            <div id="fees-information" class="form-section" style="display: none;">
+                <h2><img src="/images/profitLoss.gif" alt="Fees Icon" class="heading-icon">Fees and Packages</h2>
+
+                <div class="input-container">
+                    <h3>Fee Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="feeSection" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Section</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="feeStandard" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Standard</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="feeDivision" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Division</span>
+                        </div>
+
+                        <div class="form-row">
+                            <button type="button" class="btn generate-package-button" id="generatePackageBtn">Generate Package</button>
+                        </div>
+                        
+                    </div>
+
+                    <div class="form-row">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Fee Category</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="feeCategoryAmountTable">
+                                <!-- Rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                   
+                </div>
+                <div class="form-navigation-buttons">
+
+                  
+                    <button type="button" class="btn prev-button" id="fees-prev"> <img src="/images/nextPrev.png" alt="Next Icon">Previous</button>
+                    <button type="button" class="btn next-button" id="fees-next"> <img src="/images/nextPrev.png" alt="Next Icon">Next</button>
+                </div>
+            </div>
+
+            <!-- Transport Services Section -->
+            <div id="transport-information" class="form-section">
+                <h2><img src="/images/busIcon.png" alt="Transport Icon" class="heading-icon">Transport Services</h2>
+
+                <div class="input-container">
+                    <h3>Transport Requirement</h3>
+                    <!-- Radio buttons for Transport Needed -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <span>Transport Needed</span>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="transportNeeded" value="Yes"
+                                        onclick="toggleTransportDetails(true)">
+                                    Yes
+                                </label>
+                                <label>
+                                    <input type="radio" name="transportNeeded" value="No"
+                                        onclick="toggleTransportDetails(false)">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Transport Services Section Details -->
+                    <div id="transportDetails">
+                        <div class="form-row">
+                            <!-- Standard -->
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="transportStandard" placeholder=" " readonly>
+                                <span class="form-control-placeholder">Standard</span>
+                            </div>
+
+                            <!-- Division -->
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="transportDivision" placeholder=" " readonly>
+                                <span class="form-control-placeholder">Division</span>
+                            </div>
+
+                            <!-- Pick/Drop Address -->
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="pickDropAddress" placeholder=" ">
+                                <span class="form-control-placeholder">Pick/Drop Address</span>
+                                <div id="pickDropAddressSuggestions" class="suggestions"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <!-- Vehicle Running -->
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="vehicleRunning" placeholder=" ">
+                                <span class="form-control-placeholder">Vehicle Running</span>
+                                <div id="vehicleRunningSuggestions" class="suggestions"></div>
+                            </div>
+
+                            <!-- Vehicle Info Container -->
+                            <div id="vehicleInfo" class="info-container">
+                                <!-- Vehicle info will be displayed here -->
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="checkbox" id="noVehicleFound">
+                                <label for="noVehicleFound">Select if no vehicle is found</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-navigation-buttons">
+                        <button type="button" class="btn prev-button" id="transport-prev"><img src="/images/nextPrev.png" alt="Next Icon">Previous</button>
+                        <button type="button" class="btn next-button" id="transport-next"><img src="/images/nextPrev.png" alt="Next Icon">Next</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="review-information" class="form-section" style="display: none;">
+                <h2><img src="/images/cheque.gif" alt="Review Icon" class="heading-icon">Review Form</h2>
+                <div class="main-content">
+                    <div id="reviewContent">
+                        <!-- Student Information -->
+                        <div class="review-section">
+                            <h3>Student Information</h3>
+                            <div class="review-item"><span>Full Name:</span> <span id="review-fullName"></span></div>
+                            <div class="review-item"><span>Date of Birth:</span> <span id="review-dob"></span></div>
+                            <div class="review-item"><span>Place of Birth:</span> <span id="review-placeOfBirth"></span>
+                            </div>
+                            <div class="review-item"><span>Age:</span> <span id="review-age"></span></div>
+                            <div class="review-item"><span>Gender:</span> <span id="review-gender"></span></div>
+                            <div class="review-item"><span>Blood Group:</span> <span id="review-bloodGroup"></span>
+                            </div>
+                            <div class="review-item"><span>Contact:</span> <span id="review-studentContact"></span>
+                            </div>
+                            <div class="review-item"><span>Address:</span> <span id="review-address"></span></div>
+                            <div class="review-item"><span>Nationality:</span> <span id="review-nationality"></span>
+                            </div>
+                            <div class="review-item"><span>Religion:</span> <span id="review-religion"></span></div>
+                            <div class="review-item"><span>Category:</span> <span id="review-category"></span></div>
+                            <div class="review-item"><span>Caste:</span> <span id="review-caste"></span></div>
+                            <div class="review-item"><span>Domicile:</span> <span id="review-domicile"></span></div>
+                            <div class="review-item"><span>Mother Tongue:</span> <span id="review-motherTongue"></span>
+                            </div>
+                            <div class="review-item"><span>Aadhaar Number:</span> <span id="review-aadharNo"></span>
+                            </div>
+                            <div class="review-item"><span>Documents:</span> <span id="review-documents"></span></div>
+                        </div>
+
+                        <!-- Guardian Information -->
+                        <div class="review-section">
+                            <h3>Guardian Information</h3>
+                            <div class="review-item"><span>Father's Name:</span> <span id="review-fatherName"></span>
+                            </div>
+                            <div class="review-item"><span>Mother's Name:</span> <span id="review-motherName"></span>
+                            </div>
+                            <div class="review-item"><span>Local Guardian:</span> <span
+                                    id="review-localGuardian"></span></div>
+                        </div>
+
+                        <!-- Academic Information -->
+                        <div class="review-section">
+                            <h3>Academic Information</h3>
+                            <div class="review-item"><span>Section:</span> <span id="review-section"></span></div>
+                            <div class="review-item"><span>Standard:</span> <span id="review-standard"></span></div>
+                            <div class="review-item"><span>Division:</span> <span id="review-division"></span></div>
+                            <div id="review-academic-tag" style="display: none;">
+                                <div class="review-item"><span>Academic History:</span> <span id="review-academics"></span></div>
+                            </div>
+                            <div id="previousSchoolDetails">
+                                <div class="review-item"><span>Last School Attended:</span> <span id="review-lastSchool"></span></div>
+                                <div class="review-item"><span>Class Completed:</span> <span id="review-classCompleted"></span></div>
+                                <div class="review-item"><span>Percentage:</span> <span id="review-percentage"></span></div>
+                            </div>
+                        </div>
+                        
+
+                      <!-- Fees Information -->
+                      <div class="review-section">
+                        <h3>Fees Information</h3>
+                        <div class="review-item"><span>Fee Section:</span> <span id="review-feeSection"></span>
+                        </div>
+                        <div class="review-item"><span>Fee Standard:</span> <span id="review-feeStandard"></span>
+                        </div>
+                        <div class="review-item"><span>Package Allotted:</span> <span id="review-package"></span>
+                        </div>
+
+                        <!-- Fee Details Table -->
+                        <table id="feeDetailsTable" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Fee Category</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="feeDetailsTableBody">
+                                <!-- Rows will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Transport Information -->
+                    <div class="review-section">
+                        <h3>Transport Information</h3>
+                        <div class="review-item">
+                            <span>Transport Needed:</span> <span id="review-transportNeeded"></span>
+                        </div>
+                        <div id="transportDetailsSection" style="display: none;">
+                            <!-- <div class="review-item"><span>Transport Standard:</span> <span
+                                    id="review-transportStandard"></span></div>
+                            <div class="review-item"><span>Transport Division:</span> <span
+                                    id="review-transportDivision"></span></div> -->
+                            <div class="review-item"><span>Pick/Drop Address:</span> <span
+                                    id="review-pickDropAddress"></span></div>
+                            <!-- <div class="review-item"><span>Vehicle Running:</span> <span
+                                    id="review-vehicleRunning"></span></div> -->
+                            <div class="review-item"><span>Vehicle Details:</span> <span
+                                    id="review-vehicleDetails"></span></div>
+                            <!-- <div class="review-item"><span>No Vehicle Found:</span> <span
+                                    id="review-noVehicleFound"></span></div> -->
+                        </div>
+                    </div>
+
+                        
+
+                        <div class="review-section">
+                            <h3>Consent</h3>
+                            <div class="review-item">
+                                <span>
+                                    <label>
+                                        <input type="checkbox" id="select-all-checkbox">
+                                        Select All
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="review-item">
+                                <span>
+                                    <label>
+                                        <input type="checkbox" id="consent-policies" class="consent-checkbox">
+                                        I agree to the School Policies</a>.
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="review-item">
+                                <span>
+                                    <label>
+                                        <input type="checkbox" id="consent-photo" class="consent-checkbox">
+                                        I consent to Photo/Video use in School Activities.
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="review-item">
+                                <span>
+                                    <label>
+                                        <input type="checkbox" id="consent-trips" class="consent-checkbox">
+                                        I consent to participate in Field Trips and Extracurricular Activities.
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="review-item">
+                                <span>
+                                    <label>
+                                        <input type="checkbox" id="consent-medical" class="consent-checkbox">
+                                        I consent to Emergency Medical Treatment.
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="review-item">
+                                <span>
+                                    <label>
+                                        <input type="checkbox" id="consent-accuracy" class="consent-checkbox">
+                                        Declaration that all provided information is accurate and complete.
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="review-item">
+                                <span>
+                                    <label>
+                                        <input type="checkbox" id="consent-fees" class="consent-checkbox">
+                                        Agreement to pay the required fees as per the chosen plan
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="review-item">
+                                <span>
+                                    <label>
+                                        <input type="checkbox" id="consent-rules" class="consent-checkbox">
+                                        Confirmation of understanding of school rules and regulations
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="review-section">
+                                <h3>Date of Submission</h3>
+                                <div class="review-item">
+                                    <span>Date of Submission:</span>
+                                    <span id="submission-date"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-navigation-buttons">
+                    <button type="button" class="btn prev-button" id="review-prev"><img src="/images/nextPrev.png" alt="Next Icon">Previous</button>
+                    <button type="button" class="btn next-button" id="review-next"><img src="/images/nextPrev.png" alt="Next Icon">Submit</button>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+    </div>
+
+    <script>
+        // Automatically set today's date for the Date of Submission
+        document.getElementById('submission-date').textContent = new Date().toLocaleDateString();
+    </script>
+
+    <!-- <script src="/js/Inventory_js/All.js"></script>
+
+    <script src="/js/Student_Enrollment_Form/student_enrollment_form.js"></script> -->
+
+    <script src="/js/Inventory_js/All.js"></script>
+    <!-- <script src="/js/Student_Enrollment_Form/manage_student.js"></script> -->
+    <script src="/js/Student_Enrollment_Form/update_student_enrollment_form.js"></script>
+    <script src="/js/Student_Enrollment_Form/populate_update_student_form.js"></script>
+    <script src="/js/Student_Enrollment_Form/update_enrollment_data_submission.js"></script>
+    
+
+
+    
+</body>
+
+</html>

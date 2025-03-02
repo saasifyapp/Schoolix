@@ -12,9 +12,9 @@ router.get('/distinctAddresses', (req, res) => {
     const sql = `
         SELECT DISTINCT transport_pickup_drop
         FROM (
-            SELECT transport_pickup_drop FROM pre_primary_student_details WHERE transport_pickup_drop IS NOT NULL
+            SELECT transport_pickup_drop FROM pre_primary_student_details WHERE transport_pickup_drop IS NOT NULL AND is_active = 1
             UNION
-            SELECT transport_pickup_drop FROM primary_student_details WHERE transport_pickup_drop IS NOT NULL
+            SELECT transport_pickup_drop FROM primary_student_details WHERE transport_pickup_drop IS NOT NULL AND is_active = 1
         ) AS combined_addresses;
     `;
 
@@ -107,25 +107,44 @@ router.get('/displayRoutes', (req, res) => {
 // Endpoint to delete a route by its ID
 router.delete('/deleteRoute/:routeId', (req, res) => {
     const { routeId } = req.params;
+    const { routeName } = req.body;
 
-    // Query to delete the route from the database
-    const deleteQuery = 'DELETE FROM transport_route_shift_details WHERE route_shift_id = ?';
+    // Query to check if the route name exists in the schedule table
+    const checkQuery = `
+        SELECT COUNT(*) AS count
+        FROM transport_schedule_details
+        WHERE route_name = ?
+    `;
 
-    req.connectionPool.query(deleteQuery, [routeId], (error, results) => {
-        if (error) {
-            console.error('Error deleting route:', error);
-            return res.status(500).json({ message: 'Error deleting route' });
+    req.connectionPool.query(checkQuery, [routeName], (checkError, checkResults) => {
+        if (checkError) {
+            return res.status(500).json({ message: 'Error checking route in schedule' });
         }
 
-        // Check if any rows were affected (i.e., if the route existed)
-        if (results.affectedRows === 0) {
-            return res.status(404).json({ message: 'Route not found' });
+        if (checkResults[0].count > 0) {
+            // Route is tagged in the schedule, cannot delete
+            return res.status(400).json({ message: 'Cannot delete route. It is tagged to a vehicle. Please untag from Tagging Console.' });
         }
 
-        // If successful, send a success message
-        res.status(200).json({ message: 'Route deleted successfully' });
+        // If no record is found in the schedule table, proceed with deletion
+        const deleteQuery = 'DELETE FROM transport_route_shift_details WHERE route_shift_id = ?';
+
+        req.connectionPool.query(deleteQuery, [routeId], (deleteError, deleteResults) => {
+            if (deleteError) {
+                return res.status(500).json({ message: 'Error deleting route' });
+            }
+
+            // Check if any rows were affected (i.e., if the route existed)
+            if (deleteResults.affectedRows === 0) {
+                return res.status(404).json({ message: 'Route not found' });
+            }
+
+            // If successful, send a success message
+            res.status(200).json({ message: 'Route deleted successfully' });
+        });
     });
 });
+
 
 
 // Route to handle updating the transport route shift details
@@ -136,25 +155,37 @@ router.post('/updateRoute', (req, res) => {
         return res.status(400).json({ error: 'All fields are required' });
     }
 
-    const query = `
+    // SQL query to update the route shift table
+    const updateRouteShiftQuery = `
         UPDATE transport_route_shift_details
         SET route_shift_name = ?, 
             route_shift_detail = ?, 
             route_shift_type = ?
         WHERE route_shift_id = ?`;
 
-        req.connectionPool.query(
-        query, 
-        [routeName, routeCities, routeType, routeShiftId], 
-        (error, results) => {
-            if (error) {
-                console.error('Error updating route shift details:', error);
+    req.connectionPool.query(updateRouteShiftQuery, [routeName, routeCities, routeType, routeShiftId], (routeShiftError, routeShiftResults) => {
+        if (routeShiftError) {
+            console.error('Error updating route shift details:', routeShiftError);
+            return res.status(500).json({ error: 'Database update failed' });
+        }
+
+        // If the first update is successful, execute the update for the schedule table
+        const updateScheduleQuery = `
+            UPDATE transport_schedule_details
+            SET route_name = ?, 
+                route_stops = ?
+            WHERE route_name = ?`;
+
+        req.connectionPool.query(updateScheduleQuery, [routeName, routeCities, routeName], (scheduleError, scheduleResults) => {
+            if (scheduleError) {
+                console.error('Error updating schedule details:', scheduleError);
                 return res.status(500).json({ error: 'Database update failed' });
             }
-            res.status(200).json({ message: 'Route updated successfully' });
-        }
-    );
-});
 
+            // If both updates are successful
+            res.status(200).json({ message: 'Route updated successfully' });
+        });
+    });
+});
 
 module.exports = router;
