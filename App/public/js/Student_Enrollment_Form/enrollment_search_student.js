@@ -15,19 +15,23 @@ let allStudentData = [];
 
 // Fetch data from the server and store it for searching
 function fetchAndPopulateStudents() {
+    showManageStudentLoading();
     const studentType = document.getElementById('studentFilter').value;
     fetch(`/search_enrolled_students?type=${studentType}`)
         .then(response => response.json())
         .then(data => {
             //console.log('Received data:', data);
             if (Array.isArray(data)) {
+                hideManageStudentLoading();
                 allStudentData = data;
                 populateTable(data);  // Initially populate the table with all data
             } else {
+                hideManageStudentLoading();
                 console.error('Expected an array but got:', data);
             }
         })
         .catch(error => {
+            hideManageStudentLoading();
             console.error('Error fetching student data:', error);
             alert('An error occurred while fetching student data.');
         });

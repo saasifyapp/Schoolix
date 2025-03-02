@@ -15,6 +15,7 @@
 </head>
 
 <body>
+    <div id="manageStudentLoader" class="manage-student-loader"></div>
 
 
     <nav class="navbar">
@@ -170,7 +171,7 @@
                         <img src="/images/filter.png" alt="Refresh Icon"> Filter
                     </button>
 
-                    <button class="refreshButton" onclick="refreshStudentsData()"
+                    <button class="refreshButton" onclick="fetchAndPopulateStudents()"
                         style="margin-top: 10px; margin-left: 10px;">
                         <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
                     </button>

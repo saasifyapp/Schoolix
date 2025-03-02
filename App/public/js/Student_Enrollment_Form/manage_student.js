@@ -1,28 +1,57 @@
+function showManageStudentLoading() {
+    const loader = document.getElementById("manageStudentLoader");
+    let blurOverlay = document.getElementById("manageStudentBlur");
+
+    if (!blurOverlay) {
+        blurOverlay = document.createElement("div");
+        blurOverlay.id = "manageStudentBlur";
+        blurOverlay.className = "manage-student-blur";
+        document.body.appendChild(blurOverlay);
+    }
+
+    loader.classList.add("active");
+    blurOverlay.style.display = "block";
+}
+
+function hideManageStudentLoading() {
+    const loader = document.getElementById("manageStudentLoader");
+    const blurOverlay = document.getElementById("manageStudentBlur");
+
+    loader.classList.remove("active");
+    if (blurOverlay) {
+        blurOverlay.style.display = "none";
+    }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     const overlayConfig = [
         {
             buttonId: "updateStudent",
             overlayId: "updateStudentOverlay",
             closeButtonId: "closeUpdateStudentOverlay",
+            onOpen: null, // No special function needed
         },
         {
             buttonId: "searchStudent",
             overlayId: "searchStudentOverlay",
             closeButtonId: "closeSearchStudentOverlay",
+            onOpen: null,
         },
         {
             buttonId: "deleteStudent",
             overlayId: "deleteStudentOverlay",
             closeButtonId: "closeOverlayDelete",
+            onOpen: null, // Load TC data when opening the delete overlay
         },
         {
             buttonId: "generateTC",
             overlayId: "generateTCOverlay",
             closeButtonId: "closeGenerateTCOverlay",
+            onOpen: null,
         },
     ];
 
-    overlayConfig.forEach(({ buttonId, overlayId, closeButtonId }) => {
+    overlayConfig.forEach(({ buttonId, overlayId, closeButtonId, onOpen }) => {  
         const button = document.getElementById(buttonId);
         const overlay = document.getElementById(overlayId);
         const closeButton = document.getElementById(closeButtonId);
@@ -30,6 +59,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (button && overlay && closeButton) {
             button.addEventListener("click", () => {
                 overlay.style.display = "flex";
+                if (typeof onOpen === "function") { 
+                    onOpen();
+                }
             });
 
             closeButton.addEventListener("click", () => {
@@ -38,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
 
 
 // document.addEventListener("DOMContentLoaded", () => {
@@ -91,6 +124,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // Open the correct overlay
                 overlay.style.display = "flex";
+
+                if (buttonId === "searchTCButton") {
+                    if (typeof refreshTCData === "function") {
+                        refreshTCData();
+                    } else {
+                        console.error("refreshTCData function is not defined!");
+                    }
+                }
             });
 
             closeButton?.addEventListener("click", () => {
@@ -224,20 +265,23 @@ document.querySelector(".search-button").addEventListener("click", function () {
 // });
 
 ////////////////////////////SEARCH TC//////////////////////////////////////////////////////////
-document.addEventListener("DOMContentLoaded", function () {
-    refreshTCData(); // Load students with TC on page load
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//     refreshTCData(); // Load students with TC on page load
+// });
 
 let tcData = []; // Store fetched TC data globally
 
 function refreshTCData() {
+    showManageStudentLoading();
     fetch(`/fetch-all-leave-students`)
         .then(response => response.json())
         .then(data => {
+            hideManageStudentLoading();
             tcData = data; // Store data in global object
             displayStudentsHavingTC(tcData);
         })
         .catch(error => {
+            hideManageStudentLoading();
             console.error("Error fetching TC data:", error);
             document.getElementById("tcTableBody").innerHTML = 
                 `<tr><td colspan="5">Error loading data</td></tr>`;
