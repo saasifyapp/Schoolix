@@ -19,7 +19,7 @@ function showNoResults(suggestionsContainer) {
 
 // Function to fetch and display suggestions
 function fetchAndDisplaySuggestions(query, suggestionsContainer, inputField, additionalActions) {
-    if (query.length > 2) {
+    if (query.length > 1) {
         showLoading(suggestionsContainer);
         fetch(`/get_student_details?q=${query}`)
             .then(response => response.json())
@@ -31,7 +31,7 @@ function fetchAndDisplaySuggestions(query, suggestionsContainer, inputField, add
                     data.forEach(student => {
                         const suggestionItem = document.createElement('div');
                         suggestionItem.classList.add('suggestion-item');
-                        suggestionItem.textContent = `${student.Name} | ${student.Standard}`;
+                        suggestionItem.textContent = `${student.Grno} | ${student.Name} | ${student.Standard}`;
                         suggestionItem.dataset.name = student.Name;
                         suggestionItem.dataset.standard = student.Standard; // Assuming standard field exists
                         suggestionItem.dataset.contact = student.f_mobile_no; // Assuming contact field exists
