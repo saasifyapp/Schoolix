@@ -8,6 +8,98 @@ const { connection_auth } = require('../../../main_server'); // Adjust the path 
 // Use the connection manager middleware
 router.use(connectionManager);
 
+////////////////////// ENDPOINTS FOR SEARCHING STUDENT //////////////
+
+
+// Endpoint to fetch basic student info for Transfer Certificate
+router.get("/get-students-for-tc", (req, res) => {
+    const { section, name, grno } = req.query;
+
+    // Validate input parameters
+    if (!section || (!name && !grno)) {
+        return res.status(400).json({ error: "Invalid search parameters" });
+    }
+
+    // Determine the appropriate table based on section
+    let tableName;
+    if (section === "primary") {
+        tableName = "primary_student_details";
+    } else if (section === "pre_primary") {
+        tableName = "pre_primary_student_details";
+    } else {
+        return res.status(400).json({ error: "Invalid section parameter" });
+    }
+
+    // Construct the SQL query
+    let query = `SELECT Grno, Name, Standard FROM ${tableName} WHERE is_active = 1 AND `;
+    let queryParams = [];
+
+    if (grno) {
+        query += "Grno = ?"; 
+        queryParams.push(grno);
+    } else if (name) {
+        query += "Name LIKE ?";
+        queryParams.push(`%${name}%`);
+    }
+
+    // Execute the query
+    req.connectionPool.query(query, queryParams, (error, results) => {
+        if (error) {
+            return res.status(500).json({ error: "Database error", details: error });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: "No students found" });
+        }
+
+        // Return the results
+        res.json(results);
+    });
+});
+
+
+
+// Endpoint to fetch detailed student info for Transfer Certificate
+router.get("/get-student-details-for-tc", (req, res) => {
+    const { grno, section } = req.query;
+
+    // Validate input parameters
+    if (!section || !grno) {
+        return res.status(400).json({ error: "Invalid search parameters" });
+    }
+
+    // Determine the appropriate table based on section
+    let tableName;
+    if (section === "primary") {
+        tableName = "primary_student_details";
+    } else if (section === "pre_primary") {
+        tableName = "pre_primary_student_details";
+    } else {
+        return res.status(400).json({ error: "Invalid section parameter" });
+    }
+
+    // Construct the SQL query
+    let query = `SELECT * FROM ${tableName} WHERE is_active = 1 AND Grno = ?`;
+    let queryParams = [grno];
+
+    // Execute the query
+    req.connectionPool.query(query, queryParams, (error, results) => {
+        if (error) {
+            return res.status(500).json({ error: "Database error", details: error });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: "No student found with this Grno" });
+        }
+
+        // Return the results
+        res.json(results);
+    });
+});
+
+
+//////////////////////////////////////////////////////////////////////////////
+
 // Endpoint to fetch student details for Transfer Certificate
 router.get("/fetch-student-for-TC", (req, res) => {
     const { grno, name, section } = req.query;
@@ -54,10 +146,12 @@ router.get("/fetch-student-for-TC", (req, res) => {
     });
 });
 
+///////////////////////////////////////////
+
 // Endpoint to fetch and increment max tc_no from transfer_certificates table
 router.get('/fetch-new-tc-no', (req, res) => {
-    // Construct the SQL query to get the max tc_no
-    const sql = `SELECT MAX(tc_no) AS max_tc_no FROM transfer_certificates`;
+    // Construct the SQL query to get the max tc_no considering it as an integer
+    const sql = `SELECT MAX(CAST(tc_no AS UNSIGNED)) AS max_tc_no FROM transfer_certificates`;
 
     // Execute the SQL query
     req.connectionPool.query(sql, (error, results) => {
@@ -76,6 +170,11 @@ router.get('/fetch-new-tc-no', (req, res) => {
         res.status(200).json({ new_tc_no: newTcNo });
     });
 });
+
+/////////////////////////////////////////////////////////////////////////
+
+
+//////////////////////// GENERATE  TC ////////////////////////////////////////
 
 
 // Endpoint to fetch school details with filtering by loginName and schoolName
@@ -184,7 +283,7 @@ router.post('/delete-android-user', (req, res) => {
                 return res.status(500).json({ error: 'Database query failed', details: deleteError });
             }
 
-            console.log('Delete Android User Result:', deleteResults);
+            //console.log('Delete Android User Result:', deleteResults);
             res.status(200).json({ message: 'Android user deleted successfully' });
         });
     });
@@ -192,7 +291,7 @@ router.post('/delete-android-user', (req, res) => {
 
 
 
-// New endpoint to delete Transport Allotted
+// Endpoint to delete Transport Allotted
 router.post('/delete-transport-alloted', (req, res) => {
     const { section, grno } = req.body;
 
@@ -212,23 +311,23 @@ router.post('/delete-transport-alloted', (req, res) => {
 
     // Construct the SQL query to fetch transport details and class details (standard and division)
     const fetchDetailsQuery = `SELECT transport_needed, transport_tagged, transport_pickup_drop, Standard, Division FROM ${tableName} WHERE Grno = ?`;
-    console.log('Executing query:', fetchDetailsQuery, 'with params:', [grno]);
+    //console.log('Executing query:', fetchDetailsQuery, 'with params:', [grno]);
     connection_auth.query(fetchDetailsQuery, [grno], (fetchError, fetchResults) => {
         if (fetchError) {
             console.error('Database query failed:', fetchError);
             return res.status(500).json({ error: 'Database query failed', details: fetchError });
         }
 
-        console.log('Fetch Transport and Class Details Result:', fetchResults);
+        //console.log('Fetch Transport and Class Details Result:', fetchResults);
 
         if (fetchResults.length === 0) {
-            return res.status(404).json({ error: 'Details not found for the given Gr No' });
+          return res.status(404).json({ error: 'Details not found for the given Gr No' });
         }
 
         const { transport_needed, transport_tagged, transport_pickup_drop, Standard, Division } = fetchResults[0];
         const concatenatedClass = `${Standard} ${Division}`;
 
-        if (transport_needed) {
+        if (transport_needed && transport_tagged) {
             // Fetch vehicle ID from transport_schedule_details
             const getVehicleId = (vehicle_no, transportPickupDrop, callback) => {
                 if (!vehicle_no) return callback(null, null);
@@ -238,10 +337,10 @@ router.post('/delete-transport-alloted', (req, res) => {
                     WHERE vehicle_no = ? AND classes_alloted LIKE ? AND route_stops LIKE ?
                 `;
                 const params = [vehicle_no, `%${concatenatedClass}%`, `%${transportPickupDrop}%`];
-                console.log('Executing query:', getIdQuery, 'with params:', params);
+               // console.log('Executing query:', getIdQuery, 'with params:', params);
                 connection_auth.query(getIdQuery, params, (getIdError, results) => {
                     if (getIdError) return callback(getIdError);
-                    console.log('Get Vehicle ID Result:', results);
+                  //  console.log('Get Vehicle ID Result:', results);
                     callback(null, results.length > 0 ? results[0].id : null);
                 });
             };
@@ -260,10 +359,10 @@ router.post('/delete-transport-alloted', (req, res) => {
                             END
                     WHERE id = ?
                 `;
-                console.log('Executing query:', updateSeatsQuery, 'with params:', [vehicleId]);
+               // console.log('Executing query:', updateSeatsQuery, 'with params:', [vehicleId]);
                 connection_auth.query(updateSeatsQuery, [vehicleId], (updateError) => {
                     if (updateError) return callback(updateError);
-                    console.log('Update Seats Result for vehicleId:', vehicleId);
+                //    console.log('Update Seats Result for vehicleId:', vehicleId);
                     callback(null);
                 });
             };
@@ -276,7 +375,8 @@ router.post('/delete-transport-alloted', (req, res) => {
                 }
 
                 if (!vehicleId) {
-                    return res.status(404).json({ error: 'Transport schedule not found' });
+                   // console.log('Vehicle not found in transport schedule, no changes made.');
+                    return res.status(200).json({ message: 'No transport allotment found for this student.' });
                 }
 
                 updateSeats(vehicleId, (updateSeatsError) => {
@@ -285,7 +385,7 @@ router.post('/delete-transport-alloted', (req, res) => {
                         return res.status(500).json({ error: 'Database query failed', details: updateSeatsError });
                     }
 
-                    console.log('Transport allotment deleted successfully');
+                   // console.log('Transport allotment deleted successfully');
                     res.status(200).json({ message: 'Transport allotment deleted successfully' });
                 });
             });
@@ -295,6 +395,78 @@ router.post('/delete-transport-alloted', (req, res) => {
         }
     });
 });
+
+// Endpoint to save Transfer Certificate data
+router.post('/save-to-tc-table', (req, res) => {
+    const { 
+      tc_no, 
+      gr_no, 
+      student_name, 
+      date_of_leaving, 
+      standard_of_leaving, 
+      reason_of_leaving, 
+      progress, 
+      conduct, 
+      result, 
+      remark, 
+      issue_date, 
+      section,
+      current_class,
+      no_of_copies = 1, 
+    } = req.body;
+  
+    // Check for duplicate tc_no
+    const checkDuplicateQuery = `SELECT COUNT(*) AS count FROM transfer_certificates WHERE tc_no = ?`;
+    req.connectionPool.query(checkDuplicateQuery, [tc_no], (checkError, checkResults) => {
+      if (checkError) {
+        console.error('Database query failed:', checkError);
+        return res.status(500).json({ error: 'Database query failed', details: checkError });
+      }
+  
+      if (checkResults[0].count > 0) {
+        // Duplicate tc_no found
+        return res.status(409).json({ error: 'Duplicate TC No', message: 'A record with this TC No already exists.' });
+      }
+  
+      // Construct the SQL query to insert a new record into the transfer_certificates table
+      const insertQuery = `INSERT INTO transfer_certificates 
+        (tc_no, gr_no, student_name, date_of_leaving, standard_of_leaving, reason_of_leaving, 
+         progress, conduct, result, remark, issue_date, section, current_class, no_of_copies) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  
+      const queryParams = [tc_no, gr_no, student_name, date_of_leaving, standard_of_leaving, 
+        reason_of_leaving, progress, conduct, result, remark, issue_date, section, current_class, no_of_copies];
+  
+      req.connectionPool.query(insertQuery, queryParams, (insertError, result) => {
+        if (insertError) {
+          console.error('Database query failed:', insertError);
+          return res.status(500).json({ error: 'Database query failed', details: insertError });
+        }
+  
+       // console.log('Insert TC Data Result:', result);
+        res.status(200).json({ message: 'Transfer Certificate data saved successfully' });
+      });
+    });
+  });
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+//////////////////////// EDIT TC ////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+  /////////////////////////// FETCH TC STUDENTS DATA ////////////////
 
 // Endpoint to fetch all students who have left school with TC
 router.get("/fetch-all-leave-students", async (req, res) => {
@@ -321,42 +493,6 @@ router.get("/fetch-all-leave-students", async (req, res) => {
 });
 
 
-// // Endpoint to fetch students who have LEFT SCHOOL WITH TC
-// router.get("/search-leave-student", async (req, res) => {
-//     const { grno, name } = req.query;
-
-//     // Validate input parameters
-//     if (!grno && !name) {
-//         return res.status(400).json({ error: "Invalid search parameters" });
-//     }
-
-//     let query, values;
-
-//     if (grno) { // Search by Grno
-//         query = `SELECT * FROM primary_student_details WHERE is_active = 0 AND Grno = ?
-//                  UNION
-//                  SELECT * FROM pre_primary_student_details WHERE is_active = 0 AND Grno = ?`;
-//         values = [grno, grno]; // Pass same value for both queries
-//     } else { // Search by Name
-//         query = `SELECT * FROM primary_student_details WHERE is_active = 0 AND Name LIKE ?
-//                  UNION
-//                  SELECT * FROM pre_primary_student_details WHERE is_active = 0 AND Name LIKE ?`;
-//         values = [`%${name}%`, `%${name}%`]; // Pass same value for both queries
-//     }
-
-//     // Execute the query
-//     req.connectionPool.query(query, values, (error, results) => {
-//         if (error) {
-//             return res.status(500).json({ error: "Database error", details: error });
-//         }
-
-//         if (results.length === 0) {
-//             return res.status(404).json({ message: "No student found" });
-//         }
-
-//         res.json(results);
-//     });
-// });
 
 
 module.exports = router;

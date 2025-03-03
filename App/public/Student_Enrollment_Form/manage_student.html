@@ -284,19 +284,19 @@
                     <h3><img src="/images/student.gif" alt="Student Icon" class="heading-icon">Student Information</h3>
                     <div class="form-row">
                         <div class="form-group">
-                            <input type="text" class="form-control" id="studentName" placeholder=" ">
+                            <input type="text" class="form-control" id="studentName" placeholder=" " readonly>
                             <span class="form-control-placeholder">Student Name</span>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" id="motherName" placeholder=" ">
+                            <input type="text" class="form-control" id="motherName" placeholder=" " readonly>
                             <span class="form-control-placeholder">Mother's Name</span>
                         </div>
                         <div class="form-group">
-                            <input type="date" class="form-control" id="dob">
+                            <input type="date" class="form-control" id="dob" readonly>
                             <span class="form-control-placeholder">DOB</span>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" id="placeOfBirth" placeholder=" ">
+                            <input type="text" class="form-control" id="placeOfBirth" placeholder=" " readonly>
                             <span class="form-control-placeholder">Place of Birth</span>
                         </div>
                     </div>
@@ -308,25 +308,25 @@
                         Information</h3>
                     <div class="form-row">
                         <div class="form-group">
-                            <input type="text" class="form-control" id="nationality" placeholder=" ">
+                            <input type="text" class="form-control" id="nationality" placeholder=" " readonly>
                             <span class="form-control-placeholder">Nationality</span>
                             <div id="nationalitySuggestions" class="suggestions"></div>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" id="religion" placeholder=" ">
+                            <input type="text" class="form-control" id="religion" placeholder=" " readonly>
                             <span class="form-control-placeholder">Religion</span>
                             <div id="religionSuggestions" class="suggestions"></div>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" id="category" placeholder=" ">
+                            <input type="text" class="form-control" id="category" placeholder=" " readonly>
                             <span class="form-control-placeholder">Category</span>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" id="caste" placeholder=" ">
+                            <input type="text" class="form-control" id="caste" placeholder=" " readonly>
                             <span class="form-control-placeholder">Caste</span>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" id="aadharId" placeholder=" ">
+                            <input type="text" class="form-control" id="aadharId" placeholder=" " readonly>
                             <span class="form-control-placeholder">Aadhar ID</span>
                         </div>
                     </div>
@@ -338,17 +338,17 @@
                     </h3>
                     <div class="form-row">
                         <div class="form-group">
-                            <input type="text" class="form-control" id="tc_grNo" placeholder=" ">
+                            <input type="text" class="form-control" id="tc_grNo" placeholder=" " readonly>
                             <span class="form-control-placeholder">Gr No</span>
                         </div>
 
                         <div class="form-group">
-                            <input type="text" class="form-control" id="tc_section" placeholder=" ">
+                            <input type="text" class="form-control" id="tc_section" placeholder=" " readonly>
                             <span class="form-control-placeholder">Section</span>
                         </div>
 
                         <div class="form-group">
-                            <input type="text" class="form-control" id="tc_class" placeholder=" ">
+                            <input type="text" class="form-control" id="tc_class" placeholder=" " readonly>
                             <span class="form-control-placeholder">Current Class</span>
                         </div>
 
@@ -357,29 +357,29 @@
                     <div class="form-row">
 
                         <div class="form-group">
-                            <input type="text" class="form-control" id="saralId" placeholder=" ">
+                            <input type="text" class="form-control" id="saralId" placeholder=" " readonly>
                             <span class="form-control-placeholder">Saral ID</span>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" id="aaparId" placeholder=" ">
+                            <input type="text" class="form-control" id="aaparId" placeholder=" " readonly>
                             <span class="form-control-placeholder">Aapar ID</span>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" id="penId" placeholder=" ">
+                            <input type="text" class="form-control" id="penId" placeholder=" " readonly>
                             <span class="form-control-placeholder">PEN ID</span>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <input type="text" class="form-control" id="lastSchool" placeholder=" ">
+                            <input type="text" class="form-control" id="lastSchool" placeholder=" " readonly>
                             <span class="form-control-placeholder">Last School</span>
                         </div>
                         <div class="form-group">
-                            <input type="date" class="form-control" id="dateOfAdmission">
+                            <input type="date" class="form-control" id="dateOfAdmission" readonly>
                             <span class="form-control-placeholder">Date of Admission</span>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" id="classOfAdmission" placeholder=" ">
+                            <input type="text" class="form-control" id="classOfAdmission" placeholder=" " readonly>
                             <span class="form-control-placeholder">Class of Admission</span>
                         </div>
                     </div>
@@ -391,7 +391,7 @@
                     </h3>
                     <div class="form-row">
                         <div class="form-group">
-                            <input type="text" class="form-control" id="tcNo" placeholder=" ">
+                            <input type="text" class="form-control" id="tcNo" placeholder=" " >
                             <span class="form-control-placeholder">TC NO</span>
                         </div>
                         <div class="form-group">
@@ -639,11 +639,19 @@
                 <table id="tcTable" class="styled-table">
                     <thead>
                         <tr>
-                            <th>TC ID</th>
+                            <th>TC No</th>
+                            <th>Gr No</th>
                             <th>Student Name</th>
-                            <th>Class</th>
+                            <th>Date of Leaving</th>
+                            <th>Standard of Leaving</th>
+                            <th>Reason of Leaving</th>
+                            <th>Progress</th>
+                            <th>Conduct</th>
+                            <th>Result</th>
+                            <th>Remark</th>
                             <th>Issue Date</th>
-                            <th>Reason</th>
+                            <th>Section</th>
+                            <th>No. of Copies</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -717,6 +725,7 @@
 
     <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Student_Enrollment_Form/manage_student.js"></script>
+    <script src="/js/Student_Enrollment_Form/transfer_certificate_search.js"></script>
     <script src="/js/Student_Enrollment_Form/enrollment_search_student.js"></script>
     <script src="/js/Student_Enrollment_Form/enrollment_delete_student.js"></script>
     <script src="/js/Student_Enrollment_Form/populate_update_student_form.js"></script>

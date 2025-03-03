@@ -14,7 +14,7 @@ function searchStudentAndHandleTC() {
       confirmButtonText: "OK",
     });
     return;
-  }
+  } 
 
   if (!section) {
     Swal.fire({
@@ -202,7 +202,7 @@ let standardsWhenLeaving = [
   "7th",
   "8th",
   "9th",
-  "10th",
+  "10th", 
 ];
 let standardsWhenLeavingFetched = false;
 
@@ -820,130 +820,161 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //////////////////////// GENERATE BUTTON //////////////
 
-document
-  .getElementById("submitGenerateTCForm")
-  .addEventListener("click", async function (event) {
-    const requiredFields = {
-      studentName: "Student Name",
-      motherName: "Mother's Name",
-      dob: "Date of Birth (DOB)",
-      placeOfBirth: "Place of Birth",
-      nationality: "Nationality",
-      religion: "Religion",
-      category: "Category",
-      caste: "Caste",
-      aadharId: "Aadhar ID",
-      tc_grNo: "Gr No",
-      tc_section: "Section",
-      tc_class: "Current Class",
-      saralId: "Saral ID",
-      aaparId: "Aapar ID",
-      penId: "PEN ID",
-      lastSchool: "Last School",
-      dateOfAdmission: "Date of Admission",
-      classOfAdmission: "Class of Admission",
-      tcNo: "TC No",
-      dateOfLeaving: "Date of Leaving",
-      standardLeaving: "Standard when Leaving",
-      reasonLeaving: "Reason of Leaving",
-      progress: "Progress",
-      conduct: "Conduct",
-      result: "Result",
-      remark: "Remark",
-    };
+document.getElementById("submitGenerateTCForm").addEventListener("click", async function (event) {
+  const requiredFields = {
+    studentName: "Student Name",
+    motherName: "Mother's Name",
+    dob: "Date of Birth (DOB)",
+    placeOfBirth: "Place of Birth",
+    nationality: "Nationality",
+    religion: "Religion",
+    category: "Category",
+    caste: "Caste",
+    aadharId: "Aadhar ID",
+    tc_grNo: "Gr No",
+    tc_section: "Section",
+    tc_class: "Current Class",
+    saralId: "Saral ID",
+    aaparId: "Aapar ID",
+    penId: "PEN ID",
+    lastSchool: "Last School",
+    dateOfAdmission: "Date of Admission",
+    classOfAdmission: "Class of Admission",
+    tcNo: "TC No",
+    dateOfLeaving: "Date of Leaving",
+    standardLeaving: "Standard when Leaving",
+    reasonLeaving: "Reason of Leaving",
+    progress: "Progress",
+    conduct: "Conduct",
+    result: "Result",
+    remark: "Remark",
+  };
 
-    let isValid = true;
-    let missingFields = [];
+  let isValid = true;
+  let missingFields = [];
 
-    Object.keys(requiredFields).forEach(function (fieldId) {
-      const field = document.getElementById(fieldId);
-      if (!field.value.trim()) {
-        isValid = false;
-        const label = requiredFields[fieldId];
-        missingFields.push(label);
-      }
-    });
-
-    if (!isValid) {
-      const missingFieldsList = missingFields
-        .map((field) => `<li>${field}</li>`)
-        .join("");
-      Swal.fire({
-        icon: "warning",
-        title: "Missing Fields",
-        html: `The following fields are required: <ul>${missingFieldsList}</ul>`,
-      });
-    } else {
-      // Fetch 'schoolName' and 'username' from cookies
-      const cookies = document.cookie.split(";").reduce((acc, cookie) => {
-        const [key, value] = cookie.trim().split("=");
-        acc[key] = value;
-        return acc;
-      }, {});
-      const schoolName = cookies["schoolName"];
-      const loginName = cookies["username"];
-
-      if (schoolName && loginName) {
-        try {
-          const fetchSchoolDetailsResponse = await fetch(
-            `/fetch-tc-school-details?loginName=${loginName}&schoolName=${schoolName}`
-          );
-          const schoolDetails = await fetchSchoolDetailsResponse.json();
-
-          let tcformdata = {
-            schoolName,
-            loginName,
-            ...schoolDetails,
-          };
-
-          Object.keys(requiredFields).forEach((fieldId) => {
-            const field = document.getElementById(fieldId);
-            tcformdata[fieldId] = field.value.trim();
-          });
-
-          sessionStorage.setItem("tcformdata", JSON.stringify(tcformdata));
-
-          console.log("TC Form Data:", tcformdata);
-
-          await deactivateStudent(
-            tcformdata.tc_section.toLowerCase(),
-            tcformdata.tc_grNo
-          );
-          await deleteAndroidUser(
-            tcformdata.tc_section.toLowerCase(),
-            tcformdata.tc_grNo
-          );
-          await deleteTransportAlloted(
-            tcformdata.tc_section.toLowerCase(),
-            tcformdata.tc_grNo
-          );
-
-          Swal.fire({
-            icon: "success",
-            title: "Form Submitted",
-            text: "All fields are filled correctly, data has been sent to the server, and student, Android user, and transport allotment processing has started.",
-          });
-
-          // Populate the HTML and display overlay
-          populateTCFormData(tcformdata);
-        } catch (error) {
-          Swal.fire({
-            icon: "error",
-            title: "Submission Failed",
-            text: error.message,
-          });
-        }
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Missing Cookies",
-          text: 'Required cookies "schoolName" and "username" are missing.',
-        });
-      }
+  Object.keys(requiredFields).forEach(function (fieldId) {
+    const field = document.getElementById(fieldId);
+    if (!field.value.trim()) {
+      isValid = false;
+      const label = requiredFields[fieldId];
+      missingFields.push(label);
     }
   });
 
-  
+  if (!isValid) {
+    const missingFieldsList = missingFields.map((field) => `<li>${field}</li>`).join("");
+    Swal.fire({
+      icon: "warning",
+      title: "Missing Fields",
+      html: `The following fields are required: <ul>${missingFieldsList}</ul>`,
+    });
+    return;
+  }
+
+  const cookies = document.cookie.split(";").reduce((acc, cookie) => {
+    const [key, value] = cookie.trim().split("=");
+    acc[key] = value;
+    return acc;
+  }, {});
+  const schoolName = cookies["schoolName"];
+  const loginName = cookies["username"];
+
+  if (!schoolName || !loginName) {
+    Swal.fire({
+      icon: "error",
+      title: "Missing Cookies",
+      text: 'Required cookies "schoolName" and "username" are missing.',
+    });
+    return;
+  }
+
+  try {
+    // Initialize Swal for loading status
+    let currentStep = "Processing...";
+    const updateSwal = async (message) => {
+      currentStep = message;
+      Swal.update({
+        title: "Processing...",
+        html: message,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+      });
+      Swal.showLoading();
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    };
+
+    Swal.fire({
+      title: "Processing...",
+      html: currentStep,
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    await updateSwal("Fetching School Details...");
+    const fetchSchoolDetailsResponse = await fetch(
+      `/fetch-tc-school-details?loginName=${loginName}&schoolName=${schoolName}`
+    );
+    if (!fetchSchoolDetailsResponse.ok) {
+      const errorText = await fetchSchoolDetailsResponse.text();
+      throw new Error(errorText);
+    }
+    const schoolDetails = await fetchSchoolDetailsResponse.json();
+
+    let tcformdata = {
+      schoolName,
+      loginName,
+      ...schoolDetails,
+    };
+
+    Object.keys(requiredFields).forEach((fieldId) => {
+      const field = document.getElementById(fieldId);
+      tcformdata[fieldId] = field.value.trim();
+    });
+
+    await updateSwal("Saving TC Record...");
+    const saveTCresponse = await saveTCdata(tcformdata);
+
+    if (saveTCresponse.error && saveTCresponse.error === "Duplicate TC No") {
+      throw new Error("A record with this TC No already exists.");
+    }
+
+    await updateSwal("Deactivating Student...");
+    await deactivateStudent(tcformdata.tc_section.toLowerCase(), tcformdata.tc_grNo);
+
+    await updateSwal("Deleting App Credentials...");
+    await deleteAndroidUser(tcformdata.tc_section.toLowerCase(), tcformdata.tc_grNo);
+
+    await updateSwal("Deallocating Transport...");
+    await deleteTransportAlloted(tcformdata.tc_section.toLowerCase(), tcformdata.tc_grNo);
+
+    await Swal.fire({
+      icon: "success",
+      title: "Form Submitted",
+      text: "All tasks completed successfully.",
+    });
+
+    populateTCFormData(tcformdata);
+  } catch (error) {
+    if (error.message === "A record with this TC No already exists.") {
+      Swal.fire({
+        icon: "error",
+        title: "Duplicate TC No",
+        text: error.message,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Submission Failed",
+        text: error.message,
+      });
+    }
+  }
+});
+
 function populateTCFormData(formData) {
   const setText = (selector, value) => {
     const element = document.querySelector(selector);
@@ -954,7 +985,6 @@ function populateTCFormData(formData) {
     }
   };
 
-  // ✅ Get school logo URL based on school name
   const logoUrl = getSchoolLogoUrl("schoolName");
 
   if (logoUrl) {
@@ -979,28 +1009,22 @@ function populateTCFormData(formData) {
     console.error("School logo URL not found");
   }
 
-  // ✅ Update school details
   setText("#schoolName", formData.schoolName);
   setText(".left-detail strong", formData.udise_no);
   setText(".right-detail strong", formData.board_index_no);
   setText("#contact", `Contact No: ${formData.contact_no}`);
   setText("#email", `Email: ${formData.email_address}`);
 
-  // ✅ Populate Address in Two Lines
   if (formData.detailed_address) {
     const addressLines = formData.detailed_address.split(", ");
-    setText("#schoolAddressLine1", addressLines.slice(0, 2).join(", ")); // First two parts
-    setText("#schoolAddressLine2", addressLines.slice(2).join(", ")); // Remaining parts
+    setText("#schoolAddressLine1", addressLines.slice(0, 2).join(", "));
+    setText("#schoolAddressLine2", addressLines.slice(2).join(", "));
   }
-  console.log(formData); // Debugging: Ensure `tcNo` and `tc_grNo` exist
-  console.log(formData.tcNo); // Should log "1"
-  console.log(formData.tc_grNo); // Should log "1615"
 
-  // ✅ Update student details
   setText("#tc_No", formData.tcNo);
-  setText("#tcgrNo",formData.tc_grNo);
+  setText("#tcgrNo", formData.tc_grNo);
   setText("#tcStudentName", formData.studentName);
-  setText("#tcMotherName", formData.motherName);  
+  setText("#tcMotherName", formData.motherName);
   setText("#tcDOB", formData.dob);
   setText("#tcPlaceOfBirth", formData.placeOfBirth);
   setText("#tcNationality", formData.nationality);
@@ -1019,7 +1043,6 @@ function populateTCFormData(formData) {
   setText("#tcResult", formData.result);
   setText("#tcRemark", formData.remark);
 
-  // ✅ Show the overlay if available
   const overlay = document.getElementById("previewTCOverlay");
   if (overlay) {
     overlay.style.display = "flex";
@@ -1028,63 +1051,44 @@ function populateTCFormData(formData) {
   }
 }
 
-// Close overlay
-document
-  .getElementById("closePreviewTCOverlay")
-  .addEventListener("click", function () {
-    document.getElementById("previewTCOverlay").style.display = "none";
-  });
-
-  
-// Download TC as Image
-// document.getElementById("downloadTC").addEventListener("click", function () {
-//   html2canvas(document.getElementById("tcContainer")).then((canvas) => {
-//     let link = document.createElement("a");
-//     link.href = canvas.toDataURL("image/png");
-//     link.download = "Transfer_Certificate.png";
-//     link.click();
-//   });
-// });
+document.getElementById("closePreviewTCOverlay").addEventListener("click", function () {
+  document.getElementById("previewTCOverlay").style.display = "none";
+});
 
 document.getElementById("downloadTC").addEventListener("click", function () {
   const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF('p', 'mm', 'a4'); 
+  const pdf = new jsPDF("p", "mm", "a4");
   const tcContainer = document.getElementById("tcContainer");
 
-  // Clone the tcContainer and remove scrolling
   let clonedContainer = tcContainer.cloneNode(true);
   clonedContainer.style.maxHeight = "none";
   clonedContainer.style.overflowY = "visible";
   clonedContainer.style.position = "absolute";
-  clonedContainer.style.left = "-9999px"; // Move off-screen
+  clonedContainer.style.left = "-9999px";
 
-  document.body.appendChild(clonedContainer); // Append it to the body
+  document.body.appendChild(clonedContainer);
 
-  html2canvas(clonedContainer, { scale: 2 }).then(canvas => {
-      const imgData = canvas.toDataURL("image/png");
-      const imgWidth = 190; // mm (A4 width)
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  html2canvas(clonedContainer, { scale: 2 }).then((canvas) => {
+    const imgData = canvas.toDataURL("image/png");
+    const imgWidth = 190;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
-      pdf.save("Transfer_Certificate.pdf");
+    pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+    pdf.save("Transfer_Certificate.pdf");
 
-      // Remove cloned container
-      document.body.removeChild(clonedContainer);
+    document.body.removeChild(clonedContainer);
 
-      // Close overlay
-      document.getElementById("previewTCOverlay").style.display = "none";
+    document.getElementById("previewTCOverlay").style.display = "none";
 
-      // Show SweetAlert
-      Swal.fire({
-          icon: "success",
-          title: "TC Downloaded!",
-          text: "Your Transfer Certificate has been successfully downloaded.",
-          confirmButtonColor: "#007bff"
-      });
+    Swal.fire({
+      icon: "success",
+      title: "TC Downloaded!",
+      text: "Your Transfer Certificate has been successfully downloaded.",
+      confirmButtonColor: "#007bff",
+    });
   });
 });
 
-// Function to get school logo URL dynamically
 function getSchoolLogoUrl(cookieName) {
   const cookies = document.cookie.split(";");
   let schoolName;
@@ -1098,16 +1102,12 @@ function getSchoolLogoUrl(cookieName) {
   }
 
   if (schoolName) {
-    return `../images/logo/${schoolName
-      .toLowerCase()
-      .replace(/\s+/g, "_")}.png`; // Construct logo URL
+    return `../images/logo/${schoolName.toLowerCase().replace(/\s+/g, "_")}.png`;
   }
-  return null; // Return null if school name is not found
+  return null;
 }
 
 async function deactivateStudent(section, grno) {
-  console.log("Deactivate Student called with:", { section, grno }); // Log for debugging
-
   try {
     const response = await fetch("/deactivate-student", {
       method: "POST",
@@ -1117,21 +1117,20 @@ async function deactivateStudent(section, grno) {
       body: JSON.stringify({ section, grno }),
     });
 
-    const result = await response.json();
-
-    if (response.ok) {
-      console.log("Student deactivated successfully:", result);
-    } else {
-      console.error("Failed to deactivate student:", result);
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to deactivate student: ${errorText}`);
     }
+
+    const result = await response.json();
+    console.log("Student deactivated successfully:", result);
   } catch (error) {
     console.error("Error deactivating student:", error);
+    throw new Error("An error occurred while deactivating the student.");
   }
 }
 
 async function deleteAndroidUser(section, grno) {
-  console.log("Delete Android User called with:", { section, grno }); // Log for debugging
-
   try {
     const response = await fetch("/delete-android-user", {
       method: "POST",
@@ -1141,21 +1140,20 @@ async function deleteAndroidUser(section, grno) {
       body: JSON.stringify({ section, grno }),
     });
 
-    const result = await response.json();
-
-    if (response.ok) {
-      console.log("Android user deleted successfully:", result);
-    } else {
-      console.error("Failed to delete Android user:", result);
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to delete Android user: ${errorText}`);
     }
+
+    const result = await response.json();
+    console.log("Android user deleted successfully:", result);
   } catch (error) {
     console.error("Error deleting Android user:", error);
+    throw new Error("An error occurred while deleting the Android user.");
   }
 }
 
 async function deleteTransportAlloted(section, grno) {
-  console.log("Delete Transport Alloted called with:", { section, grno }); // Log for debugging
-
   try {
     const response = await fetch("/delete-transport-alloted", {
       method: "POST",
@@ -1165,14 +1163,65 @@ async function deleteTransportAlloted(section, grno) {
       body: JSON.stringify({ section, grno }),
     });
 
-    const result = await response.json();
-
-    if (response.ok) {
-      console.log("Transport allotment deleted successfully:", result);
-    } else {
-      console.error("Failed to delete transport allotment:", result);
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to delete transport allotment: ${errorText}`);
     }
+
+    const result = await response.json();
+    console.log("Transport allotment deleted successfully:", result);
   } catch (error) {
     console.error("Error deleting transport allotment:", error);
+    throw new Error("An error occurred while deleting the transport allotment.");
+  }
+}
+
+async function saveTCdata(tcformdata) {
+  try {
+    const issueDate = new Date().toISOString().split("T")[0];
+
+    const response = await fetch("/save-to-tc-table", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        tc_no: tcformdata.tcNo,
+        gr_no: tcformdata.tc_grNo,
+        student_name: tcformdata.studentName,
+        date_of_leaving: tcformdata.dateOfLeaving,
+        standard_of_leaving: tcformdata.standardLeaving,
+        reason_of_leaving: tcformdata.reasonLeaving,
+        progress: tcformdata.progress,
+        conduct: tcformdata.conduct,
+        result: tcformdata.result,
+        remark: tcformdata.remark,
+        issue_date: issueDate,
+        section: tcformdata.tc_section,
+        current_class: tcformdata.tc_class,
+      }),
+    });
+
+    if (response.status === 409) {
+      // Duplicate TC No
+      const result = await response.json();
+      console.error("Duplicate TC No:", result);
+      throw new Error("A record with this TC No already exists.");
+    }
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Failed to save TC data:", errorText);
+      throw new Error(
+        "Failed to save Transfer Certificate data. Please ensure all fields are correctly filled."
+      );
+    }
+
+    const result = await response.json();
+    console.log("TC Data saved successfully:", result);
+    return result;
+  } catch (error) {
+    console.error("Error saving TC data:", error);
+    throw error; // Rethrow the error so it can be caught by the calling function
   }
 }
