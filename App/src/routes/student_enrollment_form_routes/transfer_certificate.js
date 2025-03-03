@@ -412,7 +412,7 @@ router.post('/save-to-tc-table', (req, res) => {
       issue_date, 
       section,
       current_class,
-      no_of_copies = 1, 
+      generation_status = 'ORIGINAL', 
     } = req.body;
   
     // Check for duplicate tc_no
@@ -431,11 +431,11 @@ router.post('/save-to-tc-table', (req, res) => {
       // Construct the SQL query to insert a new record into the transfer_certificates table
       const insertQuery = `INSERT INTO transfer_certificates 
         (tc_no, gr_no, student_name, date_of_leaving, standard_of_leaving, reason_of_leaving, 
-         progress, conduct, result, remark, issue_date, section, current_class, no_of_copies) 
+         progress, conduct, result, remark, issue_date, section, current_class, generation_status) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
   
       const queryParams = [tc_no, gr_no, student_name, date_of_leaving, standard_of_leaving, 
-        reason_of_leaving, progress, conduct, result, remark, issue_date, section, current_class, no_of_copies];
+        reason_of_leaving, progress, conduct, result, remark, issue_date, section, current_class, generation_status];
   
       req.connectionPool.query(insertQuery, queryParams, (insertError, result) => {
         if (insertError) {
@@ -458,18 +458,8 @@ router.post('/save-to-tc-table', (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-  /////////////////////////// FETCH TC STUDENTS DATA ////////////////
-
 // Endpoint to fetch all students who have left school with TC
-router.get("/fetch-all-leave-students", async (req, res) => {
+router.get("/get-tc-data", async (req, res) => {
     try {
         const query = `SELECT * FROM transfer_certificates`;
 
@@ -493,6 +483,134 @@ router.get("/fetch-all-leave-students", async (req, res) => {
 });
 
 
+// Endpoint to fetch TC details by id
+router.get("/edit-tc-details", async (req, res) => {
+    const id = req.query.id;
 
+    if (!id) {
+        return res.status(400).json({ error: "ID parameter is required" });
+    }
+
+    try {
+        const query = `SELECT * FROM transfer_certificates WHERE id = ?`;
+        
+        // Execute query with the provided id
+        req.connectionPool.query(query, [id], (error, results) => {
+            if (error) {
+                console.error("Database error:", error);
+                return res.status(500).json({ error: "Database error" });
+            }
+
+            if (results.length === 0) {
+                return res.status(404).json({ message: "No transfer certificate record found for the given ID" });
+            }
+
+            res.json({ success: true, details: results[0] });
+        });
+    } catch (error) {
+        console.error("Server error:", error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+
+// Endpoint to update TC details by tc_no and gr_no
+router.post("/update-tc-details", async (req, res) => {
+    const { tc_no, gr_no, date_of_leaving, standard_of_leaving, reason_of_leaving, progress, conduct, result, remark, issue_date, generation_status } = req.body;
+
+    if (!tc_no || !gr_no) {
+        return res.status(400).json({ error: "tc_no and gr_no parameters are required" });
+    }
+
+    try {
+        const selectQuery = `
+            SELECT id, date_of_leaving, standard_of_leaving, reason_of_leaving, progress, conduct, result, remark, issue_date, generation_status 
+            FROM transfer_certificates 
+            WHERE tc_no = ? AND gr_no = ?
+        `;
+
+        req.connectionPool.query(selectQuery, [tc_no, gr_no], (selectError, results) => {
+            if (selectError) {
+                console.error("Database error:", selectError);
+                return res.status(500).json({ error: "Database error" });
+            }
+
+            if (results.length === 0) {
+                return res.status(404).json({ message: "No transfer certificate record found for the given TC No and GR No" });
+            }
+
+            const currentValues = results[0];
+            const id = currentValues.id;
+
+            const updatedFields = {
+                date_of_leaving,
+                standard_of_leaving,
+                reason_of_leaving,
+                progress,
+                conduct,
+                result,
+                remark,
+                issue_date,
+                generation_status
+            };
+
+            let changes = {};
+
+            Object.keys(updatedFields).forEach(key => {
+                if (updatedFields[key] !== currentValues[key]) {
+                    changes[key] = {
+                        old: currentValues[key],
+                        new: updatedFields[key]
+                    };
+                }
+            });
+
+            if (Object.keys(changes).length === 0) {
+                return res.status(200).json({ success: false, message: "No changes detected" });
+            }
+
+            const updateQuery = `
+                UPDATE transfer_certificates 
+                SET 
+                    date_of_leaving = ?, 
+                    standard_of_leaving = ?, 
+                    reason_of_leaving = ?, 
+                    progress = ?, 
+                    conduct = ?, 
+                    result = ?, 
+                    remark = ?, 
+                    issue_date = ?, 
+                    generation_status = ?
+                WHERE 
+                    id = ?
+            `;
+
+            const values = [
+                date_of_leaving,
+                standard_of_leaving,
+                reason_of_leaving,
+                progress,
+                conduct,
+                result,
+                remark,
+                issue_date,
+                generation_status,
+                id
+            ];
+
+            req.connectionPool.query(updateQuery, values, (updateError, updateResults) => {
+                if (updateError) {
+                    console.error("Database error:", updateError);
+                    return res.status(500).json({ error: "Database error" });
+                }
+
+                res.json({ success: true, message: "TC details updated successfully", changes });
+            });
+        });
+    } catch (error) {
+        console.error("Server error:", error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
 
 module.exports = router;

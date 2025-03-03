@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const overlayMappings = {        
+    const overlayMappings = {
         generateTCButton: "searchTCFormOverlay",  // Clicking "Generate TC" opens "Search TC Form"
         searchTCButton: "generateTCOverlay",      // Clicking "Search TC" opens "Generate TC Overlay"
     };
@@ -136,8 +136,8 @@ document.querySelector(".search-button").addEventListener("click", function () {
                 sessionStorage.setItem("selectedSection", section);
                 window.location.href = `/Student_Enrollment_Form/student_enrollment_form?section=${encodeURIComponent(section)}&search=${encodeURIComponent(searchValue)}&mode=update`;
                 document.getElementById("updateStudentOverlay").style.display = "none";
-                  // Change form mode to "update"
-            // document.getElementById("formMode").value = "update";
+                // Change form mode to "update"
+                // document.getElementById("formMode").value = "update";
             }
         })
         .catch(error => {
@@ -159,15 +159,18 @@ document.querySelector(".search-button").addEventListener("click", function () {
 // });
 
 ////////////////////////////SEARCH TC//////////////////////////////////////////////////////////
-// document.addEventListener("DOMContentLoaded", function () {
-//     refreshTCData(); // Load students with TC on page load
-// });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    refreshTCData(); // Load students with TC on page load
+});
+
 
 let tcData = []; // Store fetched TC data globally
 
 function refreshTCData() {
     showManageStudentLoading();
-    fetch(`/fetch-all-leave-students`)
+    fetch(`/get-tc-data`)
         .then(response => response.json())
         .then(data => {
             hideManageStudentLoading();
@@ -177,7 +180,7 @@ function refreshTCData() {
         .catch(error => {
             hideManageStudentLoading();
             console.error("Error fetching TC data:", error);
-            document.getElementById("tcTableBody").innerHTML = 
+            document.getElementById("tcTableBody").innerHTML =
                 `<tr><td colspan="5">Error loading data</td></tr>`;
         });
 }
@@ -208,32 +211,20 @@ function displayStudentsHavingTC(data) {
             <td>${student.remark || "N/A"}</td>
             <td>${student.issue_date || "N/A"}</td>
             <td>${student.section || "N/A"}</td>
-            <td>${student.no_of_copies || "N/A"}</td>
+            <td>${student.generation_status || "N/A"}</td>
             <td>
                 <div class="button-container" style="display: flex; justify-content: center; gap: 10px;">
                     <!-- Edit Button -->
-                    <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; 
-                        text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px;
-                        cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                        transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-                        onclick="editStudent('${student.tc_no}', '${student.student_name}', '${student.standard_of_leaving}', '${student.issue_date}', '${student.reason_of_leaving}')"
-                        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                        <img src="../images/edit_icon.png" alt="Edit" style="width: 25px; height: 25px; margin: 5px;">
-                        <span>Edit</span>
-                    </button>
-
-                    <!-- Delete Button -->
-                    <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; 
-                        text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px;
-                        cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                        transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-                        onclick="deleteStudent('${student.tc_no}', '${student.student_name}')"
-                        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                        <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; margin: 5px;">
-                        <span>Delete</span>
-                    </button>
+<button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; 
+        text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px;
+        cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+        onclick="editTC('${student.id}')"
+        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+        <img src="../images/edit.png" alt="Edit" style="width: 25px; height: 25px; margin: 5px;">
+        <span>Edit</span>
+</button>
 
                     <!-- Print Button -->
                     <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; 
@@ -246,6 +237,20 @@ function displayStudentsHavingTC(data) {
                         <img src="../images/print_icon.png" alt="Print" style="width: 25px; height: 25px; margin: 5px;">
                         <span>Print</span>
                     </button>
+
+                    <!-- Delete Button -->
+                    <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; 
+                        text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px;
+                        cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                        transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+                        onclick="deleteTC('${student.tc_no}', '${student.student_name}')"
+                        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                        <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; margin: 5px;">
+                        <span>Delete</span>
+                    </button>
+
+                    
                 </div>
             </td>
         `;
@@ -256,14 +261,14 @@ function displayStudentsHavingTC(data) {
 function searchLeaveStudent() {
     const inputField = document.getElementById("searchLeaveStudentInput");
     const query = inputField.value.trim().toLowerCase();
-    
+
     if (query.length < 1) {
         refreshTCData();
         return;
     }
 
     const isNumeric = /^\d+$/.test(query); // Check if input is a number (GR No)
-    
+
     const filteredData = tcData.filter(student => {
         if (isNumeric) {
             return student.gr_no && student.gr_no.toString().includes(query);
@@ -311,7 +316,7 @@ function exportTCTable() {
     // Convert CSV content to Blob
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
-    
+
     if (navigator.msSaveBlob) { // IE 10+
         navigator.msSaveBlob(blob, "Transfer_Certificate_Data.csv");
     } else {
@@ -327,3 +332,162 @@ function exportTCTable() {
 
 
 ///////////////////////////////   EDIT TC ////////////////////
+
+// Utility functions for date formatting
+function formatToDDMMYYYY(dateStr) {
+    const [year, month, day] = dateStr.split("-");
+    return `${day}-${month}-${year}`;
+}
+
+function formatToYYYYMMDD(dateStr) {
+    const [day, month, year] = dateStr.split("-");
+    return `${year}-${month}-${day}`;
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const closeEditTCFormButton = document.getElementById("closeEditTCForm");
+    if (closeEditTCFormButton) {
+        closeEditTCFormButton.addEventListener("click", function () {
+            document.getElementById("editTCForm").style.display = "none";
+            console.log("Form closed");
+        });
+    }
+
+    const updateTCButton = document.getElementById("updateTCButton");
+    if (updateTCButton) {
+        updateTCButton.addEventListener("click", updateTCDetails);
+    }
+});
+
+function editTC(id) {
+    console.log("editTC function called with id:", id);
+
+    // Clear previous input values (if any)
+    document.getElementById("tc_edit_tcNoValue").textContent = "";
+    document.getElementById("tc_edit_grNoValue").textContent = "";
+    document.getElementById("tc_edit_studentNameValue").textContent = "";
+    document.getElementById("tc_edit_dateOfLeaving").value = ""; 
+    document.getElementById("tc_edit_standardOfLeaving").value = ""; 
+    document.getElementById("tc_edit_reasonOfLeaving").value = ""; 
+    document.getElementById("tc_edit_progress").value = ""; 
+    document.getElementById("tc_edit_conduct").value = ""; 
+    document.getElementById("tc_edit_result").value = ""; 
+    document.getElementById("tc_edit_remark").value = ""; 
+    document.getElementById("tc_edit_issueDate").value = ""; 
+    document.getElementById("tc_edit_generationStatus").value = ""; 
+
+    // Fetch data from the server using the id
+    fetch(`/edit-tc-details?id=${id}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const details = data.details;
+                document.getElementById("tc_edit_tcNoValue").textContent = details.tc_no || "";
+                document.getElementById("tc_edit_grNoValue").textContent = details.gr_no || "";
+                document.getElementById("tc_edit_studentNameValue").textContent = details.student_name || "";
+                document.getElementById("tc_edit_dateOfLeaving").value = details.date_of_leaving ? formatToDDMMYYYY(details.date_of_leaving) : ""; 
+                document.getElementById("tc_edit_standardOfLeaving").value = details.standard_of_leaving || ""; 
+                document.getElementById("tc_edit_reasonOfLeaving").value = details.reason_of_leaving || ""; 
+                document.getElementById("tc_edit_progress").value = details.progress || ""; 
+                document.getElementById("tc_edit_conduct").value = details.conduct || ""; 
+                document.getElementById("tc_edit_result").value = details.result || ""; 
+                document.getElementById("tc_edit_remark").value = details.remark || ""; 
+                document.getElementById("tc_edit_issueDate").value = details.issue_date ? formatToDDMMYYYY(details.issue_date) : ""; 
+                document.getElementById("tc_edit_generationStatus").value = details.generation_status || ""; 
+
+                // Store initial values
+                initialFormValues = {
+                    dateOfLeaving: details.date_of_leaving ? formatToDDMMYYYY(details.date_of_leaving) : "",
+                    standardOfLeaving: details.standard_of_leaving || "",
+                    reasonOfLeaving: details.reason_of_leaving || "",
+                    progress: details.progress || "",
+                    conduct: details.conduct || "",
+                    result: details.result || "",
+                    remark: details.remark || "",
+                    issueDate: details.issue_date ? formatToDDMMYYYY(details.issue_date) : "",
+                    generationStatus: details.generation_status || ""
+                };
+
+                console.log("Form values populated with fetched data");
+            } else {
+                console.error("Failed to fetch TC details:", data.message);
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching TC details:", error);
+            Swal.fire("Error", "Error fetching TC details: " + error.message, "error");
+        });
+
+    // Show the form
+    document.getElementById("editTCForm").style.display = "flex";
+    console.log("Form displayed");
+}
+
+function updateTCDetails() {
+    const tcNo = document.getElementById("tc_edit_tcNoValue").textContent;
+    const grNo = document.getElementById("tc_edit_grNoValue").textContent;
+    const dateOfLeaving = document.getElementById("tc_edit_dateOfLeaving").value;
+    const standardOfLeaving = document.getElementById("tc_edit_standardOfLeaving").value;
+    const reasonOfLeaving = document.getElementById("tc_edit_reasonOfLeaving").value;
+    const progress = document.getElementById("tc_edit_progress").value;
+    const conduct = document.getElementById("tc_edit_conduct").value;
+    const result = document.getElementById("tc_edit_result").value;
+    const remark = document.getElementById("tc_edit_remark").value;
+    const issueDate = document.getElementById("tc_edit_issueDate").value;
+    const generationStatus = document.getElementById("tc_edit_generationStatus").value;
+
+    const payload = {
+        tc_no: tcNo,
+        gr_no: grNo,
+        date_of_leaving: formatToYYYYMMDD(dateOfLeaving),
+        standard_of_leaving: standardOfLeaving,
+        reason_of_leaving: reasonOfLeaving,
+        progress: progress,
+        conduct: conduct,
+        result: result,
+        remark: remark,
+        issue_date: formatToYYYYMMDD(issueDate),
+        generation_status: generationStatus
+    };
+
+    fetch('/update-tc-details', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            let changesString = Object.keys(data.changes).map(key => {
+                return `${key}: ${data.changes[key].old} ➜ ${data.changes[key].new}`;
+            }).join('<br>');
+
+            Swal.fire({
+                title: 'Changes Applied Successfully',
+                html: `The following changes were made:<br><br>${changesString}`,
+                icon: 'success'
+            }).then(() => {
+                // Close the form
+                document.getElementById("editTCForm").style.display = "none";
+
+                // Refresh the data table
+                refreshTCData();
+            });
+        } else if (data.message === 'No changes detected') {
+            Swal.fire("Info", "No changes were made to the TC details", "info");
+        } else {
+            Swal.fire("Error", "Failed to update TC details", "error");
+        }
+    })
+    .catch(error => {
+        console.error("Error updating TC details:", error);
+        Swal.fire("Error", "Failed to update TC details: " + error.message, "error");
+    });
+}

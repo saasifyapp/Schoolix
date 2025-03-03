@@ -651,7 +651,7 @@
                             <th>Remark</th>
                             <th>Issue Date</th>
                             <th>Section</th>
-                            <th>No. of Copies</th>
+                            <th>Generation Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -663,8 +663,71 @@
         </div>
     </div>
 
-
-
+    <div id="editTCForm" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeEditTCForm" class="close-button">&times;</button>
+            <h2>Edit TC</h2>
+            <form id="editTCFormContent">
+                <div id="tcNoContainer">
+                    <strong>TC No -</strong> <span id="tc_edit_tcNoValue"></span>
+                </div>
+                <div id="grNoContainer">
+                    <strong>Gr No -</strong> <span id="tc_edit_grNoValue"></span>
+                </div>
+                <div id="studentNameContainer">
+                    <strong>Student Name -</strong> <span id="tc_edit_studentNameValue"></span>
+                </div>
+                <div class="form-group">
+                    <input type="date" class="form-control" id="tc_edit_dateOfLeaving" name="dateOfLeaving" placeholder=" ">
+                    <span class="form-control-placeholder">Date of Leaving</span>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="tc_edit_standardOfLeaving" name="standardOfLeaving" placeholder=" ">
+                    <span class="form-control-placeholder">Standard of Leaving</span>
+                    <div id="edit_tc_standardOfLeavingSuggestion" class="suggestions"></div>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="tc_edit_reasonOfLeaving" name="reasonOfLeaving" placeholder=" ">
+                    <span class="form-control-placeholder">Reason of Leaving</span>
+                    <div id="edit_tc_reasonOfLeavingSuggestion" class="suggestions"></div>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="tc_edit_progress" name="progress" placeholder=" ">
+                    <span class="form-control-placeholder">Progress</span>
+                    <div id="edit_tc_progressSuggestion" class="suggestions"></div>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="tc_edit_conduct" name="conduct" placeholder=" ">
+                    <span class="form-control-placeholder">Conduct</span>
+                    <div id="edit_tc_conductSuggestion" class="suggestions"></div>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="tc_edit_result" name="result" placeholder=" ">
+                    <span class="form-control-placeholder">Result</span>
+                    <div id="edit_tc_resultSuggestion" class="suggestions"></div>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="tc_edit_remark" name="remark" placeholder=" ">
+                    <span class="form-control-placeholder">Remark</span>
+                    <div id="edit_tc_remarkSuggestion" class="suggestions"></div>
+                </div>
+                <div class="form-group">
+                    <input type="date" class="form-control" id="tc_edit_issueDate" name="issueDate" placeholder=" ">
+                    <span class="form-control-placeholder">Issue Date</span>
+                </div>
+                <div class="form-group">
+                    <select class="form-control" id="tc_edit_generationStatus" name="generationStatus">
+                      <option value=""> </option>
+                      <option value="ORIGINAL">ORIGINAL</option>
+                      <option value="DUPLICATE">DUPLICATE</option>
+                      <option value="TRIPLICATE">TRIPLICATE</option>
+                    </select>
+                    <span class="form-control-placeholder">Generation Status</span>
+                  </div>
+                  <button type="button" class="update-button" id="updateTCButton">Update</button>
+                </form>
+        </div>
+    </div>
 
 
 

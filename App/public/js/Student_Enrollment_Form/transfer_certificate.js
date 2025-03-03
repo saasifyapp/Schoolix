@@ -186,637 +186,158 @@ function setLeavingDate() {
 // Set the default date when the document is ready
 document.addEventListener("DOMContentLoaded", setLeavingDate);
 
-//////////////////////////////////// STANDARD WHEN LEAVING ////////////////////////
+/////////////////////////// SUGGESTION UTILS ///////////////////////////
 
-// Cache for standards when leaving
-let standardsWhenLeaving = [
-  "Nursery",
-  "LKG",
-  "UKG",
-  "1st",
-  "2nd",
-  "3rd",
-  "4th",
-  "5th",
-  "6th",
-  "7th",
-  "8th",
-  "9th",
-  "10th", 
-];
-let standardsWhenLeavingFetched = false;
+////////////// USED BY GENERATE AND UPDATE TC /////////
 
-// Function to display standard when leaving suggestions
-function displayStandardWhenLeavingSuggestions() {
-  const standardLeavingInput = document.getElementById("standardLeaving");
-  const standardLeavingSuggestionsContainer = document.getElementById(
-    "standardLeavingSuggestion"
-  );
+// Utility function to show a loading indicator
+function showLoading(container) {
+  container.innerHTML = '<div class="loading">Loading...</div>';
+}
+
+// Utility function to show "No Results" message
+function showNoResults(container) {
+  container.innerHTML = '<div class="no-results">No results found</div>';
+}
+
+// Generic function to display suggestions
+function displaySuggestions(inputId, suggestionContainerId, data, cacheFlag, fetchFunc) {
+  const inputElement = document.getElementById(inputId);
+  const suggestionContainer = document.getElementById(suggestionContainerId);
 
   // Show suggestion box
-  standardLeavingSuggestionsContainer.style.display = "block";
-  const query = standardLeavingInput.value.toLowerCase().trim();
+  suggestionContainer.style.display = "block";
+  const query = inputElement.value.toLowerCase().trim();
 
-  if (!standardsWhenLeavingFetched) {
-    showLoading(standardLeavingSuggestionsContainer);
+  if (!cacheFlag.fetched) {
+    showLoading(suggestionContainer);
 
     // Simulate an async data fetch
     setTimeout(() => {
-      standardsWhenLeavingFetched = true;
-      filterAndDisplayStandardWhenLeavingSuggestions(
-        query,
-        standardLeavingSuggestionsContainer
-      );
+      cacheFlag.fetched = true;
+      fetchFunc(query, suggestionContainer);
     }, 500);
   } else {
-    filterAndDisplayStandardWhenLeavingSuggestions(
-      query,
-      standardLeavingSuggestionsContainer
-    );
+    fetchFunc(query, suggestionContainer);
   }
 }
 
-// Function to filter and display standard when leaving suggestions
-function filterAndDisplayStandardWhenLeavingSuggestions(
-  query,
-  suggestionsContainer
-) {
-  const filteredStandards = standardsWhenLeaving.filter((standard) =>
-    standard.toLowerCase().startsWith(query)
-  );
+// Generic function to filter and display suggestions
+function filterAndDisplaySuggestions(query, suggestionsContainer, data) {
+  const filteredItems = data.filter(item => item.toLowerCase().startsWith(query));
   suggestionsContainer.innerHTML = "";
 
-  if (filteredStandards.length > 0) {
-    filteredStandards.forEach((standard) => {
+  if (filteredItems.length > 0) {
+    filteredItems.forEach((item) => {
       const suggestionItem = document.createElement("div");
       suggestionItem.classList.add("suggestion-item");
-      suggestionItem.textContent = standard;
-      suggestionItem.dataset.value = standard;
+      suggestionItem.textContent = item;
+      suggestionItem.dataset.value = item;
       suggestionsContainer.appendChild(suggestionItem);
     });
   } else {
     showNoResults(suggestionsContainer);
   }
+}
 
-  // Add event listeners for selection
+// Add event listeners for selection
+function attachSuggestionListeners(suggestionsContainer, inputElement) {
   suggestionsContainer.querySelectorAll(".suggestion-item").forEach((item) => {
     item.addEventListener("click", function () {
-      const standardLeavingInput = document.getElementById("standardLeaving");
-      standardLeavingInput.value = this.dataset.value;
+      inputElement.value = this.dataset.value;
       suggestionsContainer.innerHTML = "";
       suggestionsContainer.style.display = "none";
     });
   });
 }
 
-// Function to show a loading indicator
-function showLoading(container) {
-  container.innerHTML = '<div class="loading">Loading...</div>';
-}
+/////////////////////////// SUGGESTION CONFIG ///////////////////////////
 
-// Function to show "No Results" message
-function showNoResults(container) {
-  container.innerHTML = '<div class="no-results">No results found</div>';
-}
+const cacheFlags = {
+  standards: { fetched: false },
+  reasons: { fetched: false },
+  progress: { fetched: false },
+  conduct: { fetched: false },
+  result: { fetched: false },
+  remark: { fetched: false },
+};
 
-// Initialization of standard when leaving suggestion box
-document.addEventListener("DOMContentLoaded", function () {
-  const standardLeavingInput = document.getElementById("standardLeaving");
-  const standardLeavingSuggestionsContainer = document.getElementById(
-    "standardLeavingSuggestion"
-  );
+const dataMap = {
+  standards: ["Nursery", "LKG", "UKG", "1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"],
+  reasons: [
+    "At his / her own request", "Relocation", "Change of School", "Financial Reasons", "Health Reasons",
+    "Permanent Move Abroad", "Academic Reasons", "Behavioural Issues", "Lack of Satisfaction",
+    "Completion of Education Level", "Personal/Family Issues", "Special Educational Needs",
+    "Bullying or Safety Concerns", "Extracurricular Opportunities"
+  ],
+  progress: ["Excellent", "Very Good", "Good", "Satisfactory", "Average", "Poor"],
+  conduct: ["Excellent", "Very Good", "Good", "Average", "Poor"],
+  result: ["Pass", "Fail", "Promoted", "Detained", "Incomplete"],
+  remark: ["Promoted to Next Class", "Good", "Very Good", "Excellent", "Needs Improvement", "Satisfactory"],
+};
 
-  // Add event listeners for input, focus, and click events
-  standardLeavingInput.addEventListener(
-    "input",
-    displayStandardWhenLeavingSuggestions
+function initSuggestions(inputId, suggestionContainerId, dataType) {
+  const inputElement = document.getElementById(inputId);
+  const suggestionsContainer = document.getElementById(suggestionContainerId);
+
+  inputElement.addEventListener("input", () =>
+    displaySuggestions(inputId, suggestionContainerId, dataMap[dataType], cacheFlags[dataType], (query, container) => {
+      filterAndDisplaySuggestions(query, container, dataMap[dataType]);
+      attachSuggestionListeners(container, inputElement);
+    })
   );
-  standardLeavingInput.addEventListener(
-    "focus",
-    displayStandardWhenLeavingSuggestions
+  inputElement.addEventListener("focus", () =>
+    displaySuggestions(inputId, suggestionContainerId, dataMap[dataType], cacheFlags[dataType], (query, container) => {
+      filterAndDisplaySuggestions(query, container, dataMap[dataType]);
+      attachSuggestionListeners(container, inputElement);
+    })
   );
-  standardLeavingInput.addEventListener(
-    "click",
-    displayStandardWhenLeavingSuggestions
+  inputElement.addEventListener("click", () =>
+    displaySuggestions(inputId, suggestionContainerId, dataMap[dataType], cacheFlags[dataType], (query, container) => {
+      filterAndDisplaySuggestions(query, container, dataMap[dataType]);
+      attachSuggestionListeners(container, inputElement);
+    })
   );
 
   document.addEventListener("click", function (event) {
     if (
-      !standardLeavingSuggestionsContainer.contains(event.target) &&
-      !standardLeavingInput.contains(event.target)
+      !suggestionsContainer.contains(event.target) &&
+      !inputElement.contains(event.target)
     ) {
-      standardLeavingSuggestionsContainer.style.display = "none";
-    }
-  });
-});
-
-///////////////////// REASON OF LEAVING ////////////////
-
-// Cache for reasons of leaving school
-const reasonsOfLeaving = [
-  "At his / her own request",
-  "Relocation",
-  "Change of School",
-  "Financial Reasons",
-  "Health Reasons",
-  "Permanent Move Abroad",
-  "Academic Reasons",
-  "Behavioural Issues",
-  "Lack of Satisfaction",
-  "Completion of Education Level",
-  "Personal/Family Issues",
-  "Special Educational Needs",
-  "Bullying or Safety Concerns",
-  "Extracurricular Opportunities",
-];
-let reasonsOfLeavingFetched = false;
-
-// Function to display reason of leaving suggestions
-function displayReasonOfLeavingSuggestions() {
-  const reasonLeavingInput = document.getElementById("reasonLeaving");
-  const reasonLeavingSuggestionsContainer = document.getElementById(
-    "reasonLeavingSuggestion"
-  );
-
-  // Show suggestion box
-  reasonLeavingSuggestionsContainer.style.display = "block";
-  const query = reasonLeavingInput.value.toLowerCase().trim();
-
-  if (!reasonsOfLeavingFetched) {
-    showLoading(reasonLeavingSuggestionsContainer);
-
-    // Simulate an async data fetch
-    setTimeout(() => {
-      reasonsOfLeavingFetched = true;
-      filterAndDisplayReasonOfLeavingSuggestions(
-        query,
-        reasonLeavingSuggestionsContainer
-      );
-    }, 500);
-  } else {
-    filterAndDisplayReasonOfLeavingSuggestions(
-      query,
-      reasonLeavingSuggestionsContainer
-    );
-  }
-}
-
-// Function to filter and display reason of leaving suggestions
-function filterAndDisplayReasonOfLeavingSuggestions(
-  query,
-  suggestionsContainer
-) {
-  const filteredReasons = reasonsOfLeaving.filter((reason) =>
-    reason.toLowerCase().startsWith(query)
-  );
-  suggestionsContainer.innerHTML = "";
-
-  if (filteredReasons.length > 0) {
-    filteredReasons.forEach((reason) => {
-      const suggestionItem = document.createElement("div");
-      suggestionItem.classList.add("suggestion-item");
-      suggestionItem.textContent = reason;
-      suggestionItem.dataset.value = reason;
-      suggestionsContainer.appendChild(suggestionItem);
-    });
-  } else {
-    showNoResults(suggestionsContainer);
-  }
-
-  // Add event listeners for selection
-  suggestionsContainer.querySelectorAll(".suggestion-item").forEach((item) => {
-    item.addEventListener("mousedown", function () {
-      const reasonLeavingInput = document.getElementById("reasonLeaving");
-      reasonLeavingInput.value = this.dataset.value;
-      suggestionsContainer.innerHTML = "";
       suggestionsContainer.style.display = "none";
-    });
-  });
-}
-
-// Function to show a loading indicator
-function showLoading(container) {
-  container.innerHTML = '<div class="loading">Loading...</div>';
-}
-
-// Function to show "No Results" message
-function showNoResults(container) {
-  container.innerHTML = '<div class="no-results">No results found</div>';
-}
-
-// Initialization of reason of leaving suggestion box
-document.addEventListener("DOMContentLoaded", function () {
-  const reasonLeavingInput = document.getElementById("reasonLeaving");
-  const reasonLeavingSuggestionsContainer = document.getElementById(
-    "reasonLeavingSuggestion"
-  );
-
-  // Add event listeners for input, focus, and click events
-  reasonLeavingInput.addEventListener(
-    "input",
-    displayReasonOfLeavingSuggestions
-  );
-  reasonLeavingInput.addEventListener(
-    "focus",
-    displayReasonOfLeavingSuggestions
-  );
-  reasonLeavingInput.addEventListener(
-    "click",
-    displayReasonOfLeavingSuggestions
-  );
-
-  document.addEventListener("click", function (event) {
-    if (
-      !reasonLeavingSuggestionsContainer.contains(event.target) &&
-      !reasonLeavingInput.contains(event.target)
-    ) {
-      reasonLeavingSuggestionsContainer.style.display = "none";
     }
   });
-});
-
-///////////////// PROGRESS SUGGESTIONS ////////////////
-
-const progressDescriptions = [
-  "Excellent",
-  "Very Good",
-  "Good",
-  "Satisfactory",
-  "Average",
-  "Poor",
-];
-let progressDescriptionsFetched = false;
-
-// Function to display progress suggestions
-function displayProgressSuggestions() {
-  const progressInput = document.getElementById("progress");
-  const progressSuggestionsContainer =
-    document.getElementById("progressSuggestion");
-
-  // Show suggestion box
-  progressSuggestionsContainer.style.display = "block";
-  const query = progressInput.value.toLowerCase().trim();
-
-  if (!progressDescriptionsFetched) {
-    showLoading(progressSuggestionsContainer);
-
-    // Simulate an async data fetch
-    setTimeout(() => {
-      progressDescriptionsFetched = true;
-      filterAndDisplayProgressSuggestions(query, progressSuggestionsContainer);
-    }, 500);
-  } else {
-    filterAndDisplayProgressSuggestions(query, progressSuggestionsContainer);
-  }
 }
 
-// Function to filter and display progress suggestions
-function filterAndDisplayProgressSuggestions(query, suggestionsContainer) {
-  const filteredDescriptions = progressDescriptions.filter((description) =>
-    description.toLowerCase().startsWith(query)
-  );
-  suggestionsContainer.innerHTML = "";
+////////////////////////// INIT ALL SUGGESTIONS ///////////////////////////
 
-  if (filteredDescriptions.length > 0) {
-    filteredDescriptions.forEach((description) => {
-      const suggestionItem = document.createElement("div");
-      suggestionItem.classList.add("suggestion-item");
-      suggestionItem.textContent = description;
-      suggestionItem.dataset.value = description;
-      suggestionsContainer.appendChild(suggestionItem);
-    });
-  } else {
-    showNoResults(suggestionsContainer);
-  }
-
-  // Add event listeners for selection
-  suggestionsContainer.querySelectorAll(".suggestion-item").forEach((item) => {
-    item.addEventListener("click", function () {
-      const progressInput = document.getElementById("progress");
-      progressInput.value = this.dataset.value;
-      suggestionsContainer.innerHTML = "";
-      suggestionsContainer.style.display = "none";
-    });
-  });
-}
-
-// Function to show a loading indicator
-function showLoading(container) {
-  container.innerHTML = '<div class="loading">Loading...</div>';
-}
-
-// Function to show "No Results" message
-function showNoResults(container) {
-  container.innerHTML = '<div class="no-results">No results found</div>';
-}
-
-// Initialization of progress suggestion box
 document.addEventListener("DOMContentLoaded", function () {
-  const progressInput = document.getElementById("progress");
-  const progressSuggestionsContainer =
-    document.getElementById("progressSuggestion");
+  // Standard of Leaving
+  initSuggestions("standardLeaving", "standardLeavingSuggestion", "standards");
+  initSuggestions("tc_edit_standardOfLeaving", "edit_tc_standardOfLeavingSuggestion", "standards");
 
-  // Add event listeners for input, focus, and click events
-  progressInput.addEventListener("input", displayProgressSuggestions);
-  progressInput.addEventListener("focus", displayProgressSuggestions);
-  progressInput.addEventListener("click", displayProgressSuggestions);
+  // Reason of Leaving
+  initSuggestions("reasonLeaving", "reasonLeavingSuggestion", "reasons");
+  initSuggestions("tc_edit_reasonOfLeaving", "edit_tc_reasonOfLeavingSuggestion", "reasons");
 
-  document.addEventListener("click", function (event) {
-    if (
-      !progressSuggestionsContainer.contains(event.target) &&
-      !progressInput.contains(event.target)
-    ) {
-      progressSuggestionsContainer.style.display = "none";
-    }
-  });
+  // Progress
+  initSuggestions("progress", "progressSuggestion", "progress");
+  initSuggestions("tc_edit_progress", "edit_tc_progressSuggestion", "progress");
+
+  // Conduct
+  initSuggestions("conduct", "conductSuggestion", "conduct");
+  initSuggestions("tc_edit_conduct", "edit_tc_conductSuggestion", "conduct");
+
+  // Result
+  initSuggestions("result", "resultSuggestion", "result");
+  initSuggestions("tc_edit_result", "edit_tc_resultSuggestion", "result");
+
+  // Remark
+  initSuggestions("remark", "remarkSuggestion", "remark");
+  initSuggestions("tc_edit_remark", "edit_tc_remarkSuggestion", "remark");
 });
 
-///////////// CONDUCT SUGGESTIONS ///////////////
 
-const conductDescriptions = [
-  "Excellent",
-  "Very Good",
-  "Good",
-  "Average",
-  "Poor",
-];
-let conductDescriptionsFetched = false;
-
-// Function to display conduct suggestions
-function displayConductSuggestions() {
-  const conductInput = document.getElementById("conduct");
-  const conductSuggestionsContainer =
-    document.getElementById("conductSuggestion");
-
-  // Show suggestion box
-  conductSuggestionsContainer.style.display = "block";
-  const query = conductInput.value.toLowerCase().trim();
-
-  if (!conductDescriptionsFetched) {
-    showLoading(conductSuggestionsContainer);
-
-    // Simulate an async data fetch
-    setTimeout(() => {
-      conductDescriptionsFetched = true;
-      filterAndDisplayConductSuggestions(query, conductSuggestionsContainer);
-    }, 500);
-  } else {
-    filterAndDisplayConductSuggestions(query, conductSuggestionsContainer);
-  }
-}
-
-// Function to filter and display conduct suggestions
-function filterAndDisplayConductSuggestions(query, suggestionsContainer) {
-  const filteredDescriptions = conductDescriptions.filter((description) =>
-    description.toLowerCase().startsWith(query)
-  );
-  suggestionsContainer.innerHTML = "";
-
-  if (filteredDescriptions.length > 0) {
-    filteredDescriptions.forEach((description) => {
-      const suggestionItem = document.createElement("div");
-      suggestionItem.classList.add("suggestion-item");
-      suggestionItem.textContent = description;
-      suggestionItem.dataset.value = description;
-      suggestionsContainer.appendChild(suggestionItem);
-    });
-  } else {
-    showNoResults(suggestionsContainer);
-  }
-
-  // Add event listeners for selection
-  suggestionsContainer.querySelectorAll(".suggestion-item").forEach((item) => {
-    item.addEventListener("click", function () {
-      const conductInput = document.getElementById("conduct");
-      conductInput.value = this.dataset.value;
-      suggestionsContainer.innerHTML = "";
-      suggestionsContainer.style.display = "none";
-    });
-  });
-}
-
-// Function to show a loading indicator
-function showLoading(container) {
-  container.innerHTML = '<div class="loading">Loading...</div>';
-}
-
-// Function to show "No Results" message
-function showNoResults(container) {
-  container.innerHTML = '<div class="no-results">No results found</div>';
-}
-
-// Initialization of conduct suggestion box
-document.addEventListener("DOMContentLoaded", function () {
-  const conductInput = document.getElementById("conduct");
-  const conductSuggestionsContainer =
-    document.getElementById("conductSuggestion");
-
-  // Add event listeners for input, focus, and click events
-  conductInput.addEventListener("input", displayConductSuggestions);
-  conductInput.addEventListener("focus", displayConductSuggestions);
-  conductInput.addEventListener("click", displayConductSuggestions);
-
-  document.addEventListener("click", function (event) {
-    if (
-      !conductSuggestionsContainer.contains(event.target) &&
-      !conductInput.contains(event.target)
-    ) {
-      conductSuggestionsContainer.style.display = "none";
-    }
-  });
-});
-
-////////////// RESULT SUGGESTIONS ///////////
-
-const resultDescriptions = [
-  "Pass",
-  "Fail",
-  "Promoted",
-  "Detained",
-  "Incomplete",
-];
-let resultDescriptionsFetched = false;
-
-// Function to display result suggestions
-function displayResultSuggestions() {
-  const resultInput = document.getElementById("result");
-  const resultSuggestionsContainer =
-    document.getElementById("resultSuggestion");
-
-  // Show suggestion box
-  resultSuggestionsContainer.style.display = "block";
-  const query = resultInput.value.toLowerCase().trim();
-
-  if (!resultDescriptionsFetched) {
-    showLoading(resultSuggestionsContainer);
-
-    // Simulate an async data fetch
-    setTimeout(() => {
-      resultDescriptionsFetched = true;
-      filterAndDisplayResultSuggestions(query, resultSuggestionsContainer);
-    }, 500);
-  } else {
-    filterAndDisplayResultSuggestions(query, resultSuggestionsContainer);
-  }
-}
-
-// Function to filter and display result suggestions
-function filterAndDisplayResultSuggestions(query, suggestionsContainer) {
-  const filteredDescriptions = resultDescriptions.filter((description) =>
-    description.toLowerCase().startsWith(query)
-  );
-  suggestionsContainer.innerHTML = "";
-
-  if (filteredDescriptions.length > 0) {
-    filteredDescriptions.forEach((description) => {
-      const suggestionItem = document.createElement("div");
-      suggestionItem.classList.add("suggestion-item");
-      suggestionItem.textContent = description;
-      suggestionItem.dataset.value = description;
-      suggestionsContainer.appendChild(suggestionItem);
-    });
-  } else {
-    showNoResults(suggestionsContainer);
-  }
-
-  // Add event listeners for selection
-  suggestionsContainer.querySelectorAll(".suggestion-item").forEach((item) => {
-    item.addEventListener("click", function () {
-      const resultInput = document.getElementById("result");
-      resultInput.value = this.dataset.value;
-      suggestionsContainer.innerHTML = "";
-      suggestionsContainer.style.display = "none";
-    });
-  });
-}
-
-// Function to show a loading indicator
-function showLoading(container) {
-  container.innerHTML = '<div class="loading">Loading...</div>';
-}
-
-// Function to show "No Results" message
-function showNoResults(container) {
-  container.innerHTML = '<div class="no-results">No results found</div>';
-}
-
-// Initialization of result suggestion box
-document.addEventListener("DOMContentLoaded", function () {
-  const resultInput = document.getElementById("result");
-  const resultSuggestionsContainer =
-    document.getElementById("resultSuggestion");
-
-  // Add event listeners for input, focus, and click events
-  resultInput.addEventListener("input", displayResultSuggestions);
-  resultInput.addEventListener("focus", displayResultSuggestions);
-  resultInput.addEventListener("click", displayResultSuggestions);
-
-  document.addEventListener("click", function (event) {
-    if (
-      !resultSuggestionsContainer.contains(event.target) &&
-      !resultInput.contains(event.target)
-    ) {
-      resultSuggestionsContainer.style.display = "none";
-    }
-  });
-});
-
-/////////////////// REMARKS /////////////////
-
-// Cache for remark suggestions
-const remarkDescriptions = [
-  "Promoted to Next Class",
-  "Good",
-  "Very Good",
-  "Excellent",
-  "Needs Improvement",
-  "Satisfactory",
-];
-let remarkDescriptionsFetched = false;
-
-// Function to display remark suggestions
-function displayRemarkSuggestions() {
-  const remarkInput = document.getElementById("remark");
-  const remarkSuggestionsContainer =
-    document.getElementById("remarkSuggestion");
-
-  // Show suggestion box
-  remarkSuggestionsContainer.style.display = "block";
-  const query = remarkInput.value.toLowerCase().trim();
-
-  if (!remarkDescriptionsFetched) {
-    showLoading(remarkSuggestionsContainer);
-
-    // Simulate an async data fetch
-    setTimeout(() => {
-      remarkDescriptionsFetched = true;
-      filterAndDisplayRemarkSuggestions(query, remarkSuggestionsContainer);
-    }, 500);
-  } else {
-    filterAndDisplayRemarkSuggestions(query, remarkSuggestionsContainer);
-  }
-}
-
-// Function to filter and display remark suggestions
-function filterAndDisplayRemarkSuggestions(query, suggestionsContainer) {
-  const filteredDescriptions = remarkDescriptions.filter((description) =>
-    description.toLowerCase().startsWith(query)
-  );
-  suggestionsContainer.innerHTML = "";
-
-  if (filteredDescriptions.length > 0) {
-    filteredDescriptions.forEach((description) => {
-      const suggestionItem = document.createElement("div");
-      suggestionItem.classList.add("suggestion-item");
-      suggestionItem.textContent = description;
-      suggestionItem.dataset.value = description;
-      suggestionsContainer.appendChild(suggestionItem);
-    });
-  } else {
-    showNoResults(suggestionsContainer);
-  }
-
-  // Add event listeners for selection
-  suggestionsContainer.querySelectorAll(".suggestion-item").forEach((item) => {
-    item.addEventListener("click", function () {
-      const remarkInput = document.getElementById("remark");
-      remarkInput.value = this.dataset.value;
-      suggestionsContainer.innerHTML = "";
-      suggestionsContainer.style.display = "none";
-    });
-  });
-}
-
-// Function to show a loading indicator
-function showLoading(container) {
-  container.innerHTML = '<div class="loading">Loading...</div>';
-}
-
-// Function to show "No Results" message
-function showNoResults(container) {
-  container.innerHTML = '<div class="no-results">No results found</div>';
-}
-
-// Initialization of remark suggestion box
-document.addEventListener("DOMContentLoaded", function () {
-  const remarkInput = document.getElementById("remark");
-  const remarkSuggestionsContainer =
-    document.getElementById("remarkSuggestion");
-
-  // Add event listeners for input, focus, and click events
-  remarkInput.addEventListener("input", displayRemarkSuggestions);
-  remarkInput.addEventListener("focus", displayRemarkSuggestions);
-  remarkInput.addEventListener("click", displayRemarkSuggestions);
-
-  document.addEventListener("click", function (event) {
-    if (
-      !remarkSuggestionsContainer.contains(event.target) &&
-      !remarkInput.contains(event.target)
-    ) {
-      remarkSuggestionsContainer.style.display = "none";
-    }
-  });
-});
 
 //////////////////////// GENERATE BUTTON //////////////
 
@@ -934,6 +455,17 @@ document.getElementById("submitGenerateTCForm").addEventListener("click", async 
       const field = document.getElementById(fieldId);
       tcformdata[fieldId] = field.value.trim();
     });
+
+    // Utility function to format date
+    const formatDate = (dateStr) => {
+      const [year, month, day] = dateStr.split("-");
+      return `${day}-${month}-${year}`;
+    };
+
+    // Apply date formatting
+    const issueDate = new Date().toISOString().split("T")[0];
+    tcformdata.issueDate = formatDate(issueDate);
+    tcformdata.dateOfLeaving = formatDate(tcformdata.dateOfLeaving);
 
     await updateSwal("Saving TC Record...");
     const saveTCresponse = await saveTCdata(tcformdata);
@@ -1178,7 +710,6 @@ async function deleteTransportAlloted(section, grno) {
 
 async function saveTCdata(tcformdata) {
   try {
-    const issueDate = new Date().toISOString().split("T")[0];
 
     const response = await fetch("/save-to-tc-table", {
       method: "POST",
@@ -1196,7 +727,7 @@ async function saveTCdata(tcformdata) {
         conduct: tcformdata.conduct,
         result: tcformdata.result,
         remark: tcformdata.remark,
-        issue_date: issueDate,
+        issue_date: tcformdata.issueDate,
         section: tcformdata.tc_section,
         current_class: tcformdata.tc_class,
       }),
