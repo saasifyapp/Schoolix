@@ -391,7 +391,7 @@
                     </h3>
                     <div class="form-row">
                         <div class="form-group">
-                            <input type="text" class="form-control" id="tcNo" placeholder=" " >
+                            <input type="text" class="form-control" id="tcNo" placeholder=" ">
                             <span class="form-control-placeholder">TC NO</span>
                         </div>
                         <div class="form-group">
@@ -459,12 +459,12 @@
                     <div class="logo-container">
                         <img id="schoolLogo" src="logo1.png" alt="School Logo" class="school-logo">
                     </div>
-                
+
                     <div class="school-details">
                         <h2 id="schoolName">TARANGAN ENGLISH SCHOOL</h2>
                         <p id="schoolAddressLine1"></p>
                         <p id="schoolAddressLine2"></p>
-                        
+
                         <div class="info-container-detail">
                             <div class="info-row-detail">
                                 <span class="left-detail">UDISE No: <strong>2706011105</strong></span>
@@ -475,24 +475,24 @@
                                 <span class="right-detail" id="email">Email: tarangan.english.school@gmail.com</span>
                             </div>
                         </div>
-                        
+
                         <h3>SCHOOL LEAVING CERTIFICATE</h3>
                     </div>
-                
+
                     <div class="logo-container">
                         <img id="schoolLogo2" src="logo2.png" alt="School Logo" class="school-logo">
                     </div>
                 </div>
-                
-                
+
+
 
                 <table class="tc-table">
                     <tr>
-                        <td><strong>1. Certificate No:</strong> <span id="tc_No" ></span></td>
+                        <td><strong>1. Certificate No:</strong> <span id="tc_No"></span></td>
                     </tr>
                     <tr>
                         <td><strong>2. General Register No:</strong> <span id="tcgrNo"></span></td>
-                    </tr>                    
+                    </tr>
                     <tr>
                         <td><strong>3. Student Name:</strong> <span id="tcStudentName"></span></td>
                     </tr>
@@ -512,7 +512,8 @@
                         <td><strong>8. Religion:</strong> <span id="tcReligion"></span></td>
                     </tr>
                     <tr>
-                        <td><strong>9. Caste & Sub-Caste:</strong> <span id="tcCategory">(<span id="tcCaste"></span>)</span></td>
+                        <td><strong>9. Caste & Sub-Caste:</strong> <span id="tcCategory">(<span
+                                    id="tcCaste"></span>)</span></td>
                     </tr>
                     <tr>
                         <td><strong>10. Aadhar ID:</strong> <span id="tcAadharId"></span></td>
@@ -556,17 +557,19 @@
                         <p class="signature"><strong>Signature</strong></p>
                     </div>
                     <p class="notice">
-                        No changes shall be made to any entry in this certificate except by the title authority issuing it. 
-                        Any infringement of this certificate will be treated as a violation of school policy and may result 
+                        No changes shall be made to any entry in this certificate except by the title authority issuing
+                        it.
+                        Any infringement of this certificate will be treated as a violation of school policy and may
+                        result
                         in a penalty and legal action as per the applicable rules and regulations.
                     </p>
                 </div>
-                
+
             </div>
 
 
             <button id="downloadTC" class="download-button">
-                <img src="/images/download.gif" alt="Download TC">                
+                <img src="/images/download.gif" alt="Download TC">
             </button>
         </div>
     </div>
@@ -623,8 +626,8 @@
                     <div class="form-Searchgroup">
                         <img class="vendorIcon" src="/images/search.gif" alt="Search Icon"
                             style="right: 25px; left: 405px;">
-                        <input type="text" class="form-control" id="searchLeaveStudentInput" name="tcSearch" placeholder=" "
-                            oninput="searchLeaveStudent()" style="width: 400px;">
+                        <input type="text" class="form-control" id="searchLeaveStudentInput" name="tcSearch"
+                            placeholder=" " oninput="searchLeaveStudent()" style="width: 400px;">
                         <span class="form-control-placeholder" style="left: 3.75rem;">Search by student name</span>
                     </div>
                     <button class="refreshButton" onclick="refreshTCData()" style="margin-top: 10px;">
@@ -663,71 +666,110 @@
         </div>
     </div>
 
-    <div id="editTCForm" class="overlay-search">
-        <div class="overlay-content-search">
+    <div id="editTCForm" class="overlay">
+        <div class="overlay-content-edit-tc">
             <button id="closeEditTCForm" class="close-button">&times;</button>
-            <h2>Edit TC</h2>
-            <form id="editTCFormContent">
-                <div id="tcNoContainer">
-                    <strong>TC No -</strong> <span id="tc_edit_tcNoValue"></span>
+            <div class="overlay-inner">
+                <div class="left-side-edit-tc">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/a2cd2dff-b291-4ef1-a597-8c585c75a24f/XeYfdUvvZd.lottie"
+                        background="transparent" speed="1" style="width: 300px; height: 300px" loop
+                        autoplay></dotlottie-player>
                 </div>
-                <div id="grNoContainer">
-                    <strong>Gr No -</strong> <span id="tc_edit_grNoValue"></span>
+                <div class="right-side-edit-tc">
+                    <h2>Edit TC</h2>
+                    <form id="editTCFormContent">
+                        <div class="tc-info-container">
+                            <div id="tcNoContainer"><strong>TC No -</strong> <span id="tc_edit_tcNoValue"></span></div>
+                            <div id="grNoContainer"><strong>Gr No -</strong> <span id="tc_edit_grNoValue"></span></div>
+                            <div id="studentNameContainer"><strong>Student Name -</strong> <span
+                                    id="tc_edit_studentNameValue"></span></div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="date" class="form-control" id="tc_edit_dateOfLeaving" name="dateOfLeaving"
+                                    placeholder=" ">
+                                <span class="form-control-placeholder">Date of Leaving</span>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="tc_edit_standardOfLeaving"
+                                    name="standardOfLeaving" placeholder=" ">
+                                <span class="form-control-placeholder">Standard of Leaving</span>
+                                <div id="edit_tc_standardOfLeavingSuggestion" class="suggestions"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="tc_edit_reasonOfLeaving"
+                                    name="reasonOfLeaving" placeholder=" ">
+                                <span class="form-control-placeholder">Reason of Leaving</span>
+                                <div id="edit_tc_reasonOfLeavingSuggestion" class="suggestions"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="tc_edit_progress" name="progress"
+                                    placeholder=" ">
+                                <span class="form-control-placeholder">Progress</span>
+                                <div id="edit_tc_progressSuggestion" class="suggestions"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="tc_edit_conduct" name="conduct"
+                                    placeholder=" ">
+                                <span class="form-control-placeholder">Conduct</span>
+                                <div id="edit_tc_conductSuggestion" class="suggestions"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="tc_edit_result" name="result"
+                                    placeholder=" ">
+                                <span class="form-control-placeholder">Result</span>
+                                <div id="edit_tc_resultSuggestion" class="suggestions"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="tc_edit_remark" name="remark"
+                                    placeholder=" ">
+                                <span class="form-control-placeholder">Remark</span>
+                                <div id="edit_tc_remarkSuggestion" class="suggestions"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="date" class="form-control" id="tc_edit_issueDate" name="issueDate"
+                                    placeholder=" ">
+                                <span class="form-control-placeholder">Issue Date</span>
+                            </div>
+
+                            <div class="form-group">
+                                <select class="form-control" id="tc_edit_generationStatus" name="generationStatus">
+                                    <option value=""> </option>
+                                    <option value="ORIGINAL">ORIGINAL</option>
+                                    <option value="DUPLICATE">DUPLICATE</option>
+                                    <option value="TRIPLICATE">TRIPLICATE</option>
+                                </select>
+                                <span class="form-control-placeholder">Generation Status</span>
+                            </div>
+                        </div>
+
+
+                        <button type="button" class="edit-tc" id="updateTCButton">
+                            <img src="/images/update.gif" alt="Generate TC">
+                            <span>Update TC</span>
+                        </button>
+                    </form>
                 </div>
-                <div id="studentNameContainer">
-                    <strong>Student Name -</strong> <span id="tc_edit_studentNameValue"></span>
-                </div>
-                <div class="form-group">
-                    <input type="date" class="form-control" id="tc_edit_dateOfLeaving" name="dateOfLeaving" placeholder=" ">
-                    <span class="form-control-placeholder">Date of Leaving</span>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" id="tc_edit_standardOfLeaving" name="standardOfLeaving" placeholder=" ">
-                    <span class="form-control-placeholder">Standard of Leaving</span>
-                    <div id="edit_tc_standardOfLeavingSuggestion" class="suggestions"></div>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" id="tc_edit_reasonOfLeaving" name="reasonOfLeaving" placeholder=" ">
-                    <span class="form-control-placeholder">Reason of Leaving</span>
-                    <div id="edit_tc_reasonOfLeavingSuggestion" class="suggestions"></div>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" id="tc_edit_progress" name="progress" placeholder=" ">
-                    <span class="form-control-placeholder">Progress</span>
-                    <div id="edit_tc_progressSuggestion" class="suggestions"></div>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" id="tc_edit_conduct" name="conduct" placeholder=" ">
-                    <span class="form-control-placeholder">Conduct</span>
-                    <div id="edit_tc_conductSuggestion" class="suggestions"></div>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" id="tc_edit_result" name="result" placeholder=" ">
-                    <span class="form-control-placeholder">Result</span>
-                    <div id="edit_tc_resultSuggestion" class="suggestions"></div>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" id="tc_edit_remark" name="remark" placeholder=" ">
-                    <span class="form-control-placeholder">Remark</span>
-                    <div id="edit_tc_remarkSuggestion" class="suggestions"></div>
-                </div>
-                <div class="form-group">
-                    <input type="date" class="form-control" id="tc_edit_issueDate" name="issueDate" placeholder=" ">
-                    <span class="form-control-placeholder">Issue Date</span>
-                </div>
-                <div class="form-group">
-                    <select class="form-control" id="tc_edit_generationStatus" name="generationStatus">
-                      <option value=""> </option>
-                      <option value="ORIGINAL">ORIGINAL</option>
-                      <option value="DUPLICATE">DUPLICATE</option>
-                      <option value="TRIPLICATE">TRIPLICATE</option>
-                    </select>
-                    <span class="form-control-placeholder">Generation Status</span>
-                  </div>
-                  <button type="button" class="update-button" id="updateTCButton">Update</button>
-                </form>
+            </div>
         </div>
     </div>
+
 
 
 
@@ -794,7 +836,7 @@
     <script src="/js/Student_Enrollment_Form/populate_update_student_form.js"></script>
     <script src="/js/Student_Enrollment_Form/transfer_certificate.js"></script>
     <script src="/js/Universal_Components_JS/autoFill_student_details.js"></script>
-    
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
