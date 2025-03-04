@@ -215,16 +215,16 @@ function displayStudentsHavingTC(data) {
             <td>
                 <div class="button-container" style="display: flex; justify-content: center; gap: 10px;">
                     <!-- Edit Button -->
-<button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; 
-        text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px;
-        cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-        onclick="editTC('${student.id}')"
-        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-        <img src="../images/edit.png" alt="Edit" style="width: 25px; height: 25px; margin: 5px;">
-        <span>Edit</span>
-</button>
+                    <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; 
+                            text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px;
+                            cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                            transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+                            onclick="editTC('${student.id}')"
+                            onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                            <img src="../images/edit.png" alt="Edit" style="width: 25px; height: 25px; margin: 5px;">
+                            <span>Edit</span>
+                    </button>
 
                     <!-- Print Button -->
                     <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; 
@@ -234,16 +234,16 @@ function displayStudentsHavingTC(data) {
                         onclick="printStudent('${student.tc_no}')"
                         onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
                         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                        <img src="../images/print_icon.png" alt="Print" style="width: 25px; height: 25px; margin: 5px;">
+                        <img src="../images/print.png" alt="Print" style="width: 25px; height: 25px; margin: 5px;">
                         <span>Print</span>
                     </button>
 
-                    <!-- Delete Button -->
+                     <!-- Delete Button -->
                     <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; 
                         text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px;
                         cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
                         transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-                        onclick="deleteTC('${student.tc_no}', '${student.student_name}')"
+                        onclick="deleteTC('${student.id}', '${student.tc_no}', '${student.gr_no}', '${student.student_name}', '${student.generation_status}')"
                         onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
                         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
                         <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; margin: 5px;">
@@ -332,6 +332,8 @@ function exportTCTable() {
 
 
 ///////////////////////////////   EDIT TC ////////////////////
+
+// JUST UPDATE THE TC TABLE //
 
 // Utility functions for date formatting
 function formatToDDMMYYYY(dateStr) {
@@ -489,5 +491,82 @@ function updateTCDetails() {
     .catch(error => {
         console.error("Error updating TC details:", error);
         Swal.fire("Error", "Failed to update TC details: " + error.message, "error");
+    });
+}
+
+
+/////////////////////////// DELETE TC ///////////////////////
+
+function deleteTC(studentId, tcNo, grNo, studentName, generationStatus) {
+    let issuedCopies = "ORIGINAL";
+    if (generationStatus.includes("DUPLICATE")) {
+        issuedCopies = "ORIGINAL and DUPLICATE";
+    }
+    if (generationStatus.includes("TRIPLICATE")) {
+        issuedCopies = "ORIGINAL, DUPLICATE, and TRIPLICATE";
+    }
+
+    Swal.fire({
+        title: 'Are you sure?',
+        html: `
+               <strong>TC No:</strong> ${tcNo}<br>
+               <strong>GR No:</strong> ${grNo}<br>
+               <strong>Name:</strong> ${studentName}<br>
+               <strong>Issued Copies:</strong> ${issuedCopies}<br><br>
+               The selected student is issued with <strong>${issuedCopies} TC</strong>. <br> Please make sure to collect the issued copies before deletion.<br><br>
+               <input type="text" id="swal-input" class="swal2-input" placeholder="Enter admin password" autocomplete="off">`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel',
+        preConfirm: () => {
+            const input = Swal.getPopup().querySelector('#swal-input').value;
+            const correctPassword = 'admin@123';
+
+            if (!input) {
+                Swal.showValidationMessage(`Please enter the password`);
+                return false; // Prevents the modal from closing
+            } 
+            
+            if (input !== correctPassword) {
+                Swal.showValidationMessage(`Incorrect password. Please try again.`);
+                return false; // Prevents the modal from closing
+            }
+
+            return input; // Return input if validation passes
+        },
+        didOpen: () => {
+            Swal.getPopup().querySelector('#swal-input').value = ''; // Ensure the input is empty
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const input = result.value;
+            deleteTCRecord(studentId, grNo, studentName);
+        }
+    });
+}
+
+
+//// DELETE RECORD FROM TC TABLE ////
+
+function deleteTCRecord(studentId, grNo, studentName) {
+    console.log(`Deleting TC for student ID: ${studentId}`);
+    fetch(`/delete-tc-record?id=${studentId}&grno=${grNo}`, {
+        method: 'DELETE'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to delete the record');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+        Swal.fire('Deleted!', `The TC for ${studentName} has been deleted.`, 'success');
+        refreshTCData(); // Refresh the table data after deletion
+    })
+    .catch(error => {
+        console.error('Error deleting TC:', error);
+        Swal.fire('Error!', 'Failed to delete the TC. Please try again later.', 'error');
     });
 }

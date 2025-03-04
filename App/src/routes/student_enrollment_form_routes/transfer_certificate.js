@@ -613,4 +613,50 @@ router.post("/update-tc-details", async (req, res) => {
     }
 });
 
+
+
+
+/////////////////////////////////////// DELETE TC //////////////////////////////
+
+
+// New endpoint to delete a TC record
+router.delete("/delete-tc-record", async (req, res) => {
+    try {
+        const { id, grno } = req.query;
+        
+        if (!id || !grno) {
+            return res.status(400).json({ error: "Missing required parameters" });
+        }
+
+        const query = `DELETE FROM transfer_certificates WHERE id = ? AND gr_no = ?`;
+
+        // Execute query
+        req.connectionPool.query(query, [id, grno], (error, results) => {
+            if (error) {
+                console.error("Database error:", error);
+                return res.status(500).json({ error: "Database error" });
+            }
+
+            if (results.affectedRows === 0) {
+                return res.status(404).json({ message: "No record found to delete" });
+            }
+
+            res.json({ message: "Record deleted successfully" });
+        });
+    } catch (error) {
+        console.error("Server error:", error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
 module.exports = router;
