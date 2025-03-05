@@ -485,8 +485,8 @@ document.getElementById("submitGenerateTCForm").addEventListener("click", async 
 
     await Swal.fire({
       icon: "success",
-      title: "Form Submitted",
-      text: "All tasks completed successfully.",
+      title: "TC generation completed!",
+      html: `TC for <strong>GR - ${tcformdata.tc_grNo}</strong> | <strong>Name - ${tcformdata.studentName}</strong> generated successfully.`,
     });
 
     populateTCFormData(tcformdata);

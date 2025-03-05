@@ -620,43 +620,253 @@ router.post("/update-tc-details", async (req, res) => {
 
 
 // New endpoint to delete a TC record
-router.delete("/delete-tc-record", async (req, res) => {
-    try {
-        const { id, grno } = req.query;
-        
-        if (!id || !grno) {
-            return res.status(400).json({ error: "Missing required parameters" });
+router.delete("/delete-tc-record", (req, res) => {
+    const { id, grno, section } = req.query; // Get section from query parameters
+
+    console.log(`Received parameters: id=${id}, grno=${grno}, section=${section}`);
+
+    if (!id || !grno || !section) {
+        console.error('Missing required parameters');
+        return res.status(400).json({ error: "Missing required parameters" });
+    }
+
+    const schoolName = req.cookies.schoolName;
+    if (!schoolName) {
+        return res.status(400).json({ error: 'School name is required' });
+    }
+
+    // Determine the appropriate table based on section
+    let tableName;
+    if (section === "primary") {
+        tableName = "primary_student_details";
+    } else if (section === "pre_primary") {
+        tableName = "pre_primary_student_details";
+    } else {
+        console.error('Invalid section parameter');
+        return res.status(400).json({ error: "Invalid section parameter" });
+    }
+
+    // Start a transaction
+    req.connectionPool.getConnection((err, connection) => {
+        if (err) {
+            return res.status(500).json({ error: "Database connection failed" });
         }
 
-        const query = `DELETE FROM transfer_certificates WHERE id = ? AND gr_no = ?`;
-
-        // Execute query
-        req.connectionPool.query(query, [id, grno], (error, results) => {
-            if (error) {
-                console.error("Database error:", error);
-                return res.status(500).json({ error: "Database error" });
+        connection.beginTransaction(async (transactionError) => {
+            if (transactionError) {
+                console.error("Transaction initiation failed:", transactionError);
+                connection.release();
+                return res.status(500).json({ error: "Transaction initiation failed" });
             }
 
-            if (results.affectedRows === 0) {
-                return res.status(404).json({ message: "No record found to delete" });
-            }
+            try {
+                // Step 1: Reactivate the student by setting is_active to 1
+                const reactivateStudentQuery = `UPDATE ${tableName} SET is_active = 1 WHERE Grno = ?`;
+                connection.query(reactivateStudentQuery, [grno], (reactivateError, reactivateResult) => {
+                    if (reactivateError) {
+                        console.error("Database error:", reactivateError);
+                        return connection.rollback(() => {
+                            connection.release();
+                            return res.status(500).json({ error: "Database error while reactivating student" });
+                        });
+                    }
 
-            res.json({ message: "Record deleted successfully" });
+                    if (reactivateResult.affectedRows === 0) {
+                        return connection.rollback(() => {
+                            connection.release();
+                            return res.status(404).json({ error: "Failed to reactivate student or student not found" });
+                        });
+                    }
+
+                    console.log(`Reactivated student with GR No: ${grno}`);
+
+                    // Step 2: Proceed with deleting the TC record
+                    const deleteTCQuery = `DELETE FROM transfer_certificates WHERE id = ? AND gr_no = ?`;
+                    connection.query(deleteTCQuery, [id, grno], (deleteError, deleteResult) => {
+                        if (deleteError) {
+                            console.error("Database error:", deleteError);
+                            return connection.rollback(() => {
+                                connection.release();
+                                return res.status(500).json({ error: "Database error while deleting TC record" });
+                            });
+                        }
+
+                        if (deleteResult.affectedRows === 0) {
+                            return connection.rollback(() => {
+                                connection.release();
+                                return res.status(404).json({ error: "No TC record found to delete" });
+                            });
+                        }
+
+                        console.log(`Deleted TC with ID: ${id}`);
+
+                        // Step 3: Fetch the student details to get the app_uid and other required information
+                        const fetchStudentDetailsQuery = `
+                            SELECT app_uid, Name, transport_needed, transport_tagged, transport_pickup_drop, Standard, Division 
+                            FROM ${tableName} WHERE Grno = ?
+                        `;
+                        connection.query(fetchStudentDetailsQuery, [grno], (fetchError, fetchResult) => {
+                            if (fetchError) {
+                                console.error("Database error:", fetchError);
+                                return connection.rollback(() => {
+                                    connection.release();
+                                    return res.status(500).json({ error: "Database error while fetching student details" });
+                                });
+                            }
+
+                            if (fetchResult.length === 0) {
+                                return connection.rollback(() => {
+                                    connection.release();
+                                    return res.status(404).json({ error: "Student not found with the given GR No" });
+                                });
+                            }
+
+                            const studentDetails = fetchResult[0];
+                            const { app_uid, Name: fullName, transport_needed, transport_tagged, transport_pickup_drop, Standard, Division } = studentDetails;
+
+                            // Generate the new username and password
+                            const { username, password } = regenerateUsernameAndPassword(fullName, schoolName, grno);
+                            const studentName = fullName;
+
+                            // Step 4: Insert into android_app_users table using connection_auth
+                            const insertIntoAndroidAppUsersQuery = `
+                                INSERT INTO android_app_users (username, password, school_name, type, name, uid)
+                                VALUES (?, ?, ?, ?, ?, ?)
+                            `;
+
+                            const userType = 'student';
+
+                            connection_auth.query(insertIntoAndroidAppUsersQuery, [username, password, schoolName, userType, studentName, app_uid], (userError) => {
+                                if (userError) {
+                                    console.error('Error inserting into android_app_users:', userError);
+                                    return connection.rollback(() => {
+                                        connection.release();
+                                        return res.status(500).json({ error: 'Error inserting into android_app_users' });
+                                    });
+                                }
+
+                                console.log(`Regenerated Android credentials for app UID: ${app_uid}`);
+
+                                // Step 5: Update transport schedule details if needed and if transport_tagged is not null
+                                if (transport_needed === 1 && transport_tagged) {
+                                    const concatenatedClass = `${Standard} ${Division}`; // e.g., '5th Red'
+                                    const getIdQuery = `
+                                        SELECT id 
+                                        FROM transport_schedule_details
+                                        WHERE vehicle_no = ? 
+                                        AND classes_alloted LIKE ? 
+                                        AND route_stops LIKE ?
+                                    `;
+
+                                    connection.query(getIdQuery, [transport_tagged, `%${concatenatedClass}%`, `%${transport_pickup_drop}%`], (getIdError, results) => {
+                                        if (getIdError) {
+                                            console.error('Error fetching transport schedule id:', getIdError);
+                                            return connection.rollback(() => {
+                                                connection.release();
+                                                return res.status(500).json({ error: 'Error fetching transport schedule id' });
+                                            });
+                                        }
+
+                                        if (results.length === 0) {
+                                            console.log('No transport schedule found for the provided details, but continuing transaction');
+                                        } else {
+                                            const transportId = results[0].id;
+
+                                            // Now, update the transport_schedule_details using the retrieved id
+                                            const transportUpdateQuery = `
+                                                UPDATE transport_schedule_details
+                                                SET available_seats = available_seats - 1,
+                                                    students_tagged = COALESCE(students_tagged, 0) + 1
+                                                WHERE id = ?
+                                            `;
+
+                                            connection.query(transportUpdateQuery, [transportId], (transportUpdateError, updateResult) => {
+                                                if (transportUpdateError) {
+                                                    console.error('Error updating transport schedule:', transportUpdateError);
+                                                    return connection.rollback(() => {
+                                                        connection.release();
+                                                        return res.status(500).json({ error: 'Error updating transport schedule' });
+                                                    });
+                                                }
+
+                                                console.log(`Updated transport schedule for ID: ${transportId}`);
+                                            });
+                                        }
+                                        
+                                        // Commit transaction
+                                        connection.commit((commitError) => {
+                                            if (commitError) {
+                                                console.error("Transaction commit failed:", commitError);
+                                                return connection.rollback(() => {
+                                                    connection.release();
+                                                    return res.status(500).json({ error: "Transaction commit failed" });
+                                                });
+                                            }
+
+                                            console.log("Transaction committed successfully");
+                                            connection.release();
+                                            res.json({ message: "Record deleted successfully, android user inserted, and transport details updated" });
+                                        });
+                                    });
+                                } else {
+                                    // Commit transaction if no transport update is needed or if transport_tagged is null
+                                    connection.commit((commitError) => {
+                                        if (commitError) {
+                                            console.error("Transaction commit failed:", commitError);
+                                            return connection.rollback(() => {
+                                                connection.release();
+                                                return res.status(500).json({ error: "Transaction commit failed" });
+                                            });
+                                        }
+
+                                        console.log("Transaction committed successfully");
+                                        connection.release();
+                                        res.json({ message: "Record deleted successfully and android user inserted" });
+                                    });
+                                }
+                            });
+                        });
+                    });
+                });
+            } catch (transactionError) {
+                console.error("Error during transaction:", transactionError);
+                try {
+                    connection.rollback(() => {
+                        connection.release();
+                        return res.status(500).json({ error: "Transaction failed and rolled back", details: transactionError.message });
+                    });
+                } catch (rollbackError) {
+                    console.error("Rollback error:", rollbackError);
+                    connection.release();
+                }
+            }
         });
-    } catch (error) {
-        console.error("Server error:", error);
-        res.status(500).json({ error: "Server error" });
-    }
+    });
 });
 
+// Function to regenerate username and password
+function regenerateUsernameAndPassword(fullName, schoolName, grNo) {
+    // Split the full name by spaces to extract the name parts
+    const nameParts = fullName.split(/\s+/);
 
+    // Get the first part from the first name, middle name, and last name
+    const firstPart = nameParts[0] ? nameParts[0].toLowerCase() : "";
+    const middlePart = nameParts[1] ? nameParts[1].toLowerCase() : "";
+    const lastPart = nameParts[2] ? nameParts[2].toLowerCase() : nameParts[1] ? nameParts[1].toLowerCase() : "";
 
+    // Combine the parts to form the username
+    const username = `${firstPart}${lastPart}${grNo}`;
 
+    // Get the first two letters of the school name
+    const schoolAbbr = schoolName.split(" ").map(word => word.slice(0, 1)).join("").toLowerCase();
 
+    // Create the username in the format username@schoolAbbr
+    const userWithSchool = `${username}@${schoolAbbr}`;
 
+    // Create the password by combining the school abbreviation and the first two letters of the name parts
+    const password = `${schoolAbbr}@${firstPart.slice(0, 2)}${middlePart.slice(0, 2)}${lastPart.slice(0, 2)}`;
 
-
-
-
+    return { username: userWithSchool, password };
+}
 
 module.exports = router;
