@@ -105,44 +105,44 @@ document.addEventListener("DOMContentLoaded", () => {
 // });
 
 
-//////////////////DISABLE SEARCH STUDENT INPUT FOR TC OVERLAY////////////////////////
-document.addEventListener("DOMContentLoaded", () => {
-    const sectionSelect = document.getElementById('selectsectionforTC');
-    const searchInput = document.getElementById('searchInputforTC');
+// //////////////////DISABLE SEARCH STUDENT INPUT FOR TC OVERLAY////////////////////////
+// document.addEventListener("DOMContentLoaded", () => {
+//     const sectionSelect = document.getElementById('selectsectionforTC');
+//     const searchInput = document.getElementById('searchInputforTC');
 
-    // Function to toggle input disabled state
-    function toggleSearchInput() {
-        if (sectionSelect.value === '' || !sectionSelect.value) {
-            searchInput.disabled = true; // Disable if no valid option is selected
-        } else {
-            searchInput.disabled = false; // Enable if "Primary" or "Pre-primary" is selected
-        }
-    }
+//     // Function to toggle input disabled state
+//     function toggleSearchInput() {
+//         if (sectionSelect.value === '' || !sectionSelect.value) {
+//             searchInput.disabled = true; // Disable if no valid option is selected
+//         } else {
+//             searchInput.disabled = false; // Enable if "Primary" or "Pre-primary" is selected
+//         }
+//     }
 
-    // Initial check (since input starts disabled and default option is "")
-    toggleSearchInput();
+//     // Initial check (since input starts disabled and default option is "")
+//     toggleSearchInput();
 
-    // Listen for changes in the dropdown
-    sectionSelect.addEventListener('change', toggleSearchInput);
-});
+//     // Listen for changes in the dropdown
+//     sectionSelect.addEventListener('change', toggleSearchInput);
+// });
 
-//////////////////DISABLE SEARCH STUDENT INPUT FOR STUDENT UPDATE OVERLAY////////////////////////
-document.addEventListener("DOMContentLoaded", () => {
-    const sectionSelect = document.getElementById('sectionSelect');
-    const searchInput = document.getElementById('searchInput');
+// //////////////////DISABLE SEARCH STUDENT INPUT FOR STUDENT UPDATE OVERLAY////////////////////////
+// document.addEventListener("DOMContentLoaded", () => {
+//     const sectionSelect = document.getElementById('sectionSelect');
+//     const searchInput = document.getElementById('searchInput');
 
-    // Function to toggle input disabled state
-    function toggleSearchInput() {
-        if (sectionSelect.value === '' || !sectionSelect.value) {
-            searchInput.disabled = true; // Disable if no valid option is selected
-        } else {
-            searchInput.disabled = false; // Enable if "Primary" or "Pre-primary" is selected
-        }
-    }
+//     // Function to toggle input disabled state
+//     function toggleSearchInput() {
+//         if (sectionSelect.value === '' || !sectionSelect.value) {
+//             searchInput.disabled = true; // Disable if no valid option is selected
+//         } else {
+//             searchInput.disabled = false; // Enable if "Primary" or "Pre-primary" is selected
+//         }
+//     }
 
-    // Initial check (since input starts disabled and default option is "")
-    toggleSearchInput();
+//     // Initial check (since input starts disabled and default option is "")
+//     toggleSearchInput();
 
-    // Listen for changes in the dropdown
-    sectionSelect.addEventListener('change', toggleSearchInput);
-});
+//     // Listen for changes in the dropdown
+//     sectionSelect.addEventListener('change', toggleSearchInput);
+// });

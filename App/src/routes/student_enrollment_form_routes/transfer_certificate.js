@@ -12,9 +12,8 @@ router.use(connectionManager);
 
 
 // Endpoint to fetch basic student info for Transfer Certificate
-router.get("/get-students-for-tc", (req, res) => {
+router.get("/get-students-for-suggestion-manage-students", (req, res) => {
     const { section, name, grno } = req.query;
-
     // Validate input parameters
     if (!section || (!name && !grno)) {
         return res.status(400).json({ error: "Invalid search parameters" });

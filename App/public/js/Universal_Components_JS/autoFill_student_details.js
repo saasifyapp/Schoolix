@@ -96,23 +96,97 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Function to fetch and display suggestions for manage students
+function fetchAndDisplaySuggestionsformanagestudents(query, suggestionsContainer, inputField, additionalActions, sectionElementId) {
+    const sectionSelect = document.getElementById(sectionElementId);
+    const section = sectionSelect ? sectionSelect.value : '';
 
+    // Only proceed if section is selected and query is long enough
+    if (!section || query.length <= 1) {
+        suggestionsContainer.innerHTML = '';
+        return;
+    }
+
+    showLoading(suggestionsContainer);
+
+    // Determine if query is a GR number (numeric) or name (text)
+    const isGrno = /^\d+$/.test(query); // Check if query is all digits
+    const url = isGrno 
+        ? `/get-students-for-suggestion-manage-students?section=${section}&grno=${query}`
+        : `/get-students-for-suggestion-manage-students?section=${section}&name=${encodeURIComponent(query)}`;
+
+    fetch(url)
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            suggestionsContainer.innerHTML = '';
+            if (!data || (Array.isArray(data) && data.length === 0) || data.message === "No students found") {
+                showNoResults(suggestionsContainer);
+            } else if (data.error) {
+                console.error('Server error:', data.error);
+                showNoResults(suggestionsContainer);
+            } else {
+                data.forEach(student => {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.classList.add('suggestion-item');
+                    suggestionItem.textContent = `${student.Grno} | ${student.Name} | ${student.Standard}`;
+                    suggestionItem.dataset.Grno = student.Grno;
+                    suggestionItem.dataset.name = student.Name;
+                    suggestionItem.dataset.standard = student.Standard;
+                    // Note: f_mobile_no isn't returned by the endpoint, so remove or fetch it separately if needed
+                    suggestionsContainer.appendChild(suggestionItem);
+                });
+
+                // Add event listeners for selection
+                suggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+                    item.addEventListener('click', function () {
+                        const selectedItem = this; // Use 'this' instead of event.target for consistency
+                        inputField.value = selectedItem.dataset.name;
+                        additionalActions(selectedItem);
+                        suggestionsContainer.innerHTML = '';
+                    });
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            showNoResults(suggestionsContainer);
+        });
+}
 //////////////////////////Update Student Enrollment Form (SMALLPOPUP)
 document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById('searchInput');
     const suggestionsContainer = document.getElementById('suggestions');
+    const sectionSelect = document.getElementById('sectionSelect'); // Adjust ID if different
+    const closeUpdateStudentOverlay = document.getElementById('closeUpdateStudentOverlay');
+
+    // Disable/enable search input based on section selection
+    function toggleSearchInput() {
+        searchInput.disabled = !sectionSelect.value;
+    }
+    toggleSearchInput();
+    sectionSelect.addEventListener('change', toggleSearchInput);
+
+    // Clear input and suggestions when section changes
+    sectionSelect.addEventListener('change', function () {
+        searchInput.value = ''; // Empty the input
+        suggestionsContainer.innerHTML = ''; // Clear suggestions
+    });
 
     searchInput.addEventListener('input', function () {
         const query = this.value.trim();
-        if (!query) {
+        if (!query || !sectionSelect.value) {
             suggestionsContainer.innerHTML = '';
             return;
         }
 
-        fetchAndDisplaySuggestions(query, suggestionsContainer, searchInput, (selectedItem) => {
+        fetchAndDisplaySuggestionsformanagestudents(query, suggestionsContainer, searchInput, (selectedItem) => {
             searchInput.value = selectedItem.dataset.Grno;
-            console.log(selectedItem)
-        });
+            console.log(selectedItem);
+        }, 'sectionSelect'); // Pass section element ID
     });
 
     document.addEventListener('click', function (event) {
@@ -120,23 +194,48 @@ document.addEventListener("DOMContentLoaded", function () {
             suggestionsContainer.innerHTML = '';
         }
     });
+
+      // Reset on closeUpdateStudentOverlay click
+      if (closeUpdateStudentOverlay) {
+        closeUpdateStudentOverlay.addEventListener('click', function () {
+            searchInput.value = ''; // Clear input
+            sectionSelect.selectedIndex = 0; // Reset to first option ("Select Section")
+            suggestionsContainer.innerHTML = ''; // Clear suggestions
+            toggleSearchInput();
+        });
+    };
 });
 
 //////////////////////////////Generate TC Form////////////////////////////////
 document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById('searchInputforTC');
     const suggestionsContainer = document.getElementById('TCsuggestions');
+    const sectionSelect = document.getElementById('selectsectionforTC');
+    const closeSearchTCFormOverlay = document.getElementById('closeSearchTCFormOverlay');
+
+    // Disable/enable search input based on section selection
+    function toggleSearchInput() {
+        searchInput.disabled = !sectionSelect.value;
+    }
+    toggleSearchInput();
+    sectionSelect.addEventListener('change', toggleSearchInput);
+
+    // Clear input and suggestions when section changes
+    sectionSelect.addEventListener('change', function () {
+        searchInput.value = ''; // Empty the input
+        suggestionsContainer.innerHTML = ''; // Clear suggestions
+    });
 
     searchInput.addEventListener('input', function () {
         const query = this.value.trim();
-        if (!query) {
+        if (!query || !sectionSelect.value) {
             suggestionsContainer.innerHTML = '';
             return;
         }
 
-        fetchAndDisplaySuggestions(query, suggestionsContainer, searchInput, (selectedItem) => {
+        fetchAndDisplaySuggestionsformanagestudents(query, suggestionsContainer, searchInput, (selectedItem) => {
             searchInput.value = selectedItem.dataset.Grno;
-        });
+        }, 'selectsectionforTC');
     });
 
     document.addEventListener('click', function (event) {
@@ -144,4 +243,15 @@ document.addEventListener("DOMContentLoaded", function () {
             suggestionsContainer.innerHTML = '';
         }
     });
+
+    // Reset on closeSearchTCFormOverlay click
+    if (closeSearchTCFormOverlay) {
+        closeSearchTCFormOverlay.addEventListener('click', function () {
+            searchInput.value = ''; // Clear input
+            sectionSelect.selectedIndex = 0; // Reset to first option ("Select Section")
+            suggestionsContainer.innerHTML = ''; // Clear suggestions
+            toggleSearchInput();
+        });
+    }
+  
 });
