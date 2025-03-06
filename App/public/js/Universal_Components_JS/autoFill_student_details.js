@@ -32,6 +32,7 @@ function fetchAndDisplaySuggestions(query, suggestionsContainer, inputField, add
                         const suggestionItem = document.createElement('div');
                         suggestionItem.classList.add('suggestion-item');
                         suggestionItem.textContent = `${student.Grno} | ${student.Name} | ${student.Standard}`;
+                        suggestionItem.dataset.Grno = student.Grno;
                         suggestionItem.dataset.name = student.Name;
                         suggestionItem.dataset.standard = student.Standard; // Assuming standard field exists
                         suggestionItem.dataset.contact = student.f_mobile_no; // Assuming contact field exists
@@ -109,7 +110,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         fetchAndDisplaySuggestions(query, suggestionsContainer, searchInput, (selectedItem) => {
-            searchInput.value = selectedItem.dataset.name;
+            searchInput.value = selectedItem.dataset.Grno;
+            console.log(selectedItem)
         });
     });
 
@@ -133,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         fetchAndDisplaySuggestions(query, suggestionsContainer, searchInput, (selectedItem) => {
-            searchInput.value = selectedItem.dataset.name;
+            searchInput.value = selectedItem.dataset.Grno;
         });
     });
 

@@ -161,9 +161,9 @@ document.querySelector(".search-button").addEventListener("click", function () {
 ////////////////////////////SEARCH TC//////////////////////////////////////////////////////////
 
 
-document.addEventListener("DOMContentLoaded", function () {
-    refreshTCData(); // Load students with TC on page load
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//     refreshTCData(); // Load students with TC on page load
+// });
 
 
 let tcData = []; // Store fetched TC data globally
