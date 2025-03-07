@@ -599,7 +599,7 @@ function populateTCFormData(formData) {
       }
   };
 
-  const logoUrl = getSchoolLogoUrl("schoolName");
+  // const logoUrl = getSchoolLogoUrl("schoolName");
 
   if (logoUrl) {
       const logoElement1 = document.getElementById("schoolLogo");
