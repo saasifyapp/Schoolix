@@ -156,12 +156,13 @@ function fetchAndDisplaySuggestionsformanagestudents(query, suggestionsContainer
             showNoResults(suggestionsContainer);
         });
 }
-//////////////////////////Update Student Enrollment Form (SMALLPOPUP)
+//////////////////////////////////Update Student Enrollment Form (SMALLPOPUP)
 document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById('searchInput');
     const suggestionsContainer = document.getElementById('suggestions');
-    const sectionSelect = document.getElementById('sectionSelect'); // Adjust ID if different
+    const sectionSelect = document.getElementById('sectionSelect');
     const closeUpdateStudentOverlay = document.getElementById('closeUpdateStudentOverlay');
+    let debounceTimer;
 
     // Disable/enable search input based on section selection
     function toggleSearchInput() {
@@ -177,16 +178,19 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     searchInput.addEventListener('input', function () {
+        clearTimeout(debounceTimer);
         const query = this.value.trim();
-        if (!query || !sectionSelect.value) {
+        if (!query || query.length < 2 || !sectionSelect.value) {
             suggestionsContainer.innerHTML = '';
             return;
         }
 
-        fetchAndDisplaySuggestionsformanagestudents(query, suggestionsContainer, searchInput, (selectedItem) => {
-            searchInput.value = selectedItem.dataset.Grno;
-            console.log(selectedItem);
-        }, 'sectionSelect'); // Pass section element ID
+        debounceTimer = setTimeout(() => {
+            fetchAndDisplaySuggestionsformanagestudents(query, suggestionsContainer, searchInput, (selectedItem) => {
+                searchInput.value = selectedItem.dataset.Grno;
+                //console.log(selectedItem);
+            }, 'sectionSelect'); // Pass section element ID
+        }, 300); // Adjust the delay as needed (300 milliseconds)
     });
 
     document.addEventListener('click', function (event) {
@@ -195,23 +199,24 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-      // Reset on closeUpdateStudentOverlay click
-      if (closeUpdateStudentOverlay) {
+    // Reset on closeUpdateStudentOverlay click
+    if (closeUpdateStudentOverlay) {
         closeUpdateStudentOverlay.addEventListener('click', function () {
             searchInput.value = ''; // Clear input
             sectionSelect.selectedIndex = 0; // Reset to first option ("Select Section")
             suggestionsContainer.innerHTML = ''; // Clear suggestions
             toggleSearchInput();
         });
-    };
+    }
 });
 
-//////////////////////////////Generate TC Form////////////////////////////////
+//////////////////////////////////Generate TC Form////////////////////////////////
 document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById('searchInputforTC');
     const suggestionsContainer = document.getElementById('TCsuggestions');
     const sectionSelect = document.getElementById('selectsectionforTC');
     const closeSearchTCFormOverlay = document.getElementById('closeSearchTCFormOverlay');
+    let debounceTimer;
 
     // Disable/enable search input based on section selection
     function toggleSearchInput() {
@@ -227,15 +232,18 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     searchInput.addEventListener('input', function () {
+        clearTimeout(debounceTimer);
         const query = this.value.trim();
-        if (!query || !sectionSelect.value) {
+        if (!query || query.length < 2 || !sectionSelect.value) {
             suggestionsContainer.innerHTML = '';
             return;
         }
 
-        fetchAndDisplaySuggestionsformanagestudents(query, suggestionsContainer, searchInput, (selectedItem) => {
-            searchInput.value = selectedItem.dataset.Grno;
-        }, 'selectsectionforTC');
+        debounceTimer = setTimeout(() => {
+            fetchAndDisplaySuggestionsformanagestudents(query, suggestionsContainer, searchInput, (selectedItem) => {
+                searchInput.value = selectedItem.dataset.Grno;
+            }, 'selectsectionforTC');
+        }, 300); // Adjust the delay as needed (300 milliseconds)
     });
 
     document.addEventListener('click', function (event) {
@@ -253,5 +261,4 @@ document.addEventListener("DOMContentLoaded", function () {
             toggleSearchInput();
         });
     }
-  
 });

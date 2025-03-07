@@ -23,6 +23,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (formModeInput) {
             console.log("Form mode:", formModeInput.value);
         }
+
+        // Call validateAcademicRecords only when mode is update
+        validateAcademicRecords();
     }
 });
 
@@ -246,25 +249,41 @@ function toggleLocalGuardianDetails(isVisible) {
 ////////////// VALIDATE PREVIOUS ACADEMIC RECORDS /////////////////
 
 function validateAcademicRecords() {
-    const formMode = document.getElementById('formMode').value;
+    const formModeInput = document.getElementById('formMode');
+    if (!formModeInput) {
+        console.error("Form mode input element not found!");
+        return;
+    }
+
+    const formMode = formModeInput.value;
 
     if (formMode !== 'update') {
         return; // Return early if the form is not in "Update" mode
     }
-    
-    const lastSchoolAttended = document.getElementById('lastSchoolAttended').value;
-    const classCompleted = document.getElementById('classCompleted').value;
-    const percentage = document.getElementById('percentage').value;
+
+    const lastSchoolAttended = document.getElementById('lastSchoolAttended');
+    const classCompleted = document.getElementById('classCompleted');
+    const percentage = document.getElementById('percentage');
+
+    if (!lastSchoolAttended || !classCompleted || !percentage) {
+        console.error("One or more academic record fields not found!");
+        return;
+    }
+
+    const lastSchoolAttendedValue = lastSchoolAttended.value;
+    const classCompletedValue = classCompleted.value;
+    const percentageValue = percentage.value;
 
     // Check if NONE of the fields have data
-    const allFieldsEmpty = [lastSchoolAttended, classCompleted, percentage].every(field => !field || field.trim() === "");
+    const allFieldsEmpty = [lastSchoolAttendedValue, classCompletedValue, percentageValue].every(field => !field || field.trim() === "");
 
     const newAdmissionCheckbox = document.getElementById('newAdmission');
-    const fieldsToToggle = [
-        document.getElementById('lastSchoolAttended'),
-        document.getElementById('classCompleted'),
-        document.getElementById('percentage')
-    ];
+    if (!newAdmissionCheckbox) {
+        console.error("New admission checkbox not found!");
+        return;
+    }
+
+    const fieldsToToggle = [lastSchoolAttended, classCompleted, percentage];
 
     if (allFieldsEmpty) {
         // If all fields are empty, check the 'newAdmissionCheckbox' and disable academic fields
@@ -282,31 +301,10 @@ function validateAcademicRecords() {
         });
     }
 }
-
-document.addEventListener('DOMContentLoaded', (event) => {
-    // Listen for changes to dynamically populated fields
-    const targetNode = document.body;
-    const config = { childList: true, subtree: true, characterData: true };
-
-    // Create an observer instance linked to the callback function
-    const observer = new MutationObserver((mutationsList, observer) => {
-        for (const mutation of mutationsList) {
-            if (mutation.type === 'childList' || mutation.type === 'characterData') {
-                validateAcademicRecords();
-            }
-        }
-    });
-
-    // Start observing the target node for configured mutations
-    observer.observe(targetNode, config);
-
-    validateAcademicRecords(); // Initial validation
-});
-
 // Listen for changes to the fields directly
-document.getElementById('lastSchoolAttended').addEventListener('input', validateAcademicRecords);
-document.getElementById('classCompleted').addEventListener('input', validateAcademicRecords);
-document.getElementById('percentage').addEventListener('input', validateAcademicRecords);
+//document.getElementById('lastSchoolAttended').addEventListener('input', validateAcademicRecords);
+//document.getElementById('classCompleted').addEventListener('input', validateAcademicRecords);
+//document.getElementById('percentage').addEventListener('input', validateAcademicRecords);
 
 ///////////// CREATE FEES AND PACKAGE TABLE ///////////
 
