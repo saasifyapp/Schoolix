@@ -161,9 +161,9 @@ document.querySelector(".search-button").addEventListener("click", function () {
 ////////////////////////////SEARCH TC//////////////////////////////////////////////////////////
 
 
-document.addEventListener("DOMContentLoaded", function () {
-    refreshTCData(); // Load students with TC on page load
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//     refreshTCData(); // Load students with TC on page load
+// });
 
 
 let tcData = []; // Store fetched TC data globally
@@ -243,7 +243,7 @@ function displayStudentsHavingTC(data) {
                         text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px;
                         cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
                         transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-                        onclick="deleteTC('${student.id}', '${student.tc_no}', '${student.gr_no}', '${student.student_name}', '${student.generation_status}')"
+                        onclick="deleteTC('${student.id}', '${student.tc_no}', '${student.gr_no}', '${student.student_name}', '${student.generation_status}', '${student.section}')"
                         onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
                         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
                         <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; margin: 5px;">
@@ -497,7 +497,8 @@ function updateTCDetails() {
 
 /////////////////////////// DELETE TC ///////////////////////
 
-function deleteTC(studentId, tcNo, grNo, studentName, generationStatus) {
+
+function deleteTC(studentId, tcNo, grNo, studentName, generationStatus, section) {
     let issuedCopies = "ORIGINAL";
     if (generationStatus.includes("DUPLICATE")) {
         issuedCopies = "ORIGINAL and DUPLICATE";
@@ -513,7 +514,8 @@ function deleteTC(studentId, tcNo, grNo, studentName, generationStatus) {
                <strong>GR No:</strong> ${grNo}<br>
                <strong>Name:</strong> ${studentName}<br>
                <strong>Issued Copies:</strong> ${issuedCopies}<br><br>
-               The selected student is issued with <strong>${issuedCopies} TC</strong>. <br> Please make sure to collect the issued copies before deletion.<br><br>
+               The selected student is issued with <strong>${issuedCopies} TC</strong>. <br> 
+               Please make sure to collect the issued copies before deletion.<br><br>
                <input type="text" id="swal-input" class="swal2-input" placeholder="Enter admin password" autocomplete="off">`,
         icon: 'warning',
         showCancelButton: true,
@@ -533,25 +535,77 @@ function deleteTC(studentId, tcNo, grNo, studentName, generationStatus) {
                 return false; // Prevents the modal from closing
             }
 
-            return input; // Return input if validation passes
-        },
-        didOpen: () => {
-            Swal.getPopup().querySelector('#swal-input').value = ''; // Ensure the input is empty
+            return true; // Validation passes, return true
         }
     }).then((result) => {
         if (result.isConfirmed) {
-            const input = result.value;
-            deleteTCRecord(studentId, grNo, studentName);
+            showProgressSteps(studentId, tcNo, grNo, studentName, section);
         }
     });
 }
 
+async function showProgressSteps(studentId, tcNo, grNo, studentName, section) {
+    const intervalMessages = [
+        "Reactivating the student...",
+        "Deleting TC record...",
+        "Regenerating App Credentials...",
+        "Reallocating transport..."
+    ];
+
+    const updateSwal = async (message) => {
+        Swal.update({
+            title: "Processing...",
+            html: message,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+        });
+        Swal.showLoading();
+        await new Promise(resolve => setTimeout(resolve, 1000));
+    };
+
+    Swal.fire({
+        title: "Processing...",
+        html: intervalMessages[0],
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: async () => {
+            Swal.showLoading();
+            
+            for (let i = 0; i < intervalMessages.length; i++) {
+                await updateSwal(intervalMessages[i]);
+            }
+
+            // Once all messages have been displayed, perform the delete operation
+            deleteTCRecord(studentId, grNo, section)
+                .then(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: `TC Deleted Successfully!`,
+                        html: `The <strong> TC No - ${tcNo} </strong> for <strong>${studentName}</strong> with GR No <strong>${grNo}</strong> has been deleted.`,
+                        showConfirmButton: true
+                    });
+                    refreshTCData(); // Refresh the table data after deletion
+                })
+                .catch(error => {
+                    console.error('Error during TC deletion operation:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to delete the TC. Please try again later.',
+                        showConfirmButton: true
+                    });
+                });
+        }
+    });
+}
 
 //// DELETE RECORD FROM TC TABLE ////
 
-function deleteTCRecord(studentId, grNo, studentName) {
-    console.log(`Deleting TC for student ID: ${studentId}`);
-    fetch(`/delete-tc-record?id=${studentId}&grno=${grNo}`, {
+function deleteTCRecord(studentId, grNo, section) {
+    const normalizedSection = section.toLowerCase();
+    console.log(`Deleting TC for student ID: ${studentId} in section: ${normalizedSection}`);
+
+    return fetch(`/delete-tc-record?id=${studentId}&grno=${grNo}&section=${normalizedSection}`, {
         method: 'DELETE'
     })
     .then(response => {
@@ -562,11 +616,8 @@ function deleteTCRecord(studentId, grNo, studentName) {
     })
     .then(data => {
         console.log(data);
-        Swal.fire('Deleted!', `The TC for ${studentName} has been deleted.`, 'success');
-        refreshTCData(); // Refresh the table data after deletion
     })
     .catch(error => {
-        console.error('Error deleting TC:', error);
-        Swal.fire('Error!', 'Failed to delete the TC. Please try again later.', 'error');
+        throw error;
     });
 }

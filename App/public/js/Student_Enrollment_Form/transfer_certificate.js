@@ -61,9 +61,24 @@ function searchStudentAndHandleTC() {
       } else {
         // If student found, handle the data (e.g., display it)
         console.log("Student Found:", data);
-        // sessionStorage.setItem("studentDataforTC", JSON.stringify(data[0]));
-        // sessionStorage.setItem("selectedSection", section);
-        // window.location.href = `/Student_Enrollment_Form/student_enrollment_form?section=${encodeURIComponent(section)}&search=${encodeURIComponent(searchValue)}&mode=update`;
+
+      // Check if current_outstanding is zero
+      const currentOutstanding = parseFloat(data[0].current_outstanding);
+      const grNo = data[0].Grno;
+      const studentName = `${data[0].Firstname} ${data[0].Middlename} ${data[0].Surname}`;
+
+        
+      if (currentOutstanding !== 0) {
+        Swal.fire({
+          icon: "warning",
+          title: "Pending Transaction",
+          html: `The student with GR No: <strong>${grNo}</strong> <br>
+           Name: <strong>${studentName}</strong> has <strong>${currentOutstanding} INR</strong> as outstanding amount.<br>
+           Please clear the outstanding amount to generate TC.`,
+          confirmButtonText: "OK",
+        });
+        return;
+      }
 
         // Populate the form with student data
         populateStudentTCForm(data[0]);
@@ -485,8 +500,8 @@ document.getElementById("submitGenerateTCForm").addEventListener("click", async 
 
     await Swal.fire({
       icon: "success",
-      title: "Form Submitted",
-      text: "All tasks completed successfully.",
+      title: "TC generation completed!",
+      html: `TC for <strong>GR - ${tcformdata.tc_grNo}</strong> | <strong>Name - ${tcformdata.studentName}</strong> generated successfully.`,
     });
 
     populateTCFormData(tcformdata);
