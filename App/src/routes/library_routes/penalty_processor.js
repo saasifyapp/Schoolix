@@ -43,27 +43,52 @@ router.post('/library/get_penalties', (req, res) => {
                 lt.member_contact, 
                 lt.bookID, 
                 lt.book_name, 
-                lt.return_date, 
-                DATEDIFF(CURDATE(), lt.return_date) * ? AS penalty_amount
+                lt.return_date
             FROM 
                 library_transactions lt
             WHERE 
                 lt.return_date < CURDATE();
         `;
 
-        req.connectionPool.query(getPenaltiesQuery, [libraryPenalty], (err, penaltyResult) => {
+        req.connectionPool.query(getPenaltiesQuery, (err, penaltyResult) => {
             if (err) {
                 console.error('Error fetching penalties:', err);
                 return res.status(500).json({ error: 'Error fetching penalties' });
             }
 
-            return res.status(200).json({ penalties: penaltyResult });
+            // Calculate the penalties excluding Sundays
+            const penalties = penaltyResult.map(transaction => {
+                const overdueDays = calculateOverdueDays(transaction.return_date);
+                const penaltyAmount = overdueDays * libraryPenalty;
+                return {
+                    ...transaction,
+                    penalty_amount: penaltyAmount
+                };
+            });
+
+            return res.status(200).json({ penalties });
         });
     });
 });
 
+// Function to calculate overdue days excluding Sundays
+function calculateOverdueDays(returnDate) {
+    const today = new Date();
+    const returnDateObj = new Date(returnDate);
+    let overdueDays = 0;
 
+    // Start from the day after the return date
+    let dateIterator = new Date(returnDateObj);
+    dateIterator.setDate(returnDateObj.getDate() + 1);
 
+    for (; dateIterator < today; dateIterator.setDate(dateIterator.getDate() + 1)) {
+        if (dateIterator.getDay() !== 0) { // Exclude Sundays
+            overdueDays++;
+        }
+    }
+
+    return overdueDays;
+}
 
 
 const formatDateToIST = (date) => {
