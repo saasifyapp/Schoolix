@@ -59,6 +59,23 @@
         </div>
 
 
+        <div class="card">
+            <button id="updatePackage">
+                <div class="dotlottie-container">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/5974ccac-b8df-4488-868b-d772e0c2fa53/DcxhJUt0XY.lottie"
+                        background="transparent" speed="1" style="width: 257px;
+                        height: 208px;
+                        margin-bottom: 10px;" loop
+                        autoplay></dotlottie-player>
+
+                </div>
+                <h3>Update Student Package</h3>
+            </button>
+        </div>
+
+
 
         <div class="card">
             <button id="searchStudent">
@@ -140,6 +157,120 @@
             </button>
         </div>
     </div>
+
+
+    <!-- Update Student Package Overlay -->
+    <div id="updatePackageOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeUpdatePackageOverlay" class="close-button">&times;</button>
+            <h2 class="overlay-search-head">UPDATE STUDENT PACKAGE</h2>
+
+            <div class="search-container">
+                <div class="form-Searchgroup">
+                    <img class="searchIcon" src="/images/search.gif" alt="Search Icon"
+                        style="right: 25px; left: 405px;">
+                    <input type="text" class="form-control" id="" name="studentSearch" placeholder=" " oninput=""
+                        style="width: 400px;">
+                    <span class="form-control-placeholder" style="left: 3.75rem;">Search by Name or GR Number</span>
+                </div>
+
+                <select id="dropdown1" class="form-control" style="width: 150px; margin-left: 10px;">
+                    <option value="">Dropdown 1</option>
+                </select>
+
+                <select id="dropdown2" class="form-control" style="width: 150px; margin-left: 10px;">
+                    <option value="">Dropdown 2</option>
+                </select>
+            </div>
+
+            <div class="table-container">
+                <table id="updatePackageTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>Id</th>
+                            <th>Grno</th>
+                            <th>Name</th>
+                            <th>Class, Division</th>
+                            <th>Package Breakup</th>
+                            <th>Total Package</th>
+                        </tr>
+                    </thead>
+                    <tbody id="updatePackageTableBody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <button id="nextButton" class="next-button" style="position: absolute;
+            bottom: 20px;
+            right: 20px;">Next</button>
+        </div>
+    </div>
+
+    <div id="updateStudentPackageOverlay" class="overlay">
+        <div class="overlay-content" style="max-width: 1300px;padding: 50px;">
+            <button id="closeUpdateStudentPackageOverlay" class="close-button">&times;</button>
+            <div class="overlay-inner">
+                <div class="left-side-package">
+                    <h2>Update Student Package</h2>
+                    <form id="updatePackageForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="category" placeholder=" ">
+                                <span class="form-control-placeholder">Category</span>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="grade" placeholder=" ">
+                                <span class="form-control-placeholder">Grade</span>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="amount" placeholder=" ">
+                                <span class="form-control-placeholder">Amount</span>
+                            </div>
+                        </div>
+
+
+
+                        <button type="button" class="generate-button" id="addToPackage">
+                            <img src="/images/addVendor.gif" alt="Generate TC">
+                            <span>Add to Package</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="right-side-package">
+                    <table id="packageTable" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Grade</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dynamic data will be inserted here -->
+                        </tbody>
+                    </table>
+
+
+                    <button type="button" class="generate-button" id="updatePackage" style="position: absolute;
+                    bottom: 1px;
+                    right: 35%;">
+                        <img src="/images/update.gif" alt="Generate TC">
+                        <span>Update</span>
+                    </button>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 
 
@@ -445,14 +576,14 @@
 
 
     <!-- Overlay for TC Preview -->
-    <div id="previewTCOverlay" class="overlay">
-        <div class="overlay-content" style="top: 0;max-width: 1700px;width: 85%;">
+    <div id="previewTCOverlay" class="overlay-search">
+        <div class="overlay-content-search">
             <div class="icon-container">
                 <i><img class="topicon" src="/images/preview.gif" alt="Preview Icon"></i>
             </div>
             <button id="closePreviewTCOverlay" class="close-button">&times;</button>
 
-            <h2 class="overlay-title">TRANSFER CERTIFICATE PREVIEW</h2>
+            <h2 class="overlay-search-head">TRANSFER CERTIFICATE PREVIEW</h2>
 
             <div class="content">
                 <!-- Main container with thick border and margin -->
@@ -487,7 +618,7 @@
                         <!-- Content container that occupies remaining space -->
                         <div id="tc-content">
                             <img id="watermark" src="../public/images/logo/tarangan_english_school.png" alt="Watermark">
-                        </div> 
+                        </div>
                         <!-- Footer container that is 20% height of tc-layout -->
                         <div id="tc-footer">
                             <div id="authenticity-container" class="footer-section">
@@ -503,7 +634,10 @@
                                 </div>
                             </div>
                             <div id="voilation-container" class="footer-section">
-                                No changes shall be made to any entry in this certificate except by the title authority issuing it. Any infringement of this certificate will be treated as a violation of school policy and may result in a penalty and legal action as per the applicable rules and regulations.
+                                No changes shall be made to any entry in this certificate except by the title authority
+                                issuing it. Any infringement of this certificate will be treated as a violation of
+                                school policy and may result in a penalty and legal action as per the applicable rules
+                                and regulations.
                             </div>
                         </div>
                     </div>

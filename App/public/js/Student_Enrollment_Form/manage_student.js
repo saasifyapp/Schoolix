@@ -32,6 +32,12 @@ document.addEventListener("DOMContentLoaded", () => {
             onOpen: null, // No special function needed
         },
         {
+            buttonId: "updatePackage",
+            overlayId: "updatePackageOverlay",
+            closeButtonId: "closeUpdatePackageOverlay",
+            onOpen: null,
+        },        
+        {
             buttonId: "searchStudent",
             overlayId: "searchStudentOverlay",
             closeButtonId: "closeSearchStudentOverlay",
@@ -71,78 +77,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const nextButton = document.getElementById("nextButton");
+    const updatePackageOverlay = document.getElementById("updateStudentPackageOverlay");
+    const closeUpdatePackageOverlay = document.getElementById("closeUpdateStudentPackageOverlay");
+
+    // Open overlay when clicking Next button
+    nextButton.addEventListener("click", function () {
+        updatePackageOverlay.style.display = "flex";
+    });
+
+    // Close overlay when clicking close button
+    closeUpdatePackageOverlay.addEventListener("click", function () {
+        updatePackageOverlay.style.display = "none";
+    });
+});
 
 
-// document.addEventListener("DOMContentLoaded", () => {
-//     const overlays = [        
-//         {
-//             buttonId: "generateTCButton",
-//             overlayId: "generateTCFormOverlay",
-//             closeButtonId: "closeGenerateTCFormOverlay",
-//         },
-//         {
-//             buttonId: "searchTCButton",
-//             overlayId: "searchTCFormOverlay",
-//             closeButtonId: "closeSearchTCFormOverlay",
-//         },
-//     ];
 
-//     overlays.forEach(({ buttonId, overlayId, closeButtonId }) => {
-//         const button = document.getElementById(buttonId);
-//         const overlay = document.getElementById(overlayId);
-//         const closeButton = document.getElementById(closeButtonId);
-
-//         if (button && overlay && closeButton) {
-//             button.addEventListener("click", () => {
-//                 overlay.style.display = "flex";
-//             });
-
-//             closeButton.addEventListener("click", () => {
-//                 overlay.style.display = "none";
-//             });
-//         }
-//     });
-// });
-
-
-// //////////////////DISABLE SEARCH STUDENT INPUT FOR TC OVERLAY////////////////////////
-// document.addEventListener("DOMContentLoaded", () => {
-//     const sectionSelect = document.getElementById('selectsectionforTC');
-//     const searchInput = document.getElementById('searchInputforTC');
-
-//     // Function to toggle input disabled state
-//     function toggleSearchInput() {
-//         if (sectionSelect.value === '' || !sectionSelect.value) {
-//             searchInput.disabled = true; // Disable if no valid option is selected
-//         } else {
-//             searchInput.disabled = false; // Enable if "Primary" or "Pre-primary" is selected
-//         }
-//     }
-
-//     // Initial check (since input starts disabled and default option is "")
-//     toggleSearchInput();
-
-//     // Listen for changes in the dropdown
-//     sectionSelect.addEventListener('change', toggleSearchInput);
-// });
-
-// //////////////////DISABLE SEARCH STUDENT INPUT FOR STUDENT UPDATE OVERLAY////////////////////////
-// document.addEventListener("DOMContentLoaded", () => {
-//     const sectionSelect = document.getElementById('sectionSelect');
-//     const searchInput = document.getElementById('searchInput');
-
-//     // Function to toggle input disabled state
-//     function toggleSearchInput() {
-//         if (sectionSelect.value === '' || !sectionSelect.value) {
-//             searchInput.disabled = true; // Disable if no valid option is selected
-//         } else {
-//             searchInput.disabled = false; // Enable if "Primary" or "Pre-primary" is selected
-//         }
-//     }
-
-//     // Initial check (since input starts disabled and default option is "")
-//     toggleSearchInput();
-
-//     // Listen for changes in the dropdown
-//     sectionSelect.addEventListener('change', toggleSearchInput);
-// });
