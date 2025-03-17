@@ -62,19 +62,21 @@ function searchStudentAndHandleTC() {
         // If student found, handle the data (e.g., display it)
         //console.log("Student Found:", data);
 
-        // Check if current_outstanding is zero
-        const currentOutstanding = parseFloat(data[0].current_outstanding);
+        // Check if current_outstanding and previous_outstanding are both zero
+        const currentOutstanding = parseFloat(data[0].current_outstanding) || 0;
+        const previousOutstanding = parseFloat(data[0].previous_outstanding) || 0;
         const grNo = data[0].Grno;
         const studentName = `${data[0].Firstname} ${data[0].Middlename} ${data[0].Surname}`;
 
 
-        if (currentOutstanding !== 0) {
+        if (currentOutstanding !== 0 || previousOutstanding !== 0) {
           Swal.fire({
             icon: "warning",
             title: "Pending Transaction",
             html: `The student with GR No: <strong>${grNo}</strong> <br>
-           Name: <strong>${studentName}</strong> has <strong>${currentOutstanding} INR</strong> as outstanding amount.<br>
-           Please clear the outstanding amount to generate TC.`,
+           Name: <strong>${studentName}</strong> has <strong>${currentOutstanding} INR</strong> current outstanding and 
+           <strong>${previousOutstanding} INR</strong> previous outstanding amount.<br><br>
+           Please clear all outstanding amounts to generate TC.`,
             confirmButtonText: "OK",
           });
           return;
