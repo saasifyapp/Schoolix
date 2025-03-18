@@ -416,3 +416,8 @@ function collectSelectedStudents() {
 
 // Event listener for the Next button
 document.getElementById('nextButton').addEventListener('click', collectSelectedStudents);
+
+// Event listener for the Close button
+document.getElementById('closeUpdateStudentPackageOverlay').addEventListener('click', function() {
+    document.getElementById('updateStudentPackageOverlay').style.display = 'none';
+});
