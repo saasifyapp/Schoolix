@@ -67,8 +67,7 @@
                     <dotlottie-player src="https://lottie.host/5974ccac-b8df-4488-868b-d772e0c2fa53/DcxhJUt0XY.lottie"
                         background="transparent" speed="1" style="width: 257px;
                         height: 208px;
-                        margin-bottom: 10px;" loop
-                        autoplay></dotlottie-player>
+                        margin-bottom: 10px;" loop autoplay></dotlottie-player>
 
                 </div>
                 <h3>Update Student Package</h3>
@@ -169,18 +168,30 @@
                 <div class="form-Searchgroup">
                     <img class="searchIcon" src="/images/search.gif" alt="Search Icon"
                         style="right: 25px; left: 405px;">
-                    <input type="text" class="form-control" id="" name="studentSearch" placeholder=" " oninput=""
+                    <input type="text" class="form-control" id="update_packagesearchStudentInput" name="studentSearch" placeholder=" " oninput=""
                         style="width: 400px;">
                     <span class="form-control-placeholder" style="left: 3.75rem;">Search by Name or GR Number</span>
                 </div>
 
                 <select id="dropdown1" class="form-control" style="width: 150px; margin-left: 10px;">
-                    <option value="">Dropdown 1</option>
+                    <option value="primary">Primary</option>
+                    <option value="pre_primary">Pre-primary</option>
                 </select>
 
-                <select id="dropdown2" class="form-control" style="width: 150px; margin-left: 10px;">
-                    <option value="">Dropdown 2</option>
-                </select>
+                <!-- Second input field for standards with suggestion box -->
+                <div class="form-group">
+                    <input type="text" class="form-control" id="update_packagestandard" placeholder="">
+                    <span class="form-control-placeholder">Class</span>
+                    <div id="update_packagestandardSuggestions" class="suggestions"></div>
+                </div>
+
+                <!-- Third input field for standards with suggestion box -->
+                <div class="form-group">
+                    <input type="text" class="form-control" id="update_packagesDivision" placeholder="">
+                    <span class="form-control-placeholder">Division</span>
+                    <div id="update_packageDivisionSuggestions" class="suggestions"></div>
+                </div>
+
             </div>
 
             <div class="table-container">
@@ -191,7 +202,7 @@
                             <th>Id</th>
                             <th>Grno</th>
                             <th>Name</th>
-                            <th>Class, Division</th>
+                            <th>Standard</th>
                             <th>Package Breakup</th>
                             <th>Total Package</th>
                         </tr>
@@ -214,6 +225,7 @@
             <div class="overlay-inner">
                 <div class="left-side-package">
                     <h2>Update Student Package</h2>
+                    <h4 id="studentCount" style="color: green;">0 students selected</h4> <!-- Added section for displaying student count -->
                     <form id="updatePackageForm">
                         <div class="form-row">
                             <div class="form-group">
@@ -928,6 +940,7 @@
     <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Student_Enrollment_Form/manage_student.js"></script>
     <script src="/js/Student_Enrollment_Form/transfer_certificate_search.js"></script>
+    <script src="/js/Student_Enrollment_Form/enrollment_update_package.js"></script>
     <script src="/js/Student_Enrollment_Form/enrollment_search_student.js"></script>
     <script src="/js/Student_Enrollment_Form/enrollment_delete_student.js"></script>
     <script src="/js/Student_Enrollment_Form/populate_update_student_form.js"></script>

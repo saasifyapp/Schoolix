@@ -619,6 +619,11 @@ const enrollment_search_student = require('./src/routes/student_enrollment_form_
 app.use('/', enrollment_search_student);
 
 
+////// UPDATE PACKAGE ROUTES ///
+const enrollment_update_package = require('./src/routes/student_enrollment_form_routes/update_package.js');
+app.use('/', enrollment_update_package);
+
+
 ////// DELETE STUDENT ROUTES ///
 const enrollment_delete_student = require('./src/routes/student_enrollment_form_routes/enrollment_delete_student.js');
 app.use('/', enrollment_delete_student);
