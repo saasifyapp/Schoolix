@@ -139,4 +139,68 @@ router.get("/get-student-details-for-package-update", (req, res) => {
 });
 
 
+router.get('/get-all-grade-fee-structure', (req, res) => {
+    const selectedClass = req.query.class || ''; // Get the selected class from the query parameter
+
+    const query = `SELECT category_name, class_grade, amount FROM fee_structures 
+                   WHERE class_grade = 'All Grades' 
+                   OR class_grade = ?`;
+
+    req.connectionPool.query(query, [selectedClass], (error, results) => {
+        if (error) {
+            console.error('Error fetching fee structures:', error);
+            return res.status(500).json({ error: 'Error fetching fee structures' });
+        }
+        res.status(200).json(results);
+    });
+});
+
+router.get('/get-fee-category-for-package-update', (req, res) => {
+    const selectQuery = 'SELECT category_id, category_name FROM fee_categories';
+
+    req.connectionPool.query(selectQuery, (error, results) => {
+        if (error) {
+            console.error('Error retrieving fee categories:', error);
+            return res.status(500).json({ error: 'Error retrieving fee categories' });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'No categories found' });
+        }
+        res.status(200).json(results);
+    });
+});
+
+router.get('/get-grade-for-category', (req, res) => {
+    const categoryId = req.query.categoryId; // Get category ID from query parameters
+    const selectQuery = 'SELECT DISTINCT class_grade FROM fee_structures WHERE category_id = ?';
+
+    req.connectionPool.query(selectQuery, [categoryId], (error, results) => {
+        if (error) {
+            console.error('Error retrieving grades:', error);
+            return res.status(500).json({ error: 'Error retrieving grades' });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'No grades found for selected category' });
+        }
+        res.status(200).json(results);
+    });
+});
+
+router.get('/get-category-grade-amounts', (req, res) => {
+    const categoryId = req.query.categoryId; // Get category ID from query parameters
+    const grade = req.query.grade; // Get grade from query parameters
+    const selectQuery = 'SELECT amount FROM fee_structures WHERE category_id = ? AND class_grade = ?';
+
+    req.connectionPool.query(selectQuery, [categoryId, grade], (error, results) => {
+        if (error) {
+            console.error('Error retrieving amounts:', error);
+            return res.status(500).json({ error: 'Error retrieving amounts' });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'No amounts found for selected category and grade' });
+        }
+        res.status(200).json(results);
+    });
+});
+
 module.exports = router;

@@ -77,21 +77,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-    const nextButton = document.getElementById("nextButton");
-    const updatePackageOverlay = document.getElementById("updateStudentPackageOverlay");
-    const closeUpdatePackageOverlay = document.getElementById("closeUpdateStudentPackageOverlay");
+// document.addEventListener("DOMContentLoaded", function () {
+//     const nextButton = document.getElementById("nextButton");
+//     const updatePackageOverlay = document.getElementById("updateStudentPackageOverlay");
+//     const closeUpdatePackageOverlay = document.getElementById("closeUpdateStudentPackageOverlay");
 
-    // Open overlay when clicking Next button
-    nextButton.addEventListener("click", function () {
-        updatePackageOverlay.style.display = "flex";
-    });
+//     // Open overlay when clicking Next button
+//     nextButton.addEventListener("click", function () {
+//         updatePackageOverlay.style.display = "flex";
+//     });
 
-    // Close overlay when clicking close button
-    closeUpdatePackageOverlay.addEventListener("click", function () {
-        updatePackageOverlay.style.display = "none";
-    });
-});
+//     // Close overlay when clicking close button
+//     closeUpdatePackageOverlay.addEventListener("click", function () {
+//         updatePackageOverlay.style.display = "none";
+//     });
+// });
 
 
 
