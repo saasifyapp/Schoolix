@@ -553,6 +553,9 @@ function validateReceiptStatusAndCheck(checkbox, student) {
 
 ////////////////////////// STORE SELECTED STUDENTS //////////////////
 
+// Define studentForPackageUpdate in a scope accessible by both functions
+let studentForPackageUpdate = [];
+
 function collectSelectedStudents() {
     let classInput = document.getElementById('update_packagestandard').value.toLowerCase();
     const divisionInput = document.getElementById('update_packagesDivision').value.toLowerCase();
@@ -571,7 +574,7 @@ function collectSelectedStudents() {
     }
 
     // Clear existing students fetched
-    const studentForPackageUpdate = []; 
+    studentForPackageUpdate = []; 
 
     const tableRows = document.querySelectorAll('#updatePackageTableBody tr');
     let initialClass = null;
@@ -1130,3 +1133,120 @@ document.addEventListener("DOMContentLoaded", function () {
 
 /////////////////////////////// UPDATE PACKAGE //////////////////
 
+function preparePackageUpdateData() {
+    const packageTable = document.getElementById("packageTable").querySelector("tbody");
+    const packageBreakup = [];
+    let totalPackage = 0;
+
+    packageTable.querySelectorAll('tr').forEach(row => {
+        if (!row.classList.contains('total-row')) {
+            const category = row.cells[0].textContent.trim();
+            const amount = parseFloat(row.cells[2].textContent.trim());
+            packageBreakup.push(`${category}: ${amount}`);
+            totalPackage += amount;
+        }
+    });
+
+    const updated_package_details = {
+        package_breakup: packageBreakup.join(', '),
+        total_package: Math.round(totalPackage),
+        current_outstanding: Math.round(totalPackage) // Same value as total_package
+    };
+
+    return updated_package_details;
+}
+
+document.getElementById('updatePackageButton').addEventListener('click', function() {
+    const updated_package_details = preparePackageUpdateData();
+    const section = document.getElementById('dropdown1').value.trim();
+
+    if (studentForPackageUpdate.length === 0) {
+        Swal.fire({
+            title: 'Warning',
+            text: 'No students selected for the package update.',
+            icon: 'warning',
+            confirmButtonText: 'OK'
+        });
+        return; // Exit function if no students are selected
+    }
+
+    const className = document.getElementById('update_packagestandard').value.trim();
+    const studentCount = studentForPackageUpdate.length;
+
+    Swal.fire({
+        title: 'Are you sure?',
+        html: `Are you sure you want to update the package for <strong>${studentCount}</strong> students of <strong>${className}</strong> with total amount <strong>${updated_package_details.total_package}</strong>?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, update it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Prepare payload to send to server
+            const payload = {
+                section,
+                students: studentForPackageUpdate,
+                updated_package_details
+            };
+
+            fetch('/update-package-for-students', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error('Error:', data.error);
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.error,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    console.log('Success:', data.message);
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Packages updated successfully',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        // Close the overlay
+                        document.getElementById('updateStudentPackageOverlay').style.display = 'none';
+
+                        // Clear the input fields
+                        document.getElementById('update_packagestandard').value = '';
+                        document.getElementById('update_packagesDivision').value = '';
+                        document.getElementById('update_packagesearchStudentInput').value = '';
+
+                        // Clear any selected checkboxes
+                        document.querySelectorAll('.student-checkbox').forEach(checkbox => {
+                            checkbox.checked = false;
+                        });
+
+                        // Uncheck the selectAllCheckbox
+                        const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+                        if (selectAllCheckbox) {
+                            selectAllCheckbox.checked = false;
+                        }
+
+                        // Recall the fetchStudentDetails to refresh the main table data
+                        fetchStudentDetails(section);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while updating packages',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            });
+        }
+    });
+});
