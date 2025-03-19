@@ -203,4 +203,56 @@ router.get('/get-category-grade-amounts', (req, res) => {
     });
 });
 
+
+// Endpoint to update package for selected students
+router.post("/update-package-for-students", (req, res) => {
+    const { section, students } = req.body;
+
+    // Validate input parameters
+    if (!section || !students || students.length === 0) {
+        return res.status(400).json({ error: "Invalid input parameters" });
+    }
+
+    // Determine the appropriate table based on section
+    let tableName;
+    if (section === "primary") {
+        tableName = "primary_student_details";
+    } else if (section === "pre_primary") {
+        tableName = "pre_primary_student_details";
+    } else {
+        return res.status(400).json({ error: "Invalid section parameter" });
+    }
+
+    // Construct the SQL query for updating packages
+    let query = `
+        UPDATE ${tableName}
+        SET 
+            package_breakup = CASE Grno 
+                ${students.map(student => `WHEN '${student.grno}' THEN '${student.packageBreakup}'`).join(" ")}
+            END,
+            total_package = CASE Grno 
+                ${students.map(student => `WHEN '${student.grno}' THEN '${student.totalPackage}'`).join(" ")}
+            END,
+            current_outstanding = CASE Grno 
+                ${students.map(student => `WHEN '${student.grno}' THEN '${student.totalPackage}'`).join(" ")}
+            END
+        WHERE Grno IN (${students.map(student => `'${student.grno}'`).join(", ")})
+    `;
+
+    // Execute the query
+    req.connectionPool.query(query, (error, results) => {
+        if (error) {
+            return res.status(500).json({ error: "Database error", details: error });
+        }
+
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ message: "No students found to update" });
+        }
+
+        // Return success response
+        res.json({ message: "Packages updated successfully" });
+    });
+});
+
+
 module.exports = router;
