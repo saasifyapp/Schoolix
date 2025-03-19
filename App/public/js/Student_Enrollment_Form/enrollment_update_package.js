@@ -1170,12 +1170,13 @@ document.getElementById('updatePackageButton').addEventListener('click', functio
         return; // Exit function if no students are selected
     }
 
-    const className = document.getElementById('update_packagestandard').value.trim();
+    // Extract class from first student
+    const formattedClass = studentForPackageUpdate[0].standard.charAt(0).toUpperCase() + studentForPackageUpdate[0].standard.slice(1);
     const studentCount = studentForPackageUpdate.length;
 
     Swal.fire({
         title: 'Are you sure?',
-        html: `Are you sure you want to update the package for <strong>${studentCount}</strong> students of <strong>${className}</strong> with total amount <strong>${updated_package_details.total_package}</strong>?`,
+        html: `Are you sure you want to update the package for <strong>${studentCount}</strong> students of <strong>${formattedClass}</strong> with total amount <strong>${updated_package_details.total_package}</strong>?`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, update it!',

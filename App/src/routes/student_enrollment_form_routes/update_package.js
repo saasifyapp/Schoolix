@@ -249,7 +249,7 @@ router.post("/update-package-for-students", (req, res) => {
         }
 
         // Return success response and log number of rows updated
-        console.log(`Packages updated successfully. Number of rows updated: ${results.affectedRows}`);
+        //console.log(`Packages updated successfully. Number of rows updated: ${results.affectedRows}`);
         res.json({ message: "Packages updated successfully", rowsUpdated: results.affectedRows });
     });
 });
