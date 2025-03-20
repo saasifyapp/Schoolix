@@ -1,0 +1,169 @@
+/* Default screen styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #0000ff; /* Change background color to blue */
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.header {
+    height: 20%; /* Default screen header height */
+    display: flex;
+    justify-content: space-between;
+    margin: 0; /* Remove any margin */
+    padding: 0; /* Remove padding applied directly */
+}
+
+.header div {
+    margin: 0; /* Ensure no margins are applied within the header */
+    padding: 10px; /* Ensure padding for contents */
+}
+
+.logo1-container {
+    width: 20%;
+    background-color: red;
+    text-align: center;
+}
+
+.school-details-container {
+    width: 60%;
+    background-color: blue;
+    text-align: center;
+}
+
+.logo2-container {
+    width: 20%;
+    background-color: red;
+    text-align: center;
+}
+
+.logo {
+    width: 100%; /* Make the logo responsive */
+    height: auto;
+}
+
+.tc-content {
+    height: 60%; /* Default screen content height */
+    text-align: center;
+    background-color: yellow;
+    padding: 10px;
+    margin: 0; /* Ensure no margin within content */
+}
+
+.footer {
+    height: 20%; /* Default screen footer height */
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0; /* Ensure no margin within the footer */
+}
+
+.footer div {
+    flex: 1; /* Each row takes equal height */
+    padding: 10px; /* Padding for content */
+}
+
+.authenticity-container {
+    background-color: #ffcccb; /* Light red color for first row */
+}
+
+.date-signature-container {
+    background-color: #d3d3d3; /* Light gray color for second row */
+}
+
+.warning-container {
+    background-color: #add8e6; /* Light blue color for third row */
+}
+
+/* Position the print button in the bottom right */
+.print-options {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+.print-options button {
+    padding: 5px 10px;
+}
+
+/* Print styling */
+@media print {
+    .header, .tc-content, .footer {
+        text-align: center;
+        margin: 0; /* Ensure no margins in print */
+    }
+
+    .print-options {
+        display: none; /* Hide print options during print */
+    }
+
+    @page {
+        size: auto;
+        margin: 5mm; /* Add uniform 5mm margin on all sides */
+    }
+
+    body {
+        margin: 0; /* Remove margin for print */
+        padding: 0; /* Remove padding for body itself */
+        background-color: white; /* Background color for print */
+        box-sizing: border-box; /* Include border in total dimensions */
+        display: flex;
+        flex-direction: column;
+        padding: 0mm; /* Apply margin to body for spacing */
+        border: 2mm solid black; /* Apply border to body */
+    }
+
+    .footer div {
+        margin: 0; /* Prevent internal margins during print */
+    }
+
+    .authenticity-container {
+        background-color: #ffcccb; /* Light red color for first row */
+    }
+
+    .date-signature-container {
+        background-color: #d3d3d3; /* Light gray color for second row */
+    }
+
+    .warning-container {
+        background-color: #add8e6; /* Light blue color for third row */
+    }
+
+    /* Legal Size */
+    body.Legal .header {
+        height: 15%; /* Adjust header height */
+    }
+    body.Legal .tc-content {
+        height: 60%; /* Adjust main content height */
+    }
+    body.Legal .footer {
+        height: 25%; /* Adjust footer height */
+    }
+
+    /* Letter Size */
+    body.Letter .header {
+        height: 20%; /* Adjust header height */
+    }
+    body.Letter .tc-content {
+        height: 60%; /* Adjust main content height */
+    }
+    body.Letter .footer {
+        height: 20%; /* Adjust footer height */
+    }
+
+    /* A4 Size */
+    body.A4 .header {
+        height: 20%; /* Adjust header height */
+    }
+    body.A4 .tc-content {
+        height: 60%; /* Adjust main content height */
+    }
+    body.A4 .footer {
+        height: 20%; /* Adjust footer height */
+    }
+}
