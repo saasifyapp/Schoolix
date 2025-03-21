@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/css/Student_Enrollment_Form/manage_student_console.css">
     <link rel="stylesheet" href="/css/Student_Enrollment_Form/enrollment-form-control.css">
     <link rel="stylesheet" href="/css/Universal_Components/autoFill_student_details.css">
+    <link rel="stylesheet" href="/css/Student_Enrollment_Form/tcStructure.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
@@ -588,7 +589,7 @@
 
                 <!-- Submit Button -->
                 <button type="button" class="generate-button" id="submitGenerateTCForm">
-                    <img src="/images/generate.gif" alt="Generate TC">
+                    <img src="/images/generate.gif" alt="Generate TC" style="height: 35px; width: 35px;">
                     <span>Generate TC</span>
                 </button>
 
@@ -600,144 +601,165 @@
     <!-- Overlay for TC Preview -->
     <div id="previewTCOverlay" class="overlay">
         <div class="overlay-content-search">
-            <div class="icon-container">
-                <i><img class="topicon" src="/images/preview.gif" alt="Preview Icon"></i>
-            </div>
-            <button id="closePreviewTCOverlay" class="close-button">&times;</button>
+            <!DOCTYPE html>
+            <html lang="en">
 
-            <h2 class="overlay-title">TRANSFER CERTIFICATE PREVIEW</h2>
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Flexible Print Layout</title>
+            </head>
 
-            <div id="tcContainer" class="tc-design">
-                <div class="tc-header">
-                    <div class="logo-container">
-                        <img id="schoolLogo" src="logo1.png" alt="School Logo" class="school-logo">
+            <body class="Legal"> <!-- Hardcoded to Legal paper size -->
+                <div class="header">
+                    <div class="logo1-container">
+                        <img src="/images/logo/demo_school.png" alt="Logo 1" class="logo">
                     </div>
-
-                    <div class="school-details">
-                        <h2 id="schoolName">TARANGAN ENGLISH SCHOOL</h2>
-                        <p id="schoolAddressLine1"></p>
-                        <p id="schoolAddressLine2"></p>
-
-                        <div class="info-container-detail">
-                            <div class="info-row-detail">
-                                <span class="left-detail">UDISE No: <strong>2706011105</strong></span>
-                                <span class="right-detail">Board Index No: <strong>10.04.059</strong></span>
+                    <div class="school-details-container">
+                        <div class="school-name-container">
+                            <h1>Tarangan English School</h1>
+                        </div>
+                        <div class="address-container">
+                            <p>123 Main Street, Dhanaj Bk,<br>Karnja Washmi, Maharashtra, India</p>
+                        </div>
+                        <div class="additional-details-container">
+                            <div class="left-container">
+                                <p>UDISE No: 123456789012</p>
+                                <p>Contact No: +91 9876543210</p>
                             </div>
-                            <div class="info-row-detail">
-                                <span class="left-detail" id="contact">Contact No: 8308474371</span>
-                                <span class="right-detail" id="email">Email: tarangan.english.school@gmail.com</span>
+                            <div class="right-container">
+                                <p>Board Index No: ABC123456789</p>
+                                <p>Email: info@taranganenglishschool.com</p>
                             </div>
                         </div>
-
-                        <h3>SCHOOL LEAVING CERTIFICATE</h3>
                     </div>
-
-                    <div class="logo-container">
-                        <img id="schoolLogo2" src="logo2.png" alt="School Logo" class="school-logo">
+                    <div class="logo2-container">
+                        <img src="/images/logo/demo_school2.png" alt="Logo 2" class="logo">
                     </div>
                 </div>
-
-                <table class="tc-table">
-                    <tr>
-                        <td><strong>1. Certificate No:</strong> <span id="tc_No"></span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>2. General Register No:</strong> <span id="tcgrNo"></span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>3. Student Name:</strong> <span id="tcStudentName"></span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>4. Mother's Name:</strong> <span id="tcMotherName"></span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>5. Date of Birth:</strong> <span id="tcDOB"></span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>6. Place of Birth:</strong> <span id="tcPlaceOfBirth"></span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>7. Nationality:</strong> <span id="tcNationality"></span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>8. Religion:</strong> <span id="tcReligion"></span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>9. Caste & Sub-Caste:</strong> <span id="tcCategory">(<span
-                                    id="tcCaste"></span>)</span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>10. Aadhar ID:</strong> <span id="tcAadharId"></span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>11. Last School Attended:</strong> <span id="tcLastSchool"></span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>12. Date of Admission:</strong> <span id="tcDateOfAdmission"></span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>13. Class of Admission:</strong> <span id="tcClassOfAdmission"></span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>14. Date of Leaving:</strong> <span id="tcDateOfLeaving"></span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>15. Standard Leaving:</strong> <span id="tcStandardLeaving"></span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>16. Reason for Leaving:</strong> <span id="tcReasonLeaving"></span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>17. Progress:</strong> <span id="tcProgress"></span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>18. Conduct:</strong> <span id="tcConduct"></span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>19. Result:</strong> <span id="tcResult"></span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>20. Remark:</strong> <span id="tcRemark"></span></td>
-                    </tr>
-                </table>
-
-                <div class="tc-footer">
-                    <div class="footer-content">
-                        <p><strong>DATE :</strong> <span id="tcIssueDate">01-01-2025</span></p>
-                        <p class="signature"><strong>Signature</strong></p>
+                <div class="tc-content">
+                    <table class="content-table">
+                        <thead style="display: flex; align-items: center;justify-content: center;">
+                            Duplicate
+                        </thead>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Row 1, Col 1</td>
+                                <td>Row 1, Col 2</td>
+                            </tr>
+                            <tr>
+                                <td>Row 2, Col 1</td>
+                                <td>Row 2, Col 2</td>
+                            </tr>
+                            <tr>
+                                <td>Row 3, Col 1</td>
+                                <td>Row 3, Col 2</td>
+                            </tr>
+                            <tr>
+                                <td>Row 4, Col 1</td>
+                                <td>Row 4, Col 2</td>
+                            </tr>
+                            <tr>
+                                <td>Row 5, Col 1</td>
+                                <td>Row 5, Col 2</td>
+                            </tr>
+                            <tr>
+                                <td>Row 1, Col 1</td>
+                                <td>Row 1, Col 2</td>
+                            </tr>
+                            <tr>
+                                <td>Row 2, Col 1</td>
+                                <td>Row 2, Col 2</td>
+                            </tr>
+                            <tr>
+                                <td>Row 3, Col 1</td>
+                                <td>Row 3, Col 2</td>
+                            </tr>
+                            <tr>
+                                <td>Row 4, Col 1</td>
+                                <td>Row 4, Col 2</td>
+                            </tr>
+                            <tr>
+                                <td>Row 5, Col 1</td>
+                                <td>Row 5, Col 2</td>
+                            </tr>
+                            <tr>
+                                <td>Row 1, Col 1</td>
+                                <td>Row 1, Col 2</td>
+                            </tr>
+                            <tr>
+                                <td>Row 2, Col 1</td>
+                                <td>Row 2, Col 2</td>
+                            </tr>
+                            <tr>
+                                <td>Row 3, Col 1</td>
+                                <td>Row 3, Col 2</td>
+                            </tr>
+                            <tr>
+                                <td>Row 4, Col 1</td>
+                                <td>Row 4, Col 2</td>
+                            </tr>
+                            <tr>
+                                <td>Row 5, Col 1</td>
+                                <td>Row 5, Col 2</td>
+                            </tr>
+                            <tr>
+                                <td>Row 1, Col 1</td>
+                                <td>Row 1, Col 2</td>
+                            </tr>
+                            <tr>
+                                <td>Row 2, Col 1</td>
+                                <td>Row 2, Col 2</td>
+                            </tr>
+                            <tr>
+                                <td>Row 3, Col 1</td>
+                                <td>Row 3, Col 2</td>
+                            </tr>
+                            <tr>
+                                <td>Row 4, Col 1</td>
+                                <td>Row 4, Col 2</td>
+                            </tr>
+                            <tr>
+                                <td>Row 5, Col 1</td>
+                                <td>Row 5, Col 2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="footer">
+                    <div class="authenticity-container">
+                        <p>Certified that the above information is in accordance with school Admission Register</p>
                     </div>
-                    <p class="notice">
-                        No changes shall be made to any entry in this certificate except by the title authority issuing
-                        it.
-                        Any infringement of this certificate will be treated as a violation of school policy and may
-                        result
-                        in a penalty and legal action as per the applicable rules and regulations.
-                    </p>
+                    <div class="date-signature-container">
+                        <div class="date-container">
+                            <p>Date: 21/03/2025</p>
+                            <p>Place: Dhanaj Bk</p>
+                        </div>
+                        <div class="signature-container">
+                            <p>Signature</p>
+                        </div>
+                    </div>
+                    <div class="warning-container">
+                        <p>No changes shall be made to any entry in this certificate except by the title authority
+                            issuing it.<br>Any infringement of this certificate will be treated as a violation of school
+                            policy and may result in a penalty and legal action as per the applicable rules and
+                            regulations</p>
+                    </div>
                 </div>
-            </div>
-            <!-- <button id="toggleControlPanel" class="toggle-button"></button> -->
+                <div class="print-options">
 
-            <button type="button" class="generate-button toggle-button" id="toggleControlPanel">
-                <img src="/images/threeDots.gif" alt="Download TC">
-            </button>
+                    <button onclick="printContent()" class="generate-button"><img src="/images/printer.gif"
+                            alt="Print TC">Print</button>
 
-            <!-- Control Panel at Bottom Right -->
-            <div id="controlPanel" class="control-panel">
-                <h3>Page Size</h3>
-                <div class="form-row">
-                    <label><input type="radio" name="pageSize" value="A4" checked> A4</label>
-                    <label><input type="radio" name="pageSize" value="Letter"> Letter</label>
-                    <label><input type="radio" name="pageSize" value="Legal"> Legal</label>
+                    <button id="closePreviewTCOverlay" class="generate-button"><img src="/images/cancel.png"
+                            alt="Cancel TC">Cancel</button>
                 </div>
+            </body>
 
-                <div class="form-row" style="justify-content: center;">
+            </html>
 
-                    <button type="button" class="generate-button" id="downloadTC">
-                        <img src="/images/printer.gif" alt="Print TC">
-                        <span>Download & Print</span>
-                    </button>
-                </div>
-            </div>
+
 
         </div>
     </div>
@@ -984,35 +1006,6 @@
             </div>
         </div>
     </div>
-
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const toggleButton = document.querySelector(".toggle-button");
-            const controlPanel = document.querySelector(".control-panel");
-
-            toggleButton.addEventListener("click", function (event) {
-                event.stopPropagation(); // Prevents click from bubbling up
-                controlPanel.classList.toggle("active");
-                toggleButton.classList.toggle("active");
-            });
-
-            // Hide control panel if clicked outside
-            document.addEventListener("click", function (event) {
-                if (!controlPanel.contains(event.target) && !toggleButton.contains(event.target)) {
-                    controlPanel.classList.remove("active");
-                    toggleButton.classList.remove("active");
-                }
-            });
-        });
-
-
-    </script>
-
-
-
-
-
 
 
 

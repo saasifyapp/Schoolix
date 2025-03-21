@@ -1,0 +1,558 @@
+/* Default screen styling */
+.overlay-content-search {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    /* background-color: #0000ff; */
+    /* Change background color to blue */
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;   
+}
+
+.header {
+    height: 20%;
+    /* Default screen header height */
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    padding: 0;
+}
+
+.header div {
+    margin: 0;
+    padding: 10px;
+}
+
+.logo1-container {
+    width: 20%;
+    background-color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.school-details-container {
+    width: 60%;
+    background-color: blue;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.school-name-container {
+    width: 100%;
+    text-align: center;
+    max-height: 33.33%;
+    /* Adjusted for three containers */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.school-name-container h1 {
+    margin: 0;
+    white-space: nowrap;
+    font-size: 24px;
+    /* Default, overridden by JS */
+}
+
+.address-container {
+    width: 100%;
+    text-align: center;
+    max-height: 33.33%;
+    /* Adjusted for three containers */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.address-container p {
+    margin: 0;
+    font-size: 16px;
+    /* Default, overridden by JS */
+    line-height: 1.2;
+    overflow: hidden;
+}
+
+.additional-details-container {
+    width: 100%;
+    max-height: 33.33%;
+    /* Adjusted for three containers */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.left-container,
+.right-container {
+    width: 50%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.left-container p,
+.right-container p {
+    margin: 0;
+    font-size: 14px;
+    /* Default, overridden by JS */
+    line-height: 1.2;
+    overflow: hidden;
+}
+
+.logo2-container {
+    width: 20%;
+    background-color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo {
+    max-width: 100px;
+    max-height: 100px;
+    width: auto;
+    height: auto;
+}
+
+.tc-content {
+    height: 60%;
+    /* Default screen content height */
+    background-color: yellow;
+    padding: 0;
+    /* Remove padding to ensure table touches edges */
+    margin: 0;
+    /* Ensure no margin within content */
+    display: flex;
+    /* Use flexbox to control table height */
+    flex-direction: column;
+    /* Stack children vertically */
+    overflow-y: auto;
+    /* Allow scrolling on screen if needed */
+}
+
+.content-table {
+    width: 100%;
+    /* Take full width of the container */
+    height: 100%;
+    /* Take full height of the parent (.tc-content) */
+    border-collapse: collapse;
+    /* Remove gaps between cells */
+    table-layout: fixed;
+    /* Ensure consistent column widths */
+    font-size: 14px;
+    /* Adjust font size for readability */
+}
+
+.content-table th,
+.content-table td {
+    border: 1px solid #333;
+    /* Add borders to table cells */
+    padding: 8px;
+    /* Add padding for readability */
+    text-align: left;
+    /* Align text to the left */
+}
+
+.content-table th {
+    background-color: #f2f2f2;
+    /* Light gray background for header */
+    font-weight: bold;
+    height: 40px;
+    /* Fixed height for header row */
+}
+
+.content-table tbody tr {
+    height: calc((100% - 40px) / var(--row-count));
+    /* Dynamically calculate row height */
+}
+
+.content-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+    /* Light gray for even rows */
+}
+
+.footer {
+    height: 20%; /* Default screen footer height */
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0; /* Ensure no margin within the footer */
+}
+
+.footer div {
+    flex: 1; /* Each row takes equal height */
+    padding: 10px; /* Padding for content */
+}
+
+.authenticity-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.authenticity-container p {
+    margin: 0;
+    font-size: 16px; /* Default, overridden by JS */
+    white-space: nowrap; /* Ensure single line */
+    overflow: hidden;
+}
+
+.date-signature-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.date-container {
+    width: 50%;
+    text-align: left; /* Align content to the left */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.signature-container {
+    width: 50%;
+    text-align: right; /* Align content to the right */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.date-container p, .signature-container p {
+    margin: 0;
+    font-size: 14px; /* Default, overridden by JS */
+    line-height: 1.2;
+    overflow: hidden;
+    white-space: nowrap; /* Ensure single line per <p> */
+}
+
+.warning-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.warning-container p {
+    margin: 0;
+    font-size: 14px; /* Default, overridden by JS */
+    line-height: 1.2;
+    overflow: hidden;
+    text-align: center; /* Center the warning text */
+}
+
+/* Position the print button in the bottom right */
+.print-options {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+.print-options button {
+    padding: 5px 10px;
+}
+
+/* Print styling */
+@media print {
+
+    .header,
+    .tc-content,
+    .footer {
+        text-align: center;
+        margin: 0;
+        /* Ensure no margins in print */
+    }
+
+    .header {
+        height: auto; /* Allow natural height for print */
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .logo1-container {
+        width: 20%;
+        background-color: red;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        page-break-inside: avoid;
+    }
+
+    .school-details-container {
+        width: 60%;
+        background-color: blue;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .school-name-container {
+        width: 100%;
+        text-align: center;
+        max-height: 33.33%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .school-name-container h1 {
+        margin: 0;
+        white-space: nowrap;
+        font-size: 24px; /* Adjusted by JS */
+        max-width: 100%;
+    }
+
+    .address-container {
+        width: 100%;
+        text-align: center;
+        max-height: 33.33%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .address-container p {
+        margin: 0;
+        font-size: 16px; /* Adjusted by JS */
+        line-height: 1.2;
+        overflow: hidden;
+    }
+
+    .additional-details-container {
+        width: 100%;
+        max-height: 33.33%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .left-container, .right-container {
+        width: 50%;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .left-container p, .right-container p {
+        margin: 0;
+        font-size: 14px; /* Adjusted by JS */
+        line-height: 1.2;
+        overflow: hidden;
+        white-space: nowrap; /* Ensure one line per <p> */
+    }
+
+    .logo2-container {
+        width: 20%;
+        background-color: red;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        page-break-inside: avoid;
+    }
+
+    .print-options {
+        display: none;
+        /* Hide print options during print */
+    }
+
+    @page {
+        size: auto;
+        margin: 5mm;
+        /* Add uniform 5mm margin on all sides */
+    }
+
+    .overlay-content-search {
+        margin: 0;
+        /* Remove margin for print */
+        padding: 0;
+        /* Remove padding for body itself */
+        background-color: white;
+        /* Background color for print */
+        box-sizing: border-box;
+        /* Include border in total dimensions */
+        display: flex;
+        flex-direction: column;
+        padding: 0mm;
+        /* Apply margin to body for spacing */
+        border: 2mm solid black;
+        /* Apply border to body */
+    }
+
+    .footer {
+        height: auto; /* Allow natural height for print */
+        background-color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        margin: 0;
+    }
+
+    .footer div {
+        flex: 1;
+        padding: 10px;
+    }
+
+    .authenticity-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .authenticity-container p {
+        margin: 0;
+        font-size: 16px; /* Adjusted by JS */
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .date-signature-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .date-container {
+        width: 50%;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .signature-container {
+        width: 50%;
+        text-align: right;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .date-container p, .signature-container p {
+        margin: 0;
+        font-size: 14px; /* Adjusted by JS */
+        line-height: 1.2;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .warning-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .warning-container p {
+        margin: 0;
+        font-size: 14px; /* Adjusted by JS */
+        line-height: 1.2;
+        overflow: hidden;
+        text-align: center;
+    }
+
+    
+    .tc-content {
+        overflow-y: visible;
+        /* Disable scrolling for print */
+        height: 60%;
+        /* Maintain height for print */
+        padding: 0;
+    }
+
+    .content-table {
+        height: 100%;
+        /* Ensure table takes full height in print */
+        font-size: 12px;
+        /* Slightly smaller font for print */
+    }
+
+    .content-table th,
+    .content-table td {
+        padding: 5px;
+        /* Reduce padding for print */
+    }
+
+    .content-table th {
+        height: 40px;
+        /* Fixed height for header in print */
+    }
+
+    .content-table tbody tr {
+        height: calc((100% - 40px) / var(--row-count));
+        /* Maintain dynamic row height in print */
+    }
+
+
+    /* Ensure logo containers remain centered in print */
+    .logo1-container,
+    .logo2-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Inside the @media print section */
+    .logo {
+        max-width: 100px;
+        /* Increased from 80px */
+        max-height: 100px;
+        width: auto;
+        height: auto;
+    }
+
+    /* Legal Size */
+    body.Legal .header {
+        height: 15%;
+        /* Adjust header height */
+    }
+
+    body.Legal .tc-content {
+        height: 60%;
+        /* Adjust main content height */
+    }
+
+    body.Legal .footer {
+        height: 25%;
+        /* Adjust footer height */
+    }
+
+    /* Letter Size */
+    body.Letter .header {
+        height: 20%;
+        /* Adjust header height */
+    }
+
+    body.Letter .tc-content {
+        height: 60%;
+        /* Adjust main content height */
+    }
+
+    body.Letter .footer {
+        height: 20%;
+        /* Adjust footer height */
+    }
+
+    /* A4 Size */
+    body.A4 .header {
+        height: 20%;
+        /* Adjust header height */
+    }
+
+    body.A4 .tc-content {
+        height: 60%;
+        /* Adjust main content height */
+    }
+
+    body.A4 .footer {
+        height: 20%;
+        /* Adjust footer height */
+    }
+}

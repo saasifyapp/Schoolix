@@ -64,10 +64,10 @@ function searchStudentAndHandleTC() {
 
         // Check if current_outstanding and previous_outstanding are both zero
         const currentOutstanding = parseFloat(data[0].current_outstanding) || 0;
-        const previousOutstanding = parseFloat(data[0].previous_outstanding) || 0;
+        const previousOutstanding =
+          parseFloat(data[0].previous_outstanding) || 0;
         const grNo = data[0].Grno;
         const studentName = `${data[0].Firstname} ${data[0].Middlename} ${data[0].Surname}`;
-
 
         if (currentOutstanding !== 0 || previousOutstanding !== 0) {
           Swal.fire({
@@ -218,7 +218,13 @@ function showNoResults(container) {
 }
 
 // Generic function to display suggestions
-function displaySuggestions(inputId, suggestionContainerId, data, cacheFlag, fetchFunc) {
+function displaySuggestions(
+  inputId,
+  suggestionContainerId,
+  data,
+  cacheFlag,
+  fetchFunc
+) {
   const inputElement = document.getElementById(inputId);
   const suggestionContainer = document.getElementById(suggestionContainerId);
 
@@ -241,7 +247,9 @@ function displaySuggestions(inputId, suggestionContainerId, data, cacheFlag, fet
 
 // Generic function to filter and display suggestions
 function filterAndDisplaySuggestions(query, suggestionsContainer, data) {
-  const filteredItems = data.filter(item => item.toLowerCase().startsWith(query));
+  const filteredItems = data.filter((item) =>
+    item.toLowerCase().startsWith(query)
+  );
   suggestionsContainer.innerHTML = "";
 
   if (filteredItems.length > 0) {
@@ -280,17 +288,55 @@ const cacheFlags = {
 };
 
 const dataMap = {
-  standards: ["Nursery", "LKG", "UKG", "1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"],
-  reasons: [
-    "At his / her own request", "Relocation", "Change of School", "Financial Reasons", "Health Reasons",
-    "Permanent Move Abroad", "Academic Reasons", "Behavioural Issues", "Lack of Satisfaction",
-    "Completion of Education Level", "Personal/Family Issues", "Special Educational Needs",
-    "Bullying or Safety Concerns", "Extracurricular Opportunities"
+  standards: [
+    "Nursery",
+    "LKG",
+    "UKG",
+    "1st",
+    "2nd",
+    "3rd",
+    "4th",
+    "5th",
+    "6th",
+    "7th",
+    "8th",
+    "9th",
+    "10th",
   ],
-  progress: ["Excellent", "Very Good", "Good", "Satisfactory", "Average", "Poor"],
+  reasons: [
+    "At his / her own request",
+    "Relocation",
+    "Change of School",
+    "Financial Reasons",
+    "Health Reasons",
+    "Permanent Move Abroad",
+    "Academic Reasons",
+    "Behavioural Issues",
+    "Lack of Satisfaction",
+    "Completion of Education Level",
+    "Personal/Family Issues",
+    "Special Educational Needs",
+    "Bullying or Safety Concerns",
+    "Extracurricular Opportunities",
+  ],
+  progress: [
+    "Excellent",
+    "Very Good",
+    "Good",
+    "Satisfactory",
+    "Average",
+    "Poor",
+  ],
   conduct: ["Excellent", "Very Good", "Good", "Average", "Poor"],
   result: ["Pass", "Fail", "Promoted", "Detained", "Incomplete"],
-  remark: ["Promoted to Next Class", "Good", "Very Good", "Excellent", "Needs Improvement", "Satisfactory"],
+  remark: [
+    "Promoted to Next Class",
+    "Good",
+    "Very Good",
+    "Excellent",
+    "Needs Improvement",
+    "Satisfactory",
+  ],
 };
 
 function initSuggestions(inputId, suggestionContainerId, dataType) {
@@ -298,22 +344,40 @@ function initSuggestions(inputId, suggestionContainerId, dataType) {
   const suggestionsContainer = document.getElementById(suggestionContainerId);
 
   inputElement.addEventListener("input", () =>
-    displaySuggestions(inputId, suggestionContainerId, dataMap[dataType], cacheFlags[dataType], (query, container) => {
-      filterAndDisplaySuggestions(query, container, dataMap[dataType]);
-      attachSuggestionListeners(container, inputElement);
-    })
+    displaySuggestions(
+      inputId,
+      suggestionContainerId,
+      dataMap[dataType],
+      cacheFlags[dataType],
+      (query, container) => {
+        filterAndDisplaySuggestions(query, container, dataMap[dataType]);
+        attachSuggestionListeners(container, inputElement);
+      }
+    )
   );
   inputElement.addEventListener("focus", () =>
-    displaySuggestions(inputId, suggestionContainerId, dataMap[dataType], cacheFlags[dataType], (query, container) => {
-      filterAndDisplaySuggestions(query, container, dataMap[dataType]);
-      attachSuggestionListeners(container, inputElement);
-    })
+    displaySuggestions(
+      inputId,
+      suggestionContainerId,
+      dataMap[dataType],
+      cacheFlags[dataType],
+      (query, container) => {
+        filterAndDisplaySuggestions(query, container, dataMap[dataType]);
+        attachSuggestionListeners(container, inputElement);
+      }
+    )
   );
   inputElement.addEventListener("click", () =>
-    displaySuggestions(inputId, suggestionContainerId, dataMap[dataType], cacheFlags[dataType], (query, container) => {
-      filterAndDisplaySuggestions(query, container, dataMap[dataType]);
-      attachSuggestionListeners(container, inputElement);
-    })
+    displaySuggestions(
+      inputId,
+      suggestionContainerId,
+      dataMap[dataType],
+      cacheFlags[dataType],
+      (query, container) => {
+        filterAndDisplaySuggestions(query, container, dataMap[dataType]);
+        attachSuggestionListeners(container, inputElement);
+      }
+    )
   );
 
   document.addEventListener("click", function (event) {
@@ -331,11 +395,19 @@ function initSuggestions(inputId, suggestionContainerId, dataType) {
 document.addEventListener("DOMContentLoaded", function () {
   // Standard of Leaving
   initSuggestions("standardLeaving", "standardLeavingSuggestion", "standards");
-  initSuggestions("tc_edit_standardOfLeaving", "edit_tc_standardOfLeavingSuggestion", "standards");
+  initSuggestions(
+    "tc_edit_standardOfLeaving",
+    "edit_tc_standardOfLeavingSuggestion",
+    "standards"
+  );
 
   // Reason of Leaving
   initSuggestions("reasonLeaving", "reasonLeavingSuggestion", "reasons");
-  initSuggestions("tc_edit_reasonOfLeaving", "edit_tc_reasonOfLeavingSuggestion", "reasons");
+  initSuggestions(
+    "tc_edit_reasonOfLeaving",
+    "edit_tc_reasonOfLeavingSuggestion",
+    "reasons"
+  );
 
   // Progress
   initSuggestions("progress", "progressSuggestion", "progress");
@@ -354,12 +426,12 @@ document.addEventListener("DOMContentLoaded", function () {
   initSuggestions("tc_edit_remark", "edit_tc_remarkSuggestion", "remark");
 });
 
-
-
 //////////////////////// GENERATE BUTTON //////////////
 
-document.getElementById("submitGenerateTCForm").addEventListener("click", async function (event) {
-  const requiredFields = {
+document
+  .getElementById("submitGenerateTCForm")
+  .addEventListener("click", async function (event) {
+    const requiredFields = {
       studentName: "Student Name",
       motherName: "Mother's Name",
       dob: "Date of Birth (DOB)",
@@ -386,115 +458,123 @@ document.getElementById("submitGenerateTCForm").addEventListener("click", async 
       conduct: "Conduct",
       result: "Result",
       remark: "Remark",
-  };
+    };
 
-  let isValid = true;
-  let missingFields = [];
+    let isValid = true;
+    let missingFields = [];
 
-  Object.keys(requiredFields).forEach(function (fieldId) {
+    Object.keys(requiredFields).forEach(function (fieldId) {
       const field = document.getElementById(fieldId);
       if (!field.value.trim()) {
-          isValid = false;
-          const label = requiredFields[fieldId];
-          missingFields.push(label);
+        isValid = false;
+        const label = requiredFields[fieldId];
+        missingFields.push(label);
       }
-  });
+    });
 
-  if (!isValid) {
-      const missingFieldsList = missingFields.map((field) => `<li>${field}</li>`).join("");
+    if (!isValid) {
+      const missingFieldsList = missingFields
+        .map((field) => `<li>${field}</li>`)
+        .join("");
       Swal.fire({
-          icon: "warning",
-          title: "Missing Fields",
-          html: `The following fields are required: <ul>${missingFieldsList}</ul>`,
+        icon: "warning",
+        title: "Missing Fields",
+        html: `The following fields are required: <ul>${missingFieldsList}</ul>`,
       });
       return;
-  }
+    }
 
-  const cookies = document.cookie.split(";").reduce((acc, cookie) => {
+    const cookies = document.cookie.split(";").reduce((acc, cookie) => {
       const [key, value] = cookie.trim().split("=");
       acc[key] = value;
       return acc;
-  }, {});
+    }, {});
 
-  const schoolName = decodeURIComponent(cookies["schoolName"]); // Decode URL-encoded value
-  const loginName = decodeURIComponent(cookies["username"]);
+    const schoolName = decodeURIComponent(cookies["schoolName"]); // Decode URL-encoded value
+    const loginName = decodeURIComponent(cookies["username"]);
 
-  if (!schoolName || !loginName) {
+    if (!schoolName || !loginName) {
       Swal.fire({
-          icon: "error",
-          title: "Missing Information",
-          text: 'Required cookies "schoolName" and "username" are missing.',
+        icon: "error",
+        title: "Missing Information",
+        text: 'Required cookies "schoolName" and "username" are missing.',
       });
       return;
-  }
+    }
 
-  try {
+    try {
       // Initialize Swal for loading status
       let currentStep = "Processing...";
       const updateSwal = async (message) => {
-          currentStep = message;
-          Swal.update({
-              title: "Processing...",
-              html: message,
-              allowOutsideClick: false,
-              showConfirmButton: false,
-          });
-          Swal.showLoading();
-          await new Promise((resolve) => setTimeout(resolve, 1000));
+        currentStep = message;
+        Swal.update({
+          title: "Processing...",
+          html: message,
+          allowOutsideClick: false,
+          showConfirmButton: false,
+        });
+        Swal.showLoading();
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       };
 
       Swal.fire({
-          title: "Processing...",
-          html: currentStep,
-          allowOutsideClick: false,
-          showConfirmButton: false,
-          didOpen: () => {
-              Swal.showLoading();
-          },
+        title: "Processing...",
+        html: currentStep,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
       });
 
       await updateSwal("Fetching School Details...");
-      const fetchSchoolDetailsResponse = await fetch("/generate-tc-operations", {
+      const fetchSchoolDetailsResponse = await fetch(
+        "/generate-tc-operations",
+        {
           method: "POST",
           headers: {
-              "Content-Type": "application/json",
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-              operation: "fetch-tc-school-details",
-              data: { loginName, schoolName },
+            operation: "fetch-tc-school-details",
+            data: { loginName, schoolName },
           }),
-      });
+        }
+      );
 
       if (!fetchSchoolDetailsResponse.ok) {
-          const errorText = await fetchSchoolDetailsResponse.text();
-          throw new Error(errorText);
+        const errorText = await fetchSchoolDetailsResponse.text();
+        throw new Error(errorText);
       }
 
       const schoolDetailsResponse = await fetchSchoolDetailsResponse.json();
 
-      if (!schoolDetailsResponse.result || Object.keys(schoolDetailsResponse.result).length === 0) {
-          throw new Error('School details not found or empty.');
+      if (
+        !schoolDetailsResponse.result ||
+        Object.keys(schoolDetailsResponse.result).length === 0
+      ) {
+        throw new Error("School details not found or empty.");
       }
 
       let schoolDetails = schoolDetailsResponse.result;
 
       let tcformdata = {
-          schoolName,
-          loginName,
-          ...schoolDetails,
+        schoolName,
+        loginName,
+        ...schoolDetails,
       };
 
-      console.log (tcformdata)
+      console.log(tcformdata);
 
       Object.keys(requiredFields).forEach((fieldId) => {
-          const field = document.getElementById(fieldId);
-          tcformdata[fieldId] = field.value.trim();
+        const field = document.getElementById(fieldId);
+        tcformdata[fieldId] = field.value.trim();
       });
 
       // Utility function to format date
       const formatDate = (dateStr) => {
-          const [year, month, day] = dateStr.split("-");
-          return `${day}-${month}-${year}`;
+        const [year, month, day] = dateStr.split("-");
+        return `${day}-${month}-${year}`;
       };
 
       // Apply date formatting
@@ -504,162 +584,132 @@ document.getElementById("submitGenerateTCForm").addEventListener("click", async 
 
       await updateSwal("Saving TC Record...");
       const saveTCResponse = await fetch("/generate-tc-operations", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          operation: "save-to-tc-table",
+          data: {
+            tc_no: tcformdata.tcNo,
+            gr_no: tcformdata.tc_grNo,
+            student_name: tcformdata.studentName,
+            date_of_leaving: tcformdata.dateOfLeaving,
+            standard_of_leaving: tcformdata.standardLeaving,
+            reason_of_leaving: tcformdata.reasonLeaving,
+            progress: tcformdata.progress,
+            conduct: tcformdata.conduct,
+            result: tcformdata.result,
+            remark: tcformdata.remark,
+            issue_date: tcformdata.issueDate,
+            section: tcformdata.tc_section,
+            current_class: tcformdata.tc_class,
           },
-          body: JSON.stringify({
-              operation: "save-to-tc-table",
-              data: {
-                  tc_no: tcformdata.tcNo,
-                  gr_no: tcformdata.tc_grNo,
-                  student_name: tcformdata.studentName,
-                  date_of_leaving: tcformdata.dateOfLeaving,
-                  standard_of_leaving: tcformdata.standardLeaving,
-                  reason_of_leaving: tcformdata.reasonLeaving,
-                  progress: tcformdata.progress,
-                  conduct: tcformdata.conduct,
-                  result: tcformdata.result,
-                  remark: tcformdata.remark,
-                  issue_date: tcformdata.issueDate,
-                  section: tcformdata.tc_section,
-                  current_class: tcformdata.tc_class,
-              },
-          }),
+        }),
       });
 
       if (!saveTCResponse.ok) {
-          const errorText = await saveTCResponse.text();
-          if (saveTCResponse.status === 409) {
-              throw new Error('Duplicate TC No');
-          }
-          throw new Error(errorText);
+        const errorText = await saveTCResponse.text();
+        if (saveTCResponse.status === 409) {
+          throw new Error("Duplicate TC No");
+        }
+        throw new Error(errorText);
       }
 
       await updateSwal("Deactivating Student...");
       await fetch("/generate-tc-operations", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          operation: "deactivate-student",
+          data: {
+            section: tcformdata.tc_section.toLowerCase(),
+            grno: tcformdata.tc_grNo,
           },
-          body: JSON.stringify({
-              operation: "deactivate-student",
-              data: { section: tcformdata.tc_section.toLowerCase(), grno: tcformdata.tc_grNo },
-          }),
+        }),
       });
 
       await updateSwal("Deleting App Credentials...");
       await fetch("/generate-tc-operations", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          operation: "delete-android-user",
+          data: {
+            section: tcformdata.tc_section.toLowerCase(),
+            grno: tcformdata.tc_grNo,
           },
-          body: JSON.stringify({
-              operation: "delete-android-user",
-              data: { section: tcformdata.tc_section.toLowerCase(), grno: tcformdata.tc_grNo },
-          }),
+        }),
       });
 
       await updateSwal("Deallocating Transport...");
       await fetch("/generate-tc-operations", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          operation: "delete-transport-alloted",
+          data: {
+            section: tcformdata.tc_section.toLowerCase(),
+            grno: tcformdata.tc_grNo,
           },
-          body: JSON.stringify({
-              operation: "delete-transport-alloted",
-              data: { section: tcformdata.tc_section.toLowerCase(), grno: tcformdata.tc_grNo },
-          }),
+        }),
       });
 
       await Swal.fire({
-          icon: "success",
-          title: "TC Generation Completed!",
-          html: `Transfer Certificate for <strong>GR - ${tcformdata.tc_grNo}</strong> | <strong>Name - ${tcformdata.studentName}</strong> generated successfully.`,
+        icon: "success",
+        title: "TC Generation Completed!",
+        html: `Transfer Certificate for <strong>GR - ${tcformdata.tc_grNo}</strong> | <strong>Name - ${tcformdata.studentName}</strong> generated successfully.`,
       });
 
       populateTCFormData(tcformdata);
-  } catch (error) {
-      const errorMessage = (error.json && typeof error.json === 'function') ? JSON.stringify(error.json) : error.message;
-      const displayMessage = errorMessage.includes('Duplicate TC No') ? 
-          "A Transfer Certificate with this TC No already exists. Please use a different TC No." :
-          errorMessage;
+    } catch (error) {
+      const errorMessage =
+        error.json && typeof error.json === "function"
+          ? JSON.stringify(error.json)
+          : error.message;
+      const displayMessage = errorMessage.includes("Duplicate TC No")
+        ? "A Transfer Certificate with this TC No already exists. Please use a different TC No."
+        : errorMessage;
 
       await Swal.fire({
-          icon: "error",
-          title: "Operation Failed",
-          text: displayMessage,
+        icon: "error",
+        title: "Operation Failed",
+        text: displayMessage,
       });
-  }
-});
+    }
+  });
 
 function populateTCFormData(formData) {
-  // const setText = (selector, value) => {
-  //   const element = document.querySelector(selector);
-  //   if (element) {
-  //     element.innerText = value;
-  //   } else {
-  //     console.warn(Element with selector "${selector}" not found.);
-  //   }
-  // };
+  // const tbody = document.querySelector(".content-table tbody");
+  // if (!tbody) return;
 
-  // const logoUrl = getSchoolLogoUrl("schoolName");
+  // // Clear existing rows
+  // tbody.innerHTML = "";
 
-  // if (logoUrl) {
-  //   const logoElement1 = document.getElementById("schoolLogo");
-  //   if (logoElement1) {
-  //     logoElement1.src = logoUrl;
-  //     logoElement1.alt = "School Logo";
-  //   } else {
-  //     console.error("First logo element not found in HTML");
-  //   }
+  // // Populate rows from tcData
+  // Object.entries(formData).forEach(([key, value]) => {
+  //   const row = document.createElement("tr");
+  //   const keyCell = document.createElement("td");
+  //   const valueCell = document.createElement("td");
 
-  //   const logoUrl2 = logoUrl.replace(/(\.[a-z]+)$/, "2$1");
+  //   keyCell.textContent = key;
+  //   valueCell.textContent = value;
 
-  //   const logoElement2 = document.getElementById("schoolLogo2");
-  //   if (logoElement2) {
-  //     logoElement2.src = logoUrl2;
-  //     logoElement2.alt = "School Logo 2";
-  //   } else {
-  //     console.error("Second logo element not found in HTML");
-  //   }
-  // } else {
-  //   console.error("School logo URL not found");
-  // }
+  //   row.appendChild(keyCell);
+  //   row.appendChild(valueCell);
+  //   tbody.appendChild(row);
+  // });
 
-  // setText("#schoolName", formData.schoolName);
-  // setText(".left-detail strong", formData.udise_no);
-  // setText(".right-detail strong", formData.board_index_no);
-  // setText("#contact", Contact No: ${formData.contact_no});
-  // setText("#email", Email: ${formData.email_address});
-
-  // if (formData.detailed_address) {
-  //   const addressLines = formData.detailed_address.split(", ");
-  //   setText("#schoolAddressLine1", addressLines.slice(0, 2).join(", "));
-  //   setText("#schoolAddressLine2", addressLines.slice(2).join(", "));
-  // }
-
-  // setText("#tc_No", formData.tcNo);
-  // setText("#tcgrNo", formData.tc_grNo);
-  // setText("#tcStudentName", formData.studentName);
-  // setText("#tcMotherName", formData.motherName);
-  // setText("#tcDOB", formData.dob);
-  // setText("#tcPlaceOfBirth", formData.placeOfBirth);
-  // setText("#tcNationality", formData.nationality);
-  // setText("#tcReligion", formData.religion);
-  // setText("#tcCategory", formData.category);
-  // setText("#tcCaste", formData.caste);
-  // setText("#tcAadharId", formData.aadharId);
-  // setText("#tcLastSchool", formData.lastSchool);
-  // setText("#tcDateOfAdmission", formData.dateOfAdmission);
-  // setText("#tcClassOfAdmission", formData.classOfAdmission);
-  // setText("#tcDateOfLeaving", formData.dateOfLeaving);
-  // setText("#tcStandardLeaving", formData.standardLeaving);
-  // setText("#tcReasonLeaving", formData.reasonLeaving);
-  // setText("#tcProgress", formData.progress);
-  // setText("#tcConduct", formData.conduct);
-  // setText("#tcResult", formData.result);
-  // setText("#tcRemark", formData.remark);
+  // // Update row count for CSS
+  // const rowCount = Object.keys(tcData).length;
+  // const table = document.querySelector(".content-table");
+  // table.style.setProperty("--row-count", rowCount);
 
   const overlay = document.getElementById("previewTCOverlay");
   if (overlay) {
@@ -669,223 +719,30 @@ function populateTCFormData(formData) {
   }
 }
 
-document.getElementById("closePreviewTCOverlay").addEventListener("click", function () {
-  document.getElementById("previewTCOverlay").style.display = "none";
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-  const downloadTCButton = document.getElementById('downloadTC');
-  const tcContainer = document.getElementById('tcContainer');
-  const pageSizeRadios = document.querySelectorAll('input[name="pageSize"]');
-
-  downloadTCButton.addEventListener('click', function() {
-      let selectedPageSize = 'A4'; // Default to A4
-
-      // Get the selected page size
-      pageSizeRadios.forEach(radio => {
-          if (radio.checked) {
-              selectedPageSize = radio.value;
-          }
-      });
-
-      // Apply page size styles
-      applyPageSizeStyles(selectedPageSize);
-
-      // Trigger the print/download process
-      printTC();
-
-      // Reset the page size styles after printing
-      resetPageSizeStyles();
+document
+  .getElementById("closePreviewTCOverlay")
+  .addEventListener("click", function () {
+    document.getElementById("previewTCOverlay").style.display = "none";
   });
 
-  function applyPageSizeStyles(pageSize) {
-      switch (pageSize) {
-          case 'A4':
-              tcContainer.style.width = '210mm'; // A4 width
-              tcContainer.style.height = '297mm'; // A4 height
-              break;
-          case 'Letter':
-              tcContainer.style.width = '8.5in'; // Letter width
-              tcContainer.style.height = '11in'; // Letter height
-              break;
-          case 'Legal':
-              tcContainer.style.width = '8.5in'; // Legal width
-              tcContainer.style.height = '14in'; // Legal height
-              break;
-          default:
-              tcContainer.style.width = '210mm'; // Default to A4
-              tcContainer.style.height = '297mm';
-      }
-  }
 
-  function resetPageSizeStyles() {
-      tcContainer.style.width = ''; // Reset to original width (likely auto or a CSS defined width)
-      tcContainer.style.height = ''; // Reset to original height
-  }
-
-  function printTC() {
-    const originalDisplayStyle = document.body.style.display;
-    document.body.style.display = 'block';
-
-    const printWindow = window.open('', '_blank');
-    printWindow.document.open();
-
-    let pageSize = 'A4';
-    const pageSizeRadios = document.querySelectorAll('input[name="pageSize"]');
-    pageSizeRadios.forEach(radio => {
-        if (radio.checked) {
-            pageSize = radio.value;
-        }
-    });
-
-    let fontSize, padding, containerHeight;
-
-    switch (pageSize) {
-        case 'A4':
-            fontSize = '12pt';
-            padding = '20px';
-            containerHeight = '297mm';
-            break;
-        case 'Letter':
-            fontSize = '11pt';
-            padding = '15px';
-            containerHeight = '279.4mm';
-            break;
-        case 'Legal':
-            fontSize = '11pt'; // Start with a slightly larger font for Legal
-            padding = '25px';
-            containerHeight = '355.6mm';
-            break;
-        default:
-            fontSize = '12pt';
-            padding = '20px';
-            containerHeight = '297mm';
-    }
-
-    printWindow.document.write(`
-        <html>
-            <head>
-                <title>Transfer Certificate</title>
-                <style>
-                    body {
-                        font-family: Arial, sans-serif;
-                        margin: 0;
-                        padding: 0;
-                    }
-                    .tc-design {
-                        margin: 20px auto;
-                        border: 1px solid #ccc;
-                        box-sizing: border-box;
-                        font-size: ${fontSize};
-                        padding: ${padding};
-                        height: ${containerHeight};
-                        overflow: hidden;
-                    }
-                    .tc-header {
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        margin-bottom: 20px;
-                    }
-                    .logo-container {
-                        width: 100px;
-                    }
-                    .school-logo {
-                        max-width: 100%;
-                        height: auto;
-                    }
-                    .school-details {
-                        text-align: center;
-                    }
-                    .tc-table {
-                        width: 100%;
-                        border-collapse: collapse;
-                        margin-bottom: 20px;
-                    }
-                    .tc-table td {
-                        padding: 8px;
-                        border-bottom: 1px solid #eee;
-                    }
-                    .tc-footer {
-                        text-align: center;
-                    }
-                    .overlay{
-                        display:none;
-                    }
-                </style>
-            </head>
-            <body>
-                ${tcContainer.outerHTML}
-            </body>
-        </html>
-    `);
-    printWindow.document.close();
-
-    printWindow.onload = () => {
-        printWindow.focus();
-
-        if (pageSize === 'Legal') {
-            const printContainer = printWindow.document.querySelector('.tc-design');
-            let contentHeight = printContainer.scrollHeight;
-            const availableHeight = 355.6 - (parseFloat(padding) * 2);
-            let currentFontSize = parseFloat(fontSize);
-            const maxFontSize = 16; // Aggressive max font size
-            const originalFontSize = parseFloat(fontSize);
-
-            while (contentHeight < availableHeight && currentFontSize < maxFontSize) {
-                currentFontSize += 0.5;
-                printContainer.style.fontSize = currentFontSize + 'pt';
-                contentHeight = printContainer.scrollHeight;
-            }
-
-            if (contentHeight > availableHeight) {
-                printContainer.style.fontSize = originalFontSize + 'pt';
-
-                // Adjust layout if it still overflows
-                const table = printContainer.querySelector('.tc-table');
-                if (table) {
-                    table.style.fontSize = (originalFontSize - 1) + 'pt';
-                    table.style.lineHeight = '1'; // Reduce line height
-                    table.style.padding = '5px'; // Reduce cell padding
-                }
-
-                const footer = printContainer.querySelector('.tc-footer');
-                if (footer) {
-                    footer.style.fontSize = (originalFontSize - 1) + 'pt';
-                }
-
-                // If still overflow, try reducing global padding and line height
-                if(printContainer.scrollHeight > availableHeight){
-                    printContainer.style.padding = '10px';
-                    printContainer.style.lineHeight = '1';
-                }
-            }
-        }
-
-        printWindow.print();
-        printWindow.onafterprint = () => {
-            printWindow.close();
-            document.body.style.display = originalDisplayStyle;
-        };
-    };
-}
-});
-
-
+  
 function getSchoolLogoUrl(cookieName) {
   const cookies = document.cookie.split(";");
   let schoolName;
 
   for (let cookie of cookies) {
-      const [name, value] = cookie.trim().split("=");
-      if (name === cookieName) {
-          schoolName = decodeURIComponent(value);
-          break;
-      }
+    const [name, value] = cookie.trim().split("=");
+    if (name === cookieName) {
+      schoolName = decodeURIComponent(value);
+      break;
+    }
   }
 
   if (schoolName) {
-      return `../images/logo/${schoolName.toLowerCase().replace(/\s+/g, "_")}.png`;
+    return `../images/logo/${schoolName
+      .toLowerCase()
+      .replace(/\s+/g, "_")}.png`;
   }
   return null;
 }

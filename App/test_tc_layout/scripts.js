@@ -10,6 +10,62 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+function adjustTableFontSize() {
+    const table = document.querySelector('.content-table');
+    if (!table) return;
+
+    const tbody = table.querySelector('tbody');
+    if (!tbody) return;
+
+    const rowCount = parseInt(getComputedStyle(table).getPropertyValue('--row-count')) || 0;
+    if (rowCount === 0) return;
+
+    // Get the height of tc-content (60% of viewport height)
+    const tcContent = document.querySelector('.tc-content');
+    const tcContentHeight = tcContent.getBoundingClientRect().height;
+
+    // Fixed header height (40px as per your CSS)
+    const headerHeight = 40;
+
+    // Calculate ideal row height
+    const availableHeight = tcContentHeight - headerHeight;
+    const idealRowHeight = availableHeight / rowCount;
+
+    // Define minimum acceptable row height (adjustable)
+    const minRowHeight = 20; // Minimum height for readability (adjust as needed)
+
+    // Default font size from your CSS
+    let fontSize = 14; // Starting font size for screen (from .content-table)
+
+    // If row height is below minimum, adjust font size
+    if (idealRowHeight < minRowHeight) {
+        // Calculate how much to scale down font size
+        const scaleFactor = idealRowHeight / minRowHeight;
+        fontSize = Math.max(8, fontSize * scaleFactor); // Minimum font size of 8px
+
+        // Apply font size to all th and td elements
+        const cells = table.querySelectorAll('th, td');
+        cells.forEach(cell => {
+            cell.style.fontSize = `${fontSize}px`;
+        });
+    } else {
+        // Reset to default font size if row height is sufficient
+        const cells = table.querySelectorAll('th, td');
+        cells.forEach(cell => {
+            cell.style.fontSize = `${fontSize}px`; // Default 14px for screen
+        });
+    }
+
+    // For print, override with smaller font size if needed
+    if (window.matchMedia('print').matches) {
+        const printFontSize = Math.min(fontSize, 12); // Cap at 12px for print (from your CSS)
+        const cells = table.querySelectorAll('th, td');
+        cells.forEach(cell => {
+            cell.style.fontSize = `${printFontSize}px`;
+        });
+    }
+}
+
 // Adjust school name font size (single line)
 function adjustSchoolNameFontSize() {
     const container = document.querySelector('.school-name-container');
@@ -155,9 +211,13 @@ function adjustWarningFontSize() {
 
 // Run all adjustments
 function adjustAll() {
+    adjustSchoolNameFontSize();
+    adjustAddressFontSize();
+    adjustAdditionalDetailsFontSize();
     adjustAuthenticityFontSize();
     adjustDateSignatureFontSize();
     adjustWarningFontSize();
+    adjustTableFontSize(); // Add this line
 }
 
 window.addEventListener('load', adjustAll);
