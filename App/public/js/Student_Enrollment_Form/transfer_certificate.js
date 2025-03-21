@@ -673,39 +673,204 @@ document.getElementById("closePreviewTCOverlay").addEventListener("click", funct
   document.getElementById("previewTCOverlay").style.display = "none";
 });
 
-document.getElementById("downloadTC").addEventListener("click", function () {
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF("p", "mm", "a4");
-  const tcContainer = document.getElementById("tcContainer");
+document.addEventListener('DOMContentLoaded', function() {
+  const downloadTCButton = document.getElementById('downloadTC');
+  const tcContainer = document.getElementById('tcContainer');
+  const pageSizeRadios = document.querySelectorAll('input[name="pageSize"]');
 
-  let clonedContainer = tcContainer.cloneNode(true);
-  clonedContainer.style.maxHeight = "none";
-  clonedContainer.style.overflowY = "visible";
-  clonedContainer.style.position = "absolute";
-  clonedContainer.style.left = "-9999px";
+  downloadTCButton.addEventListener('click', function() {
+      let selectedPageSize = 'A4'; // Default to A4
 
-  document.body.appendChild(clonedContainer);
+      // Get the selected page size
+      pageSizeRadios.forEach(radio => {
+          if (radio.checked) {
+              selectedPageSize = radio.value;
+          }
+      });
 
-  html2canvas(clonedContainer, { scale: 2 }).then((canvas) => {
-    const imgData = canvas.toDataURL("image/png");
-    const imgWidth = 190;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      // Apply page size styles
+      applyPageSizeStyles(selectedPageSize);
 
-    pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
-    pdf.save("Transfer_Certificate.pdf");
+      // Trigger the print/download process
+      printTC();
 
-    document.body.removeChild(clonedContainer);
-
-    document.getElementById("previewTCOverlay").style.display = "none";
-
-    Swal.fire({
-      icon: "success",
-      title: "TC Downloaded!",
-      text: "Your Transfer Certificate has been successfully downloaded.",
-      confirmButtonColor: "#007bff",
-    });
+      // Reset the page size styles after printing
+      resetPageSizeStyles();
   });
+
+  function applyPageSizeStyles(pageSize) {
+      switch (pageSize) {
+          case 'A4':
+              tcContainer.style.width = '210mm'; // A4 width
+              tcContainer.style.height = '297mm'; // A4 height
+              break;
+          case 'Letter':
+              tcContainer.style.width = '8.5in'; // Letter width
+              tcContainer.style.height = '11in'; // Letter height
+              break;
+          case 'Legal':
+              tcContainer.style.width = '8.5in'; // Legal width
+              tcContainer.style.height = '14in'; // Legal height
+              break;
+          default:
+              tcContainer.style.width = '210mm'; // Default to A4
+              tcContainer.style.height = '297mm';
+      }
+  }
+
+  function resetPageSizeStyles() {
+      tcContainer.style.width = ''; // Reset to original width (likely auto or a CSS defined width)
+      tcContainer.style.height = ''; // Reset to original height
+  }
+
+  function printTC() {
+    const originalDisplayStyle = document.body.style.display;
+    document.body.style.display = 'block';
+
+    const printWindow = window.open('', '_blank');
+    printWindow.document.open();
+
+    let pageSize = 'A4';
+    const pageSizeRadios = document.querySelectorAll('input[name="pageSize"]');
+    pageSizeRadios.forEach(radio => {
+        if (radio.checked) {
+            pageSize = radio.value;
+        }
+    });
+
+    let fontSize, padding, containerHeight;
+
+    switch (pageSize) {
+        case 'A4':
+            fontSize = '12pt';
+            padding = '20px';
+            containerHeight = '297mm';
+            break;
+        case 'Letter':
+            fontSize = '11pt';
+            padding = '15px';
+            containerHeight = '279.4mm';
+            break;
+        case 'Legal':
+            fontSize = '11pt'; // Start with a slightly larger font for Legal
+            padding = '25px';
+            containerHeight = '355.6mm';
+            break;
+        default:
+            fontSize = '12pt';
+            padding = '20px';
+            containerHeight = '297mm';
+    }
+
+    printWindow.document.write(`
+        <html>
+            <head>
+                <title>Transfer Certificate</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    .tc-design {
+                        margin: 20px auto;
+                        border: 1px solid #ccc;
+                        box-sizing: border-box;
+                        font-size: ${fontSize};
+                        padding: ${padding};
+                        height: ${containerHeight};
+                        overflow: hidden;
+                    }
+                    .tc-header {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 20px;
+                    }
+                    .logo-container {
+                        width: 100px;
+                    }
+                    .school-logo {
+                        max-width: 100%;
+                        height: auto;
+                    }
+                    .school-details {
+                        text-align: center;
+                    }
+                    .tc-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-bottom: 20px;
+                    }
+                    .tc-table td {
+                        padding: 8px;
+                        border-bottom: 1px solid #eee;
+                    }
+                    .tc-footer {
+                        text-align: center;
+                    }
+                    .overlay{
+                        display:none;
+                    }
+                </style>
+            </head>
+            <body>
+                ${tcContainer.outerHTML}
+            </body>
+        </html>
+    `);
+    printWindow.document.close();
+
+    printWindow.onload = () => {
+        printWindow.focus();
+
+        if (pageSize === 'Legal') {
+            const printContainer = printWindow.document.querySelector('.tc-design');
+            let contentHeight = printContainer.scrollHeight;
+            const availableHeight = 355.6 - (parseFloat(padding) * 2);
+            let currentFontSize = parseFloat(fontSize);
+            const maxFontSize = 16; // Aggressive max font size
+            const originalFontSize = parseFloat(fontSize);
+
+            while (contentHeight < availableHeight && currentFontSize < maxFontSize) {
+                currentFontSize += 0.5;
+                printContainer.style.fontSize = currentFontSize + 'pt';
+                contentHeight = printContainer.scrollHeight;
+            }
+
+            if (contentHeight > availableHeight) {
+                printContainer.style.fontSize = originalFontSize + 'pt';
+
+                // Adjust layout if it still overflows
+                const table = printContainer.querySelector('.tc-table');
+                if (table) {
+                    table.style.fontSize = (originalFontSize - 1) + 'pt';
+                    table.style.lineHeight = '1'; // Reduce line height
+                    table.style.padding = '5px'; // Reduce cell padding
+                }
+
+                const footer = printContainer.querySelector('.tc-footer');
+                if (footer) {
+                    footer.style.fontSize = (originalFontSize - 1) + 'pt';
+                }
+
+                // If still overflow, try reducing global padding and line height
+                if(printContainer.scrollHeight > availableHeight){
+                    printContainer.style.padding = '10px';
+                    printContainer.style.lineHeight = '1';
+                }
+            }
+        }
+
+        printWindow.print();
+        printWindow.onafterprint = () => {
+            printWindow.close();
+            document.body.style.display = originalDisplayStyle;
+        };
+    };
+}
 });
+
 
 function getSchoolLogoUrl(cookieName) {
   const cookies = document.cookie.split(";");

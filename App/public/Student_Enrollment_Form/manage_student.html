@@ -235,23 +235,26 @@
                             <div class="form-group">
                                 <input type="text" class="form-control" id="categoryNameInput" placeholder=" ">
                                 <span class="form-control-placeholder">Category</span>
-                                <div id="categorySuggestionsContainer" class="suggestions"></div> <!-- Suggestion container for category -->
+                                <div id="categorySuggestionsContainer" class="suggestions"></div>
+                                <!-- Suggestion container for category -->
                             </div>
                         </div>
-                    
+
                         <div class="form-row">
                             <div class="form-group">
                                 <input type="text" class="form-control" id="classGradeInput" placeholder=" ">
                                 <span class="form-control-placeholder">Grade</span>
-                                <div id="gradeSuggestionsContainer" class="suggestions"></div> <!-- Suggestion container for grade -->
+                                <div id="gradeSuggestionsContainer" class="suggestions"></div>
+                                <!-- Suggestion container for grade -->
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="amountInput" placeholder=" ">
                                 <span class="form-control-placeholder">Amount</span>
-                                <div id="amountSuggestionsContainer" class="suggestions"></div> <!-- Suggestion container for amount -->
+                                <div id="amountSuggestionsContainer" class="suggestions"></div>
+                                <!-- Suggestion container for amount -->
                             </div>
                         </div>
-                    
+
                         <button type="button" class="generate-button" id="addToPackage">
                             <img src="/images/addVendor.gif" alt="Generate TC">
                             <span>Add to Package</span>
@@ -595,101 +598,149 @@
 
 
     <!-- Overlay for TC Preview -->
-    <div id="previewTCOverlay" class="overlay-search">
+    <div id="previewTCOverlay" class="overlay">
         <div class="overlay-content-search">
             <div class="icon-container">
                 <i><img class="topicon" src="/images/preview.gif" alt="Preview Icon"></i>
             </div>
             <button id="closePreviewTCOverlay" class="close-button">&times;</button>
 
-            <h2 class="overlay-search-head">TRANSFER CERTIFICATE PREVIEW</h2>
+            <h2 class="overlay-title">TRANSFER CERTIFICATE PREVIEW</h2>
 
-            <div class="content">
-                <!-- Main container with thick border and margin -->
-                <div id="main-container">
-                    <!-- Dynamic container which size changes based on selected radio button -->
-                    <div id="tc-layout">
-                        <!-- Header container that is 20% height of tc-layout -->
-                        <div id="tc-header">
-                            <div id="logo1-container">
-                                <img src="/images/logo/tarangan_english_school.png" alt="Logo 1">
+            <div id="tcContainer" class="tc-design">
+                <div class="tc-header">
+                    <div class="logo-container">
+                        <img id="schoolLogo" src="logo1.png" alt="School Logo" class="school-logo">
+                    </div>
+
+                    <div class="school-details">
+                        <h2 id="schoolName">TARANGAN ENGLISH SCHOOL</h2>
+                        <p id="schoolAddressLine1"></p>
+                        <p id="schoolAddressLine2"></p>
+
+                        <div class="info-container-detail">
+                            <div class="info-row-detail">
+                                <span class="left-detail">UDISE No: <strong>2706011105</strong></span>
+                                <span class="right-detail">Board Index No: <strong>10.04.059</strong></span>
                             </div>
-                            <div id="school-detail-container">
-                                <div id="school-name" class="school-detail-text">
-                                    TARANGAN ENGLISH SCHOOL
-                                </div>
-                                <div id="school-address" class="school-detail-text">
-                                    Bhausaheb Hiwale Nagar, Dhanaj (Bk) <br>
-                                    Taluka: Karanja (Lad), District: Washim, Pin: 444110
-                                </div>
-                                <div id="school-contact" class="school-detail-text">
-                                    UDISE No: 27060101105 &nbsp;&nbsp;&nbsp;&nbsp; Board Index No: 10.04.059 <br>
-                                    Contact No: 8308474371 &nbsp;&nbsp;&nbsp;Email: tarangan.english.school@gmail.com
-                                </div>
-                                <div id="school-leaving-certificate" class="school-detail-text">
-                                    SCHOOL LEAVING CERTIFICATE
-                                </div>
-                            </div>
-                            <div id="logo2-container">
-                                <img src="/images/logo/tarangan_english_school2.png" alt="Logo 2">
+                            <div class="info-row-detail">
+                                <span class="left-detail" id="contact">Contact No: 8308474371</span>
+                                <span class="right-detail" id="email">Email: tarangan.english.school@gmail.com</span>
                             </div>
                         </div>
-                        <!-- Content container that occupies remaining space -->
-                        <div id="tc-content">
-                            <img id="watermark" src="../public/images/logo/tarangan_english_school.png" alt="Watermark">
-                        </div>
-                        <!-- Footer container that is 20% height of tc-layout -->
-                        <div id="tc-footer">
-                            <div id="authenticity-container" class="footer-section">
-                                Certified that the above information is in accordance with School Admission Register
-                            </div>
-                            <div id="date-sign-container" class="footer-section">
-                                <div class="date-sign-left">
-                                    <div>Date: 01-01-2025</div>
-                                    <div>Place: Dhanaj (BK)</div>
-                                </div>
-                                <div class="date-sign-right">
-                                    Signature
-                                </div>
-                            </div>
-                            <div id="voilation-container" class="footer-section">
-                                No changes shall be made to any entry in this certificate except by the title authority
-                                issuing it. Any infringement of this certificate will be treated as a violation of
-                                school policy and may result in a penalty and legal action as per the applicable rules
-                                and regulations.
-                            </div>
-                        </div>
+
+                        <h3>SCHOOL LEAVING CERTIFICATE</h3>
+                    </div>
+
+                    <div class="logo-container">
+                        <img id="schoolLogo2" src="logo2.png" alt="School Logo" class="school-logo">
                     </div>
                 </div>
-                <!-- Container for radio buttons -->
-                <div class="page-sizes">
-                    <!-- Form containing radio buttons for selecting document type -->
-                    <form>
-                        <label>
-                            <!-- Radio button for A4 size -->
-                            <input type="radio" name="documentType" value="A4" checked>
-                            A4
-                        </label>
-                        <label>
-                            <!-- Radio button for Letter size -->
-                            <input type="radio" name="documentType" value="Letter">
-                            Letter
-                        </label>
-                        <label>
-                            <!-- Radio button for Legal size -->
-                            <input type="radio" name="documentType" value="Legal">
-                            Legal
-                        </label>
-                    </form>
+
+                <table class="tc-table">
+                    <tr>
+                        <td><strong>1. Certificate No:</strong> <span id="tc_No"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. General Register No:</strong> <span id="tcgrNo"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. Student Name:</strong> <span id="tcStudentName"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. Mother's Name:</strong> <span id="tcMotherName"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>5. Date of Birth:</strong> <span id="tcDOB"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>6. Place of Birth:</strong> <span id="tcPlaceOfBirth"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>7. Nationality:</strong> <span id="tcNationality"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>8. Religion:</strong> <span id="tcReligion"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>9. Caste & Sub-Caste:</strong> <span id="tcCategory">(<span
+                                    id="tcCaste"></span>)</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>10. Aadhar ID:</strong> <span id="tcAadharId"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>11. Last School Attended:</strong> <span id="tcLastSchool"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>12. Date of Admission:</strong> <span id="tcDateOfAdmission"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>13. Class of Admission:</strong> <span id="tcClassOfAdmission"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>14. Date of Leaving:</strong> <span id="tcDateOfLeaving"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>15. Standard Leaving:</strong> <span id="tcStandardLeaving"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>16. Reason for Leaving:</strong> <span id="tcReasonLeaving"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>17. Progress:</strong> <span id="tcProgress"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>18. Conduct:</strong> <span id="tcConduct"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>19. Result:</strong> <span id="tcResult"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>20. Remark:</strong> <span id="tcRemark"></span></td>
+                    </tr>
+                </table>
+
+                <div class="tc-footer">
+                    <div class="footer-content">
+                        <p><strong>DATE :</strong> <span id="tcIssueDate">01-01-2025</span></p>
+                        <p class="signature"><strong>Signature</strong></p>
+                    </div>
+                    <p class="notice">
+                        No changes shall be made to any entry in this certificate except by the title authority issuing
+                        it.
+                        Any infringement of this certificate will be treated as a violation of school policy and may
+                        result
+                        in a penalty and legal action as per the applicable rules and regulations.
+                    </p>
+                </div>
+            </div>
+            <!-- <button id="toggleControlPanel" class="toggle-button"></button> -->
+
+            <button type="button" class="generate-button toggle-button" id="toggleControlPanel">
+                <img src="/images/threeDots.gif" alt="Download TC">
+            </button>
+
+            <!-- Control Panel at Bottom Right -->
+            <div id="controlPanel" class="control-panel">
+                <h3>Page Size</h3>
+                <div class="form-row">
+                    <label><input type="radio" name="pageSize" value="A4" checked> A4</label>
+                    <label><input type="radio" name="pageSize" value="Letter"> Letter</label>
+                    <label><input type="radio" name="pageSize" value="Legal"> Legal</label>
+                </div>
+
+                <div class="form-row" style="justify-content: center;">
+
+                    <button type="button" class="generate-button" id="downloadTC">
+                        <img src="/images/printer.gif" alt="Print TC">
+                        <span>Download & Print</span>
+                    </button>
                 </div>
             </div>
 
-            <button id="downloadTC" class="download-button">
-                <img src="/images/download.gif" alt="Download TC">
-            </button>
         </div>
     </div>
-
 
 
 
@@ -934,6 +985,29 @@
         </div>
     </div>
 
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleButton = document.querySelector(".toggle-button");
+            const controlPanel = document.querySelector(".control-panel");
+
+            toggleButton.addEventListener("click", function (event) {
+                event.stopPropagation(); // Prevents click from bubbling up
+                controlPanel.classList.toggle("active");
+                toggleButton.classList.toggle("active");
+            });
+
+            // Hide control panel if clicked outside
+            document.addEventListener("click", function (event) {
+                if (!controlPanel.contains(event.target) && !toggleButton.contains(event.target)) {
+                    controlPanel.classList.remove("active");
+                    toggleButton.classList.remove("active");
+                }
+            });
+        });
+
+
+    </script>
 
 
 
