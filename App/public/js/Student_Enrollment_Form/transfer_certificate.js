@@ -668,6 +668,7 @@ document
       });
 
       populateTCFormData(tcformdata);
+     
     } catch (error) {
       const errorMessage =
         error.json && typeof error.json === "function"
@@ -685,32 +686,18 @@ document
     }
   });
 
+  
 function populateTCFormData(formData) {
-  // const tbody = document.querySelector(".content-table tbody");
-  // if (!tbody) return;
 
-  // // Clear existing rows
-  // tbody.innerHTML = "";
+  const newTCObject = createTCObject(formData);
+  console.log(newTCObject);
+  addRowsToTCTable(newTCObject);
+  updateSchoolDetails(formData);
+  setSchoolLogos(formData);
+  updateDateSignature(formData);
 
-  // // Populate rows from tcData
-  // Object.entries(formData).forEach(([key, value]) => {
-  //   const row = document.createElement("tr");
-  //   const keyCell = document.createElement("td");
-  //   const valueCell = document.createElement("td");
 
-  //   keyCell.textContent = key;
-  //   valueCell.textContent = value;
-
-  //   row.appendChild(keyCell);
-  //   row.appendChild(valueCell);
-  //   tbody.appendChild(row);
-  // });
-
-  // // Update row count for CSS
-  // const rowCount = Object.keys(tcData).length;
-  // const table = document.querySelector(".content-table");
-  // table.style.setProperty("--row-count", rowCount);
-
+ 
   const overlay = document.getElementById("previewTCOverlay");
   if (overlay) {
     overlay.style.display = "flex";
@@ -719,14 +706,199 @@ function populateTCFormData(formData) {
   }
 }
 
+function createTCObject(tcformdata) {
+  return {
+    "CERTIFICATE No": "1", // Hardcoded as per image
+    "GENERAL REGISTER No": tcformdata.tc_grNo || "1618", // Maps to tc_grNo
+    "STUDENT NAME": tcformdata.studentName || "Om Deepak Dafade", // Maps to studentName
+    "MOTHER'S NAME": tcformdata.motherName || "Smita", // Maps to motherName
+    "DATE OF BIRTH": tcformdata.dob || "2009-07-10", // Maps to dob
+    "PLACE OF BIRTH": tcformdata.placeOfBirth || "Amravati", // Maps to placeOfBirth
+    NATIONALITY: tcformdata.nationality || "Indian", // Maps to nationality
+    RELIGION: tcformdata.religion || "Hindu", // Maps to religion
+    "CASTE & SUB-CASTE": tcformdata.category || "OBC", // Maps to category (as per image context)
+    "AADHAR ID": tcformdata.aadharId || "674816054773", // Maps to aadharId
+    "LAST SCHOOL ATTENDED": tcformdata.lastSchool || "JC Highschool", // Maps to lastSchool
+    "DATE OF ADMISSION": tcformdata.dateOfAdmission || "2020-02-23", // Maps to dateOfAdmission
+    "CLASS OF ADMISSION": tcformdata.classOfAdmission || "1st", // Maps to classOfAdmission
+    "DATE OF LEAVING": tcformdata.dateOfLeaving || "2020-03-01", // Maps to dateOfLeaving
+    "STANDARD LEAVING": tcformdata.standardLeaving || "LKG", // Maps to standardLeaving
+    "REASON FOR LEAVING":
+      tcformdata.reasonLeaving || "AT HIS / HER OWN REQUEST", // Maps to reasonLeaving
+    PROGRESS: tcformdata.progress || "Excellent", // Maps to progress
+    CONDUCT: tcformdata.conduct || "Excellent", // Maps to conduct
+    RESULT: tcformdata.result || "Pass", // Maps to result
+    REMARK: tcformdata.remark || "Promoted to Next Class", // Maps to remark
+  };
+}
+
+function addRowsToTCTable(tcObject) {
+  // Find the table's tbody element in the DOM
+  const tbody = document.querySelector('.content-table tbody');
+  
+  // If tbody is not found, log an error and return
+  if (!tbody) {
+    console.error("Table body not found in the DOM. Please ensure the table with class 'content-table' exists.");
+    return;
+  }
+
+  // Clear any existing rows in the tbody (optional, remove if you want to append without clearing)
+  tbody.innerHTML = '';
+
+  // Loop through the object entries to create and append table rows
+  for (const [key, value] of Object.entries(tcObject)) {
+    // Create a new row
+    const row = document.createElement('tr');
+
+    // Create the first cell (for the key)
+    const keyCell = document.createElement('td');
+    keyCell.textContent = key;
+    row.appendChild(keyCell);
+
+    // Create the second cell (for the value)
+    const valueCell = document.createElement('td');
+    valueCell.textContent = value;
+    row.appendChild(valueCell);
+
+    // Append the row to the tbody
+    tbody.appendChild(row);
+  }
+}
+
+function updateSchoolDetails(tcformdata) {
+  // Find the container elements in the DOM
+  const schoolDetailsContainer = document.querySelector('.school-details-container');
+  
+  // If the container isn't found, log an error and return
+  if (!schoolDetailsContainer) {
+    console.error("School details container not found in the DOM. Please ensure the element with class 'school-details-container' exists.");
+    return;
+  }
+
+  // Update School Name
+  const schoolNameElement = schoolDetailsContainer.querySelector('.school-name-container h1');
+  if (schoolNameElement) {
+    schoolNameElement.textContent = tcformdata.schoolName || tcformdata.school_name || "Unknown School";
+  } else {
+    console.warn("School name element not found.");
+  }
+
+  // Update Address
+  const addressElement = schoolDetailsContainer.querySelector('.address-container p');
+  if (addressElement) {
+    addressElement.textContent = tcformdata.detailed_address || "Address not available";
+  } else {
+    console.warn("Address element not found.");
+  }
+
+  // Update UDISE No
+  const udiseElement = schoolDetailsContainer.querySelector('.left-container p:nth-child(1)');
+  if (udiseElement) {
+    udiseElement.textContent = `UDISE No: ${tcformdata.udise_no || "Not available"}`;
+  } else {
+    console.warn("UDISE No element not found.");
+  }
+
+  // Update Contact No
+  const contactElement = schoolDetailsContainer.querySelector('.left-container p:nth-child(2)');
+  if (contactElement) {
+    contactElement.textContent = `Contact No: ${tcformdata.contact_no ? `+91 ${tcformdata.contact_no}` : "Not available"}`;
+  } else {
+    console.warn("Contact No element not found.");
+  }
+
+  // Update Board Index No
+  const boardIndexElement = schoolDetailsContainer.querySelector('.right-container p:nth-child(1)');
+  if (boardIndexElement) {
+    boardIndexElement.textContent = `Board Index No: ${tcformdata.board_index_no || "Not available"}`;
+  } else {
+    console.warn("Board Index No element not found.");
+  }
+
+  // Update Email
+  const emailElement = schoolDetailsContainer.querySelector('.right-container p:nth-child(2)');
+  if (emailElement) {
+    emailElement.textContent = `Email: ${tcformdata.email_address || "Not available"}`;
+  } else {
+    console.warn("Email element not found.");
+  }
+}
+
+function setSchoolLogos(tcformdata) {
+  // Get the school name from tcformdata
+  const schoolName = tcformdata.schoolName || tcformdata.school_name || "demo school";
+
+  // Generate the logo URLs
+  const baseLogoName = schoolName.toLowerCase().replace(/\s+/g, "_");
+  const logo1Url = `/images/logo/${baseLogoName}.png`; // e.g., /images/logo/demo_school.png
+  const logo2Url = `/images/logo/${baseLogoName}2.png`; // e.g., /images/logo/demo_school2.png
+
+  // Find the logo image elements in the DOM
+  const logo1Element = document.querySelector('.logo1-container img');
+  const logo2Element = document.querySelector('.logo2-container img');
+
+  // Update Logo 1
+  if (logo1Element) {
+    logo1Element.src = logo1Url;
+    logo1Element.alt = `${schoolName} Logo 1`; // Update alt text for accessibility
+  } else {
+    console.warn("Logo 1 element not found in the DOM.");
+  }
+
+  // Update Logo 2
+  if (logo2Element) {
+    logo2Element.src = logo2Url;
+    logo2Element.alt = `${schoolName} Logo 2`; // Update alt text for accessibility
+  } else {
+    console.warn("Logo 2 element not found in the DOM.");
+  }
+}
+
+function updateDateSignature(tcformdata) {
+  // Find the date-signature container in the DOM
+  const dateSignatureContainer = document.querySelector('.date-signature-container');
+  
+  // If the container isn't found, log an error and return
+  if (!dateSignatureContainer) {
+    console.error("Date-signature container not found in the DOM. Please ensure the element with class 'date-signature-container' exists.");
+    return;
+  }
+
+  // Update Date
+  const dateElement = dateSignatureContainer.querySelector('.date-container p:nth-child(1)');
+  if (dateElement) {
+    const formattedDate = tcformdata.issueDate ? tcformdata.issueDate.replace(/-/g, '/') : "Not available";
+    dateElement.textContent = `Date: ${formattedDate}`;
+  } else {
+    console.warn("Date element not found.");
+  }
+
+  // Update Place
+  const placeElement = dateSignatureContainer.querySelector('.date-container p:nth-child(2)');
+  if (placeElement) {
+    let place = "Not available";
+    if (tcformdata.detailed_address) {
+      // Split the address by commas and take the second part (Dhanaj Bk)
+      const addressParts = tcformdata.detailed_address.split(',').map(part => part.trim());
+      place = addressParts[1] || "Not available"; // Dhanaj Bk is the second part
+    }
+    placeElement.textContent = `Place: ${place}`;
+  } else {
+    console.warn("Place element not found.");
+  }
+
+  // Signature section remains unchanged as there's no data to update it
+}
+
+
+
+
 document
   .getElementById("closePreviewTCOverlay")
   .addEventListener("click", function () {
     document.getElementById("previewTCOverlay").style.display = "none";
   });
 
-
-  
 function getSchoolLogoUrl(cookieName) {
   const cookies = document.cookie.split(";");
   let schoolName;
