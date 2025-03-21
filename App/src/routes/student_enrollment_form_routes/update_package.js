@@ -203,4 +203,55 @@ router.get('/get-category-grade-amounts', (req, res) => {
     });
 });
 
+
+// Endpoint to update package for selected students
+router.post("/update-package-for-students", (req, res) => {
+    const { section, students, updated_package_details } = req.body;
+
+    // Validate input parameters
+    if (!section || !students || students.length === 0 || !updated_package_details) {
+        return res.status(400).json({ error: "Invalid input parameters" });
+    }
+
+    // Determine the appropriate table based on section
+    let tableName;
+    if (section === "primary") {
+        tableName = "primary_student_details";
+    } else if (section === "pre_primary") {
+        tableName = "pre_primary_student_details";
+    } else {
+        return res.status(400).json({ error: "Invalid section parameter" });
+    }
+
+    // Construct the SQL query for updating packages
+    let query = `
+        UPDATE ${tableName}
+        SET 
+            package_breakup = CASE ${students.map(student => `WHEN student_id = '${student.id}' AND Grno = '${student.grno}' THEN '${updated_package_details.package_breakup}'`).join(" ")}
+            END,
+            total_package = CASE ${students.map(student => `WHEN student_id = '${student.id}' AND Grno = '${student.grno}' THEN '${updated_package_details.total_package}'`).join(" ")}
+            END,
+            current_outstanding = CASE ${students.map(student => `WHEN student_id = '${student.id}' AND Grno = '${student.grno}' THEN '${updated_package_details.current_outstanding}'`).join(" ")}
+            END
+        WHERE (${students.map(student => `(student_id = '${student.id}' AND Grno = '${student.grno}')`).join(" OR ")})
+    `;
+
+    // Execute the query
+    req.connectionPool.query(query, (error, results) => {
+        if (error) {
+            console.error(`Database error: ${error}`);
+            return res.status(500).json({ error: "Database error", details: error });
+        }
+
+        if (results.affectedRows === 0) {
+            console.log("No students found to update.");
+            return res.status(404).json({ message: "No students found to update" });
+        }
+
+        // Return success response and log number of rows updated
+        //console.log(`Packages updated successfully. Number of rows updated: ${results.affectedRows}`);
+        res.json({ message: "Packages updated successfully", rowsUpdated: results.affectedRows });
+    });
+});
+
 module.exports = router;

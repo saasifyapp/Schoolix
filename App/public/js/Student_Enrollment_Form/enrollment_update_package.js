@@ -6,7 +6,8 @@ let divisionsCache = [];
 let divisionsFetchedSection;
 let divisionsFetchedClass;
 
-// Function to display standard suggestions
+//////////*** Function to display standard suggestions*//////////////////////
+
 function displayStandardSuggestions() {
     const standardInput = document.getElementById('update_packagestandard');
     const standardSuggestionsContainer = document.getElementById('update_packagestandardSuggestions');
@@ -37,7 +38,9 @@ function displayStandardSuggestions() {
     }
 }
 
-// Function to filter and display standards
+/**
+ * Function to filter and display standards
+ */
 function filterAndDisplayStandards(query, suggestionsContainer) {
     const uniqueStandards = new Set();
     const filteredStandards = standardsCache.filter(standard => {
@@ -73,26 +76,35 @@ function filterAndDisplayStandards(query, suggestionsContainer) {
             // Clear divisions field when the standard changes
             clearDivisions();
             handleClassOrDivisionInput(); // Call this to filter table when suggestion is selected
+            enableCheckboxesIfNecessary(); // Call to enable checkboxes based on inputs
         });
     });
 }
 
-// Function to show a loading message
+/**
+ * Function to show a loading message
+ */
 function showLoading(container) {
     container.innerHTML = '<div class="suggestion-item loading">Loading...</div>';
 }
 
-// Function to show no results message
+/**
+ * Function to show no results message
+ */
 function showNoResults(container) {
     container.innerHTML = '<div class="suggestion-item no-results">No results found</div>';
 }
 
-// Function to clear the suggestions and fetch new data
+/**
+ * Function to clear the suggestions and fetch new data
+ */
 function handleDropdownChange() {
     const standardSuggestionsContainer = document.getElementById('update_packagestandardSuggestions');
     const standardInput = document.getElementById('update_packagestandard');
     const divisionInput = document.getElementById('update_packagesDivision');
     const searchInput = document.getElementById('update_packagesearchStudentInput');
+    const checkboxes = document.querySelectorAll('.student-checkbox');
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
 
     // Clear search, class, and division inputs
     searchInput.value = '';
@@ -107,9 +119,21 @@ function handleDropdownChange() {
 
     clearDivisions();
     fetchStudentDetails(document.getElementById('dropdown1').value); // Update table based on the dropdown value
+
+    // Clear and disable all checkboxes
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+        checkbox.disabled = true;
+    });
+
+    // Disable the select all checkbox
+    selectAllCheckbox.checked = false;
+    selectAllCheckbox.disabled = true;
 }
 
-// Function to display division suggestions
+/**
+ * Function to display division suggestions
+ */
 function displayDivisionSuggestions() {
     const divisionInput = document.getElementById('update_packagesDivision');
     const divisionSuggestionsContainer = document.getElementById('update_packageDivisionSuggestions');
@@ -143,7 +167,9 @@ function displayDivisionSuggestions() {
     }
 }
 
-// Function to filter and display divisions
+/**
+ * Function to filter and display divisions
+ */
 function filterAndDisplayDivisions(query, suggestionsContainer) {
     const uniqueDivisions = new Set();
     const filteredDivisions = divisionsCache.filter(division => {
@@ -176,11 +202,14 @@ function filterAndDisplayDivisions(query, suggestionsContainer) {
             suggestionsContainer.innerHTML = '';
             suggestionsContainer.style.display = "none";
             handleClassOrDivisionInput(); // Call this to filter table when suggestion is selected
+            enableCheckboxesIfNecessary(); // Call to enable checkboxes based on inputs
         });
     });
 }
 
-// Function to clear the divisions field and its suggestions
+/**
+ * Function to clear the divisions field and its suggestions
+ */
 function clearDivisions() {
     const divisionInput = document.getElementById('update_packagesDivision');
     const divisionSuggestionsContainer = document.getElementById('update_packageDivisionSuggestions');
@@ -193,7 +222,9 @@ function clearDivisions() {
     divisionsCache = [];
 }
 
-// Initialization of standard suggestion box and dropdown change event
+/**
+ * Initialization of standard suggestion box and dropdown change event
+ */
 document.addEventListener("DOMContentLoaded", function () {
     const standardInput = document.getElementById('update_packagestandard');
     const standardSuggestionsContainer = document.getElementById('update_packagestandardSuggestions');
@@ -229,17 +260,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
 /////////////////////// POPULATE PACKAGE UPDATE TABLE //////////////////////
 
- // Function to fetch student details based on section
- function fetchStudentDetails(section) {
+
+
+/**
+ * Function to fetch student details based on section
+ */
+function fetchStudentDetails(section) {
     const updatePackageTableBody = document.getElementById('updatePackageTableBody');
     const selectAllCheckbox = document.getElementById('selectAllCheckbox');
-    
+
     // Fetch the student details from the backend
     fetch(`/get-student-details-for-package-update?section=${section}`)
         .then(response => response.json())
         .then(data => {
             updatePackageTableBody.innerHTML = '';
-            
+
             if (data.length > 0) {
                 data.forEach(student => {
                     const tr = document.createElement('tr');
@@ -248,7 +283,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     const input = document.createElement('input');
                     input.type = 'checkbox';
                     input.classList.add('student-checkbox');
-                    input.addEventListener('change', updateHeaderCheckboxState);
+                    input.disabled = true; // Initially disable the checkbox
+
+                    // Add event listener for checkbox
+                    input.addEventListener('change', function() {
+                        if (this.checked) {
+                            validateReceiptStatusAndCheck(this, student);
+                        }
+                        updateHeaderCheckboxState();
+                    });
                     selectTd.appendChild(input);
 
                     const idTd = document.createElement('td');
@@ -287,13 +330,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 tr.appendChild(td);
                 updatePackageTableBody.appendChild(tr);
             }
+
+            enableCheckboxesIfNecessary(); // Enable checkboxes if necessary
         })
         .catch(error => {
             console.error('Error fetching student details:', error);
         });
 }
 
-// Function to update the header checkbox state
+/**
+ * Function to update the header checkbox state
+ */
 function updateHeaderCheckboxState() {
     const checkboxes = document.querySelectorAll('.student-checkbox');
     const selectAllCheckbox = document.getElementById('selectAllCheckbox');
@@ -309,7 +356,9 @@ function updateHeaderCheckboxState() {
     selectAllCheckbox.checked = anyChecked;
 }
 
-// Function to deselect all checkboxes
+/**
+ * Function to deselect all checkboxes
+ */
 function toggleSelectAll(source) {
     if (!source.checked) {
         const checkboxes = document.querySelectorAll('.student-checkbox');
@@ -337,6 +386,7 @@ function handleSearchInput() {
     document.getElementById('update_packagesDivision').value = '';
 
     filterPackageStudents();
+    enableCheckboxesIfNecessary(); // Enable checkboxes if search input is used
 }
 
 function handleSuggestionClick(event) {
@@ -349,6 +399,7 @@ function handleSuggestionClick(event) {
         }
 
         handleClassOrDivisionInput(); // Call this to filter table when suggestion is selected
+        enableCheckboxesIfNecessary(); // Enable checkboxes if any suggestion is used
     }
 }
 
@@ -357,14 +408,18 @@ function handleClassOrDivisionInput() {
     document.getElementById('update_packagesearchStudentInput').value = '';
 
     filterByClassAndDivision();
+    enableCheckboxesIfNecessary(); // Enable checkboxes if class or division input is used
 }
 
+/**
+ * Function to filter package students based on search input
+ */
 function filterPackageStudents() {
     const searchInput = document.getElementById('update_packagesearchStudentInput').value.toLowerCase();
     const tableRows = document.querySelectorAll('#updatePackageTableBody tr');
-    
+
     let isNumber = !isNaN(searchInput);
-    
+
     tableRows.forEach(row => {
         let cell;
         if (isNumber) {
@@ -372,7 +427,7 @@ function filterPackageStudents() {
         } else {
             cell = row.cells[3]; // Name is in the fourth cell (index 3)
         }
-        
+
         if (cell) {
             const cellText = cell.textContent.toLowerCase();
             if (cellText.includes(searchInput)) {
@@ -384,6 +439,9 @@ function filterPackageStudents() {
     });
 }
 
+/**
+ * Function to filter rows by class and division
+ */
 function filterByClassAndDivision() {
     const classInput = document.getElementById('update_packagestandard').value.toLowerCase();
     const divisionInput = document.getElementById('update_packagesDivision').value.toLowerCase();
@@ -406,20 +464,97 @@ function filterByClassAndDivision() {
     });
 }
 
-// Programmatically set the search input and trigger the filter
+/**
+ * Programmatically set the search input and trigger the filter
+ */
 function setSearchInput(value) {
     document.getElementById('update_packagesearchStudentInput').value = value;
     handleSearchInput();
+    enableCheckboxesIfNecessary(); // Enable checkboxes if search input is used
 }
 
-// Programmatically set class and division inputs and trigger the filter
+/**
+ * Programmatically set class and division inputs and trigger the filter
+ */
 function setClassAndDivision(classValue, divisionValue) {
     document.getElementById('update_packagestandard').value = classValue;
     document.getElementById('update_packagesDivision').value = divisionValue;
     handleClassOrDivisionInput();
+    enableCheckboxesIfNecessary(); // Enable checkboxes if class or division input is used
 }
 
+/**
+ * Function to enable or disable checkboxes based on the inputs
+ */
+function enableCheckboxesIfNecessary() {
+    const searchInput = document.getElementById('update_packagesearchStudentInput').value.trim();
+    const standardInput = document.getElementById('update_packagestandard').value.trim();
+    const divisionInput = document.getElementById('update_packagesDivision').value.trim();
+    const checkboxes = document.querySelectorAll('.student-checkbox');
+
+    const shouldEnable = searchInput || standardInput || divisionInput;
+
+    checkboxes.forEach(checkbox => {
+        checkbox.disabled = !shouldEnable;
+    });
+
+    document.getElementById('selectAllCheckbox').disabled = !shouldEnable;
+}
+
+
+
+/////////////////////////// CHECK RECEIPT STATUS ON EACH SELECTION ////////
+
+/**
+ * Function to validate receipt status and check the checkbox if validation passes
+ */
+function validateReceiptStatusAndCheck(checkbox, student) {
+    const sectionInput = document.getElementById('dropdown1').value.trim();
+    const grNo = student.Grno;
+
+    fetch(`/checkOutstandingAndTotalPackage?section=${sectionInput}&grNo=${grNo}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.error
+                });
+                checkbox.checked = false; // Uncheck if there is an error
+                return;
+            }
+
+            const { current_outstanding, total_package } = data;
+
+            if (data.proceedWithPackageGeneration || current_outstanding === total_package) {
+                checkbox.checked = true; // Check the checkbox if valid
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Cannot proceed',
+                    html: `There is a receipt generated for<br><strong>GR No: ${grNo}</strong><br><strong>Name: ${student.Name}</strong><br><strong>Standard: ${student.ClassDivision}</strong><br><br>Please delete the receipt to edit the package for this specific student.`
+                });
+                checkbox.checked = false; // Uncheck if not valid
+            }
+            updateHeaderCheckboxState(); // Update the header checkbox state
+        })
+        .catch(error => {
+            console.error('Error checking outstanding and total package:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Error checking outstanding and total package.'
+            });
+            checkbox.checked = false; // Uncheck in case of error
+        });
+}
+
+
 ////////////////////////// STORE SELECTED STUDENTS //////////////////
+
+// Define studentForPackageUpdate in a scope accessible by both functions
+let studentForPackageUpdate = [];
 
 function collectSelectedStudents() {
     let classInput = document.getElementById('update_packagestandard').value.toLowerCase();
@@ -439,7 +574,7 @@ function collectSelectedStudents() {
     }
 
     // Clear existing students fetched
-    const studentForPackageUpdate = []; 
+    studentForPackageUpdate = []; 
 
     const tableRows = document.querySelectorAll('#updatePackageTableBody tr');
     let initialClass = null;
@@ -993,4 +1128,126 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Populate the package table on page load
     populatePackageTable(selectedClass);
+});
+
+
+/////////////////////////////// UPDATE PACKAGE //////////////////
+
+function preparePackageUpdateData() {
+    const packageTable = document.getElementById("packageTable").querySelector("tbody");
+    const packageBreakup = [];
+    let totalPackage = 0;
+
+    packageTable.querySelectorAll('tr').forEach(row => {
+        if (!row.classList.contains('total-row')) {
+            const category = row.cells[0].textContent.trim();
+            const amount = parseFloat(row.cells[2].textContent.trim());
+            packageBreakup.push(`${category}: ${amount}`);
+            totalPackage += amount;
+        }
+    });
+
+    const updated_package_details = {
+        package_breakup: packageBreakup.join(', '),
+        total_package: Math.round(totalPackage),
+        current_outstanding: Math.round(totalPackage) // Same value as total_package
+    };
+
+    return updated_package_details;
+}
+
+document.getElementById('updatePackageButton').addEventListener('click', function() {
+    const updated_package_details = preparePackageUpdateData();
+    const section = document.getElementById('dropdown1').value.trim();
+
+    if (studentForPackageUpdate.length === 0) {
+        Swal.fire({
+            title: 'Warning',
+            text: 'No students selected for the package update.',
+            icon: 'warning',
+            confirmButtonText: 'OK'
+        });
+        return; // Exit function if no students are selected
+    }
+
+    // Extract class from first student
+    const formattedClass = studentForPackageUpdate[0].standard.charAt(0).toUpperCase() + studentForPackageUpdate[0].standard.slice(1);
+    const studentCount = studentForPackageUpdate.length;
+
+    Swal.fire({
+        title: 'Are you sure?',
+        html: `Are you sure you want to update the package for <strong>${studentCount}</strong> students of <strong>${formattedClass}</strong> with total amount <strong>${updated_package_details.total_package}</strong>?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, update it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Prepare payload to send to server
+            const payload = {
+                section,
+                students: studentForPackageUpdate,
+                updated_package_details
+            };
+
+            fetch('/update-package-for-students', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error('Error:', data.error);
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.error,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    console.log('Success:', data.message);
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Packages updated successfully',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        // Close the overlay
+                        document.getElementById('updateStudentPackageOverlay').style.display = 'none';
+
+                        // Clear the input fields
+                        document.getElementById('update_packagestandard').value = '';
+                        document.getElementById('update_packagesDivision').value = '';
+                        document.getElementById('update_packagesearchStudentInput').value = '';
+
+                        // Clear any selected checkboxes
+                        document.querySelectorAll('.student-checkbox').forEach(checkbox => {
+                            checkbox.checked = false;
+                        });
+
+                        // Uncheck the selectAllCheckbox
+                        const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+                        if (selectAllCheckbox) {
+                            selectAllCheckbox.checked = false;
+                        }
+
+                        // Recall the fetchStudentDetails to refresh the main table data
+                        fetchStudentDetails(section);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while updating packages',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            });
+        }
+    });
 });
