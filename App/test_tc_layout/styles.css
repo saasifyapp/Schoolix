@@ -26,7 +26,9 @@ body {
 .logo1-container {
     width: 20%;
     background-color: red;
-    text-align: center;
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
 }
 
 .school-details-container {
@@ -38,20 +40,54 @@ body {
 .logo2-container {
     width: 20%;
     background-color: red;
-    text-align: center;
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
 }
 
 .logo {
-    width: 100%; /* Make the logo responsive */
-    height: auto;
+    max-width: 100px; /* Increased from 80px */
+    max-height: 100px; /* Increased from 80px */
+    width: auto; /* Maintain aspect ratio */
+    height: auto; /* Maintain aspect ratio */
 }
 
 .tc-content {
     height: 60%; /* Default screen content height */
-    text-align: center;
     background-color: yellow;
-    padding: 10px;
+    padding: 0; /* Remove padding to ensure table touches edges */
     margin: 0; /* Ensure no margin within content */
+    display: flex; /* Use flexbox to control table height */
+    flex-direction: column; /* Stack children vertically */
+    overflow-y: auto; /* Allow scrolling on screen if needed */
+}
+
+.content-table {
+    width: 100%; /* Take full width of the container */
+    height: 100%; /* Take full height of the parent (.tc-content) */
+    border-collapse: collapse; /* Remove gaps between cells */
+    table-layout: fixed; /* Ensure consistent column widths */
+    font-size: 14px; /* Adjust font size for readability */
+}
+
+.content-table th, .content-table td {
+    border: 1px solid #333; /* Add borders to table cells */
+    padding: 8px; /* Add padding for readability */
+    text-align: left; /* Align text to the left */
+}
+
+.content-table th {
+    background-color: #f2f2f2; /* Light gray background for header */
+    font-weight: bold;
+    height: 40px; /* Fixed height for header row */
+}
+
+.content-table tbody tr {
+    height: calc((100% - 40px) / var(--row-count)); /* Dynamically calculate row height */
+}
+
+.content-table tr:nth-child(even) {
+    background-color: #f9f9f9; /* Light gray for even rows */
 }
 
 .footer {
@@ -133,6 +169,45 @@ body {
     .warning-container {
         background-color: #add8e6; /* Light blue color for third row */
     }
+
+    .tc-content {
+        overflow-y: visible; /* Disable scrolling for print */
+        height: 60%; /* Maintain height for print */
+        padding: 0;
+    }
+
+    .content-table {
+        height: 100%; /* Ensure table takes full height in print */
+        font-size: 12px; /* Slightly smaller font for print */
+    }
+
+    .content-table th, .content-table td {
+        padding: 5px; /* Reduce padding for print */
+    }
+
+    .content-table th {
+        height: 40px; /* Fixed height for header in print */
+    }
+
+    .content-table tbody tr {
+        height: calc((100% - 40px) / var(--row-count)); /* Maintain dynamic row height in print */
+    }
+
+    
+    /* Ensure logo containers remain centered in print */
+    .logo1-container, .logo2-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Inside the @media print section */
+    .logo {
+    max-width: 100px; /* Increased from 80px */
+    max-height: 100px;
+    width: auto;
+    height: auto;
+}
 
     /* Legal Size */
     body.Legal .header {
