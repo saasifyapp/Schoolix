@@ -1,82 +1,74 @@
 function printContent() {
-    window.print();
+    if (document.readyState === "complete") {
+        console.log("Running adjustAll before print");
+        adjustAll();
+        setTimeout(() => {
+            document.body.offsetHeight;
+            adjustAll();
+            window.print();
+        }, 200);
+    } else {
+        window.addEventListener("load", () => {
+            console.log("Running adjustAll before print (after DOM load)");
+            adjustAll();
+            setTimeout(() => {
+                document.body.offsetHeight;
+                adjustAll();
+                window.print();
+            }, 200);
+        });
+    }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     const table = document.querySelector(".content-table");
-    if (table) { // Check if table exists
+    if (table) {
         const rowCount = table.querySelectorAll("tbody tr").length;
         table.style.setProperty("--row-count", rowCount);
     }
 });
 
-// Add this new function
 function adjustTableFontSize() {
-    // const table = document.querySelector('.content-table');
-    // if (!table) return;
+    const table = document.querySelector(".content-table");
+    if (!table) return;
+    const cells = table.querySelectorAll("td, th");
+    if (cells.length === 0) return;
 
-    // const tbody = table.querySelector('tbody');
-    // if (!tbody) return;
+    cells.forEach((cell) => {
+        const containerWidth = cell.getBoundingClientRect().width;
+        let fontSize = 14;
+        cell.style.fontSize = `${fontSize}px`;
 
-    // const rowCount = parseInt(getComputedStyle(table).getPropertyValue('--row-count')) || 0;
-    // if (rowCount === 0) return;
+        while (cell.scrollWidth > containerWidth && fontSize > 8) {
+            fontSize -= 0.5;
+            cell.style.fontSize = `${fontSize}px`;
+        }
 
-    // // Get the height of tc-content (60% of viewport height)
-    // const tcContent = document.querySelector('.tc-content');
-    // const tcContentHeight = tcContent.getBoundingClientRect().height;
+        if (cell.scrollWidth > containerWidth) {
+            fontSize -= 1;
+        }
 
-    // // Fixed header height (40px as per your CSS)
-    // const headerHeight = 40;
+        const minFontSize = 12;
+        const adjustedFontSize = Math.max(fontSize, minFontSize);
+        cell.style.fontSize = `${adjustedFontSize}px`;
 
-    // // Calculate ideal row height
-    // const availableHeight = tcContentHeight - headerHeight;
-    // const idealRowHeight = availableHeight / rowCount;
-
-    // // Define minimum acceptable row height (adjustable)
-    // const minRowHeight = 20; // Minimum height for readability (adjust as needed)
-
-    // // Default font size from your CSS
-    // let fontSize = 14; // Starting font size for screen (from .content-table)
-
-    // // If row height is below minimum, adjust font size
-    // if (idealRowHeight < minRowHeight) {
-    //     // Calculate how much to scale down font size
-    //     const scaleFactor = idealRowHeight / minRowHeight;
-    //     fontSize = Math.max(8, fontSize * scaleFactor); // Minimum font size of 8px
-
-    //     // Apply font size to all th and td elements
-    //     const cells = table.querySelectorAll('th, td');
-    //     cells.forEach(cell => {
-    //         cell.style.fontSize = `${fontSize}px`;
-    //     });
-    // } else {
-    //     // Reset to default font size if row height is sufficient
-    //     const cells = table.querySelectorAll('th, td');
-    //     cells.forEach(cell => {
-    //         cell.style.fontSize = `${fontSize}px`; // Default 14px for screen
-    //     });
-    // }
-
-    // // For print, override with smaller font size if needed
-    // if (window.matchMedia('print').matches) {
-    //     const printFontSize = Math.min(fontSize, 12); // Cap at 12px for print (from your CSS)
-    //     const cells = table.querySelectorAll('th, td');
-    //     cells.forEach(cell => {
-    //         cell.style.fontSize = `${printFontSize}px`;
-    //     });
-    // }
+        if (window.matchMedia("print").matches) {
+            const finalFontSize = Math.min(adjustedFontSize, 14);
+            cell.style.fontSize = `${finalFontSize}px !important`;
+            console.log("Print Font Size (Table Cell):", finalFontSize);
+        }
+    });
 }
 
-// Adjust school name font size (single line)
 function adjustSchoolNameFontSize() {
-    const container = document.querySelector('.school-name-container');
-    if (!container) return; // Exit if container not found
-    const heading = container.querySelector('h1');
-    if (!heading) return; // Exit if heading not found
+    const container = document.querySelector(".school-name-container");
+    if (!container) return;
+    const heading = container.querySelector("h1");
+    if (!heading) return;
     const containerWidth = container.getBoundingClientRect().width;
-    let fontSize = 24;
+    let fontSize = 30;
     heading.style.fontSize = `${fontSize}px`;
-    heading.style.overflow = 'visible';
+    heading.style.overflow = "visible";
 
     while (heading.scrollWidth > containerWidth && fontSize > 10) {
         fontSize -= 0.5;
@@ -84,49 +76,76 @@ function adjustSchoolNameFontSize() {
     }
 
     if (heading.scrollWidth > containerWidth) {
-        heading.style.fontSize = `${fontSize - 1}px`;
+        fontSize -= 1;
+    }
+
+    const minFontSize = 24;
+    const adjustedFontSize = Math.max(fontSize, minFontSize);
+    heading.style.fontSize = `${adjustedFontSize}px`;
+
+    if (window.matchMedia("print").matches) {
+        const finalFontSize = Math.min(adjustedFontSize, 30);
+        heading.style.fontSize = `${finalFontSize}px !important`;
+        console.log("Print Font Size (School Name):", finalFontSize);
     }
 }
 
-// Adjust address font size (two lines with <br>)
-function adjustAddressFontSize() {
-    const container = document.querySelector('.address-container');
-    if (!container) return; // Exit if container not found
-    const address = container.querySelector('p');
-    if (!address) return; // Exit if address not found
-    const containerWidth = container.getBoundingClientRect().width;
-    let fontSize = 16;
-    address.style.fontSize = `${fontSize}px`;
-    address.style.overflow = 'hidden';
+function adjustAddressAndAdditionalDetailsFontSize() {
+    const addressContainer = document.querySelector(".address-container");
+    const address = addressContainer ? addressContainer.querySelector("p") : null;
+    const additionalDetailsContainers = [
+        document.querySelectorAll(".left-container p"),
+        document.querySelectorAll(".right-container p"),
+    ]
+        .flat()
+        .filter((text) => text !== null && text !== undefined);
 
-    const lineHeight = parseFloat(getComputedStyle(address).lineHeight) || 1.2 * fontSize;
-    const maxHeight = lineHeight * 2;
+    if (!address && additionalDetailsContainers.length === 0) return;
 
-    while ((address.scrollWidth > containerWidth || address.scrollHeight > maxHeight) && fontSize > 8) {
-        fontSize -= 0.5;
+    let smallestFontSize = 16;
+
+    if (address && addressContainer) {
+        const containerWidth = addressContainer.getBoundingClientRect().width;
+        let fontSize = 16;
         address.style.fontSize = `${fontSize}px`;
+        address.style.overflow = "hidden";
+
+        const computedStyle = getComputedStyle(address);
+        const lineHeight = parseFloat(computedStyle.lineHeight) || 1.4 * fontSize;
+        const maxHeight = lineHeight * 2.2;
+
+        console.log("Address - Font Size:", fontSize);
+        console.log("Address - Line Height:", lineHeight);
+        console.log("Address - Max Height:", maxHeight);
+        console.log("Address - Scroll Height:", address.scrollHeight);
+        console.log("Address - Scroll Width:", address.scrollWidth);
+        console.log("Address - Container Width:", containerWidth);
+
+        while (address.scrollWidth > containerWidth && fontSize > 8) {
+            fontSize -= 0.5;
+            address.style.fontSize = `${fontSize}px`;
+        }
+
+        if (address.scrollHeight > maxHeight * 1.2 && fontSize > 8) {
+            while (address.scrollHeight > maxHeight && fontSize > 8) {
+                fontSize -= 0.5;
+                address.style.fontSize = `${fontSize}px`;
+            }
+        }
+
+        if (address.scrollWidth > containerWidth || address.scrollHeight > maxHeight) {
+            fontSize -= 1;
+        }
+
+        smallestFontSize = Math.min(smallestFontSize, fontSize);
     }
 
-    if (address.scrollWidth > containerWidth || address.scrollHeight > maxHeight) {
-        address.style.fontSize = `${fontSize - 1}px`;
-    }
-}
-
-// Adjust additional details font size (one line per <p>)
-function adjustAdditionalDetailsFontSize() {
-    const containers = [
-        document.querySelectorAll('.left-container p'),
-        document.querySelectorAll('.right-container p')
-    ].flat();
-
-    if (containers.length === 0) return; // Exit if no <p> elements found
-
-    containers.forEach(text => {
-        if (!text || !text.parentElement) return; // Skip if text or parent is undefined
+    additionalDetailsContainers.forEach((text) => {
+        if (!text || !text.parentElement) return;
         const containerWidth = text.parentElement.getBoundingClientRect().width;
-        let fontSize = 14;
+        let fontSize = 16;
         text.style.fontSize = `${fontSize}px`;
-        text.style.overflow = 'hidden';
+        text.style.overflow = "hidden";
 
         while (text.scrollWidth > containerWidth && fontSize > 8) {
             fontSize -= 0.5;
@@ -134,20 +153,77 @@ function adjustAdditionalDetailsFontSize() {
         }
 
         if (text.scrollWidth > containerWidth) {
-            text.style.fontSize = `${fontSize - 1}px`;
+            fontSize -= 1;
+        }
+
+        smallestFontSize = Math.min(smallestFontSize, fontSize);
+    });
+
+    const minFontSize = 14;
+    const adjustedFontSize = Math.max(smallestFontSize, minFontSize);
+
+    if (address) {
+        address.style.fontSize = `${adjustedFontSize}px`;
+    }
+    additionalDetailsContainers.forEach((text) => {
+        if (text && text.style) {
+            text.style.fontSize = `${adjustedFontSize}px`;
         }
     });
+
+    if (window.matchMedia("print").matches) {
+        const finalFontSize = Math.min(adjustedFontSize, 16);
+        console.log("Print Font Size (Address & Additional Details):", finalFontSize);
+        if (address) {
+            address.style.fontSize = `${finalFontSize}px !important`;
+        }
+        additionalDetailsContainers.forEach((text) => {
+            if (text && text.style) {
+                text.style.fontSize = `${finalFontSize}px !important`;
+            }
+        });
+    }
+}
+
+function adjustCertificateTitleFontSize() {
+    const container = document.querySelector(".certificate-title-container");
+    if (!container) return;
+    const heading = container.querySelector("h2");
+    if (!heading) return;
+    const containerWidth = container.getBoundingClientRect().width;
+    let fontSize = window.matchMedia("print").matches ? 24 : 24;
+    heading.style.fontSize = `${fontSize}px`;
+    heading.style.overflow = "visible";
+
+    while (heading.scrollWidth > containerWidth && fontSize > 10) {
+        fontSize -= 0.5;
+        heading.style.fontSize = `${fontSize}px`;
+    }
+
+    if (heading.scrollWidth > containerWidth) {
+        fontSize -= 1;
+    }
+
+    const minFontSize = 20;
+    const adjustedFontSize = Math.max(fontSize, minFontSize);
+    heading.style.fontSize = `${adjustedFontSize}px`;
+
+    if (window.matchMedia("print").matches) {
+        const finalFontSize = Math.min(adjustedFontSize, 24);
+        heading.style.fontSize = `${finalFontSize}px !important`;
+        console.log("Print Font Size (Certificate Title):", finalFontSize);
+    }
 }
 
 function adjustAuthenticityFontSize() {
-    const container = document.querySelector('.authenticity-container');
+    const container = document.querySelector(".authenticity-container");
     if (!container) return;
-    const text = container.querySelector('p');
+    const text = container.querySelector("p");
     if (!text) return;
     const containerWidth = container.getBoundingClientRect().width;
-    let fontSize = 16;
+    let fontSize = window.matchMedia("print").matches ? 16 : 16;
     text.style.fontSize = `${fontSize}px`;
-    text.style.overflow = 'hidden';
+    text.style.overflow = "hidden";
 
     while (text.scrollWidth > containerWidth && fontSize > 8) {
         fontSize -= 0.5;
@@ -155,25 +231,34 @@ function adjustAuthenticityFontSize() {
     }
 
     if (text.scrollWidth > containerWidth) {
-        text.style.fontSize = `${fontSize - 1}px`;
+        fontSize -= 1;
+    }
+
+    const minFontSize = 14;
+    const adjustedFontSize = Math.max(fontSize, minFontSize);
+    text.style.fontSize = `${adjustedFontSize}px`;
+
+    if (window.matchMedia("print").matches) {
+        const finalFontSize = Math.min(adjustedFontSize, 16);
+        text.style.fontSize = `${finalFontSize}px !important`;
+        console.log("Print Font Size (Authenticity):", finalFontSize);
     }
 }
 
-// Adjust date-signature font size (one line per <p>)
 function adjustDateSignatureFontSize() {
     const containers = [
-        document.querySelectorAll('.date-container p'),
-        document.querySelectorAll('.signature-container p')
+        document.querySelectorAll(".date-container p"),
+        document.querySelectorAll(".signature-container p"),
     ].flat();
 
     if (containers.length === 0) return;
 
-    containers.forEach(text => {
+    containers.forEach((text) => {
         if (!text || !text.parentElement) return;
         const containerWidth = text.parentElement.getBoundingClientRect().width;
-        let fontSize = 14;
+        let fontSize = window.matchMedia("print").matches ? 14 : 14;
         text.style.fontSize = `${fontSize}px`;
-        text.style.overflow = 'hidden';
+        text.style.overflow = "hidden";
 
         while (text.scrollWidth > containerWidth && fontSize > 8) {
             fontSize -= 0.5;
@@ -181,53 +266,85 @@ function adjustDateSignatureFontSize() {
         }
 
         if (text.scrollWidth > containerWidth) {
-            text.style.fontSize = `${fontSize - 1}px`;
+            fontSize -= 1;
+        }
+
+        const minFontSize = 12;
+        const adjustedFontSize = Math.max(fontSize, minFontSize);
+        text.style.fontSize = `${adjustedFontSize}px`;
+
+        if (window.matchMedia("print").matches) {
+            const finalFontSize = Math.min(adjustedFontSize, 14);
+            text.style.fontSize = `${finalFontSize}px !important`;
+            console.log("Print Font Size (Date/Signature):", finalFontSize);
         }
     });
 }
 
-// Adjust warning text font size (two lines with <br>)
 function adjustWarningFontSize() {
-    const container = document.querySelector('.warning-container');
+    const container = document.querySelector(".warning-container");
     if (!container) return;
-    const text = container.querySelector('p');
+    const text = container.querySelector("p");
     if (!text) return;
     const containerWidth = container.getBoundingClientRect().width;
-    let fontSize = 14;
+    let fontSize = window.matchMedia("print").matches ? 14 : 14;
     text.style.fontSize = `${fontSize}px`;
-    text.style.overflow = 'hidden';
+    text.style.overflow = "hidden";
 
-    const lineHeight = parseFloat(getComputedStyle(text).lineHeight) || 1.2 * fontSize;
-    const maxHeight = lineHeight * 2;
+    const computedStyle = getComputedStyle(text);
+    const lineHeight = parseFloat(computedStyle.lineHeight) || 1.2 * fontSize;
+    const maxHeight = lineHeight * 2.2;
 
-    while ((text.scrollWidth > containerWidth || text.scrollHeight > maxHeight) && fontSize > 8) {
+    console.log("Warning - Font Size:", fontSize);
+    console.log("Warning - Line Height:", lineHeight);
+    console.log("Warning - Max Height:", maxHeight);
+    console.log("Warning - Scroll Height:", text.scrollHeight);
+
+    while (text.scrollWidth > containerWidth && fontSize > 8) {
         fontSize -= 0.5;
         text.style.fontSize = `${fontSize}px`;
     }
 
+    if (text.scrollHeight > maxHeight * 1.2 && fontSize > 8) {
+        while (text.scrollHeight > maxHeight && fontSize > 8) {
+            fontSize -= 0.5;
+            text.style.fontSize = `${fontSize}px`;
+        }
+    }
+
     if (text.scrollWidth > containerWidth || text.scrollHeight > maxHeight) {
-        text.style.fontSize = `${fontSize - 1}px`;
+        fontSize -= 1;
+    }
+
+    const minFontSize = 12;
+    const adjustedFontSize = Math.max(fontSize, minFontSize);
+    text.style.fontSize = `${adjustedFontSize}px`;
+
+    if (window.matchMedia("print").matches) {
+        const finalFontSize = Math.min(adjustedFontSize, 14);
+        text.style.fontSize = `${finalFontSize}px !important`;
+        console.log("Print Font Size (Warning):", finalFontSize);
     }
 }
 
-// Run all adjustments
 function adjustAll() {
+    document.body.offsetHeight;
     adjustSchoolNameFontSize();
-    adjustAddressFontSize();
-    adjustAdditionalDetailsFontSize();
+    adjustAddressAndAdditionalDetailsFontSize();
+    adjustCertificateTitleFontSize();
     adjustAuthenticityFontSize();
     adjustDateSignatureFontSize();
     adjustWarningFontSize();
-    adjustTableFontSize(); // Add this line
+    adjustTableFontSize();
 }
 
-window.addEventListener('load', adjustAll);
-window.addEventListener('resize', adjustAll);
-window.addEventListener('beforeprint', adjustAll);
-window.addEventListener('afterprint', adjustAll);
+window.addEventListener("load", adjustAll);
+window.addEventListener("resize", adjustAll);
+window.addEventListener("beforeprint", adjustAll);
+window.addEventListener("afterprint", adjustAll);
 
-const printMedia = window.matchMedia('print');
-printMedia.addEventListener('change', (e) => {
+const printMedia = window.matchMedia("print");
+printMedia.addListener((e) => {
     if (e.matches) {
         adjustAll();
     } else {

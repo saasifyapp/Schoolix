@@ -1,5 +1,5 @@
 /* Default screen styling */
-body {
+.overlay-content-search {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -8,7 +8,7 @@ body {
     color: #333;
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100vh;   
 }
 
 .header {
@@ -26,27 +26,25 @@ body {
 }
 
 .logo1-container {
-    width: 20%;
-    background-color: red;
+    width: 20%;  
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .school-details-container {
-    width: 60%;
-    background-color: blue;
+    width: 60%;   
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
+
 .school-name-container {
     width: 100%;
     text-align: center;
     max-height: 33.33%;
-    /* Adjusted for three containers */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -55,10 +53,11 @@ body {
 .school-name-container h1 {
     margin: 0;
     white-space: nowrap;
-    font-size: 24px;
-    /* Default, overridden by JS */
+    font-size: 24px; /* Adjusted by JS */
+    max-width: 100%;
+    font-family: "Times New Roman", Times, serif; /* Matching the font */
+    color: #5A5A5A; /* Matching the gray color */
 }
-
 .address-container {
     width: 100%;
     text-align: center;
@@ -105,8 +104,7 @@ body {
 }
 
 .logo2-container {
-    width: 20%;
-    background-color: red;
+    width: 20%; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -121,9 +119,8 @@ body {
 
 .tc-content {
     height: 60%;
-    /* Default screen content height */
-    background-color: yellow;
-    padding: 0;
+    /* Default screen content height */  
+    padding: 0px 10px;
     /* Remove padding to ensure table touches edges */
     margin: 0;
     /* Ensure no margin within content */
@@ -277,8 +274,7 @@ body {
     }
 
     .logo1-container {
-        width: 20%;
-        background-color: red;
+        width: 20%;      
         display: flex;
         justify-content: center;
         align-items: center;
@@ -286,8 +282,7 @@ body {
     }
 
     .school-details-container {
-        width: 60%;
-        background-color: blue;
+        width: 60%;       
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -302,12 +297,14 @@ body {
         justify-content: center;
         align-items: center;
     }
-
+    
     .school-name-container h1 {
         margin: 0;
         white-space: nowrap;
         font-size: 24px; /* Adjusted by JS */
         max-width: 100%;
+        font-family: "Times New Roman", Times, serif; /* Matching the font */
+        color: #5A5A5A; /* Matching the gray color */
     }
 
     .address-container {
@@ -351,8 +348,7 @@ body {
     }
 
     .logo2-container {
-        width: 20%;
-        background-color: red;
+        width: 20%;      
         display: flex;
         justify-content: center;
         align-items: center;
@@ -370,7 +366,7 @@ body {
         /* Add uniform 5mm margin on all sides */
     }
 
-    body {
+    .overlay-content-search {
         margin: 0;
         /* Remove margin for print */
         padding: 0;
@@ -386,7 +382,6 @@ body {
         border: 2mm solid black;
         /* Apply border to body */
     }
-
 
     .footer {
         height: auto; /* Allow natural height for print */
@@ -465,7 +460,7 @@ body {
         /* Disable scrolling for print */
         height: 60%;
         /* Maintain height for print */
-        padding: 0;
+        padding: 0px 10px;
     }
 
     .content-table {

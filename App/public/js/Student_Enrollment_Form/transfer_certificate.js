@@ -668,7 +668,6 @@ document
       });
 
       populateTCFormData(tcformdata);
-     
     } catch (error) {
       const errorMessage =
         error.json && typeof error.json === "function"
@@ -686,9 +685,7 @@ document
     }
   });
 
-  
 function populateTCFormData(formData) {
-
   const newTCObject = createTCObject(formData);
   console.log(newTCObject);
   addRowsToTCTable(newTCObject);
@@ -696,8 +693,6 @@ function populateTCFormData(formData) {
   setSchoolLogos(formData);
   updateDateSignature(formData);
 
-
- 
   const overlay = document.getElementById("previewTCOverlay");
   if (overlay) {
     overlay.style.display = "flex";
@@ -734,29 +729,31 @@ function createTCObject(tcformdata) {
 
 function addRowsToTCTable(tcObject) {
   // Find the table's tbody element in the DOM
-  const tbody = document.querySelector('.content-table tbody');
-  
+  const tbody = document.querySelector(".content-table tbody");
+
   // If tbody is not found, log an error and return
   if (!tbody) {
-    console.error("Table body not found in the DOM. Please ensure the table with class 'content-table' exists.");
+    console.error(
+      "Table body not found in the DOM. Please ensure the table with class 'content-table' exists."
+    );
     return;
   }
 
   // Clear any existing rows in the tbody (optional, remove if you want to append without clearing)
-  tbody.innerHTML = '';
+  tbody.innerHTML = "";
 
   // Loop through the object entries to create and append table rows
   for (const [key, value] of Object.entries(tcObject)) {
     // Create a new row
-    const row = document.createElement('tr');
+    const row = document.createElement("tr");
 
     // Create the first cell (for the key)
-    const keyCell = document.createElement('td');
+    const keyCell = document.createElement("td");
     keyCell.textContent = key;
     row.appendChild(keyCell);
 
     // Create the second cell (for the value)
-    const valueCell = document.createElement('td');
+    const valueCell = document.createElement("td");
     valueCell.textContent = value;
     row.appendChild(valueCell);
 
@@ -767,58 +764,110 @@ function addRowsToTCTable(tcObject) {
 
 function updateSchoolDetails(tcformdata) {
   // Find the container elements in the DOM
-  const schoolDetailsContainer = document.querySelector('.school-details-container');
-  
+  const schoolDetailsContainer = document.querySelector(
+    ".school-details-container"
+  );
+
   // If the container isn't found, log an error and return
   if (!schoolDetailsContainer) {
-    console.error("School details container not found in the DOM. Please ensure the element with class 'school-details-container' exists.");
+    console.error(
+      "School details container not found in the DOM. Please ensure the element with class 'school-details-container' exists."
+    );
     return;
   }
 
   // Update School Name
-  const schoolNameElement = schoolDetailsContainer.querySelector('.school-name-container h1');
+  const schoolNameElement = schoolDetailsContainer.querySelector(
+    ".school-name-container h1"
+  );
   if (schoolNameElement) {
-    schoolNameElement.textContent = tcformdata.schoolName || tcformdata.school_name || "Unknown School";
+    schoolNameElement.textContent =
+      tcformdata.schoolName || tcformdata.school_name || "Unknown School";
   } else {
     console.warn("School name element not found.");
   }
 
   // Update Address
-  const addressElement = schoolDetailsContainer.querySelector('.address-container p');
+  const addressElement = schoolDetailsContainer.querySelector(
+    ".address-container p"
+  );
   if (addressElement) {
-    addressElement.textContent = tcformdata.detailed_address || "Address not available";
+    const address = tcformdata.detailed_address || "Address not available";
+
+    let firstLine = address;
+    let secondLine = "";
+
+    const parts = address.split(",").map((part) => part.trim());
+    const totalLength = address.length;
+    let splitIndex = 0;
+    let currentLength = 0;
+
+    for (let i = 0; i < parts.length; i++) {
+      currentLength += parts[i].length + 1;
+      if (currentLength >= totalLength / 2) {
+        splitIndex = i;
+        break;
+      }
+    }
+
+    if (splitIndex > 0 && splitIndex < parts.length - 1) {
+      firstLine = parts.slice(0, splitIndex + 1).join(", ");
+      secondLine = parts.slice(splitIndex + 1).join(", ");
+    } else {
+      const words = address.split(" ");
+      const midPoint = Math.ceil(words.length / 2);
+      firstLine = words.slice(0, midPoint).join(" ");
+      secondLine = words.slice(midPoint).join(" ");
+    }
+
+    addressElement.innerHTML = `${firstLine}<br>${secondLine}`;
   } else {
     console.warn("Address element not found.");
   }
-
   // Update UDISE No
-  const udiseElement = schoolDetailsContainer.querySelector('.left-container p:nth-child(1)');
+  const udiseElement = schoolDetailsContainer.querySelector(
+    ".left-container p:nth-child(1)"
+  );
   if (udiseElement) {
-    udiseElement.textContent = `UDISE No: ${tcformdata.udise_no || "Not available"}`;
+    udiseElement.textContent = `UDISE No: ${
+      tcformdata.udise_no || "Not available"
+    }`;
   } else {
     console.warn("UDISE No element not found.");
   }
 
   // Update Contact No
-  const contactElement = schoolDetailsContainer.querySelector('.left-container p:nth-child(2)');
+  const contactElement = schoolDetailsContainer.querySelector(
+    ".left-container p:nth-child(2)"
+  );
   if (contactElement) {
-    contactElement.textContent = `Contact No: ${tcformdata.contact_no ? `+91 ${tcformdata.contact_no}` : "Not available"}`;
+    contactElement.textContent = `Contact No: ${
+      tcformdata.contact_no ? `+91 ${tcformdata.contact_no}` : "Not available"
+    }`;
   } else {
     console.warn("Contact No element not found.");
   }
 
   // Update Board Index No
-  const boardIndexElement = schoolDetailsContainer.querySelector('.right-container p:nth-child(1)');
+  const boardIndexElement = schoolDetailsContainer.querySelector(
+    ".right-container p:nth-child(1)"
+  );
   if (boardIndexElement) {
-    boardIndexElement.textContent = `Board Index No: ${tcformdata.board_index_no || "Not available"}`;
+    boardIndexElement.textContent = `Board Index No: ${
+      tcformdata.board_index_no || "Not available"
+    }`;
   } else {
     console.warn("Board Index No element not found.");
   }
 
   // Update Email
-  const emailElement = schoolDetailsContainer.querySelector('.right-container p:nth-child(2)');
+  const emailElement = schoolDetailsContainer.querySelector(
+    ".right-container p:nth-child(2)"
+  );
   if (emailElement) {
-    emailElement.textContent = `Email: ${tcformdata.email_address || "Not available"}`;
+    emailElement.textContent = `Email: ${
+      tcformdata.email_address || "Not available"
+    }`;
   } else {
     console.warn("Email element not found.");
   }
@@ -826,7 +875,8 @@ function updateSchoolDetails(tcformdata) {
 
 function setSchoolLogos(tcformdata) {
   // Get the school name from tcformdata
-  const schoolName = tcformdata.schoolName || tcformdata.school_name || "demo school";
+  const schoolName =
+    tcformdata.schoolName || tcformdata.school_name || "demo school";
 
   // Generate the logo URLs
   const baseLogoName = schoolName.toLowerCase().replace(/\s+/g, "_");
@@ -834,8 +884,8 @@ function setSchoolLogos(tcformdata) {
   const logo2Url = `/images/logo/${baseLogoName}2.png`; // e.g., /images/logo/demo_school2.png
 
   // Find the logo image elements in the DOM
-  const logo1Element = document.querySelector('.logo1-container img');
-  const logo2Element = document.querySelector('.logo2-container img');
+  const logo1Element = document.querySelector(".logo1-container img");
+  const logo2Element = document.querySelector(".logo2-container img");
 
   // Update Logo 1
   if (logo1Element) {
@@ -856,30 +906,42 @@ function setSchoolLogos(tcformdata) {
 
 function updateDateSignature(tcformdata) {
   // Find the date-signature container in the DOM
-  const dateSignatureContainer = document.querySelector('.date-signature-container');
-  
+  const dateSignatureContainer = document.querySelector(
+    ".date-signature-container"
+  );
+
   // If the container isn't found, log an error and return
   if (!dateSignatureContainer) {
-    console.error("Date-signature container not found in the DOM. Please ensure the element with class 'date-signature-container' exists.");
+    console.error(
+      "Date-signature container not found in the DOM. Please ensure the element with class 'date-signature-container' exists."
+    );
     return;
   }
 
   // Update Date
-  const dateElement = dateSignatureContainer.querySelector('.date-container p:nth-child(1)');
+  const dateElement = dateSignatureContainer.querySelector(
+    ".date-container p:nth-child(1)"
+  );
   if (dateElement) {
-    const formattedDate = tcformdata.issueDate ? tcformdata.issueDate.replace(/-/g, '/') : "Not available";
+    const formattedDate = tcformdata.issueDate
+      ? tcformdata.issueDate.replace(/-/g, "/")
+      : "Not available";
     dateElement.textContent = `Date: ${formattedDate}`;
   } else {
     console.warn("Date element not found.");
   }
 
   // Update Place
-  const placeElement = dateSignatureContainer.querySelector('.date-container p:nth-child(2)');
+  const placeElement = dateSignatureContainer.querySelector(
+    ".date-container p:nth-child(2)"
+  );
   if (placeElement) {
     let place = "Not available";
     if (tcformdata.detailed_address) {
       // Split the address by commas and take the second part (Dhanaj Bk)
-      const addressParts = tcformdata.detailed_address.split(',').map(part => part.trim());
+      const addressParts = tcformdata.detailed_address
+        .split(",")
+        .map((part) => part.trim());
       place = addressParts[1] || "Not available"; // Dhanaj Bk is the second part
     }
     placeElement.textContent = `Place: ${place}`;
@@ -889,9 +951,6 @@ function updateDateSignature(tcformdata) {
 
   // Signature section remains unchanged as there's no data to update it
 }
-
-
-
 
 document
   .getElementById("closePreviewTCOverlay")
