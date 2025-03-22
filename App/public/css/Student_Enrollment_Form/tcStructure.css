@@ -81,7 +81,7 @@
     color: #5A5A5A;
     line-height: 1.2;
     overflow: hidden;
-    display: block;    
+    display: block;
     white-space: normal;
 }
 
@@ -111,7 +111,7 @@
     overflow: hidden;
     font-weight: bold;
     color: #5A5A5A;
-    
+
 }
 
 /* New container for the certificate title */
@@ -196,7 +196,7 @@
 }
 
 .content-table th {
-    background-color: #f2f2f2;
+    /* background-color: #f2f2f2; */
     /* Light gray background for header */
     font-weight: bold;
     height: 40px;
@@ -208,19 +208,20 @@
     /* Dynamically calculate row height */
 }
 
-.content-table tr:nth-child(even) {
+/* .content-table tr:nth-child(even) {
     background-color: #f9f9f9;
-    /* Light gray for even rows */
-}
+    Light gray for even rows
+} */
 
 .footer {
     height: 18%;
     /* Default screen footer height */
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
     display: flex;
     flex-direction: column;
     padding: 0;
     margin: 0;
+    color: #5A5A5A;
     /* Ensure no margin within the footer */
 }
 
@@ -244,6 +245,7 @@
     white-space: nowrap;
     /* Ensure single line */
     overflow: hidden;
+    font-weight: bold;
 }
 
 .date-signature-container {
@@ -278,6 +280,8 @@
     line-height: 1.2;
     overflow: hidden;
     white-space: nowrap;
+    color: #5A5A5A;
+    font-weight: bold;
     /* Ensure single line per <p> */
 }
 
@@ -295,6 +299,8 @@
     overflow: hidden;
     text-align: center;
     /* Center the warning text */
+    color: #5A5A5A;
+    font-weight: bold;
 }
 
 /* Position the print button in the bottom right */
@@ -308,6 +314,39 @@
     padding: 5px 10px;
 }
 
+/* Watermark styling */
+.watermark {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 500px;
+    opacity: 0.2;
+    z-index: 0;
+    pointer-events: none;
+    text-align: center;
+}
+
+.watermark img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+}
+
+/* Ensure main content stays above the watermark */
+.header,
+.tc-content,
+.footer,
+.print-options {
+    position: relative;
+    z-index: 1;    
+}
+
+.header{
+    mix-blend-mode: multiply;
+}
+
 
 
 /* Print styling */
@@ -318,6 +357,7 @@
     .footer {
         text-align: center;
         margin: 0;
+        mix-blend-mode: multiply;
         /* Ensure no margins in print */
     }
 
@@ -372,7 +412,7 @@
         text-transform: uppercase;
     }
 
-    .address-container {   
+    .address-container {
         width: 100%;
         text-align: center;
         max-height: 33.33%;
@@ -403,7 +443,7 @@
         color: #5A5A5A;
     }
 
-   
+
 
     .left-container p,
     .right-container p {
@@ -462,7 +502,7 @@
         /* Remove margin for print */
         padding: 0;
         /* Remove padding for body itself */
-        background-color: white;
+        /* background-color: white; */
         /* Background color for print */
         box-sizing: border-box;
         /* Include border in total dimensions */
@@ -477,7 +517,7 @@
     .footer {
         height: auto;
         /* Allow natural height for print */
-        background-color: #ffffff;
+        /* background-color: #ffffff; */
         display: flex;
         flex-direction: column;
         padding: 0;
@@ -533,6 +573,8 @@
         line-height: 1.2;
         overflow: hidden;
         white-space: nowrap;
+        color: #5A5A5A;
+        font-weight: bold;
     }
 
     .warning-container {
@@ -548,6 +590,8 @@
         line-height: 1.2;
         overflow: hidden;
         text-align: center;
+        color: #5A5A5A;
+        font-weight: bold;
     }
 
 
@@ -648,4 +692,37 @@
         height: 18%;
         /* Adjust footer height */
     }
+
+    .watermark {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 500px;
+        height: 500px;
+        opacity: 0.2;
+        z-index: 0;
+        pointer-events: none;
+        text-align: center;
+    }
+
+    .watermark img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        mix-blend-mode: multiply;
+    }
+
+    .header,
+    .tc-content,
+    .footer,
+    .print-options {
+        position: relative;
+        z-index: 1;
+    }
+
+    .print-options {
+        display: none;
+    }
+
 }

@@ -603,14 +603,16 @@
         <div class="overlay-content-search">
             <!DOCTYPE html>
             <html lang="en">
-
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Flexible Print Layout</title>
             </head>
-
-            <body class="Legal"> <!-- Hardcoded to Legal paper size -->
+            <body class="Legal">
+                <div class="watermark">
+                    <img src="" alt="Watermark" class="watermark-img" id="watermark">
+                </div>
+            
                 <div class="header">
                     <div class="logo1-container">
                         <img src="" alt="Logo 1" class="logo">
@@ -621,7 +623,7 @@
                         </div>
                         <div class="address-container">
                             <p><br></p>
-                          </div>
+                        </div>
                         <div class="additional-details-container">
                             <div class="left-container">
                                 <p>UDISE No: 123456789012</p>
@@ -642,14 +644,14 @@
                 </div>
                 <div class="tc-content">
                     <table class="content-table">
-                      <thead style="display: flex; align-items: center; justify-content: center;font-weight: bold;">
-                       Original
-                      </thead>
-                      <tbody>
-                        <!-- Rows will be added here -->
-                      </tbody>
+                        <thead style="display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                            Original
+                        </thead>
+                        <tbody>
+                            <!-- Rows will be added here -->
+                        </tbody>
                     </table>
-                  </div>
+                </div>
                 <div class="footer">
                     <div class="authenticity-container">
                         <p>Certified that the above information is in accordance with school Admission Register</p>
@@ -664,24 +666,15 @@
                         </div>
                     </div>
                     <div class="warning-container">
-                        <p>No changes shall be made to any entry in this certificate except by the title authority
-                            issuing it.<br>Any infringement of this certificate will be treated as a violation of school
-                            policy and may result in a penalty and legal action as per the applicable rules and
-                            regulations</p>
+                        <p>No changes shall be made to any entry in this certificate except by the title authority issuing it.<br>Any infringement of this certificate will be treated as a violation of school policy and may result in a penalty and legal action as per the applicable rules and regulations</p>
                     </div>
                 </div>
                 <div class="print-options">
-
-                    <button onclick="printContent()" class="generate-button"><img src="/images/printer.gif"
-                            alt="Print TC">Print</button>
-
-                    <button onclick="window.location.href='/student_Enrollment_Form/manage_student'" class="generate-button"><img src="/images/cancel.png"
-                            alt="Cancel TC">Back</button>
+                    <button onclick="printContent()" class="generate-button"><img src="/images/printer.gif" alt="Print TC">Print</button>
+                    <button onclick="window.location.href='/student_Enrollment_Form/manage_student'" class="generate-button"><img src="/images/cancel.png" alt="Cancel TC">Back</button>
                 </div>
             </body>
-
             </html>
-
 
 
         </div>

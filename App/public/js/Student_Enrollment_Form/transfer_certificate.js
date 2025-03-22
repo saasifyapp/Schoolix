@@ -876,7 +876,7 @@ function updateSchoolDetails(tcformdata) {
 function setSchoolLogos(tcformdata) {
   // Get the school name from tcformdata
   const schoolName =
-    tcformdata.schoolName || tcformdata.school_name || "demo school";
+      tcformdata.schoolName || tcformdata.school_name || "demo school";
 
   // Generate the logo URLs
   const baseLogoName = schoolName.toLowerCase().replace(/\s+/g, "_");
@@ -886,21 +886,30 @@ function setSchoolLogos(tcformdata) {
   // Find the logo image elements in the DOM
   const logo1Element = document.querySelector(".logo1-container img");
   const logo2Element = document.querySelector(".logo2-container img");
+  const watermarkImg = document.getElementById("watermark"); // Select the watermark image
 
   // Update Logo 1
   if (logo1Element) {
-    logo1Element.src = logo1Url;
-    logo1Element.alt = `${schoolName} Logo 1`; // Update alt text for accessibility
+      logo1Element.src = logo1Url;
+      logo1Element.alt = `${schoolName} Logo 1`; // Update alt text for accessibility
   } else {
-    console.warn("Logo 1 element not found in the DOM.");
+      console.warn("Logo 1 element not found in the DOM.");
   }
 
   // Update Logo 2
   if (logo2Element) {
-    logo2Element.src = logo2Url;
-    logo2Element.alt = `${schoolName} Logo 2`; // Update alt text for accessibility
+      logo2Element.src = logo2Url;
+      logo2Element.alt = `${schoolName} Logo 2`; // Update alt text for accessibility
   } else {
-    console.warn("Logo 2 element not found in the DOM.");
+      console.warn("Logo 2 element not found in the DOM.");
+  }
+
+  // Update Watermark Image
+  if (watermarkImg) {
+      watermarkImg.src = logo1Url; // Set watermark to match logo1Url
+      watermarkImg.alt = `${schoolName} Watermark`; // Update alt text for accessibility
+  } else {
+      console.warn("Watermark image element not found in the DOM.");
   }
 }
 
