@@ -1,6 +1,5 @@
 function printContent() {
     if (document.readyState === "complete") {
-        console.log("Running adjustAll before print");
         adjustAll();
         setTimeout(() => {
             document.body.offsetHeight;
@@ -9,7 +8,6 @@ function printContent() {
         }, 200);
     } else {
         window.addEventListener("load", () => {
-            console.log("Running adjustAll before print (after DOM load)");
             adjustAll();
             setTimeout(() => {
                 document.body.offsetHeight;
@@ -55,7 +53,6 @@ function adjustTableFontSize() {
         if (window.matchMedia("print").matches) {
             const finalFontSize = Math.min(adjustedFontSize, 14);
             cell.style.fontSize = `${finalFontSize}px !important`;
-            console.log("Print Font Size (Table Cell):", finalFontSize);
         }
     });
 }
@@ -86,7 +83,6 @@ function adjustSchoolNameFontSize() {
     if (window.matchMedia("print").matches) {
         const finalFontSize = Math.min(adjustedFontSize, 30);
         heading.style.fontSize = `${finalFontSize}px !important`;
-        console.log("Print Font Size (School Name):", finalFontSize);
     }
 }
 
@@ -113,13 +109,6 @@ function adjustAddressAndAdditionalDetailsFontSize() {
         const computedStyle = getComputedStyle(address);
         const lineHeight = parseFloat(computedStyle.lineHeight) || 1.4 * fontSize;
         const maxHeight = lineHeight * 2.2;
-
-        console.log("Address - Font Size:", fontSize);
-        console.log("Address - Line Height:", lineHeight);
-        console.log("Address - Max Height:", maxHeight);
-        console.log("Address - Scroll Height:", address.scrollHeight);
-        console.log("Address - Scroll Width:", address.scrollWidth);
-        console.log("Address - Container Width:", containerWidth);
 
         while (address.scrollWidth > containerWidth && fontSize > 8) {
             fontSize -= 0.5;
@@ -173,7 +162,6 @@ function adjustAddressAndAdditionalDetailsFontSize() {
 
     if (window.matchMedia("print").matches) {
         const finalFontSize = Math.min(adjustedFontSize, 16);
-        console.log("Print Font Size (Address & Additional Details):", finalFontSize);
         if (address) {
             address.style.fontSize = `${finalFontSize}px !important`;
         }
@@ -211,7 +199,6 @@ function adjustCertificateTitleFontSize() {
     if (window.matchMedia("print").matches) {
         const finalFontSize = Math.min(adjustedFontSize, 24);
         heading.style.fontSize = `${finalFontSize}px !important`;
-        console.log("Print Font Size (Certificate Title):", finalFontSize);
     }
 }
 
@@ -241,7 +228,6 @@ function adjustAuthenticityFontSize() {
     if (window.matchMedia("print").matches) {
         const finalFontSize = Math.min(adjustedFontSize, 16);
         text.style.fontSize = `${finalFontSize}px !important`;
-        console.log("Print Font Size (Authenticity):", finalFontSize);
     }
 }
 
@@ -276,7 +262,6 @@ function adjustDateSignatureFontSize() {
         if (window.matchMedia("print").matches) {
             const finalFontSize = Math.min(adjustedFontSize, 14);
             text.style.fontSize = `${finalFontSize}px !important`;
-            console.log("Print Font Size (Date/Signature):", finalFontSize);
         }
     });
 }
@@ -294,11 +279,6 @@ function adjustWarningFontSize() {
     const computedStyle = getComputedStyle(text);
     const lineHeight = parseFloat(computedStyle.lineHeight) || 1.2 * fontSize;
     const maxHeight = lineHeight * 2.2;
-
-    console.log("Warning - Font Size:", fontSize);
-    console.log("Warning - Line Height:", lineHeight);
-    console.log("Warning - Max Height:", maxHeight);
-    console.log("Warning - Scroll Height:", text.scrollHeight);
 
     while (text.scrollWidth > containerWidth && fontSize > 8) {
         fontSize -= 0.5;
@@ -323,7 +303,6 @@ function adjustWarningFontSize() {
     if (window.matchMedia("print").matches) {
         const finalFontSize = Math.min(adjustedFontSize, 14);
         text.style.fontSize = `${finalFontSize}px !important`;
-        console.log("Print Font Size (Warning):", finalFontSize);
     }
 }
 

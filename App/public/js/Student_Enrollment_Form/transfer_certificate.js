@@ -687,8 +687,8 @@ document
 
 function populateTCFormData(formData) {
   const newTCObject = createTCObject(formData);
-  console.log(newTCObject);
-  addRowsToTCTable(newTCObject);
+  addRowsToTCTable(newTCObject); // Populate table first
+  adjustDateOfBirthFontSize(); // Adjust font size after table is populated
   updateSchoolDetails(formData);
   setSchoolLogos(formData);
   updateDateSignature(formData);
@@ -701,37 +701,128 @@ function populateTCFormData(formData) {
   }
 }
 
+// Keep your existing createTCObject function unchanged
 function createTCObject(tcformdata) {
+  function dateToWords(dateStr) {
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    const ones = [
+      "",
+      "One",
+      "Two",
+      "Three",
+      "Four",
+      "Five",
+      "Six",
+      "Seven",
+      "Eight",
+      "Nine",
+      "Ten",
+      "Eleven",
+      "Twelve",
+      "Thirteen",
+      "Fourteen",
+      "Fifteen",
+      "Sixteen",
+      "Seventeen",
+      "Eighteen",
+      "Nineteen",
+    ];
+    const tens = [
+      "",
+      "",
+      "Twenty",
+      "Thirty",
+      "Forty",
+      "Fifty",
+      "Sixty",
+      "Seventy",
+      "Eighty",
+      "Ninety",
+    ];
+
+    const [year, month, day] = dateStr
+      .split("-")
+      .map((num) => parseInt(num, 10));
+    let dayInWords =
+      day < 20
+        ? ones[day]
+        : `${tens[Math.floor(day / 10)]}-${ones[day % 10]}`.replace(
+            /^-|-$/,
+            ""
+          );
+    const monthInWords = months[month - 1];
+    let yearInWords = "";
+    if (year >= 1000 && year <= 9999) {
+      const thousands = Math.floor(year / 1000);
+      const hundreds = Math.floor((year % 1000) / 100);
+      const tensUnits = year % 100;
+      yearInWords += ones[thousands] + " Thousand";
+      if (hundreds > 0) yearInWords += " " + ones[hundreds] + " Hundred";
+      if (tensUnits > 0) {
+        yearInWords +=
+          " " +
+          (tensUnits < 20
+            ? ones[tensUnits]
+            : `${tens[Math.floor(tensUnits / 10)]}${
+                tensUnits % 10 > 0 ? "-" + ones[tensUnits % 10] : ""
+              }`);
+      }
+    }
+    return `${dayInWords}-${monthInWords}-${yearInWords}`.replace(/^-|-$/, "");
+  }
+
+  const dob = tcformdata.dob || "2009-07-10";
+  const [year, month, day] = dob.split("-");
+  const dobFormatted = `${day.padStart(2, "0")}-${month.padStart(
+    2,
+    "0"
+  )}-${year}`;
+  const dobInWords = dateToWords(dob);
+  const dobCombined = `${dobFormatted} (${dobInWords})`;
+
   return {
-    "CERTIFICATE No": "1", // Hardcoded as per image
-    "GENERAL REGISTER No": tcformdata.tc_grNo || "1618", // Maps to tc_grNo
-    "STUDENT NAME": tcformdata.studentName || "Om Deepak Dafade", // Maps to studentName
-    "MOTHER'S NAME": tcformdata.motherName || "Smita", // Maps to motherName
-    "DATE OF BIRTH": tcformdata.dob || "2009-07-10", // Maps to dob
-    "PLACE OF BIRTH": tcformdata.placeOfBirth || "Amravati", // Maps to placeOfBirth
-    NATIONALITY: tcformdata.nationality || "Indian", // Maps to nationality
-    RELIGION: tcformdata.religion || "Hindu", // Maps to religion
-    "CASTE & SUB-CASTE": tcformdata.category || "OBC", // Maps to category (as per image context)
-    "AADHAR ID": tcformdata.aadharId || "674816054773", // Maps to aadharId
-    "LAST SCHOOL ATTENDED": tcformdata.lastSchool || "JC Highschool", // Maps to lastSchool
-    "DATE OF ADMISSION": tcformdata.dateOfAdmission || "2020-02-23", // Maps to dateOfAdmission
-    "CLASS OF ADMISSION": tcformdata.classOfAdmission || "1st", // Maps to classOfAdmission
-    "DATE OF LEAVING": tcformdata.dateOfLeaving || "2020-03-01", // Maps to dateOfLeaving
-    "STANDARD LEAVING": tcformdata.standardLeaving || "LKG", // Maps to standardLeaving
+    "CERTIFICATE No": "1",
+    "GENERAL REGISTER No": tcformdata.tc_grNo || "1618",
+    "STUDENT NAME": tcformdata.studentName || "Om Deepak Dafade",
+    "MOTHER'S NAME": tcformdata.motherName || "Smita",
+    "DATE OF BIRTH": dobCombined,
+    "PLACE OF BIRTH": tcformdata.placeOfBirth || "Amravati",
+    NATIONALITY: tcformdata.nationality || "Indian",
+    RELIGION: tcformdata.religion || "Hindu",
+    "CATEGORY & CASTE": `${tcformdata.category || "OBC"} - ${
+      tcformdata.caste || "Jain"
+    }`,
+    "AADHAR ID": tcformdata.aadharId || "674816054773",
+    "LAST SCHOOL ATTENDED": tcformdata.lastSchool || "JC Highschool",
+    "DATE OF ADMISSION": tcformdata.dateOfAdmission || "2020-02-23",
+    "CLASS OF ADMISSION": tcformdata.classOfAdmission || "1st",
+    "DATE OF LEAVING": tcformdata.dateOfLeaving || "2020-03-01",
+    "STANDARD LEAVING": tcformdata.standardLeaving || "LKG",
     "REASON FOR LEAVING":
-      tcformdata.reasonLeaving || "AT HIS / HER OWN REQUEST", // Maps to reasonLeaving
-    PROGRESS: tcformdata.progress || "Excellent", // Maps to progress
-    CONDUCT: tcformdata.conduct || "Excellent", // Maps to conduct
-    RESULT: tcformdata.result || "Pass", // Maps to result
-    REMARK: tcformdata.remark || "Promoted to Next Class", // Maps to remark
+      tcformdata.reasonLeaving || "AT HIS / HER OWN REQUEST",
+    PROGRESS: tcformdata.progress || "Excellent",
+    CONDUCT: tcformdata.conduct || "Excellent",
+    RESULT: tcformdata.result || "Pass",
+    REMARK: tcformdata.remark || "Promoted to Next Class",
   };
 }
 
+// Modified addRowsToTCTable to tag "DATE OF BIRTH" cell
 function addRowsToTCTable(tcObject) {
-  // Find the table's tbody element in the DOM
   const tbody = document.querySelector(".content-table tbody");
-
-  // If tbody is not found, log an error and return
   if (!tbody) {
     console.error(
       "Table body not found in the DOM. Please ensure the table with class 'content-table' exists."
@@ -739,44 +830,107 @@ function addRowsToTCTable(tcObject) {
     return;
   }
 
-  // Clear any existing rows in the tbody (optional, remove if you want to append without clearing)
-  tbody.innerHTML = "";
+  tbody.innerHTML = ""; // Clear existing rows
 
-  // Loop through the object entries to create and append table rows
   for (const [key, value] of Object.entries(tcObject)) {
-    // Create a new row
     const row = document.createElement("tr");
-
-    // Create the first cell (for the key)
     const keyCell = document.createElement("td");
-    keyCell.textContent = key;
-    row.appendChild(keyCell);
-
-    // Create the second cell (for the value)
     const valueCell = document.createElement("td");
-    valueCell.textContent = value;
-    row.appendChild(valueCell);
 
-    // Append the row to the tbody
+    keyCell.textContent = key;
+    valueCell.textContent = value;
+
+    // Add a class to the "DATE OF BIRTH" value cell
+    if (key === "DATE OF BIRTH") {
+      valueCell.className = "date-of-birth";
+    }
+
+    row.appendChild(keyCell);
+    row.appendChild(valueCell);
     tbody.appendChild(row);
   }
 }
 
-function updateSchoolDetails(tcformdata) {
-  // Find the container elements in the DOM
-  const schoolDetailsContainer = document.querySelector(
-    ".school-details-container"
-  );
-
-  // If the container isn't found, log an error and return
-  if (!schoolDetailsContainer) {
-    console.error(
-      "School details container not found in the DOM. Please ensure the element with class 'school-details-container' exists."
-    );
+function adjustDateOfBirthFontSize() {
+  const table = document.querySelector(".content-table");
+  if (!table) {
+    console.warn("Table with class 'content-table' not found.");
     return;
   }
 
-  // Update School Name
+  const dobCell = table.querySelector(".date-of-birth");
+  if (!dobCell) {
+    console.warn("Date of Birth cell with class 'date-of-birth' not found.");
+    return;
+  }
+
+  // Reset any existing styles that might interfere
+  dobCell.style.fontSize = ""; // Clear any previous font size
+  dobCell.style.whiteSpace = "nowrap"; // Prevent wrapping during measurement
+  dobCell.style.lineHeight = "normal"; // Ensure consistent line height
+
+  const containerWidth = dobCell.getBoundingClientRect().width;
+  let fontSize = 14; // Initial font size
+  dobCell.style.fontSize = `${fontSize}px`;
+
+  // Recalculate line height after setting initial font size
+  const lineHeight = parseFloat(getComputedStyle(dobCell).lineHeight) || fontSize * 1.2;
+
+  // Step 1: Reduce font size to fit on one line
+  while (
+    (dobCell.scrollWidth > containerWidth || dobCell.scrollHeight > lineHeight * 1.1) &&
+    fontSize > 2 // Minimum font size
+  ) {
+    fontSize -= 0.1; // Fine-grained reduction
+    dobCell.style.fontSize = `${fontSize}px`;
+  }
+
+  // Step 2: Additional reduction if still overflowing
+  if (dobCell.scrollWidth > containerWidth || dobCell.scrollHeight > lineHeight * 1.1) {
+    fontSize -= 0.2;
+  }
+
+  // Step 3: Ensure font size doesn't go below minimum
+  let adjustedFontSize = Math.max(fontSize, 2);
+  dobCell.style.fontSize = `${adjustedFontSize}px !important`; // Use !important to override external styles
+
+  // Step 4: If still overflowing, allow wrapping and adjust for max two lines
+  if (dobCell.scrollWidth > containerWidth) {
+    dobCell.style.whiteSpace = "normal"; // Allow wrapping
+    const maxHeight = lineHeight * 2; // Allow up to two lines
+    while (dobCell.scrollHeight > maxHeight && adjustedFontSize > 2) {
+      adjustedFontSize -= 0.1;
+      dobCell.style.fontSize = `${adjustedFontSize}px !important`;
+    }
+  }
+
+  // Step 5: Final font size check
+  adjustedFontSize = Math.max(adjustedFontSize, 2);
+  dobCell.style.fontSize = `${adjustedFontSize}px !important`;
+
+  // Step 6: Adjust for print media
+  if (window.matchMedia("print").matches) {
+    const finalFontSize = Math.min(adjustedFontSize, 8);
+    dobCell.style.fontSize = `${finalFontSize}px !important`;
+  }
+
+  // Debug: Log the final font size and dimensions
+  console.log(`Final font size: ${adjustedFontSize}px`);
+  console.log(`Container width: ${containerWidth}px, Scroll width: ${dobCell.scrollWidth}px`);
+  console.log(`Line height: ${lineHeight}px, Scroll height: ${dobCell.scrollHeight}px`);
+}
+
+
+// Keep your existing updateSchoolDetails, setSchoolLogos, and updateDateSignature functions unchanged
+function updateSchoolDetails(tcformdata) {
+  const schoolDetailsContainer = document.querySelector(
+    ".school-details-container"
+  );
+  if (!schoolDetailsContainer) {
+    console.error("School details container not found in the DOM.");
+    return;
+  }
+
   const schoolNameElement = schoolDetailsContainer.querySelector(
     ".school-name-container h1"
   );
@@ -787,16 +941,13 @@ function updateSchoolDetails(tcformdata) {
     console.warn("School name element not found.");
   }
 
-  // Update Address
   const addressElement = schoolDetailsContainer.querySelector(
     ".address-container p"
   );
   if (addressElement) {
     const address = tcformdata.detailed_address || "Address not available";
-
     let firstLine = address;
     let secondLine = "";
-
     const parts = address.split(",").map((part) => part.trim());
     const totalLength = address.length;
     let splitIndex = 0;
@@ -824,7 +975,7 @@ function updateSchoolDetails(tcformdata) {
   } else {
     console.warn("Address element not found.");
   }
-  // Update UDISE No
+
   const udiseElement = schoolDetailsContainer.querySelector(
     ".left-container p:nth-child(1)"
   );
@@ -836,7 +987,6 @@ function updateSchoolDetails(tcformdata) {
     console.warn("UDISE No element not found.");
   }
 
-  // Update Contact No
   const contactElement = schoolDetailsContainer.querySelector(
     ".left-container p:nth-child(2)"
   );
@@ -848,7 +998,6 @@ function updateSchoolDetails(tcformdata) {
     console.warn("Contact No element not found.");
   }
 
-  // Update Board Index No
   const boardIndexElement = schoolDetailsContainer.querySelector(
     ".right-container p:nth-child(1)"
   );
@@ -860,7 +1009,6 @@ function updateSchoolDetails(tcformdata) {
     console.warn("Board Index No element not found.");
   }
 
-  // Update Email
   const emailElement = schoolDetailsContainer.querySelector(
     ".right-container p:nth-child(2)"
   );
@@ -874,60 +1022,47 @@ function updateSchoolDetails(tcformdata) {
 }
 
 function setSchoolLogos(tcformdata) {
-  // Get the school name from tcformdata
   const schoolName =
-      tcformdata.schoolName || tcformdata.school_name || "demo school";
-
-  // Generate the logo URLs
+    tcformdata.schoolName || tcformdata.school_name || "demo school";
   const baseLogoName = schoolName.toLowerCase().replace(/\s+/g, "_");
-  const logo1Url = `/images/logo/${baseLogoName}.png`; // e.g., /images/logo/demo_school.png
-  const logo2Url = `/images/logo/${baseLogoName}2.png`; // e.g., /images/logo/demo_school2.png
+  const logo1Url = `/images/logo/${baseLogoName}.png`;
+  const logo2Url = `/images/logo/${baseLogoName}2.png`;
 
-  // Find the logo image elements in the DOM
   const logo1Element = document.querySelector(".logo1-container img");
   const logo2Element = document.querySelector(".logo2-container img");
-  const watermarkImg = document.getElementById("watermark"); // Select the watermark image
+  const watermarkImg = document.getElementById("watermark");
 
-  // Update Logo 1
   if (logo1Element) {
-      logo1Element.src = logo1Url;
-      logo1Element.alt = `${schoolName} Logo 1`; // Update alt text for accessibility
+    logo1Element.src = logo1Url;
+    logo1Element.alt = `${schoolName} Logo 1`;
   } else {
-      console.warn("Logo 1 element not found in the DOM.");
+    console.warn("Logo 1 element not found in the DOM.");
   }
 
-  // Update Logo 2
   if (logo2Element) {
-      logo2Element.src = logo2Url;
-      logo2Element.alt = `${schoolName} Logo 2`; // Update alt text for accessibility
+    logo2Element.src = logo2Url;
+    logo2Element.alt = `${schoolName} Logo 2`;
   } else {
-      console.warn("Logo 2 element not found in the DOM.");
+    console.warn("Logo 2 element not found in the DOM.");
   }
 
-  // Update Watermark Image
   if (watermarkImg) {
-      watermarkImg.src = logo1Url; // Set watermark to match logo1Url
-      watermarkImg.alt = `${schoolName} Watermark`; // Update alt text for accessibility
+    watermarkImg.src = logo1Url;
+    watermarkImg.alt = `${schoolName} Watermark`;
   } else {
-      console.warn("Watermark image element not found in the DOM.");
+    console.warn("Watermark image element not found in the DOM.");
   }
 }
 
 function updateDateSignature(tcformdata) {
-  // Find the date-signature container in the DOM
   const dateSignatureContainer = document.querySelector(
     ".date-signature-container"
   );
-
-  // If the container isn't found, log an error and return
   if (!dateSignatureContainer) {
-    console.error(
-      "Date-signature container not found in the DOM. Please ensure the element with class 'date-signature-container' exists."
-    );
+    console.error("Date-signature container not found in the DOM.");
     return;
   }
 
-  // Update Date
   const dateElement = dateSignatureContainer.querySelector(
     ".date-container p:nth-child(1)"
   );
@@ -940,26 +1075,28 @@ function updateDateSignature(tcformdata) {
     console.warn("Date element not found.");
   }
 
-  // Update Place
   const placeElement = dateSignatureContainer.querySelector(
     ".date-container p:nth-child(2)"
   );
   if (placeElement) {
     let place = "Not available";
     if (tcformdata.detailed_address) {
-      // Split the address by commas and take the second part (Dhanaj Bk)
       const addressParts = tcformdata.detailed_address
         .split(",")
         .map((part) => part.trim());
-      place = addressParts[1] || "Not available"; // Dhanaj Bk is the second part
+      place = addressParts[1] || "Not available";
     }
     placeElement.textContent = `Place: ${place}`;
   } else {
     console.warn("Place element not found.");
   }
-
-  // Signature section remains unchanged as there's no data to update it
 }
+
+// Event listeners to adjust font size on various events
+window.addEventListener("load", adjustDateOfBirthFontSize);
+window.addEventListener("resize", adjustDateOfBirthFontSize);
+window.addEventListener("beforeprint", adjustDateOfBirthFontSize);
+window.addEventListener("afterprint", adjustDateOfBirthFontSize);
 
 document
   .getElementById("closePreviewTCOverlay")
