@@ -754,10 +754,10 @@ async function regenerateTC(tc_no, gr_no, student_name, section, generation_stat
                     aaparId: studentDetails.apar_id || "",
                     penId: studentDetails.pen_id || "",
                     lastSchool: studentDetails.Last_School || "NA",
-                    dateOfAdmission: formatDate(studentDetails.Admission_Date),
+                    dateOfAdmission: studentDetails.Admission_Date,
                     classOfAdmission: studentDetails.admitted_class || "",
                     tcNo: tcDetails.tc_no || "",
-                    dateOfLeaving: formatDate(tcDetails.date_of_leaving),
+                    dateOfLeaving: tcDetails.date_of_leaving,
                     standardLeaving: tcDetails.standard_of_leaving || "",
                     reasonLeaving: tcDetails.reason_of_leaving || "",
                     progress: tcDetails.progress || "",
@@ -773,7 +773,7 @@ async function regenerateTC(tc_no, gr_no, student_name, section, generation_stat
                     board_index_no: schoolDetails.board_index_no,
                     detailed_address: schoolDetails.detailed_address,
                     tc_status: tcStatus,
-                    issueDate: formatDate(tcDetails.issue_date || "")
+                    issueDate: tcDetails.issue_date || ""
                 };
 
                 console.log('TC Form Data Object:', tcFormData);
@@ -803,14 +803,15 @@ async function regenerateTC(tc_no, gr_no, student_name, section, generation_stat
     });
 }
 
-
-// Utility function to format date
 const formatDate = (dateStr) => {
     const components = dateStr.split("-");
-    if (components[2].length == 4) {
-        // Assuming input is already in DD-MM-YYYY format
-        return dateStr;
+    if (components.length === 3) {
+        if (components[2].length === 4) {
+            // Input is in DD-MM-YYYY format
+            return `${components[2]}-${components[1]}-${components[0]}`;
+        } else {
+            // Input is in YYYY-MM-DD format
+            return `${components[2].padStart(2, '0')}-${components[1].padStart(2, '0')}-${components[0].padStart(4, '0')}`;
+        }
     }
-    const [year, month, day] = components;
-    return `${day}-${month}-${year}`;
 };
