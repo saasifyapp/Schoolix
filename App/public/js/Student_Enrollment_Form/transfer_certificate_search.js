@@ -227,16 +227,16 @@ function displayStudentsHavingTC(data) {
                     </button>
 
                     <!-- Print Button -->
-                    <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; 
-                        text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px;
-                        cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                        transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
-                        onclick="printStudent('${student.tc_no}')"
-                        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
-                        <img src="../images/print.png" alt="Print" style="width: 25px; height: 25px; margin: 5px;">
-                        <span>Print</span>
-                    </button>
+                   <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; 
+        text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px;
+        cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+        onclick="regenerateTC('${student.tc_no}', '${student.gr_no}', '${student.student_name}', '${student.section}', '${student.generation_status}')"
+        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+    <img src="../images/print.png" alt="Print" style="width: 25px; height: 25px; margin: 5px;">
+    <span>Print</span>
+</button>
 
                      <!-- Delete Button -->
                     <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; 
@@ -368,15 +368,15 @@ function editTC(id) {
     document.getElementById("tc_edit_tcNoValue").textContent = "";
     document.getElementById("tc_edit_grNoValue").textContent = "";
     document.getElementById("tc_edit_studentNameValue").textContent = "";
-    document.getElementById("tc_edit_dateOfLeaving").value = ""; 
-    document.getElementById("tc_edit_standardOfLeaving").value = ""; 
-    document.getElementById("tc_edit_reasonOfLeaving").value = ""; 
-    document.getElementById("tc_edit_progress").value = ""; 
-    document.getElementById("tc_edit_conduct").value = ""; 
-    document.getElementById("tc_edit_result").value = ""; 
-    document.getElementById("tc_edit_remark").value = ""; 
-    document.getElementById("tc_edit_issueDate").value = ""; 
-    document.getElementById("tc_edit_generationStatus").value = ""; 
+    document.getElementById("tc_edit_dateOfLeaving").value = "";
+    document.getElementById("tc_edit_standardOfLeaving").value = "";
+    document.getElementById("tc_edit_reasonOfLeaving").value = "";
+    document.getElementById("tc_edit_progress").value = "";
+    document.getElementById("tc_edit_conduct").value = "";
+    document.getElementById("tc_edit_result").value = "";
+    document.getElementById("tc_edit_remark").value = "";
+    document.getElementById("tc_edit_issueDate").value = "";
+    document.getElementById("tc_edit_generationStatus").value = "";
 
     // Fetch data from the server using the id
     fetch(`/edit-tc-details?id=${id}`)
@@ -387,15 +387,15 @@ function editTC(id) {
                 document.getElementById("tc_edit_tcNoValue").textContent = details.tc_no || "";
                 document.getElementById("tc_edit_grNoValue").textContent = details.gr_no || "";
                 document.getElementById("tc_edit_studentNameValue").textContent = details.student_name || "";
-                document.getElementById("tc_edit_dateOfLeaving").value = details.date_of_leaving ? formatToDDMMYYYY(details.date_of_leaving) : ""; 
-                document.getElementById("tc_edit_standardOfLeaving").value = details.standard_of_leaving || ""; 
-                document.getElementById("tc_edit_reasonOfLeaving").value = details.reason_of_leaving || ""; 
-                document.getElementById("tc_edit_progress").value = details.progress || ""; 
-                document.getElementById("tc_edit_conduct").value = details.conduct || ""; 
-                document.getElementById("tc_edit_result").value = details.result || ""; 
-                document.getElementById("tc_edit_remark").value = details.remark || ""; 
-                document.getElementById("tc_edit_issueDate").value = details.issue_date ? formatToDDMMYYYY(details.issue_date) : ""; 
-                document.getElementById("tc_edit_generationStatus").value = details.generation_status || ""; 
+                document.getElementById("tc_edit_dateOfLeaving").value = details.date_of_leaving ? formatToDDMMYYYY(details.date_of_leaving) : "";
+                document.getElementById("tc_edit_standardOfLeaving").value = details.standard_of_leaving || "";
+                document.getElementById("tc_edit_reasonOfLeaving").value = details.reason_of_leaving || "";
+                document.getElementById("tc_edit_progress").value = details.progress || "";
+                document.getElementById("tc_edit_conduct").value = details.conduct || "";
+                document.getElementById("tc_edit_result").value = details.result || "";
+                document.getElementById("tc_edit_remark").value = details.remark || "";
+                document.getElementById("tc_edit_issueDate").value = details.issue_date ? formatToDDMMYYYY(details.issue_date) : "";
+                document.getElementById("tc_edit_generationStatus").value = details.generation_status || "";
 
                 // Store initial values
                 initialFormValues = {
@@ -459,39 +459,39 @@ function updateTCDetails() {
         },
         body: JSON.stringify(payload)
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.success) {
-            let changesString = Object.keys(data.changes).map(key => {
-                return `${key}: ${data.changes[key].old} ➜ ${data.changes[key].new}`;
-            }).join('<br>');
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                let changesString = Object.keys(data.changes).map(key => {
+                    return `${key}: ${data.changes[key].old} ➜ ${data.changes[key].new}`;
+                }).join('<br>');
 
-            Swal.fire({
-                title: 'Changes Applied Successfully',
-                html: `The following changes were made:<br><br>${changesString}`,
-                icon: 'success'
-            }).then(() => {
-                // Close the form
-                document.getElementById("editTCForm").style.display = "none";
+                Swal.fire({
+                    title: 'Changes Applied Successfully',
+                    html: `The following changes were made:<br><br>${changesString}`,
+                    icon: 'success'
+                }).then(() => {
+                    // Close the form
+                    document.getElementById("editTCForm").style.display = "none";
 
-                // Refresh the data table
-                refreshTCData();
-            });
-        } else if (data.message === 'No changes detected') {
-            Swal.fire("Info", "No changes were made to the TC details", "info");
-        } else {
-            Swal.fire("Error", "Failed to update TC details", "error");
-        }
-    })
-    .catch(error => {
-        console.error("Error updating TC details:", error);
-        Swal.fire("Error", "Failed to update TC details: " + error.message, "error");
-    });
+                    // Refresh the data table
+                    refreshTCData();
+                });
+            } else if (data.message === 'No changes detected') {
+                Swal.fire("Info", "No changes were made to the TC details", "info");
+            } else {
+                Swal.fire("Error", "Failed to update TC details", "error");
+            }
+        })
+        .catch(error => {
+            console.error("Error updating TC details:", error);
+            Swal.fire("Error", "Failed to update TC details: " + error.message, "error");
+        });
 }
 
 
@@ -528,8 +528,8 @@ function deleteTC(studentId, tcNo, grNo, studentName, generationStatus, section)
             if (!input) {
                 Swal.showValidationMessage(`Please enter the password`);
                 return false; // Prevents the modal from closing
-            } 
-            
+            }
+
             if (input !== correctPassword) {
                 Swal.showValidationMessage(`Incorrect password. Please try again.`);
                 return false; // Prevents the modal from closing
@@ -570,7 +570,7 @@ async function showProgressSteps(studentId, tcNo, grNo, studentName, section) {
         showConfirmButton: false,
         didOpen: async () => {
             Swal.showLoading();
-            
+
             for (let i = 0; i < intervalMessages.length; i++) {
                 await updateSwal(intervalMessages[i]);
             }
@@ -608,16 +608,148 @@ function deleteTCRecord(studentId, grNo, section) {
     return fetch(`/delete-tc-record?id=${studentId}&grno=${grNo}&section=${normalizedSection}`, {
         method: 'DELETE'
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to delete the record');
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log(data);
-    })
-    .catch(error => {
-        throw error;
-    });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to delete the record');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => {
+            throw error;
+        });
+}
+
+
+
+////////////////////////// PRINT TC FROM SEARCH ////////////////////
+
+function regenerateTC(tc_no, gr_no, student_name, section, generation_status) {     
+    let certificateType = '';          
+
+    // Determine the next certificate type based on current generation_status
+    switch(generation_status?.toUpperCase()) {         
+        case 'ORIGINAL':             
+            certificateType = 'DUPLICATE';             
+            break;         
+        case 'DUPLICATE':             
+            certificateType = 'TRIPLICATE';             
+            break;         
+        case 'TRIPLICATE':             
+            Swal.fire({                 
+                title: 'Limit Reached',                 
+                html: `There are already three copies issued for this student:<br><strong>${student_name}</strong> (<strong>GR No: ${gr_no}</strong>)`,                 
+                icon: 'warning',                 
+                confirmButtonText: 'OK'             
+            });             
+            return;         
+        default:             
+            certificateType = 'ORIGINAL';     
+    }      
+
+    // Show confirmation dialog     
+    Swal.fire({         
+        title: 'Confirm Generation',         
+        html: `Do you want to generate a <strong>${certificateType} COPY</strong> of Transfer Certificate for<br><strong>GR No: ${gr_no} | ${student_name}</strong>`,         
+        icon: 'question',         
+        showCancelButton: true,         
+        confirmButtonText: 'Yes',         
+        cancelButtonText: 'No'     
+    }).then((result) => {         
+        if (result.isConfirmed) {             
+            // Show loading state
+            Swal.fire({                 
+                title: 'Fetching Student Details',                 
+                text: 'Please wait...',                 
+                allowOutsideClick: false,                 
+                didOpen: () => {                     
+                    Swal.showLoading();                 
+                }             
+            });
+
+            // Fetch student details with corrected URL             
+            fetch(`/get-student-details-for-tc-regeneration?tc_no=${encodeURIComponent(tc_no)}&grno=${encodeURIComponent(gr_no)}&section=${encodeURIComponent(section)}`)
+                .then(response => {                     
+                    if (!response.ok) {                         
+                        throw new Error(`HTTP error! status: ${response.status}`);                     
+                    }                     
+                    return response.json();                 
+                })                 
+                .then(data => {                     
+                    Swal.close();                                          
+                    if (data.error) {                         
+                        Swal.fire({                             
+                            title: 'Error',                             
+                            text: data.error,                             
+                            icon: 'error'                         
+                        });                         
+                        return;                     
+                    }                      
+                    if (data.message) {                         
+                        Swal.fire({                             
+                            title: 'Not Found',                             
+                            text: data.message,                             
+                            icon: 'warning'                         
+                        });                         
+                        return;                     
+                    }                      
+                    // Success case                     
+                    Swal.fire({                         
+                        title: 'Generating',                         
+                        html: `<strong>${certificateType}</strong> TC generation in progress for<br><strong>GR No: ${gr_no} | ${student_name}</strong>`,                         
+                        icon: 'success'                     
+                    });                                          
+                    
+                    // Create tcFormData object to hold only the specified details
+                    const studentDetails = data.studentDetails;
+                    const tcDetails = data.tcDetails;
+
+                    const tcFormData = {
+                        Name: studentDetails.Name || tcDetails.student_name || "",
+                        Mother_name: studentDetails.Mother_name || "",
+                        DOB: formatDateForInput(studentDetails.DOB),
+                        Place_of_Birth: studentDetails.POB || "",
+                        Nationality: studentDetails.Nationality || "",
+                        Religion: studentDetails.Religion || "",
+                        Category: studentDetails.Category || "",
+                        Caste: studentDetails.Caste || "",
+                        Adhar_no: studentDetails.Adhar_no || "",
+                        Grno: studentDetails.Grno || tcDetails.gr_no || "",
+                        Section: studentDetails.Section || "",
+                        Standard: studentDetails.Standard || tcDetails.current_class || "",
+                        Saral_id: studentDetails.saral_id || "",
+                        Apar_id: studentDetails.apar_id || "",
+                        Pen_id: studentDetails.pen_id || "",
+                        Last_School: studentDetails.Last_School || "NA",
+                        Admission_Date: formatDateForInput(studentDetails.Admission_Date),
+                        Admitted_class: studentDetails.admitted_class || "",
+                        tcNo: tcDetails.tc_no || "",
+                        dateOfLeaving: formatDateForInput(tcDetails.date_of_leaving),
+                        standardLeaving: tcDetails.standard_of_leaving || "",
+                        reasonLeaving: tcDetails.reason_of_leaving || "",
+                        progress: tcDetails.progress || "",
+                        conduct: tcDetails.conduct || "",
+                        result: tcDetails.result || "",
+                        remark: tcDetails.remark || ""
+                    };
+
+                    // Log the tcFormData object in the browser's console
+                    console.log('TC Form Data Object:', tcFormData);
+
+                    // Call the preview function
+                    populateTCFormData(tcFormData);
+                })                 
+                .catch(error => {                     
+                    Swal.close();                     
+                    Swal.fire({                         
+                        title: 'Error',                         
+                        text: `Failed to fetch student details: ${error.message}`,                         
+                        icon: 'error'                     
+                    });                     
+                    console.error('Fetch error:', error);                 
+                });         
+        }     
+    }); 
 }

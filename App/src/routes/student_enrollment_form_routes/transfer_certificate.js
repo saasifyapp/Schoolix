@@ -938,4 +938,78 @@ function regenerateUsernameAndPassword(fullName, schoolName, grNo) {
     return { username: userWithSchool, password };
 }
 
+//////////////////////////////// REGENERATE TC FROM SEARCH WINDOW ///////////
+
+// Endpoint to fetch student details for TC regeneration
+router.get("/get-student-details-for-tc-regeneration", (req, res) => {
+    const { tc_no, grno, section } = req.query;
+
+    // Validate input parameters
+    if (!tc_no || !grno || !section) {
+        console.log("Validation failed: Missing tc_no, grno or section", { tc_no, grno, section });
+        return res.status(400).json({ error: "TC No, GR No, and section are required" });
+    }
+
+    // Normalize the section parameter to lowercase to avoid case sensitivity issues
+    const normalizedSection = section.toLowerCase();
+
+    // Determine the appropriate table based on section
+    let tableName;
+    if (normalizedSection === "primary") {
+        tableName = "primary_student_details";
+    } else if (normalizedSection === "pre_primary") {
+        tableName = "pre_primary_student_details";
+    } else {
+        console.log("Invalid section provided", { section });
+        return res.status(400).json({ error: "Invalid section parameter" });
+    }
+
+    // Construct the SQL query for student details
+    const studentDetailsQuery = `SELECT * FROM ${tableName} WHERE Grno = ?`;
+    const studentQueryParams = [grno];
+
+   // console.log("Executing student details query:", { query: studentDetailsQuery, params: studentQueryParams, table: tableName });
+
+    // Execute the query for student details
+    req.connectionPool.query(studentDetailsQuery, studentQueryParams, (studentError, studentResults) => {
+        if (studentError) {
+            console.error("Database error occurred during student details query:", { error: studentError, query: studentDetailsQuery, params: studentQueryParams });
+            return res.status(500).json({ error: "Database error", details: studentError.message });
+        }
+
+        if (studentResults.length === 0) {
+            console.log("No student found for:", { grno, section });
+            return res.status(404).json({ message: "No active student found with this GR No" });
+        }
+
+        // Construct the SQL query for transfer certificate details
+        const tcDetailsQuery = `SELECT * FROM transfer_certificates WHERE tc_no = ?`;
+        const tcQueryParams = [tc_no];
+
+       // console.log("Executing transfer certificate details query:", { query: tcDetailsQuery, params: tcQueryParams });
+
+        // Execute the query for transfer certificate details
+        req.connectionPool.query(tcDetailsQuery, tcQueryParams, (tcError, tcResults) => {
+            if (tcError) {
+                console.error("Database error occurred during transfer certificate details query:", { error: tcError, query: tcDetailsQuery, params: tcQueryParams });
+                return res.status(500).json({ error: "Database error", details: tcError.message });
+            }
+
+            if (tcResults.length === 0) {
+                console.log("No transfer certificate found for:", { tc_no });
+                return res.status(404).json({ message: "No transfer certificate found with this TC No" });
+            }
+
+            // Combine student and transfer certificate details into one response
+            const responseData = {
+                studentDetails: studentResults[0],
+                tcDetails: tcResults[0]
+            };
+
+           // console.log("Student and transfer certificate details retrieved:", responseData);
+            res.json(responseData);
+        });
+    });
+});
+
 module.exports = router;
