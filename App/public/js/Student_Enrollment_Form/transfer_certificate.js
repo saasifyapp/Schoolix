@@ -124,7 +124,7 @@ function populateStudentTCForm(data) {
   document.getElementById("dateOfAdmission").value = formatDateForInput(
     data.Admission_Date
   );
-  document.getElementById("classOfAdmission").value = data.admitted_class || "";
+  document.getElementById("classOfAdmission").value = data.admitted_class || "";  
 }
 
 // Function to format date from "DD-MM-YYYY" to "YYYY-MM-DD" (for input[type=date])
@@ -872,60 +872,37 @@ function adjustDateOfBirthFontSize() {
     return;
   }
 
-  // Reset any existing styles that might interfere
-  dobCell.style.fontSize = ""; // Clear any previous font size
-  dobCell.style.whiteSpace = "nowrap"; // Prevent wrapping during measurement
-  dobCell.style.lineHeight = "normal"; // Ensure consistent line height
+  // Reset styles and allow wrapping from the start
+  dobCell.style.fontSize = ""; 
+  dobCell.style.whiteSpace = "normal"; // Allow text to wrap naturally
+  dobCell.style.lineHeight = "normal";
 
   const containerWidth = dobCell.getBoundingClientRect().width;
   let fontSize = 14; // Initial font size
   dobCell.style.fontSize = `${fontSize}px`;
 
-  // Recalculate line height after setting initial font size
+  // Get computed line height
   const lineHeight = parseFloat(getComputedStyle(dobCell).lineHeight) || fontSize * 1.2;
+  const maxHeight = lineHeight * 2; // Allow up to two lines
 
-  // Step 1: Reduce font size to fit on one line
+  // Adjust font size to fit within container width and max two lines
   while (
-    (dobCell.scrollWidth > containerWidth || dobCell.scrollHeight > lineHeight * 1.1) &&
+    (dobCell.scrollWidth > containerWidth || dobCell.scrollHeight > maxHeight) &&
     fontSize > 2 // Minimum font size
   ) {
-    fontSize -= 0.1; // Fine-grained reduction
+    fontSize -= 0.1;
     dobCell.style.fontSize = `${fontSize}px`;
   }
 
-  // Step 2: Additional reduction if still overflowing
-  if (dobCell.scrollWidth > containerWidth || dobCell.scrollHeight > lineHeight * 1.1) {
-    fontSize -= 0.2;
-  }
-
-  // Step 3: Ensure font size doesn't go below minimum
+  // Ensure minimum font size
   let adjustedFontSize = Math.max(fontSize, 2);
-  dobCell.style.fontSize = `${adjustedFontSize}px !important`; // Use !important to override external styles
-
-  // Step 4: If still overflowing, allow wrapping and adjust for max two lines
-  if (dobCell.scrollWidth > containerWidth) {
-    dobCell.style.whiteSpace = "normal"; // Allow wrapping
-    const maxHeight = lineHeight * 2; // Allow up to two lines
-    while (dobCell.scrollHeight > maxHeight && adjustedFontSize > 2) {
-      adjustedFontSize -= 0.1;
-      dobCell.style.fontSize = `${adjustedFontSize}px !important`;
-    }
-  }
-
-  // Step 5: Final font size check
-  adjustedFontSize = Math.max(adjustedFontSize, 2);
   dobCell.style.fontSize = `${adjustedFontSize}px !important`;
 
-  // Step 6: Adjust for print media
+  // Adjust for print media
   if (window.matchMedia("print").matches) {
     const finalFontSize = Math.min(adjustedFontSize, 8);
     dobCell.style.fontSize = `${finalFontSize}px !important`;
   }
-
-  // Debug: Log the final font size and dimensions
-  console.log(`Final font size: ${adjustedFontSize}px`);
-  console.log(`Container width: ${containerWidth}px, Scroll width: ${dobCell.scrollWidth}px`);
-  console.log(`Line height: ${lineHeight}px, Scroll height: ${dobCell.scrollHeight}px`);
 }
 
 
@@ -934,6 +911,9 @@ function updateSchoolDetails(tcformdata) {
   const schoolDetailsContainer = document.querySelector(
     ".school-details-container"
   );
+
+  const tcStatusContaine = document.querySelector(
+    ".tc-content h4")
   if (!schoolDetailsContainer) {
     console.error("School details container not found in the DOM.");
     return;
@@ -948,6 +928,8 @@ function updateSchoolDetails(tcformdata) {
   } else {
     console.warn("School name element not found.");
   }
+
+
 
   const addressElement = schoolDetailsContainer.querySelector(
     ".address-container p"
@@ -1026,6 +1008,14 @@ function updateSchoolDetails(tcformdata) {
     }`;
   } else {
     console.warn("Email element not found.");
+  }
+
+  const tcStatus = schoolDetailsContainer.querySelector(
+    ".tc-content h4"
+  );
+  
+  if (tcStatus) {
+    tcStatus.textContent = ` ${tcformdata.tc_status || "Not available"}`;
   }
 }
 

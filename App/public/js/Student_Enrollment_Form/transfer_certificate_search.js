@@ -779,7 +779,7 @@ async function regenerateTC(tc_no, gr_no, student_name, section, generation_stat
                 console.log('TC Form Data Object:', tcFormData);
 
                  // Update table header with dynamic tcStatus
-                 document.querySelector('.content-table thead').textContent = tcStatus;
+                 document.querySelector('.tc-content h4').textContent = tcStatus;
 
 
                 // Call the preview function
