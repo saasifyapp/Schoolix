@@ -1012,4 +1012,47 @@ router.get("/get-student-details-for-tc-regeneration", (req, res) => {
     });
 });
 
+
+// Endpoint to fetch school details for TC regeneration
+router.post('/fetch-school-detail-to-regenerate', (req, res) => {
+    const { loginName, schoolName } = req.body.data;
+    
+    // Validate input parameters
+    if (!loginName || !schoolName) {
+        console.log("Validation failed: Missing loginName or schoolName", { loginName, schoolName });
+        return res.status(400).json({ error: "Login name and school name are required" });
+    }
+
+    const sql = `
+        SELECT 
+            LoginName AS login_name,
+            schoolName AS school_name,
+            contact_no,
+            email_address,
+            udise_no,
+            board_index_no,
+            detailed_address
+        FROM user_details
+        WHERE LoginName = ? AND schoolName = ?
+    `;
+
+   // console.log("Executing school details query:", { query: sql, params: [loginName, schoolName] });
+
+    // Execute the query for school details
+    connection_auth.query(sql, [loginName, schoolName], (error, results) => {
+        if (error) {
+            console.error("Database error occurred during school details query:", { error, query: sql, params: [loginName, schoolName] });
+            return res.status(500).json({ error: "Database error", details: error.message });
+        }
+
+        if (results.length === 0) {
+            console.log("No school details found for:", { loginName, schoolName });
+            return res.status(404).json({ error: 'School details not found' });
+        }
+
+        res.json({ result: results[0] });
+    });
+});
+
+
 module.exports = router;

@@ -136,7 +136,11 @@ function formatDateForInput(dateString) {
 
 // If switching to a new page, store data in session storage
 function storeStudentDataForRedirection(data) {
-  sessionStorage.setItem("tcFormData", JSON.stringify(data));
+  // Add tc_status manually
+  const tcData = {
+      ...data,
+  };
+  sessionStorage.setItem("tcFormData", JSON.stringify(tcData));
 }
 
 // If redirected, fetch from session storage and populate form
@@ -562,7 +566,8 @@ document
         schoolName,
         loginName,
         ...schoolDetails,
-      };
+        tc_status: 'ORIGINAL'  // Add the tc_status field here
+    };
 
       console.log(tcformdata);
 
@@ -580,6 +585,7 @@ document
       // Apply date formatting
       const issueDate = new Date().toISOString().split("T")[0];
       tcformdata.issueDate = formatDate(issueDate);
+      tcformdata.dateOfAdmission = formatDate(tcformdata.dateOfAdmission);
       tcformdata.dateOfLeaving = formatDate(tcformdata.dateOfLeaving);
 
       await updateSwal("Saving TC Record...");
@@ -794,29 +800,31 @@ function createTCObject(tcformdata) {
   const dobCombined = `${dobFormatted} (${dobInWords})`;
 
   return {
-    "CERTIFICATE No": "1",
-    "GENERAL REGISTER No": tcformdata.tc_grNo || "1618",
-    "STUDENT NAME": tcformdata.studentName || "Om Deepak Dafade",
+    "CERTIFICATE No": tcformdata.tcNo || "" ,
+    "GENERAL REGISTER No": tcformdata.tc_grNo || "",
+    "STUDENT NAME": tcformdata.studentName || "",
     "MOTHER'S NAME": tcformdata.motherName || "Smita",
     "DATE OF BIRTH": dobCombined,
-    "PLACE OF BIRTH": tcformdata.placeOfBirth || "Amravati",
-    NATIONALITY: tcformdata.nationality || "Indian",
+    "PLACE OF BIRTH": tcformdata.placeOfBirth || "",
+    NATIONALITY: tcformdata.nationality || "",
     RELIGION: tcformdata.religion || "Hindu",
-    "CATEGORY & CASTE": `${tcformdata.category || "OBC"} - ${
-      tcformdata.caste || "Jain"
+    "CATEGORY & CASTE": `${tcformdata.category || ""} - ${
+      tcformdata.caste || ""
     }`,
-    "AADHAR ID": tcformdata.aadharId || "674816054773",
-    "LAST SCHOOL ATTENDED": tcformdata.lastSchool || "JC Highschool",
-    "DATE OF ADMISSION": tcformdata.dateOfAdmission || "2020-02-23",
-    "CLASS OF ADMISSION": tcformdata.classOfAdmission || "1st",
-    "DATE OF LEAVING": tcformdata.dateOfLeaving || "2020-03-01",
-    "STANDARD LEAVING": tcformdata.standardLeaving || "LKG",
+    "AADHAR ID": tcformdata.aadharId || "",
+    "PEN ID": tcformdata.penId || "",
+    "SARAL ID": tcformdata.saralId || "",
+    "LAST SCHOOL ATTENDED": tcformdata.lastSchool || "",
+    "DATE OF ADMISSION": tcformdata.dateOfAdmission || "",
+    "CLASS OF ADMISSION": tcformdata.classOfAdmission || "",
+    "DATE OF LEAVING": tcformdata.dateOfLeaving || "",
+    "STANDARD LEAVING": tcformdata.standardLeaving || "",
     "REASON FOR LEAVING":
-      tcformdata.reasonLeaving || "AT HIS / HER OWN REQUEST",
-    PROGRESS: tcformdata.progress || "Excellent",
-    CONDUCT: tcformdata.conduct || "Excellent",
-    RESULT: tcformdata.result || "Pass",
-    REMARK: tcformdata.remark || "Promoted to Next Class",
+      tcformdata.reasonLeaving || "",
+    PROGRESS: tcformdata.progress || "",
+    CONDUCT: tcformdata.conduct || "",
+    RESULT: tcformdata.result || "",
+    REMARK: tcformdata.remark || "",
   };
 }
 
