@@ -403,6 +403,10 @@ app.get('/Transport/transport_console', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Transport', 'transport_console.html'));
 });
 
+app.get('/Attendance/attendance_console', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Attendance', 'attendance_console.html'));
+});
+
 app.get('/FeeStructure/feeStructure', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Fees', 'feeStructure.html'));
 });
