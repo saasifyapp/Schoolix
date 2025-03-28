@@ -1,3 +1,9 @@
+pip --version
+pip install opencv-python
+pip install face_recognition
+
+
+
 import os
 import cv2
 import numpy as np
