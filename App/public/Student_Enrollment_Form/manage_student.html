@@ -165,34 +165,36 @@
             <button id="closeUpdatePackageOverlay" class="close-button">&times;</button>
             <h2 class="overlay-search-head">UPDATE STUDENT PACKAGE</h2>
 
-            <div class="search-container">
-                <div class="form-Searchgroup">
-                    <img class="searchIcon" src="/images/search.gif" alt="Search Icon"
-                        style="right: 25px; left: 405px;">
-                    <input type="text" class="form-control" id="update_packagesearchStudentInput" name="studentSearch"
-                        placeholder=" " oninput="" style="width: 400px;">
-                    <span class="form-control-placeholder" style="left: 3.75rem;">Search by Name or GR Number</span>
+            <div class="form-row">
+                <div class="search-container">
+                    <div class="form-Searchgroup">
+                        <img class="searchIcon" src="/images/search.gif" alt="Search Icon"
+                            style="right: 25px; left: 405px;">
+                        <input type="text" class="form-control" id="update_packagesearchStudentInput"
+                            name="studentSearch" placeholder=" " oninput="" style="width: 400px;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search by Name or GR Number</span>
+                    </div>
+
+                    <select id="dropdown1" class="form-control" style="width: 150px; margin-left: 10px;">
+                        <option value="primary">Primary</option>
+                        <option value="pre_primary">Pre-primary</option>
+                    </select>
+
+                    <!-- Second input field for standards with suggestion box -->
+                    <div class="form-group" style="margin-bottom: 5px;">
+                        <input type="text" class="form-control" id="update_packagestandard" placeholder="">
+                        <span class="form-control-placeholder">Class</span>
+                        <div id="update_packagestandardSuggestions" class="suggestions" style="width: 12.7rem;"></div>
+                    </div>
+
+                    <!-- Third input field for standards with suggestion box -->
+                    <div class="form-group" style="margin-bottom: 5px;">
+                        <input type="text" class="form-control" id="update_packagesDivision" placeholder="">
+                        <span class="form-control-placeholder">Division</span>
+                        <div id="update_packageDivisionSuggestions" class="suggestions" style="width: 12.7rem;"></div>
+                    </div>
+
                 </div>
-
-                <select id="dropdown1" class="form-control" style="width: 150px; margin-left: 10px;">
-                    <option value="primary">Primary</option>
-                    <option value="pre_primary">Pre-primary</option>
-                </select>
-
-                <!-- Second input field for standards with suggestion box -->
-                <div class="form-group">
-                    <input type="text" class="form-control" id="update_packagestandard" placeholder="">
-                    <span class="form-control-placeholder">Class</span>
-                    <div id="update_packagestandardSuggestions" class="suggestions"></div>
-                </div>
-
-                <!-- Third input field for standards with suggestion box -->
-                <div class="form-group">
-                    <input type="text" class="form-control" id="update_packagesDivision" placeholder="">
-                    <span class="form-control-placeholder">Division</span>
-                    <div id="update_packageDivisionSuggestions" class="suggestions"></div>
-                </div>
-
             </div>
 
             <div class="table-container">
@@ -236,7 +238,8 @@
                             <div class="form-group">
                                 <input type="text" class="form-control" id="categoryNameInput" placeholder=" ">
                                 <span class="form-control-placeholder">Category</span>
-                                <div id="categorySuggestionsContainer" class="suggestions"></div>
+                                <div id="categorySuggestionsContainer" class="suggestions" style="width: 28.7rem;">
+                                </div>
                                 <!-- Suggestion container for category -->
                             </div>
                         </div>
@@ -245,13 +248,13 @@
                             <div class="form-group">
                                 <input type="text" class="form-control" id="classGradeInput" placeholder=" ">
                                 <span class="form-control-placeholder">Grade</span>
-                                <div id="gradeSuggestionsContainer" class="suggestions"></div>
+                                <div id="gradeSuggestionsContainer" class="suggestions" style="width: 13rem;"></div>
                                 <!-- Suggestion container for grade -->
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="amountInput" placeholder=" ">
                                 <span class="form-control-placeholder">Amount</span>
-                                <div id="amountSuggestionsContainer" class="suggestions"></div>
+                                <div id="amountSuggestionsContainer" class="suggestions" style="width: 13rem;"></div>
                                 <!-- Suggestion container for amount -->
                             </div>
                         </div>
@@ -603,16 +606,18 @@
         <div class="overlay-content-search">
             <!DOCTYPE html>
             <html lang="en">
+
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Flexible Print Layout</title>
             </head>
+
             <body class="Legal">
                 <div class="watermark">
                     <img src="" alt="Watermark" class="watermark-img" id="watermark">
                 </div>
-            
+
                 <div class="header">
                     <div class="logo1-container">
                         <img src="" alt="Logo 1" class="logo">
@@ -645,7 +650,7 @@
                 <div class="tc-content">
                     <h4 style="margin: 0;"></h4>
                     <table class="content-table">
-                        <thead>                           
+                        <thead>
                         </thead>
                         <tbody>
                             <!-- Rows will be added here -->
@@ -666,14 +671,20 @@
                         </div>
                     </div>
                     <div class="warning-container">
-                        <p>No changes shall be made to any entry in this certificate except by the title authority issuing it.<br>Any infringement of this certificate will be treated as a violation of school policy and may result in a penalty and legal action as per the applicable rules and regulations</p>
+                        <p>No changes shall be made to any entry in this certificate except by the title authority
+                            issuing it.<br>Any infringement of this certificate will be treated as a violation of school
+                            policy and may result in a penalty and legal action as per the applicable rules and
+                            regulations</p>
                     </div>
                 </div>
                 <div class="print-options">
-                    <button onclick="printContent()" class="generate-button"><img src="/images/printer.gif" alt="Print TC">Print</button>
-                    <button onclick="window.location.href='/student_Enrollment_Form/manage_student'" class="generate-button"><img src="/images/cancel.png" alt="Cancel TC">Back</button>
+                    <button onclick="printContent()" class="generate-button"><img src="/images/printer.gif"
+                            alt="Print TC">Print</button>
+                    <button onclick="window.location.href='/student_Enrollment_Form/manage_student'"
+                        class="generate-button"><img src="/images/cancel.png" alt="Cancel TC">Back</button>
                 </div>
             </body>
+
             </html>
 
 

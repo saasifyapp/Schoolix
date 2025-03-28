@@ -111,6 +111,30 @@
     transition: transform 0.3s ease-in-out;
 }
 
+.overlay-content-enroll-face {
+    background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
+    padding: 20px;
+    border: 1px solid #888;
+    width: 95%;
+    max-width: 1200px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    top: 0rem;
+    bottom: 2rem;
+    border-radius: 1rem;
+    transition: transform 0.3s ease-in-out;
+    animation: fadeUp 0.3s ease-in-out;
+}
+
+
+.overlay-content-enroll-face h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    pointer-events: auto;
+    color: var(--grey-color);
+}
 
 .overlay-search-head {
     font-size: 30px;
@@ -706,150 +730,65 @@ svg path {
 }
 
 
-
-
-
-
-
-/*------------------------ ___________ Report Css ______------------------------------------------------------------------------------------------*/
-.filter-container {
-    display: flex;
+.generate-button,
+.enroll-face {
+    background-color: #85C1E9;
+    border: none;
+    color: black;
+    padding: 0;
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
-    gap: 30px;
-    margin-top: -10px;
-    animation: fadeInFromUp 1s ease-out;
-    /* Animation applied here */
-}
-
-
-.filter-container label {
-    color: var(--grey-color);
-}
-
-.dropdown {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.dropdown label {
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-.custom-input-container,
-.custom-dropdown-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.common-height {
-    height: 2.8125rem;
-    /* Adjust the height as needed */
-}
-
-.custom-input,
-.custom-dropdown {
-    padding-left: 2.5rem;
-    /* Add padding to the left for the icon */
-    padding-right: 2.5rem;
-    /* Add padding to the right for the right icon */
-    border: 0.0625rem solid #ccc;
-    /* Adjust border as needed */
-    border-radius: 0.625rem;
-    /* Adjust border-radius as needed */
-    font-size: 1rem;
-    /* Adjust font size as needed */
+    font-size: 14px;
     cursor: pointer;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    /* Add transition for smooth effect */
+    max-height: 100%;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 10px;
 }
 
-.custom-input:hover,
-.custom-input:focus,
-.custom-dropdown:hover,
-.custom-dropdown:focus {
-    box-shadow: 0 0 10px #5DADE2;
-    /* Add shadow on hover and focus */
-    border: 1px solid #85C1E9;
-    outline: none;
-}
-
-.custom-input-icon,
-.custom-dropdown-left-icon,
-.custom-dropdown-right-icon {
-    position: absolute;
-    width: 1.5rem;
-    /* Adjust the size as needed */
-    height: 1.5rem;
-    /* Adjust the size as needed */
-    pointer-events: none;
-    /* Ensure the icon does not interfere with input */
-    border-radius: 15px;
+.generate-button img,
+.enroll-face img {
+    width: 25px;
+    height: 25px;
+    border-radius: 0px;
+    margin: 5px;
     mix-blend-mode: multiply;
-    /* Add this property */
 }
 
-.custom-input-icon {
-    left: 0.75rem;
-    /* Adjust the position as needed */
+.generate-button span,
+.enroll-face span {
+    margin-right: 10px;
 }
 
-.custom-dropdown-left-icon {
-    left: 0.5rem;
-    /* Adjust the position as needed */
+.generate-button:hover,
+.enroll-face:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    background-color: #ea7a00;
 }
 
-.custom-dropdown-right-icon {
-    right: 0.5rem;
-    /* Adjust the position as needed */
+.generate-button:focus,
+.enroll-face:focus {
+    transform: scale(1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #ea7a00;
 }
 
-/* Hide the default dropdown arrow */
-.custom-dropdown {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background: none;
-    /* Remove the default background */
-    background-position: right 0.5rem center;
-    /* Position the custom right icon */
-}
-
-/* Override default styles for dropdown arrow */
-.custom-dropdown::after {
-    content: '';
-}
-
-.report-lottie {
+.left-side-enroll-face {
+    flex: 0 0 30%;
+    padding-right: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    mix-blend-mode: multiply;
 }
 
-
-/* Custom styles for SweetAlert2 popup */
-.library_setup_popup {
-    border-radius: 20px;
-    /* More rounded border radius */
-}
-
-/* Custom styles for SweetAlert2 button */
-.library_setup_button {
-    width: 100px;
-    /* Wider button */
-    border-radius: 20px;
-    /* Rounder button */
-    padding: 10px 20px;
-    /* Increase padding for a larger button */
-}
-
-/* Custom styles for SweetAlert2 title */
-.library_setup_title {
-    margin-bottom: 10px;
-    /* Reduce the gap between title and input fields */
+.right-side-enroll-face {
+    flex: 0 0 60%;
+    padding-left: 20px;
 }
 
 
@@ -1001,137 +940,48 @@ svg path {
     /* Make text bold on hover */
 }
 
-/* Styles for the selected city tags inside the input */
-.tag {
-    background: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 4px 8px;
-    display: flex;
-    align-items: center;
-}
 
-.tag-head {
-    font-size: 30px;
-    color: var(--grey-color);
-}
-
-.remove-tag {
-    margin-left: 5px;
-    cursor: pointer;
-    color: #ff0000;
-}
-
-
-.information-box {
-    display: none;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    margin-top: 10px;
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    position: relative;
-    /* Ensure it stays within the flow of the document */
-    width: 100%;
-    /* Match the width of the input field */
-}
-
-.tag-flex-container {
+.image-selection-row {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
+    gap: 10px;
 }
 
-.tag-left {
-    flex: 0;
-    margin-right: 50px;
-}
-
-.tag-right {
-    flex: 2;
-    overflow-x: auto;
-}
-
-.left-manageroute,
-.left-manageshift,
-.left-liststudents {
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
-    box-sizing: border-box;
-    color: white;
-    flex-direction: column;
-    padding: 20px;
-    border-radius: 20px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-    flex: 0.7 !important;
-}
-
-
-
-.input-section {
+.image-slot {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    gap: 5px;
+}
+
+.image-option-label {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.image-option-input {
     width: 100%;
+    max-width: 100px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 12px;
 }
 
-.input-form {
-    width: 100%;
+.webcam-button {
+    padding: 5px 10px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
 }
 
-.info-container {
-    color: black;
-    margin-bottom: 20px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: #fff;
-    display: none;
-    /* Initially hidden */
-    width: 100%;
-    max-height: 75px;
-    overflow-y: auto;
-    animation: fadeUp 0.5s ease-in-out forwards;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+.webcam-button:hover {
+    background: #0056b3;
 }
 
-/* Hover effect */
-.info-container:hover {
-    transform: translateY(-5px);
-    /* Slight upward movement */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    /* Stronger shadow on hover */
-}
-
-#map {
-    height: 90%; /* Ensure the map container takes full height of its parent */
-    width: 100%; /* Ensure the map container takes full width of its parent */
-}
-
-.leaflet-interactive {
-    stroke: #3939f0 !important;
-    stroke-width: 5 !important;
-    stroke-opacity: 1.0 !important;
-    stroke-dasharray: none !important; /* Ensure the line is continuous */
-}
-
-@keyframes fadeUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-
-
-/********************************** Create Category ***********************************************************/

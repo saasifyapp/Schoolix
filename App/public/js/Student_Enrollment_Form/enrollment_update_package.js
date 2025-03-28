@@ -320,6 +320,19 @@ function fetchStudentDetails(section) {
                     tr.appendChild(packageBreakupTd);
                     tr.appendChild(totalPackageTd);
 
+                    // Add click event listener to the row
+                    tr.addEventListener('click', function(e) {
+                        // Prevent triggering row click when clicking the checkbox directly
+                        if (e.target.type !== 'checkbox') {
+                            const checkbox = tr.querySelector('.student-checkbox');
+                            if (!checkbox.disabled) {
+                                checkbox.checked = !checkbox.checked;
+                                // Trigger the change event manually
+                                checkbox.dispatchEvent(new Event('change'));
+                            }
+                        }
+                    });
+
                     updatePackageTableBody.appendChild(tr);
                 });
             } else {
@@ -1097,6 +1110,7 @@ function populatePackageTable(selectedClass) {
                 if (feeStructure.class_grade.toLowerCase() !== 'all grades') {
                     const actionCell = document.createElement('td');
                     const removeButton = document.createElement('button');
+                    removeButton.classList.add('next-button');
                     removeButton.textContent = 'Remove';
                     removeButton.addEventListener('click', () => {
                         row.remove();
