@@ -3,7 +3,7 @@ import os
 import numpy as np
 
 # Define the image file with full path
-image_file = 'C:/Users/ingaleya/Desktop/Schoolix/Schoolix/App/image_recognition_playground/girl.jpg'
+image_file = 'C:/Users/ingaleya/Desktop/Schoolix/Schoolix/App/image_recognition_playground/boy.jpg'
 
 # Check if the image file exists
 if not os.path.exists(image_file):
