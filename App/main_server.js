@@ -403,6 +403,10 @@ app.get('/Transport/transport_console', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Transport', 'transport_console.html'));
 });
 
+app.get('/Attendance/attendance_console', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Attendance', 'attendance_console.html'));
+});
+
 app.get('/FeeStructure/feeStructure', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Fees', 'feeStructure.html'));
 });
@@ -617,6 +621,11 @@ app.use('/', studentenrollment);
 ////// SEARCH STUDENT ROUTES ///
 const enrollment_search_student = require('./src/routes/student_enrollment_form_routes/enrollment_search_student.js');
 app.use('/', enrollment_search_student);
+
+
+////// UPDATE PACKAGE ROUTES ///
+const enrollment_update_package = require('./src/routes/student_enrollment_form_routes/update_package.js');
+app.use('/', enrollment_update_package);
 
 
 ////// DELETE STUDENT ROUTES ///

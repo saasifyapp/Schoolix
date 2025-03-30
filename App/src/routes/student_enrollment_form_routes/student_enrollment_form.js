@@ -768,7 +768,7 @@ router.post('/submitEnrollmentForm', (req, res) => {
                 //console.log(`Fetched student_id: ${incrementResult[0].maxStudentId}, New student_id: ${newStudentId}`);
 
                 // Generate the UID for insertion using the new student_id and school name
-                const appUid = `${formattedSchoolName}_student_${newStudentId}`;
+                const appUid = `${formattedSchoolName}_student_${newStudentId}_${grNo}`;
                 //console.log(`Generated app_uid: ${appUid}`);
 
                 const query = `INSERT INTO ${tableName} (
@@ -1049,7 +1049,7 @@ router.get("/fetch-student", (req, res) => {
 
         // Return the results
         res.json(results);
-    });
+    }); 
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -133,28 +133,35 @@ function checkSectionCompletion(sectionId) {
     return Array.from(inputs).every(input => input.value.trim() !== ""); // Check if all inputs are filled
 }
 
-// Function to update the done icon for navigation items
-function updateDoneIcons() {
-    document.querySelectorAll('.form-navigation li').forEach(item => {
-        const sectionId = item.id.replace('-info', '-information'); // Map navigation ID to section ID
-        const isComplete = checkSectionCompletion(sectionId); // Check if the section is complete
-        const doneIcon = item.querySelector('.done-icon'); // Get the done icon for the current item
-
-        if (isComplete) {
+// Function to update the done icon for a specific section
+function updateDoneIconForSection(sectionId) {
+    const navItem = document.querySelector(`.form-navigation li[id="${sectionId.replace('-information', '-info')}"]`);
+    if (navItem) {
+        const doneIcon = navItem.querySelector('.done-icon');
+        if (checkSectionCompletion(sectionId)) {
             doneIcon.style.display = 'inline'; // Show the done icon if the section is complete
         } else {
             doneIcon.style.display = 'none'; // Hide the done icon if the section is incomplete
         }
-    });
+    }
 }
 
-// Add event listeners to all inputs to update the icons dynamically
+// Add event listeners to all inputs to dynamically update the specific section's icon
 document.querySelectorAll('.form-control, textarea').forEach(input => {
-    input.addEventListener('input', updateDoneIcons);
+    input.addEventListener('input', function() {
+        const section = input.closest('.section'); // Adjust the selector to match your section class
+        if (section) {
+            updateDoneIconForSection(section.id);
+        }
+    });
 });
 
-// Initialize done icons on page load
-updateDoneIcons();
+// Initialize done icons for all sections on page load
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll('.section').forEach(section => {
+        updateDoneIconForSection(section.id);
+    });
+});
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
