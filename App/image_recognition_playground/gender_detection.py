@@ -1,65 +1,35 @@
 import cv2
-import os
 import numpy as np
+import insightface
+import torch
 
-# Define the image file with full path
-image_file = 'C:/Users/ingaleya/Desktop/Schoolix/Schoolix/App/image_recognition_playground/boy.jpg'
+# Ensure InsightFace uses GPU if available
+ctx_id = 0 if torch.cuda.is_available() else -1  # 0 for GPU, -1 for CPU
+face_model = insightface.app.FaceAnalysis()
+face_model.prepare(ctx_id=ctx_id)  
 
-# Check if the image file exists
-if not os.path.exists(image_file):
-    print(f"Error: File '{image_file}' not found in {os.getcwd()}!")
-    exit()
+def detect_gender(image_path):
+    img = cv2.imread(image_path)
 
-# Load the image
-img = cv2.imread(image_file)
-if img is None:
-    print("Error: Could not load image! Check file path or integrity.")
-    exit()
+    if img is None:
+        print(f"Error: Unable to read image '{image_path}'")
+        return None
 
-# Load face detection model (Haar Cascade)
-face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+    faces = face_model.get(img)
 
-# Define full paths for gender model files
-model_folder = 'C:/Users/ingaleya/Desktop/Schoolix/Schoolix/App/image_recognition_playground/'
-prototxt_file = os.path.join(model_folder, 'gender_deploy.prototxt')
-caffemodel_file = os.path.join(model_folder, 'gender_net.caffemodel')
+    if not faces:
+        print(f"No face detected in '{image_path}'.")
+        return None
 
-# Load gender classification model (Caffe)
-try:
-    gender_net = cv2.dnn.readNetFromCaffe(prototxt_file, caffemodel_file)
-except Exception as e:
-    print(f"Error loading gender model: {e}")
-    exit()
+    gender = "Male" if faces[0].gender == 1 else "Female"
+    return gender
 
-# Gender labels
-gender_list = ['Male', 'Female']
+# Test images
+image_path1 = "C:/Users/yashi/Desktop/Schoolix_App/Schoolix/App/image_recognition_playground/1.jpg"  
+image_path2 = "C:/Users/yashi/Desktop/Schoolix_App/Schoolix/App/image_recognition_playground/1.jpg"  
 
-# Convert to grayscale for face detection
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+gender1 = detect_gender(image_path1)
+gender2 = detect_gender(image_path2)
 
-# Detect faces with adjusted parameters
-faces = face_cascade.detectMultiScale(gray, scaleFactor=1.05, minNeighbors=3, minSize=(50, 50))
-
-# Check if any faces were detected
-if len(faces) == 0:
-    print("No faces detected in the image!")
-else:
-    # Process the first detected face
-    for (x, y, w, h) in faces:
-        # Extract the face region with a slight padding
-        padding = 10
-        face_roi = img[max(0, y-padding):y+h+padding, max(0, x-padding):x+w+padding]
-        
-        # Prepare the face for gender classification (resize to 227x227)
-        blob = cv2.dnn.blobFromImage(face_roi, 1.0, (227, 227), (104.0, 177.0, 123.0))
-        gender_net.setInput(blob)
-        
-        # Predict gender with confidence
-        gender_preds = gender_net.forward()
-        gender_idx = gender_preds[0].argmax()
-        gender = gender_list[gender_idx]
-        confidence = gender_preds[0][gender_idx] * 100  # Convert to percentage
-        
-        # Print the result with confidence
-        print(f"Predicted gender: {gender} (Confidence: {confidence:.2f}%)")
-        break  # Only process the first face
+print(f"Gender for {image_path1}: {gender1}")
+print(f"Gender for {image_path2}: {gender2}")
