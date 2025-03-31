@@ -9,33 +9,35 @@ router.use(connectionManager);
 
 router.post('/send-face-data-to-enroll', async (req, res) => {
     try {
-        const images = req.body.images; // Receive the 5 base64 images from frontend
-
-        console.log('Step 1 - Received from UI:', images.length, 'images');
-
-        // Debugging: Log first few characters of one base64 string
-        console.log("Sample base64 from UI:", images[0]?.substring(0, 50));
-
-        // Send the images to FastAPI for gender detection
-        const response = await fetch('http://localhost:8000/detect-gender', {
+        const response = await fetch('http://localhost:8000/extract-embedding', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ images })
+            body: JSON.stringify({ images: req.body.images })
         });
 
-        if (!response.ok) {
-            throw new Error(`FastAPI Error: ${response.statusText}`);
-        }
-
-        // Receive gender detection results from FastAPI
         const result = await response.json();
-        console.log('Step 3 - Gender results:', result.genders);
+        //console.log('📤 Step 3 - Received embeddings:', JSON.stringify(result, null, 2));
+
+        // Create an array to hold the embeddings
+        const embeddingsArray = result.embeddings;
+
+        // Calculate number of non-null embeddings (objects) in the array
+        const validEmbeddings = embeddingsArray.filter(embedding => embedding !== null);
+        const count = validEmbeddings.length;
+
+        // Check if the array is holding embeddings
+        if (count > 0) {
+            console.log(`✅ Array created successfully! It holds ${count} embeddings for images:`, validEmbeddings);
+        } else {
+            console.log('❌ No valid embeddings found.');
+        }
 
         res.status(200).json(result);
     } catch (error) {
-        console.error('Error calling FastAPI:', error.message);
+        console.error('❌ Error calling FastAPI:', error.message);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
 
 module.exports = router;
