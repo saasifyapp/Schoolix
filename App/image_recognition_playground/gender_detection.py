@@ -16,7 +16,7 @@ os.environ["CUDA_LAUNCH_BLOCKING"] = "0"
 ctx_id = 0 if torch.cuda.is_available() else -1  # Use GPU if available
 
 # Load a faster model
-face_model = insightface.app.FaceAnalysis(name='buffalo_s')  # Faster model
+face_model = insightface.app.FaceAnalysis(name='buffalo_l')  # Faster model
 face_model.prepare(ctx_id=ctx_id)
 
 def detect_gender(image_path):
@@ -38,8 +38,8 @@ def detect_gender(image_path):
 
 # Process multiple images in parallel
 image_paths = [
-    "C:/Users/yashi/Desktop/Schoolix_App/Schoolix/App/image_recognition_playground/1.jpg",
-    "C:/Users/yashi/Desktop/Schoolix_App/Schoolix/App/image_recognition_playground/2.jpg"
+    "/content/1.jpg",
+    "/content/2.jpg"
 ]
 
 with ThreadPoolExecutor() as executor:

@@ -11,6 +11,10 @@ const cors = require('cors'); // Import the cors middleware
 const refreshTokens = []; // Define the refreshTokens array
 
 
+// Increase the request size limit
+app.use(express.json({ limit: '50mb' })); // For parsing application/json
+app.use(express.urlencoded({ limit: '50mb', extended: true })); // For parsing application/x-www-form-urlencoded
+
  
 app.use(express.json());
 app.use(cookieParser());
@@ -638,6 +642,11 @@ const student_transfer_form = require('./src/routes/student_enrollment_form_rout
 app.use('/', student_transfer_form);
 
 
+///////////////////////////////////// ATTENDANCE ROUTES //////////////////
+
+///////////////////////////FACE ENROLLMENT FORM ROUTES//////////////////
+const face_enrollment_form = require('./src/routes/attendance_routes/attendance_face_enrollment.js');
+app.use('/', face_enrollment_form);
 
 // Start the server 
 const PORT = process.env.PORT || 4000;

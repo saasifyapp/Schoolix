@@ -36,6 +36,8 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+/////////////////////////////// ENROLL BUTTON FUNCTIONALITY /////////////////
+
 document.addEventListener('DOMContentLoaded', () => {
     // Function to set up image slot functionality
     function setupImageSlot(slotNumber) {
@@ -46,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const webcamCanvas = document.getElementById(`webcamCanvas${slotNumber}`);
         const imageUpload = document.getElementById(`imageUpload${slotNumber}`);
         const imagePreview = document.getElementById(`imagePreview${slotNumber}`);
-        const imageDataInput = document.getElementById(`imageData${slotNumber}`);
         let stream = null;
 
         // Start Webcam
@@ -71,11 +72,13 @@ document.addEventListener('DOMContentLoaded', () => {
             webcamCanvas.height = webcam.videoHeight;
             context.drawImage(webcam, 0, 0, webcamCanvas.width, webcamCanvas.height);
 
-            // Convert canvas to image and display in preview
-            const imageDataUrl = webcamCanvas.toDataURL('image/png');
+            // Convert canvas to JPG image and display in preview
+            const imageDataUrl = webcamCanvas.toDataURL('image/jpeg');
             imagePreview.src = imageDataUrl;
             imagePreview.style.display = 'block';
-            imageDataInput.value = imageDataUrl; // Store image data for form submission
+
+            // Store image data in sessionStorage
+            sessionStorage.setItem(`userImage${slotNumber}`, imageDataUrl);
 
             // Stop the webcam after capturing
             stopWebcam();
@@ -105,7 +108,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 reader.onload = (e) => {
                     imagePreview.src = e.target.result;
                     imagePreview.style.display = 'block';
-                    imageDataInput.value = e.target.result; // Store image data for form submission
+
+                    // Store image data in sessionStorage
+                    sessionStorage.setItem(`userImage${slotNumber}`, e.target.result);
                 };
                 reader.readAsDataURL(file);
             }
@@ -117,11 +122,59 @@ document.addEventListener('DOMContentLoaded', () => {
         setupImageSlot(i);
     }
 
+    // Handle form submission
+    document.getElementById('enrollFaceForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        // Get the form data
+        const formData = {};
+        const formElements = document.getElementById('enrollFaceForm').elements;
+        for (let element of formElements) {
+            if (element.name && element.type !== 'file') {
+                formData[element.name] = element.value;
+            }
+        }
+
+        // Append images from sessionStorage
+        const images = [];
+        for (let i = 1; i <= 5; i++) {
+            const userImageData = sessionStorage.getItem(`userImage${i}`);
+            if (userImageData) {
+                images.push(userImageData);
+            }
+        }
+
+        console.log('Form data:', formData);
+        console.log('Images stored in session:', images);
+
+        // Send data to the backend for embedding
+        try {
+            const response = await fetch('/send-face-data-to-enroll', { // Modified endpoint name
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    ...formData,
+                    images
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`An error occurred: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            console.log('Enroll process completed successfully:', result);
+        } catch (error) {
+            console.error('Error during enroll process:', error);
+        }
+    });
+
     // Optional: Reset all previews if form is reset
     document.getElementById('enrollFaceForm').addEventListener('reset', () => {
         for (let i = 1; i <= 5; i++) {
             const imagePreview = document.getElementById(`imagePreview${i}`);
-            const imageDataInput = document.getElementById(`imageData${i}`);
             const webcam = document.getElementById(`webcam${i}`);
             const startWebcamButton = document.getElementById(`startWebcam${i}`);
             const captureImageButton = document.getElementById(`captureImage${i}`);
@@ -129,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             imagePreview.src = '';
             imagePreview.style.display = 'none';
-            imageDataInput.value = '';
+            sessionStorage.removeItem(`userImage${i}`);
             if (webcam.srcObject) {
                 webcam.srcObject.getTracks().forEach(track => track.stop());
                 webcam.srcObject = null;
