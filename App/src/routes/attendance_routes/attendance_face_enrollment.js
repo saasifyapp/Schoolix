@@ -7,35 +7,34 @@ const connectionManager = require('../../middleware/connectionManager'); // Adju
 router.use(connectionManager);
 
 
-// Endpoint to receive form data and images
 router.post('/send-face-data-to-enroll', async (req, res) => {
-    const { images } = req.body;
-
-    // Log the number of images received to the console
-    console.log('Number of Images:', images.length);
-
-    // Send images to Python backend for embedding
     try {
-        const response = await fetch('http://python-backend-address:5000/enroll-embeed', { // Replace with your Python backend address and port
+        const images = req.body.images; // Receive the 5 base64 images from frontend
+
+        console.log('Step 1 - Received from UI:', images.length, 'images');
+
+        // Debugging: Log first few characters of one base64 string
+        console.log("Sample base64 from UI:", images[0]?.substring(0, 50));
+
+        // Send the images to FastAPI for gender detection
+        const response = await fetch('http://localhost:8000/detect-gender', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ images })
         });
 
         if (!response.ok) {
-            throw new Error(`An error occurred: ${response.statusText}`);
+            throw new Error(`FastAPI Error: ${response.statusText}`);
         }
 
+        // Receive gender detection results from FastAPI
         const result = await response.json();
-        console.log('Embedding process completed successfully:', result);
+        console.log('Step 3 - Gender results:', result.genders);
 
-        // Send response back to client
         res.status(200).json(result);
     } catch (error) {
-        console.error('Error during embedding process:', error);
-        res.status(500).send('Internal Server Error');
+        console.error('Error calling FastAPI:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
