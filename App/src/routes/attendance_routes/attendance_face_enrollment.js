@@ -18,7 +18,7 @@ router.post('/send-face-data-to-enroll', async (req, res) => {
             return res.status(400).json({ error: "No valid images provided." });
         }
 
-        console.log("🔄 Sending images for embedding...");
+        //console.log("🔄 Sending images for embedding...");
 
         // Step 1: Send images to FastAPI for embedding extraction
         const response = await fetch('http://localhost:8000/extract-embedding', {
@@ -31,7 +31,7 @@ router.post('/send-face-data-to-enroll', async (req, res) => {
             throw new Error("Failed to communicate with FastAPI for embedding extraction.");
         }
 
-        console.log("🔄 Embedding images...");
+        //console.log("🔄 Embedding images...");
         const result = await response.json();
         const embeddingsArray = result.embeddings;
 
@@ -39,7 +39,7 @@ router.post('/send-face-data-to-enroll', async (req, res) => {
             return res.status(400).json({ error: 'No valid embeddings found' });
         }
 
-        console.log("✅ Embedding completed, storing face details...");
+        //console.log("✅ Embedding completed, storing face details...");
 
         // Convert embeddings array to a string format for SQL storage
         const embeddingsString = JSON.stringify(embeddingsArray);
@@ -59,7 +59,7 @@ router.post('/send-face-data-to-enroll', async (req, res) => {
                     return res.status(500).json({ error: 'Database insertion failed' });
                 }
 
-                console.log(`✅ Face enrolled successfully for GR No: ${grId}, Student: ${name}, Standard: ${standard}`);
+                //console.log(`✅ Face enrolled successfully for GR No: ${grId}, Student: ${name}, Standard: ${standard}`);
                 res.status(201).json({ 
                     message: 'Face enrolled successfully!', 
                     grId, name, standard
