@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="/css/Attendence_Css/AttendanceConsole.css">
     <link rel="stylesheet" href="/css/Attendence_Css/Attendance-form-control.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.min.js"></script>
+
 </head>
 
 
@@ -52,8 +54,7 @@
                     <dotlottie-player src="https://lottie.host/82fb7e83-3aa2-47ea-a258-cda4c1701d85/kGcPRkDTP7.lottie"
                         background="transparent" speed="1" style="width: 200px;
                         height: 236px;
-                        margin-left: 39px;" loop
-                        autoplay></dotlottie-player>
+                        margin-left: 39px;" loop autoplay></dotlottie-player>
                 </div>
                 <h3>Enroll Face</h3>
             </button>
@@ -61,7 +62,14 @@
 
         <div class="card">
             <button id="button2">
-                <div class="dotlottie-container"></div>
+                <div class="dotlottie-container">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player   src="https://lottie.host/d420a168-23ec-4a58-a5fd-17e63c209935/jNkbaTRMFD.lottie"
+                        background="transparent" speed="1" style="width: 200px;
+                        height: 236px;
+                        margin-left: 39px;" loop autoplay></dotlottie-player>
+                </div>
                 <h3>Open Overlay 2</h3>
             </button>
         </div>
@@ -70,7 +78,7 @@
 
     <div id="overlay1" class="overlay">
         <div class="overlay-content-enroll-face">
-            <button id="closeFeeCategoryOverlay1" class="close-button">×</button>
+            <button id="closeAttendanceOverlay1" class="close-button">×</button>
             <div class="overlay-inner">
                 <!-- Left Side: Animation -->
                 <div class="left-side-edit-enroll-face">
@@ -87,29 +95,27 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <input type="text" class="form-control" id="enroll_category" name="category"
-                                    placeholder=" " >
+                                    placeholder=" ">
                                 <span class="form-control-placeholder">Category</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="enroll_name" name="name" placeholder=" "
-                                    >
+                                <input type="text" class="form-control" id="enroll_name" name="name" placeholder=" ">
                                 <span class="form-control-placeholder">Name</span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="enroll_grId" name="grId" placeholder=" "
-                                    >
+                                <input type="text" class="form-control" id="enroll_grId" name="grId" placeholder=" ">
                                 <span class="form-control-placeholder">Gr/Id</span>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <input type="text" class="form-control" id="enroll_section" name="section"
-                                    placeholder=" " >
+                                    placeholder=" ">
                                 <span class="form-control-placeholder">Section</span>
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="enroll_standard" name="standard"
-                                    placeholder=" " >
+                                    placeholder=" ">
                                 <span class="form-control-placeholder">Standard</span>
                             </div>
                             <!--
@@ -227,7 +233,21 @@
     <div id="overlay2" class="overlay-search" style="display: none;">
         <div class="overlay-content-search">
             <h2 class="overlay-search-head">Overlay 2</h2>
-            <button id="closeFeeCategoryOverlay2" class="close-button">&times;</button>
+            <button id="closeAttendanceOverlay2" class="close-button">&times;</button>
+
+            <button id="captureImageBtn">Capture Image</button>
+
+            <!-- Webcam Preview Overlay -->
+            <div id="previewOverlay"
+                style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); align-items: center; justify-content: center;">
+                <div style="background: white; padding: 20px; border-radius: 10px; text-align: center;">
+                    <h3>Webcam Preview</h3>
+                    <video id="videoPreview" autoplay playsinline style="width: 100%; max-width: 300px;"></video>
+                    <p id="faceDetectedMsg">🔍 Detecting face...</p>
+                    <canvas id="capturedCanvas" style="display: none;"></canvas>
+                    <button id="captureAgainBtn" style="display: none;">Try Again</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -235,6 +255,10 @@
     <script src="/js/Universal_Components_JS/handle_session.js"></script>
     <script src="/js/Universal_Components_JS/Helping_functions.js"></script>
     <script src="/js/Attendance/Attendance_console.js"></script>
+    <script src="/js/Attendance/attendance_enroll_face.js"></script>
+    <script src="/js/Attendance/attendance_manage_face.js"></script>
+
+
 </body>
 
 </html>
