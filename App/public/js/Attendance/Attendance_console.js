@@ -122,54 +122,122 @@ document.addEventListener('DOMContentLoaded', () => {
         setupImageSlot(i);
     }
 
-    // Handle form submission
-    document.getElementById('enrollFaceForm').addEventListener('submit', async (event) => {
-        event.preventDefault();
+///////////////////////////////////////// ENROLL BUTTON FUNCTIONALITY //////////////////////    
 
-        // Get the form data
-        const formData = {};
-        const formElements = document.getElementById('enrollFaceForm').elements;
-        for (let element of formElements) {
-            if (element.name && element.type !== 'file') {
-                formData[element.name] = element.value;
+document.getElementById('enrollFaceForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    // Get form data & validate required fields
+    let isFormValid = true;
+    let missingFields = [];
+    const formData = {};
+    const requiredFields = ["category", "name", "grId", "section", "standard"];
+    const formElements = document.getElementById('enrollFaceForm').elements;
+
+    for (let element of formElements) {
+        if (element.name && element.type !== 'file') {
+            formData[element.name] = element.value.trim();
+            if (requiredFields.includes(element.name) && !formData[element.name]) {
+                isFormValid = false;
+                missingFields.push(element.name);
             }
         }
+    }
 
-        // Append images from sessionStorage
-        const images = [];
-        for (let i = 1; i <= 5; i++) {
-            const userImageData = sessionStorage.getItem(`userImage${i}`);
-            if (userImageData) {
-                images.push(userImageData);
-            }
+    // Append images directly into formData & check at least 1 image is provided
+    let imageCount = 0;
+    for (let i = 1; i <= 5; i++) {
+        const userImageData = sessionStorage.getItem(`userImage${i}`);
+        if (userImageData) {
+            formData[`image${i}`] = userImageData;
+            imageCount++;
         }
+    }
 
-        console.log('Form data:', formData);
-        console.log('Images stored in session:', images);
+    if (imageCount === 0) {
+        isFormValid = false;
+        missingFields.push("at least one image");
+    }
 
-        // Send data to the backend for embedding
-        try {
-            const response = await fetch('/send-face-data-to-enroll', { // Modified endpoint name
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    ...formData,
-                    images
-                })
-            });
+    // If validation fails, show error and stop execution
+    if (!isFormValid) {
+        await Swal.fire({
+            icon: "warning",
+            title: "Missing Information!",
+            html: `Please fill out: <strong>${missingFields.join(", ")}</strong>`,
+        });
+        return;  // Stop execution if validation fails
+    }
 
-            if (!response.ok) {
-                throw new Error(`An error occurred: ${response.statusText}`);
-            }
+    // Initialize Swal loader
+    const updateSwal = async (message) => {
+        Swal.update({
+            title: "Enrolling Face...",
+            html: message,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+        });
+        Swal.showLoading();
+        await new Promise((resolve) => setTimeout(resolve, 1000));  // Smooth UI transition
+    };
 
-            const result = await response.json();
-            console.log('Enroll process completed successfully:', result);
-        } catch (error) {
-            console.error('Error during enroll process:', error);
-        }
+    // Show initial Swal loader
+    Swal.fire({
+        title: "Processing...",
+        html: "🔄 Sending images for embedding...",
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => Swal.showLoading(),
     });
+
+    try {
+        await updateSwal("🔄 Embedding images...");
+        const response = await fetch('/send-face-data-to-enroll', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Server Error: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        await updateSwal("🔄 Storing face details...");
+
+        // Success Alert with Dynamic Data
+        await Swal.fire({
+            icon: "success",
+            title: "✅ Face Enrolled Successfully!",
+            html: `Face enrolled for <strong>GR No: ${formData.grId}</strong> | <strong>Name: ${formData.name}</strong> | <strong>Standard: ${formData.standard}</strong>`,
+        });
+
+        // Clear form fields
+        document.getElementById('enrollFaceForm').reset();
+
+        // Remove images from sessionStorage
+        for (let i = 1; i <= 5; i++) {
+            sessionStorage.removeItem(`userImage${i}`);
+        }
+
+        // Clear image previews if displayed
+        for (let i = 1; i <= 5; i++) {
+            const imgPreview = document.getElementById(`imagePreview${i}`);
+            if (imgPreview) imgPreview.src = "";
+        }
+
+    } catch (error) {
+        await Swal.fire({
+            icon: "error",
+            title: "❌ Enrollment Failed",
+            text: error.message || "An unexpected error occurred. Please try again.",
+        });
+    }
+});
+
+
+
+/////////////////////////////////////////////////////////////////////////////////
 
     // Optional: Reset all previews if form is reset
     document.getElementById('enrollFaceForm').addEventListener('reset', () => {
