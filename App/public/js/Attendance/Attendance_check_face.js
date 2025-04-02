@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let isDetecting = false;
     let detectionConfirmed = 0;
     let modelLoaded = false;
+    let storedEmbeddings = [];
 
     async function loadFaceModel() {
         if (modelLoaded) return;
@@ -17,6 +18,22 @@ document.addEventListener("DOMContentLoaded", function () {
             modelLoaded = true;
         } catch (error) {
             console.error("❌ Error Loading Face Model:", error);
+        }
+    }
+
+    async function fetchEmbeddings() {
+        try {
+            const response = await fetch('/retrieve-stored-embeddings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            
+            const data = await response.json();
+            storedEmbeddings = data.embeddings;  // Assuming the endpoint returns { embeddings: [...] }
+        
+            //console.log('Embeddings retrieved:', storedEmbeddings);
+        } catch (error) {
+            console.error('❌ Error retrieving embeddings:', error);
         }
     }
 
@@ -41,6 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         try {
             await loadFaceModel();
+            await fetchEmbeddings();
 
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());
@@ -134,12 +152,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const response = await fetch('/check-user-face-existence', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ image: latestImage })
+                body: JSON.stringify({ image: latestImage, embeddings: storedEmbeddings })
             });
             
             const result = await response.json();
-            //console.log('Image sent to backend');
-            console.log(result.message);  // Display server response in console
+            //console.log(result.message);  // Display server response in console
         } catch (error) {
             console.error('Error calling endpoint:', error);
         }
