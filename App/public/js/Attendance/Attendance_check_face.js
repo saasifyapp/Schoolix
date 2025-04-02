@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             await faceapi.nets.tinyFaceDetector.loadFromUri("https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights");
             modelLoaded = true;
-            console.log("✅ Face AI Model Loaded Successfully!");
         } catch (error) {
             console.error("❌ Error Loading Face Model:", error);
         }
@@ -87,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     detectionConfirmed++;
                     if (detectionConfirmed >= 3) {
                         faceDetectedMsg.innerText = "✅ Face Detected! Capturing...";
-                        captureImage();
+                        await captureImage();
                         return;
                     } else {
                         faceDetectedMsg.innerText = `🔍 Face Detected... Hold Still (${detectionConfirmed}/3)`;
@@ -106,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
         checkForFace();
     }
 
-    function captureImage() {
+    async function captureImage() {
         isDetecting = false;
 
         const context = canvasElement.getContext("2d");
@@ -117,38 +116,43 @@ document.addEventListener("DOMContentLoaded", function () {
         const imageData = canvasElement.toDataURL("image/png");
         saveImageToSession(imageData);
 
-        const storedImages = getStoredImages();
-        faceDetectedMsg.innerText = `📸 Captured (${storedImages.length}/5)`;
+        faceDetectedMsg.innerText = `📸 Image Captured!`;
 
-        console.log("Stored Images:");
-        storedImages.forEach((img, index) => console.log(`Image ${index + 1}: ${img.substring(0, 25)}`));
+        // Stop the camera stream
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
 
-        if (storedImages.length < 5) {
-            setTimeout(detectFace, 1000);
-        } else {
-            stopWebcam();
-            previewOverlay.style.display = "none";
-            console.log("✅ 5 images captured. Preview closed.");
+        // Turn off the preview
+        previewOverlay.style.display = "none";
+        videoElement.style.display = "none";
+
+        try {
+            const storedFaces = getStoredImages();
+            const latestImage = storedFaces[storedFaces.length - 1];
+
+            const response = await fetch('/check-user-face-existence', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: latestImage })
+            });
+            
+            const result = await response.json();
+            //console.log('Image sent to backend');
+            console.log(result.message);  // Display server response in console
+        } catch (error) {
+            console.error('Error calling endpoint:', error);
         }
     }
 
     function saveImageToSession(base64Image) {
         let storedFaces = getStoredImages();
-        if (storedFaces.length >= 5) storedFaces.shift();
         storedFaces.push(base64Image);
         sessionStorage.setItem("liveUserFaces", JSON.stringify(storedFaces));
     }
 
     function getStoredImages() {
         return JSON.parse(sessionStorage.getItem("liveUserFaces")) || [];
-    }
-
-    function stopWebcam() {
-        if (stream) {
-            stream.getTracks().forEach(track => track.stop());
-        }
-        videoElement.style.display = "none";
-        canvasElement.style.display = "block";
     }
 
     captureButton.addEventListener("click", startWebcam);

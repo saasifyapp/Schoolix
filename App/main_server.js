@@ -648,6 +648,13 @@ app.use('/', student_transfer_form);
 const face_enrollment_form = require('./src/routes/attendance_routes/attendance_face_enrollment.js');
 app.use('/', face_enrollment_form);
 
+
+/////////////////////////// DETECT FACE ROUTES//////////////////
+const detect_face = require('./src/routes/attendance_routes/attendance_check_face.js');
+app.use('/', detect_face);
+
+
+
 // Start the server 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
