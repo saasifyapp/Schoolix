@@ -26,18 +26,19 @@ router.post('/retrieve-stored-embeddings', async (req, res) => {
             }
 
             const storedEmbeddings = results.map(row => {
-                let embedding;
+                let embeddings;
                 try {
-                    embedding = JSON.parse(row.image_decode);
+                    embeddings = JSON.parse(row.image_decode);
                 } catch (e) {
-                    embedding = [];
+                    embeddings = [];
                 }
+
                 return {
                     user_id: row.user_id,
                     name: row.name,
                     section: row.section,
                     standard_division: row.standard_division,
-                    embedding: embedding.flat() // Ensure embedding is a flat array
+                    embedding: embeddings
                 };
             });
 
@@ -62,12 +63,10 @@ router.post('/retrieve-stored-embeddings', async (req, res) => {
                 res.status(500).json({ error: 'Internal Server Error', details: error.message });
             });
         });
-
     } catch (error) {
         res.status(500).json({ error: 'Internal Server Error', details: error.message });
     }
 });
-
 
 ///////////////////////////////////////////////////////////////////////////////
 

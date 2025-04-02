@@ -98,9 +98,9 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!isDetecting) return;
 
             try {
-                const result = await faceapi.detectSingleFace(videoElement, options);
+                const results = await faceapi.detectAllFaces(videoElement, options);
 
-                if (result) {
+                if (results.length === 1) {
                     detectionConfirmed++;
                     if (detectionConfirmed >= 3) {
                         faceDetectedMsg.innerText = "✅ Face Detected! Capturing...";
@@ -111,7 +111,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 } else {
                     detectionConfirmed = 0;
-                    faceDetectedMsg.innerText = "❌ No Face Detected...";
+                    if (results.length === 0) {
+                        faceDetectedMsg.innerText = "❌ No Face Detected...";
+                    } else {
+                        faceDetectedMsg.innerText = "❌ Multiple Faces Detected...";
+                    }
                 }
             } catch (error) {
                 console.error("Face detection error:", error);
@@ -122,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         checkForFace();
     }
-
+    
     async function captureImage() {
         isDetecting = false;
 
