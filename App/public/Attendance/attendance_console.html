@@ -239,8 +239,8 @@
             <button id="stopCaptureBtn">Stop Capture</button>
     
             <!-- Hidden Webcam Video Element for Face Detection -->
-            <video id="videoPreview" autoplay playsinline style="display: none;"></video>
-            <canvas id="capturedCanvas" style="display: none;"></canvas>
+            <video id="videoPreview" autoplay playsinline style="display: flex;"></video>
+            <canvas id="capturedCanvas" style="display: flex;"></canvas>
             
             <div class="table-container">
                 <table id="feeCategoriesTable" class="styled-table">
@@ -279,7 +279,3 @@
 
 </html>
 
-
-SELECT user_id, name, section, date_of_attendance, MIN(in_time) AS in_time, MAX(in_time) AS out_time
-FROM attendance_user_logs
-GROUP BY user_id, name, section, date_of_attendance
