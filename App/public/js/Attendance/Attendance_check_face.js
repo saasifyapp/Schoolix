@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const captureButton = document.getElementById("captureImageBtn");
+    const stopCaptureButton = document.getElementById("stopCaptureBtn");
     const videoElement = document.getElementById("videoPreview");
     const canvasElement = document.getElementById("capturedCanvas");
 
@@ -27,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             const data = await response.json();
-            storedEmbeddings = data.embeddings;  // Assuming the endpoint returns { embeddings: [...] }
+            storedEmbeddings = data.embeddings;
 
             //console.log('Embeddings retrieved:', storedEmbeddings);
         } catch (error) {
@@ -44,9 +45,9 @@ document.addEventListener("DOMContentLoaded", function () {
             didOpen: () => Swal.showLoading(),
         });
 
-        sessionStorage.removeItem("liveUserFaces"); // Clear previous images
+        sessionStorage.removeItem("liveUserFaces");
 
-        videoElement.width = 640; // Reset video element size
+        videoElement.width = 640;
         videoElement.height = 480;
 
         try {
@@ -64,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
             videoElement.srcObject = stream;
 
             videoElement.onloadedmetadata = () => {
-                Swal.close(); // Close loading screen only when everything is ready
+                Swal.close();
                 detectFace();
             };
         } catch (error) {
@@ -118,11 +119,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const imageData = canvasElement.toDataURL("image/png");
         saveImageToSession(imageData);
 
-        // Stop the camera stream
-        if (stream) {
-            stream.getTracks().forEach(track => track.stop());
-        }
-
         try {
             const storedFaces = getStoredImages();
             const latestImage = storedFaces[storedFaces.length - 1];
@@ -134,9 +130,25 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             const result = await response.json();
-            //console.log(result.message);  // Display server response in console
+            //console.log(result.message);
+
+            if (response.ok) {
+                // Restart detection on a successful response
+                detectFace();
+            }
         } catch (error) {
             console.error('Error calling endpoint:', error);
+        }
+    }
+
+    // Function to stop capture
+    function stopCapture() {
+        isDetecting = false;
+
+        // Stop the camera stream
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            stream = null;
         }
     }
 
@@ -151,4 +163,5 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     captureButton.addEventListener("click", startWebcam);
+    stopCaptureButton.addEventListener("click", stopCapture); // Attach stopCapture function to stop button
 });
