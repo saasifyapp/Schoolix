@@ -96,40 +96,77 @@ router.post("/check-user-face-existence", async (req, res) => {
 
         const result = await response.json();
 
+        const formatDate = () => {
+            const date = new Date();
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            const year = date.getFullYear();
+            return `${day}-${month}-${year}`;
+        };
+
+        const date_of_attendance = formatDate();
+        
         if (result.error) {
-            console.log('No match found or embedding failed.');
-            return res.status(400).json({ error: result.error });
+            //console.log('No match found. Probably Visitor.');
+
+            // No match - prepare data to be INSERTed with default 'Unavailable' values
+            const user_id = 'Unavailable';
+            const name = 'Unavailable';
+            const section = 'Visitor';
+            const standard_division = 'Unavailable';
+            const confidence = result.confidence || 'Unavailable'; // Assuming the FastAPI sends confidence when no match is found
+            const live_face_embedding = result.live_face_embedding || 'Unavailable';
+
+            const in_time = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); // Current time in HH:MM format
+
+            // Convert the embedding to a string format to store in the database
+            const embeddingString = JSON.stringify(live_face_embedding);
+
+            const insertQuery = `
+                INSERT INTO attendance_user_logs (user_id, name, section, standard_division, date_of_attendance, in_time, out_time, image_decode, confidence)
+                VALUES (?, ?, ?, ?, ?, ?, NULL, ?, ?)
+            `;
+
+            req.connectionPool.query(insertQuery, [user_id, name, section, standard_division, date_of_attendance, in_time, embeddingString, confidence], (error, results) => {
+                if (error) {
+                    console.error("Error inserting data into the database:", error.message);
+                    return res.status(500).json({ error: "Database Insertion Error", details: error.message });
+                }
+
+                console.log("Data inserted successfully into attendance_user_logs for No Match case.");
+                return res.status(200).json({ message: 'No match found, data inserted with default values.' });
+            });
+        } else {
+            //console.log('Matches found:', result.matches);
+
+            // Match found - use exact values from the response
+            const { user_id, name, section, standard_division, confidence, live_face_embedding } = result.matches[0]; // Assuming we only have one match
+            const in_time = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); // Current time in HH:MM format
+
+            // Convert the embedding to a string format to store in the database
+            const embeddingString = JSON.stringify(live_face_embedding);
+
+            const insertQuery = `
+                INSERT INTO attendance_user_logs (user_id, name, section, standard_division, date_of_attendance, in_time, out_time, image_decode, confidence)
+                VALUES (?, ?, ?, ?, ?, ?, NULL, ?, ?)
+            `;
+
+            req.connectionPool.query(insertQuery, [user_id, name, section, standard_division, date_of_attendance, in_time, embeddingString, confidence], (error, results) => {
+                if (error) {
+                    console.error("Error inserting data into the database:", error.message);
+                    return res.status(500).json({ error: "Database Insertion Error", details: error.message });
+                }
+
+                console.log("Data inserted successfully into attendance_user_logs.");
+                return res.status(200).json(result);
+            });
         }
-
-        console.log('Matches found:', result.matches);
-
-        // Insert data into the attendance_user_logs table
-        const { user_id, name, section, standard_division, confidence, live_face_embedding } = result.matches[0]; // Assuming we only have one match
-        const in_time = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); // Current time in HH:MM format
-
-        // Convert the embedding to a string format to store in the database
-        const embeddingString = JSON.stringify(live_face_embedding);
-
-        const insertQuery = `
-            INSERT INTO attendance_user_logs (user_id, name, section, standard_division, date_of_attendance, in_time, out_time, image_decode, confidence)
-            VALUES (?, ?, ?, ?, CURDATE(), ?, NULL, ?, ?)
-        `;
-
-        // Using the connection pool from req.connectionPool
-        req.connectionPool.query(insertQuery, [user_id, name, section, standard_division, in_time, embeddingString, confidence], (error, results) => {
-            if (error) {
-                console.error("Error inserting data into the database:", error.message);
-                return res.status(500).json({ error: "Database Insertion Error", details: error.message });
-            }
-
-            console.log("Data inserted successfully into attendance_user_logs.");
-            return res.status(200).json(result);
-        });
     } catch (error) {
         console.error('Error calling FastAPI server:', error);
         res.status(500).json({ error: 'Internal Server Error', details: error.message });
     }
 });
+
 
 
 module.exports = router;

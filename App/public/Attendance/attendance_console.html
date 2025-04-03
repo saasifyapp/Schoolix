@@ -236,6 +236,8 @@
             <button id="closeAttendanceOverlay2" class="close-button">&times;</button>
     
             <button id="captureImageBtn">Capture Image</button>
+            <button id="stopCaptureBtn" style="display: none;">Stop Capture</button>
+
             
             <!-- Hidden Webcam Video Element for Face Detection -->
             <video id="videoPreview" autoplay playsinline style="display: none;"></video>
@@ -245,10 +247,16 @@
                 <table id="feeCategoriesTable" class="styled-table">
                     <thead>
                         <tr>
-                            <th>Category ID</th>
-                            <th>Category Name</th>
-                            <th>Description</th>
-                            <th>Action</th> <!-- Action column added -->
+                            <th>Record ID</th>
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th>Action</th>
+                            <th>Section</th>
+                            <th>Standard</th>
+                            <th>Date</th>
+                            <th>In Time</th>
+                            <th>Out Time</th>
+                            <th>Confidence</th>
                         </tr>
                     </thead>
                     <tbody id="feeCategoriesTableBody">
