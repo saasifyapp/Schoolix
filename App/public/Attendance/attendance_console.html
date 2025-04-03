@@ -234,22 +234,31 @@
         <div class="overlay-content-search">
             <h2 class="overlay-search-head">Overlay 2</h2>
             <button id="closeAttendanceOverlay2" class="close-button">&times;</button>
-
+    
             <button id="captureImageBtn">Capture Image</button>
-
-            <!-- Webcam Preview Overlay -->
-            <div id="previewOverlay"
-                style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); align-items: center; justify-content: center;">
-                <div style="background: white; padding: 20px; border-radius: 10px; text-align: center;">
-                    <h3>Webcam Preview</h3>
-                    <video id="videoPreview" autoplay playsinline style="width: 100%; max-width: 300px;"></video>
-                    <p id="faceDetectedMsg">🔍 Detecting face...</p>
-                    <canvas id="capturedCanvas" style="display: none;"></canvas>
-                    <button id="captureAgainBtn" style="display: none;">Try Again</button>
-                </div>
+            
+            <!-- Hidden Webcam Video Element for Face Detection -->
+            <video id="videoPreview" autoplay playsinline style="display: none;"></video>
+            <canvas id="capturedCanvas" style="display: none;"></canvas>
+            
+            <div class="table-container">
+                <table id="feeCategoriesTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Category ID</th>
+                            <th>Category Name</th>
+                            <th>Description</th>
+                            <th>Action</th> <!-- Action column added -->
+                        </tr>
+                    </thead>
+                    <tbody id="feeCategoriesTableBody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+    
 
     <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Universal_Components_JS/handle_session.js"></script>

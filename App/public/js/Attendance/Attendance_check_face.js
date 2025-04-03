@@ -1,9 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     const captureButton = document.getElementById("captureImageBtn");
-    const previewOverlay = document.getElementById("previewOverlay");
     const videoElement = document.getElementById("videoPreview");
     const canvasElement = document.getElementById("capturedCanvas");
-    const faceDetectedMsg = document.getElementById("faceDetectedMsg");
 
     let stream = null;
     let isDetecting = false;
@@ -27,10 +25,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' }
             });
-            
+
             const data = await response.json();
             storedEmbeddings = data.embeddings;  // Assuming the endpoint returns { embeddings: [...] }
-        
+
             //console.log('Embeddings retrieved:', storedEmbeddings);
         } catch (error) {
             console.error('❌ Error retrieving embeddings:', error);
@@ -48,12 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         sessionStorage.removeItem("liveUserFaces"); // Clear previous images
 
-        // Reset UI elements before restarting
-        previewOverlay.style.display = "none";
-        videoElement.style.display = "block";
-        canvasElement.style.display = "none";
-        faceDetectedMsg.innerText = "";
-        videoElement.width = 640; // Reset size
+        videoElement.width = 640; // Reset video element size
         videoElement.height = 480;
 
         try {
@@ -72,12 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             videoElement.onloadedmetadata = () => {
                 Swal.close(); // Close loading screen only when everything is ready
-
-                setTimeout(() => {
-                    previewOverlay.style.display = "flex"; // Show preview after a small delay
-                    faceDetectedMsg.innerText = "🔍 Detecting face...";
-                    detectFace();
-                }, 300); // Allow time for reinitialization
+                detectFace();
             };
         } catch (error) {
             Swal.fire({
@@ -103,19 +91,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (results.length === 1) {
                     detectionConfirmed++;
                     if (detectionConfirmed >= 3) {
-                        faceDetectedMsg.innerText = "✅ Face Detected! Capturing...";
                         await captureImage();
                         return;
-                    } else {
-                        faceDetectedMsg.innerText = `🔍 Face Detected... Hold Still (${detectionConfirmed}/3)`;
                     }
                 } else {
                     detectionConfirmed = 0;
-                    if (results.length === 0) {
-                        faceDetectedMsg.innerText = "❌ No Face Detected...";
-                    } else {
-                        faceDetectedMsg.innerText = "❌ Multiple Faces Detected...";
-                    }
                 }
             } catch (error) {
                 console.error("Face detection error:", error);
@@ -126,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         checkForFace();
     }
-    
+
     async function captureImage() {
         isDetecting = false;
 
@@ -138,16 +118,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const imageData = canvasElement.toDataURL("image/png");
         saveImageToSession(imageData);
 
-        faceDetectedMsg.innerText = `📸 Image Captured!`;
-
         // Stop the camera stream
         if (stream) {
             stream.getTracks().forEach(track => track.stop());
         }
-
-        // Turn off the preview
-        previewOverlay.style.display = "none";
-        videoElement.style.display = "none";
 
         try {
             const storedFaces = getStoredImages();
@@ -158,7 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ image: latestImage, embeddings: storedEmbeddings })
             });
-            
+
             const result = await response.json();
             //console.log(result.message);  // Display server response in console
         } catch (error) {

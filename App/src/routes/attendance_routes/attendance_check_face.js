@@ -73,7 +73,7 @@ router.post('/retrieve-stored-embeddings', async (req, res) => {
 ///////////////////////// Endpoint to embedd live feed from webcam ////////////////
 
 
-router.post('/check-user-face-existence', async (req, res) => {
+router.post("/check-user-face-existence", async (req, res) => {
     const { image } = req.body;
 
     if (!image) {
@@ -102,12 +102,34 @@ router.post('/check-user-face-existence', async (req, res) => {
         }
 
         console.log('Matches found:', result.matches);
-        return res.status(200).json(result);
 
+        // Insert data into the attendance_user_logs table
+        const { user_id, name, section, standard_division, confidence, live_face_embedding } = result.matches[0]; // Assuming we only have one match
+        const in_time = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); // Current time in HH:MM format
+
+        // Convert the embedding to a string format to store in the database
+        const embeddingString = JSON.stringify(live_face_embedding);
+
+        const insertQuery = `
+            INSERT INTO attendance_user_logs (user_id, name, section, standard_division, date_of_attendance, in_time, out_time, image_decode, confidence)
+            VALUES (?, ?, ?, ?, CURDATE(), ?, NULL, ?, ?)
+        `;
+
+        // Using the connection pool from req.connectionPool
+        req.connectionPool.query(insertQuery, [user_id, name, section, standard_division, in_time, embeddingString, confidence], (error, results) => {
+            if (error) {
+                console.error("Error inserting data into the database:", error.message);
+                return res.status(500).json({ error: "Database Insertion Error", details: error.message });
+            }
+
+            console.log("Data inserted successfully into attendance_user_logs.");
+            return res.status(200).json(result);
+        });
     } catch (error) {
         console.error('Error calling FastAPI server:', error);
         res.status(500).json({ error: 'Internal Server Error', details: error.message });
     }
 });
+
 
 module.exports = router;
