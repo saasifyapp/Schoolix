@@ -10,6 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
     let modelLoaded = false;
     let storedEmbeddings = [];
 
+    // Create an Audio object for the beep sound
+    const beepSound = new Audio('https://www.soundjay.com/buttons/beep-01a.mp3'); // You can replace this with a local file or another URL
+
     async function loadFaceModel() {
         if (modelLoaded) return;
         try {
@@ -29,8 +32,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const data = await response.json();
             storedEmbeddings = data.embeddings;
-
-            //console.log('Embeddings retrieved:', storedEmbeddings);
         } catch (error) {
             console.error('❌ Error retrieving embeddings:', error);
         }
@@ -119,6 +120,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const imageData = canvasElement.toDataURL("image/png");
         saveImageToSession(imageData);
 
+        // Play the beep sound when an image is captured
+        beepSound.play().catch(error => console.error("Error playing beep sound:", error));
+
         try {
             const storedFaces = getStoredImages();
             const latestImage = storedFaces[storedFaces.length - 1];
@@ -130,22 +134,18 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             const result = await response.json();
-            //console.log(result.message);
 
             if (response.ok) {
-                // Restart detection on a successful response
-                detectFace();
+                detectFace(); // Restart detection on a successful response
             }
         } catch (error) {
             console.error('Error calling endpoint:', error);
         }
     }
 
-    // Function to stop capture
     function stopCapture() {
         isDetecting = false;
 
-        // Stop the camera stream
         if (stream) {
             stream.getTracks().forEach(track => track.stop());
             stream = null;
@@ -163,5 +163,5 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     captureButton.addEventListener("click", startWebcam);
-    stopCaptureButton.addEventListener("click", stopCapture); // Attach stopCapture function to stop button
+    stopCaptureButton.addEventListener("click", stopCapture);
 });
