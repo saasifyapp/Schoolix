@@ -34,12 +34,18 @@
 
     <div class="capture-container">
         <h2>Capture Window</h2>
-        <button class="close-button" onclick="window.close()">×</button>
-        <button id="captureImageBtn">Capture Image</button>
-        <button id="stopCaptureBtn">Stop Capture</button>
-        <!-- Container for Video and Canvas -->
+        <button class="close-button" onclick="window.close()">×</button>             
+        <button id="captureImageBtn">
+            <img src="../images/capture.gif" alt="">
+            <span>Capture Image</span>
+        </button>
+        <button id="stopCaptureBtn">
+            <img src="../images/stopCapture.gif" alt="">
+            <span>Stop Capture</span>
+        </button>
         <div class="media-container">
             <video id="videoPreview" autoplay playsinline></video>
+            <img src="../images/race.gif" alt="Arrow" class="arrow-icon"> <!-- Arrow icon -->
             <canvas id="capturedCanvas"></canvas>
         </div>
     </div>

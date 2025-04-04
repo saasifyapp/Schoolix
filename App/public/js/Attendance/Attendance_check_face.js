@@ -10,8 +10,11 @@ document.addEventListener("DOMContentLoaded", function () {
     let modelLoaded = false;
     let storedEmbeddings = [];
 
-    // Create an Audio object for the beep sound
-    const beepSound = new Audio('https://www.soundjay.com/buttons/beep-01a.mp3'); // You can replace this with a local file or another URL
+    const beepSound = new Audio('https://www.soundjay.com/buttons/beep-01a.mp3');
+
+    // Initial button states when page loads
+    captureButton.disabled = false;  // Enable capture button
+    stopCaptureButton.disabled = true; // Disable stop button
 
     async function loadFaceModel() {
         if (modelLoaded) return;
@@ -120,7 +123,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const imageData = canvasElement.toDataURL("image/png");
         saveImageToSession(imageData);
 
-        // Play the beep sound when an image is captured
         beepSound.play().catch(error => console.error("Error playing beep sound:", error));
 
         try {
@@ -136,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const result = await response.json();
 
             if (response.ok) {
-                detectFace(); // Restart detection on a successful response
+                detectFace(); // Restart detection
             }
         } catch (error) {
             console.error('Error calling endpoint:', error);
@@ -150,6 +152,10 @@ document.addEventListener("DOMContentLoaded", function () {
             stream.getTracks().forEach(track => track.stop());
             stream = null;
         }
+
+        // Reset button states after stopping
+        captureButton.disabled = false;  // Re-enable capture button
+        stopCaptureButton.disabled = true; // Disable stop button
     }
 
     function saveImageToSession(base64Image) {
@@ -162,6 +168,13 @@ document.addEventListener("DOMContentLoaded", function () {
         return JSON.parse(sessionStorage.getItem("liveUserFaces")) || [];
     }
 
-    captureButton.addEventListener("click", startWebcam);
+    // Event listener for capture button
+    captureButton.addEventListener("click", function () {
+        startWebcam();
+        captureButton.disabled = true;   // Disable capture button
+        stopCaptureButton.disabled = false; // Enable stop button
+    });
+
+    // Event listener for stop button
     stopCaptureButton.addEventListener("click", stopCapture);
 });
