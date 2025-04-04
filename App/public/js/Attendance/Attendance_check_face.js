@@ -197,4 +197,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Event listener for stop button
     stopCaptureButton.addEventListener("click", stopCapture);
+
+
 });

@@ -70,6 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Open manage overlay
   manageBtn.addEventListener("click", function () {
+    refreshManageData();
     console.log("Manage clicked");
     hideOverlay(overlay1);
     showOverlay(manageOverlay);
@@ -129,3 +130,72 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
+
+async function refreshManageData() {
+  try {
+      const response = await fetch('/get-manage-enrollments');
+
+      if (!response.ok) {
+          throw new Error(`HTTP Error: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.data && result.data.length > 0) {
+          displayManageTable(result.data);
+      } else {
+          document.getElementById('manageTableBody').innerHTML = `
+              <tr><td colspan="8" style="text-align:center;">No enrollments found.</td></tr>
+          `;
+          Swal.fire({
+              icon: 'info',
+              title: 'No Records',
+              text: result.message || 'No enrollment data available.',
+              timer: 2000,
+              showConfirmButton: false
+          });
+      }
+  } catch (error) {
+      console.error('[REFRESH ERROR]:', error.message);
+      Swal.fire({
+          icon: 'error',
+          title: 'Error Fetching Data',
+          text: error.message,
+          confirmButtonText: 'Retry'
+      });
+  }
+}
+
+function displayManageTable(enrollments) {
+  const tableBody = document.getElementById('manageTableBody');
+  tableBody.innerHTML = '';
+
+  enrollments.forEach(enroll => {
+      const row = document.createElement('tr');
+
+      row.innerHTML = `
+          <td>${enroll.face_record_id}</td>
+          <td>${enroll.name}</td>
+          <td>${enroll.category ?? '---'}</td>
+          <td>${enroll.user_id}</td>
+          <td>${enroll.section}</td>
+          <td>${enroll.standard_division}</td>
+          <td>${enroll.enrollment_date ?? '---'}</td>
+          <td>
+              <button onclick="handleEdit('${enroll.user_id}')">Edit</button>
+              <button onclick="handleDelete('${enroll.user_id}')">Delete</button>
+          </td>
+      `;
+
+      tableBody.appendChild(row);
+  });
+}
+
+// function getCategoryFromUserId(userId) {
+//   if (!userId) return 'Unknown';
+//   if (userId.startsWith('S')) return 'Student';
+//   if (userId.startsWith('T')) return 'Teacher';
+//   if (userId.startsWith('D')) return 'Driver';
+//   return 'Other';
+// }

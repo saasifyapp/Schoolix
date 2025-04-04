@@ -43,7 +43,7 @@ router.post('/retrieve-stored-embeddings', async (req, res) => {
             });
 
             // Send stored embeddings to FastAPI server
-            fetch('https://ominous-succotash-pj7577gjvjx7hrjq5-8000.app.github.dev/store-retrieve-embeddings', {
+            fetch('  https://ominous-succotash-pj7577gjvjx7hrjq5-8000.app.github.dev/store-retrieve-embeddings', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(storedEmbeddings)
@@ -84,7 +84,7 @@ router.post("/check-user-face-existence", async (req, res) => {
 
     try {
         // Send the image to the FastAPI server for embedding extraction and comparison
-        const response = await fetch('https://ominous-succotash-pj7577gjvjx7hrjq5-8000.app.github.dev/embedd-live-face', {
+        const response = await fetch('  https://ominous-succotash-pj7577gjvjx7hrjq5-8000.app.github.dev/embedd-live-face', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ image: base64Data })
@@ -164,6 +164,46 @@ router.post("/check-user-face-existence", async (req, res) => {
     } catch (error) {
         console.error('Error calling FastAPI server:', error);
         res.status(500).json({ error: 'Internal Server Error', details: error.message });
+    }
+});
+
+
+router.get('/get-manage-enrollments', async (req, res) => {
+    try {
+        const query = `
+            SELECT 
+                face_record_id, 
+                user_id, 
+                name, 
+                section, 
+                standard_division
+            FROM attendance_user_info
+        `;
+
+        req.connectionPool.query(query, [], (err, results) => {
+            if (err) {
+                console.error('[DB ERROR]:', err.message);
+                return res.status(500).json({
+                    message: '❌ Database query failed while fetching enrollments.',
+                    error: err.message
+                });
+            }
+
+            if (!results.length) {
+                return res.status(200).json({ message: 'ℹ️ No enrollments found.', data: [] });
+            }
+
+            res.status(200).json({
+                message: '✅ Enrollments fetched successfully.',
+                data: results
+            });
+        });
+    } catch (error) {
+        console.error('[SERVER ERROR]:', error.message);
+        res.status(500).json({
+            message: '🚨 Internal server error.',
+            error: error.message
+        });
     }
 });
 

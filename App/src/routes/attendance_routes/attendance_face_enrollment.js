@@ -21,7 +21,7 @@ router.post('/send-face-data-to-enroll', async (req, res) => {
         //console.log("🔄 Sending images for embedding...");
 
         // Step 1: Send images to FastAPI for embedding extraction
-        const response = await fetch('https://ominous-succotash-pj7577gjvjx7hrjq5-8000.app.github.dev/extract-embedding', {
+        const response = await fetch('  https://ominous-succotash-pj7577gjvjx7hrjq5-8000.app.github.dev/extract-embedding', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ images })
