@@ -1,63 +1,130 @@
+// Wait for DOM to be fully loaded
 document.addEventListener("DOMContentLoaded", function () {
-    // Get button and overlay elements
-    const button1 = document.getElementById("button1");
-    const button2 = document.getElementById("button2");
-    const overlay1 = document.getElementById("overlay1");
-    const overlay2 = document.getElementById("overlay2");
-    const closeOverlay1 = document.getElementById("closeAttendanceOverlay1");
-    const closeOverlay2 = document.getElementById("closeAttendanceOverlay2");
-    
-    // Function to open an overlay
-    function openOverlay(overlay) {
-        overlay.style.display = "flex";
-    }
+  // Get all necessary elements
+  const button1 = document.getElementById("button1");
+  const overlay1 = document.getElementById("overlay1");
+  const closeOverlay1 = document.getElementById("closeAttendanceOverlay1");
+  const enrollFaceOverlay = document.getElementById("enrollFaceOverlay");
+  const manageOverlay = document.getElementById("manageOverlay");
 
-    // Function to close an overlay
-    function closeOverlay(overlay) {
-        overlay.style.display = "none";
-    }
+  const attendanceBtn = document.getElementById("attendanceBtn");
+  const attendanceOverlay = document.getElementById("attendanceOverlay");
+  const closeAttendanceOverlay = document.getElementById(
+    "closeAttendanceOverlay"
+  );
 
-    // Add event listeners
-    button1.addEventListener("click", function () {
-        openOverlay(overlay1);
-    });
+  const attendanceSummaryBtn = document.getElementById(
+    "attendanceSummaryButton"
+  );
+  const attendanceSummaryOverlay = document.getElementById(
+    "attendanceSummaryOverlay"
+  );
+  const closeAttendanceSummaryOverlay = document.getElementById(
+    "closeAttendanceSummaryOverlay"
+  );
 
-    button2.addEventListener("click", function () {
-        openOverlay(overlay2);
-    });
+  // Select the buttons more precisely
+  const enrollFaceBtn = overlay1.querySelector(
+    ".button-container .enrollAndManageCard:nth-child(1) span"
+  );
+  const manageBtn = overlay1.querySelector(
+    ".button-container .enrollAndManageCard:nth-child(2) span"
+  );
 
-    closeOverlay1.addEventListener("click", function () {
-        closeOverlay(overlay1);
-        clearOverlayContents(overlay1);
-    });
+  // Debugging to ensure correct elements are selected
+  console.log("Enroll Face Button:", enrollFaceBtn);
+  console.log("Manage Button:", manageBtn);
 
-    closeOverlay2.addEventListener("click", function () {
-        closeOverlay(overlay2);
-    });
+  // Function to show overlay
+  function showOverlay(overlay) {
+    overlay.style.display = "flex";
+    setTimeout(() => {
+      overlay.style.opacity = "1";
+    }, 10);
+  }
+
+  // Function to hide overlay
+  function hideOverlay(overlay) {
+    overlay.style.opacity = "0";
+    setTimeout(() => {
+      overlay.style.display = "none";
+    }, 300);
+  }
+
+  // Initial click to open first overlay
+  button1.addEventListener("click", function () {
+    showOverlay(overlay1);
+  });
+
+  // Close first overlay
+  closeOverlay1.addEventListener("click", function () {
+    hideOverlay(overlay1);
+  });
+
+  // Open enroll face overlay
+  enrollFaceBtn.addEventListener("click", function () {
+    console.log("Enroll Face clicked");
+    hideOverlay(overlay1);
+    showOverlay(enrollFaceOverlay);
+  });
+
+  // Open manage overlay
+  manageBtn.addEventListener("click", function () {
+    console.log("Manage clicked");
+    hideOverlay(overlay1);
+    showOverlay(manageOverlay);
+  });
+
+  // Close enroll face overlay
+  if (enrollFaceOverlay) {
+    enrollFaceOverlay
+      .querySelector(".close-button")
+      .addEventListener("click", function () {
+        hideOverlay(enrollFaceOverlay);
+      });
+  }
+
+  // Close manage overlay
+  if (manageOverlay) {
+    manageOverlay
+      .querySelector(".close-button")
+      .addEventListener("click", function () {
+        hideOverlay(manageOverlay);
+      });
+  }
+
+  // Open attendance overlay
+  attendanceBtn.addEventListener("click", function () {
+    showOverlay(attendanceOverlay);
+  });
+
+  // Close attendance overlay
+  closeAttendanceOverlay.addEventListener("click", function () {
+    hideOverlay(attendanceOverlay);
+  });
+
+  // Open attendance summary overlay
+  attendanceSummaryBtn.addEventListener("click", function () {
+    showOverlay(attendanceSummaryOverlay);
+  });
+
+  // Close attendance summary overlay
+  closeAttendanceSummaryOverlay.addEventListener("click", function () {
+    hideOverlay(attendanceSummaryOverlay);
+  });
 });
 
+// Wait for DOM to be fully loaded
+document.addEventListener("DOMContentLoaded", function () {
+  // Get the start capture button
+  const startCaptureBtn = document.getElementById("startCaptureBtn");
 
-
-function clearOverlayContents(overlay) {
-    if (overlay === overlay1) {
-        // Reset form fields
-        document.getElementById('enrollFaceForm').reset();
-
-        // Remove images from sessionStorage
-        for (let i = 1; i <= 5; i++) {
-            sessionStorage.removeItem(`userImage${i}`);
-        }
-
-        // Clear image previews if displayed
-        for (let i = 1; i <= 5; i++) {
-            const imgPreview = document.getElementById(`imagePreview${i}`);
-            if (imgPreview) imgPreview.src = "";
-        }
-
-        // Hide overlay
-        overlay.style.display = "none";
+  // Add click event to start capture button
+  startCaptureBtn.addEventListener("click", function () {
+    // Open the existing CaptureImage.html in a new tab
+    const newWindow = window.open("CaptureImage.html", "_blank");
+    if (!newWindow) {
+      alert("Please allow pop-ups for this site to open the capture window.");
     }
-}
-
-
-
+  });
+});

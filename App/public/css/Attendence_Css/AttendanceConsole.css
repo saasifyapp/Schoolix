@@ -32,6 +32,7 @@
     justify-content: center;
     /* Center horizontally */
     align-items: center;
+    transition: opacity 0.3s ease-in-out;
     /* Center vertically */
 }
 
@@ -326,9 +327,11 @@
     max-width: 1200px;
 }
 
-#searchBar,
+#manageSearchBar,
 #searchRoute,
-#searchShift {
+#searchShift,
+#attendanceSearchBar,
+#attendanceSummarySearchBar {
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ddd;
@@ -548,7 +551,7 @@
 
 
 
-.bookvaltcard {
+.enrollAndManageCard {
     position: relative;
     padding: 20px;
     background-color: #fff;
@@ -565,7 +568,7 @@
     width: 100px;
 }
 
-.bookvaltcard:hover {
+.enrollAndManageCard:hover {
     transform: scale(1.05);
     background-color: #FFDEE9;
     background-image: linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 100%);
@@ -573,7 +576,7 @@
     outline: none;
 }
 
-.bookvaltcard::after {
+.enrollAndManageCard::after {
     content: "";
     position: absolute;
     background: inherit;
@@ -584,12 +587,12 @@
     transition: 0.3s ease;
 }
 
-.bookvaltcard:hover::after {
+.enrollAndManageCard:hover::after {
     scale: 0.9;
     filter: blur(36px) brightness(1) contrast(1) saturate(1);
 }
 
-.bookvaltcard span {
+.enrollAndManageCard span {
     position: relative;
     z-index: 1;
     /* background-color: #007bff; */
@@ -602,7 +605,7 @@
     mix-blend-mode: multiply;
 }
 
-.bookvaltcard img {
+.enrollAndManageCard img {
     height: 93px;
     width: 100px;
     background-color: transparent

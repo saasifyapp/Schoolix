@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capture Image</title>
+    <link rel="stylesheet" href="/css/NavButtons.css">
+    <link rel="stylesheet" href="/css/Attendence_Css/CaptureImage.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.min.js"></script>  
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo_item">
+            <img id="logo" src="" alt="Logo">
+        </div>
+        <div class="navbar_center">
+            <button onclick="window.location.href='/dashboard'">
+                <i class='bx'><img src="/images/back.png" alt="Previous Icon"></i>
+            </button>
+            <button onclick="window.location.href='/dashboard'">
+                <i class='bx'><img src="/images/homeicon.png" alt="Dashboard Icon"></i>
+            </button>
+            <button id="logoutButton">
+                <i class='bx'><img src="/images/logout.png" alt="Signout Icon"></i>
+            </button>
+        </div>
+        <div class="navbar_content">
+            <!-- Additional icons can go here if needed -->
+        </div>
+    </nav>
+    
+
+    <div class="capture-container">
+        <h2>Capture Window</h2>
+        <button class="close-button" onclick="window.close()">×</button>
+        <button id="captureImageBtn">Capture Image</button>
+        <button id="stopCaptureBtn">Stop Capture</button>
+        <!-- Container for Video and Canvas -->
+        <div class="media-container">
+            <video id="videoPreview" autoplay playsinline></video>
+            <canvas id="capturedCanvas"></canvas>
+        </div>
+    </div>
+
+    <!-- Scripts (unchanged) -->
+    <script src="/js/Inventory_js/All.js"></script>
+    <script src="/js/Universal_Components_JS/handle_session.js"></script>
+    <script src="/js/Universal_Components_JS/Helping_functions.js"></script>   
+    <script src="/js/Attendance/Attendance_enroll_face.js"></script>
+    <script src="/js/Attendance/Attendance_check_face.js"></script>
+</body>
+</html>

@@ -17,6 +17,7 @@
         /* Center horizontally */
         align-items: center;
         /* Center vertically */
+        transition: transform 0.3s ease-in-out;
     }
 
     .overlay-content {
@@ -83,10 +84,10 @@
 
     .overlay-content-search {
         position: absolute;
-        top: 2rem;
-        left: 2rem;
-        right: 2rem;
-        bottom: 2rem;
+        top: 0rem;
+        left: 0rem;
+        right: 0rem;
+        bottom: 0rem;
         padding: 1rem;
         background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
         border-radius: 1rem;

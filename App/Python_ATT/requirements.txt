@@ -6,9 +6,5 @@ insightface
 torch
 torchvision
 torchaudio
-p
-p-utils
-p-base64
-p-image
 pydantic
 concurrent-log-handler

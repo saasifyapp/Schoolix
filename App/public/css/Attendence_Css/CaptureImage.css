@@ -1,0 +1,106 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+* {
+
+    font-family: "Poppins", sans-serif;
+}
+
+:root {
+    --white-color: #fff;
+    --blue-color: #4070f4;
+    --grey-color: #707070;
+    --grey-color-light: #aaa;
+}
+
+body {
+    font-family: american typewriter, sans-serif;
+    text-align: center;
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    min-height: 100vh;
+    /* Prevent scrolling */
+}
+
+
+.capture-container {
+    background: var(--white-color);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 900px; /* Increased to accommodate side-by-side layout */
+    position: relative;
+    text-align: center;
+}
+
+.capture-container h2 {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--blue-color);
+    margin-bottom: 20px;
+}
+
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 30px;
+    color: var(--grey-color);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.close-button:hover {
+    color: var(--blue-color);
+}
+
+#captureImageBtn,
+#stopCaptureBtn {
+    background: var(--blue-color);
+    color: var(--white-color);
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#captureImageBtn:hover,
+#stopCaptureBtn:hover {
+    background: #3050d6;
+    transform: translateY(-2px);
+}
+
+/* New container for video and canvas */
+.media-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+#videoPreview,
+#capturedCanvas {
+    width: 48%; /* Each takes roughly half the container width */
+    max-width: 400px; /* Adjusted for side-by-side layout */
+    height: 300px; /* Fixed height for consistency */
+    border-radius: 8px;
+    border: 2px solid var(--grey-color-light);
+    background: #f9f9f9;
+}
+
+#capturedCanvas {
+    display: flex; /* Hidden until captured */
+}

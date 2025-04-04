@@ -56,29 +56,81 @@
                         height: 236px;
                         margin-left: 39px;" loop autoplay></dotlottie-player>
                 </div>
-                <h3>Enroll Face</h3>
+                <h3>Enroll and Manage</h3>
             </button>
         </div>
 
         <div class="card">
-            <button id="button2">
+            <button id="startCaptureBtn">
                 <div class="dotlottie-container">
                     <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
                         type="module"></script>
-                    <dotlottie-player   src="https://lottie.host/d420a168-23ec-4a58-a5fd-17e63c209935/jNkbaTRMFD.lottie"
-                        background="transparent" speed="1" style="width: 200px;
-                        height: 236px;
-                        margin-left: 39px;" loop autoplay></dotlottie-player>
+                    <dotlottie-player src="https://lottie.host/34a03ffb-ae08-4054-9ca0-977a42bf2a37/ZCZKs3tVed.lottie"
+                        background="transparent" speed="1" style="width: 280px; height: 230px" loop
+                        autoplay></dotlottie-player>
+
                 </div>
-                <h3>Open Overlay 2</h3>
+                <h3>Start Capturing</h3>
             </button>
+        </div>
+
+        <div class="card">
+            <button id="attendanceBtn"> <!-- Give the button an ID -->
+                <div class="dotlottie-container">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/70959f5d-8725-49f5-8230-1a15a23a8c95/hPVdj50RJs.lottie"
+                        background="transparent" speed="1" style="width: 270px; height: 220px" loop
+                        autoplay></dotlottie-player>
+                </div>  
+                <h3>Today's Attendance</h3>
+            </button>
+        </div>
+
+        <div class="card">
+            <button id="attendanceSummaryButton">
+                <div class="dotlottie-container">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/cdbf6721-76c1-4945-b333-0c4661a4f63b/zZWStC82bQ.lottie"
+                        background="transparent" speed="1" style="width: 310px; height: 230px" loop
+                        autoplay></dotlottie-player>
+                </div>
+                <h3>Attendance summary</h3>
+            </button>
+        </div>
+
+
+    </div>
+
+
+    <!-- Overlay for selecting Add or Search Book -->
+    <div id="overlay1" class="overlay">
+        <div class="overlay-content-inner">
+            <h2>Enroll and Manage</h2>
+            <button id="closeAttendanceOverlay1" class="close-button">&times;</button>
+            <div class="button-container">
+                <div class="enrollAndManageCard">
+                    <span id="enrollFaceSpan">
+                        <img src="/images/enrollFace.gif" alt="">
+                        Enroll Face
+                    </span>
+                </div>
+                <div class="enrollAndManageCard">
+                    <span id="manageSpan">
+                        <img src="/images/manageFace.gif" alt="" style="height: 90px;">
+                        Manage
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
 
 
-    <div id="overlay1" class="overlay">
+
+    <div id="enrollFaceOverlay" class="overlay">
         <div class="overlay-content-enroll-face">
-            <button id="closeAttendanceOverlay1" class="close-button">×</button>
+            <button id="" class="close-button">×</button>
             <div class="overlay-inner">
                 <!-- Left Side: Animation -->
                 <div class="left-side-edit-enroll-face">
@@ -230,18 +282,166 @@
     </div>
 
 
-    <div id="overlay2" class="overlay-search" style="display: none;">
+    <!-- Overlay for Manage -->
+    <div id="manageOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+
+            <button id="closeManageOverlay" class="close-button">×</button>
+            <img src="/images/manageFace.gif" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
+            <h2 class="overlay-search-head">Manage Enrollments</h2>
+            <div class="search-container">
+                <div class="form-Searchgroup">
+                    <div class="form-Searchgroup">
+                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                        <input type="text" class="form-control" id="manageSearchBar" name="manageSearch" placeholder=" "
+                            oninput="searchManageDetails()" style="width: 400px; height: 1.7rem !important;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search Enrollments...</span>
+                    </div>
+                    <button class="refreshButton" onclick="refreshManageData()" style="margin-top: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
+                </div>
+            </div>
+            <button class="export_registered_students" onclick="exportManageTable()">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+            <div class="table-container">
+                <table id="manageTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Gr/Id</th>
+                            <th>Section</th>
+                            <th>Standard</th>
+                            <th>Enrollment Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="manageTableBody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay for Today's Attendance -->
+    <div id="attendanceOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+
+            <button id="closeAttendanceOverlay" class="close-button">×</button>
+            <img src="/images/todaysAttendance.png" alt="Overlay Icon" class="overlay-icon">
+            <!-- Use a relevant icon -->
+            <h2 class="overlay-search-head">Today's Attendance</h2>
+
+            <div class="search-container">
+                <div class="form-Searchgroup">
+                    <div class="form-Searchgroup">
+                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                        <input type="text" class="form-control" id="attendanceSearchBar" name="attendanceSearch"
+                            placeholder=" " oninput="searchAttendanceDetails()"
+                            style="width: 400px; height: 1.7rem !important;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search Attendance...</span>
+                    </div>
+                    <button class="refreshButton" onclick="refreshAttendanceData()" style="margin-top: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <button class="export_registered_students" onclick="exportAttendanceTable()">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+
+            <div class="table-container">
+                <table id="attendanceTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Gr/Id</th>
+                            <th>Standard</th>
+                            <th>Section</th>
+                            <th>Status</th>
+                            <th>Time Marked</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceTableBody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay for Attendance Summary -->
+    <div id="attendanceSummaryOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+
+            <button id="closeAttendanceSummaryOverlay" class="close-button">×</button>
+            <img src="/images/attendanceSummary.png" alt="Overlay Icon" class="overlay-icon">
+            <!-- Replace with relevant icon -->
+            <h2 class="overlay-search-head">Attendance Summary</h2>
+
+            <div class="search-container">
+                <div class="form-Searchgroup">
+                    <div class="form-Searchgroup">
+                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                        <input type="text" class="form-control" id="attendanceSummarySearchBar"
+                            name="attendanceSummarySearch" placeholder=" " oninput="searchAttendanceSummaryDetails()"
+                            style="width: 400px; height: 1.7rem !important;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search Summary...</span>
+                    </div>
+                    <button class="refreshButton" onclick="refreshAttendanceSummaryData()" style="margin-top: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <button class="export_registered_students" onclick="exportAttendanceSummaryTable()">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+
+            <div class="table-container">
+                <table id="attendanceSummaryTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Standard</th>
+                            <th>Section</th>
+                            <th>Total Students</th>
+                            <th>Present</th>
+                            <th>Absent</th>
+                            <th>Leave</th>
+                            <th>Marked By</th>
+                            <th>Marked Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceSummaryTableBody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- <div id="capturingOverlay" class="overlay-search" style="display: none;">
         <div class="overlay-content-search">
             <h2 class="overlay-search-head">Overlay 2</h2>
             <button id="closeAttendanceOverlay2" class="close-button">&times;</button>
-        
+
             <button id="captureImageBtn">Capture Image</button>
             <button id="stopCaptureBtn">Stop Capture</button>
-    
-            <!-- Hidden Webcam Video Element for Face Detection -->
+
+           
             <video id="videoPreview" autoplay playsinline style="display: flex;"></video>
             <canvas id="capturedCanvas" style="display: flex;"></canvas>
-            
+
             <div class="table-container">
                 <table id="feeCategoriesTable" class="styled-table">
                     <thead>
@@ -259,13 +459,13 @@
                         </tr>
                     </thead>
                     <tbody id="feeCategoriesTableBody">
-                        <!-- Table rows will be populated here -->
+                       
                     </tbody>
                 </table>
             </div>
         </div>
-    </div>
-    
+    </div> -->
+
 
     <script src="/js/Inventory_js/All.js"></script>
     <script src="/js/Universal_Components_JS/handle_session.js"></script>
@@ -278,4 +478,3 @@
 </body>
 
 </html>
-
