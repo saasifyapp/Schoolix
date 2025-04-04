@@ -43,7 +43,7 @@ router.post('/retrieve-stored-embeddings', async (req, res) => {
             });
 
             // Send stored embeddings to FastAPI server
-            fetch('http://localhost:8000/store-retrieve-embeddings', {
+            fetch('https://ominous-succotash-pj7577gjvjx7hrjq5-8000.app.github.dev/store-retrieve-embeddings', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(storedEmbeddings)
@@ -84,7 +84,7 @@ router.post("/check-user-face-existence", async (req, res) => {
 
     try {
         // Send the image to the FastAPI server for embedding extraction and comparison
-        const response = await fetch('http://localhost:8000/embedd-live-face', {
+        const response = await fetch('https://ominous-succotash-pj7577gjvjx7hrjq5-8000.app.github.dev/embedd-live-face', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ image: base64Data })
