@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const stopCaptureButton = document.getElementById("stopCaptureBtn");
     const videoElement = document.getElementById("videoPreview");
     const canvasElement = document.getElementById("capturedCanvas");
+    const statusText = document.getElementById("statusText");
 
     let stream = null;
     let isDetecting = false;
@@ -22,6 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
             await faceapi.nets.tinyFaceDetector.loadFromUri("https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights");
             modelLoaded = true;
         } catch (error) {
+            statusText.innerText = "❌ Error Loading Face Model";
             console.error("❌ Error Loading Face Model:", error);
         }
     }
@@ -36,11 +38,13 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = await response.json();
             storedEmbeddings = data.embeddings;
         } catch (error) {
+            statusText.innerText = "❌ Error retrieving embeddings";
             console.error('❌ Error retrieving embeddings:', error);
         }
     }
 
     async function startWebcam() {
+        statusText.innerText = "🤖 Loading AI Vision...";
         Swal.fire({
             title: "🤖 Loading AI Vision...",
             html: "Initializing Face Detection & Camera...",
@@ -70,9 +74,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
             videoElement.onloadedmetadata = () => {
                 Swal.close();
+                statusText.innerText = "✅ Camera Access Granted";
                 detectFace();
             };
         } catch (error) {
+            statusText.innerText = "🚫 Camera Access Denied!";
             Swal.fire({
                 icon: "error",
                 title: "🚫 Camera Access Denied!",
@@ -95,14 +101,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (results.length === 1) {
                     detectionConfirmed++;
+                    statusText.innerText = `👤 Face detected (${detectionConfirmed}/3)`;
                     if (detectionConfirmed >= 3) {
                         await captureImage();
                         return;
                     }
+                } else if (results.length > 1) {
+                    statusText.innerText = "👥 Multiple faces detected";
+                    detectionConfirmed = 0;
                 } else {
+                    statusText.innerText = "😕 Face not detected";
                     detectionConfirmed = 0;
                 }
             } catch (error) {
+                statusText.innerText = "❌ Face detection error";
                 console.error("Face detection error:", error);
             }
 
@@ -125,6 +137,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         beepSound.play().catch(error => console.error("Error playing beep sound:", error));
 
+        statusText.innerText = "📸 Image captured";
+
         try {
             const storedFaces = getStoredImages();
             const latestImage = storedFaces[storedFaces.length - 1];
@@ -139,9 +153,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (response.ok) {
                 detectFace(); // Restart detection
+            } else {
+                statusText.innerText = "❌ Face verification failed";
             }
         } catch (error) {
-            console.error('Error calling endpoint:', error);
+            statusText.innerText = '❌ Error calling endpoint';
+            console.error('❌ Error calling endpoint:', error);
         }
     }
 
@@ -156,6 +173,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // Reset button states after stopping
         captureButton.disabled = false;  // Re-enable capture button
         stopCaptureButton.disabled = true; // Disable stop button
+
+        statusText.innerText = "🛑 Detection stopped";
     }
 
     function saveImageToSession(base64Image) {
@@ -173,6 +192,7 @@ document.addEventListener("DOMContentLoaded", function () {
         startWebcam();
         captureButton.disabled = true;   // Disable capture button
         stopCaptureButton.disabled = false; // Enable stop button
+        statusText.innerText = "📷 Starting camera...";
     });
 
     // Event listener for stop button
