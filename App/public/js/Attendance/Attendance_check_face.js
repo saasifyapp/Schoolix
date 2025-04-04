@@ -200,3 +200,49 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 });
+
+function exportManageTable() {
+    const table = document.getElementById("manageTable");
+    const rows = table.querySelectorAll("tbody tr");
+  
+    let csvContent = "";
+  
+    // Collect headers dynamically, excluding the last 'Action' column
+    const headers = table.querySelectorAll("thead th");
+    const headerData = [];
+    headers.forEach((header, index) => {
+      if (header.textContent.trim().toLowerCase() !== 'action') {
+        headerData.push(`"${header.textContent.trim()}"`);
+      }
+    });
+    csvContent += headerData.join(",") + "\n";
+  
+    // Collect row data, excluding last cell (Action column)
+    rows.forEach((row) => {
+      const cells = row.querySelectorAll("td");
+      const rowData = [];
+      cells.forEach((cell, index) => {
+        if (index < cells.length - 1) { // Exclude last column (Action)
+          rowData.push(`"${cell.textContent.trim()}"`);
+        }
+      });
+      csvContent += rowData.join(",") + "\n";
+    });
+  
+    // Create and trigger CSV download
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+  
+    if (navigator.msSaveBlob) {
+      navigator.msSaveBlob(blob, "manage_enrollments.csv");
+    } else {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", "manage_enrollments.csv");
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }
+  

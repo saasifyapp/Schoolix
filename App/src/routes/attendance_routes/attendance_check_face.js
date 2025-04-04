@@ -207,6 +207,40 @@ router.get('/get-manage-enrollments', async (req, res) => {
     }
 });
 
-
+router.delete('/delete-enrollment/:id', async (req, res) => {
+    const faceRecordId = req.params.id;
+  
+    try {
+      const query = `DELETE FROM attendance_user_info WHERE face_record_id = ?`;
+  
+      req.connectionPool.query(query, [faceRecordId], (err, result) => {
+        if (err) {
+          console.error('[DB DELETE ERROR]:', err.message);
+          return res.status(500).json({
+            message: '❌ Database error while deleting record.',
+            error: err.message
+          });
+        }
+  
+        if (result.affectedRows === 0) {
+          return res.status(404).json({
+            message: `⚠️ No record found with ID ${faceRecordId}.`
+          });
+        }
+  
+        res.status(200).json({
+          message: `✅ Record with ID ${faceRecordId} deleted successfully.`
+        });
+      });
+  
+    } catch (error) {
+      console.error('[SERVER DELETE ERROR]:', error.message);
+      res.status(500).json({
+        message: '🚨 Internal server error during deletion.',
+        error: error.message
+      });
+    }
+  });
+  
 
 module.exports = router;
