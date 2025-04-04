@@ -96,7 +96,7 @@
                         background="transparent" speed="1" style="width: 310px; height: 230px" loop
                         autoplay></dotlottie-player>
                 </div>
-                <h3>Attendance Report</h3>
+                <h3>Attendance Summary</h3>
             </button>
         </div>
 
@@ -359,14 +359,15 @@
                 <table id="attendanceTable" class="styled-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Gr/Id</th>
-                            <th>Standard</th>
-                            <th>Section</th>
-                            <th>Status</th>
-                            <th>Time Marked</th>
-                            <th>Action</th>
+                            <th>Record ID</th>
+                            <th>User ID <input type="text" id="filterUserID" oninput="applyFilters()"></th>
+                            <th>Name <input type="text" id="filterName" oninput="applyFilters()"></th>
+                            <th>Section <input type="text" id="filterSection" oninput="applyFilters()"></th>
+                            <th>Standard <input type="text" id="filterStandard" oninput="applyFilters()"></th>
+                            <th>Date <input type="date" id="filterDate" oninput="applyFilters()"></th>
+                            <th>In Time <input type="time" id="filterInTime" oninput="applyFilters()"></th>
+                            <th>Out Time <input type="time" id="filterOutTime" oninput="applyFilters()"></th>
+                            <th>Preview</th>
                         </tr>
                     </thead>
                     <tbody id="attendanceTableBody">
@@ -473,7 +474,7 @@
     <script src="/js/Attendance/Attendance_console.js"></script>
     <script src="/js/Attendance/Attendance_enroll_face.js"></script>
     <script src="/js/Attendance/Attendance_check_face.js"></script>
-
+    <script src="/js/Attendance/Attendance_reports.js"></script>
 
 </body>
 

@@ -96,6 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Open attendance overlay
   attendanceBtn.addEventListener("click", function () {
     showOverlay(attendanceOverlay);
+    populateAttendanceTable();
   });
 
   // Close attendance overlay

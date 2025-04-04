@@ -644,14 +644,18 @@ app.use('/', student_transfer_form);
 
 ///////////////////////////////////// ATTENDANCE ROUTES //////////////////
 
-///////////////////////////FACE ENROLLMENT FORM ROUTES//////////////////
+///////////////////////////FACE ENROLLMENT FORM ROUTES //////////////////
 const face_enrollment_form = require('./src/routes/attendance_routes/attendance_face_enrollment.js');
 app.use('/', face_enrollment_form);
 
 
-/////////////////////////// DETECT FACE ROUTES//////////////////
+/////////////////////////// DETECT FACE ROUTES //////////////////
 const detect_face = require('./src/routes/attendance_routes/attendance_check_face.js');
 app.use('/', detect_face);
+
+/////////////////////////// ATTENDANCE REPORT  ROUTES //////////////////
+const attendance_reports = require('./src/routes/attendance_routes/attendance_reports.js');
+app.use('/', attendance_reports);
 
 
 
