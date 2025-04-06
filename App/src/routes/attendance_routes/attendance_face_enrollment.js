@@ -73,6 +73,79 @@ router.post('/send-face-data-to-enroll', async (req, res) => {
     }
 });
 
+router.get('/get-manage-enrollments', async (req, res) => {
+    try {
+        const query = `
+            SELECT 
+                face_record_id, 
+                user_id, 
+                name, 
+                section, 
+                standard_division
+            FROM attendance_user_info
+        `;
 
+        req.connectionPool.query(query, [], (err, results) => {
+            if (err) {
+                console.error('[DB ERROR]:', err.message);
+                return res.status(500).json({
+                    message: '❌ Database query failed while fetching enrollments.',
+                    error: err.message
+                });
+            }
+
+            if (!results.length) {
+                return res.status(200).json({ message: 'ℹ️ No enrollments found.', data: [] });
+            }
+
+            res.status(200).json({
+                message: '✅ Enrollments fetched successfully.',
+                data: results
+            });
+        });
+    } catch (error) {
+        console.error('[SERVER ERROR]:', error.message);
+        res.status(500).json({
+            message: '🚨 Internal server error.',
+            error: error.message
+        });
+    }
+});
+
+router.delete('/delete-enrollment/:id', async (req, res) => {
+    const faceRecordId = req.params.id;
+  
+    try {
+      const query = `DELETE FROM attendance_user_info WHERE face_record_id = ?`;
+  
+      req.connectionPool.query(query, [faceRecordId], (err, result) => {
+        if (err) {
+          console.error('[DB DELETE ERROR]:', err.message);
+          return res.status(500).json({
+            message: '❌ Database error while deleting record.',
+            error: err.message
+          });
+        }
+  
+        if (result.affectedRows === 0) {
+          return res.status(404).json({
+            message: `⚠️ No record found with ID ${faceRecordId}.`
+          });
+        }
+  
+        res.status(200).json({
+          message: `✅ Record with ID ${faceRecordId} deleted successfully.`
+        });
+      });
+  
+    } catch (error) {
+      console.error('[SERVER DELETE ERROR]:', error.message);
+      res.status(500).json({
+        message: '🚨 Internal server error during deletion.',
+        error: error.message
+      });
+    }
+  });
+  
 
 module.exports = router;

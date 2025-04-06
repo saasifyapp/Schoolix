@@ -228,4 +228,195 @@ document.getElementById('enrollFaceForm').addEventListener('submit', async (even
 });
 
 
-/////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////// MANAGE FACE ////////////////////////////
+
+// Array to hold manage enrollments data
+let manageData = [];
+
+// Function to refresh manage enrollments data
+async function refreshManageData() {
+    try {
+        const response = await fetch('/get-manage-enrollments');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        
+        if (result.data && result.data.length > 0) {
+            manageData = result.data;
+            displayManageTable(manageData);
+        } else {
+            document.getElementById('manageTableBody').innerHTML = `
+                <tr><td colspan="8" style="text-align:center;">No enrollments found.</td></tr>
+            `;
+            Swal.fire({
+                icon: 'info',
+                title: 'No Records',
+                text: result.message || 'No enrollment data available.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        }
+    } catch (error) {
+        console.error('[REFRESH ERROR]:', error.message);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error Fetching Data',
+            text: error.message,
+            confirmButtonText: 'Retry'
+        });
+    }
+}
+
+// Function to display manage table
+function displayManageTable(enrollments) {
+    const tableBody = document.getElementById('manageTableBody');
+    tableBody.innerHTML = '';
+    
+    enrollments.forEach(enroll => {
+        const row = document.createElement('tr');
+        
+        row.innerHTML = `
+            <td>${enroll.face_record_id}</td>
+            <td>${enroll.user_id}</td>
+            <td>${enroll.name}</td>
+            <td>${enroll.section}</td>
+            <td>${enroll.standard_division}</td>
+            <td>
+                <button onclick="handleDelete('${enroll.face_record_id}', '${enroll.name}', '${enroll.user_id}')">
+                    Delete
+                </button>
+            </td>
+        `;
+        
+        tableBody.appendChild(row);
+    });
+}
+
+// Function to handle delete
+async function handleDelete(faceRecordId, name, user_id) {
+    const confirmDelete = await Swal.fire({
+        title: 'Are you sure?',
+        html: `
+            <strong>This will permanently delete the following record:</strong><br><br>
+            <b>Name:</b> ${name}<br>
+            <b>Gr/ID:</b> ${user_id}<br>
+            <b>Record ID:</b> ${faceRecordId}
+        `,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    });
+    
+    if (confirmDelete.isConfirmed) {
+        try {
+            const response = await fetch(`/delete-enrollment/${faceRecordId}`, {
+                method: 'DELETE'
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Deleted Successfully',
+                    html: `
+                        <b>${name}</b> with Gr/ID <b>${user_id}</b> (Record ID: <b>${faceRecordId}</b>) has been deleted.
+                    `,
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#3085d6',
+                    showConfirmButton: true
+                });
+                
+                refreshManageData(); // refresh table
+            } else {
+                throw new Error(result.message || 'Deletion failed.');
+            }
+
+        } catch (error) {
+            console.error('[DELETE ERROR]:', error.message);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message
+            });
+        }
+    }
+}
+
+// Function to search the table directly by name or user_id
+function searchManageDetails() {
+    const searchValue = document.getElementById('manageSearchBar').value.toLowerCase();
+    
+    const filteredData = manageData.filter(enroll => {
+        return (
+            enroll.name.toLowerCase().includes(searchValue) ||
+            enroll.user_id.toLowerCase().includes(searchValue)
+        );
+    });
+    
+    displayManageTable(filteredData);
+}
+
+// Initialize search listener
+document.getElementById('manageSearchBar').addEventListener('input', searchManageDetails);
+
+// Initial data load
+refreshManageData();
+
+
+//////////////////////////// EXPORT FUNCTION ////////////////////////////////////
+
+
+function exportManageTable() {
+    const table = document.getElementById("manageTable");
+    const rows = table.querySelectorAll("tbody tr");
+  
+    let csvContent = "";
+  
+    // Collect headers dynamically, excluding the last 'Action' column
+    const headers = table.querySelectorAll("thead th");
+    const headerData = [];
+    headers.forEach((header, index) => {
+      if (header.textContent.trim().toLowerCase() !== 'action') {
+        headerData.push(`"${header.textContent.trim()}"`);
+      }
+    });
+    csvContent += headerData.join(",") + "\n";
+  
+    // Collect row data, excluding last cell (Action column)
+    rows.forEach((row) => {
+      const cells = row.querySelectorAll("td");
+      const rowData = [];
+      cells.forEach((cell, index) => {
+        if (index < cells.length - 1) { // Exclude last column (Action)
+          rowData.push(`"${cell.textContent.trim()}"`);
+        }
+      });
+      csvContent += rowData.join(",") + "\n";
+    });
+  
+    // Create and trigger CSV download
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+  
+    if (navigator.msSaveBlob) {
+      navigator.msSaveBlob(blob, "Face_Enrollments.csv");
+    } else {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", "manage_enrollments.csv");
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }
+  

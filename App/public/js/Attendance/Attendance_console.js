@@ -108,6 +108,8 @@ document.addEventListener("DOMContentLoaded", function () {
   // Open attendance summary overlay
   attendanceSummaryBtn.addEventListener("click", function () {
     showOverlay(attendanceSummaryOverlay);
+    populateAttendanceSummaryTable();
+
   });
 
   // Close attendance summary overlay
@@ -132,116 +134,56 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-async function refreshManageData() {
-  try {
-    const response = await fetch('/get-manage-enrollments');
+////////////// UNIFIED EXPORT FOR ALL OVERLAYS ///////////
 
-    if (!response.ok) {
-      throw new Error(`HTTP Error: ${response.status}`);
-    }
 
-    const result = await response.json();
+function exportTableToCSV(tableId, filename) {
+  const table = document.getElementById(tableId);
+  const rows = table.querySelectorAll('tbody tr'); // Select only rows within the table body
 
-    if (result.data && result.data.length > 0) {
-      displayManageTable(result.data);
-    } else {
-      document.getElementById('manageTableBody').innerHTML = `
-              <tr><td colspan="8" style="text-align:center;">No enrollments found.</td></tr>
-          `;
-      Swal.fire({
-        icon: 'info',
-        title: 'No Records',
-        text: result.message || 'No enrollment data available.',
-        timer: 2000,
-        showConfirmButton: false
-      });
-    }
-  } catch (error) {
-    console.error('[REFRESH ERROR]:', error.message);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error Fetching Data',
-      text: error.message,
-      confirmButtonText: 'Retry'
-    });
-  }
-}
+  let csvContent = '';
 
-function displayManageTable(enrollments) {
-  const tableBody = document.getElementById('manageTableBody');
-  tableBody.innerHTML = '';
-
-  enrollments.forEach(enroll => {
-    const row = document.createElement('tr');
-
-    row.innerHTML = `
-          <td>${enroll.face_record_id}</td>
-          <td>${enroll.name}</td>
-          <td>${enroll.user_id}</td>
-          <td>${enroll.section}</td>
-          <td>${enroll.standard_division}</td>
-          <td>
-              <button onclick="handleDelete('${enroll.face_record_id}', '${enroll.name}', '${enroll.user_id}')">
-  Delete
-</button>
-
-          </td>
-      `;
-
-    tableBody.appendChild(row);
-  });
-}
-
-async function handleDelete(faceRecordId, name, user_id) {
-  const confirmDelete = await Swal.fire({
-    title: 'Are you sure?',
-    html: `
-      <strong>This will permanently delete the following record:</strong><br><br>
-      <b>Name:</b> ${name}<br>
-      <b>Gr/ID:</b> ${user_id}<br>
-      <b>Record ID:</b> ${faceRecordId}
-    `,
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Yes, delete it!'
-  });
-
-  if (confirmDelete.isConfirmed) {
-    try {
-      const response = await fetch(`/delete-enrollment/${faceRecordId}`, {
-        method: 'DELETE'
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted Successfully',
-          html: `
-            <b>${name}</b> with Gr/ID <b>${user_id}</b> (Record ID: <b>${faceRecordId}</b>) has been deleted.
-          `,
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#3085d6',
-          showConfirmButton: true
-        });
-        
-        refreshManageData(); // refresh table
-      } else {
-        throw new Error(result.message || 'Deletion failed.');
+  // Collect headers dynamically, excluding the 'Action' and 'Preview' columns if present
+  const headers = table.querySelectorAll('th');
+  const headerData = [];
+  headers.forEach((header) => {
+      const headerText = header.textContent.trim().toLowerCase();
+      if (headerText !== 'action' && headerText !== 'preview') {
+          headerData.push(`"${header.textContent.trim()}"`);
       }
+  });
+  csvContent += headerData.join(',') + '\n';
 
-    } catch (error) {
-      console.error('[DELETE ERROR]:', error.message);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: error.message
+  // Collect row data, excluding the 'Action' and 'Preview' columns if present
+  rows.forEach((row) => {
+      const cells = row.querySelectorAll('td');
+      const rowData = [];
+      cells.forEach((cell, index) => {
+          const thElement = table.querySelector(`th:nth-child(${index + 1})`);
+          const thText = thElement ? thElement.textContent.trim().toLowerCase() : '';
+
+          if (thText !== 'action' && thText !== 'preview') {
+              rowData.push(`"${cell.textContent.trim()}"`);
+          }
       });
-    }
+      // Check if rowData has content before adding to csvContent
+      if (rowData.length > 0) {
+          csvContent += rowData.join(',') + '\n';
+      }
+  });
+
+  // Create and trigger CSV download
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  if (navigator.msSaveBlob) { // IE 10+
+      navigator.msSaveBlob(blob, filename);
+  } else {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', filename);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
   }
 }
-
-

@@ -302,7 +302,7 @@
                     </button>
                 </div>
             </div>
-            <button class="export_registered_students" onclick="exportManageTable()">
+            <button class="export_registered_students" onclick="exportTableToCSV('manageTable', 'Manage_Enrollments.csv')">
                 <img src="/images/export.png" alt="Export Icon"> Export
             </button>
             <div class="table-container">
@@ -310,8 +310,8 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
                             <th>Gr/Id</th>
+                            <th>Name</th>
                             <th>Section</th>
                             <th>Standard</th>
                             <!-- <th>Enrollment Date</th> -->
@@ -340,7 +340,7 @@
                     <div class="form-Searchgroup">
                         <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
                         <input type="text" class="form-control" id="attendanceSearchBar" name="attendanceSearch"
-                            placeholder=" " oninput="searchAttendanceDetails()"
+                            placeholder=" " oninput=""
                             style="width: 400px; height: 1.7rem !important;">
                         <span class="form-control-placeholder" style="left: 3.75rem;">Search Attendance...</span>
                     </div>
@@ -350,7 +350,7 @@
                 </div>
             </div>
 
-            <button class="export_registered_students" onclick="exportAttendanceTable()">
+            <button class="export_registered_students" onclick="exportTableToCSV('attendanceTable', 'Attendance.csv')">
                 <img src="/images/export.png" alt="Export Icon"> Export
             </button>
 
@@ -377,55 +377,49 @@
         </div>
     </div>
 
-    <!-- Overlay for Attendance Summary -->
-    <div id="attendanceSummaryOverlay" class="overlay-search">
-        <div class="overlay-content-search">
-
-            <button id="closeAttendanceSummaryOverlay" class="close-button">×</button>
-            <img src="/images/attendanceSummary.png" alt="Overlay Icon" class="overlay-icon">
-            <!-- Replace with relevant icon -->
-            <h2 class="overlay-search-head">Attendance Summary</h2>
-
-            <div class="search-container">
-                <div class="form-Searchgroup">
-                    <div class="form-Searchgroup">
-                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
-                        <input type="text" class="form-control" id="attendanceSummarySearchBar"
-                            name="attendanceSummarySearch" placeholder=" " oninput="searchAttendanceSummaryDetails()"
-                            style="width: 400px; height: 1.7rem !important;">
-                        <span class="form-control-placeholder" style="left: 3.75rem;">Search Summary...</span>
-                    </div>
-                    <button class="refreshButton" onclick="refreshAttendanceSummaryData()" style="margin-top: 10px;">
-                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
-                    </button>
-                </div>
-            </div>
-
-            <button class="export_registered_students" onclick="exportAttendanceSummaryTable()">
-                <img src="/images/export.png" alt="Export Icon"> Export
-            </button>
-
-            <div class="table-container">
-                <table id="attendanceSummaryTable" class="styled-table">
-                    <thead>
-                        <tr>
-                            <th>Standard</th>
-                            <th>Section</th>
-                            <th>Total Students</th>
-                            <th>Present</th>
-                            <th>Absent</th>
-                            <th>Leave</th>
-                            <th>Marked By</th>
-                            <th>Marked Time</th>
-                        </tr>
-                    </thead>
-                    <tbody id="attendanceSummaryTableBody">
-                        <!-- Table rows will be populated here -->
-                    </tbody>
-                </table>
+<!-- Overlay for Attendance Summary -->
+<div id="attendanceSummaryOverlay" class="overlay-search">
+    <div class="overlay-content-search">
+        <button id="closeAttendanceSummaryOverlay" class="close-button">×</button>
+        <img src="/images/attendanceSummary.png" alt="Overlay Icon" class="overlay-icon">
+        <h2 class="overlay-search-head">Attendance Summary</h2>
+        <div class="search-container">
+            <div class="form-Searchgroup">
+                <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                <input type="text" class="form-control" id="attendanceSummarySearchBar" name="attendanceSummarySearch"
+                    placeholder=" " oninput=""
+                    style="width: 400px; height: 1.7rem !important;">
+                <span class="form-control-placeholder" style="left: 3.75rem;">Search Summary...</span>
+                <button class="refreshButton" onclick="refreshAttendanceSummaryData()" style="margin-top: 10px;">
+                    <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                </button>
             </div>
         </div>
+        <button class="export_registered_students" onclick="exportTableToCSV('attendanceSummaryTable', 'Attendance_Summary.csv')">
+            <img src="/images/export.png" alt="Export Icon"> Export
+        </button>
+        <div class="table-container">
+            <table id="attendanceSummaryTable" class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Record ID</th>
+                        <th>User ID <input type="text" id="summaryFilterUserID" oninput="applySummaryFilters()"></th>
+                        <th>Name <input type="text" id="summaryFilterName" oninput="applySummaryFilters()"></th>
+                        <th>Section <input type="text" id="summaryFilterSection" oninput="applySummaryFilters()"></th>
+                        <th>Standard <input type="text" id="summaryFilterStandard" oninput="applySummaryFilters()"></th>
+                        <th>Date <input type="date" id="summaryFilterDate" oninput="applySummaryFilters()"></th>
+                        <th>In Time <input type="time" id="summaryFilterInTime" oninput="applySummaryFilters()"></th>
+                        <th>Out Time <input type="time" id="summaryFilterOutTime" oninput="applySummaryFilters()"></th>
+                        <th>Preview</th>
+                    </tr>
+                </thead>
+                <tbody id="attendanceSummaryTableBody">
+                    <!-- Table rows will be populated here -->
+                </tbody>
+            </table>
+        </div>
     </div>
+</div>
 
 
 
