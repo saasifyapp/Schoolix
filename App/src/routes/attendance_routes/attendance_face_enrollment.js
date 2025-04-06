@@ -11,47 +11,55 @@ router.post('/send-face-data-to-enroll', async (req, res) => {
     try {
         const { category, name, grId, section, standard, ...imageData } = req.body;
 
-        // Convert image fields into an array
         const images = Object.values(imageData).filter(img => img !== "");
 
         if (images.length === 0) {
+            console.error("⚠️ No valid images provided.");
             return res.status(400).json({ error: "No valid images provided." });
         }
 
-        //console.log("🔄 Sending images for embedding...");
+        console.log("📤 Sending images to FastAPI for embedding extraction...");
 
-        // Step 1: Send images to FastAPI for embedding extraction
-        const response = await fetch('https://ominous-succotash-pj7577gjvjx7hrjq5-8000.app.github.dev/extract-embedding', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ images })
-        });
+        const fetchUrl = 'https://ominous-succotash-pj7577gjvjx7hrjq5-8000.app.github.dev/extract-embedding';
+        let response;
 
-        if (!response.ok) {
-            throw new Error("Failed to communicate with FastAPI for embedding extraction.");
+        try {
+            response = await fetch(fetchUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ images })
+            });
+        } catch (fetchError) {
+            console.error("❌ Fetch failed:", fetchError.message);
+            console.error("🔍 Full fetch error:", fetchError);
+            return res.status(500).json({ error: 'Failed to communicate with FastAPI server', details: fetchError.message });
         }
 
-        //console.log("🔄 Embedding images...");
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error("❌ FastAPI responded with error:", errorText);
+            return res.status(502).json({ error: 'Bad response from FastAPI', details: errorText });
+        }
+
         const result = await response.json();
         const embeddingsArray = result.embeddings;
 
         if (!embeddingsArray || embeddingsArray.length === 0) {
+            console.warn("⚠️ No valid embeddings returned from FastAPI.");
             return res.status(400).json({ error: 'No valid embeddings found' });
         }
 
-        //console.log("✅ Embedding completed, storing face details...");
-
-        // Convert embeddings array to a string format for SQL storage
         const embeddingsString = JSON.stringify(embeddingsArray);
 
-        // Step 2: Insert into database
         const insertQuery = `
             INSERT INTO attendance_user_info (user_id, name, section, standard_division, image_decode)
             VALUES (?, ?, ?, ?, ?)
         `;
 
+        console.log("💾 Inserting face data into database...");
+
         req.connectionPool.query(
-            insertQuery, 
+            insertQuery,
             [grId, name, section, standard, embeddingsString],
             (error, results) => {
                 if (error) {
@@ -59,19 +67,22 @@ router.post('/send-face-data-to-enroll', async (req, res) => {
                     return res.status(500).json({ error: 'Database insertion failed' });
                 }
 
-                //console.log(`✅ Face enrolled successfully for GR No: ${grId}, Student: ${name}, Standard: ${standard}`);
-                res.status(201).json({ 
-                    message: 'Face enrolled successfully!', 
+                console.log(`✅ Face enrolled for GR No: ${grId}, Name: ${name}`);
+                res.status(201).json({
+                    message: 'Face enrolled successfully!',
                     grId, name, standard
                 });
             }
         );
 
     } catch (error) {
-        console.error('❌ Error:', error.message);
+        console.error('❌ Unhandled error:', error.message);
+        if (error.cause) console.error('🔍 Cause:', error.cause);
+        console.error('🧠 Stack Trace:', error.stack);
         res.status(500).json({ error: 'Internal Server Error', details: error.message });
     }
 });
+
 
 router.get('/get-manage-enrollments', async (req, res) => {
     try {
