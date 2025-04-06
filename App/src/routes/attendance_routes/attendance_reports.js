@@ -16,7 +16,6 @@ const formatDate = () => {
     return `${day}-${month}-${year}`;
 };
 
-// Define the get-daily-attendance endpoint
 router.post('/get-daily-attendance', async (req, res) => {
     try {
         const today = formatDate();
@@ -41,17 +40,31 @@ router.post('/get-daily-attendance', async (req, res) => {
 
         req.connectionPool.query(sqlQuery, [today, today], (error, results) => {
             if (error) {
-                return res.status(500).json({ error: 'Database query failed' });
+                console.error('[DB ERROR]:', error.message);
+                return res.status(500).json({
+                    message: '❌ Database query failed while fetching today\'s attendance.',
+                    error: error.message
+                });
             }
 
-            res.status(200).json({ data: results });
+            if (!results.length) {
+                return res.status(200).json({ message: 'ℹ️ No attendance records found for today.', data: [] });
+            }
+
+            res.status(200).json({
+                message: '✅ Today\'s attendance fetched successfully.',
+                data: results
+            });
         });
     } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error', details: error.message });
+        console.error('[SERVER ERROR]:', error.message);
+        res.status(500).json({
+            message: '🚨 Internal server error.',
+            error: error.message
+        });
     }
 });
 
-// Define the get-attendance-summary endpoint
 router.post('/get-attendance-summary', async (req, res) => {
     try {
         const sqlQuery = `
@@ -74,13 +87,28 @@ router.post('/get-attendance-summary', async (req, res) => {
 
         req.connectionPool.query(sqlQuery, (error, results) => {
             if (error) {
-                return res.status(500).json({ error: 'Database query failed' });
+                console.error('[DB ERROR]:', error.message);
+                return res.status(500).json({
+                    message: '❌ Database query failed while fetching attendance summary.',
+                    error: error.message
+                });
             }
 
-            res.status(200).json({ data: results });
+            if (!results.length) {
+                return res.status(200).json({ message: 'ℹ️ No attendance summaries found.', data: [] });
+            }
+
+            res.status(200).json({
+                message: '✅ Attendance summary fetched successfully.',
+                data: results
+            });
         });
     } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error', details: error.message });
+        console.error('[SERVER ERROR]:', error.message);
+        res.status(500).json({
+            message: '🚨 Internal server error.',
+            error: error.message
+        });
     }
 });
 

@@ -9,10 +9,30 @@ async function populateAttendanceTable() {
     try {
         const response = await fetch('/get-daily-attendance', { method: 'POST' });
         const result = await response.json();
-        attendanceData = result.data;
-        renderAttendanceTable(attendanceData);
+
+        if (!result.data.length) {
+            Swal.fire({
+                icon: 'info',
+                title: 'No Records',
+                text: result.message || 'No attendance records found for today.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+            document.getElementById('attendanceTableBody').innerHTML = `
+                <tr><td colspan="9" style="text-align:center;">No records found.</td></tr>
+            `;
+        } else {
+            attendanceData = result.data;
+            renderAttendanceTable(attendanceData);
+        }
     } catch (error) {
         console.error("Error fetching attendance data:", error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error Fetching Data',
+            text: error.message,
+            confirmButtonText: 'Retry'
+        });
     }
 }
 
@@ -100,13 +120,32 @@ async function populateAttendanceSummaryTable() {
     try {
         const response = await fetch('/get-attendance-summary', { method: 'POST' });
         const result = await response.json();
-        attendanceSummaryData = result.data;
-        renderAttendanceSummaryTable(attendanceSummaryData);
+        
+        if (!result.data.length) {
+            Swal.fire({
+                icon: 'info',
+                title: 'No Records',
+                text: result.message || 'No attendance summaries found.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+            document.getElementById('attendanceSummaryTableBody').innerHTML = `
+                <tr><td colspan="9" style="text-align:center;">No records found.</td></tr>
+            `;
+        } else {
+            attendanceSummaryData = result.data;
+            renderAttendanceSummaryTable(attendanceSummaryData);
+        }
     } catch (error) {
         console.error("Error fetching attendance summary data:", error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error Fetching Data',
+            text: error.message,
+            confirmButtonText: 'Retry'
+        });
     }
 }
-
 // Function to render the attendance summary table with provided data
 function renderAttendanceSummaryTable(data) {
     const attendanceSummaryTableBody = document.getElementById('attendanceSummaryTableBody');
@@ -182,5 +221,5 @@ document.getElementById('summaryFilterInTime').addEventListener('input', applySu
 document.getElementById('summaryFilterOutTime').addEventListener('input', applySummaryFilters);
 
 // Initial data load for both overlays
-refreshAttendanceData();
-refreshAttendanceSummaryData();
+//refreshAttendanceData();
+//refreshAttendanceSummaryData();
