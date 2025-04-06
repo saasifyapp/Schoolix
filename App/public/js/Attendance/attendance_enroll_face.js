@@ -369,7 +369,7 @@ function searchManageDetails() {
 document.getElementById('manageSearchBar').addEventListener('input', searchManageDetails);
 
 // Initial data load
-refreshManageData();
+// refreshManageData();
 
 
 //////////////////////////// EXPORT FUNCTION ////////////////////////////////////
