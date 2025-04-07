@@ -18,7 +18,7 @@ router.post('/send-face-data-to-enroll', async (req, res) => {
             return res.status(400).json({ error: "No valid images provided." });
         }
 
-        console.log("📤 Sending images to FastAPI for embedding extraction...");
+        //console.log("📤 Sending images to FastAPI for embedding extraction...");
 
         const fetchUrl = 'https://ominous-succotash-pj7577gjvjx7hrjq5-8000.app.github.dev/extract-embedding';
         let response;
@@ -56,7 +56,7 @@ router.post('/send-face-data-to-enroll', async (req, res) => {
             VALUES (?, ?, ?, ?, ?)
         `;
 
-        console.log("💾 Inserting face data into database...");
+        //console.log("💾 Inserting face data into database...");
 
         req.connectionPool.query(
             insertQuery,
@@ -67,7 +67,7 @@ router.post('/send-face-data-to-enroll', async (req, res) => {
                     return res.status(500).json({ error: 'Database insertion failed' });
                 }
 
-                console.log(`✅ Face enrolled for GR No: ${grId}, Name: ${name}`);
+                //console.log(`✅ Face enrolled for GR No: ${grId}, Name: ${name}`);
                 res.status(201).json({
                     message: 'Face enrolled successfully!',
                     grId, name, standard

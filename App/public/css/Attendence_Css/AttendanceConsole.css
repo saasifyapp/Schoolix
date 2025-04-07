@@ -1053,3 +1053,13 @@ svg path {
 .image-slot img[src]:not([src=""]) + .image-slot::before {
     display: none; /* Hide placeholder when an image is present */
 }
+
+
+
+.modal-content {
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: white;
+  }
+  
