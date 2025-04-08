@@ -4,6 +4,8 @@ let attendanceSummaryData = [];
 
 /**************************** Today's Attendance Functions ****************************/
 
+
+
 // Function to populate the attendance table by fetching data from the server
 async function populateAttendanceTable() {
     try {
@@ -157,6 +159,7 @@ async function populateAttendanceSummaryTable() {
             confirmButtonText: 'Retry'
         });
     }
+
 }
 // Function to render the attendance summary table with provided data
 function renderAttendanceSummaryTable(data) {
@@ -218,12 +221,13 @@ function applySummaryFilters() {
             (!filterName || record.name.toLowerCase().includes(filterName)) &&
             (!filterSection || record.section.toLowerCase().includes(filterSection)) &&
             (!filterStandard || record.standard_division.toLowerCase().includes(filterStandard)) &&
-            (!filterDate || record.date_of_attendance.includes(formatDateToLocal(filterDate))) &&
+            (!filterDate || formatToYYYYMMDD(record.date_of_attendance) === filterDate) &&
             (!filterInTime || record.in_time.includes(filterInTime)) &&
             (!filterOutTime || record.out_time.includes(filterOutTime)) &&
             (!searchValue || record.user_id.toLowerCase().includes(searchValue) || record.name.toLowerCase().includes(searchValue))
         );
     });
+    
 
     renderAttendanceSummaryTable(filteredData);
 }
@@ -246,6 +250,18 @@ document.getElementById('summaryFilterOutTime').addEventListener('input', applyS
 // Initial data load for both overlays
 //refreshAttendanceData();
 //refreshAttendanceSummaryData();
+
+// Helper function to convert "dd-mm-yyyy" or similar to "yyyy-mm-dd"
+function formatToYYYYMMDD(dateStr) {
+    const parts = dateStr.split('-');
+    if (parts.length === 3) {
+        // Assuming original format is dd-mm-yyyy or dd/mm/yyyy
+        const [day, month, year] = parts;
+        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    }
+    return dateStr;
+}
+
 
 
 ///////////////////////////////// PREVIEW FUNCTIONS ////////////////////

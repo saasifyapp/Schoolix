@@ -389,7 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 await Swal.fire({
                     icon: "error",
                     title: "Enrollment Failed",
-                    text: "User already exists in the system",
+                    html: `User <strong>${formData.grId}</strong> | <strong>${formData.name}</strong> is already enrolled with a face.`,
                 });
                 return;  // Stop execution if user already exists
             }
