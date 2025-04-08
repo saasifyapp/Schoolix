@@ -146,13 +146,14 @@
                     <form id="enrollFaceForm">
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="enroll_category" name="category"
-                                    placeholder=" ">
+                                <input type="text" class="form-control" id="enroll_category" name="category" placeholder=" ">
                                 <span class="form-control-placeholder">Category</span>
+                                <div id="categorySuggestions" class="suggestions"></div>
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="enroll_name" name="name" placeholder=" ">
                                 <span class="form-control-placeholder">Name</span>
+                                <div id="nameSuggestions" class="suggestions"></div>
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="enroll_grId" name="grId" placeholder=" ">
@@ -377,23 +378,7 @@
         </div>
     </div>
 
-    <div id="imagePreviewOverlay" class="overlay-search" style="display: none;">
-        <div class="overlay-content-search">
-            <button class="close-button" onclick="document.getElementById('imagePreviewOverlay').style.display='none'">×</button>
-            <h2 class="overlay-search-head">Preview Images</h2>
-            <div style="display: flex; justify-content: space-evenly; align-items: center; margin-top: 20px;">
-                <div>
-                    <h4 style="text-align: center;">In Image</h4>
-                    <img id="previewInImage" style="max-width: 300px; max-height: 300px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-                </div>
-                <div>
-                    <h4 style="text-align: center;">Out Image</h4>
-                    <img id="previewOutImage" style="max-width: 300px; max-height: 300px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-                </div>
-            </div>
-        </div>
-    </div>
-    
+
 
 <!-- Overlay for Attendance Summary -->
 <div id="attendanceSummaryOverlay" class="overlay-search">
@@ -439,6 +424,22 @@
     </div>
 </div>
 
+<div id="imagePreviewOverlay" class="overlay-search" style="display: none;">
+    <div class="overlay-content-search">
+        <button class="close-button" onclick="document.getElementById('imagePreviewOverlay').style.display='none'">×</button>
+        <h2 class="overlay-search-head">Preview Images</h2>
+        <div style="display: flex; justify-content: space-evenly; align-items: center; margin-top: 20px;">
+            <div>
+                <h4 style="text-align: center;">In Image</h4>
+                <img id="previewInImage" style="max-width: 300px; max-height: 300px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+            </div>
+            <div>
+                <h4 style="text-align: center;">Out Image</h4>
+                <img id="previewOutImage" style="max-width: 300px; max-height: 300px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
