@@ -84,7 +84,7 @@ router.post("/check-user-face-existence", async (req, res) => {
     const base64Data = image.replace(/^data:image\/png;base64,/, ""); // Remove the prefix
     const imageBuffer = Buffer.from(base64Data, 'base64'); // Convert to binary buffer
 
-    console.log("🧪 Decoded Image Buffer Length:", imageBuffer.length); // Add this
+    //console.log("🧪 Decoded Image Buffer Length:", imageBuffer.length); // Add this
 
 
     try {

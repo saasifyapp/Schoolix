@@ -164,8 +164,17 @@ function renderAttendanceSummaryTable(data) {
     attendanceSummaryTableBody.innerHTML = ''; // Clear existing table rows
 
     data.forEach((record, index) => {
+        // Store base64 image in sessionStorage
+        if (record.in_image) {
+            sessionStorage.setItem(`summaryPreviewInImage_${index}`, record.in_image);
+        }
+        if (record.out_image) {
+            sessionStorage.setItem(`summaryPreviewOutImage_${index}`, record.out_image);
+        }
+    
         const row = document.createElement('tr');
-
+        row.dataset.index = index;
+    
         row.innerHTML = `
             <td>${index + 1}</td>
             <td>${record.user_id}</td>
@@ -176,13 +185,15 @@ function renderAttendanceSummaryTable(data) {
             <td>${record.in_time}</td>
             <td>${record.out_time}</td>
             <td>
-                <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin: 5px;"
+                <button 
+                    style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s, box-shadow 0.2s; margin: 5px;"
                     onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
-                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';"
+                    onclick="handleSummaryPreview(this)">
                     <img src="../images/camera.png" alt="Preview" style="width: 25px; height: 25px; border-radius: 0px; margin: 5px;">
                     <span style="margin-right: 10px;">Preview</span>
                 </button>
-            </td>   
+            </td>
         `;
 
         attendanceSummaryTableBody.appendChild(row);
@@ -244,6 +255,35 @@ function handlePreview(button) {
 
     const inImage = sessionStorage.getItem(`previewInImage_${rowIndex}`);
     const outImage = sessionStorage.getItem(`previewOutImage_${rowIndex}`);
+
+    const inImageHTML = inImage ? `<img src="${inImage}" alt="In Image" style="width: 100%; max-width: 300px; border-radius: 8px;" />` : '<p>🟡 No In image available</p>';
+    const outImageHTML = outImage ? `<img src="${outImage}" alt="Out Image" style="width: 100%; max-width: 300px; border-radius: 8px;" />` : '<p>🟡 No Out image available</p>';
+
+    Swal.fire({
+        title: "📸 Preview Attendance Images",
+        html: `
+            <div style="display: flex; gap: 20px; justify-content: center; align-items: center; flex-wrap: wrap;">
+                <div>
+                    <h4>In Image</h4>
+                    ${inImageHTML}
+                </div>
+                <div>
+                    <h4>Out Image</h4>
+                    ${outImageHTML}
+                </div>
+            </div>
+        `,
+        width: '700px',
+        confirmButtonText: 'Close'
+    });
+}
+
+// Function to handle the preview for attendance summary images
+function handleSummaryPreview(button) {
+    const rowIndex = button.closest('tr').dataset.index;
+
+    const inImage = sessionStorage.getItem(`summaryPreviewInImage_${rowIndex}`);
+    const outImage = sessionStorage.getItem(`summaryPreviewOutImage_${rowIndex}`);
 
     const inImageHTML = inImage ? `<img src="${inImage}" alt="In Image" style="width: 100%; max-width: 300px; border-radius: 8px;" />` : '<p>🟡 No In image available</p>';
     const outImageHTML = outImage ? `<img src="${outImage}" alt="Out Image" style="width: 100%; max-width: 300px; border-radius: 8px;" />` : '<p>🟡 No Out image available</p>';

@@ -32,8 +32,8 @@ document.addEventListener("DOMContentLoaded", function () {
   );
 
   // Debugging to ensure correct elements are selected
-  console.log("Enroll Face Button:", enrollFaceBtn);
-  console.log("Manage Button:", manageBtn);
+  //console.log("Enroll Face Button:", enrollFaceBtn);
+ // console.log("Manage Button:", manageBtn);
 
   // Function to show overlay
   function showOverlay(overlay) {
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Open enroll face overlay
   enrollFaceBtn.addEventListener("click", function () {
-    console.log("Enroll Face clicked");
+    //console.log("Enroll Face clicked");
     hideOverlay(overlay1);
     showOverlay(enrollFaceOverlay);
   });
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Open manage overlay
   manageBtn.addEventListener("click", function () {
     refreshManageData();
-    console.log("Manage clicked");
+    //console.log("Manage clicked");
     hideOverlay(overlay1);
     showOverlay(manageOverlay);
   });

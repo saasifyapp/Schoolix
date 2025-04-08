@@ -127,18 +127,18 @@ document.addEventListener("DOMContentLoaded", function () {
     async function captureImage() {
         isDetecting = false;
     
-        // Wait for the video element to be ready
         if (videoElement.readyState < 2) {
             console.warn("⏳ Video not ready to draw yet.");
             statusText.innerText = "⏳ Waiting for video stream...";
-            await new Promise(resolve => setTimeout(resolve, 200)); // Delay for video to render
+            await new Promise(resolve => setTimeout(resolve, 200));
         }
     
-        // Set canvas size to match video
-        canvasElement.width = videoElement.videoWidth;
-        canvasElement.height = videoElement.videoHeight;
+        const targetWidth = 300; // Increased width
+        const targetHeight = 150; // Increased height to match the new size
+        canvasElement.width = targetWidth;
+        canvasElement.height = targetHeight;
     
-        console.log("🎯 Canvas Size:", canvasElement.width, canvasElement.height);
+        //console.log("🎯 Canvas Size:", canvasElement.width, canvasElement.height);
         if (canvasElement.width === 0 || canvasElement.height === 0) {
             console.error("❌ Canvas has zero dimensions!");
             statusText.innerText = "❌ Failed to capture image – video not ready";
@@ -146,35 +146,24 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     
         const context = canvasElement.getContext("2d");
-    
-        // Give a short delay before capturing to allow for frame stabilization
         await new Promise(resolve => setTimeout(resolve, 100));
+        context.drawImage(videoElement, 0, 0, targetWidth, targetHeight);
     
-        context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
-    
-        // Convert canvas to base64 PNG
         const imageData = canvasElement.toDataURL("image/png");
-    
-        // Validate base64 structure
         if (!imageData.startsWith("data:image/png;base64,")) {
             console.error("❌ Invalid base64 format from canvas");
             statusText.innerText = "❌ Error converting image";
             return;
         }
     
-        // Save image to sessionStorage
         saveImageToSession(imageData);
-    
-        // Play confirmation sound
         beepSound.play().catch(error => console.error("🔈 Error playing beep sound:", error));
         statusText.innerText = "📸 Image captured";
     
         try {
             const storedFaces = getStoredImages();
             const latestImage = storedFaces[storedFaces.length - 1];
-    
-            // Optional: Debug log for base64 string length
-            console.log("🧬 Base64 Image Length:", latestImage.length);
+            //console.log("🧬 Base64 Image Length:", latestImage.length);
     
             const response = await fetch('/check-user-face-existence', {
                 method: 'POST',
@@ -183,10 +172,9 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     
             const result = await response.json();
-    
             if (response.ok) {
                 statusText.innerText = "✅ Face processed";
-                detectFace(); // Restart detection
+                detectFace();
             } else {
                 console.error("❌ Face verification failed:", result);
                 statusText.innerText = "❌ Face verification failed";
