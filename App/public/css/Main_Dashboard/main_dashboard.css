@@ -12,7 +12,7 @@
     --white-color: #fff;
     --blue-color: #4070f4;
     --grey-color: #707070;
-    --grey-color-light: #aaa;
+    --grey-color-light: #aaa; 
 }
 
 body {
@@ -951,12 +951,12 @@ body.dark {
 .attendance_and_transport {
     display: flex;
     justify-content: space-between;
-    width: 100%; /* Ensure the container takes full width */
-    margin-top: 20px; /* Add some space above the new containers */
-    gap: 2px; /* Reduce gap between subcontainers to a minimum */
+    width: 100%;
+    margin-top: 20px;
+    gap: 2px;
 }
 
-/* Keyframes for slide-in-from-left animation for attendance */
+/* Keyframes for animations */
 @keyframes slideInFromLeft {
     0% {
         transform: translateX(-100%);
@@ -968,7 +968,6 @@ body.dark {
     }
 }
 
-/* Keyframes for slide-in-from-right animation for transport */
 @keyframes slideInFromRight {
     0% {
         transform: translateX(100%);
@@ -984,47 +983,54 @@ body.dark {
 .attendance {
     background-color: white;
     width: 49.8%;
-    height: 200px; /* Optional: Adjust height as needed */
+    height: 250px;
     border-radius: 10px;
     display: flex;
-    flex-direction: column; /* Stack heading and content vertically */
-    justify-content: flex-start; /* Align items to the top */
-    padding: 10px; /* Add some padding inside the container */
-    box-sizing: border-box; /* Include padding in the element's total width and height */
-    color: #5d6d7e; /* Change text color */
-    font-size: 20px; /* Adjust text size as needed */
-    font-weight: 600; /* Adjust font weight to match the heading */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow on all sides */
-    animation: slideInFromLeft 0.9s ease-out; /* Apply slide-in-from-left animation */
+    flex-direction: column;
+    padding: 10px;
+    box-sizing: border-box;
+    color: #5d6d7e;
+    font-size: 20px;
+    font-weight: 600;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    animation: slideInFromLeft 0.9s ease-out;
 }
 
 /* Styles for the transport subcontainer */
 .transport {
     background-color: white;
     width: 49.6%;
-    height: 200px; /* Optional: Adjust height as needed */
+    height: 250px;
     border-radius: 10px;
     display: flex;
-    flex-direction: column; /* Stack heading and content vertically */
-    justify-content: flex-start; /* Align items to the top */
-    padding: 10px; /* Add some padding inside the container */
-    box-sizing: border-box; /* Include padding in the element's total width and height */
-    color: #5d6d7e; /* Change text color */
-    font-size: 20px; /* Adjust text size as needed */
-    font-weight: 600; /* Adjust font weight to match the heading */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow on all sides */
-    animation: slideInFromRight 0.9s ease-out; /* Apply slide-in-from-right animation */
+    flex-direction: column;
+    padding: 10px;
+    box-sizing: border-box;
+    color: #5d6d7e;
+    font-size: 20px;
+    font-weight: 600;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    animation: slideInFromRight 0.9s ease-out;
 }
 
-/* Heading styles to match Library Overview and position at top center */
+/* Heading styles */
 .attendance h3,
 .transport h3 {
-    font-size: 20px; /* Set font size for the heading */
-    font-weight: 600; /* Make the heading bold */
-    margin-top: 0; /* Remove top margin */
-    margin-bottom: 15px; /* Adjust bottom margin to ensure spacing from content */
-    font-family: 'Poppins', sans-serif; /* Apply font-family */
-    color: #5d6d7e; /* Set heading color */
-    text-align: center; /* Center align the heading */
-    width: 100%; /* Ensure the heading takes full width */
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 10px; /* Reduced bottom margin to save space */
+    font-family: 'Poppins', sans-serif;
+    color: #5d6d7e;
+    text-align: center;
+    width: 100%;
+}
+
+/* Ensure the canvas fits within the container */
+.attendance canvas {
+    width: 100% !important; /* Override any inline styles */
+    height: calc(250px - 50px) !important; /* Account for heading (approx 30px) + padding (20px) */
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }

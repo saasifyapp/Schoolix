@@ -731,3 +731,106 @@ async function confirmSchoolLocation(loginName) {
 confirmSchoolLocation(username); // Replace with the actual login name
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+///////////////////////// ATTENDANCE BAR CHART /////////////////////
+
+var ctx = document.getElementById('attendanceChart').getContext('2d');
+var attendanceChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: [['Mon', '1-Mar'], ['Tue', '2-Mar'], ['Wed', '3-Mar'], ['Thu', '4-Mar'], ['Fri', '5-Mar'], ['Sat', '6-Mar']],        datasets: [
+            {
+                label: 'Students',
+                data: [250, 300, 280, 290, 275, 260],
+                backgroundColor: '#a3e4d7', // Solid light teal hex
+                borderColor: 'rgba(0, 0, 0, 0)', // No border
+                borderWidth: 0
+            },
+            {
+                label: 'Teachers',
+                data: [100, 120, 110, 115, 110, 100],
+                backgroundColor: '#f5b7b1', // Solid light pink hex
+                borderColor: 'rgba(0, 0, 0, 0)', // No border
+                borderWidth: 0
+            }
+        ]
+    },
+    options: {
+        scales: {
+            x: { // Updated to v3.x/v4.x syntax (x instead of xAxes)
+                ticks: {
+                    autoSkip: true,
+                    maxRotation: 45,
+                    minRotation: 0,
+                    padding: 5,
+                    maxTicksLimit: 6
+                },
+                grid: { // Updated to v3.x/v4.x syntax (grid instead of gridLines)
+                    display: false // Remove x-axis grid lines
+                }
+            },
+            y: { // Updated to v3.x/v4.x syntax (y instead of yAxes)
+                ticks: {
+                    beginAtZero: true,
+                    max: 300
+                },
+                grid: { // Updated to v3.x/v4.x syntax
+                    display: false // Remove y-axis grid lines
+                }
+            }
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { // Updated to v3.x/v4.x syntax (moved inside plugins)
+                display: true,
+                position: 'top'
+            }
+        },
+        layout: {
+            padding: {
+                top: 0,
+                bottom: 10
+            }
+        },
+        barPercentage: 0.7,
+        categoryPercentage: 0.8
+    },
+    plugins: [{
+        id: 'customBars', // Give the plugin an ID
+        beforeDatasetDraw: function(chart, args) {
+            const ctx = chart.ctx;
+            const meta = args.meta;
+            meta.data.forEach((bar, index) => {
+                const dataset = chart.data.datasets[meta.index];
+                const value = dataset.data[index];
+                const x = bar.x; // Bar center x-coordinate
+                const y = bar.y; // Bar top y-coordinate
+                const width = bar.width; // Bar width
+                const height = bar.height; // Bar height (positive downward in v3.x/v4.x)
+
+                ctx.beginPath();
+                ctx.moveTo(x - width / 2, y); // Top-left
+                ctx.lineTo(x - width / 2 + 10, y); // Top-left curve start (increased radius)
+                ctx.quadraticCurveTo(x - width / 2, y, x - width / 2, y + 10); // Top-left curve
+                ctx.lineTo(x - width / 2, y + height); // Left side
+                ctx.lineTo(x + width / 2, y + height); // Right side
+                ctx.lineTo(x + width / 2, y + 10); // Top-right curve start
+                ctx.quadraticCurveTo(x + width / 2, y, x + width / 2 - 10, y); // Top-right curve
+                ctx.closePath();
+                ctx.fillStyle = dataset.backgroundColor;
+                ctx.fill();
+
+                // Display the count inside the top of the bar
+                ctx.fillStyle = '#000'; // Text color
+                ctx.font = '12px Arial'; // Font and size
+                ctx.textAlign = 'center'; // Align text to the center
+                ctx.fillText(value, x, y + 15); // Position text slightly inside the top of the bar
+            });
+            // Prevent default bar drawing
+            args.meta.hidden = true; // Hide default bars (optional, test if needed)
+        }
+    }]
+});
