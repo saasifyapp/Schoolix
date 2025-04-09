@@ -133,8 +133,8 @@ document.addEventListener("DOMContentLoaded", function () {
             await new Promise(resolve => setTimeout(resolve, 200));
         }
     
-        const targetWidth = 200; // Increased width
-        const targetHeight = 100; // Increased height to match the new size
+        const targetWidth = 300; // Increased width
+        const targetHeight = 180; // Increased height to match the new size
         canvasElement.width = targetWidth;
         canvasElement.height = targetHeight;
     

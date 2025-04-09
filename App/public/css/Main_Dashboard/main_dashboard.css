@@ -20,7 +20,7 @@ body {
     background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
     transition: all 0.5s ease;
 }
-
+ 
 body.dark {
     background-color: #333;
 }
@@ -684,6 +684,8 @@ body.dark {
     position: relative; /* Allows positioning the icon */
     overflow: hidden; /* Hide any overflow content */
     height: 100%; /* Ensures full height usage */
+   /* box-shadow: 0 0 8px rgba(0, 0, 0, 0.1); /* Add shadow on all sides */
+
   }
   
   .detail_text {
@@ -756,7 +758,9 @@ body.dark {
     justify-content: center; /* Center content */
     box-sizing: border-box; /* Include padding in the element's total width and height */
     overflow: hidden; /* Hide any overflow content */
-    border-radius: 15px; /* Optional: Add border radius */    
+    border-radius: 15px; /* Optional: Add border radius */   
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow on all sides */
+ 
   }
   
   .chart-container {
@@ -861,6 +865,8 @@ body.dark {
     flex-direction: column; /* Stack heading and items vertically */
     align-items: center; /* Center align the content horizontally */
     animation: slideInFromRight 0.9s ease-out; /* Add the slide-in animation */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow on all sides */
+
 }
 
   
@@ -936,3 +942,89 @@ body.dark {
     font-size: 24px; 
     font-weight: bold;
   }
+
+
+
+////////////////////////////////////////// ATTENDANCE AND TRANSPORT CONTAINER ///////////////
+
+/* Define the parent container */
+.attendance_and_transport {
+    display: flex;
+    justify-content: space-between;
+    width: 100%; /* Ensure the container takes full width */
+    margin-top: 20px; /* Add some space above the new containers */
+    gap: 2px; /* Reduce gap between subcontainers to a minimum */
+}
+
+/* Keyframes for slide-in-from-left animation for attendance */
+@keyframes slideInFromLeft {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Keyframes for slide-in-from-right animation for transport */
+@keyframes slideInFromRight {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Styles for the attendance subcontainer */
+.attendance {
+    background-color: white;
+    width: 49.8%;
+    height: 200px; /* Optional: Adjust height as needed */
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column; /* Stack heading and content vertically */
+    justify-content: flex-start; /* Align items to the top */
+    padding: 10px; /* Add some padding inside the container */
+    box-sizing: border-box; /* Include padding in the element's total width and height */
+    color: #5d6d7e; /* Change text color */
+    font-size: 20px; /* Adjust text size as needed */
+    font-weight: 600; /* Adjust font weight to match the heading */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow on all sides */
+    animation: slideInFromLeft 0.9s ease-out; /* Apply slide-in-from-left animation */
+}
+
+/* Styles for the transport subcontainer */
+.transport {
+    background-color: white;
+    width: 49.6%;
+    height: 200px; /* Optional: Adjust height as needed */
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column; /* Stack heading and content vertically */
+    justify-content: flex-start; /* Align items to the top */
+    padding: 10px; /* Add some padding inside the container */
+    box-sizing: border-box; /* Include padding in the element's total width and height */
+    color: #5d6d7e; /* Change text color */
+    font-size: 20px; /* Adjust text size as needed */
+    font-weight: 600; /* Adjust font weight to match the heading */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow on all sides */
+    animation: slideInFromRight 0.9s ease-out; /* Apply slide-in-from-right animation */
+}
+
+/* Heading styles to match Library Overview and position at top center */
+.attendance h3,
+.transport h3 {
+    font-size: 20px; /* Set font size for the heading */
+    font-weight: 600; /* Make the heading bold */
+    margin-top: 0; /* Remove top margin */
+    margin-bottom: 15px; /* Adjust bottom margin to ensure spacing from content */
+    font-family: 'Poppins', sans-serif; /* Apply font-family */
+    color: #5d6d7e; /* Set heading color */
+    text-align: center; /* Center align the heading */
+    width: 100%; /* Ensure the heading takes full width */
+}
