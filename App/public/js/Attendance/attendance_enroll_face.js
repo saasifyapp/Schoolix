@@ -486,6 +486,7 @@ let manageData = [];
 
 // Function to refresh manage enrollments data
 async function refreshManageData() {
+    showAttendanceLoadingAnimation();
     try {
         const response = await fetch('/get-manage-enrollments');
 
@@ -498,7 +499,9 @@ async function refreshManageData() {
         if (result.data && result.data.length > 0) {
             manageData = result.data;
             displayManageTable(manageData);
+            hideAttendanceLoadingAnimation();
         } else {
+            hideAttendanceLoadingAnimation();
             document.getElementById('manageTableBody').innerHTML = `
                 <tr><td colspan="8" style="text-align:center;">No enrollments found.</td></tr>
             `;
@@ -511,6 +514,7 @@ async function refreshManageData() {
             });
         }
     } catch (error) {
+        hideAttendanceLoadingAnimation();
         console.error('[REFRESH ERROR]:', error.message);
         Swal.fire({
             icon: 'error',
@@ -568,6 +572,7 @@ async function handleDelete(faceRecordId, name, user_id) {
     });
 
     if (confirmDelete.isConfirmed) {
+        showAttendanceLoadingAnimation();
         try {
             const response = await fetch(`/delete-enrollment/${faceRecordId}`, {
                 method: 'DELETE'
@@ -588,11 +593,13 @@ async function handleDelete(faceRecordId, name, user_id) {
                 });
 
                 refreshManageData(); // refresh table
+                hideAttendanceLoadingAnimation();
             } else {
                 throw new Error(result.message || 'Deletion failed.');
             }
 
         } catch (error) {
+            hideAttendanceLoadingAnimation();
             console.error('[DELETE ERROR]:', error.message);
             Swal.fire({
                 icon: 'error',

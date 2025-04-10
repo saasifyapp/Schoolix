@@ -187,3 +187,108 @@ function exportTableToCSV(tableId, filename) {
       document.body.removeChild(link);
   }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Function to clear all input fields and session storage within a given overlay
+  function clearInputsAndSessionStorage(overlayId) {
+      const overlay = document.getElementById(overlayId);
+      if (overlay) {
+          // Clear all input elements within the overlay
+          const inputs = overlay.querySelectorAll('input');
+          inputs.forEach(input => {
+              if (input.type === 'file') {
+                  // Clear file input
+                  input.value = '';
+              } else if (input.type === 'text' || input.type === 'date' || input.type === 'time' || input.type === 'hidden') {
+                  // Clear text, date, time, and hidden inputs
+                  input.value = '';
+              }
+          });
+
+          // Clear select elements if any
+          const selects = overlay.querySelectorAll('select');
+          selects.forEach(select => {
+              select.value = '';
+          });
+
+          // Reset image previews for enrollFaceOverlay
+          if (overlayId === 'enrollFaceOverlay') {
+              for (let i = 1; i <= 5; i++) {
+                  const imagePreview = document.getElementById(`imagePreview${i}`);
+                  if (imagePreview) {
+                      imagePreview.src = '';
+                      imagePreview.style.display = 'none';
+                  }
+              }
+
+              // Clear sessionStorage keys for enrollFaceOverlay
+              for (let i = 1; i <= 5; i++) {
+                  sessionStorage.removeItem(`userImage${i}`);
+              }
+              sessionStorage.removeItem('liveUserFaces');
+          }
+
+          // Clear search bars if applicable
+          if (overlayId.includes('SearchBar')) {
+              const searchBar = overlay.querySelector('input[type="text"]');
+              if (searchBar) {
+                  searchBar.value = '';
+              }
+          }
+      }
+  }
+
+  // Mapping of close buttons to their respective overlays
+  const closeButtonMap = [
+      { buttonId: 'closeAttendanceOverlay1', overlayId: 'overlay1' },
+      { buttonId: 'closeAttendanceOverlay', overlayId: 'attendanceOverlay' },
+      { buttonId: 'closeManageOverlay', overlayId: 'manageOverlay' },
+      { buttonId: 'closeAttendanceSummaryOverlay', overlayId: 'attendanceSummaryOverlay' },
+  ];
+
+  // Add event listeners for close buttons with IDs
+  closeButtonMap.forEach(({ buttonId, overlayId }) => {
+      const closeButton = document.getElementById(buttonId);
+      if (closeButton) {
+          closeButton.addEventListener('click', () => {
+              clearInputsAndSessionStorage(overlayId);
+          });
+      }
+  });
+
+  // Handle enrollFaceOverlay close button (has no ID, selected by class)
+  const enrollFaceCloseButton = document.querySelector('#enrollFaceOverlay .close-button');
+  if (enrollFaceCloseButton) {
+      enrollFaceCloseButton.addEventListener('click', () => {
+          clearInputsAndSessionStorage('enrollFaceOverlay');
+      });
+  }
+
+  // Handle imagePreviewOverlay close button
+  const imagePreviewCloseButton = document.querySelector('#imagePreviewOverlay .close-button');
+  if (imagePreviewCloseButton) {
+      imagePreviewCloseButton.addEventListener('click', () => {
+          const previewInImage = document.getElementById('previewInImage');
+          const previewOutImage = document.getElementById('previewOutImage');
+          if (previewInImage) previewInImage.src = '';
+          if (previewOutImage) previewOutImage.src = '';
+      });
+  }
+});
+
+
+// Show the loading animation with a blurred background
+function showAttendanceLoadingAnimation() {
+  const loadingOverlay = document.getElementById('loadingOverlay');
+  if (loadingOverlay) {
+      loadingOverlay.style.display = 'flex'; // Show the overlay
+  }
+}
+
+// Hide the loading animation and remove the blur
+function hideAttendanceLoadingAnimation() {
+  const loadingOverlay = document.getElementById('loadingOverlay');
+  if (loadingOverlay) {
+      loadingOverlay.style.display = 'none'; // Hide the overlay
+  }
+}

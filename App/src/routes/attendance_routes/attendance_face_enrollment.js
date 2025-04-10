@@ -128,7 +128,7 @@ router.post('/send-face-data-to-enroll', async (req, res) => {
 
         //console.log("📤 Sending images to FastAPI for embedding extraction...");
 
-        const fetchUrl = 'https://ominous-succotash-pj7577gjvjx7hrjq5-8000.app.github.dev/extract-embedding';
+        const fetchUrl = 'http://localhost:8000/extract-embedding';
         let response;
 
         try {

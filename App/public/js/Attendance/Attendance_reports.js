@@ -8,11 +8,13 @@ let attendanceSummaryData = [];
 
 // Function to populate the attendance table by fetching data from the server
 async function populateAttendanceTable() {
+    showAttendanceLoadingAnimation();
     try {
         const response = await fetch('/get-daily-attendance', { method: 'POST' });
         const result = await response.json();
 
         if (!result.data.length) {
+            hideAttendanceLoadingAnimation();
             Swal.fire({
                 icon: 'info',
                 title: 'No Records',
@@ -24,10 +26,12 @@ async function populateAttendanceTable() {
                 <tr><td colspan="9" style="text-align:center;">No records found.</td></tr>
             `;
         } else {
+            hideAttendanceLoadingAnimation();
             attendanceData = result.data;
             renderAttendanceTable(attendanceData);
         }
     } catch (error) {
+        hideAttendanceLoadingAnimation();
         console.error("Error fetching attendance data:", error);
         Swal.fire({
             icon: 'error',
@@ -131,11 +135,13 @@ document.getElementById('filterOutTime').addEventListener('input', applyFilters)
 
 // Function to populate the attendance summary table by fetching data from the server
 async function populateAttendanceSummaryTable() {
+    showAttendanceLoadingAnimation();
     try {
         const response = await fetch('/get-attendance-summary', { method: 'POST' });
         const result = await response.json();
 
         if (!result.data.length) {
+            hideAttendanceLoadingAnimation();
             Swal.fire({
                 icon: 'info',
                 title: 'No Records',
@@ -147,10 +153,12 @@ async function populateAttendanceSummaryTable() {
                 <tr><td colspan="9" style="text-align:center;">No records found.</td></tr>
             `;
         } else {
+            hideAttendanceLoadingAnimation();
             attendanceSummaryData = result.data;
             renderAttendanceSummaryTable(attendanceSummaryData);
         }
     } catch (error) {
+        hideAttendanceLoadingAnimation();
         console.error("Error fetching attendance summary data:", error);
         Swal.fire({
             icon: 'error',
@@ -267,6 +275,7 @@ function formatToYYYYMMDD(dateStr) {
 ///////////////////////////////// PREVIEW FUNCTIONS ////////////////////
 
 function handlePreview(button) {
+    showAttendanceLoadingAnimation();
     const rowIndex = button.closest('tr').dataset.index;
 
     const inImage = sessionStorage.getItem(`previewInImage_${rowIndex}`);
@@ -274,7 +283,7 @@ function handlePreview(button) {
 
     const inImageHTML = inImage ? `<img src="${inImage}" alt="In Image" style="width: 100%; max-width: 300px; border-radius: 8px;" />` : '<p>🟡 No In image available</p>';
     const outImageHTML = outImage ? `<img src="${outImage}" alt="Out Image" style="width: 100%; max-width: 300px; border-radius: 8px;" />` : '<p>🟡 No Out image available</p>';
-
+    hideAttendanceLoadingAnimation();
     Swal.fire({
         title: "📸 Preview Attendance Images",
         html: `
@@ -296,6 +305,7 @@ function handlePreview(button) {
 
 // Function to handle the preview for attendance summary images
 function handleSummaryPreview(button) {
+    showAttendanceLoadingAnimation();
     const rowIndex = button.closest('tr').dataset.index;
 
     const inImage = sessionStorage.getItem(`summaryPreviewInImage_${rowIndex}`);
@@ -303,7 +313,7 @@ function handleSummaryPreview(button) {
 
     const inImageHTML = inImage ? `<img src="${inImage}" alt="In Image" style="width: 100%; max-width: 300px; border-radius: 8px;" />` : '<p>🟡 No In image available</p>';
     const outImageHTML = outImage ? `<img src="${outImage}" alt="Out Image" style="width: 100%; max-width: 300px; border-radius: 8px;" />` : '<p>🟡 No Out image available</p>';
-
+    hideAttendanceLoadingAnimation();
     Swal.fire({
         title: "📸 Preview Attendance Images",
         html: `
