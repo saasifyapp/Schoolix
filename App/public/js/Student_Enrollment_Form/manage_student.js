@@ -95,3 +95,102 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+document.addEventListener('DOMContentLoaded', () => {
+    // Function to clear input fields within a given overlay, with exceptions
+    function clearOverlayInputs(overlayId) {
+        const overlay = document.getElementById(overlayId);
+        if (!overlay) return; // Skip if overlay not found
+
+        // Clear all input elements except specific dropdowns
+        const inputs = overlay.querySelectorAll('input');
+        inputs.forEach(input => {
+            if (input.type === 'file') {
+                input.value = ''; // Clear file inputs
+            } else if (input.type === 'checkbox' || input.type === 'radio') {
+                input.checked = false; // Uncheck checkboxes/radios
+            } else {
+                input.value = ''; // Clear text, date, time, number, hidden, etc.
+            }
+        });
+
+        // Clear select elements, excluding specific dropdowns
+        const selects = overlay.querySelectorAll('select');
+        selects.forEach(select => {
+            // Skip specific dropdowns that should remain "primary"
+            if (
+                (overlayId === 'updatePackageOverlay' && select.id === 'dropdown1') ||
+                (overlayId === 'searchStudentOverlay' && select.id === 'studentFilter') ||
+                (overlayId === 'deleteStudentOverlay' && select.id === 'deleteStudentFilter')
+            ) {
+                return; // Preserve these dropdowns
+            }
+            select.value = ''; // Reset other selects to empty or default
+        });
+
+        // Clear textareas (if any)
+        const textareas = overlay.querySelectorAll('textarea');
+        textareas.forEach(textarea => {
+            textarea.value = ''; // Clear textarea content
+        });
+
+        // Special handling for searchStudentOverlay: clear filter-related state
+        if (overlayId === 'searchStudentOverlay') {
+            // Clear the search input explicitly (already handled by input selector, but for clarity)
+            const searchInput = document.getElementById('searchStudentInput');
+            if (searchInput) {
+                searchInput.value = '';
+            }
+            // Clear table body to reset filter results (assumed to be the "special filter" state)
+            const tableBody = document.getElementById('studentsTablebody');
+            if (tableBody) {
+                tableBody.innerHTML = ''; // Clear filtered table rows
+            }
+        }
+    }
+
+    // Map of close buttons to overlay IDs
+    const closeButtonMap = [
+        { buttonId: 'closeAttendanceOverlay1', overlayId: 'overlay1' },
+        { buttonId: 'closeAttendanceOverlay', overlayId: 'attendanceOverlay' },
+        { buttonId: 'closeManageOverlay', overlayId: 'manageOverlay' },
+        { buttonId: 'closeAttendanceSummaryOverlay', overlayId: 'attendanceSummaryOverlay' },
+        { buttonId: 'closeUpdateStudentOverlay', overlayId: 'updateStudentOverlay' },
+        { buttonId: 'closeUpdatePackageOverlay', overlayId: 'updatePackageOverlay' },
+        { buttonId: 'closeUpdateStudentPackageOverlay', overlayId: 'updateStudentPackageOverlay' },
+        { buttonId: 'closeSearchStudentOverlay', overlayId: 'searchStudentOverlay' },
+        { buttonId: 'closeFilterOverlay', overlayId: 'filterOverlay' },
+        { buttonId: 'closeGenerateTCOverlay', overlayId: 'generateTCOverlay' },
+        { buttonId: 'closeGenerateTCFormOverlay', overlayId: 'generateTCFormOverlay' },
+        { buttonId: 'closeSearchTCFormOverlay', overlayId: 'searchTCFormOverlay' },
+        { buttonId: 'closeSearchTCOverlay', overlayId: 'searchTCOverlay' },
+        { buttonId: 'closeEditTCForm', overlayId: 'editTCForm' },
+        { buttonId: 'closeOverlayDelete', overlayId: 'deleteStudentOverlay' },
+    ];
+
+    // Add event listeners for close buttons
+    closeButtonMap.forEach(({ buttonId, overlayId }) => {
+        const closeButton = document.getElementById(buttonId);
+        if (closeButton) {
+            closeButton.addEventListener('click', () => clearOverlayInputs(overlayId));
+        }
+    });
+
+    // Handle enrollFaceOverlay (close button has no ID, selected by class)
+    const enrollFaceCloseButton = document.querySelector('#enrollFaceOverlay .close-button');
+    if (enrollFaceCloseButton) {
+        enrollFaceCloseButton.addEventListener('click', () => clearOverlayInputs('enrollFaceOverlay'));
+    }
+
+    // Handle imagePreviewOverlay (close button has inline onclick)
+    const imagePreviewCloseButton = document.querySelector('#imagePreviewOverlay .close-button');
+    if (imagePreviewCloseButton) {
+        imagePreviewCloseButton.addEventListener('click', () => {
+            const previewInImage = document.getElementById('previewInImage');
+            const previewOutImage = document.getElementById('previewOutImage');
+            if (previewInImage) previewInImage.src = '';
+            if (previewOutImage) previewOutImage.src = '';
+        });
+    }
+
+    // Note: previewTCOverlay has no close button; uses Back button with window.location.href
+});
