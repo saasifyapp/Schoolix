@@ -740,26 +740,34 @@ var ctx = document.getElementById('attendanceChart').getContext('2d');
 var attendanceChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: [['Mon', '1-Mar'], ['Tue', '2-Mar'], ['Wed', '3-Mar'], ['Thu', '4-Mar'], ['Fri', '5-Mar'], ['Sat', '6-Mar']],        datasets: [
+        labels: [['Mon', '1-Mar'], ['Tue', '2-Mar'], ['Wed', '3-Mar'], ['Thu', '4-Mar'], ['Fri', '5-Mar'], ['Sat', '6-Mar']],
+        datasets: [
             {
                 label: 'Students',
                 data: [250, 300, 280, 290, 275, 260],
-                backgroundColor: '#a3e4d7', // Solid light teal hex
-                borderColor: 'rgba(0, 0, 0, 0)', // No border
+                backgroundColor: '#8cefda',
+                borderColor: 'rgba(0, 0, 0, 0)',
                 borderWidth: 0
             },
             {
                 label: 'Teachers',
                 data: [100, 120, 110, 115, 110, 100],
-                backgroundColor: '#f5b7b1', // Solid light pink hex
-                borderColor: 'rgba(0, 0, 0, 0)', // No border
+                backgroundColor: '#fae27c',
+                borderColor: 'rgba(0, 0, 0, 0)',
+                borderWidth: 0
+            },
+            {
+                label: 'Visitors',
+                data: [50, 45, 60, 55, 40, 35],
+                backgroundColor: '#ff9999',
+                borderColor: 'rgba(0, 0, 0, 0)',
                 borderWidth: 0
             }
         ]
     },
     options: {
         scales: {
-            x: { // Updated to v3.x/v4.x syntax (x instead of xAxes)
+            x: {
                 ticks: {
                     autoSkip: true,
                     maxRotation: 45,
@@ -767,26 +775,39 @@ var attendanceChart = new Chart(ctx, {
                     padding: 5,
                     maxTicksLimit: 6
                 },
-                grid: { // Updated to v3.x/v4.x syntax (grid instead of gridLines)
-                    display: false // Remove x-axis grid lines
+                grid: {
+                    display: false
                 }
             },
-            y: { // Updated to v3.x/v4.x syntax (y instead of yAxes)
+            y: {
+                beginAtZero: true,
                 ticks: {
-                    beginAtZero: true,
-                    max: 300
+                    beginAtZero: true
                 },
-                grid: { // Updated to v3.x/v4.x syntax
-                    display: false // Remove y-axis grid lines
-                }
+                grid: {
+                  drawBorder: false,
+                  color: 'rgba(0, 0, 0, 0.1)',
+                  borderDash: [2, 2], // Makes the gridline more dotted
+                  drawOnChartArea: true, // Ensures lines are drawn on the chart
+                  drawTicks: false // Only draw grid lines
+              }
             }
         },
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-            legend: { // Updated to v3.x/v4.x syntax (moved inside plugins)
+            legend: {
                 display: true,
-                position: 'top'
+                position: 'top',
+                align: 'end',
+                labels: {
+                    boxWidth: 15
+                }
+            },
+            tooltip: {
+                enabled: true,
+                mode: 'index',
+                intersect: false
             }
         },
         layout: {
@@ -796,41 +817,41 @@ var attendanceChart = new Chart(ctx, {
             }
         },
         barPercentage: 0.7,
-        categoryPercentage: 0.8
+        categoryPercentage: 0.8,
+        hover: {
+            mode: 'index',
+            intersect: false
+        }
     },
     plugins: [{
-        id: 'customBars', // Give the plugin an ID
-        beforeDatasetDraw: function(chart, args) {
+        id: 'customRoundedBars',
+        beforeDatasetsDraw: function(chart) {
             const ctx = chart.ctx;
-            const meta = args.meta;
-            meta.data.forEach((bar, index) => {
-                const dataset = chart.data.datasets[meta.index];
-                const value = dataset.data[index];
-                const x = bar.x; // Bar center x-coordinate
-                const y = bar.y; // Bar top y-coordinate
-                const width = bar.width; // Bar width
-                const height = bar.height; // Bar height (positive downward in v3.x/v4.x)
+            chart.data.datasets.forEach(function(dataset, datasetIndex) {
+                const meta = chart.getDatasetMeta(datasetIndex);
+                meta.data.forEach((bar, index) => {
+                    const value = dataset.data[index];
+                    const x = bar.x;
+                    const y = bar.y;
+                    const width = bar.width;
+                    const height = Math.max(bar.height, 0); // Ensure the height is never negative
+                    const minCurveHeight = 0; // Minimum height for the curve
 
-                ctx.beginPath();
-                ctx.moveTo(x - width / 2, y); // Top-left
-                ctx.lineTo(x - width / 2 + 10, y); // Top-left curve start (increased radius)
-                ctx.quadraticCurveTo(x - width / 2, y, x - width / 2, y + 10); // Top-left curve
-                ctx.lineTo(x - width / 2, y + height); // Left side
-                ctx.lineTo(x + width / 2, y + height); // Right side
-                ctx.lineTo(x + width / 2, y + 10); // Top-right curve start
-                ctx.quadraticCurveTo(x + width / 2, y, x + width / 2 - 10, y); // Top-right curve
-                ctx.closePath();
-                ctx.fillStyle = dataset.backgroundColor;
-                ctx.fill();
+                    ctx.beginPath();
 
-                // Display the count inside the top of the bar
-                ctx.fillStyle = '#000'; // Text color
-                ctx.font = '12px Arial'; // Font and size
-                ctx.textAlign = 'center'; // Align text to the center
-                ctx.fillText(value, x, y + 15); // Position text slightly inside the top of the bar
+                    // Start drawing above baseline if height is too low for curving
+                    ctx.moveTo(x - width / 2, height < minCurveHeight ? y + minCurveHeight : y + height);
+                    ctx.lineTo(x - width / 2, y); // Draw from baseline
+                    ctx.quadraticCurveTo(x - width / 2, y, x - width / 2 + 20, y);
+                    ctx.lineTo(x + width / 2 - 20, y);
+                    ctx.quadraticCurveTo(x + width / 2, y, x + width / 2, height < minCurveHeight ? y : y + minCurveHeight);
+                    ctx.lineTo(x + width / 2, height < minCurveHeight ? y + minCurveHeight : y + height);
+                    ctx.closePath();
+
+                    ctx.fillStyle = dataset.backgroundColor;
+                    ctx.fill();
+                });
             });
-            // Prevent default bar drawing
-            args.meta.hidden = true; // Hide default bars (optional, test if needed)
         }
     }]
 });
