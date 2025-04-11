@@ -124,7 +124,7 @@
     bottom: 2rem;
     border-radius: 1rem;
     transition: transform 0.3s ease-in-out;
-    animation: fadeUp 0.3s ease-in-out;
+    animation: fadeUp 0.3s ease-in-out;    
 }
 
 
@@ -948,6 +948,9 @@ svg path {
     justify-content: space-between;
     gap: 15px; /* Slightly increased gap for better spacing */
     margin-top: 20px; /* Add some top margin for separation */
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 35vh;
 }
 
 .image-slot {

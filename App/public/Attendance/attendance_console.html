@@ -20,7 +20,7 @@
     <div id="loadingOverlay" class="loading-overlay" style="display: none;">
         <div class="loader"></div>
     </div>
-    
+
     <nav class="navbar">
         <div class="logo_item">
             <!-- <i class="bx bx-menu" id="sidebarOpen"></i> -->
@@ -69,7 +69,7 @@
                 <div class="dotlottie-container">
                     <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
                         type="module"></script>
-                    <dotlottie-player   src="https://lottie.host/3196b5c9-9ce9-4b08-8b20-9f62f98b9387/67Rw9E7mtR.lottie"
+                    <dotlottie-player src="https://lottie.host/3196b5c9-9ce9-4b08-8b20-9f62f98b9387/67Rw9E7mtR.lottie"
                         background="transparent" speed="1" style="width: 270px; height: 220px" loop
                         autoplay></dotlottie-player>
 
@@ -86,7 +86,7 @@
                     <dotlottie-player src="https://lottie.host/c2a33d91-19aa-402e-aa8d-b4a720f61f1b/zCx4UnouZl.lottie"
                         background="transparent" speed="1" style="width: 270px; height: 220px" loop
                         autoplay></dotlottie-player>
-                </div>  
+                </div>
                 <h3>Daily Attendance</h3>
             </button>
         </div>
@@ -150,14 +150,15 @@
                     <form id="enrollFaceForm">
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="enroll_category" name="category" placeholder=" ">
+                                <input type="text" class="form-control" id="enroll_category" name="category"
+                                    placeholder=" ">
                                 <span class="form-control-placeholder">Category</span>
-                                <div id="categorySuggestions" class="suggestions"></div>
+                                <div id="categorySuggestions" class="suggestions" style="width: 12rem;"></div>
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="enroll_name" name="name" placeholder=" ">
                                 <span class="form-control-placeholder">Name</span>
-                                <div id="nameSuggestions" class="suggestions"></div>
+                                <div id="nameSuggestions" class="suggestions" style="width: 12rem;"></div>
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="enroll_grId" name="grId" placeholder=" ">
@@ -307,7 +308,8 @@
                     </button>
                 </div>
             </div>
-            <button class="export_registered_students" onclick="exportTableToCSV('manageTable', 'Manage_Enrollments.csv')">
+            <button class="export_registered_students"
+                onclick="exportTableToCSV('manageTable', 'Manage_Enrollments.csv')">
                 <img src="/images/export.png" alt="Export Icon"> Export
             </button>
             <div class="table-container">
@@ -345,8 +347,7 @@
                     <div class="form-Searchgroup">
                         <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
                         <input type="text" class="form-control" id="attendanceSearchBar" name="attendanceSearch"
-                            placeholder=" " oninput=""
-                            style="width: 400px; height: 1.7rem !important;">
+                            placeholder=" " oninput="" style="width: 400px; height: 1.7rem !important;">
                         <span class="form-control-placeholder" style="left: 3.75rem;">Search Attendance...</span>
                     </div>
                     <button class="refreshButton" onclick="refreshAttendanceData()" style="margin-top: 10px;">
@@ -364,13 +365,48 @@
                     <thead>
                         <tr>
                             <th>Record ID</th>
-                            <th>User ID <input type="text" id="filterUserID" oninput="applyFilters()"></th>
-                            <th>Name <input type="text" id="filterName" oninput="applyFilters()"></th>
-                            <th>Section <input type="text" id="filterSection" oninput="applyFilters()"></th>
-                            <th>Standard <input type="text" id="filterStandard" oninput="applyFilters()"></th>
-                            <th>Date <input type="date" id="filterDate" oninput="applyFilters()"></th>
-                            <th>In Time <input type="time" id="filterInTime" oninput="applyFilters()"></th>
-                            <th>Out Time <input type="time" id="filterOutTime" oninput="applyFilters()"></th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="filterUserID" name="filterUserID" placeholder=" " oninput="applyFilters()">
+                                    <span class="form-control-placeholder">User ID</span>                                    
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="filterName" name="filterName" placeholder=" " oninput="applyFilters()">
+                                    <span class="form-control-placeholder">Name</span>                                    
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="filterSection" name="filterSection" placeholder=" " oninput="applyFilters()">
+                                    <span class="form-control-placeholder">Section</span>                                   
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="filterStandard" name="filterStandard" placeholder=" " oninput="applyFilters()">
+                                    <span class="form-control-placeholder">Standard</span>                                   
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="date" class="form-control" id="filterDate" name="filterDate" placeholder=" " oninput="applyFilters()">
+                                    <span class="form-control-placeholder">Date</span>                                   
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="time" class="form-control" id="filterInTime" name="filterInTime" placeholder=" " oninput="applyFilters()">
+                                    <span class="form-control-placeholder">In Time</span>                                  
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="time" class="form-control" id="filterOutTime" name="filterOutTime" placeholder=" " oninput="applyFilters()">
+                                    <span class="form-control-placeholder">Out Time</span>                                   
+                                </div>
+                            </th>
                             <th>Preview</th>
                         </tr>
                     </thead>
@@ -384,66 +420,113 @@
 
 
 
-<!-- Overlay for Attendance Summary -->
-<div id="attendanceSummaryOverlay" class="overlay-search">
-    <div class="overlay-content-search">
-        <button id="closeAttendanceSummaryOverlay" class="close-button">×</button>
-        <img src="/images/attendanceSummary.png" alt="Overlay Icon" class="overlay-icon">
-        <h2 class="overlay-search-head">Attendance Summary</h2>
-        <div class="search-container">
-            <div class="form-Searchgroup">
-                <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
-                <input type="text" class="form-control" id="attendanceSummarySearchBar" name="attendanceSummarySearch"
-                    placeholder=" " oninput=""
-                    style="width: 400px; height: 1.7rem !important;">
-                <span class="form-control-placeholder" style="left: 3.75rem;">Search Summary...</span>
-                <button class="refreshButton" onclick="refreshAttendanceSummaryData()" style="margin-top: 10px;">
-                    <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
-                </button>
-            </div>
-        </div>
-        <button class="export_registered_students" onclick="exportTableToCSV('attendanceSummaryTable', 'Attendance_Summary.csv')">
-            <img src="/images/export.png" alt="Export Icon"> Export
-        </button>
-        <div class="table-container">
-            <table id="attendanceSummaryTable" class="styled-table">
-                <thead>
-                    <tr>
-                        <th>Record ID</th>
-                        <th>User ID <input type="text" id="summaryFilterUserID" oninput="applySummaryFilters()"></th>
-                        <th>Name <input type="text" id="summaryFilterName" oninput="applySummaryFilters()"></th>
-                        <th>Section <input type="text" id="summaryFilterSection" oninput="applySummaryFilters()"></th>
-                        <th>Standard <input type="text" id="summaryFilterStandard" oninput="applySummaryFilters()"></th>
-                        <th>Date <input type="date" id="summaryFilterDate" oninput="applySummaryFilters()"></th>
-                        <th>In Time <input type="time" id="summaryFilterInTime" oninput="applySummaryFilters()"></th>
-                        <th>Out Time <input type="time" id="summaryFilterOutTime" oninput="applySummaryFilters()"></th>
-                        <th>Preview</th>
-                    </tr>
-                </thead>
-                <tbody id="attendanceSummaryTableBody">
-                    <!-- Table rows will be populated here -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+    <!-- Overlay for Attendance Summary -->
+    <div id="attendanceSummaryOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeAttendanceSummaryOverlay" class="close-button">×</button>
+            <img src="/images/attendanceSummary.png" alt="Overlay Icon" class="overlay-icon">
+            <h2 class="overlay-search-head">Attendance Summary</h2>
 
-<div id="imagePreviewOverlay" class="overlay-search" style="display: none;">
-    <div class="overlay-content-search">
-        <button class="close-button" onclick="document.getElementById('imagePreviewOverlay').style.display='none'">×</button>
-        <h2 class="overlay-search-head">Preview Images</h2>
-        <div style="display: flex; justify-content: space-evenly; align-items: center; margin-top: 20px;">
-            <div>
-                <h4 style="text-align: center;">In Image</h4>
-                <img id="previewInImage" style="max-width: 300px; max-height: 300px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-            </div>
-            <div>
-                <h4 style="text-align: center;">Out Image</h4>
-                <img id="previewOutImage" style="max-width: 300px; max-height: 300px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+
+            <div class="search-container">
+                <div class="form-Searchgroup">
+                    <div class="form-Searchgroup">
+                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                        <input type="text" class="form-control" id="attendanceSummarySearchBar"
+                            name="attendanceSummarySearch" placeholder=" " oninput=""
+                            style="width: 400px; height: 1.7rem !important;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search Summary...</span>
+                    </div>
+
+                    <button class="refreshButton" onclick="refreshAttendanceSummaryData()" style="margin-top: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
+                </div>
+            </div>           
+
+            <button class="export_registered_students"
+                onclick="exportTableToCSV('attendanceSummaryTable', 'Attendance_Summary.csv')">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+            <div class="table-container">
+                <table id="attendanceSummaryTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Record ID</th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="summaryFilterUserID" name="summaryFilterUserID" placeholder=" " oninput="applySummaryFilters()">
+                                    <span class="form-control-placeholder">User ID</span>
+                                    <div id="summaryFilterUserIDSuggestions" class="suggestions" style="width: 12rem;"></div>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="summaryFilterName" name="summaryFilterName" placeholder=" " oninput="applySummaryFilters()">
+                                    <span class="form-control-placeholder">Name</span>
+                                    <div id="summaryFilterNameSuggestions" class="suggestions" style="width: 12rem;"></div>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="summaryFilterSection" name="summaryFilterSection" placeholder=" " oninput="applySummaryFilters()">
+                                    <span class="form-control-placeholder">Section</span>
+                                    <div id="summaryFilterSectionSuggestions" class="suggestions" style="width: 12rem;"></div>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="summaryFilterStandard" name="summaryFilterStandard" placeholder=" " oninput="applySummaryFilters()">
+                                    <span class="form-control-placeholder">Standard</span>                                   
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="date" class="form-control" id="summaryFilterDate" name="summaryFilterDate" placeholder=" " oninput="applySummaryFilters()">                                                                
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="time" class="form-control" id="summaryFilterInTime" name="summaryFilterInTime" placeholder=" " oninput="applySummaryFilters()">
+                                    <span class="form-control-placeholder">In Time</span>                                  
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="time" class="form-control" id="summaryFilterOutTime" name="summaryFilterOutTime" placeholder=" " oninput="applySummaryFilters()">
+                                    <span class="form-control-placeholder">Out Time</span>                                    >
+                                </div>
+                            </th>
+                            <th>Preview</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceSummaryTableBody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-</div>
+
+    <div id="imagePreviewOverlay" class="overlay-search" style="display: none;">
+        <div class="overlay-content-search">
+            <button class="close-button"
+                onclick="document.getElementById('imagePreviewOverlay').style.display='none'">×</button>
+            <h2 class="overlay-search-head">Preview Images</h2>
+            <div style="display: flex; justify-content: space-evenly; align-items: center; margin-top: 20px;">
+                <div>
+                    <h4 style="text-align: center;">In Image</h4>
+                    <img id="previewInImage"
+                        style="max-width: 300px; max-height: 300px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                </div>
+                <div>
+                    <h4 style="text-align: center;">Out Image</h4>
+                    <img id="previewOutImage"
+                        style="max-width: 300px; max-height: 300px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
