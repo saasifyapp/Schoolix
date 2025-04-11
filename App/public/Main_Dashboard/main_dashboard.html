@@ -10,7 +10,7 @@
   <title>Dashboard</title>
   <link rel="stylesheet" href="/css/Main_Dashboard/main_dashboard.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <!-- SweetAlert2 CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -420,7 +420,7 @@
               <div><span class="male"></span>Male: <span id="maleCount"></span></div>
               <div><span class="female"></span>Female: <span id="femaleCount"></span></div>
             </div>
-            <h3>Primary</h3>
+            <h2 class="container_heading_piechart">Primary</h2>
           </div>
         </div>
 
@@ -435,7 +435,7 @@
               <div><span class="pre-male"></span>Male: <span id="prePrimaryMaleCount"></span></div>
               <div><span class="pre-female"></span>Female: <span id="prePrimaryFemaleCount"></span></div>
             </div>
-            <h3>Pre-Primary</h3>
+            <h2 class="container_heading_piechart">Pre-Primary</h2>
           </div>
         </div>
       </div>
@@ -526,10 +526,33 @@
       </div>
       <div class="transport">
           <h3>Transport Insights</h3>
-          <!-- Transport content here -->
+          <div class="transport_wrapper">
+              <div class="transport_cards">
+                  <div class="card summary-card">
+                      <h4>Summary</h4>
+                      <ul>
+                          <li>Number of Vehicles: 0</li>
+                          <li>Number of Drivers: 0</li>
+                          <!-- <li>Number of Conductors: 0</li> -->
+                          <li>Number of Passengers: 0</li>
+                          <li>Number of Routes: 0</li>
+                          <li>Number of Shifts: 0</li>
+                      </ul>
+                  </div>
+                  <div class="card">
+                      <h4>Live Location</h4>
+                  </div>
+                  <div class="card">
+                      <h4>Shift - Morning</h4>
+                  </div>
+                  <div class="card">
+                      <h4>Shift - Afternoon</h4>
+                  </div>
+              </div>
+          </div>
       </div>
   </div>
-
+  
   </div>
 
 

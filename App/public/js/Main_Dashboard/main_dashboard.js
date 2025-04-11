@@ -862,3 +862,33 @@ async function setupChart() {
 
 // Setup chart on page load
 window.addEventListener('load', setupChart);
+
+
+/////////////////////////////// TRANSPORT INSIGHTS ///////////////////////
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  let index = 0;
+  const cards = document.querySelector('.transport_cards');
+  const numOfSets = Math.ceil(cards.children.length / 2); // Number of card sets to show
+  let scrollInterval;
+  
+  const startScrolling = () => {
+      scrollInterval = setInterval(() => {
+          index = (index + 1) % numOfSets;
+          cards.style.transform = `translateX(-${index * (100 / numOfSets)}%)`;
+      }, 5000);
+  };
+  
+  const stopScrolling = () => {
+      clearInterval(scrollInterval);
+  };
+  
+  // Start the initial scrolling
+  startScrolling();
+  
+  // Add hover event listeners for all cards
+  Array.from(cards.children).forEach(card => {
+      card.addEventListener('mouseenter', stopScrolling);
+      card.addEventListener('mouseleave', startScrolling);
+  });
+});

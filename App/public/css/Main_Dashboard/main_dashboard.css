@@ -748,6 +748,15 @@ body.dark {
     animation: slideInFromLeft 0.9s ease-out; /* Add the slide-in animation */
 }
 
+.container_heading_piechart {
+    text-align: center; /* Center align the heading */
+    font-size: 16px; /* Set font size for the heading */
+    font-weight: 600; /* Make the heading bold */
+    margin: 0; /* Remove default margin */
+    font-family: 'Poppins', sans-serif; /* Apply font-family */
+    color: #5d6d7e;
+  }
+
   
   .male_female_graph, .fee_status {
     background-color: white;
@@ -996,22 +1005,6 @@ body.dark {
     animation: slideInFromLeft 0.9s ease-out;
 }
 
-/* Styles for the transport subcontainer */
-.transport {
-    background-color: white;
-    width: 49.6%;
-    height: 250px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    box-sizing: border-box;
-    color: #5d6d7e;
-    font-size: 20px;
-    font-weight: 600;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    animation: slideInFromRight 0.9s ease-out;
-}
 
 /* Heading styles */
 .attendance h3,
@@ -1033,4 +1026,77 @@ body.dark {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+}
+
+
+/* /////////////////////// TRANSPORT CARDS /////////////// */
+
+.transport {
+    background-color: white;
+    width: 49.6%;
+    height: 250px; /* Height set as per parent container */
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    box-sizing: border-box;
+    color: #5d6d7e;
+    font-size: 20px;
+    font-weight: 600;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    animation: slideInFromRight 0.9s ease-out;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Card container styles */
+.transport_cards {
+    display: flex;
+    transition: transform 0.5s ease;
+    width: 200%; /* Ensure full width is utilized for scrolling */
+    height: 100%; /* Take full height of parent */
+    flex-grow: 1; /* Ensure the cards take the full height of the parent */
+}
+
+.transport_cards .card {
+    width: 50%; /* Each card occupies 50% of parent */
+    height: 95%; /* Adjust height to leave some space at the bottom */
+    display: flex;
+    flex-direction: column; /* Ensure content inside the card is arranged vertically */
+    align-items: center; /* Center the content horizontally */
+    border-radius: 10px;
+    margin: 0; /* Remove margin to fit exactly */
+    font-size: 16px;
+    font-weight: 600;
+    color: #5d6d7e;
+    margin-right: 10px; /* Add gap between cards */
+    margin-bottom: 10px; /* Add gap at the bottom */
+    padding-top: 10px; /* Add gap between the card top and the heading */
+}
+
+/* Apply colors to alternating cards */
+.transport_cards .card:nth-child(odd) {
+    background-color: #f1f0ff; /* Color for 1st, 3rd, etc. cards */
+}
+
+.transport_cards .card:nth-child(even) {
+    background-color: #fdf6d8; /* Color for 2nd, 4th, etc. cards */
+}
+
+.card h4 {
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+    align-self: center; /* Ensure the heading is centered */
+}
+
+.summary-card ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.summary-card li {
+    font-size: 14px; /* Reduced font size for list items */
+    margin-bottom: 5px;
 }
