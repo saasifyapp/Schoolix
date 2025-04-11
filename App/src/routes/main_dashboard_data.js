@@ -20,56 +20,8 @@ const runQuery = (connection, query, params) => {
     });
 };
 
-// GET endpoint to fetch main dashboard data
-router.get('/main_dashboard_data', (req, res) => {
-    const counts = {};
-    const tableNames = ['pre_adm_registered_students', 'pre_adm_admitted_students', 'pre_adm_registered_teachers', 'pre_adm_admitted_teachers'];
 
-    const promises = tableNames.map(tableName => {
-        return runQuery(req.connectionPool, `SELECT COUNT(*) AS count FROM ${tableName}`, [])
-            .then(results => {
-                counts[tableName] = results[0].count;
-            })
-            .catch(error => {
-                console.error(`Error querying MySQL for table ${tableName}:`, error);
-                counts[tableName] = 0;
-            });
-    });
-
-    Promise.all(promises)
-        .then(() => res.json(counts))
-        .catch(error => res.status(500).json({ error: 'Error fetching counts from MySQL' }));
-});
-
-// GET endpoint to fetch main dashboard library data
-router.get('/main_dashboard_library_data', (req, res) => {
-    const counts = {};
-    const queries = {
-        totalBooks: 'SELECT COUNT(*) AS count FROM library_book_details',
-        memberCount: 'SELECT COUNT(*) AS count FROM library_member_details',
-        booksIssued: 'SELECT COUNT(*) AS count FROM library_transactions',
-        booksAvailable: 'SELECT SUM(available_quantity) AS count FROM library_book_details',
-        outstandingBooks: 'SELECT COUNT(*) AS count FROM library_transactions WHERE return_date < CURDATE()',
-        booksIssuedToday: 'SELECT COUNT(*) AS count FROM library_transaction_log WHERE transaction_date = CURDATE() AND transaction_type = "issue"',
-        booksReturnedToday: 'SELECT COUNT(*) AS count FROM library_transaction_log WHERE transaction_date = CURDATE() AND transaction_type = "return"',
-        penaltiesCollected: 'SELECT SUM(penalty_paid) AS count FROM library_transaction_log WHERE penalty_status = "paid"'
-    };
-
-    const promises = Object.keys(queries).map(key => {
-        return runQuery(req.connectionPool, queries[key], [])
-            .then(results => {
-                counts[key] = results[0].count;
-            })
-            .catch(error => {
-                console.error(`Error querying MySQL for ${key}:`, error);
-                counts[key] = 0;
-            });
-    });
-
-    Promise.all(promises)
-        .then(() => res.json(counts))
-        .catch(error => res.status(500).json({ error: 'Error fetching counts from MySQL' }));
-});
+///////////////// LOCATION PROMPT ///////////////////
 
 // POST endpoint to check confirmation status
 router.post('/check-confirmation-status', async (req, res) => {
@@ -116,6 +68,8 @@ router.post('/confirm-location', async (req, res) => {
         res.status(500).json({ error: 'Database query failed' });
     }
 });
+
+
 
 ///////////////////////// ENDPOINT TO FETCH USER COUNTS (STUDENT,TEACHE, ADMINS )////////////////////)
 
@@ -220,7 +174,30 @@ router.get('/fetch-user-counts-for-main-dashboard', async (req, res) => {
     }
 });
 
-////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+///////////////////////////////////// PIE CHART //////////////////////////////////////////////////
+
+// GET endpoint to fetch main dashboard data
+router.get('/main_dashboard_data', (req, res) => {
+    const counts = {};
+    const tableNames = ['pre_adm_registered_students', 'pre_adm_admitted_students', 'pre_adm_registered_teachers', 'pre_adm_admitted_teachers'];
+
+    const promises = tableNames.map(tableName => {
+        return runQuery(req.connectionPool, `SELECT COUNT(*) AS count FROM ${tableName}`, [])
+            .then(results => {
+                counts[tableName] = results[0].count;
+            })
+            .catch(error => {
+                console.error(`Error querying MySQL for table ${tableName}:`, error);
+                counts[tableName] = 0;
+            });
+    });
+
+    Promise.all(promises)
+        .then(() => res.json(counts))
+        .catch(error => res.status(500).json({ error: 'Error fetching counts from MySQL' }));
+});
 
 // GET endpoint to get student counts
 router.get('/student_counts', (req, res) => {
@@ -249,6 +226,129 @@ router.get('/student_counts', (req, res) => {
         .then(() => res.json(counts))
         .catch(error => res.status(500).json({ error: 'Error fetching counts from MySQL' }));
 });
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/////////////////////////////// LIBRARY DATA ///////////////////
+
+
+// GET endpoint to fetch main dashboard library data
+router.get('/main_dashboard_library_data', (req, res) => {
+    const counts = {};
+    const queries = {
+        totalBooks: 'SELECT COUNT(*) AS count FROM library_book_details',
+        memberCount: 'SELECT COUNT(*) AS count FROM library_member_details',
+        booksIssued: 'SELECT COUNT(*) AS count FROM library_transactions',
+        booksAvailable: 'SELECT SUM(available_quantity) AS count FROM library_book_details',
+        outstandingBooks: 'SELECT COUNT(*) AS count FROM library_transactions WHERE return_date < CURDATE()',
+        booksIssuedToday: 'SELECT COUNT(*) AS count FROM library_transaction_log WHERE transaction_date = CURDATE() AND transaction_type = "issue"',
+        booksReturnedToday: 'SELECT COUNT(*) AS count FROM library_transaction_log WHERE transaction_date = CURDATE() AND transaction_type = "return"',
+        penaltiesCollected: 'SELECT SUM(penalty_paid) AS count FROM library_transaction_log WHERE penalty_status = "paid"'
+    };
+
+    const promises = Object.keys(queries).map(key => {
+        return runQuery(req.connectionPool, queries[key], [])
+            .then(results => {
+                counts[key] = results[0].count;
+            })
+            .catch(error => {
+                console.error(`Error querying MySQL for ${key}:`, error);
+                counts[key] = 0;
+            });
+    });
+
+    Promise.all(promises)
+        .then(() => res.json(counts))
+        .catch(error => res.status(500).json({ error: 'Error fetching counts from MySQL' }));
+});
+
+///////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////// ATTENDANCE BAR GRAPH //////////////
+
+
+router.get('/fetch-attendance-data-for-main-dashboard', async (req, res) => {
+    try {
+      let daysCount = 6; // Tracks days, skipping Sundays
+      const sixDaysData = [];
+      let tempDate = new Date();
+  
+      while (sixDaysData.length < daysCount) {
+        if (tempDate.getDay() !== 0) { // Skip Sundays
+          const day = String(tempDate.getDate()).padStart(2, '0');
+          const month = String(tempDate.getMonth() + 1).padStart(2, '0');
+          const year = tempDate.getFullYear();
+          const formattedDate = `${day}-${month}-${year}`; // Format to DD-MM-YYYY
+          sixDaysData.push(formattedDate);
+        }
+        tempDate.setDate(tempDate.getDate() - 1);
+      }
+  
+      const formattedDates = sixDaysData.map(date => `STR_TO_DATE('${date}', '%d-%m-%Y')`).join(', ');
+  
+      const studentAndTeacherQuery = `
+          SELECT DATE_FORMAT(STR_TO_DATE(date_of_attendance, '%d-%m-%Y'), '%d-%m-%Y') AS formatted_date,
+                 COUNT(DISTINCT CASE WHEN section IN ('Primary', 'Pre-Primary') THEN user_id END) AS students_count,
+                 COUNT(DISTINCT CASE WHEN section IN ('Teacher', 'Admin') THEN user_id END) AS teachers_count
+          FROM attendance_user_logs
+          WHERE STR_TO_DATE(date_of_attendance, '%d-%m-%Y') IN (${formattedDates})
+          GROUP BY formatted_date
+          ORDER BY formatted_date DESC;
+      `;
+  
+      const visitorQuery = `
+          SELECT DATE_FORMAT(STR_TO_DATE(date_of_attendance, '%d-%m-%Y'), '%d-%m-%Y') AS formatted_date,
+                 COUNT(DISTINCT CONCAT(user_id, in_time)) AS visitors_count
+          FROM attendance_user_logs
+          WHERE section = 'Visitor'
+            AND STR_TO_DATE(date_of_attendance, '%d-%m-%Y') IN (${formattedDates})
+          GROUP BY formatted_date
+          ORDER BY formatted_date DESC;
+      `;
+  
+      // Execute both queries
+      req.connectionPool.query(studentAndTeacherQuery, [], (studentTeacherError, studentTeacherResults) => {
+        if (studentTeacherError) {
+          console.error('Database query failed', studentTeacherError);
+          return res.status(500).json({ error: 'Database query failed' });
+        }
+  
+        req.connectionPool.query(visitorQuery, [], (visitorError, visitorResults) => {
+          if (visitorError) {
+            console.error('Database query failed', visitorError);
+            return res.status(500).json({ error: 'Database query failed' });
+          }
+  
+          // Combine results from both queries by date
+          const combinedResults = studentTeacherResults.map(studentTeacherRow => {
+            const visitorRow = visitorResults.find(vRow => vRow.formatted_date === studentTeacherRow.formatted_date);
+            return {
+              date: studentTeacherRow.formatted_date,
+              students_count: studentTeacherRow.students_count,
+              teachers_count: studentTeacherRow.teachers_count,
+              visitors_count: visitorRow ? visitorRow.visitors_count : 0
+            };
+          });
+  
+          // Log counts to the console
+         // console.log(combinedResults);
+  
+          // Send the combined counts to the client
+          res.status(200).json(combinedResults);
+        });
+      });
+    } catch (error) {
+      console.error('Internal Server Error', error);
+      res.status(500).json({ error: 'Internal Server Error', details: error.message });
+    }
+  });
+
+/////////////////////// AUTOCREATE TABLES /////////////////////////////////////////
+
 
 
 // Endpoint to automatically create tables if they do not exist

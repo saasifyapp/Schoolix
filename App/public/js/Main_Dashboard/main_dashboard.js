@@ -232,7 +232,7 @@ function staytuned() {
 }
 
 
-////////////////// LOCATION FUNCTIONALITY AND AUTO CREATE TABLE ENDPOINTS CALLS ///////////
+////////////////// LOCATION FUNCTIONALITY  ///////////
 document.addEventListener('DOMContentLoaded', () => {
 
     // Call the endpoint to create tables if they do not exist
@@ -398,6 +398,94 @@ async function sendLocationToServer(loginName, latitude, longitude) {
       });
   }
 }
+
+///////////////////////////////  LOCATION PROMPT ///////////////////
+
+async function confirmSchoolLocation(loginName) {
+  // Check the user's confirmation status
+  const statusResponse = await fetch('/check-confirmation-status', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ loginName: loginName }),
+  });
+
+  const statusData = await statusResponse.json();
+
+  // Check if the user is found and if confirmation is needed
+  if (statusData.error) {
+      console.error(statusData.error);
+      return; // Handle error if user is not found
+  }
+
+  // Proceed only if confirmed_at_school is 0
+  if (statusData.confirmed_at_school === 0) {
+      // Ask the user if they are at the school's location using Swal
+      const result = await Swal.fire({
+          title: "Are you at the school's location?",
+          text: "Please confirm if you're currently at the school.",
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, I am',
+          cancelButtonText: 'No',
+      });
+
+      // Get the user's coordinates
+      navigator.geolocation.getCurrentPosition(async (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+
+          if (result.isConfirmed) {
+              // Send the coordinates to the server and confirm the location
+              const response = await fetch('/confirm-location', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                      loginName: loginName,
+                      latitude: latitude,
+                      longitude: longitude,
+                  }),
+              });
+
+              const data = await response.json();
+              if (data.success) {
+                  await Swal.fire({
+                      icon: 'success',
+                      title: 'Location Confirmed',
+                      text: 'Your location has been confirmed and saved.',
+                  });
+              } else {
+                  await Swal.fire({
+                      icon: 'info',
+                      title: 'Location Already Confirmed',
+                      text: 'You have already confirmed your location.',
+                  });
+              }
+          } else {
+              await Swal.fire({
+                  icon: 'info',
+                  title: 'Location Not Confirmed',
+                  text: 'Please confirm your location at the next login.',
+              });
+          }
+      }, (error) => {
+          console.error('Error getting location:', error);
+          Swal.fire({
+              icon: 'error',
+              title: 'Location Error',
+              text: 'Failed to get your location. Please enable location services and try again.',
+          });
+      });
+  } 
+}
+
+
+// Call this function when the user logs in, passing the login name
+confirmSchoolLocation(username); // Replace with the actual login name
+
 
 ///////////////////////////////////////// GET VALUES FOR STUDENT/ TEACHER/ ADMIN COUNT ON DASHBOARD ////////////////////////////
 
@@ -595,168 +683,6 @@ function showToast(message, isError) {
   }, 4000);
 }
 
-/*
-let animationFrameId; // Declare a variable to store animation frame ID
-
-fetch('/main_dashboard_data')
-    .then(response => response.json())
-    .then(data => {
-        console.log(data); // Log fetched data to check if admittedTeachersCount is included
-        // Update HTML with counts for each table
-        updateCountWithAnimation('registeredStudentsCount', () => data.pre_adm_registered_students);
-        updateCountWithAnimation('admittedStudentsCount', () => data.pre_adm_admitted_students);
-        updateCountWithAnimation('registeredTeachersCount', () => data.pre_adm_registered_teachers);
-        updateCountWithAnimation('admittedTeachersCount', () => data.pre_adm_admitted_teachers);
-    })
-    .catch(error => {
-        console.error('Error fetching counts:', error);
-        // Display error message
-        updateCount('registeredStudentsCount', 'Error fetching count');
-        updateCount('admittedStudentsCount', 'Error fetching count');
-        updateCount('registeredTeachersCount', 'Error fetching count');
-        updateCount('admittedTeachersCount', 'Error fetching count');
-    });
-*/
-
-/* Pause animation when tab becomes hidden
-document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-        // Tab is hidden, cancel animation
-        if (animationFrameId) {
-            window.cancelAnimationFrame(animationFrameId);
-        }
-    } else {
-        // Tab is visible again, resume animation
-        updateCountWithAnimation('registeredStudentsCount', /* valueCallback );
-        updateCountWithAnimation('admittedStudentsCount', /* valueCallback );
-        updateCountWithAnimation('registeredTeachersCount', /* valueCallback );
-        updateCountWithAnimation('admittedTeachersCount', /* valueCallback );
-    }
-}); 
-*/
-
-/*
-function updateCountWithAnimation(elementId, valueCallback) {
-    const element = document.getElementById(elementId);
-    const currentValue = parseInt(element.textContent) || 0; // Parse as integer, default to 0 if NaN
-
-    let start;
-
-    function step(timestamp) {
-        if (!start) start = timestamp;
-        const elapsed = timestamp - start;
-
-        const newValue = valueCallback(); // Fetch updated value
-
-        if (typeof newValue !== 'number' || isNaN(newValue)) {
-            // If the fetched value is not a number or NaN, stop animation
-            element.textContent = 'Error fetching count';
-            return;
-        }
-
-        const difference = newValue - currentValue;
-        const duration = 2000; // 2 seconds
-
-        // Update count value
-        const updatedValue = Math.floor(currentValue + (difference * elapsed) / duration);
-        element.textContent = updatedValue;
-
-        if (elapsed < duration) {
-            // Continue animation
-            animationFrameId = window.requestAnimationFrame(step);
-        } else {
-            // Animation complete, set final value
-            element.textContent = newValue;
-        }
-    }
-
-    // Start animation
-    animationFrameId = window.requestAnimationFrame(step);
-}*/
-async function confirmSchoolLocation(loginName) {
-  // Check the user's confirmation status
-  const statusResponse = await fetch('/check-confirmation-status', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ loginName: loginName }),
-  });
-
-  const statusData = await statusResponse.json();
-
-  // Check if the user is found and if confirmation is needed
-  if (statusData.error) {
-      console.error(statusData.error);
-      return; // Handle error if user is not found
-  }
-
-  // Proceed only if confirmed_at_school is 0
-  if (statusData.confirmed_at_school === 0) {
-      // Ask the user if they are at the school's location using Swal
-      const result = await Swal.fire({
-          title: "Are you at the school's location?",
-          text: "Please confirm if you're currently at the school.",
-          icon: 'question',
-          showCancelButton: true,
-          confirmButtonText: 'Yes, I am',
-          cancelButtonText: 'No',
-      });
-
-      // Get the user's coordinates
-      navigator.geolocation.getCurrentPosition(async (position) => {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-
-          if (result.isConfirmed) {
-              // Send the coordinates to the server and confirm the location
-              const response = await fetch('/confirm-location', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                      loginName: loginName,
-                      latitude: latitude,
-                      longitude: longitude,
-                  }),
-              });
-
-              const data = await response.json();
-              if (data.success) {
-                  await Swal.fire({
-                      icon: 'success',
-                      title: 'Location Confirmed',
-                      text: 'Your location has been confirmed and saved.',
-                  });
-              } else {
-                  await Swal.fire({
-                      icon: 'info',
-                      title: 'Location Already Confirmed',
-                      text: 'You have already confirmed your location.',
-                  });
-              }
-          } else {
-              await Swal.fire({
-                  icon: 'info',
-                  title: 'Location Not Confirmed',
-                  text: 'Please confirm your location at the next login.',
-              });
-          }
-      }, (error) => {
-          console.error('Error getting location:', error);
-          Swal.fire({
-              icon: 'error',
-              title: 'Location Error',
-              text: 'Failed to get your location. Please enable location services and try again.',
-          });
-      });
-  } 
-}
-
-
-// Call this function when the user logs in, passing the login name
-confirmSchoolLocation(username); // Replace with the actual login name
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -764,122 +690,175 @@ confirmSchoolLocation(username); // Replace with the actual login name
 
 ///////////////////////// ATTENDANCE BAR CHART /////////////////////
 
-var ctx = document.getElementById('attendanceChart').getContext('2d');
-var attendanceChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: [['Mon', '1-Mar'], ['Tue', '2-Mar'], ['Wed', '3-Mar'], ['Thu', '4-Mar'], ['Fri', '5-Mar'], ['Sat', '6-Mar']],
-        datasets: [
-            {
-                label: 'Students',
-                data: [250, 300, 280, 290, 275, 260],
-                backgroundColor: '#8cefda',
-                borderColor: 'rgba(0, 0, 0, 0)',
-                borderWidth: 0
-            },
-            {
-                label: 'Teachers',
-                data: [100, 120, 110, 115, 110, 100],
-                backgroundColor: '#fae27c',
-                borderColor: 'rgba(0, 0, 0, 0)',
-                borderWidth: 0
-            },
-            {
-                label: 'Visitors',
-                data: [50, 45, 60, 55, 40, 35],
-                backgroundColor: '#ff9999',
-                borderColor: 'rgba(0, 0, 0, 0)',
-                borderWidth: 0
-            }
-        ]
-    },
-    options: {
-        scales: {
-            x: {
-                ticks: {
-                    autoSkip: true,
-                    maxRotation: 45,
-                    minRotation: 0,
-                    padding: 5,
-                    maxTicksLimit: 6
-                },
-                grid: {
-                    display: false
-                }
-            },
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    beginAtZero: true
-                },
-                grid: {
-                  drawBorder: false,
-                  color: 'rgba(0, 0, 0, 0.1)',
-                  borderDash: [2, 2], // Makes the gridline more dotted
-                  drawOnChartArea: true, // Ensures lines are drawn on the chart
-                  drawTicks: false // Only draw grid lines
+
+async function fetchAttendanceData() {
+  try {
+      const response = await fetch('/fetch-attendance-data-for-main-dashboard', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await response.json();
+      return data;
+  } catch (error) {
+      console.error('Error fetching attendance data:', error);
+      return [];
+  }
+}
+
+function getPastWeekData(data) {
+  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const labels = [];
+  const studentsData = [];
+  const teachersData = [];
+  const visitorsData = [];
+
+  // Populate data for the past 6 days excluding Sunday
+  for (const entry of data) {
+      const dateParts = entry.date.split('-'); // format: DD-MM-YYYY
+      const dateObj = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
+      const dayOfWeek = weekDays[dateObj.getDay()];
+      const formattedDate = `${dayOfWeek}, ${dateObj.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}`;
+      labels.push(formattedDate);
+      studentsData.push(entry.students_count);
+      teachersData.push(entry.teachers_count);
+      visitorsData.push(entry.visitors_count);
+  }
+
+  // Reverse the arrays to show the oldest date first
+  labels.reverse();
+  studentsData.reverse();
+  teachersData.reverse();
+  visitorsData.reverse();
+
+  return { labels, studentsData, teachersData, visitorsData };
+}
+
+async function setupChart() {
+  // Fetch attendance data
+  const attendanceData = await fetchAttendanceData();
+
+  // Extract labels and data arrays
+  const { labels, studentsData, teachersData, visitorsData } = getPastWeekData(attendanceData);
+
+  // Initialize Chart
+  const ctx = document.getElementById('attendanceChart').getContext('2d');
+  const attendanceChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: labels,
+          datasets: [
+              {
+                  label: 'Students',
+                  data: studentsData,
+                  backgroundColor: '#8cefda',
+                  borderColor: 'rgba(0, 0, 0, 0)',
+                  borderWidth: 0
+              },
+              {
+                  label: 'Teachers',
+                  data: teachersData,
+                  backgroundColor: '#fae27c',
+                  borderColor: 'rgba(0, 0, 0, 0)',
+                  borderWidth: 0
+              },
+              {
+                  label: 'Visitors',
+                  data: visitorsData,
+                  backgroundColor: '#ff9999',
+                  borderColor: 'rgba(0, 0, 0, 0)',
+                  borderWidth: 0
               }
-            }
-        },
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                display: true,
-                position: 'top',
-                align: 'end',
-                labels: {
-                    boxWidth: 15
-                }
-            },
-            tooltip: {
-                enabled: true,
-                mode: 'index',
-                intersect: false
-            }
-        },
-        layout: {
-            padding: {
-                top: 0,
-                bottom: 10
-            }
-        },
-        barPercentage: 0.7,
-        categoryPercentage: 0.8,
-        hover: {
-            mode: 'index',
-            intersect: false
-        }
-    },
-    plugins: [{
-        id: 'customRoundedBars',
-        beforeDatasetsDraw: function(chart) {
-            const ctx = chart.ctx;
-            chart.data.datasets.forEach(function(dataset, datasetIndex) {
-                const meta = chart.getDatasetMeta(datasetIndex);
-                meta.data.forEach((bar, index) => {
-                    const value = dataset.data[index];
-                    const x = bar.x;
-                    const y = bar.y;
-                    const width = bar.width;
-                    const height = Math.max(bar.height, 0); // Ensure the height is never negative
-                    const minCurveHeight = 0; // Minimum height for the curve
+          ]
+      },
+      options: {
+          scales: {
+              x: {
+                  ticks: {
+                      autoSkip: true,
+                      maxRotation: 45,
+                      minRotation: 0,
+                      padding: 5,
+                      maxTicksLimit: 6
+                  },
+                  grid: {
+                      display: false
+                  }
+              },
+              y: {
+                  beginAtZero: true,
+                  ticks: {
+                      beginAtZero: true,
+                      stepSize: 1, // Ensure only integer values are displayed
+                  },
+                  grid: {
+                      drawBorder: false,
+                      color: 'rgba(0, 0, 0, 0.1)',
+                      borderDash: [2, 2],
+                      drawOnChartArea: true,
+                      drawTicks: false
+                  }
+              }
+          },
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+              legend: {
+                  display: true,
+                  position: 'top',
+                  align: 'end',
+                  labels: {
+                      boxWidth: 15
+                  }
+              },
+              tooltip: {
+                  enabled: true,
+                  mode: 'index',
+                  intersect: false
+              }
+          },
+          layout: {
+              padding: {
+                  top: 0,
+                  bottom: 10
+              }
+          },
+          barPercentage: 0.7,
+          categoryPercentage: 0.8,
+          hover: {
+              mode: 'index',
+              intersect: false
+          }
+      },
+      plugins: [{
+          id: 'customRoundedBars',
+          beforeDatasetsDraw: function(chart) {
+              const ctx = chart.ctx;
+              chart.data.datasets.forEach(function(dataset, datasetIndex) {
+                  const meta = chart.getDatasetMeta(datasetIndex);
+                  meta.data.forEach((bar, index) => {
+                      const x = bar.x;
+                      const y = bar.y;
+                      const width = bar.width;
+                      const height = Math.max(bar.height, 0);
+                      const minCurveHeight = 0;
 
-                    ctx.beginPath();
+                      ctx.beginPath();
+                      ctx.moveTo(x - width / 2, height < minCurveHeight ? y + minCurveHeight : y + height);
+                      ctx.lineTo(x - width / 2, y);
+                      ctx.quadraticCurveTo(x - width / 2, y, x - width / 2 + 20, y);
+                      ctx.lineTo(x + width / 2 - 20, y);
+                      ctx.quadraticCurveTo(x + width / 2, y, x + width / 2, height < minCurveHeight ? y : y + minCurveHeight);
+                      ctx.lineTo(x + width / 2, height < minCurveHeight ? y + minCurveHeight : y + height);
+                      ctx.closePath();
 
-                    // Start drawing above baseline if height is too low for curving
-                    ctx.moveTo(x - width / 2, height < minCurveHeight ? y + minCurveHeight : y + height);
-                    ctx.lineTo(x - width / 2, y); // Draw from baseline
-                    ctx.quadraticCurveTo(x - width / 2, y, x - width / 2 + 20, y);
-                    ctx.lineTo(x + width / 2 - 20, y);
-                    ctx.quadraticCurveTo(x + width / 2, y, x + width / 2, height < minCurveHeight ? y : y + minCurveHeight);
-                    ctx.lineTo(x + width / 2, height < minCurveHeight ? y + minCurveHeight : y + height);
-                    ctx.closePath();
+                      ctx.fillStyle = dataset.backgroundColor;
+                      ctx.fill();
+                  });
+              });
+          }
+      }]
+  });
+}
 
-                    ctx.fillStyle = dataset.backgroundColor;
-                    ctx.fill();
-                });
-            });
-        }
-    }]
-});
+// Setup chart on page load
+window.addEventListener('load', setupChart);
