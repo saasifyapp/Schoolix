@@ -683,6 +683,75 @@ router.post("/update-tc-details", async (req, res) => {
 });
 
 
+/////////////// UPDATE GENERATION STATUS BASED ON MULTIPLE PRINTS ///////////////
+
+router.post("/update-generation-status", async (req, res) => {
+    const { id } = req.body;
+
+    if (!id) {
+        return res.status(400).json({ error: "id is required" });
+    }
+
+    try {
+        // First, fetch the current generation_status
+        const selectQuery = `
+            SELECT generation_status 
+            FROM transfer_certificates 
+            WHERE id = ?
+        `;
+
+        req.connectionPool.query(selectQuery, [id], (selectError, results) => {
+            if (selectError) {
+                console.error("Database error:", selectError);
+                return res.status(500).json({ error: "Database error" });
+            }
+
+            if (results.length === 0) {
+                return res.status(404).json({ message: "No transfer certificate found for the given ID" });
+            }
+
+            const currentStatus = results[0].generation_status;
+
+            // Determine the new status based on the rules
+            let newStatus = currentStatus;
+            if (currentStatus === "ORIGINAL") {
+                newStatus = "DUPLICATE";
+            } else if (currentStatus === "DUPLICATE") {
+                newStatus = "TRIPLICATE";
+            } else if (currentStatus === "TRIPLICATE") {
+                return res.status(200).json({ success: false, message: "No update needed, status is already TRIPLICATE" });
+            } else {
+                return res.status(400).json({ error: "Invalid generation_status value" });
+            }
+
+            // Update the generation_status
+            const updateQuery = `
+                UPDATE transfer_certificates 
+                SET generation_status = ?
+                WHERE id = ?
+            `;
+
+            req.connectionPool.query(updateQuery, [newStatus, id], (updateError, updateResults) => {
+                if (updateError) {
+                    console.error("Database error:", updateError);
+                    return res.status(500).json({ error: "Database error" });
+                }
+
+                res.json({ 
+                    success: true, 
+                    message: "Generation status updated successfully", 
+                    oldStatus: currentStatus, 
+                    newStatus: newStatus 
+                });
+            });
+        });
+    } catch (error) {
+        console.error("Server error:", error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+
 
 
 /////////////////////////////////////// DELETE TC //////////////////////////////

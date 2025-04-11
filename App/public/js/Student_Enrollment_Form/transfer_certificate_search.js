@@ -785,6 +785,28 @@ async function regenerateTC(tc_no, gr_no, student_name, section, generation_stat
                 // Call the preview function
                 populateTCFormData(tcFormData);
 
+                // Update generation status via the new endpoint
+                const updateResponse = await fetch('/update-generation-status', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id: tcDetails.id, // Assuming tcDetails contains the id of the transfer certificate
+                        generation_status: tcStatus
+                    }),
+                });
+
+                if (!updateResponse.ok) {
+                    throw new Error(`Failed to update generation status: ${updateResponse.statusText}`);
+                }
+
+                const updateData = await updateResponse.json();
+
+                if (!updateData.success) {
+                    throw new Error(updateData.message || 'Failed to update generation status');
+                }
+
                 Swal.fire({
                     title: 'Generating',
                     html: `<strong>${certificateType}</strong> TC generation in progress for<br><strong>GR No: ${gr_no} | ${student_name}</strong>`,
