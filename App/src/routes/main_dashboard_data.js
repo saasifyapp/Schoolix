@@ -117,6 +117,111 @@ router.post('/confirm-location', async (req, res) => {
     }
 });
 
+///////////////////////// ENDPOINT TO FETCH USER COUNTS (STUDENT,TEACHE, ADMINS )////////////////////)
+
+// Route to fetch user counts for main dashboard
+router.get('/fetch-user-counts-for-main-dashboard', async (req, res) => {
+    try {
+        // Define queries to get the count from both tables
+        const primaryQuery = `SELECT COUNT(*) AS count FROM primary_student_details WHERE is_active = 1`;
+        const prePrimaryQuery = `SELECT COUNT(*) AS count FROM pre_primary_student_details WHERE is_active = 1`;
+        const teacherQuery = `SELECT COUNT(*) AS count FROM teacher_details WHERE category = 'teacher' AND is_active = 1`;
+        const adminQuery = `SELECT COUNT(*) AS count FROM teacher_details WHERE category = 'admin' AND is_active = 1`;
+        const supportStaffQuery = `SELECT COUNT(*) AS count FROM teacher_details WHERE category = 'support_staff' AND is_active = 1`;
+
+        // Execute all queries concurrently
+        const primaryPromise = new Promise((resolve, reject) => {
+            req.connectionPool.query(primaryQuery, (error, results) => {
+                if (error) {
+                    console.error(`Error querying MySQL for primary student count:`, error);
+                    reject(error);
+                } else {
+                    resolve(results[0].count);
+                }
+            });
+        });
+
+        const prePrimaryPromise = new Promise((resolve, reject) => {
+            req.connectionPool.query(prePrimaryQuery, (error, results) => {
+                if (error) {
+                    console.error(`Error querying MySQL for pre-primary student count:`, error);
+                    reject(error);
+                } else {
+                    resolve(results[0].count);
+                }
+            });
+        });
+
+        const teacherPromise = new Promise((resolve, reject) => {
+            req.connectionPool.query(teacherQuery, (error, results) => {
+                if (error) {
+                    console.error(`Error querying MySQL for teacher count:`, error);
+                    reject(error);
+                } else {
+                    resolve(results[0].count);
+                }
+            });
+        });
+
+        const adminPromise = new Promise((resolve, reject) => {
+            req.connectionPool.query(adminQuery, (error, results) => {
+                if (error) {
+                    console.error(`Error querying MySQL for admin count:`, error);
+                    reject(error);
+                } else {
+                    resolve(results[0].count);
+                }
+            });
+        });
+
+        const supportStaffPromise = new Promise((resolve, reject) => {
+            req.connectionPool.query(supportStaffQuery, (error, results) => {
+                if (error) {
+                    console.error(`Error querying MySQL for support staff count:`, error);
+                    reject(error);
+                } else {
+                    resolve(results[0].count);
+                }
+            });
+        });
+
+        // Wait for all queries to complete
+        const [
+            primaryCount,
+            prePrimaryCount,
+            teacherCount,
+            adminCount,
+            supportStaffCount
+        ] = await Promise.all([
+            primaryPromise,
+            prePrimaryPromise,
+            teacherPromise,
+            adminPromise,
+            supportStaffPromise
+        ]);
+
+        // Combine the counts
+        const studentCount = primaryCount + prePrimaryCount;
+        const employeeCount = teacherCount + adminCount + supportStaffCount;
+
+        // Prepare the response
+        const response = {
+            Students: studentCount,
+            Teachers: teacherCount,
+            Admins: adminCount,
+            SupportStaff: supportStaffCount,
+            Employees: employeeCount
+        };
+
+        res.json(response);
+    } catch (error) {
+        console.error('Server error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
 // GET endpoint to get student counts
 router.get('/student_counts', (req, res) => {
     const counts = {};

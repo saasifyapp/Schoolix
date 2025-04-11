@@ -399,7 +399,35 @@ async function sendLocationToServer(loginName, latitude, longitude) {
   }
 }
 
-///////////////////////////////////////// GET VALUES FOR LIBRARY CONSOLE ON DASHBOARD ////////////////////////////
+///////////////////////////////////////// GET VALUES FOR STUDENT/ TEACHER/ ADMIN COUNT ON DASHBOARD ////////////////////////////
+
+fetch('/fetch-user-counts-for-main-dashboard')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Update the containers with the counts
+        document.querySelectorAll('.user_detail_item').forEach(item => {
+            const title = item.querySelector('.detail_title').textContent;
+            if (title === 'Students') {
+                item.querySelector('.detail_count').textContent = data.Students;
+            } else if (title === 'Teachers') {
+                item.querySelector('.detail_count').textContent = data.Teachers;
+            } else if (title === 'Admins') {
+                item.querySelector('.detail_count').textContent = data.Admins;
+            } else if (title === 'Support Staff') {
+                item.querySelector('.detail_count').textContent = data.SupportStaff;
+            } else if (title === 'Employees') {
+                item.querySelector('.detail_count').textContent = data.Employees;
+            }
+        });
+    })
+    .catch(error => console.error('Error fetching user counts for main dashboard:', error));
+
+///////////////////////////////////////// GET VALUES FOR STUDENT PIE CHART AND LIBRARY CONSOLE ON DASHBOARD ////////////////////////////
 
 // Get Library Details //
 fetch("/main_dashboard_library_data")
