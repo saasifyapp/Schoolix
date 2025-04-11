@@ -365,13 +365,48 @@
                     <thead>
                         <tr>
                             <th>Record ID</th>
-                            <th>User ID <input type="text" id="filterUserID" oninput="applyFilters()"></th>
-                            <th>Name <input type="text" id="filterName" oninput="applyFilters()"></th>
-                            <th>Section <input type="text" id="filterSection" oninput="applyFilters()"></th>
-                            <th>Standard <input type="text" id="filterStandard" oninput="applyFilters()"></th>
-                            <th>Date <input type="date" id="filterDate" oninput="applyFilters()"></th>
-                            <th>In Time <input type="time" id="filterInTime" oninput="applyFilters()"></th>
-                            <th>Out Time <input type="time" id="filterOutTime" oninput="applyFilters()"></th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="filterUserID" name="filterUserID" placeholder=" " oninput="applyFilters()">
+                                    <span class="form-control-placeholder">User ID</span>                                    
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="filterName" name="filterName" placeholder=" " oninput="applyFilters()">
+                                    <span class="form-control-placeholder">Name</span>                                    
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="filterSection" name="filterSection" placeholder=" " oninput="applyFilters()">
+                                    <span class="form-control-placeholder">Section</span>                                   
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="filterStandard" name="filterStandard" placeholder=" " oninput="applyFilters()">
+                                    <span class="form-control-placeholder">Standard</span>                                   
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="date" class="form-control" id="filterDate" name="filterDate" placeholder=" " oninput="applyFilters()">
+                                    <span class="form-control-placeholder">Date</span>                                   
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="time" class="form-control" id="filterInTime" name="filterInTime" placeholder=" " oninput="applyFilters()">
+                                    <span class="form-control-placeholder">In Time</span>                                  
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="time" class="form-control" id="filterOutTime" name="filterOutTime" placeholder=" " oninput="applyFilters()">
+                                    <span class="form-control-placeholder">Out Time</span>                                   
+                                </div>
+                            </th>
                             <th>Preview</th>
                         </tr>
                     </thead>
@@ -418,17 +453,49 @@
                     <thead>
                         <tr>
                             <th>Record ID</th>
-                            <th>User ID <input type="text" id="summaryFilterUserID" oninput="applySummaryFilters()">
+                            <th>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="summaryFilterUserID" name="summaryFilterUserID" placeholder=" " oninput="applySummaryFilters()">
+                                    <span class="form-control-placeholder">User ID</span>
+                                    <div id="summaryFilterUserIDSuggestions" class="suggestions" style="width: 12rem;"></div>
+                                </div>
                             </th>
-                            <th>Name <input type="text" id="summaryFilterName" oninput="applySummaryFilters()"></th>
-                            <th>Section <input type="text" id="summaryFilterSection" oninput="applySummaryFilters()">
+                            <th>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="summaryFilterName" name="summaryFilterName" placeholder=" " oninput="applySummaryFilters()">
+                                    <span class="form-control-placeholder">Name</span>
+                                    <div id="summaryFilterNameSuggestions" class="suggestions" style="width: 12rem;"></div>
+                                </div>
                             </th>
-                            <th>Standard <input type="text" id="summaryFilterStandard" oninput="applySummaryFilters()">
+                            <th>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="summaryFilterSection" name="summaryFilterSection" placeholder=" " oninput="applySummaryFilters()">
+                                    <span class="form-control-placeholder">Section</span>
+                                    <div id="summaryFilterSectionSuggestions" class="suggestions" style="width: 12rem;"></div>
+                                </div>
                             </th>
-                            <th>Date <input type="date" id="summaryFilterDate" oninput="applySummaryFilters()"></th>
-                            <th>In Time <input type="time" id="summaryFilterInTime" oninput="applySummaryFilters()">
+                            <th>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="summaryFilterStandard" name="summaryFilterStandard" placeholder=" " oninput="applySummaryFilters()">
+                                    <span class="form-control-placeholder">Standard</span>                                   
+                                </div>
                             </th>
-                            <th>Out Time <input type="time" id="summaryFilterOutTime" oninput="applySummaryFilters()">
+                            <th>
+                                <div class="form-group">
+                                    <input type="date" class="form-control" id="summaryFilterDate" name="summaryFilterDate" placeholder=" " oninput="applySummaryFilters()">                                                                
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="time" class="form-control" id="summaryFilterInTime" name="summaryFilterInTime" placeholder=" " oninput="applySummaryFilters()">
+                                    <span class="form-control-placeholder">In Time</span>                                  
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <input type="time" class="form-control" id="summaryFilterOutTime" name="summaryFilterOutTime" placeholder=" " oninput="applySummaryFilters()">
+                                    <span class="form-control-placeholder">Out Time</span>                                    >
+                                </div>
                             </th>
                             <th>Preview</th>
                         </tr>
