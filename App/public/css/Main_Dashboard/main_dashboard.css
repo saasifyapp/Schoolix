@@ -1100,3 +1100,13 @@ body.dark {
     font-size: 14px; /* Reduced font size for list items */
     margin-bottom: 5px;
 }
+
+.transport_cards ul li {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adjust the gap as needed */
+}
+
+.transport_cards ul li i {
+    margin-right: 10px; /* Adjust the margin as needed */
+}

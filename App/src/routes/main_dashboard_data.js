@@ -268,7 +268,7 @@ router.get('/main_dashboard_library_data', (req, res) => {
 ///////////////////////////////////////////////////////////////////////////
 
 
-/////////////////////// ATTENDANCE BAR GRAPH //////////////
+/////////////////////// ATTENDANCE BAR GRAPH ////////////////////////////
 
 
 router.get('/fetch-attendance-data-for-main-dashboard', async (req, res) => {
@@ -346,6 +346,56 @@ router.get('/fetch-attendance-data-for-main-dashboard', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error', details: error.message });
     }
   });
+
+
+
+/////////////////////////// TRANSPORT INSIGHTS CARDS DATA /////////////////////////////
+
+// GET endpoint to fetch main dashboard transport data
+router.get('/main_dashboard_transport_data', (req, res) => {
+    const queries = {
+        get_no_of_vehicle: 'SELECT COUNT(DISTINCT vehicle_no) AS vehicle_count FROM transport_driver_conductor_details LIMIT 100',
+        get_no_of_drivers: 'SELECT COUNT(*) AS driver_count FROM transport_driver_conductor_details WHERE driver_conductor_type = "Driver"',
+        get_no_of_conductors: 'SELECT COUNT(*) AS conductor_count FROM transport_driver_conductor_details WHERE driver_conductor_type = "Conductor"',
+        get_no_of_distinct_routes: 'SELECT COUNT(DISTINCT route_shift_name) AS distinct_route_count FROM transport_route_shift_details WHERE route_shift_type = "route"',
+        get_no_of_distinct_shifts: 'SELECT COUNT(DISTINCT route_shift_name) AS distinct_shift_count FROM transport_route_shift_details WHERE route_shift_type = "shift"',
+        primary_passengers: 'SELECT COUNT(Grno) AS primaryPassengersCount FROM primary_student_details WHERE is_active = 1 AND transport_tagged IS NOT NULL',
+        pre_primary_passengers: 'SELECT COUNT(Grno) AS prePrimaryPassengersCount FROM pre_primary_student_details WHERE is_active = 1 AND transport_tagged IS NOT NULL',
+        teacher_passengers: 'SELECT COUNT(id) AS teacherPassengersCount FROM teacher_details WHERE is_active = 1 AND transport_tagged IS NOT NULL'
+    };
+
+    const counts = {};
+
+    const promises = Object.keys(queries).map(key => {
+        return runQuery(req.connectionPool, queries[key], [])
+            .then(results => {
+                counts[key] = results[0].vehicle_count 
+                    ?? results[0].driver_count 
+                    ?? results[0].conductor_count 
+                    ?? results[0].distinct_route_count 
+                    ?? results[0].distinct_shift_count
+                    ?? results[0].primaryPassengersCount
+                    ?? results[0].prePrimaryPassengersCount
+                    ?? results[0].teacherPassengersCount;
+            })
+            .catch(error => {
+                console.error(`Error querying MySQL for ${key}:`, error);
+                counts[key] = 0;
+            });
+    });
+
+    Promise.all(promises)
+        .then(() => {
+            counts.total_passengers = (
+                counts.primary_passengers +
+                counts.pre_primary_passengers +
+                counts.teacher_passengers
+            );
+
+            res.json(counts);
+        })
+        .catch(error => res.status(500).json({ error: 'Error fetching transport data from MySQL' }));
+});
 
 /////////////////////// AUTOCREATE TABLES /////////////////////////////////////////
 

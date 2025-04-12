@@ -892,3 +892,20 @@ document.addEventListener('DOMContentLoaded', (event) => {
       card.addEventListener('mouseleave', startScrolling);
   });
 });
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  fetch('/main_dashboard_transport_data')
+      .then(response => response.json())
+      .then(data => {
+          document.getElementById('vehicleCount').textContent = data.get_no_of_vehicle || 0;
+          document.getElementById('driverCount').textContent = data.get_no_of_drivers || 0;
+          // document.getElementById('conductorCount').textContent = data.get_no_of_conductors || 0;
+          document.getElementById('passengerCount').textContent = data.total_passengers || 0;
+          document.getElementById('routeCount').textContent = data.get_no_of_distinct_routes || 0;
+          document.getElementById('shiftCount').textContent = data.get_no_of_distinct_shifts || 0;
+      })
+      .catch(error => {
+          console.error('Error fetching transport data:', error);
+      });
+});
