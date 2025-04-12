@@ -20,7 +20,7 @@ function displayCategorySuggestions() {
         // Simulate an async data fetch
         setTimeout(() => {
             categoryCache = [
-                "Student", "Teacher", "Admin", "Support Staff", "Others"
+                "Student", "Teacher", "Admin", "Support Staff", "Driver", "Conductor", "Others"
             ];
 
             categoryDataFetched = true;
@@ -70,8 +70,7 @@ const displayNameSuggestions = debounce(function () {
     let endpoint = '/get-students-to-enroll-face';
     let categoryParam = '';
 
-    // Dynamic endpoint to filter category specific details
-
+    // Dynamic endpoint to filter category-specific details
     if (selectedCategory === 'Teacher') {
         endpoint = '/get-teachers-to-enroll-face';
         categoryParam = 'teacher';
@@ -81,6 +80,9 @@ const displayNameSuggestions = debounce(function () {
     } else if (selectedCategory === 'Support Staff') {
         endpoint = '/get-teachers-to-enroll-face';
         categoryParam = 'support_staff';
+    } else if (selectedCategory === 'Driver' || selectedCategory === 'Conductor') {
+        endpoint = '/get-drivers-to-enroll-face';
+        categoryParam = selectedCategory.toLowerCase();
     } else if (selectedCategory === 'Student') {
         endpoint = '/get-students-to-enroll-face';
     }
@@ -97,7 +99,7 @@ const displayNameSuggestions = debounce(function () {
                     suggestionItem.textContent = item.Grno ? `${item.Grno} | ${item.Name}` : `${item.id} | ${item.name}`;
                     suggestionItem.dataset.value = item.Name || item.name;
                     suggestionItem.dataset.id = item.Grno || item.id; // Store the Grno or id
-                    suggestionItem.dataset.section = item.Section || selectedCategory; // Store the section
+                    suggestionItem.dataset.section = selectedCategory; // Store the section
                     suggestionItem.dataset.standard = item.Standard ? `${item.Standard} ${item.Division}` : 'NA'; // Store the standard + division or 'NA'
                     suggestionItem.dataset.standardRaw = item.Standard || 'NA'; // Store the raw standard for filling
                     nameSuggestionsContainer.appendChild(suggestionItem);

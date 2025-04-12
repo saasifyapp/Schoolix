@@ -76,6 +76,34 @@ router.get('/get-teachers-to-enroll-face', async (req, res) => {
                 console.error(`Error querying MySQL for teacher search term ${searchTerm}:`, error);
                 res.status(500).json({ error: 'Server error' });
             } else {
+                res.json(results); 
+            }
+        });
+    } catch (error) {
+        console.error('Server error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+
+// Route to search for drivers or conductors to enroll face
+router.get('/get-drivers-to-enroll-face', async (req, res) => {
+    try {
+        const searchTerm = req.query.q.trim();
+        const category = req.query.category.trim().toLowerCase();
+        let query, values;
+
+        query = `SELECT id, name, driver_conductor_type
+                 FROM transport_driver_conductor_details
+                 WHERE driver_conductor_type = ? AND name LIKE ?`;
+        values = [category.charAt(0).toUpperCase() + category.slice(1), `${searchTerm}%`];
+
+        // Execute the query
+        req.connectionPool.query(query, values, (error, results) => {
+            if (error) {
+                console.error(`Error querying MySQL for driver/conductor search term ${searchTerm}:`, error);
+                res.status(500).json({ error: 'Server error' });
+            } else {
                 res.json(results);
             }
         });
