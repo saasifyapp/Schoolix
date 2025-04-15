@@ -1031,6 +1031,35 @@ body.dark {
 
 /* /////////////////////// TRANSPORT CARDS /////////////// */
 
+.card h4 {
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+    align-self: center; /* Ensure the heading is centered */
+}
+
+/* Add gap between header icon and label */
+.card h4 i {
+    margin-right: 10px; /* Adjust the margin as needed */
+}
+
+/* Header icon colors */
+.summary-card h4 i {
+    color: #ff9999; /* Red color for Summary header icon */
+}
+
+.location-card h4 i {
+    color: #28a745; /* Green color for Live Location header icon */
+}
+
+.shift1-card h4 i {
+    color: #ffc107; /* Yellow color for Shift - Morning header icon */
+}
+
+.shift2-card h4 i {
+    color: #17a2b8; /* Teal color for Shift - Afternoon header icon */
+}
+
 .transport {
     background-color: white;
     width: 49.6%;
@@ -1083,13 +1112,29 @@ body.dark {
     background-color: #fdf6d8; /* Color for 2nd, 4th, etc. cards */
 }
 
-.card h4 {
-    font-weight: bold;
-    margin-bottom: 10px;
-    text-align: center;
-    align-self: center; /* Ensure the heading is centered */
+
+.transport_cards ul li {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adjust the gap as needed */
 }
 
+.transport_cards ul li i {
+    flex-shrink: 0; /* Prevent the icon from shrinking */
+    width: 20px; /* Adjust the width as needed */
+    height: 20px; /* Adjust the height as needed */
+    margin-right: 10px; /* Adjust the margin as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Optional: Ensure the text stays aligned correctly */
+.transport_cards ul li span {
+    flex-grow: 1;
+}
+
+/* Summary Card */
 .summary-card ul {
     list-style-type: none;
     padding: 0;
@@ -1101,12 +1146,39 @@ body.dark {
     margin-bottom: 5px;
 }
 
-.transport_cards ul li {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Adjust the gap as needed */
+
+
+/* Live Location Card */
+.location-card ul {
+    list-style-type: none;
+    padding: 0 10px 0 0; /* Add padding to the right to create space between content and scrollbar */
+    margin: 0;
+    max-height: 105px; /* Restrict height to show a maximum of 5 items */
+    overflow-y: auto; /* Enable scrolling if there are more than 5 items */
+    scrollbar-width: thin; /* Make scrollbar thinner in Firefox */
+    scrollbar-color: #28a745 #f1f0ff; /* Customize scrollbar color in Firefox */
 }
 
-.transport_cards ul li i {
+.location-card ul::-webkit-scrollbar {
+    width: 8px; /* Set the width of the scrollbar */
+}
+
+.location-card ul::-webkit-scrollbar-track {
+    background: #f1f0ff; /* Set the background of the scrollbar track */
+}
+
+.location-card ul::-webkit-scrollbar-thumb {
+    background-color: #28a745; /* Set the color of the scrollbar thumb */
+    border-radius: 4px; /* Add rounded corners to the scrollbar thumb */
+    border: 2px solid #f1f0ff; /* Add border around the scrollbar thumb */
+}
+
+.location-card li {
+    font-size: 14px; /* Reduced font size for list items */
+    margin-bottom: 5px;
+}
+
+/* Add gap between header icon and label */
+.location-card h4 i {
     margin-right: 10px; /* Adjust the margin as needed */
 }
