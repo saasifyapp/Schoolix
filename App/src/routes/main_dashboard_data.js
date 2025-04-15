@@ -361,22 +361,28 @@ router.get('/main_dashboard_transport_data', (req, res) => {
         get_no_of_distinct_shifts: 'SELECT COUNT(DISTINCT route_shift_name) AS distinct_shift_count FROM transport_route_shift_details WHERE route_shift_type = "shift"',
         primary_passengers: 'SELECT COUNT(Grno) AS primaryPassengersCount FROM primary_student_details WHERE is_active = 1 AND transport_tagged IS NOT NULL',
         pre_primary_passengers: 'SELECT COUNT(Grno) AS prePrimaryPassengersCount FROM pre_primary_student_details WHERE is_active = 1 AND transport_tagged IS NOT NULL',
-        teacher_passengers: 'SELECT COUNT(id) AS teacherPassengersCount FROM teacher_details WHERE is_active = 1 AND transport_tagged IS NOT NULL'
+        teacher_passengers: 'SELECT COUNT(id) AS teacherPassengersCount FROM teacher_details WHERE is_active = 1 AND transport_tagged IS NOT NULL',
+        vehicle_details: 'SELECT vehicle_no, name, latitude, longitude FROM transport_driver_conductor_details'
     };
 
     const counts = {};
+    const vehicleDetails = [];
 
     const promises = Object.keys(queries).map(key => {
         return runQuery(req.connectionPool, queries[key], [])
             .then(results => {
-                counts[key] = results[0].vehicle_count 
-                    ?? results[0].driver_count 
-                    ?? results[0].conductor_count 
-                    ?? results[0].distinct_route_count 
-                    ?? results[0].distinct_shift_count
-                    ?? results[0].primaryPassengersCount
-                    ?? results[0].prePrimaryPassengersCount
-                    ?? results[0].teacherPassengersCount;
+                if (key === 'vehicle_details') {
+                    vehicleDetails.push(...results);
+                } else {
+                    counts[key] = results[0].vehicle_count 
+                        ?? results[0].driver_count 
+                        ?? results[0].conductor_count 
+                        ?? results[0].distinct_route_count 
+                        ?? results[0].distinct_shift_count
+                        ?? results[0].primaryPassengersCount
+                        ?? results[0].prePrimaryPassengersCount
+                        ?? results[0].teacherPassengersCount;
+                }
             })
             .catch(error => {
                 console.error(`Error querying MySQL for ${key}:`, error);
@@ -392,7 +398,10 @@ router.get('/main_dashboard_transport_data', (req, res) => {
                 counts.teacher_passengers
             );
 
-            res.json(counts);
+            res.json({
+                counts,
+                vehicleDetails
+            });
         })
         .catch(error => res.status(500).json({ error: 'Error fetching transport data from MySQL' }));
 });

@@ -866,46 +866,91 @@ window.addEventListener('load', setupChart);
 
 /////////////////////////////// TRANSPORT INSIGHTS ///////////////////////
 
-document.addEventListener('DOMContentLoaded', (event) => {
-  let index = 0;
-  const cards = document.querySelector('.transport_cards');
-  const numOfSets = Math.ceil(cards.children.length / 2); // Number of card sets to show
-  let scrollInterval;
-  
-  const startScrolling = () => {
-      scrollInterval = setInterval(() => {
-          index = (index + 1) % numOfSets;
-          cards.style.transform = `translateX(-${index * (100 / numOfSets)}%)`;
-      }, 5000);
-  };
-  
-  const stopScrolling = () => {
-      clearInterval(scrollInterval);
-  };
-  
-  // Start the initial scrolling
-  startScrolling();
-  
-  // Add hover event listeners for all cards
-  Array.from(cards.children).forEach(card => {
-      card.addEventListener('mouseenter', stopScrolling);
-      card.addEventListener('mouseleave', startScrolling);
-  });
-});
-
-
 document.addEventListener('DOMContentLoaded', function() {
   fetch('/main_dashboard_transport_data')
       .then(response => response.json())
       .then(data => {
-          document.getElementById('vehicleCount').textContent = data.get_no_of_vehicle || 0;
-          document.getElementById('driverCount').textContent = data.get_no_of_drivers || 0;
-          // document.getElementById('conductorCount').textContent = data.get_no_of_conductors || 0;
-          document.getElementById('passengerCount').textContent = data.total_passengers || 0;
-          document.getElementById('routeCount').textContent = data.get_no_of_distinct_routes || 0;
-          document.getElementById('shiftCount').textContent = data.get_no_of_distinct_shifts || 0;
+          // Update the counts
+          document.getElementById('vehicleCount').textContent = data.counts.get_no_of_vehicle || 0;
+          document.getElementById('driverCount').textContent = data.counts.get_no_of_drivers || 0;
+          document.getElementById('passengerCount').textContent = data.counts.total_passengers || 0;
+          document.getElementById('routeCount').textContent = data.counts.get_no_of_distinct_routes || 0;
+          document.getElementById('shiftCount').textContent = data.counts.get_no_of_distinct_shifts || 0;
+
+          // Populate location details
+          const locationCard = document.querySelector('.location-card ul');
+          locationCard.innerHTML = ''; // Clear existing list items
+
+          const promises = data.vehicleDetails.map(detail => {
+              if (detail.latitude && detail.longitude) {
+                  const url = `https://nominatim.openstreetmap.org/reverse?lat=${detail.latitude}&lon=${detail.longitude}&format=json`;
+                  return fetch(url)
+                      .then(response => response.json())
+                      .then(geocodeData => {
+                          const address = geocodeData.address;
+                          const locationDetails = [address.road, address.suburb, address.county].filter(Boolean).join(', ');
+                          const listItem = document.createElement('li');
+                          listItem.innerHTML = `<i class="fas fa-map-pin"></i> ${detail.vehicle_no} | ${detail.name} :- ${locationDetails}`;
+                          listItem.addEventListener('click', () => showMap(detail.latitude, detail.longitude, locationDetails));
+                          locationCard.appendChild(listItem);
+                      })
+                      .catch(error => {
+                          console.error(`Error fetching location for vehicle ${detail.vehicle_no}:`, error);
+                          const listItem = document.createElement('li');
+                          listItem.innerHTML = `<i class="fas fa-map-pin"></i> ${detail.vehicle_no} | ${detail.name} :- Location Error`;
+                          locationCard.appendChild(listItem);
+                      });
+              } else {
+                  const listItem = document.createElement('li');
+                  listItem.innerHTML = `<i class="fas fa-map-pin"></i> ${detail.vehicle_no} | ${detail.name} :- Invalid coordinates`;
+                  locationCard.appendChild(listItem);
+              }
+          });
+
+          Promise.all(promises).then(() => {
+              console.log('All vehicle locations processed');
+          });
       })
       .catch(error => {
           console.error('Error fetching transport data:', error);
       });
+
+  function showMap(lat, lon, location) {
+      // Get the modal
+      const modal = document.getElementById('mapModal');
+      const closeBtn = modal.querySelector('.close-button');
+
+      // Display the modal
+      modal.style.display = 'block';
+
+      // Reinitialize the map container
+      const mapContainer = document.getElementById('map');
+      mapContainer.innerHTML = ''; // Clear the map container
+
+      // Initialize the map
+      const map = L.map('map').setView([lat, lon], 13);
+
+      // Add OpenStreetMap tiles
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+
+      // Add the marker
+      const marker = L.marker([lat, lon]).addTo(map);
+      marker.bindPopup(location).openPopup();
+
+      // Close the modal when the close button is clicked
+      closeBtn.onclick = function() {
+          modal.style.display = 'none';
+          map.remove(); // Remove map instance
+      };
+
+      // Close the modal when clicking outside the modal content
+      window.onclick = function(event) {
+          if (event.target == modal) {
+              modal.style.display = 'none';
+              map.remove(); // Remove map instance
+          }
+      };
+  }
 });

@@ -7,10 +7,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <!-- Boxicons CSS -->
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-  <title>Dashboard</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
   <link rel="stylesheet" href="/css/Main_Dashboard/main_dashboard.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <title>Dashboard</title>
+
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
   <!-- SweetAlert2 CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -521,49 +527,49 @@
 
     <div class="attendance_and_transport">
       <div class="attendance">
-          <h3>Weekly Attendance</h3>
-          <canvas id="attendanceChart"></canvas>
+        <h3>Weekly Attendance</h3>
+        <canvas id="attendanceChart"></canvas>
       </div>
       <div class="transport">
-          <h3>Transport Insights</h3>
-          <div class="transport_wrapper">
-            <div class="transport_cards">
-                <div class="card summary-card">
-                    <h4><i class="fas fa-clipboard-list"></i> Summary</h4>
-                    <ul>
-                        <li><i class="fas fa-bus"></i> Number of Vehicles: <span id="vehicleCount">0</span></li>
-                        <li><i class="fas fa-user-tie"></i> Number of Drivers: <span id="driverCount">0</span></li>
-                        <!-- <li><i class="fas fa-user"></i> Number of Conductors: <span id="conductorCount">0</span></li> -->
-                        <li><i class="fas fa-users"></i> Number of Passengers: <span id="passengerCount">0</span></li>
-                        <li><i class="fas fa-route"></i> Number of Routes: <span id="routeCount">0</span></li>
-                        <li><i class="fas fa-calendar-alt"></i> Number of Shifts: <span id="shiftCount">0</span></li>
-                    </ul>
-                </div>
-                <div class="card location-card">
-                  <h4><i class="fas fa-map-marked-alt"></i> Live Location</h4>
-                  <ul>
-                      <li><i class="fas fa-map-pin"></i> Vehicle No. 1: Downtown</li>
-                      <li><i class="fas fa-map-pin"></i> Vehicle No. 2: Central Park</li>
-                      <li><i class="fas fa-map-pin"></i> Vehicle No. 3: City Hall</li>
-                      <li><i class="fas fa-map-pin"></i> Vehicle No. 4: Stadium</li>
-                      <li><i class="fas fa-map-pin"></i> Vehicle No. 5: Airport</li>
-                      <!-- Additional list items for testing -->
-                      <li><i class="fas fa-map-pin"></i> Vehicle No. 6: Plaza</li>
-                      <li><i class="fas fa-map-pin"></i> Vehicle No. 7: Market</li>
-                  </ul>
-              </div>
-                <div class="card shift1-card">
-                    <h4><i class="fas fa-sun"></i> Shift - Morning</h4>
-                </div>
-                <div class="card shift2-card">
-                    <h4><i class="fas fa-cloud-sun"></i> Shift - Afternoon</h4>
-                </div>
+        <h3>Transport Insights</h3>
+        <div class="transport_wrapper">
+          <div class="transport_cards">
+            <div class="card summary-card">
+              <h4><i class="fas fa-clipboard-list"></i> Summary</h4>
+              <ul>
+                <li><i class="fas fa-bus"></i> Number of Vehicles: <span id="vehicleCount">0</span></li>
+                <li><i class="fas fa-user-tie"></i> Number of Drivers: <span id="driverCount">0</span></li>
+                <!-- <li><i class="fas fa-user"></i> Number of Conductors: <span id="conductorCount">0</span></li> -->
+                <li><i class="fas fa-users"></i> Number of Passengers: <span id="passengerCount">0</span></li>
+                <li><i class="fas fa-route"></i> Number of Routes: <span id="routeCount">0</span></li>
+                <li><i class="fas fa-calendar-alt"></i> Number of Shifts: <span id="shiftCount">0</span></li>
+              </ul>
             </div>
+            <div class="card location-card">
+              <h4><i class="fas fa-map-marked-alt"></i> Live Location</h4>
+              <ul>
+                <!-- Vehicle details will be dynamically inserted here -->
+              </ul>
+            </div>
+            <div class="card shift1-card">
+              <h4><i class="fas fa-sun"></i> Shift - Morning</h4>
+            </div>
+            <div class="card shift2-card">
+              <h4><i class="fas fa-cloud-sun"></i> Shift - Afternoon</h4>
+            </div>
+          </div>
         </div>
       </div>
-  </div>
-  
-  
+    </div>
+
+    <!-- Modal for Map -->
+    <div id="mapModal" class="overlay">
+      <div class="overlay-content">
+        <button id="closeMapOverlay" class="close-button">&times;</button>
+        <div id="map"></div>
+      </div>
+    </div>
+
   </div>
 
 

@@ -1147,6 +1147,59 @@ body.dark {
 }
 
 
+/* MAP MODAL */
+
+.overlay {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.overlay-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 600px; /* Adjust the width for map */
+    height: 600px; /* Adjust the height for map */
+    border-radius: 15px; /* Add rounded corners to the modal */
+    box-sizing: border-box; /* Include padding and border in width and height */
+    position: relative; /* Ensure absolute positioning of child elements */
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.close-button {
+    border: none;
+    cursor: pointer;
+    background: none;
+    color: #aaa;
+    position: absolute; /* Position element absolutely */
+    top: 10px; /* Place 10px from the top */
+    right: 10px; /* Place 10px from the right */
+    font-size: 30px;
+    font-weight: bold;
+    z-index: 100; /* Ensure it is above other elements */
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
 
 /* Live Location Card */
 .location-card ul {
@@ -1176,6 +1229,7 @@ body.dark {
 .location-card li {
     font-size: 14px; /* Reduced font size for list items */
     margin-bottom: 5px;
+    cursor: pointer; /* Add pointer cursor for clickable items */
 }
 
 /* Add gap between header icon and label */
