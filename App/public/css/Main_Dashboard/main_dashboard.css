@@ -1031,6 +1031,8 @@ body.dark {
 
 /* /////////////////////// TRANSPORT CARDS /////////////// */
 
+
+
 .card h4 {
     font-weight: bold;
     margin-bottom: 10px;
@@ -1059,6 +1061,7 @@ body.dark {
 .shift2-card h4 i {
     color: #17a2b8; /* Teal color for Shift - Afternoon header icon */
 }
+
 
 .transport {
     background-color: white;

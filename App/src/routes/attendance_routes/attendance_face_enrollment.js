@@ -67,7 +67,7 @@ router.get('/get-teachers-to-enroll-face', async (req, res) => {
         const category = req.query.category.trim().toLowerCase();
         let query, values;
 
-        query = `SELECT id, name FROM teacher_details WHERE name LIKE ? AND category = ?`;
+        query = `SELECT id, name FROM teacher_details WHERE name LIKE ? AND category = ? AND is_active = 1`;
         values = [`${searchTerm}%`, category];
 
         // Execute the query

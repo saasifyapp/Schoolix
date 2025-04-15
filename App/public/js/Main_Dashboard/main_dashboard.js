@@ -867,17 +867,47 @@ window.addEventListener('load', setupChart);
 /////////////////////////////// TRANSPORT INSIGHTS ///////////////////////
 
 document.addEventListener('DOMContentLoaded', function() {
+  let scrollPosition = 0; // Initial scroll position
+  const cardContainer = document.querySelector('.transport_cards');
+  const numberOfVisibleCards = 2; // Number of visible cards at a time
+  const scrollInterval = 5000; // Time between each scroll in milliseconds (5 seconds)
+  const scrollAmount = cardContainer.clientWidth / numberOfVisibleCards;
+  let isHovered = false; // State to track hover
+  let isMapOpen = false; // State to track if map overlay is open
+
+  // Function to scroll the cards
+  function autoScroll() {
+      if (!isHovered && !isMapOpen) {
+          scrollPosition += scrollAmount; // Increase the scroll position
+          if (scrollPosition >= cardContainer.scrollWidth) {
+              scrollPosition = 0; // Reset scroll position if at the end
+          }
+          cardContainer.style.transform = `translateX(-${scrollPosition}px)`;
+      }
+  }
+
+  // Set an interval to auto-scroll the cards
+  const autoScrollInterval = setInterval(autoScroll, scrollInterval);
+
+  // Event listeners to track hover state
+  cardContainer.addEventListener('mouseover', () => {
+      isHovered = true;
+  });
+
+  cardContainer.addEventListener('mouseout', () => {
+      isHovered = false;
+  });
+
+  // Fetch transport data and update DOM
   fetch('/main_dashboard_transport_data')
       .then(response => response.json())
       .then(data => {
-          // Update the counts
           document.getElementById('vehicleCount').textContent = data.counts.get_no_of_vehicle || 0;
           document.getElementById('driverCount').textContent = data.counts.get_no_of_drivers || 0;
           document.getElementById('passengerCount').textContent = data.counts.total_passengers || 0;
           document.getElementById('routeCount').textContent = data.counts.get_no_of_distinct_routes || 0;
           document.getElementById('shiftCount').textContent = data.counts.get_no_of_distinct_shifts || 0;
 
-          // Populate location details
           const locationCard = document.querySelector('.location-card ul');
           locationCard.innerHTML = ''; // Clear existing list items
 
@@ -916,33 +946,35 @@ document.addEventListener('DOMContentLoaded', function() {
       });
 
   function showMap(lat, lon, location) {
-      // Get the modal
+      isMapOpen = true; // Set map open state to true
       const modal = document.getElementById('mapModal');
       const closeBtn = modal.querySelector('.close-button');
-
-      // Display the modal
       modal.style.display = 'block';
-
-      // Reinitialize the map container
       const mapContainer = document.getElementById('map');
       mapContainer.innerHTML = ''; // Clear the map container
 
       // Initialize the map
-      const map = L.map('map').setView([lat, lon], 13);
-
-      // Add OpenStreetMap tiles
+      const map = L.map('map').setView([lat, lon], 15); // Zoom in more (15)
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
 
-      // Add the marker
-      const marker = L.marker([lat, lon]).addTo(map);
+      // Add the bus icon marker
+      const busIcon = L.icon({
+          iconUrl: '/images/busIcon.png', // Use a bus icon URL
+          iconSize: [35, 35], // Size of the icon
+          iconAnchor: [12.5, 25], // Anchor point
+          popupAnchor: [0, -25] // Popup position
+      });
+
+      const marker = L.marker([lat, lon], { icon: busIcon }).addTo(map);
       marker.bindPopup(location).openPopup();
 
       // Close the modal when the close button is clicked
       closeBtn.onclick = function() {
           modal.style.display = 'none';
           map.remove(); // Remove map instance
+          isMapOpen = false; // Reset map open state to false
       };
 
       // Close the modal when clicking outside the modal content
@@ -950,6 +982,7 @@ document.addEventListener('DOMContentLoaded', function() {
           if (event.target == modal) {
               modal.style.display = 'none';
               map.remove(); // Remove map instance
+              isMapOpen = false; // Reset map open state to false
           }
       };
   }
