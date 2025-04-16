@@ -352,7 +352,7 @@ router.get('/fetch-attendance-data-for-main-dashboard', async (req, res) => {
 /////////////////////////// TRANSPORT INSIGHTS CARDS DATA /////////////////////////////
 
 // GET endpoint to fetch main dashboard transport data
-router.get('/main_dashboard_transport_data', (req, res) => {
+router.get('/main_dashboard_transport_data', async (req, res) => {
     const queries = {
         get_no_of_vehicle: 'SELECT COUNT(DISTINCT vehicle_no) AS vehicle_count FROM transport_driver_conductor_details LIMIT 100',
         get_no_of_drivers: 'SELECT COUNT(*) AS driver_count FROM transport_driver_conductor_details WHERE driver_conductor_type = "Driver"',
@@ -362,48 +362,74 @@ router.get('/main_dashboard_transport_data', (req, res) => {
         primary_passengers: 'SELECT COUNT(Grno) AS primaryPassengersCount FROM primary_student_details WHERE is_active = 1 AND transport_tagged IS NOT NULL',
         pre_primary_passengers: 'SELECT COUNT(Grno) AS prePrimaryPassengersCount FROM pre_primary_student_details WHERE is_active = 1 AND transport_tagged IS NOT NULL',
         teacher_passengers: 'SELECT COUNT(id) AS teacherPassengersCount FROM teacher_details WHERE is_active = 1 AND transport_tagged IS NOT NULL',
-        vehicle_details: 'SELECT vehicle_no, name, latitude, longitude FROM transport_driver_conductor_details'
+        vehicle_details: 'SELECT vehicle_no, name, latitude, longitude FROM transport_driver_conductor_details',
+        get_shifts: 'SELECT DISTINCT shift_name FROM transport_schedule_details'
     };
 
     const counts = {};
     const vehicleDetails = [];
+    const shifts = [];
 
-    const promises = Object.keys(queries).map(key => {
-        return runQuery(req.connectionPool, queries[key], [])
-            .then(results => {
-                if (key === 'vehicle_details') {
-                    vehicleDetails.push(...results);
-                } else {
-                    counts[key] = results[0].vehicle_count 
-                        ?? results[0].driver_count 
-                        ?? results[0].conductor_count 
-                        ?? results[0].distinct_route_count 
-                        ?? results[0].distinct_shift_count
-                        ?? results[0].primaryPassengersCount
-                        ?? results[0].prePrimaryPassengersCount
-                        ?? results[0].teacherPassengersCount;
-                }
-            })
-            .catch(error => {
-                console.error(`Error querying MySQL for ${key}:`, error);
-                counts[key] = 0;
-            });
-    });
+    try {
+        // Execute queries to fetch overall counts and vehicle details
+        const promises = Object.keys(queries).filter(key => key !== 'get_shifts').map(key => {
+            return runQuery(req.connectionPool, queries[key], [])
+                .then(results => {
+                    if (key === 'vehicle_details') {
+                        vehicleDetails.push(...results);
+                    } else {
+                        counts[key] = results[0].vehicle_count 
+                            ?? results[0].driver_count 
+                            ?? results[0].conductor_count 
+                            ?? results[0].distinct_route_count 
+                            ?? results[0].distinct_shift_count
+                            ?? results[0].primaryPassengersCount
+                            ?? results[0].prePrimaryPassengersCount
+                            ?? results[0].teacherPassengersCount;
+                    }
+                })
+                .catch(error => {
+                    console.error(`Error querying MySQL for ${key}:`, error);
+                    counts[key] = 0;
+                });
+        });
 
-    Promise.all(promises)
-        .then(() => {
-            counts.total_passengers = (
-                counts.primary_passengers +
-                counts.pre_primary_passengers +
-                counts.teacher_passengers
-            );
+        await Promise.all(promises);
 
-            res.json({
-                counts,
-                vehicleDetails
-            });
-        })
-        .catch(error => res.status(500).json({ error: 'Error fetching transport data from MySQL' }));
+        // Fetch shift names
+        const shiftResults = await runQuery(req.connectionPool, queries.get_shifts, []);
+        const shiftNames = shiftResults.map(row => row.shift_name);
+        
+        // Fetch shift details for each shift name
+        const shiftPromises = shiftNames.map(shiftName => {
+            const query = 'SELECT vehicle_no, driver_name, students_tagged, available_seats FROM transport_schedule_details WHERE shift_name = ?';
+            return runQuery(req.connectionPool, query, [shiftName])
+                .then(results => {
+                    shifts.push({ shift_name: shiftName, details: results });
+                })
+                .catch(error => {
+                    console.error(`Error querying MySQL for shift details of ${shiftName}:`, error);
+                    shifts.push({ shift_name: shiftName, details: [] });
+                });
+        });
+
+        await Promise.all(shiftPromises);
+
+        counts.total_passengers = (
+            counts.primary_passengers +
+            counts.pre_primary_passengers +
+            counts.teacher_passengers
+        );
+
+        res.json({
+            counts,
+            vehicleDetails,
+            shifts
+        });
+    } catch (error) {
+        console.error('Error fetching transport data from MySQL:', error);
+        res.status(500).json({ error: 'Error fetching transport data from MySQL' });
+    }
 });
 
 /////////////////////// AUTOCREATE TABLES /////////////////////////////////////////

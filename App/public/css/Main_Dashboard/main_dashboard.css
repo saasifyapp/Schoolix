@@ -1231,11 +1231,52 @@ body.dark {
 
 .location-card li {
     font-size: 14px; /* Reduced font size for list items */
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     cursor: pointer; /* Add pointer cursor for clickable items */
 }
 
 /* Add gap between header icon and label */
 .location-card h4 i {
+    margin-right: 10px; /* Adjust the margin as needed */
+}
+
+/* Shift Card Styles */
+.shift1-card ul,
+.shift2-card ul {
+    list-style-type: none;
+    padding: 0 10px 0 0; /* Add padding to the right for scrollbar */
+    margin: 0;
+    max-height: 105px; /* Restrict height to show a maximum of 5 items */
+    overflow-y: auto; /* Enable scrolling if there are more than 5 items */
+    scrollbar-width: thin; /* Make scrollbar thinner in Firefox */
+    scrollbar-color: #28a745 #f1f0ff; /* Customize scrollbar color in Firefox */
+}
+
+.shift1-card ul::-webkit-scrollbar,
+.shift2-card ul::-webkit-scrollbar {
+    width: 8px; /* Set the width of the scrollbar */
+}
+
+.shift1-card ul::-webkit-scrollbar-track,
+.shift2-card ul::-webkit-scrollbar-track {
+    background: #f1f0ff; /* Set the background of the scrollbar track */
+}
+
+.shift1-card ul::-webkit-scrollbar-thumb,
+.shift2-card ul::-webkit-scrollbar-thumb {
+    background-color: #28a745; /* Set the color of the scrollbar thumb */
+    border-radius: 4px; /* Add rounded corners to the scrollbar thumb */
+    border: 2px solid #f1f0ff; /* Add border around the scrollbar thumb */
+}
+
+.shift1-card li,
+.shift2-card li {
+    font-size: 14px; /* Reduced font size for list items */
+    margin-bottom: 8px; /* Add small gap between list items */
+}
+
+/* Add gap between header icon and label */
+.shift1-card h4 i,
+.shift2-card h4 i {
     margin-right: 10px; /* Adjust the margin as needed */
 }

@@ -940,10 +940,40 @@ document.addEventListener('DOMContentLoaded', function() {
           Promise.all(promises).then(() => {
               console.log('All vehicle locations processed');
           });
+
+          // Dynamic update of shift labels
+          updateShiftLabels(data.shifts);
+
       })
       .catch(error => {
           console.error('Error fetching transport data:', error);
       });
+
+  function updateShiftLabels(shifts) {
+      if (shifts && Array.isArray(shifts)) {
+          shifts.forEach((shift, index) => {
+              const shiftCardId = `shift${index + 1}`;
+              const shiftCard = document.getElementById(shiftCardId);
+
+              if (shiftCard) {
+                  const shiftNameElement = shiftCard.querySelector('h4');
+                  shiftNameElement.innerHTML = `<i class="fas fa-${index === 0 ? 'sun' : 'cloud-sun'}"></i> Shift - ${shift.shift_name || 'Unnamed Shift'}`;
+
+                  const detailsList = document.createElement('ul');
+                  shift.details.forEach(detail => {
+                    const detailItem = document.createElement('li');
+                    detailItem.innerHTML = `<i class="fas fa-bus"></i>${detail.vehicle_no || 'N/A'} | ${detail.driver_name || 'N/A'}<br>Students: ${detail.students_tagged ?? 0}, Seats: ${detail.available_seats ?? 0}`;
+                    detailsList.appendChild(detailItem);
+                });
+                  shiftCard.appendChild(detailsList);
+              } else {
+                  console.warn(`Shift card with ID ${shiftCardId} not found`);
+              }
+          });
+      } else {
+          console.error('Shifts data is not available or invalid');
+      }
+  }
 
   function showMap(lat, lon, location) {
       isMapOpen = true; // Set map open state to true
