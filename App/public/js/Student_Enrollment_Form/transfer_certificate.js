@@ -28,6 +28,7 @@ function searchStudentAndHandleTC() {
 
   // Determine search type (Number → GR No, Text → Name)
   let searchType = isNaN(searchValue) ? "name" : "grno";
+  fetchNextTcNo();
   resetSearchOverlays();
 
   // **Call the API**
@@ -188,9 +189,9 @@ function fetchNextTcNo() {
 }
 
 // Example usage: Call this function when the page loads or when necessary
-document.addEventListener("DOMContentLoaded", (event) => {
-  fetchNextTcNo(); // Fetch the next TC number when the page loads
-});
+// document.addEventListener("DOMContentLoaded", (event) => {
+//   fetchNextTcNo(); // Fetch the next TC number when the page loads
+// });
 
 ///////////////////////// DATE WHEN LEAVING ///////////////////////
 
