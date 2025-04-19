@@ -113,6 +113,7 @@ document.querySelector(".search-button").addEventListener("click", function () {
 
     // Determine search type (Number → GR No, Text → Name)
     let searchType = isNaN(searchValue) ? "name" : "grno";
+    resetSearchOverlays();
 
     fetch(`/fetch-student?section=${section}&${searchType}=${encodeURIComponent(searchValue)}`)
         .then(response => response.json())

@@ -28,6 +28,7 @@ function searchStudentAndHandleTC() {
 
   // Determine search type (Number → GR No, Text → Name)
   let searchType = isNaN(searchValue) ? "name" : "grno";
+  resetSearchOverlays();
 
   // **Call the API**
   fetch(

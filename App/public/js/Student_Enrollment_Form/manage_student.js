@@ -194,3 +194,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Note: previewTCOverlay has no close button; uses Back button with window.location.href
 });
+
+function resetSearchOverlays() {
+    // Reset for TC Search Overlay
+    const searchInputTC = document.getElementById('searchInputforTC');
+    const sectionSelectTC = document.getElementById('selectsectionforTC');
+    const suggestionsTC = document.getElementById('TCsuggestions');
+
+    if (searchInputTC) {
+        searchInputTC.value = '';
+        searchInputTC.disabled = true; // back to original state
+    }
+
+    if (sectionSelectTC) {
+        sectionSelectTC.value = ''; // reset dropdown
+        sectionSelectTC.selectedIndex = 0; // in case needed
+    }
+
+    if (suggestionsTC) {
+        suggestionsTC.innerHTML = ''; // clear autosuggestions
+    }
+
+    // Reset for Update Student Overlay
+    const searchInputStudent = document.getElementById('searchInput');
+    const sectionSelectStudent = document.getElementById('sectionSelect');
+    const suggestionsStudent = document.getElementById('suggestions');
+
+    if (searchInputStudent) {
+        searchInputStudent.value = '';
+        searchInputStudent.disabled = true; // disable until section is chosen
+    }
+
+    if (sectionSelectStudent) {
+        sectionSelectStudent.value = '';
+        sectionSelectStudent.selectedIndex = 0;
+    }
+
+    if (suggestionsStudent) {
+        suggestionsStudent.innerHTML = '';
+    }
+}
