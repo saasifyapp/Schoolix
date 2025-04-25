@@ -169,7 +169,9 @@ function payPenalty(transactionID, penaltyAmount) {
     // Show confirmation dialog before payment
     Swal.fire({
         title: 'Confirm Penalty Payment',
-        html: `Is the penalty of <b> Rs ${penaltyAmount}</b> received from the student ?`,
+        html: `
+            <p>Is the penalty of <b> Rs <input type="text" id="penaltyAmountInput" value="${penaltyAmount}" style="border: 1px solid #ccc; border-radius: 4px; padding: 5px; width: 80px; text-align: center;" /></b> received from the student?</p>
+        `,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -177,13 +179,16 @@ function payPenalty(transactionID, penaltyAmount) {
         confirmButtonText: 'Yes, received!'
     }).then((result) => {
         if (result.isConfirmed) {
+            // Get the updated penalty amount from the input field
+            const updatedPenaltyAmount = document.getElementById('penaltyAmountInput').value;
+
             showLibraryLoadingAnimation();
             fetch('/library/pay_penalty', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ transactionID, penaltyAmount })
+                body: JSON.stringify({ transactionID, penaltyAmount: updatedPenaltyAmount })
             })
                 .then(response => response.json())
                 .then(data => {

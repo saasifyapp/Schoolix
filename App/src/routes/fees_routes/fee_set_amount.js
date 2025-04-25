@@ -71,8 +71,10 @@ router.get('/setFee_getGrades', async (req, res) => {
             return 0;
         });
 
-        // Log the fetched details
-        // console.log('Fetched standards:', uniqueStandards);
+        // Add the extra entry 'GENERAL'
+        if (!uniqueStandards.includes('GENERAL')) {
+            uniqueStandards.push('GENERAL');
+        }
 
         res.json(uniqueStandards);
     } catch (error) {
@@ -80,7 +82,6 @@ router.get('/setFee_getGrades', async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
-
 
 // POST Endpoint to set fee amount
 router.post('/setFeeAmount', (req, res) => {
@@ -93,7 +94,7 @@ router.post('/setFeeAmount', (req, res) => {
     // Query to check if a fee structure with the same category name and grade already exists
     const checkQuery = `
         SELECT * FROM fee_structures 
-        WHERE category_id = ? AND category_name = ? AND class_grade = ?
+        WHERE category_id = ? AND category_name = ? AND class_grade = ? AND class_grade != 'GENERAL'
     `;
 
     const checkValues = [categoryId, categoryName, classGrade];

@@ -1,3 +1,24 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const mode = urlParams.get('mode');
+    const formModeInput = document.getElementById('formMode');
+
+    if (mode === 'update') {
+        formModeInput.value = 'update';
+    } else if (mode === 'enroll') {
+        formModeInput.value = 'insert';
+    } else {
+        // Optionally handle other modes or set a default
+        formModeInput.value = 'insert'; // Or whatever default mode you want
+    }
+
+    // For debugging purposes, log the form mode to the console
+    if (formModeInput) {
+        console.log("Form mode:", formModeInput.value);
+    }
+});
+
+
 // Select all navigation items and add event listeners
 document.querySelectorAll('.form-navigation li').forEach(item => {
     item.addEventListener('click', () => {
@@ -112,28 +133,35 @@ function checkSectionCompletion(sectionId) {
     return Array.from(inputs).every(input => input.value.trim() !== ""); // Check if all inputs are filled
 }
 
-// Function to update the done icon for navigation items
-function updateDoneIcons() {
-    document.querySelectorAll('.form-navigation li').forEach(item => {
-        const sectionId = item.id.replace('-info', '-information'); // Map navigation ID to section ID
-        const isComplete = checkSectionCompletion(sectionId); // Check if the section is complete
-        const doneIcon = item.querySelector('.done-icon'); // Get the done icon for the current item
-
-        if (isComplete) {
+// Function to update the done icon for a specific section
+function updateDoneIconForSection(sectionId) {
+    const navItem = document.querySelector(`.form-navigation li[id="${sectionId.replace('-information', '-info')}"]`);
+    if (navItem) {
+        const doneIcon = navItem.querySelector('.done-icon');
+        if (checkSectionCompletion(sectionId)) {
             doneIcon.style.display = 'inline'; // Show the done icon if the section is complete
         } else {
             doneIcon.style.display = 'none'; // Hide the done icon if the section is incomplete
         }
-    });
+    }
 }
 
-// Add event listeners to all inputs to update the icons dynamically
+// Add event listeners to all inputs to dynamically update the specific section's icon
 document.querySelectorAll('.form-control, textarea').forEach(input => {
-    input.addEventListener('input', updateDoneIcons);
+    input.addEventListener('input', function() {
+        const section = input.closest('.section'); // Adjust the selector to match your section class
+        if (section) {
+            updateDoneIconForSection(section.id);
+        }
+    });
 });
 
-// Initialize done icons on page load
-updateDoneIcons();
+// Initialize done icons for all sections on page load
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll('.section').forEach(section => {
+        updateDoneIconForSection(section.id);
+    });
+});
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -308,15 +336,21 @@ function addFullNameUpdateListeners() {
     const nameFields = ['firstName', 'middleName', 'lastName'];
 
     nameFields.forEach(field => {
-        document.getElementById(field).addEventListener('input', function () {
-            updateFullName();
-        });
+        document.getElementById(field).addEventListener('input', updateFullName);
     });
+}
+
+// Function to manually trigger the 'input' event
+function triggerInputEvent(elementId) {
+    const event = new Event('input', {
+        bubbles: true,
+        cancelable: true,
+    });
+    document.getElementById(elementId).dispatchEvent(event);
 }
 
 // Add event listeners to update full name when any name fields are modified
 addFullNameUpdateListeners();
-
 
 
 ////////////////////////////////// AUTOMATIC AGE  ///////////////////////////////////////////
@@ -1277,16 +1311,47 @@ function updateFatherFullName() {
     const fatherFirstName = document.getElementById('fatherFirstName').value.trim();
     const fatherMiddleName = document.getElementById('fatherMiddleName').value.trim();
     const fatherLastName = document.getElementById('fatherLastName').value.trim();
-    document.getElementById('fatherFullName').value = `${fatherFirstName} ${fatherMiddleName} ${fatherLastName}`.trim(); // Update father's full name field
+
+    // Concatenate the names with a space in between, handling cases where middleName might be empty
+    const fullName = [fatherFirstName, fatherMiddleName, fatherLastName].filter(Boolean).join(' ');
+
+    document.getElementById('fatherFullName').value = fullName; // Update father's full name field
 }
 
-// Add event listeners to the father's first name, middle name, and last name input fields
-document.getElementById('fatherFirstName').addEventListener('input', updateFatherFullName);
-document.getElementById('fatherMiddleName').addEventListener('input', updateFatherFullName);
-document.getElementById('fatherLastName').addEventListener('input', updateFatherFullName);
+// Function to add event listeners for father's name inputs to update the full name
+function addFatherFullNameUpdateListeners() {
+    const fatherNameFields = ['fatherFirstName', 'fatherMiddleName', 'fatherLastName'];
 
+    fatherNameFields.forEach(field => {
+        document.getElementById(field).addEventListener('input', () => {
+            updateFatherFullName();
+            periodicallyUpdateFullName(); // Reset the periodic update on input
+        });
+    });
+}
 
+// Periodically check and update the full name
+function periodicallyUpdateFullName() {
+    // Clear any existing intervals to avoid multiple intervals running simultaneously
+    if (window.fatherIntervalId) {
+        clearInterval(window.fatherIntervalId);
+    }
 
+    window.fatherIntervalId = setInterval(() => {
+        updateFatherFullName();
+    }, 1000); // Adjust the interval time as needed
+
+    // Stop the periodic function after 60 seconds
+    setTimeout(() => {
+        clearInterval(window.fatherIntervalId);
+        window.fatherIntervalId = null; // Clear the stored interval ID
+    }, 60000); // 60000 milliseconds = 60 seconds
+}
+
+// Add event listeners to update father's full name when any name fields are modified
+addFatherFullNameUpdateListeners();
+updateFatherFullName(); // Initial call to update the full name based on pre-existing values
+periodicallyUpdateFullName();
 
 
 ///////////////// MOTHERS DETAILS ////////////////////
@@ -1295,15 +1360,51 @@ document.getElementById('fatherLastName').addEventListener('input', updateFather
 // Function to update the mother's full name
 function updateMotherFullName() {
     const motherFirstName = document.getElementById('motherFirstName').value.trim();
+    const motherMiddleName = document.getElementById('motherMiddleName')?.value.trim(); // Handle potential middle name field
     const motherLastName = document.getElementById('motherLastName').value.trim();
-    document.getElementById('motherFullName').value = `${motherFirstName} ${motherLastName}`.trim(); // Update mother's full name field
+
+    // Concatenate the names with a space in-between, handling the case where middleName might be empty
+    const fullName = [motherFirstName, motherMiddleName, motherLastName].filter(Boolean).join(' ');
+
+    document.getElementById('motherFullName').value = fullName; // Update mother's full name field
 }
 
-// Add event listeners to the mother's first name, middle name, and last name input fields
-document.getElementById('motherFirstName').addEventListener('input', updateMotherFullName);
-document.getElementById('motherLastName').addEventListener('input', updateMotherFullName);
+// Function to add event listeners for mother's name inputs to update full name
+function addMotherFullNameUpdateListeners() {
+    const motherNameFields = ['motherFirstName', 'motherMiddleName', 'motherLastName'];
 
+    motherNameFields.forEach(field => {
+        const element = document.getElementById(field);
+        if (element) { // Check if the element exists
+            element.addEventListener('input', () => {
+                updateMotherFullName();
+                periodicallyUpdateMotherFullName(); // Reset the periodic update on input
+            });
+        }
+    });
+}
 
+// Periodically check and update the full name
+function periodicallyUpdateMotherFullName() {
+    // Clear any existing intervals to avoid multiple intervals running simultaneously
+    if (window.motherIntervalId) {
+        clearInterval(window.motherIntervalId);
+    }
+
+    window.motherIntervalId = setInterval(() => {
+        updateMotherFullName();
+    }, 1000); // Adjust the interval time as needed
+
+    // Stop the periodic function after 60 seconds
+    setTimeout(() => {
+        clearInterval(window.motherIntervalId);
+        window.motherIntervalId = null; // Clear the stored interval ID
+    }, 60000); // 60000 milliseconds = 60 seconds
+}
+
+// Add event listeners to update mother's full name when any name fields are modified
+addMotherFullNameUpdateListeners();
+periodicallyUpdateMotherFullName();
 
 ///////////////////////////////// LOCAL GUARDIAN DETAILS ////////////////////
 
@@ -1806,6 +1907,105 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+
+
+////////////////////////////// CLASS OF ADMISSION SUGGESTION ////////////////
+
+// Cache for classes of admission
+let classesOfAdmission = [
+    'Nursery',
+    'LKG',
+    'UKG',
+    '1st',
+    '2nd',
+    '3rd',
+    '4th',
+    '5th',
+    '6th',
+    '7th',
+    '8th',
+    '9th',
+    '10th'
+];
+let classesOfAdmissionFetched = false;
+
+// Function to display class of admission suggestions
+function displayClassOfAdmissionSuggestions() {
+    const classOfAdmissionInput = document.getElementById('class_of_admission');
+    const classOfAdmissionSuggestionsContainer = document.getElementById('classOfAdmissionSuggestion');
+
+    // Show suggestion box
+    classOfAdmissionSuggestionsContainer.style.display = "block";
+    const query = classOfAdmissionInput.value.toLowerCase().trim();
+
+    if (!classesOfAdmissionFetched) {
+        showLoading(classOfAdmissionSuggestionsContainer);
+
+        // Simulate an async data fetch
+        setTimeout(() => {
+            classesOfAdmissionFetched = true;
+            filterAndDisplayClassOfAdmissionSuggestions(query, classOfAdmissionSuggestionsContainer);
+        }, 500);
+    } else {
+        filterAndDisplayClassOfAdmissionSuggestions(query, classOfAdmissionSuggestionsContainer);
+    }
+}
+
+// Function to filter and display class of admission suggestions
+function filterAndDisplayClassOfAdmissionSuggestions(query, suggestionsContainer) {
+    const filteredClasses = classesOfAdmission.filter(className => className.toLowerCase().startsWith(query));
+    suggestionsContainer.innerHTML = '';
+
+    if (filteredClasses.length > 0) {
+        filteredClasses.forEach(className => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = className;
+            suggestionItem.dataset.value = className;
+            suggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        showNoResults(suggestionsContainer);
+    }
+
+    // Add event listeners for selection
+    suggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', function () {
+            const classOfAdmissionInput = document.getElementById('class_of_admission');
+            classOfAdmissionInput.value = this.dataset.value;
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.style.display = "none";
+        });
+    });
+}
+
+// Function to show a loading indicator
+function showLoading(container) {
+    container.innerHTML = '<div class="loading">Loading...</div>';
+}
+
+// Function to show "No Results" message
+function showNoResults(container) {
+    container.innerHTML = '<div class="no-results">No results found</div>';
+}
+
+// Initialization of class of admission suggestion box
+document.addEventListener("DOMContentLoaded", function () {
+    const classOfAdmissionInput = document.getElementById('class_of_admission');
+    const classOfAdmissionSuggestionsContainer = document.getElementById('classOfAdmissionSuggestion');
+
+    // Add event listeners for input, focus, and click events
+    classOfAdmissionInput.addEventListener('input', displayClassOfAdmissionSuggestions);
+    classOfAdmissionInput.addEventListener('focus', displayClassOfAdmissionSuggestions);
+    classOfAdmissionInput.addEventListener('click', displayClassOfAdmissionSuggestions);
+
+    document.addEventListener('click', function (event) {
+        if (!classOfAdmissionSuggestionsContainer.contains(event.target) && !classOfAdmissionInput.contains(event.target)) {
+            classOfAdmissionSuggestionsContainer.style.display = "none";
+        }
+    });
+});
+
 ////////////////////////////// CLASS COMPLETED SUGGESTION //////////////////
 
 // Cache for classes
@@ -1936,6 +2136,9 @@ document.getElementById('percentage').addEventListener('input', handlePercentage
 
 //////////////////// FEES AND PACKAGES ///////////////////
 
+document.addEventListener("DOMContentLoaded", function () {
+    observeReadOnlyFields();
+});
 
 // Function to fetch and populate the Fee Category Amount Table
 function fetchAndPopulateFeeCategoryAmountTable(standard) {
@@ -2008,6 +2211,14 @@ function observeReadOnlyFields() {
         mutations.forEach(mutation => {
             if (mutation.type === 'attributes' && mutation.attributeName === 'value') {
                 clearFeeCategoryAmountTable();
+
+                if (!feeSectionInput.value.trim() || !feeStandardInput.value.trim() || !feeDivisionInput.value.trim()) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Section, Standard, and Division fields must not be empty!',
+                        icon: 'error'
+                    });
+                }
             }
         });
     });
@@ -2017,47 +2228,69 @@ function observeReadOnlyFields() {
     observer.observe(feeDivisionInput, observerConfig);
 }
 
+// Function to check outstanding and total package amounts
+function checkOutstandingAndTotalPackage(section, grNo) {
+    return fetch(`/checkOutstandingAndTotalPackage?section=${section}&grNo=${grNo}`)
+        .then(response => response.json().then(data => ({ status: response.status, body: data })))  // fetch does not reject on HTTP errors, so we wrap and handle it properly
+        .then(({ status, body }) => {
+            if (status !== 200) {
+                return { error: body.error };
+            }
+            if (body.proceedWithPackageGeneration) {
+                return { proceedWithPackageGeneration: true };
+            }
+            const { current_outstanding, total_package } = body;
+            return { current_outstanding, total_package };
+        })
+        .catch(error => ({ error: 'Error fetching outstanding and total package amounts' }));
+}
+
 // Event listener for the "Generate Package" button
 document.getElementById('generatePackageBtn').addEventListener('click', function () {
     const feeStandard = document.getElementById('feeStandard').value.trim();
-    if (feeStandard) {
-        // Assuming fetchAndPopulateFeeCategoryAmountTable is a function that fetches fee details
-        fetchAndPopulateFeeCategoryAmountTable(feeStandard);
-
-        // Ensure feeCategory and packageAllotted are added only in the Fee Details section
-        setTimeout(() => {
-            // Get the Fee Details section specifically
-            const feeDetailsSection = document.querySelector('.input-container h3:contains("Fee Details")').parentElement;
-            const feeCategoryInputExists = feeDetailsSection.querySelector('#feeCategory');
-            const packageAllottedInputExists = feeDetailsSection.querySelector('#packageAllotted');
-
-            // Only create the input fields if they don't already exist in the Fee Details section
-            if (!feeCategoryInputExists) {
-                const feeCategoryInput = document.createElement('input');
-                feeCategoryInput.id = 'feeCategory';
-                feeCategoryInput.className = 'form-control';
-                feeCategoryInput.placeholder = "Fee Category";
-                feeDetailsSection.appendChild(feeCategoryInput);
-            }
-
-            if (!packageAllottedInputExists) {
-                const packageAllottedInput = document.createElement('input');
-                packageAllottedInput.id = 'packageAllotted';
-                packageAllottedInput.className = 'form-control';
-                packageAllottedInput.placeholder = "Package Allotted";
-                feeDetailsSection.appendChild(packageAllottedInput);
-            }
-        }, 500);  // Delay to ensure the table is populated before adding fields
-    } else {
-        console.error('feeStandard is empty, cannot call API');
+    const section = document.getElementById('section').value.trim();
+    const grNo = document.getElementById('grNo').value.trim();
+    
+    if (!feeStandard) {
+        Swal.fire('Error', 'Fee Standard is required', 'error');
+        return;
     }
-});
 
+    if (!section) {
+        Swal.fire('Error', 'Section is required', 'error');
+        return;
+    }
 
+    if (!grNo) {
+        Swal.fire('Error', 'GR No is required', 'error');
+        return;
+    }
 
-// Initialize MutationObserver on DOMContentLoaded
-document.addEventListener('DOMContentLoaded', function () {
-    observeReadOnlyFields();
+    // Directly check outstanding and total package amounts
+    checkOutstandingAndTotalPackage(section, grNo)
+        .then(result => {
+            if (result.error) {
+                // Display error message using SweetAlert
+                Swal.fire('Error', result.error, 'error');
+                return;
+            }
+
+            if (result.proceedWithPackageGeneration || result.current_outstanding === result.total_package) {
+                // Fetch and populate fee details if the amounts are the same or no record found
+                fetchAndPopulateFeeCategoryAmountTable(feeStandard);
+            } else {
+                // Show SweetAlert if the amounts are not the same
+                Swal.fire({
+                    title: 'Receipt Generated',
+                    html: 'A receipt has already been issued for this user. Hence, the package cannot be updated.<br><br><strong>Please delete the receipt to regenerate package.</strong>',
+                    icon: 'warning'
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire('Error', 'An error occurred while checking amounts.', 'error');
+            console.error('Error:', error);
+        });
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -2234,7 +2467,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //////////////////////////////// VEHICLE RUNNING SUGGESTIONS /////////////////////
 
-// Cache for vehicle running suggestions
 let vehicleRunningFetched = false;
 let vehicleRunningCache = [];
 
@@ -2248,6 +2480,7 @@ function resetVehicleRunningCache() {
 function displayVehicleRunningSuggestions() {
     const vehicleRunningInput = document.getElementById('vehicleRunning');
     const vehicleRunningSuggestionsContainer = document.getElementById('vehicleRunningSuggestions');
+    const noVehicleCheckbox = document.getElementById('noVehicleFound');
 
     // Show suggestion box
     vehicleRunningSuggestionsContainer.style.display = "block";
@@ -2335,17 +2568,19 @@ function filterAndDisplayVehicleRunning(query, suggestionsContainer, vehicleRunn
 // Add event listener to the checkbox to enable/disable input
 document.getElementById('noVehicleFound').addEventListener('change', function () {
     const vehicleRunningInput = document.getElementById('vehicleRunning');
+    const vehicleInfoContainer = document.getElementById('vehicleInfo');
 
     if (this.checked) {
         // Disable the input field and clear its value
         vehicleRunningInput.disabled = true;
         vehicleRunningInput.value = '';
+        vehicleInfoContainer.innerHTML = '';
+        vehicleInfoContainer.style.display = 'none';
     } else {
         // Enable the input field
         vehicleRunningInput.disabled = false;
     }
 });
-
 
 // Function to fetch vehicle info
 function fetchVehicleInfo(selectedVehicleNo) {
@@ -2399,21 +2634,38 @@ function clearVehicleRunningInfo() {
     noVehicleFoundCheckbox.disabled = false; // Enable the checkbox
 }
 
+// Add event listener to the vehicleRunning input to handle enabling/disabling of the checkbox
+function handleVehicleRunningInput() {
+    const vehicleRunningInput = document.getElementById('vehicleRunning');
+    const noVehicleFoundCheckbox = document.getElementById('noVehicleFound');
+
+    if (vehicleRunningInput.value.trim() === '') {
+        noVehicleFoundCheckbox.disabled = false;
+    } else {
+        noVehicleFoundCheckbox.disabled = true;
+        noVehicleFoundCheckbox.checked = false;
+    }
+}
+
 // Initialization of vehicle running suggestion box
 document.addEventListener("DOMContentLoaded", function () {
     const vehicleRunningInput = document.getElementById('vehicleRunning');
     const vehicleRunningSuggestionsContainer = document.getElementById('vehicleRunningSuggestions');
     const pickDropAddressInput = document.getElementById('pickDropAddress');
     const noVehicleFoundCheckbox = document.getElementById('noVehicleFound');
-
+    
     // Enable the checkbox initially
     noVehicleFoundCheckbox.disabled = false;
 
     // Add event listeners for input, focus, and click events
-    vehicleRunningInput.addEventListener('input', displayVehicleRunningSuggestions);
+    vehicleRunningInput.addEventListener('input', () => {
+        displayVehicleRunningSuggestions();
+        handleVehicleRunningInput();
+    });
     vehicleRunningInput.addEventListener('focus', displayVehicleRunningSuggestions);
     vehicleRunningInput.addEventListener('click', displayVehicleRunningSuggestions);
     pickDropAddressInput.addEventListener('change', clearVehicleRunningInfo);
+    vehicleRunningInput.addEventListener('change', clearVehicleRunningInfo);
 
     document.addEventListener('click', function (event) {
         if (!vehicleRunningSuggestionsContainer.contains(event.target) && !vehicleRunningInput.contains(event.target)) {
@@ -2448,20 +2700,71 @@ consentCheckboxes.forEach(checkbox => {
     });
 });
 
+////////////////////////// MEDICAL STATUS AND DESCRIPTION //////////////
 
 document.addEventListener("DOMContentLoaded", function () {
     const medicalStatus = document.getElementById("medicalStatus");
     const medicalDescription = document.getElementById("medicalDescription");
 
-    medicalStatus.addEventListener("change", function () {
+    // Function to update the medical description field based on the status
+    function updateMedicalDescription() {
         if (medicalStatus.value === "Unfit") {
             medicalDescription.removeAttribute("readonly");
+            medicalDescription.removeAttribute("disabled");
         } else {
             medicalDescription.setAttribute("readonly", true);
+            medicalDescription.setAttribute("disabled", true);
             medicalDescription.value = "";
         }
-    });
+    }
+
+    // Function to add event listeners for medical status to update the description
+    function addMedicalStatusUpdateListeners() {
+        medicalStatus.addEventListener("change", () => {
+            updateMedicalDescription();
+            periodicallyUpdateMedicalDescription(); // Restart the periodic update on change
+        });
+    }
+
+    // Periodically check and update the medical description based on the status
+    function periodicallyUpdateMedicalDescription() {
+        // Clear any existing intervals to avoid multiple intervals running simultaneously
+        if (window.medicalIntervalId) {
+            clearInterval(window.medicalIntervalId);
+        }
+
+        window.medicalIntervalId = setInterval(() => {
+            updateMedicalDescription();
+        }, 1000); // Adjust the interval time as needed
+
+        // Stop the periodic function after 60 seconds
+        setTimeout(() => {
+            clearInterval(window.medicalIntervalId);
+            window.medicalIntervalId = null; // Clear the stored interval ID
+        }, 10000); // 60000 milliseconds = 60 seconds
+    }
+
+    // Add event listeners to update the medical description when the status changes
+    addMedicalStatusUpdateListeners();
+    updateMedicalDescription(); // Initial call to update the field state based on pre-existing value
+    periodicallyUpdateMedicalDescription();
 });
+
+// Helper function to set values with appropriate event dispatching
+function setValue(elementId, value) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.value = value;
+
+        // Manually trigger the change event if it's a select element
+        if (element.tagName === 'SELECT') {
+            const event = new Event('change');
+            element.dispatchEvent(event);
+        }
+    }
+}
+
+/////////////////////////////////////////////////
 
 // Function to validate ID inputs
 function validateInput(inputId, errorId, length) {
@@ -2533,41 +2836,6 @@ document.addEventListener("DOMContentLoaded", function () {
     percentage.addEventListener("input", checkFields);
     newAdmission.addEventListener("change", resetFields);
 });
-
-
-document.addEventListener("DOMContentLoaded", function () {
-    const transportStandard = document.getElementById("transportStandard");
-    const transportDivision = document.getElementById("transportDivision");
-    const pickDropAddress = document.getElementById("pickDropAddress");
-    const vehicleRunning = document.getElementById("vehicleRunning");
-    const noVehicleFound = document.getElementById("noVehicleFound");
-
-    function checkFields() {
-        if (pickDropAddress.value.trim() && vehicleRunning.value.trim()) {
-            noVehicleFound.disabled = true;
-        } else {
-            noVehicleFound.disabled = false;
-        }
-    }
-
-    function resetFields() {
-        if (noVehicleFound.checked) {
-            pickDropAddress.value = "";
-            vehicleRunning.value = "";
-
-            pickDropAddress.disabled = true;
-            vehicleRunning.disabled = true;
-        } else {
-            pickDropAddress.disabled = false;
-            vehicleRunning.disabled = false;
-        }
-    }
-
-    pickDropAddress.addEventListener("input", checkFields);
-    vehicleRunning.addEventListener("input", checkFields);
-    noVehicleFound.addEventListener("change", resetFields);
-});
-
 
 
 

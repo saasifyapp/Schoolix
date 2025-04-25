@@ -1,6 +1,5 @@
 /* Style for the suggestions container */
 .suggestions {
-    /* border: 1px solid #ccc; */
     border-radius: 5px 5px 5px 5px; /* Rounded corners */
     max-height: 10rem;
     width: 18.7rem;
@@ -12,14 +11,15 @@
     top: 3.3rem;
     display: none;
     flex-direction: column;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 0px 0px 25px 25px;
 }
 
 /* Style for each suggestion item */
 .suggestion-item {
     padding: 10px;
     cursor: pointer;
-    border-bottom: 1.5px solid #eee; /* Optional: Add a separator between items */
+    border-bottom: 1.5px solid #eee;
 }
 
 /* Style for the last suggestion item to remove the bottom border */
@@ -29,32 +29,31 @@
 
 .suggestion-item:hover {
     background: #D6EAF8;
-    font-weight: bold; /* Make text bold on hover */
+    font-weight: bold;
 }
 
+/* No results styling */
 .no-results {
-    color: #999; /* Grey color for "No results found" text */
-    font-style: italic; /* Italic to differentiate from normal items */
-    pointer-events: none; /* Prevent clicks */
-    text-align: center; /* Center the text */
+    color: #999;
+    font-style: italic;
+    pointer-events: none;
+    text-align: center;
 }
-
-
 
 /* Customize the scrollbar */
 .suggestions::-webkit-scrollbar {
-    width: 4px; /* Thin scrollbar width */
+    width: 4px;
 }
 
 .suggestions::-webkit-scrollbar-thumb {
-    background-color: #ccc; /* Color of the scrollbar */
-    border-radius: 10px; /* Rounded scrollbar */
+    background-color: #ccc;
+    border-radius: 10px;
 }
 
 .suggestions::-webkit-scrollbar-thumb:hover {
-    background-color: #aaa; /* Darker on hover */
+    background-color: #aaa;
 }
 
 .suggestions::-webkit-scrollbar-track {
-    background: transparent; /* Transparent track */
+    background: transparent;
 }

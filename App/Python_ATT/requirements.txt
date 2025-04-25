@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+opencv-python
+numpy
+insightface
+torch
+torchvision
+torchaudio
+pydantic
+concurrent-log-handler

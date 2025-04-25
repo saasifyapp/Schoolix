@@ -87,6 +87,7 @@ h2{
     height: 35px;
     vertical-align: middle; /* Align it with the text baseline */
     margin-right: 5px; /* Space between icon and text */
+    mix-blend-mode: multiply;
 }
 
 
@@ -176,7 +177,7 @@ h3{
 }
 
 .input-container {
-    margin-bottom: 20px;   
+    margin-top: 10px;   
     padding: 10px;
     border: 1px solid #5DADE2;
     margin-bottom: 20px;
@@ -185,6 +186,13 @@ h3{
     box-shadow: 0 0 4px #808B96;
 }
 
+
+
+.input-container:hover {
+    box-shadow: 0 0 12px #5DADE2;
+    transform: scale(1.002); 
+
+}
 
 /* Style for the suggestions container */
 .suggestions {

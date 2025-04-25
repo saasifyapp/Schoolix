@@ -1,0 +1,182 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+* {
+
+    font-family: "Poppins", sans-serif;
+}
+
+:root {
+    --white-color: #fff;
+    --blue-color: #4070f4;
+    --grey-color: #707070;
+    --grey-color-light: #aaa;
+}
+
+body {
+    font-family: american typewriter, sans-serif;
+    text-align: center;
+    background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    min-height: 100vh;
+    /* Prevent scrolling */
+}
+
+
+.capture-container {
+    background: var(--white-color);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 900px; /* Increased to accommodate side-by-side layout */
+    position: relative;
+    text-align: center;
+}
+
+.capture-container h2 {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--blue-color);
+    margin-bottom: 20px;
+}
+
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 30px;
+    color: var(--grey-color);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.close-button:hover {
+    color: var(--blue-color);
+}
+
+#captureImageBtn,
+#stopCaptureBtn {
+    background: var(--blue-color);
+    color: var(--white-color);
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#captureImageBtn:hover,
+#stopCaptureBtn:hover {
+    background: #3050d6;
+    transform: translateY(-2px);
+}
+
+/* New container for video and canvas */
+.media-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px; /* Space between video, arrow, and canvas */
+}
+
+.arrow-icon {
+    width: 60px; /* Adjust size as needed */
+    height: 60px;
+    transition: transform 0.2s; /* Optional: add hover effect */
+}
+
+.arrow-icon:hover {
+    transform: scale(1.2); /* Optional: scale on hover */
+}
+
+#videoPreview,
+#capturedCanvas {
+    width: 48%; /* Each takes roughly half the container width */
+    max-width: 400px; /* Adjusted for side-by-side layout */
+    height: 300px; /* Fixed height for consistency */
+    border-radius: 8px;
+    border: 2px solid var(--grey-color-light);
+    background: #f9f9f9;
+}
+
+#capturedCanvas {
+    display: flex; /* Hidden until captured */
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+button {
+    cursor: pointer;
+}
+
+#captureImageBtn,
+#stopCaptureBtn {
+    background-color: #85C1E9;
+    border: none;
+    color: black;
+    padding: 0;
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    max-height: 100%;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 10px;
+}
+
+#captureImageBtn img,
+#stopCaptureBtn img {
+    width: 30px;
+    height: 30px;
+    border-radius: 0px;
+    margin: 5px;
+    mix-blend-mode: multiply;
+}
+
+#captureImageBtn span,
+#stopCaptureBtn span {
+    margin-right: 10px;
+}
+
+#captureImageBtn:hover,
+#stopCaptureBtn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    background-color: #ea7a00;
+}
+
+#captureImageBtn:focus,
+#stopCaptureBtn:focus {
+    transform: scale(1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #ea7a00;
+}
+
+/* Style for disabled state */
+#captureImageBtn:disabled,
+#stopCaptureBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none; /* Prevent scaling when disabled */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Reset shadow */
+    background-color: #85C1E9; /* Reset to original color */
+}

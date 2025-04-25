@@ -42,23 +42,17 @@ body {
 
 .overlay {
     display: none;
-    /* Hidden by default */
     position: fixed;
-    /* Stay in place */
-    z-index: 1000;
-    /* Sit on top */
+    z-index: 1001;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
-    /* Enable scroll if needed */
     background-color: rgba(0, 0, 0, 0.4);
-    /* Black w/ opacity */
     justify-content: center;
-    /* Center horizontally */
     align-items: center;
-    /* Center vertically */
+
 }
 
 .overlay-content {
@@ -66,11 +60,8 @@ body {
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
-    /* Could be more or less, depending on screen size */
     max-width: 750px;
-    /* Optional: maximum width for better control */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    /* Optional: shadow effect */
     position: relative;
     top: 2rem;
     bottom: 2rem;
@@ -79,21 +70,44 @@ body {
     animation: fadeUp 0.3s ease-in-out;
 }
 
+
+.overlay-content-edit-tc {
+    background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
+    padding: 20px;
+    border: 1px solid #888;
+    width: 95%;
+    max-width: 1200px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    top: 0rem;
+    bottom: 2rem;
+    border-radius: 1rem;
+    transition: transform 0.3s ease-in-out;
+    animation: fadeUp 0.3s ease-in-out;
+}
+
+
+.overlay-content-edit-tc h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    pointer-events: auto;
+    color: var(--grey-color);
+}
+
 .overlay-content-inner {
     background-color: #fefefe;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
-    /* Could be more or less, depending on screen size */
     max-width: 350px;
-    /* Optional: maximum width for better control */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    /* Optional: shadow effect */
     position: relative;
     top: 2rem;
     bottom: 2rem;
     height: 200px;
-    border-radius: 15px;
+    border-radius: 1rem;
     transition: transform 0.3s ease-in-out;
     animation: fadeUp 0.3s ease-in-out;
 }
@@ -106,7 +120,6 @@ body {
     width: 100%;
     height: 100%;
     max-width: 100%;
-    /* Adjust as necessary */
     backdrop-filter: blur(5px);
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
@@ -125,10 +138,10 @@ body {
 
 .overlay-content-search {
     position: absolute;
-    top: 2rem;
-    left: 2rem;
-    right: 2rem;
-    bottom: 2rem;
+    top: 0rem;
+    left: 0rem;
+    right: 0rem;
+    bottom: 0rem;
     padding: 1rem;
     background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
     border-radius: 1rem;
@@ -184,14 +197,51 @@ body {
     padding-right: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Align items vertically */
-    align-items: center; /* Align the content at the top */
-    height: 100%; /* Ensure the container takes up full height */
-    background-color: white; /* Change background to white */
-    border-radius: 10px; /* Add rounded corners */
+    justify-content: center;
+    /* Align items vertically */
+    align-items: center;
+    /* Align the content at the top */
+    height: 100%;
+    /* Ensure the container takes up full height */
+    background-color: white;
+    /* Change background to white */
+    border-radius: 1rem;
+    /* Add rounded corners */
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 
 }
+
+
+.left-side-package {
+    flex: 0 0 45%;
+    padding-right: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Align items vertically */
+    align-items: center;
+    /* Align the content at the top */
+    height: 100%;
+    /* Ensure the container takes up full height */
+    background-color: white;
+    /* Change background to white */
+    border-radius: 1rem;
+    /* Add rounded corners */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.right-side-package {
+    flex: 0 0 50%;
+    padding-left: 20px;
+    position: relative;
+    /* Allow absolute positioning of the button inside */
+    background-color: white;
+    /* Change background to white */
+    border-radius: 1rem;
+    /* Add rounded corners */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
 
 .select-section,
 .select-filter {
@@ -232,17 +282,19 @@ input[type="checkbox"] {
     color: white;
     flex-direction: column;
     padding: 20px;
-    border-radius: 20px;
+    border-radius: 1rem;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
 
-.select-filter{
-    max-height: 58vh; /* Adjust height as needed */
+.select-filter {
+    max-height: 58vh;
+    /* Adjust height as needed */
     overflow-y: auto;
 }
 
-#selectedFilters{
-    max-height: 60vh; /* Adjust height as needed */
+#selectedFilters {
+    max-height: 60vh;
+    /* Adjust height as needed */
     overflow-y: auto;
 }
 
@@ -251,8 +303,10 @@ input[type="checkbox"] {
     padding-left: 20px;
     position: relative;
     /* Allow absolute positioning of the button inside */
-    background-color: white; /* Change background to white */
-    border-radius: 10px; /* Add rounded corners */
+    background-color: white;
+    /* Change background to white */
+    border-radius: 1rem;
+    /* Add rounded corners */
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 
 }
@@ -270,7 +324,7 @@ input[type="checkbox"] {
     margin-bottom: 10px;
     font-size: 16px;
     padding: 5px;
-    border-radius: 5px;
+    border-radius: 1rem;
 }
 
 .container {
@@ -279,7 +333,7 @@ input[type="checkbox"] {
     gap: 10px;
     padding: 10px;
     /* border: 1px solid #5DADE2; */
-    border-radius: 10px;
+    border-radius: 1rem;
     margin: 10px;
     /* background-color: white; */
     /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); */
@@ -435,7 +489,7 @@ input[type="checkbox"] {
 .apply-button {
     position: absolute;
     /* Positions it relative to the .right-side container */
-    bottom:  10px;
+    bottom: 10px;
     /* 20px from the bottom of the container */
     margin-left: 35%;
     cursor: pointer;
@@ -457,7 +511,7 @@ input[type="checkbox"] {
     /* Add transition for smooth hover effect */
     font-family: 'Open Sans', sans-serif;
     font-weight: bold;
-    
+
 }
 
 
@@ -465,7 +519,7 @@ input[type="checkbox"] {
 .export_registered_students,
 .export_routes,
 .filterButton,
-.apply-button {   
+.apply-button {
     cursor: pointer;
     background-color: transparent;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -539,7 +593,7 @@ input[type="checkbox"] {
 .reset-button-container {
     display: flex;
     justify-content: center;
-    gap: 10px; 
+    gap: 10px;
     margin-bottom: 5px;
 }
 
@@ -551,7 +605,8 @@ input[type="checkbox"] {
     border: none;
     border-radius: 20px;
     height: 2.3rem;
-    width: 8rem; /* Adjust width for better alignment */
+    width: 8rem;
+    /* Adjust width for better alignment */
     font-size: 1rem;
     display: flex;
     align-items: center;
@@ -563,7 +618,8 @@ input[type="checkbox"] {
 }
 
 .reset-button:hover {
-    background-color: #f39c12; /* Hover effect */
+    background-color: #f39c12;
+    /* Hover effect */
     transform: scale(1.05);
 }
 
@@ -584,7 +640,7 @@ input[type="checkbox"] {
     overflow-y: auto;
     margin-top: 0.725rem;
     /* Set margin between the table container and overlay content */
-    border-radius: 10px 10px 0 0;
+    border-radius: 1rem 1rem 0 0;
     /* Apply border-radius to top corners */
 }
 
@@ -804,6 +860,193 @@ input[type="checkbox"] {
     color: var(--grey-color);
 
 }
+
+
+
+
+.option-card {
+    position: relative;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    height: 82px;
+    width: 100px;
+}
+
+.option-card:hover {
+    transform: scale(1.05);
+    background-color: #FFDEE9;
+    background-image: linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 100%);
+    box-shadow: 0 0 8px #023047;
+    outline: none;
+}
+
+.option-card::after {
+    content: "";
+    position: absolute;
+    background: inherit;
+    inset: -10px;
+    scale: 0.8;
+    filter: blur(36px) brightness(1) contrast(0.85) saturate(1.4);
+    z-index: 0;
+    transition: 0.3s ease;
+}
+
+.option-card:hover::after {
+    scale: 0.9;
+    filter: blur(36px) brightness(1) contrast(1) saturate(1);
+}
+
+.option-card span {
+    position: relative;
+    z-index: 1;
+    /* background-color: #007bff; */
+    /* color: black; */
+    padding: 10px 20px;
+    border-radius: 1rem;
+    font-size: 15px;
+    color: var(--grey-color);
+    font-weight: 700;
+    mix-blend-mode: multiply;
+}
+
+.option-card img {
+    height: 93px;
+    width: 100px;
+    background-color: transparent
+}
+
+
+.input-container {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #5DADE2;
+    margin-bottom: 15px;
+    border-radius: 1rem;
+    background-color: white;
+    box-shadow: 0 0 4px #808B96;
+    transition: all 0.3s ease-in-out;
+}
+
+.input-container:hover {
+    box-shadow: 0 0 12px #5DADE2;
+    transform: scale(1.002);
+}
+
+
+.input-container h3 {
+    font-size: 20px;
+    color: var(--grey-color);
+    animation: slideInFromUp 0.3s ease-in-out;
+}
+
+
+.heading-icon {
+    width: 35px;
+    /* Adjust the size of the icon */
+    height: 35px;
+    vertical-align: middle;
+    /* Align it with the text baseline */
+    margin-right: 5px;
+    /* Space between icon and text */
+    mix-blend-mode: multiply;
+}
+
+.generate-tc-form {
+    max-height: 85vh;
+    overflow: scroll;
+    padding: 20px;
+}
+
+
+.generate-button,
+.edit-tc {
+    background-color: #85C1E9;
+    border: none;
+    color: black;
+    padding: 0;
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    max-height: 100%;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 10px;
+}
+
+.generate-button img,
+.edit-tc img {
+    width: 25px;
+    height: 25px;
+    border-radius: 0px;
+    margin: 5px;
+    mix-blend-mode: multiply;
+}
+
+.generate-button span,
+.edit-tc span {
+    margin-right: 10px;
+}
+
+.generate-button:hover,
+.edit-tc:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    background-color: #ea7a00;
+}
+
+.generate-button:focus,
+.edit-tc:focus {
+    transform: scale(1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #ea7a00;
+}
+
+.left-side-edit-tc {
+    flex: 0 0 30%;
+    padding-right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.right-side-edit-tc {
+    flex: 0 0 60%;
+    padding-left: 20px;
+}
+
+
+
+
+.vendorIcon {
+    position: relative;
+    width: 2rem;
+    height: 2rem;
+    mix-blend-mode: multiply;
+    left: 417px;
+    /* Add this property */
+}
+
+.hidden {
+    display: none;
+    /* Hide the original while capturing */
+}
+
+
+
 
 
 
@@ -1029,4 +1272,88 @@ input[type="checkbox"] {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+
+
+
+.manage-student-loader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 65px;
+    aspect-ratio: 1;
+    z-index: 9999;
+    display: none;
+    /* Initially hidden */
+}
+
+.manage-student-loader::before,
+.manage-student-loader::after {
+    content: "";
+    position: absolute;
+    border-radius: 50px;
+    box-shadow: 0 0 0 3px inset #fff;
+    animation: l5 2.5s infinite;
+}
+
+.manage-student-loader::after {
+    animation-delay: -1.25s;
+    border-radius: 0;
+}
+
+@keyframes l5 {
+    0% {
+        inset: 0 35px 35px 0;
+    }
+
+    12.5% {
+        inset: 0 35px 0 0;
+    }
+
+    25% {
+        inset: 35px 35px 0 0;
+    }
+
+    37.5% {
+        inset: 35px 0 0 0;
+    }
+
+    50% {
+        inset: 35px 0 0 35px;
+    }
+
+    62.5% {
+        inset: 0 0 0 35px;
+    }
+
+    75% {
+        inset: 0 0 35px 35px;
+    }
+
+    87.5% {
+        inset: 0 0 35px 0;
+    }
+
+    100% {
+        inset: 0 35px 35px 0;
+    }
+}
+
+/* Blur background when loader is visible */
+.manage-student-loader.active {
+    display: block;
+}
+
+.manage-student-blur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 9998;
+    display: none;
 }

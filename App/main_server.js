@@ -11,6 +11,10 @@ const cors = require('cors'); // Import the cors middleware
 const refreshTokens = []; // Define the refreshTokens array
 
 
+// Increase the request size limit
+app.use(express.json({ limit: '50mb' })); // For parsing application/json
+app.use(express.urlencoded({ limit: '50mb', extended: true })); // For parsing application/x-www-form-urlencoded
+
  
 app.use(express.json());
 app.use(cookieParser());
@@ -403,6 +407,10 @@ app.get('/Transport/transport_console', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Transport', 'transport_console.html'));
 });
 
+app.get('/Attendance/attendance_console', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Attendance', 'attendance_console.html'));
+});
+
 app.get('/FeeStructure/feeStructure', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Fees', 'feeStructure.html'));
 });
@@ -619,13 +627,39 @@ const enrollment_search_student = require('./src/routes/student_enrollment_form_
 app.use('/', enrollment_search_student);
 
 
+////// UPDATE PACKAGE ROUTES ///
+const enrollment_update_package = require('./src/routes/student_enrollment_form_routes/update_package.js');
+app.use('/', enrollment_update_package);
+
+
 ////// DELETE STUDENT ROUTES ///
 const enrollment_delete_student = require('./src/routes/student_enrollment_form_routes/enrollment_delete_student.js');
 app.use('/', enrollment_delete_student);
 
 
+////// TRANSFER CERTIFICATE ROUTES ///
+const student_transfer_form = require('./src/routes/student_enrollment_form_routes/transfer_certificate.js');
+app.use('/', student_transfer_form);
 
-// Start the server
+
+///////////////////////////////////// ATTENDANCE ROUTES //////////////////
+
+///////////////////////////FACE ENROLLMENT FORM ROUTES //////////////////
+const face_enrollment_form = require('./src/routes/attendance_routes/attendance_face_enrollment.js');
+app.use('/', face_enrollment_form);
+
+
+/////////////////////////// DETECT FACE ROUTES //////////////////
+const detect_face = require('./src/routes/attendance_routes/attendance_check_face.js');
+app.use('/', detect_face);
+
+/////////////////////////// ATTENDANCE REPORT  ROUTES //////////////////
+const attendance_reports = require('./src/routes/attendance_routes/attendance_reports.js');
+app.use('/', attendance_reports);
+
+
+
+// Start the server 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

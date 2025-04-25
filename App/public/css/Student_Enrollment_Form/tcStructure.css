@@ -1,0 +1,733 @@
+/* Default screen styling */
+.overlay-content-search {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    /* background-color: #0000ff; */
+    /* Change background color to blue */
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.header {
+    height: 22%;
+    /* Default screen header height */
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    padding: 0;
+    border-bottom: solid;
+}
+
+.header div {
+    margin: 0;
+    padding: 5px;
+}
+
+.logo1-container {
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.school-details-container {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.school-name-container {
+    width: 100%;
+    text-align: center;
+    max-height: 33.33%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.school-name-container h1 {
+    margin: 0;
+    white-space: nowrap;
+    font-size: 35px !important;
+    /* Adjusted by JS */
+    max-width: 100%;
+    font-family: "Times New Roman", Times, serif;
+    color: #5A5A5A;
+    /* Change to black */
+    font-weight: bold;
+    /* Add bold to match Demo School */
+    text-transform: uppercase;
+    /* Add uppercase to match Demo School */
+}
+
+.address-container {
+    width: 100%;
+    text-align: center;
+    max-height: 33.33%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.address-container p {
+    margin: 0;
+    font-size: 16px;
+    font-family: "Times New Roman", Times, serif;
+    color: #5A5A5A;
+    line-height: 1.2;
+    overflow: hidden;
+    display: block;
+    white-space: normal;
+}
+
+.additional-details-container {
+    width: 100%;
+    max-height: 33.33%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.left-container,
+.right-container {
+    width: 50%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.left-container p,
+.right-container p {
+    margin: 0;
+    font-size: 16px;
+    /* Match address */
+    line-height: 1.2;
+    overflow: hidden;
+    font-weight: bold;
+    color: #5A5A5A;
+
+}
+
+/* New container for the certificate title */
+.certificate-title-container {
+    width: 100%;
+    text-align: center;
+    max-height: 33.33%;
+    /* Adjust as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    /* Add some spacing between this and the previous container */
+}
+
+.certificate-title-container h2 {
+    margin: 0;
+    font-size: 24px;
+    /* Matches the larger size in the image */
+    font-family: "Times New Roman", Times, serif;
+    /* Matches the font */
+    color: #5A5A5A;
+    /* Black color as seen in the image */
+    font-weight: bold;
+    /* Bold to match the image */
+    text-transform: uppercase;
+    /* Uppercase to match the image */
+}
+
+.logo2-container {
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo {
+    max-width: 150px;
+    max-height: 100px;
+    width: auto;
+    height: auto;
+    mix-blend-mode: multiply;
+}
+
+.tc-content {
+    height: 60%;
+    /* Default screen content height */
+    padding: 0px 10px;
+    /* Remove padding to ensure table touches edges */
+    margin: 0;
+    margin-top: 30px;
+    /* Ensure no margin within content */
+    display: flex;
+    /* Use flexbox to control table height */
+    flex-direction: column;
+    /* Stack children vertically */
+    overflow-y: auto;
+    /* Allow scrolling on screen if needed */
+}
+
+.content-table {
+    width: 100%;
+    /* Take full width of the container */
+    height: 100%;
+    /* Take full height of the parent (.tc-content) */
+    border-collapse: collapse;
+    /* Remove gaps between cells */
+    table-layout: fixed;
+    /* Ensure consistent column widths */
+    font-size: 14px;
+    /* Adjust font size for readability */
+}
+
+.content-table th,
+.content-table td {
+    border: 1px solid #333;
+    /* Add borders to table cells */
+    padding: 8px;
+    /* Add padding for readability */
+    text-align: left;
+    /* Align text to the left */
+}
+
+.content-table th {
+    /* background-color: #f2f2f2; */
+    /* Light gray background for header */
+    font-weight: bold;
+    height: 40px;
+    /* Fixed height for header row */
+}
+
+.content-table tbody tr {
+    height: calc((100% - 40px) / var(--row-count));
+    /* Dynamically calculate row height */
+}
+
+/* .content-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+    Light gray for even rows
+} */
+
+.footer {
+    height: 18%;
+    /* Default screen footer height */
+    /* background-color: #ffffff; */
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    color: #5A5A5A;
+    border-top: solid;
+    /* Ensure no margin within the footer */
+}
+
+.footer div {
+    flex: 1;
+    /* Each row takes equal height */
+    padding: 10px;
+    /* Padding for content */
+}
+
+.authenticity-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.authenticity-container p {
+    margin: 0;
+    font-size: 16px;
+    /* Default, overridden by JS */
+    white-space: nowrap;
+    /* Ensure single line */
+    overflow: hidden;
+    font-weight: bold;
+}
+
+.date-signature-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.date-container {
+    width: 50%;
+    text-align: left;
+    /* Align content to the left */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.signature-container {
+    width: 50%;
+    text-align: right;
+    /* Align content to the right */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.date-container p,
+.signature-container p {
+    margin: 0;
+    font-size: 14px;
+    /* Default, overridden by JS */
+    line-height: 1.2;
+    overflow: hidden;
+    white-space: nowrap;
+    color: #5A5A5A;
+    font-weight: bold;
+    /* Ensure single line per <p> */
+}
+
+.warning-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.warning-container p {
+    margin: 0;
+    font-size: 14px;
+    /* Default, overridden by JS */
+    line-height: 1.2;
+    overflow: hidden;
+    text-align: center;
+    /* Center the warning text */
+    color: #5A5A5A;
+    font-weight: bold;
+}
+
+/* Position the print button in the bottom right */
+.print-options {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+.print-options button {
+    padding: 5px 10px;
+}
+
+/* Watermark styling */
+.watermark {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 500px;
+    opacity: 0.2;
+    z-index: 0;
+    pointer-events: none;
+    text-align: center;
+}
+
+.watermark img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+}
+
+/* Ensure main content stays above the watermark */
+.header,
+.tc-content,
+.footer,
+.print-options {
+    position: relative;
+    z-index: 1;    
+}
+
+.header{
+    mix-blend-mode: multiply;
+}
+
+
+
+/* Print styling */
+@media print {
+
+    .header,
+    .tc-content,
+    .footer {
+        text-align: center;
+        margin: 0;
+        mix-blend-mode: multiply;
+        /* Ensure no margins in print */
+    }
+
+    .header {
+        height: auto;
+        /* Allow natural height for print */
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        border-bottom: solid;
+    }
+
+    .header div {
+        margin: 0;
+        padding: 5px;
+    }
+
+    .logo1-container {
+        width: 20%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        page-break-inside: avoid;
+    }
+
+    .school-details-container {
+        width: 60%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .school-name-container {
+        width: 100%;
+        text-align: center;
+        max-height: 33.33%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .school-name-container h1 {
+        margin: 0;
+        white-space: nowrap;
+        font-size: 35px;
+        /* Adjusted by JS */
+        max-width: 100%;
+        font-family: "Times New Roman", Times, serif;
+        color: #5A5A5A;
+        /* Change to black */
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .address-container {
+        width: 100%;
+        text-align: center;
+        max-height: 33.33%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+    }
+
+    .address-container p {
+        margin: 0;
+        font-size: 16px;
+        font-family: "Times New Roman", Times, serif;
+        color: #5A5A5A;
+        line-height: 1.4;
+        overflow: visible;
+        display: block;
+        /* min-height: calc(1.4em * 2); */
+        white-space: normal;
+    }
+
+    .additional-details-container {
+        width: 100%;
+        max-height: 33.33%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #5A5A5A;
+    }
+
+
+
+    .left-container p,
+    .right-container p {
+        margin: 0;
+        font-size: 16px;
+        font-family: "Times New Roman", Times, serif;
+        color: #5A5A5A;
+        line-height: 1.2;
+        overflow: hidden;
+    }
+
+    /* New container for the certificate title */
+    .certificate-title-container {
+        width: 100%;
+        text-align: center;
+        max-height: 33.33%;
+        /* Adjust as needed */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
+        /* Add some spacing between this and the previous container */
+    }
+
+    .certificate-title-container h2 {
+        margin: 0;
+        font-size: 24px;
+        /* Ensure JavaScript can override */
+        font-family: "Times New Roman", Times, serif;
+        color: #5A5A5A;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .logo2-container {
+        width: 20%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        page-break-inside: avoid;
+    }
+
+    .print-options {
+        display: none;
+        /* Hide print options during print */
+    }
+
+    @page {
+        size: auto;
+        margin: 5mm;
+        /* Add uniform 5mm margin on all sides */
+    }
+
+    .overlay-content-search {
+        margin: 0;
+        /* Remove margin for print */
+        padding: 0;
+        /* Remove padding for body itself */
+        /* background-color: white; */
+        /* Background color for print */
+        box-sizing: border-box;
+        /* Include border in total dimensions */
+        display: flex;
+        flex-direction: column;
+        padding: 0mm;
+        /* Apply margin to body for spacing */
+        border: 2mm solid black;
+        /* Apply border to body */
+    }
+
+    .footer {
+        height: auto;
+        /* Allow natural height for print */
+        /* background-color: #ffffff; */
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        margin: 0;
+        margin-top: 5px;
+        border-top: solid;
+    }
+
+    .footer div {
+        flex: 1;
+        padding: 10px;
+    }
+
+    .authenticity-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .authenticity-container p {
+        margin: 0;
+        font-size: 16px;
+        /* Adjusted by JS */
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .date-signature-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .date-container {
+        width: 50%;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .signature-container {
+        width: 50%;
+        text-align: right;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .date-container p,
+    .signature-container p {
+        margin: 0;
+        font-size: 14px;
+        /* Adjusted by JS */
+        line-height: 1.2;
+        overflow: hidden;
+        white-space: nowrap;
+        color: #5A5A5A;
+        font-weight: bold;
+    }
+
+    .warning-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .warning-container p {
+        margin: 0;
+        font-size: 14px;
+        /* Adjusted by JS */
+        line-height: 1.2;
+        overflow: hidden;
+        text-align: center;
+        color: #5A5A5A;
+        font-weight: bold;
+    }
+
+
+    .tc-content {
+        overflow-y: visible;
+        /* Disable scrolling for print */
+        height: 60%;
+        /* Maintain height for print */
+        padding: 0px 10px;
+    }
+
+    .content-table {
+        height: 100%;
+        /* Ensure table takes full height in print */
+        font-size: 12px;
+        /* Slightly smaller font for print */
+    }
+
+    .content-table th,
+    .content-table td {
+        padding: 5px;
+        /* Reduce padding for print */
+    }
+
+    .content-table th {
+        height: 40px;
+        /* Fixed height for header in print */
+    }
+
+    .content-table tbody tr {
+        height: calc((100% - 40px) / var(--row-count));
+        /* Maintain dynamic row height in print */
+    }
+
+
+    /* Ensure logo containers remain centered in print */
+    .logo1-container,
+    .logo2-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Inside the @media print section */
+    .logo {
+        max-width: 150px;
+        /* Increased from 80px */
+        max-height: 100px;
+        width: auto;
+        height: auto;
+        mix-blend-mode: multiply;
+    }
+
+    /* Legal Size */
+    body.Legal .header {
+        height: 17%;
+        /* Adjust header height */
+    }
+
+    body.Legal .tc-content {
+        height: 60%;
+        /* Adjust main content height */
+    }
+
+    body.Legal .footer {
+        height: 23%;
+        /* Adjust footer height */
+    }
+
+    /* Letter Size */
+    body.Letter .header {
+        height: 22%;
+        /* Adjust header height */
+    }
+
+    body.Letter .tc-content {
+        height: 60%;
+        /* Adjust main content height */
+    }
+
+    body.Letter .footer {
+        height: 18%;
+        /* Adjust footer height */
+    }
+
+    /* A4 Size */
+    body.A4 .header {
+        height: 22%;
+        /* Adjust header height */
+    }
+
+    body.A4 .tc-content {
+        height: 60%;
+        /* Adjust main content height */
+    }
+
+    body.A4 .footer {
+        height: 18%;
+        /* Adjust footer height */
+    }
+
+    .watermark {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 500px;
+        height: 500px;
+        opacity: 0.2;
+        z-index: 0;
+        pointer-events: none;
+        text-align: center;
+    }
+
+    .watermark img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        mix-blend-mode: multiply;
+    }
+
+    .header,
+    .tc-content,
+    .footer,
+    .print-options {
+        position: relative;
+        z-index: 1;
+    }
+
+    .print-options {
+        display: none;
+    }
+
+}

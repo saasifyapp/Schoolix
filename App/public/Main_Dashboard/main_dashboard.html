@@ -7,15 +7,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <!-- Boxicons CSS -->
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-  <title>Dashboard</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
   <link rel="stylesheet" href="/css/Main_Dashboard/main_dashboard.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+  <title>Dashboard</title>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
   <!-- SweetAlert2 CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <!-- SweetAlert2 JS -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 
@@ -48,11 +55,11 @@
       <!-- <img src="images/logo.png" alt=""></i> -->
       <div class="user_name" id="user_name"></div>
     </div>
-  
+
     <!-- <div class="search_bar">
             <input type="text" placeholder="Search" />
         </div> -->
-  
+
     <div class="navbar_content">
       <i class="bi bi-grid"></i>
       <!-- <i class='bx bx-sun' id="darkLight"></i> -->
@@ -66,7 +73,7 @@
       </div>
     </div>
   </nav>
-  
+
   <!-- sidebar -->
   <nav class="sidebar">
     <div class="menu_content">
@@ -86,7 +93,7 @@
           </div>
 
           <ul class="menu_items submenu">
-            <a href="/Student_Enrollment_Form/student_enrollment_form" class="nav_link sublink">
+            <a href="/Student_Enrollment_Form/student_enrollment_form?mode=enroll" class="nav_link sublink">
               <span class="navlink_icon">
                 <img src="/images/enroll.png" alt="Billing Icon" class="custom_icon">
               </span>
@@ -275,6 +282,16 @@
           </a>
         </li>
 
+        <li class="item">
+          <a href="/Attendance/attendance_console" class="nav_link">
+            <span class="navlink_icon">
+              <img src="/images/attendance (1).png" alt="Custom Icon" class="custom_icon">
+            </span>
+            <span class="navlink" style="margin-top: -8px">Attendance</span>
+          </a>
+        </li>
+
+
 
         <div class="menu_title menu_dahsboard_4"></div>
         <!-- duplicate or remove this li tag if you want to add or remove navlink with submenu -->
@@ -381,7 +398,7 @@
       <div class="user_detail_item" style="background-color: #fae27c;">
         <div class="detail_text">
           <span class="detail_count">0</span>
-          <span class="detail_title">Staff</span>
+          <span class="detail_title">Support Staff</span>
         </div>
         <i class="user_detail_icon fas fa-users-cog"></i> <!-- Example icon -->
       </div>
@@ -409,7 +426,7 @@
               <div><span class="male"></span>Male: <span id="maleCount"></span></div>
               <div><span class="female"></span>Female: <span id="femaleCount"></span></div>
             </div>
-            <h3>Primary</h3>
+            <h2 class="container_heading_piechart">Primary</h2>
           </div>
         </div>
 
@@ -424,7 +441,7 @@
               <div><span class="pre-male"></span>Male: <span id="prePrimaryMaleCount"></span></div>
               <div><span class="pre-female"></span>Female: <span id="prePrimaryFemaleCount"></span></div>
             </div>
-            <h3>Pre-Primary</h3>
+            <h2 class="container_heading_piechart">Pre-Primary</h2>
           </div>
         </div>
       </div>
@@ -506,10 +523,53 @@
           </div>
         </div>
       </div>
-
-
-
     </div>
+
+    <div class="attendance_and_transport">
+      <div class="attendance">
+        <h3>Weekly Attendance</h3>
+        <canvas id="attendanceChart"></canvas>
+      </div>
+      <div class="transport">
+        <h3>Transport Insights</h3>
+        <div class="transport_wrapper">
+          <div class="transport_cards">
+            <div class="card summary-card">
+              <h4><i class="fas fa-clipboard-list"></i> Summary</h4>
+              <ul>
+                <li><i class="fas fa-bus"></i> Number of Vehicles: <span id="vehicleCount">0</span></li>
+                <li><i class="fas fa-user-tie"></i> Number of Drivers: <span id="driverCount">0</span></li>
+                <!-- <li><i class="fas fa-user"></i> Number of Conductors: <span id="conductorCount">0</span></li> -->
+                <li><i class="fas fa-users"></i> Number of Passengers: <span id="passengerCount">0</span></li>
+                <li><i class="fas fa-route"></i> Number of Routes: <span id="routeCount">0</span></li>
+                <li><i class="fas fa-calendar-alt"></i> Number of Shifts: <span id="shiftCount">0</span></li>
+              </ul>
+            </div>
+            <div class="card location-card">
+              <h4><i class="fas fa-map-marked-alt"></i> Live Location</h4>             
+               <ul>
+                <!-- Vehicle details will be dynamically inserted here -->
+              </ul>
+            </div>
+            <div class="card shift1-card" id="shift1">
+              <h4><i class="fas fa-sun"></i> Shift - NA</h4>
+            </div>
+            <div class="card shift2-card" id="shift2">
+              <h4><i class="fas fa-cloud-sun"></i> Shift - NA</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for Map -->
+    <div id="mapModal" class="overlay">
+      <div class="overlay-content">
+        <button id="closeMapOverlay" class="close-button">&times;</button>
+        <div id="map"></div>
+      </div>
+    </div>
+
   </div>
 
 

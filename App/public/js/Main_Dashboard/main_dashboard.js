@@ -232,7 +232,7 @@ function staytuned() {
 }
 
 
-////////////////// LOCATION FUNCTIONALITY AND AUTO CREATE TABLE ENDPOINTS CALLS ///////////
+////////////////// LOCATION FUNCTIONALITY  ///////////
 document.addEventListener('DOMContentLoaded', () => {
 
     // Call the endpoint to create tables if they do not exist
@@ -399,7 +399,123 @@ async function sendLocationToServer(loginName, latitude, longitude) {
   }
 }
 
-///////////////////////////////////////// GET VALUES FOR LIBRARY CONSOLE ON DASHBOARD ////////////////////////////
+///////////////////////////////  LOCATION PROMPT ///////////////////
+
+async function confirmSchoolLocation(loginName) {
+  // Check the user's confirmation status
+  const statusResponse = await fetch('/check-confirmation-status', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ loginName: loginName }),
+  });
+
+  const statusData = await statusResponse.json();
+
+  // Check if the user is found and if confirmation is needed
+  if (statusData.error) {
+      console.error(statusData.error);
+      return; // Handle error if user is not found
+  }
+
+  // Proceed only if confirmed_at_school is 0
+  if (statusData.confirmed_at_school === 0) {
+      // Ask the user if they are at the school's location using Swal
+      const result = await Swal.fire({
+          title: "Are you at the school's location?",
+          text: "Please confirm if you're currently at the school.",
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, I am',
+          cancelButtonText: 'No',
+      });
+
+      // Get the user's coordinates
+      navigator.geolocation.getCurrentPosition(async (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+
+          if (result.isConfirmed) {
+              // Send the coordinates to the server and confirm the location
+              const response = await fetch('/confirm-location', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                      loginName: loginName,
+                      latitude: latitude,
+                      longitude: longitude,
+                  }),
+              });
+
+              const data = await response.json();
+              if (data.success) {
+                  await Swal.fire({
+                      icon: 'success',
+                      title: 'Location Confirmed',
+                      text: 'Your location has been confirmed and saved.',
+                  });
+              } else {
+                  await Swal.fire({
+                      icon: 'info',
+                      title: 'Location Already Confirmed',
+                      text: 'You have already confirmed your location.',
+                  });
+              }
+          } else {
+              await Swal.fire({
+                  icon: 'info',
+                  title: 'Location Not Confirmed',
+                  text: 'Please confirm your location at the next login.',
+              });
+          }
+      }, (error) => {
+          console.error('Error getting location:', error);
+          Swal.fire({
+              icon: 'error',
+              title: 'Location Error',
+              text: 'Failed to get your location. Please enable location services and try again.',
+          });
+      });
+  } 
+}
+
+
+// Call this function when the user logs in, passing the login name
+confirmSchoolLocation(username); // Replace with the actual login name
+
+
+///////////////////////////////////////// GET VALUES FOR STUDENT/ TEACHER/ ADMIN COUNT ON DASHBOARD ////////////////////////////
+
+fetch('/fetch-user-counts-for-main-dashboard')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Update the containers with the counts
+        document.querySelectorAll('.user_detail_item').forEach(item => {
+            const title = item.querySelector('.detail_title').textContent;
+            if (title === 'Students') {
+                item.querySelector('.detail_count').textContent = data.Students;
+            } else if (title === 'Teachers') {
+                item.querySelector('.detail_count').textContent = data.Teachers;
+            } else if (title === 'Admins') {
+                item.querySelector('.detail_count').textContent = data.Admins;
+            } else if (title === 'Support Staff') {
+                item.querySelector('.detail_count').textContent = data.SupportStaff;
+            } else if (title === 'Employees') {
+                item.querySelector('.detail_count').textContent = data.Employees;
+            }
+        });
+    })
+    .catch(error => console.error('Error fetching user counts for main dashboard:', error));
+
+///////////////////////////////////////// GET VALUES FOR STUDENT PIE CHART AND LIBRARY CONSOLE ON DASHBOARD ////////////////////////////
 
 // Get Library Details //
 fetch("/main_dashboard_library_data")
@@ -567,167 +683,337 @@ function showToast(message, isError) {
   }, 4000);
 }
 
-/*
-let animationFrameId; // Declare a variable to store animation frame ID
 
-fetch('/main_dashboard_data')
-    .then(response => response.json())
-    .then(data => {
-        console.log(data); // Log fetched data to check if admittedTeachersCount is included
-        // Update HTML with counts for each table
-        updateCountWithAnimation('registeredStudentsCount', () => data.pre_adm_registered_students);
-        updateCountWithAnimation('admittedStudentsCount', () => data.pre_adm_admitted_students);
-        updateCountWithAnimation('registeredTeachersCount', () => data.pre_adm_registered_teachers);
-        updateCountWithAnimation('admittedTeachersCount', () => data.pre_adm_admitted_teachers);
-    })
-    .catch(error => {
-        console.error('Error fetching counts:', error);
-        // Display error message
-        updateCount('registeredStudentsCount', 'Error fetching count');
-        updateCount('admittedStudentsCount', 'Error fetching count');
-        updateCount('registeredTeachersCount', 'Error fetching count');
-        updateCount('admittedTeachersCount', 'Error fetching count');
-    });
-*/
 
-/* Pause animation when tab becomes hidden
-document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-        // Tab is hidden, cancel animation
-        if (animationFrameId) {
-            window.cancelAnimationFrame(animationFrameId);
-        }
-    } else {
-        // Tab is visible again, resume animation
-        updateCountWithAnimation('registeredStudentsCount', /* valueCallback );
-        updateCountWithAnimation('admittedStudentsCount', /* valueCallback );
-        updateCountWithAnimation('registeredTeachersCount', /* valueCallback );
-        updateCountWithAnimation('admittedTeachersCount', /* valueCallback );
-    }
-}); 
-*/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/*
-function updateCountWithAnimation(elementId, valueCallback) {
-    const element = document.getElementById(elementId);
-    const currentValue = parseInt(element.textContent) || 0; // Parse as integer, default to 0 if NaN
 
-    let start;
+///////////////////////// ATTENDANCE BAR CHART /////////////////////
 
-    function step(timestamp) {
-        if (!start) start = timestamp;
-        const elapsed = timestamp - start;
 
-        const newValue = valueCallback(); // Fetch updated value
-
-        if (typeof newValue !== 'number' || isNaN(newValue)) {
-            // If the fetched value is not a number or NaN, stop animation
-            element.textContent = 'Error fetching count';
-            return;
-        }
-
-        const difference = newValue - currentValue;
-        const duration = 2000; // 2 seconds
-
-        // Update count value
-        const updatedValue = Math.floor(currentValue + (difference * elapsed) / duration);
-        element.textContent = updatedValue;
-
-        if (elapsed < duration) {
-            // Continue animation
-            animationFrameId = window.requestAnimationFrame(step);
-        } else {
-            // Animation complete, set final value
-            element.textContent = newValue;
-        }
-    }
-
-    // Start animation
-    animationFrameId = window.requestAnimationFrame(step);
-}*/
-async function confirmSchoolLocation(loginName) {
-  // Check the user's confirmation status
-  const statusResponse = await fetch('/check-confirmation-status', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ loginName: loginName }),
-  });
-
-  const statusData = await statusResponse.json();
-
-  // Check if the user is found and if confirmation is needed
-  if (statusData.error) {
-      console.error(statusData.error);
-      return; // Handle error if user is not found
+async function fetchAttendanceData() {
+  try {
+      const response = await fetch('/fetch-attendance-data-for-main-dashboard', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await response.json();
+      return data;
+  } catch (error) {
+      console.error('Error fetching attendance data:', error);
+      return [];
   }
-
-  // Proceed only if confirmed_at_school is 0
-  if (statusData.confirmed_at_school === 0) {
-      // Ask the user if they are at the school's location using Swal
-      const result = await Swal.fire({
-          title: "Are you at the school's location?",
-          text: "Please confirm if you're currently at the school.",
-          icon: 'question',
-          showCancelButton: true,
-          confirmButtonText: 'Yes, I am',
-          cancelButtonText: 'No',
-      });
-
-      // Get the user's coordinates
-      navigator.geolocation.getCurrentPosition(async (position) => {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-
-          if (result.isConfirmed) {
-              // Send the coordinates to the server and confirm the location
-              const response = await fetch('/confirm-location', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                      loginName: loginName,
-                      latitude: latitude,
-                      longitude: longitude,
-                  }),
-              });
-
-              const data = await response.json();
-              if (data.success) {
-                  await Swal.fire({
-                      icon: 'success',
-                      title: 'Location Confirmed',
-                      text: 'Your location has been confirmed and saved.',
-                  });
-              } else {
-                  await Swal.fire({
-                      icon: 'info',
-                      title: 'Location Already Confirmed',
-                      text: 'You have already confirmed your location.',
-                  });
-              }
-          } else {
-              await Swal.fire({
-                  icon: 'info',
-                  title: 'Location Not Confirmed',
-                  text: 'Please confirm your location at the next login.',
-              });
-          }
-      }, (error) => {
-          console.error('Error getting location:', error);
-          Swal.fire({
-              icon: 'error',
-              title: 'Location Error',
-              text: 'Failed to get your location. Please enable location services and try again.',
-          });
-      });
-  } 
 }
 
+function getPastWeekData(data) {
+  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const labels = [];
+  const studentsData = [];
+  const teachersData = [];
+  const visitorsData = [];
 
-// Call this function when the user logs in, passing the login name
-confirmSchoolLocation(username); // Replace with the actual login name
+  // Populate data for the past 6 days excluding Sunday
+  for (const entry of data) {
+      const dateParts = entry.date.split('-'); // format: DD-MM-YYYY
+      const dateObj = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
+      const dayOfWeek = weekDays[dateObj.getDay()];
+      const formattedDate = `${dayOfWeek}, ${dateObj.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}`;
+      labels.push(formattedDate);
+      studentsData.push(entry.students_count);
+      teachersData.push(entry.teachers_count);
+      visitorsData.push(entry.visitors_count);
+  }
+
+  // Reverse the arrays to show the oldest date first
+  labels.reverse();
+  studentsData.reverse();
+  teachersData.reverse();
+  visitorsData.reverse();
+
+  return { labels, studentsData, teachersData, visitorsData };
+}
+
+async function setupChart() {
+  // Fetch attendance data
+  const attendanceData = await fetchAttendanceData();
+
+  // Extract labels and data arrays
+  const { labels, studentsData, teachersData, visitorsData } = getPastWeekData(attendanceData);
+
+  // Initialize Chart
+  const ctx = document.getElementById('attendanceChart').getContext('2d');
+  const attendanceChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: labels,
+          datasets: [
+              {
+                  label: 'Students',
+                  data: studentsData,
+                  backgroundColor: '#8cefda',
+                  borderColor: 'rgba(0, 0, 0, 0)',
+                  borderWidth: 0
+              },
+              {
+                  label: 'Teachers',
+                  data: teachersData,
+                  backgroundColor: '#fae27c',
+                  borderColor: 'rgba(0, 0, 0, 0)',
+                  borderWidth: 0
+              },
+              {
+                  label: 'Visitors',
+                  data: visitorsData,
+                  backgroundColor: '#ff9999',
+                  borderColor: 'rgba(0, 0, 0, 0)',
+                  borderWidth: 0
+              }
+          ]
+      },
+      options: {
+          scales: {
+              x: {
+                  ticks: {
+                      autoSkip: true,
+                      maxRotation: 45,
+                      minRotation: 0,
+                      padding: 5,
+                      maxTicksLimit: 6
+                  },
+                  grid: {
+                      display: false
+                  }
+              },
+              y: {
+                  beginAtZero: true,
+                  ticks: {
+                      beginAtZero: true,
+                      stepSize: 1, // Ensure only integer values are displayed
+                  },
+                  grid: {
+                      drawBorder: false,
+                      color: 'rgba(0, 0, 0, 0.1)',
+                      borderDash: [2, 2],
+                      drawOnChartArea: true,
+                      drawTicks: false
+                  }
+              }
+          },
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+              legend: {
+                  display: true,
+                  position: 'top',
+                  align: 'end',
+                  labels: {
+                      boxWidth: 15
+                  }
+              },
+              tooltip: {
+                  enabled: true,
+                  mode: 'index',
+                  intersect: false
+              }
+          },
+          layout: {
+              padding: {
+                  top: 0,
+                  bottom: 10
+              }
+          },
+          barPercentage: 0.7,
+          categoryPercentage: 0.8,
+          hover: {
+              mode: 'index',
+              intersect: false
+          }
+      },
+      plugins: [{
+          id: 'customRoundedBars',
+          beforeDatasetsDraw: function(chart) {
+              const ctx = chart.ctx;
+              chart.data.datasets.forEach(function(dataset, datasetIndex) {
+                  const meta = chart.getDatasetMeta(datasetIndex);
+                  meta.data.forEach((bar, index) => {
+                      const x = bar.x;
+                      const y = bar.y;
+                      const width = bar.width;
+                      const height = Math.max(bar.height, 0);
+                      const minCurveHeight = 0;
+
+                      ctx.beginPath();
+                      ctx.moveTo(x - width / 2, height < minCurveHeight ? y + minCurveHeight : y + height);
+                      ctx.lineTo(x - width / 2, y);
+                      ctx.quadraticCurveTo(x - width / 2, y, x - width / 2 + 20, y);
+                      ctx.lineTo(x + width / 2 - 20, y);
+                      ctx.quadraticCurveTo(x + width / 2, y, x + width / 2, height < minCurveHeight ? y : y + minCurveHeight);
+                      ctx.lineTo(x + width / 2, height < minCurveHeight ? y + minCurveHeight : y + height);
+                      ctx.closePath();
+
+                      ctx.fillStyle = dataset.backgroundColor;
+                      ctx.fill();
+                  });
+              });
+          }
+      }]
+  });
+}
+
+// Setup chart on page load
+window.addEventListener('load', setupChart);
 
 
+/////////////////////////////// TRANSPORT INSIGHTS ///////////////////////
+
+document.addEventListener('DOMContentLoaded', function() {
+  let scrollPosition = 0; // Initial scroll position
+  const cardContainer = document.querySelector('.transport_cards');
+  const numberOfVisibleCards = 2; // Number of visible cards at a time
+  const scrollInterval = 5000; // Time between each scroll in milliseconds (5 seconds)
+  const scrollAmount = cardContainer.clientWidth / numberOfVisibleCards;
+  let isHovered = false; // State to track hover
+  let isMapOpen = false; // State to track if map overlay is open
+
+  // Function to scroll the cards
+  function autoScroll() {
+      if (!isHovered && !isMapOpen) {
+          scrollPosition += scrollAmount; // Increase the scroll position
+          if (scrollPosition >= cardContainer.scrollWidth) {
+              scrollPosition = 0; // Reset scroll position if at the end
+          }
+          cardContainer.style.transform = `translateX(-${scrollPosition}px)`;
+      }
+  }
+
+  // Set an interval to auto-scroll the cards
+  const autoScrollInterval = setInterval(autoScroll, scrollInterval);
+
+  // Event listeners to track hover state
+  cardContainer.addEventListener('mouseover', () => {
+      isHovered = true;
+  });
+
+  cardContainer.addEventListener('mouseout', () => {
+      isHovered = false;
+  });
+
+  // Fetch transport data and update DOM
+  fetch('/main_dashboard_transport_data')
+      .then(response => response.json())
+      .then(data => {
+          document.getElementById('vehicleCount').textContent = data.counts.get_no_of_vehicle || 0;
+          document.getElementById('driverCount').textContent = data.counts.get_no_of_drivers || 0;
+          document.getElementById('passengerCount').textContent = data.counts.total_passengers || 0;
+          document.getElementById('routeCount').textContent = data.counts.get_no_of_distinct_routes || 0;
+          document.getElementById('shiftCount').textContent = data.counts.get_no_of_distinct_shifts || 0;
+
+          const locationCard = document.querySelector('.location-card ul');
+          locationCard.innerHTML = ''; // Clear existing list items
+
+          const promises = data.vehicleDetails.map(detail => {
+              if (detail.latitude && detail.longitude) {
+                  const url = `https://nominatim.openstreetmap.org/reverse?lat=${detail.latitude}&lon=${detail.longitude}&format=json`;
+                  return fetch(url)
+                      .then(response => response.json())
+                      .then(geocodeData => {
+                          const address = geocodeData.address;
+                          const locationDetails = [address.road, address.suburb, address.county].filter(Boolean).join(', ');
+                          const listItem = document.createElement('li');
+                          listItem.innerHTML = `<i class="fas fa-map-pin"></i> ${detail.vehicle_no} | ${detail.name} :- ${locationDetails}`;
+                          listItem.addEventListener('click', () => showMap(detail.latitude, detail.longitude, locationDetails));
+                          locationCard.appendChild(listItem);
+                      })
+                      .catch(error => {
+                          console.error(`Error fetching location for vehicle ${detail.vehicle_no}:`, error);
+                          const listItem = document.createElement('li');
+                          listItem.innerHTML = `<i class="fas fa-map-pin"></i> ${detail.vehicle_no} | ${detail.name} :- Location Error`;
+                          locationCard.appendChild(listItem);
+                      });
+              } else {
+                  const listItem = document.createElement('li');
+                  listItem.innerHTML = `<i class="fas fa-map-pin"></i> ${detail.vehicle_no} | ${detail.name} :- Invalid coordinates`;
+                  locationCard.appendChild(listItem);
+              }
+          });
+
+          Promise.all(promises).then(() => {
+              console.log('All vehicle locations processed');
+          });
+
+          // Dynamic update of shift labels
+          updateShiftLabels(data.shifts);
+
+      })
+      .catch(error => {
+          console.error('Error fetching transport data:', error);
+      });
+
+  function updateShiftLabels(shifts) {
+      if (shifts && Array.isArray(shifts)) {
+          shifts.forEach((shift, index) => {
+              const shiftCardId = `shift${index + 1}`;
+              const shiftCard = document.getElementById(shiftCardId);
+
+              if (shiftCard) {
+                  const shiftNameElement = shiftCard.querySelector('h4');
+                  shiftNameElement.innerHTML = `<i class="fas fa-${index === 0 ? 'sun' : 'cloud-sun'}"></i> Shift - ${shift.shift_name || 'Unnamed Shift'}`;
+
+                  const detailsList = document.createElement('ul');
+                  shift.details.forEach(detail => {
+                    const detailItem = document.createElement('li');
+                    detailItem.innerHTML = `<i class="fas fa-bus"></i>${detail.vehicle_no || 'N/A'} | ${detail.driver_name || 'N/A'}<br>Students: ${detail.students_tagged ?? 0}, Seats: ${detail.available_seats ?? 0}`;
+                    detailsList.appendChild(detailItem);
+                });
+                  shiftCard.appendChild(detailsList);
+              } else {
+                  console.warn(`Shift card with ID ${shiftCardId} not found`);
+              }
+          });
+      } else {
+          console.error('Shifts data is not available or invalid');
+      }
+  }
+
+  function showMap(lat, lon, location) {
+      isMapOpen = true; // Set map open state to true
+      const modal = document.getElementById('mapModal');
+      const closeBtn = modal.querySelector('.close-button');
+      modal.style.display = 'block';
+      const mapContainer = document.getElementById('map');
+      mapContainer.innerHTML = ''; // Clear the map container
+
+      // Initialize the map
+      const map = L.map('map').setView([lat, lon], 15); // Zoom in more (15)
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+
+      // Add the bus icon marker
+      const busIcon = L.icon({
+          iconUrl: '/images/busIcon.png', // Use a bus icon URL
+          iconSize: [35, 35], // Size of the icon
+          iconAnchor: [12.5, 25], // Anchor point
+          popupAnchor: [0, -25] // Popup position
+      });
+
+      const marker = L.marker([lat, lon], { icon: busIcon }).addTo(map);
+      marker.bindPopup(location).openPopup();
+
+      // Close the modal when the close button is clicked
+      closeBtn.onclick = function() {
+          modal.style.display = 'none';
+          map.remove(); // Remove map instance
+          isMapOpen = false; // Reset map open state to false
+      };
+
+      // Close the modal when clicking outside the modal content
+      window.onclick = function(event) {
+          if (event.target == modal) {
+              modal.style.display = 'none';
+              map.remove(); // Remove map instance
+              isMapOpen = false; // Reset map open state to false
+          }
+      };
+  }
+});

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Console</title>
+    <link rel="stylesheet" href="/css/NavButtons.css">
+    <link rel="stylesheet" href="/css/Attendence_Css/AllAttendance.css">
+    <link rel="stylesheet" href="/css/Attendence_Css/AttendanceConsole.css">
+    <link rel="stylesheet" href="/css/Attendence_Css/Attendance-form-control.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.min.js"></script>
+
+</head>
+
+
+
+<body>
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loader"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="logo_item">
+            <!-- <i class="bx bx-menu" id="sidebarOpen"></i> -->
+            <img id="logo" src="" alt="Logo">
+            <!-- <div class="user_name" id="user_name"></div> -->
+        </div>
+
+        <div class="navbar_center">
+            <button onclick="window.location.href='/dashboard'"> <i class='bx' id="backButton"> <img
+                        src="/images/back.png" alt="Previous Icon"></i></button>
+            <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"> <img
+                        src="/images/homeicon.png" alt="Dashboard Icon"></i></button>
+            <button id="logoutButton"> <i class='bx' id="signoutButton"> <img src="/images/logout.png"
+                        alt="Signout Icon"></i></button>
+        </div>
+
+        <div class="navbar_content">
+            <!-- <i class="bi bi-grid"></i>
+      <i class='bx bx-bell'></i> -->
+        </div>
+    </nav>
+
+    <div class="adm-head">
+        <div class="button-container">
+            <h2>Attendance Console</h2>
+        </div>
+    </div>
+
+    <div class="cards-container">
+        <div class="card">
+            <button id="button1">
+                <div class="dotlottie-container">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/82fb7e83-3aa2-47ea-a258-cda4c1701d85/kGcPRkDTP7.lottie"
+                        background="transparent" speed="0.5" style="width: 200px;
+                        height: 236px;
+                        margin-left: 39px;" loop autoplay></dotlottie-player>
+                </div>
+                <h3>Enroll and Manage</h3>
+            </button>
+        </div>
+
+        <div class="card">
+            <button id="startCaptureBtn">
+                <div class="dotlottie-container">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/3196b5c9-9ce9-4b08-8b20-9f62f98b9387/67Rw9E7mtR.lottie"
+                        background="transparent" speed="1" style="width: 270px; height: 220px" loop
+                        autoplay></dotlottie-player>
+
+                </div>
+                <h3>Start Capturing</h3>
+            </button>
+        </div>
+
+        <div class="card">
+            <button id="attendanceBtn"> <!-- Give the button an ID -->
+                <div class="dotlottie-container">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/c2a33d91-19aa-402e-aa8d-b4a720f61f1b/zCx4UnouZl.lottie"
+                        background="transparent" speed="1" style="width: 270px; height: 220px" loop
+                        autoplay></dotlottie-player>
+                </div>
+                <h3>Daily Attendance</h3>
+            </button>
+        </div>
+
+        <div class="card">
+            <button id="attendanceSummaryButton">
+                <div class="dotlottie-container">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/0944d6da-e5c1-48e6-868f-be7c734ad6c9/cKrYqQyASe.lottie"
+                        background="transparent" speed="1" style="width: 250px; height: 230px" loop
+                        autoplay></dotlottie-player>
+                </div>
+                <h3>Attendance Summary</h3>
+            </button>
+        </div>
+
+
+    </div>
+
+
+    <!-- Overlay for selecting Add or Search Book -->
+    <div id="overlay1" class="overlay">
+        <div class="overlay-content-inner">
+            <h2>Enroll and Manage</h2>
+            <button id="closeAttendanceOverlay1" class="close-button">&times;</button>
+            <div class="button-container">
+                <div class="enrollAndManageCard">
+                    <span id="enrollFaceSpan">
+                        <img src="/images/enrollFace.gif" alt="">
+                        Enroll Face
+                    </span>
+                </div>
+                <div class="enrollAndManageCard">
+                    <span id="manageSpan">
+                        <img src="/images/manageFace.gif" alt="" style="height: 90px;">
+                        Manage
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="enrollFaceOverlay" class="overlay">
+        <div class="overlay-content-enroll-face">
+            <button id="" class="close-button">×</button>
+            <div class="overlay-inner">
+                <!-- Left Side: Animation -->
+                <div class="left-side-enroll-face">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/01001ef0-30f1-4ec2-8af1-7d69cb4d06c9/xYgMW0vtnd.lottie"
+                        background="transparent" speed="1" style="width: 300px; height: 350px" loop
+                        autoplay></dotlottie-player>
+                </div>
+                <!-- Right Side: Form -->
+                <div class="right-side-enroll-face">
+                    <h2>Enroll Face</h2>
+                    <form id="enrollFaceForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="enroll_category" name="category"
+                                    placeholder=" ">
+                                <span class="form-control-placeholder">Category</span>
+                                <div id="categorySuggestions" class="suggestions" style="width: 12rem;"></div>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="enroll_name" name="name" placeholder=" ">
+                                <span class="form-control-placeholder">Name</span>
+                                <div id="nameSuggestions" class="suggestions" style="width: 12rem;"></div>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="enroll_grId" name="grId" placeholder=" ">
+                                <span class="form-control-placeholder">Gr/Id</span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="enroll_section" name="section"
+                                    placeholder=" ">
+                                <span class="form-control-placeholder">Section</span>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="enroll_standard" name="standard"
+                                    placeholder=" ">
+                                <span class="form-control-placeholder">Standard</span>
+                            </div>
+                            <!--
+                            <div class="form-group">
+                                <select class="form-control" id="enroll_gender" name="gender" required>
+                                    <option value=""> </option>
+                                    <option value="MALE">Male</option>
+                                    <option value="FEMALE">Female</option>
+                                    <option value="OTHER">Other</option>
+                                </select>
+                                <span class="form-control-placeholder">Gender</span>
+                            </div> 
+                            -->
+                        </div>
+                        <!-- Image Selection for 5 Images -->
+                        <div class="form-row image-selection-row">
+                            <!-- Image Slot 1 -->
+                            <div class="image-slot">
+                                <label class="image-option-label">Image 1</label>
+                                <input type="file" id="imageUpload1" name="imageUpload1" accept="image/*"
+                                    class="image-option-input">
+                                <button type="button" id="startWebcam1" class="webcam-button">Start Webcam</button>
+                                <button type="button" id="captureImage1" class="webcam-button"
+                                    style="display: none;">Capture</button>
+                                <button type="button" id="stopWebcam1" class="webcam-button"
+                                    style="display: none;">Stop</button>
+                                <video id="webcam1" autoplay playsinline
+                                    style="display: none; width: 100%; max-width: 100px;"></video>
+                                <canvas id="webcamCanvas1" style="display: none;"></canvas>
+                                <img id="imagePreview1" src="" alt="Image 1 Preview"
+                                    style="display: none; width: 100%; max-width: 100px; margin-top: 5px;">
+                                <input type="hidden" id="imageData1" name="imageData1">
+                            </div>
+                            <!-- Image Slot 2 -->
+                            <div class="image-slot">
+                                <label class="image-option-label">Image 2</label>
+                                <input type="file" id="imageUpload2" name="imageUpload2" accept="image/*"
+                                    class="image-option-input">
+                                <button type="button" id="startWebcam2" class="webcam-button">Start Webcam</button>
+                                <button type="button" id="captureImage2" class="webcam-button"
+                                    style="display: none;">Capture</button>
+                                <button type="button" id="stopWebcam2" class="webcam-button"
+                                    style="display: none;">Stop</button>
+                                <video id="webcam2" autoplay playsinline
+                                    style="display: none; width: 100%; max-width: 100px;"></video>
+                                <canvas id="webcamCanvas2" style="display: none;"></canvas>
+                                <img id="imagePreview2" src="" alt="Image 2 Preview"
+                                    style="display: none; width: 100%; max-width: 100px; margin-top: 5px;">
+                                <input type="hidden" id="imageData2" name="imageData2">
+                            </div>
+                            <!-- Image Slot 3 -->
+                            <div class="image-slot">
+                                <label class="image-option-label">Image 3</label>
+                                <input type="file" id="imageUpload3" name="imageUpload3" accept="image/*"
+                                    class="image-option-input">
+                                <button type="button" id="startWebcam3" class="webcam-button">Start Webcam</button>
+                                <button type="button" id="captureImage3" class="webcam-button"
+                                    style="display: none;">Capture</button>
+                                <button type="button" id="stopWebcam3" class="webcam-button"
+                                    style="display: none;">Stop</button>
+                                <video id="webcam3" autoplay playsinline
+                                    style="display: none; width: 100%; max-width: 100px;"></video>
+                                <canvas id="webcamCanvas2" style="display: none;"></canvas>
+                                <img id="imagePreview3" src="" alt="Image 3 Preview"
+                                    style="display: none; width: 100%; max-width: 100px; margin-top: 5px;">
+                                <input type="hidden" id="imageData3" name="imageData3">
+                            </div>
+                            <!-- Image Slot 4 -->
+                            <div class="image-slot">
+                                <label class="image-option-label">Image 4</label>
+                                <input type="file" id="imageUpload4" name="imageUpload4" accept="image/*"
+                                    class="image-option-input">
+                                <button type="button" id="startWebcam4" class="webcam-button">Start Webcam</button>
+                                <button type="button" id="captureImage4" class="webcam-button"
+                                    style="display: none;">Capture</button>
+                                <button type="button" id="stopWebcam4" class="webcam-button"
+                                    style="display: none;">Stop</button>
+                                <video id="webcam4" autoplay playsinline
+                                    style="display: none; width: 100%; max-width: 100px;"></video>
+                                <canvas id="webcamCanvas4" style="display: none;"></canvas>
+                                <img id="imagePreview4" src="" alt="Image 4 Preview"
+                                    style="display: none; width: 100%; max-width: 100px; margin-top: 5px;">
+                                <input type="hidden" id="imageData4" name="imageData4">
+                            </div>
+                            <!-- Image Slot 5 -->
+                            <div class="image-slot">
+                                <label class="image-option-label">Image 5</label>
+                                <input type="file" id="imageUpload5" name="imageUpload5" accept="image/*"
+                                    class="image-option-input">
+                                <button type="button" id="startWebcam5" class="webcam-button">Start Webcam</button>
+                                <button type="button" id="captureImage5" class="webcam-button"
+                                    style="display: none;">Capture</button>
+                                <button type="button" id="stopWebcam5" class="webcam-button"
+                                    style="display: none;">Stop</button>
+                                <video id="webcam5" autoplay playsinline
+                                    style="display: none; width: 100%; max-width: 100px;"></video>
+                                <canvas id="webcamCanvas5" style="display: none;"></canvas>
+                                <img id="imagePreview5" src="" alt="Image 5 Preview"
+                                    style="display: none; width: 100%; max-width: 100px; margin-top: 5px;">
+                                <input type="hidden" id="imageData5" name="imageData5">
+                            </div>
+                        </div>
+                        <!-- Enroll Face Button -->
+                        <button class="createBtn" type="submit">
+                            <img src="../images/pie-chart.png" alt="">
+                            <span>Enroll</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Overlay for Manage -->
+    <div id="manageOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+
+            <button id="closeManageOverlay" class="close-button">×</button>
+            <img src="/images/manageFace.gif" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
+            <h2 class="overlay-search-head">Manage Enrollments</h2>
+            <div class="search-container">
+                <div class="form-Searchgroup">
+                    <div class="form-Searchgroup">
+                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                        <input type="text" class="form-control" id="manageSearchBar" name="manageSearch" placeholder=" "
+                            oninput="searchManageDetails()" style="width: 400px; height: 1.7rem !important;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search Enrollments...</span>
+                    </div>
+                    <button class="refreshButton" onclick="refreshManageData()" style="margin-top: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
+                </div>
+            </div>
+            <button class="export_registered_students"
+                onclick="exportTableToCSV('manageTable', 'Manage_Enrollments.csv')">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+            <div class="table-container">
+                <table id="manageTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Gr/Id</th>
+                            <th>Name</th>
+                            <th>Section</th>
+                            <th>Standard</th>
+                            <!-- <th>Enrollment Date</th> -->
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="manageTableBody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay for Today's Attendance -->
+    <div id="attendanceOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+
+            <button id="closeAttendanceOverlay" class="close-button">×</button>
+            <img src="/images/todaysAttendance.png" alt="Overlay Icon" class="overlay-icon">
+            <!-- Use a relevant icon -->
+            <h2 class="overlay-search-head">Today's Attendance</h2>
+
+            <div class="search-container">
+                <div class="form-Searchgroup">
+                    <div class="form-Searchgroup">
+                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                        <input type="text" class="form-control" id="attendanceSearchBar" name="attendanceSearch"
+                            placeholder=" " oninput="" style="width: 400px; height: 1.7rem !important;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search Attendance...</span>
+                    </div>
+                    <button class="refreshButton" onclick="refreshAttendanceData()" style="margin-top: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <button class="export_registered_students" onclick="exportTableToCSV('attendanceTable', 'Attendance.csv')">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+
+            <div class="table-container">
+                <table id="attendanceTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Record ID</th>
+                            <th>User ID <input type="text" id="filterUserID" oninput="applyFilters()"></th>
+                            <th>Name <input type="text" id="filterName" oninput="applyFilters()"></th>
+                            <th>Section <input type="text" id="filterSection" oninput="applyFilters()"></th>
+                            <th>Standard <input type="text" id="filterStandard" oninput="applyFilters()"></th>
+                            <th>Date <input type="date" id="filterDate" oninput="applyFilters()"></th>
+                            <th>In Time <input type="time" id="filterInTime" oninput="applyFilters()"></th>
+                            <th>Out Time <input type="time" id="filterOutTime" oninput="applyFilters()"></th>
+                            <th>Preview</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceTableBody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Overlay for Attendance Summary -->
+    <div id="attendanceSummaryOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeAttendanceSummaryOverlay" class="close-button">×</button>
+            <img src="/images/attendanceSummary.png" alt="Overlay Icon" class="overlay-icon">
+            <h2 class="overlay-search-head">Attendance Summary</h2>
+
+
+            <div class="search-container">
+                <div class="form-Searchgroup">
+                    <div class="form-Searchgroup">
+                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon" style="right: 25px;">
+                        <input type="text" class="form-control" id="attendanceSummarySearchBar"
+                            name="attendanceSummarySearch" placeholder=" " oninput=""
+                            style="width: 400px; height: 1.7rem !important;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search Summary...</span>
+                    </div>
+
+                    <button class="refreshButton" onclick="refreshAttendanceSummaryData()" style="margin-top: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
+                </div>
+            </div>           
+
+            <button class="export_registered_students"
+                onclick="exportTableToCSV('attendanceSummaryTable', 'Attendance_Summary.csv')">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+            <div class="table-container">
+                <table id="attendanceSummaryTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Record ID</th>
+                            <th>User ID <input type="text" id="summaryFilterUserID" oninput="applySummaryFilters()">
+                            </th>
+                            <th>Name <input type="text" id="summaryFilterName" oninput="applySummaryFilters()"></th>
+                            <th>Section <input type="text" id="summaryFilterSection" oninput="applySummaryFilters()">
+                            </th>
+                            <th>Standard <input type="text" id="summaryFilterStandard" oninput="applySummaryFilters()">
+                            </th>
+                            <th>Date <input type="date" id="summaryFilterDate" oninput="applySummaryFilters()"></th>
+                            <th>In Time <input type="time" id="summaryFilterInTime" oninput="applySummaryFilters()">
+                            </th>
+                            <th>Out Time <input type="time" id="summaryFilterOutTime" oninput="applySummaryFilters()">
+                            </th>
+                            <th>Preview</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceSummaryTableBody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="imagePreviewOverlay" class="overlay-search" style="display: none;">
+        <div class="overlay-content-search">
+            <button class="close-button"
+                onclick="document.getElementById('imagePreviewOverlay').style.display='none'">×</button>
+            <h2 class="overlay-search-head">Preview Images</h2>
+            <div style="display: flex; justify-content: space-evenly; align-items: center; margin-top: 20px;">
+                <div>
+                    <h4 style="text-align: center;">In Image</h4>
+                    <img id="previewInImage"
+                        style="max-width: 300px; max-height: 300px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                </div>
+                <div>
+                    <h4 style="text-align: center;">Out Image</h4>
+                    <img id="previewOutImage"
+                        style="max-width: 300px; max-height: 300px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- <div id="capturingOverlay" class="overlay-search" style="display: none;">
+        <div class="overlay-content-search">
+            <h2 class="overlay-search-head">Overlay 2</h2>
+            <button id="closeAttendanceOverlay2" class="close-button">&times;</button>
+
+            <button id="captureImageBtn">Capture Image</button>
+            <button id="stopCaptureBtn">Stop Capture</button>
+
+           
+            <video id="videoPreview" autoplay playsinline style="display: flex;"></video>
+            <canvas id="capturedCanvas" style="display: flex;"></canvas>
+
+            <div class="table-container">
+                <table id="feeCategoriesTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Record ID</th>
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th>Action</th>
+                            <th>Section</th>
+                            <th>Standard</th>
+                            <th>Date</th>
+                            <th>In Time</th>
+                            <th>Out Time</th>
+                            <th>Confidence</th>
+                        </tr>
+                    </thead>
+                    <tbody id="feeCategoriesTableBody">
+                       
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div> -->
+
+
+    <script src="/js/Inventory_js/All.js"></script>
+    <script src="/js/Universal_Components_JS/handle_session.js"></script>
+    <script src="/js/Universal_Components_JS/Helping_functions.js"></script>
+    <script src="/js/Attendance/Attendance_console.js"></script>
+    <script src="/js/Attendance/Attendance_enroll_face.js"></script>
+    <script src="/js/Attendance/Attendance_check_face.js"></script>
+    <script src="/js/Attendance/Attendance_reports.js"></script>
+
+</body>
+
+</html>

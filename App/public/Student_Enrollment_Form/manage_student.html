@@ -9,12 +9,14 @@
     <link rel="stylesheet" href="/css/Student_Enrollment_Form/manage_student_console.css">
     <link rel="stylesheet" href="/css/Student_Enrollment_Form/enrollment-form-control.css">
     <link rel="stylesheet" href="/css/Universal_Components/autoFill_student_details.css">
+    <link rel="stylesheet" href="/css/Student_Enrollment_Form/tcStructure.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 </head>
 
 <body>
+    <div id="manageStudentLoader" class="manage-student-loader"></div>
 
 
     <nav class="navbar">
@@ -58,6 +60,22 @@
         </div>
 
 
+        <div class="card">
+            <button id="updatePackage">
+                <div class="dotlottie-container">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/5974ccac-b8df-4488-868b-d772e0c2fa53/DcxhJUt0XY.lottie"
+                        background="transparent" speed="1" style="width: 257px;
+                        height: 208px;
+                        margin-bottom: 10px;" loop autoplay></dotlottie-player>
+
+                </div>
+                <h3>Update Student Package</h3>
+            </button>
+        </div>
+
+
 
         <div class="card">
             <button id="searchStudent">
@@ -71,6 +89,20 @@
                 <h3>Search Student</h3>
             </button>
         </div>
+
+        <div class="card">
+            <button id="generateTC">
+                <div class="dotlottie-container">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/2eeb8dcd-cd3a-487c-a31c-d3f8128d3359/mQAJqL1oA1.lottie"
+                        background="transparent" speed="1" style="width: 280px; height: 270px" loop
+                        autoplay></dotlottie-player>
+                </div>
+                <h3>Transfer Student(TC)</h3>
+            </button>
+        </div>
+
 
         <div class="card">
             <button id="deleteStudent">
@@ -88,24 +120,183 @@
 
     <div id="updateStudentOverlay" class="overlay">
         <div class="overlay-content">
+            <div class="icon-container">
+                <i><img class="topicon" src="/images/search.gif" alt="Search Icon"></i>
+            </div>
             <button id="closeUpdateStudentOverlay" class="close-button">&times;</button>
 
             <h2 class="overlay-title">SEARCH USING</h2>
 
             <!-- Dropdown for Section Selection -->
-            <select id="sectionSelect" class="section-dropdown">
-                <option value="primary">Primary</option>
-                <option value="preprimary">Pre-primary</option>
-            </select>
+            <div class="form-row">
+                <div class="form-group">
+                    <select id="sectionSelect" name="sectionSelect" class="form-control"
+                        style="text-align: center; width: 120px; background-color: white;">
+                        <option value="" disabled selected>Select Section</option>
+                        <option value="primary">Primary</option>
+                        <option value="pre_primary">Pre-primary</option>
+                    </select>
+                </div>
 
-            <!-- Input Field for Search -->
-            <input type="text" id="searchInput" class="search-input"
-                placeholder="Search by Name or GR No (Input Field)">
-                <div id="suggestions" class="suggestions"></div> 
+                <!-- Input Field for Search -->
+                <div class="form-group">
+                    <input type="text" id="searchInput" name="searchInput" class="form-control" placeholder=" ">
+                    <span class="form-control-placeholder">Search by Name or GR No</span>
+                    <div id="suggestions" class="suggestions"></div>
+                </div>
 
-            <button class="search-button">SEARCH</button>
+            </div>
+
+
+
+
+
+            <button type="submit" class="search-button">
+                <img src="/images/search.gif" alt="Search Button">
+                <span>Search</span>
+            </button>
         </div>
     </div>
+
+
+    <!-- Update Student Package Overlay -->
+    <div id="updatePackageOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeUpdatePackageOverlay" class="close-button">&times;</button>
+            <h2 class="overlay-search-head">UPDATE STUDENT PACKAGE</h2>
+
+            <div class="form-row">
+                <div class="search-container">
+                    <div class="form-Searchgroup">
+                        <img class="searchIcon" src="/images/search.gif" alt="Search Icon"
+                            style="right: 25px; left: 405px;">
+                        <input type="text" class="form-control" id="update_packagesearchStudentInput"
+                            name="studentSearch" placeholder=" " oninput="" style="width: 400px;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search by Name or GR Number</span>
+                    </div>
+
+                    <select id="dropdown1" class="form-control" style="width: 150px; margin-left: 10px;">
+                        <option value="primary">Primary</option>
+                        <option value="pre_primary">Pre-primary</option>
+                    </select>
+
+                    <!-- Second input field for standards with suggestion box -->
+                    <div class="form-group" style="margin-bottom: 5px;">
+                        <input type="text" class="form-control" id="update_packagestandard" placeholder="">
+                        <span class="form-control-placeholder">Class</span>
+                        <div id="update_packagestandardSuggestions" class="suggestions" style="width: 12.7rem;"></div>
+                    </div>
+
+                    <!-- Third input field for standards with suggestion box -->
+                    <div class="form-group" style="margin-bottom: 5px;">
+                        <input type="text" class="form-control" id="update_packagesDivision" placeholder="">
+                        <span class="form-control-placeholder">Division</span>
+                        <div id="update_packageDivisionSuggestions" class="suggestions" style="width: 12.7rem;"></div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table id="updatePackageTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" id="selectAllCheckbox" onclick="toggleSelectAll(this)" disabled>
+                                Select
+                            </th>
+                            <th>Id</th>
+                            <th>Grno</th>
+                            <th>Name</th>
+                            <th>Standard</th>
+                            <th>Package Breakup</th>
+                            <th>Total Package</th>
+                        </tr>
+                    </thead>
+                    <tbody id="updatePackageTableBody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <button id="nextButton" class="next-button" style="position: absolute;
+            bottom: 20px;
+            right: 20px;">Next</button>
+        </div>
+    </div>
+
+    <div id="updateStudentPackageOverlay" class="overlay">
+        <div class="overlay-content" style="max-width: 1300px;padding: 50px;">
+            <button id="closeUpdateStudentPackageOverlay" class="close-button">&times;</button>
+            <div class="overlay-inner">
+                <div class="left-side-package">
+                    <h2>Configure Package Components</h2>
+                    <h4 id="studentCount" style="color: green;"></h4>
+                    <!-- Combined section for displaying student count and class -->
+                    <form id="updatePackageForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="categoryNameInput" placeholder=" ">
+                                <span class="form-control-placeholder">Category</span>
+                                <div id="categorySuggestionsContainer" class="suggestions" style="width: 28.7rem;">
+                                </div>
+                                <!-- Suggestion container for category -->
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="classGradeInput" placeholder=" ">
+                                <span class="form-control-placeholder">Grade</span>
+                                <div id="gradeSuggestionsContainer" class="suggestions" style="width: 13rem;"></div>
+                                <!-- Suggestion container for grade -->
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="amountInput" placeholder=" ">
+                                <span class="form-control-placeholder">Amount</span>
+                                <div id="amountSuggestionsContainer" class="suggestions" style="width: 13rem;"></div>
+                                <!-- Suggestion container for amount -->
+                            </div>
+                        </div>
+
+                        <button type="button" class="generate-button" id="addToPackage">
+                            <img src="/images/addVendor.gif" alt="Generate TC">
+                            <span>Add to Package</span>
+                        </button>
+                    </form>
+
+                </div>
+
+                <div class="right-side-package">
+                    <table id="packageTable" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Grade</th>
+                                <th>Amount</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dynamic data will be inserted here -->
+                        </tbody>
+                    </table>
+
+
+                    <button type="button" class="generate-button" id="updatePackageButton" style="position: absolute;
+                    bottom: 1px;
+                    right: 35%;">
+                        <img src="/images/update.gif" alt="Generate TC">
+                        <span>Update</span>
+                    </button>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 
 
@@ -137,7 +328,7 @@
                         <img src="/images/filter.png" alt="Refresh Icon"> Filter
                     </button>
 
-                    <button class="refreshButton" onclick="refreshStudentsData()"
+                    <button class="refreshButton" onclick="fetchAndPopulateStudents()"
                         style="margin-top: 10px; margin-left: 10px;">
                         <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
                     </button>
@@ -174,7 +365,7 @@
         <div class="overlay-content" style="max-width: 1000px;top: 0;">
             <button id="closeFilterOverlay" class="close-button">&times;</button>
             <img src="/images/filter.gif" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
-            <h2 id="filterHeading" class="overlay-search-head">Filters for (section) section</h2> <!-- Dynamic heading -->
+            <h2 id="filterHeading" class="overlay-title">FILTER FOR (SECTION) SECTION</h2> <!-- Dynamic heading -->
             <p id="filterMessage"></p> <!-- Message indicating the selected section -->
             <div class="overlay-inner" style="justify-content: space-between;">
                 <div class="left-side">
@@ -186,10 +377,10 @@
                     <div class="reset-button-container">
                         <button id="previousFiltersButton" class="reset-button" onclick="applyPreviousFilters()"
                             disabled><img src="/images/return-to-the-past.png" alt="Refresh Icon">
-                            Previous 
+                            Previous
                         </button>
                         <button id="resetFiltersButton" class="reset-button" onclick="resetFilters()">
-                            <img src="/images/undo.png" alt="Refresh Icon"> Reset 
+                            <img src="/images/undo.png" alt="Refresh Icon"> Reset
                         </button>
                     </div>
                 </div>
@@ -207,11 +398,495 @@
                     <h3>Selected Filters</h3>
                     <div id="selectedFilters"></div>
                     <!-- Apply Button -->
-                    <button id="applyFiltersButton" class="apply-button" onclick="applyFilters()"><img src="/images/addVendor.gif" alt="Apply Icon"> Apply</button>
+                    <button id="applyFiltersButton" class="apply-button" onclick="applyFilters()"><img
+                            src="/images/addVendor.gif" alt="Apply Icon"> Apply</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Overlay for Generate TC -->
+    <div id="generateTCOverlay" class="overlay" style="z-index: 1;">
+        <div class="overlay-content-inner">
+            <h2>Generate TC </h2>
+            <button id="closeGenerateTCOverlay" class="close-button">&times;</button>
+            <div class="button-container">
+                <div class="option-card">
+                    <span id="generateTCButton">
+                        <img src="/images/generate.gif" alt="">
+                        Generate TC
+                    </span>
+                </div>
+                <div class="option-card">
+                    <span id="searchTCButton">
+                        <img src="/images/search.gif" alt="">
+                        Search TC
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Overlay for Generate TC Form -->
+    <div id="generateTCFormOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <img src="/images/generate.gif" alt="Overlay Icon" class="overlay-icon">
+            <h2 class="overlay-search-head">GENERATE TRANSFER CERTIFICATE</h2>
+            <button id="closeGenerateTCFormOverlay" class="close-button">&times;</button>
+
+            <form class="generate-tc-form">
+                <!-- Student Information -->
+                <div class="input-container">
+                    <h3><img src="/images/student.gif" alt="Student Icon" class="heading-icon">Student Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="studentName" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Student Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="motherName" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Mother's Name</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="date" class="form-control" id="dob" readonly>
+                            <span class="form-control-placeholder">DOB</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="placeOfBirth" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Place of Birth</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Identification Information -->
+                <div class="input-container">
+                    <h3><img src="/images/id-card.gif" alt="Identification Icon" class="heading-icon">Identification
+                        Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="nationality" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Nationality</span>
+                            <div id="nationalitySuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="religion" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Religion</span>
+                            <div id="religionSuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="category" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Category</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="caste" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Caste</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="aadharId" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Aadhar ID</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Academic Information -->
+                <div class="input-container">
+                    <h3><img src="/images/addbook.gif" alt="Academic Icon" class="heading-icon">Academic Information
+                    </h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="tc_grNo" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Gr No</span>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="tc_section" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Section</span>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="tc_class" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Current Class</span>
+                        </div>
+
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="saralId" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Saral ID</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="aaparId" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Aapar ID</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="penId" placeholder=" " readonly>
+                            <span class="form-control-placeholder">PEN ID</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="lastSchool" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Last School</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="date" class="form-control" id="dateOfAdmission" readonly>
+                            <span class="form-control-placeholder">Date of Admission</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="classOfAdmission" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Class of Admission</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transfer Information -->
+                <div class="input-container">
+                    <h3><img src="/images/transfer.gif" alt="Transfer Icon" class="heading-icon">Transfer Information
+                    </h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="tcNo" placeholder=" ">
+                            <span class="form-control-placeholder">TC NO</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="date" class="form-control" id="dateOfLeaving">
+                            <span class="form-control-placeholder">Date of Leaving</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="standardLeaving" placeholder=" ">
+                            <span class="form-control-placeholder">Standard when Leaving</span>
+                            <div id="standardLeavingSuggestion" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="reasonLeaving" placeholder=" ">
+                            <span class="form-control-placeholder">Reason of Leaving</span>
+                            <div id="reasonLeavingSuggestion" class="suggestions"></div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="progress" placeholder=" ">
+                            <span class="form-control-placeholder">Progress</span>
+                            <div id="progressSuggestion" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="conduct" placeholder=" ">
+                            <span class="form-control-placeholder">Conduct</span>
+                            <div id="conductSuggestion" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="result" placeholder=" ">
+                            <span class="form-control-placeholder">Result</span>
+                            <div id="resultSuggestion" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="remark" placeholder=" ">
+                            <span class="form-control-placeholder">Remark</span>
+                            <div id="remarkSuggestion" class="suggestions"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="button" class="generate-button" id="submitGenerateTCForm">
+                    <img src="/images/generate.gif" alt="Generate TC" style="height: 35px; width: 35px;">
+                    <span>Generate TC</span>
+                </button>
+
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Overlay for TC Preview -->
+    <div id="previewTCOverlay" class="overlay">
+        <div class="overlay-content-search">
+            <!DOCTYPE html>
+            <html lang="en">
+
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Flexible Print Layout</title>
+            </head>
+
+            <body class="Legal">
+                <div class="watermark">
+                    <img src="" alt="Watermark" class="watermark-img" id="watermark">
+                </div>
+
+                <div class="header">
+                    <div class="logo1-container">
+                        <img src="" alt="Logo 1" class="logo">
+                    </div>
+                    <div class="school-details-container">
+                        <div class="school-name-container">
+                            <h1>Tarangan English School</h1>
+                        </div>
+                        <div class="address-container">
+                            <p><br></p>
+                        </div>
+                        <div class="additional-details-container">
+                            <div class="left-container">
+                                <p>UDISE No: 123456789012</p>
+                                <p>Contact No: +91 9876543210</p>
+                            </div>
+                            <div class="right-container">
+                                <p>Board Index No: ABC123456789</p>
+                                <p>Email: info@taranganenglishschool.com</p>
+                            </div>
+                        </div>
+                        <div class="certificate-title-container">
+                            <h2>School Leaving Certificate</h2>
+                        </div>
+                    </div>
+                    <div class="logo2-container">
+                        <img src="" alt="Logo 2" class="logo">
+                    </div>
+                </div>
+                <div class="tc-content">
+                    <h4 style="margin: 0;"></h4>
+                    <table class="content-table">
+                        <thead>
+                        </thead>
+                        <tbody>
+                            <!-- Rows will be added here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="footer">
+                    <div class="authenticity-container">
+                        <p>Certified that the above information is in accordance with school Admission Register</p>
+                    </div>
+                    <div class="date-signature-container">
+                        <div class="date-container">
+                            <p></p>
+                            <p></p>
+                        </div>
+                        <div class="signature-container">
+                            <p>Signature</p>
+                        </div>
+                    </div>
+                    <div class="warning-container">
+                        <p>No changes shall be made to any entry in this certificate except by the title authority
+                            issuing it.<br>Any infringement of this certificate will be treated as a violation of school
+                            policy and may result in a penalty and legal action as per the applicable rules and
+                            regulations</p>
+                    </div>
+                </div>
+                <div class="print-options">
+                    <button onclick="printContent()" class="generate-button"><img src="/images/printer.gif"
+                            alt="Print TC">Print</button>
+                    <button onclick="window.location.href='/student_Enrollment_Form/manage_student'"
+                        class="generate-button"><img src="/images/cancel.png" alt="Cancel TC">Back</button>
+                </div>
+            </body>
+
+            </html>
+
+
+        </div>
+    </div>
+
+
+
+
+    <!-- Overlay for Search TC Form -->
+    <div id="searchTCFormOverlay" class="overlay">
+        <div class="overlay-content">
+            <div class="icon-container">
+                <i><img class="topicon" src="/images/search.gif" alt="Search Icon"></i>
+            </div>
+            <button id="closeSearchTCFormOverlay" class="close-button">&times;</button>
+
+            <h2 class="overlay-title">SEARCH USING</h2>
+
+            <!-- Dropdown for Section Selection -->
+            <div class="form-row">
+                <div class="form-group">
+                    <select id="selectsectionforTC" name="sectionSelect" class="form-control"
+                        style="text-align: center; width: 120px; background-color: white;">
+                        <option value="" disabled selected>Select Section</option>
+                        <option value="primary">Primary</option>
+                        <option value="pre_primary">Pre-primary</option>
+                    </select>
+                </div>
+
+                <!-- Input Field for Search -->
+                <div class="form-group">
+                    <input type="text" id="searchInputforTC" name="searchInput" class="form-control" placeholder=" ">
+                    <span class="form-control-placeholder">Search by Name or GR No</span>
+                    <div id="TCsuggestions" class="suggestions"></div>
+                </div>
+
+            </div>
+
+            <button type="submit" class="search-button" id="search-studentforTC">
+                <img src="/images/search.gif" alt="Search Button">
+                <span>Search</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Overlay for Search TC -->
+    <div id="searchTCOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeSearchTCOverlay" class="close-button">&times;</button>
+            <img src="/images/searchTc.gif" alt="Overlay Icon" class="overlay-icon"> <!-- Add your icon here -->
+            <h2 class="overlay-search-head">SEARCH TC</h2>
+            <div class="search-container">
+                <div class="form-Searchgroup">
+                    <div class="form-Searchgroup">
+                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon"
+                            style="right: 25px; left: 405px;">
+                        <input type="text" class="form-control" id="searchLeaveStudentInput" name="tcSearch"
+                            placeholder=" " oninput="searchLeaveStudent()" style="width: 400px;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search by student name</span>
+                    </div>
+                    <button class="refreshButton" onclick="refreshTCData()" style="margin-top: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
+                </div>
+            </div>
+            <button class="export_registered_students" onclick="exportTCTable()">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+            <div class="table-container">
+                <table id="tcTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>TC No</th>
+                            <th>Gr No</th>
+                            <th>Student Name</th>
+                            <th>Date of Leaving</th>
+                            <th>Standard of Leaving</th>
+                            <th>Reason of Leaving</th>
+                            <th>Progress</th>
+                            <th>Conduct</th>
+                            <th>Result</th>
+                            <th>Remark</th>
+                            <th>Issue Date</th>
+                            <th>Section</th>
+                            <th>Generation Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tcTablebody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="editTCForm" class="overlay">
+        <div class="overlay-content-edit-tc">
+            <button id="closeEditTCForm" class="close-button">&times;</button>
+            <div class="overlay-inner">
+                <div class="left-side-edit-tc">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/a2cd2dff-b291-4ef1-a597-8c585c75a24f/XeYfdUvvZd.lottie"
+                        background="transparent" speed="1" style="width: 300px; height: 300px" loop
+                        autoplay></dotlottie-player>
+                </div>
+                <div class="right-side-edit-tc">
+                    <h2>Edit TC</h2>
+                    <form id="editTCFormContent">
+                        <div class="tc-info-container">
+                            <div id="tcNoContainer"><strong>TC No -</strong> <span id="tc_edit_tcNoValue"></span></div>
+                            <div id="grNoContainer"><strong>Gr No -</strong> <span id="tc_edit_grNoValue"></span></div>
+                            <div id="studentNameContainer"><strong>Student Name -</strong> <span
+                                    id="tc_edit_studentNameValue"></span></div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="date" class="form-control" id="tc_edit_dateOfLeaving" name="dateOfLeaving"
+                                    placeholder=" ">
+                                <span class="form-control-placeholder">Date of Leaving</span>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="tc_edit_standardOfLeaving"
+                                    name="standardOfLeaving" placeholder=" ">
+                                <span class="form-control-placeholder">Standard of Leaving</span>
+                                <div id="edit_tc_standardOfLeavingSuggestion" class="suggestions"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="tc_edit_reasonOfLeaving"
+                                    name="reasonOfLeaving" placeholder=" ">
+                                <span class="form-control-placeholder">Reason of Leaving</span>
+                                <div id="edit_tc_reasonOfLeavingSuggestion" class="suggestions"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="tc_edit_progress" name="progress"
+                                    placeholder=" ">
+                                <span class="form-control-placeholder">Progress</span>
+                                <div id="edit_tc_progressSuggestion" class="suggestions"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="tc_edit_conduct" name="conduct"
+                                    placeholder=" ">
+                                <span class="form-control-placeholder">Conduct</span>
+                                <div id="edit_tc_conductSuggestion" class="suggestions"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="tc_edit_result" name="result"
+                                    placeholder=" ">
+                                <span class="form-control-placeholder">Result</span>
+                                <div id="edit_tc_resultSuggestion" class="suggestions"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="tc_edit_remark" name="remark"
+                                    placeholder=" ">
+                                <span class="form-control-placeholder">Remark</span>
+                                <div id="edit_tc_remarkSuggestion" class="suggestions"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="date" class="form-control" id="tc_edit_issueDate" name="issueDate"
+                                    placeholder=" ">
+                                <span class="form-control-placeholder">Issue Date</span>
+                            </div>
+
+                            <div class="form-group">
+                                <select class="form-control" id="tc_edit_generationStatus" name="generationStatus">
+                                    
+                                    <option value="ORIGINAL">ORIGINAL</option>
+                                    <option value="DUPLICATE">DUPLICATE</option>
+                                    <option value="TRIPLICATE">TRIPLICATE</option>
+                                </select>
+                                <span class="form-control-placeholder">Generation Status</span>
+                            </div>
+                        </div>
+
+
+                        <button type="button" class="edit-tc" id="updateTCButton">
+                            <img src="/images/update.gif" alt="Generate TC">
+                            <span>Update TC</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 
     <!-- Delete Student Overlay -->
@@ -219,7 +894,7 @@
         <div class="overlay-content-search">
             <button id="closeOverlayDelete" class="close-button">&times;</button>
             <img src="/images/delete_student.gif" alt="Overlay Icon" class="overlay-icon">
-            <h2 class="overlay-search-head">Delete Student</h2>
+            <h2 class="overlay-search-head">DELETE STUDENT</h2>
             <div class="delete-container">
                 <div class="search-container">
                     <div class="form-Searchgroup">
@@ -263,18 +938,22 @@
 
 
 
-
-
-
-
-
-
     <script src="/js/Inventory_js/All.js"></script>
+    <script src="/js/Universal_Components_JS/handle_session.js"></script>
+
     <script src="/js/Student_Enrollment_Form/manage_student.js"></script>
+    <script src="/js/Student_Enrollment_Form/transfer_certificate_search.js"></script>
+    <script src="/js/Student_Enrollment_Form/enrollment_update_package.js"></script>
     <script src="/js/Student_Enrollment_Form/enrollment_search_student.js"></script>
     <script src="/js/Student_Enrollment_Form/enrollment_delete_student.js"></script>
     <script src="/js/Student_Enrollment_Form/populate_update_student_form.js"></script>
+    <script src="/js/Student_Enrollment_Form/transfer_certificate.js"></script>
     <script src="/js/Universal_Components_JS/autoFill_student_details.js"></script>
+    <script src="/js/Student_Enrollment_Form/tc_structure.js"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 
 

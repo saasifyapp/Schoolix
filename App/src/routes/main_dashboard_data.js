@@ -20,56 +20,8 @@ const runQuery = (connection, query, params) => {
     });
 };
 
-// GET endpoint to fetch main dashboard data
-router.get('/main_dashboard_data', (req, res) => {
-    const counts = {};
-    const tableNames = ['pre_adm_registered_students', 'pre_adm_admitted_students', 'pre_adm_registered_teachers', 'pre_adm_admitted_teachers'];
 
-    const promises = tableNames.map(tableName => {
-        return runQuery(req.connectionPool, `SELECT COUNT(*) AS count FROM ${tableName}`, [])
-            .then(results => {
-                counts[tableName] = results[0].count;
-            })
-            .catch(error => {
-                console.error(`Error querying MySQL for table ${tableName}:`, error);
-                counts[tableName] = 0;
-            });
-    });
-
-    Promise.all(promises)
-        .then(() => res.json(counts))
-        .catch(error => res.status(500).json({ error: 'Error fetching counts from MySQL' }));
-});
-
-// GET endpoint to fetch main dashboard library data
-router.get('/main_dashboard_library_data', (req, res) => {
-    const counts = {};
-    const queries = {
-        totalBooks: 'SELECT COUNT(*) AS count FROM library_book_details',
-        memberCount: 'SELECT COUNT(*) AS count FROM library_member_details',
-        booksIssued: 'SELECT COUNT(*) AS count FROM library_transactions',
-        booksAvailable: 'SELECT SUM(available_quantity) AS count FROM library_book_details',
-        outstandingBooks: 'SELECT COUNT(*) AS count FROM library_transactions WHERE return_date < CURDATE()',
-        booksIssuedToday: 'SELECT COUNT(*) AS count FROM library_transaction_log WHERE transaction_date = CURDATE() AND transaction_type = "issue"',
-        booksReturnedToday: 'SELECT COUNT(*) AS count FROM library_transaction_log WHERE transaction_date = CURDATE() AND transaction_type = "return"',
-        penaltiesCollected: 'SELECT SUM(penalty_paid) AS count FROM library_transaction_log WHERE penalty_status = "paid"'
-    };
-
-    const promises = Object.keys(queries).map(key => {
-        return runQuery(req.connectionPool, queries[key], [])
-            .then(results => {
-                counts[key] = results[0].count;
-            })
-            .catch(error => {
-                console.error(`Error querying MySQL for ${key}:`, error);
-                counts[key] = 0;
-            });
-    });
-
-    Promise.all(promises)
-        .then(() => res.json(counts))
-        .catch(error => res.status(500).json({ error: 'Error fetching counts from MySQL' }));
-});
+///////////////// LOCATION PROMPT ///////////////////
 
 // POST endpoint to check confirmation status
 router.post('/check-confirmation-status', async (req, res) => {
@@ -117,6 +69,136 @@ router.post('/confirm-location', async (req, res) => {
     }
 });
 
+
+
+///////////////////////// ENDPOINT TO FETCH USER COUNTS (STUDENT,TEACHE, ADMINS )////////////////////)
+
+// Route to fetch user counts for main dashboard
+router.get('/fetch-user-counts-for-main-dashboard', async (req, res) => {
+    try {
+        // Define queries to get the count from both tables
+        const primaryQuery = `SELECT COUNT(*) AS count FROM primary_student_details WHERE is_active = 1`;
+        const prePrimaryQuery = `SELECT COUNT(*) AS count FROM pre_primary_student_details WHERE is_active = 1`;
+        const teacherQuery = `SELECT COUNT(*) AS count FROM teacher_details WHERE category = 'teacher' AND is_active = 1`;
+        const adminQuery = `SELECT COUNT(*) AS count FROM teacher_details WHERE category = 'admin' AND is_active = 1`;
+        const supportStaffQuery = `SELECT COUNT(*) AS count FROM teacher_details WHERE category = 'support_staff' AND is_active = 1`;
+
+        // Execute all queries concurrently
+        const primaryPromise = new Promise((resolve, reject) => {
+            req.connectionPool.query(primaryQuery, (error, results) => {
+                if (error) {
+                    console.error(`Error querying MySQL for primary student count:`, error);
+                    reject(error);
+                } else {
+                    resolve(results[0].count);
+                }
+            });
+        });
+
+        const prePrimaryPromise = new Promise((resolve, reject) => {
+            req.connectionPool.query(prePrimaryQuery, (error, results) => {
+                if (error) {
+                    console.error(`Error querying MySQL for pre-primary student count:`, error);
+                    reject(error);
+                } else {
+                    resolve(results[0].count);
+                }
+            });
+        });
+
+        const teacherPromise = new Promise((resolve, reject) => {
+            req.connectionPool.query(teacherQuery, (error, results) => {
+                if (error) {
+                    console.error(`Error querying MySQL for teacher count:`, error);
+                    reject(error);
+                } else {
+                    resolve(results[0].count);
+                }
+            });
+        });
+
+        const adminPromise = new Promise((resolve, reject) => {
+            req.connectionPool.query(adminQuery, (error, results) => {
+                if (error) {
+                    console.error(`Error querying MySQL for admin count:`, error);
+                    reject(error);
+                } else {
+                    resolve(results[0].count);
+                }
+            });
+        });
+
+        const supportStaffPromise = new Promise((resolve, reject) => {
+            req.connectionPool.query(supportStaffQuery, (error, results) => {
+                if (error) {
+                    console.error(`Error querying MySQL for support staff count:`, error);
+                    reject(error);
+                } else {
+                    resolve(results[0].count);
+                }
+            });
+        });
+
+        // Wait for all queries to complete
+        const [
+            primaryCount,
+            prePrimaryCount,
+            teacherCount,
+            adminCount,
+            supportStaffCount
+        ] = await Promise.all([
+            primaryPromise,
+            prePrimaryPromise,
+            teacherPromise,
+            adminPromise,
+            supportStaffPromise
+        ]);
+
+        // Combine the counts
+        const studentCount = primaryCount + prePrimaryCount;
+        const employeeCount = teacherCount + adminCount + supportStaffCount;
+
+        // Prepare the response
+        const response = {
+            Students: studentCount,
+            Teachers: teacherCount,
+            Admins: adminCount,
+            SupportStaff: supportStaffCount,
+            Employees: employeeCount
+        };
+
+        res.json(response);
+    } catch (error) {
+        console.error('Server error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+
+
+///////////////////////////////////// PIE CHART //////////////////////////////////////////////////
+
+// GET endpoint to fetch main dashboard data
+router.get('/main_dashboard_data', (req, res) => {
+    const counts = {};
+    const tableNames = ['pre_adm_registered_students', 'pre_adm_admitted_students', 'pre_adm_registered_teachers', 'pre_adm_admitted_teachers'];
+
+    const promises = tableNames.map(tableName => {
+        return runQuery(req.connectionPool, `SELECT COUNT(*) AS count FROM ${tableName}`, [])
+            .then(results => {
+                counts[tableName] = results[0].count;
+            })
+            .catch(error => {
+                console.error(`Error querying MySQL for table ${tableName}:`, error);
+                counts[tableName] = 0;
+            });
+    });
+
+    Promise.all(promises)
+        .then(() => res.json(counts))
+        .catch(error => res.status(500).json({ error: 'Error fetching counts from MySQL' }));
+});
+
 // GET endpoint to get student counts
 router.get('/student_counts', (req, res) => {
     const counts = {};
@@ -144,6 +226,214 @@ router.get('/student_counts', (req, res) => {
         .then(() => res.json(counts))
         .catch(error => res.status(500).json({ error: 'Error fetching counts from MySQL' }));
 });
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/////////////////////////////// LIBRARY DATA ///////////////////
+
+
+// GET endpoint to fetch main dashboard library data
+router.get('/main_dashboard_library_data', (req, res) => {
+    const counts = {};
+    const queries = {
+        totalBooks: 'SELECT COUNT(*) AS count FROM library_book_details',
+        memberCount: 'SELECT COUNT(*) AS count FROM library_member_details',
+        booksIssued: 'SELECT COUNT(*) AS count FROM library_transactions',
+        booksAvailable: 'SELECT SUM(available_quantity) AS count FROM library_book_details',
+        outstandingBooks: 'SELECT COUNT(*) AS count FROM library_transactions WHERE return_date < CURDATE()',
+        booksIssuedToday: 'SELECT COUNT(*) AS count FROM library_transaction_log WHERE transaction_date = CURDATE() AND transaction_type = "issue"',
+        booksReturnedToday: 'SELECT COUNT(*) AS count FROM library_transaction_log WHERE transaction_date = CURDATE() AND transaction_type = "return"',
+        penaltiesCollected: 'SELECT SUM(penalty_paid) AS count FROM library_transaction_log WHERE penalty_status = "paid"'
+    };
+
+    const promises = Object.keys(queries).map(key => {
+        return runQuery(req.connectionPool, queries[key], [])
+            .then(results => {
+                counts[key] = results[0].count;
+            })
+            .catch(error => {
+                console.error(`Error querying MySQL for ${key}:`, error);
+                counts[key] = 0;
+            });
+    });
+
+    Promise.all(promises)
+        .then(() => res.json(counts))
+        .catch(error => res.status(500).json({ error: 'Error fetching counts from MySQL' }));
+});
+
+///////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////// ATTENDANCE BAR GRAPH ////////////////////////////
+
+
+router.get('/fetch-attendance-data-for-main-dashboard', async (req, res) => {
+    try {
+      let daysCount = 6; // Tracks days, skipping Sundays
+      const sixDaysData = [];
+      let tempDate = new Date();
+  
+      while (sixDaysData.length < daysCount) {
+        if (tempDate.getDay() !== 0) { // Skip Sundays
+          const day = String(tempDate.getDate()).padStart(2, '0');
+          const month = String(tempDate.getMonth() + 1).padStart(2, '0');
+          const year = tempDate.getFullYear();
+          const formattedDate = `${day}-${month}-${year}`; // Format to DD-MM-YYYY
+          sixDaysData.push(formattedDate);
+        }
+        tempDate.setDate(tempDate.getDate() - 1);
+      }
+  
+      const formattedDates = sixDaysData.map(date => `STR_TO_DATE('${date}', '%d-%m-%Y')`).join(', ');
+  
+      const studentAndTeacherQuery = `
+          SELECT DATE_FORMAT(STR_TO_DATE(date_of_attendance, '%d-%m-%Y'), '%d-%m-%Y') AS formatted_date,
+                 COUNT(DISTINCT CASE WHEN section IN ('Primary', 'Pre-Primary') THEN user_id END) AS students_count,
+                 COUNT(DISTINCT CASE WHEN section IN ('Teacher', 'Admin') THEN user_id END) AS teachers_count
+          FROM attendance_user_logs
+          WHERE STR_TO_DATE(date_of_attendance, '%d-%m-%Y') IN (${formattedDates})
+          GROUP BY formatted_date
+          ORDER BY formatted_date DESC;
+      `;
+  
+      const visitorQuery = `
+          SELECT DATE_FORMAT(STR_TO_DATE(date_of_attendance, '%d-%m-%Y'), '%d-%m-%Y') AS formatted_date,
+                 COUNT(DISTINCT CONCAT(user_id, in_time)) AS visitors_count
+          FROM attendance_user_logs
+          WHERE section = 'Visitor'
+            AND STR_TO_DATE(date_of_attendance, '%d-%m-%Y') IN (${formattedDates})
+          GROUP BY formatted_date
+          ORDER BY formatted_date DESC;
+      `;
+  
+      // Execute both queries
+      req.connectionPool.query(studentAndTeacherQuery, [], (studentTeacherError, studentTeacherResults) => {
+        if (studentTeacherError) {
+          console.error('Database query failed', studentTeacherError);
+          return res.status(500).json({ error: 'Database query failed' });
+        }
+  
+        req.connectionPool.query(visitorQuery, [], (visitorError, visitorResults) => {
+          if (visitorError) {
+            console.error('Database query failed', visitorError);
+            return res.status(500).json({ error: 'Database query failed' });
+          }
+  
+          // Combine results from both queries by date
+          const combinedResults = studentTeacherResults.map(studentTeacherRow => {
+            const visitorRow = visitorResults.find(vRow => vRow.formatted_date === studentTeacherRow.formatted_date);
+            return {
+              date: studentTeacherRow.formatted_date,
+              students_count: studentTeacherRow.students_count,
+              teachers_count: studentTeacherRow.teachers_count,
+              visitors_count: visitorRow ? visitorRow.visitors_count : 0
+            };
+          });
+  
+          // Log counts to the console
+         // console.log(combinedResults);
+  
+          // Send the combined counts to the client
+          res.status(200).json(combinedResults);
+        });
+      });
+    } catch (error) {
+      console.error('Internal Server Error', error);
+      res.status(500).json({ error: 'Internal Server Error', details: error.message });
+    }
+  });
+
+
+
+/////////////////////////// TRANSPORT INSIGHTS CARDS DATA /////////////////////////////
+
+// GET endpoint to fetch main dashboard transport data
+router.get('/main_dashboard_transport_data', async (req, res) => {
+    const queries = {
+        get_no_of_vehicle: 'SELECT COUNT(DISTINCT vehicle_no) AS vehicle_count FROM transport_driver_conductor_details LIMIT 100',
+        get_no_of_drivers: 'SELECT COUNT(*) AS driver_count FROM transport_driver_conductor_details WHERE driver_conductor_type = "Driver"',
+        get_no_of_conductors: 'SELECT COUNT(*) AS conductor_count FROM transport_driver_conductor_details WHERE driver_conductor_type = "Conductor"',
+        get_no_of_distinct_routes: 'SELECT COUNT(DISTINCT route_shift_name) AS distinct_route_count FROM transport_route_shift_details WHERE route_shift_type = "route"',
+        get_no_of_distinct_shifts: 'SELECT COUNT(DISTINCT route_shift_name) AS distinct_shift_count FROM transport_route_shift_details WHERE route_shift_type = "shift"',
+        primary_passengers: 'SELECT COUNT(Grno) AS primaryPassengersCount FROM primary_student_details WHERE is_active = 1 AND transport_tagged IS NOT NULL',
+        pre_primary_passengers: 'SELECT COUNT(Grno) AS prePrimaryPassengersCount FROM pre_primary_student_details WHERE is_active = 1 AND transport_tagged IS NOT NULL',
+        teacher_passengers: 'SELECT COUNT(id) AS teacherPassengersCount FROM teacher_details WHERE is_active = 1 AND transport_tagged IS NOT NULL',
+        vehicle_details: 'SELECT vehicle_no, name, latitude, longitude FROM transport_driver_conductor_details',
+        get_shifts: 'SELECT DISTINCT shift_name FROM transport_schedule_details'
+    };
+
+    const counts = {};
+    const vehicleDetails = [];
+    const shifts = [];
+
+    try {
+        // Execute queries to fetch overall counts and vehicle details
+        const promises = Object.keys(queries).filter(key => key !== 'get_shifts').map(key => {
+            return runQuery(req.connectionPool, queries[key], [])
+                .then(results => {
+                    if (key === 'vehicle_details') {
+                        vehicleDetails.push(...results);
+                    } else {
+                        counts[key] = results[0].vehicle_count 
+                            ?? results[0].driver_count 
+                            ?? results[0].conductor_count 
+                            ?? results[0].distinct_route_count 
+                            ?? results[0].distinct_shift_count
+                            ?? results[0].primaryPassengersCount
+                            ?? results[0].prePrimaryPassengersCount
+                            ?? results[0].teacherPassengersCount;
+                    }
+                })
+                .catch(error => {
+                    console.error(`Error querying MySQL for ${key}:`, error);
+                    counts[key] = 0;
+                });
+        });
+
+        await Promise.all(promises);
+
+        // Fetch shift names
+        const shiftResults = await runQuery(req.connectionPool, queries.get_shifts, []);
+        const shiftNames = shiftResults.map(row => row.shift_name);
+        
+        // Fetch shift details for each shift name
+        const shiftPromises = shiftNames.map(shiftName => {
+            const query = 'SELECT vehicle_no, driver_name, students_tagged, available_seats FROM transport_schedule_details WHERE shift_name = ?';
+            return runQuery(req.connectionPool, query, [shiftName])
+                .then(results => {
+                    shifts.push({ shift_name: shiftName, details: results });
+                })
+                .catch(error => {
+                    console.error(`Error querying MySQL for shift details of ${shiftName}:`, error);
+                    shifts.push({ shift_name: shiftName, details: [] });
+                });
+        });
+
+        await Promise.all(shiftPromises);
+
+        counts.total_passengers = (
+            counts.primary_passengers +
+            counts.pre_primary_passengers +
+            counts.teacher_passengers
+        );
+
+        res.json({
+            counts,
+            vehicleDetails,
+            shifts
+        });
+    } catch (error) {
+        console.error('Error fetching transport data from MySQL:', error);
+        res.status(500).json({ error: 'Error fetching transport data from MySQL' });
+    }
+});
+
+/////////////////////// AUTOCREATE TABLES /////////////////////////////////////////
+
 
 
 // Endpoint to automatically create tables if they do not exist

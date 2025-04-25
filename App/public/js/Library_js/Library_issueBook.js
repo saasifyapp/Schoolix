@@ -58,7 +58,6 @@ function handleErrors(data) {
     }
 }
 
-// Call Settings endpoint to get issue-return interval
 document.addEventListener('DOMContentLoaded', () => {
     let libraryInterval = 3; // Default value in case the fetch fails
 
@@ -87,27 +86,41 @@ document.addEventListener('DOMContentLoaded', () => {
         const returnDateInput = document.getElementById('returnDate');
 
         const today = new Date();
-        const localOffset = today.getTimezoneOffset() * 60000; // Local offset in milliseconds
-        const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
-        const istToday = new Date(today.getTime() + localOffset + istOffset);
+        const istToday = convertUTCtoIST(today);
         const todayFormatted = istToday.toISOString().split('T')[0];
         issueDateInput.value = todayFormatted;
 
-        const returnDate = new Date(istToday);
-        returnDate.setDate(returnDate.getDate() + interval);
+        const returnDate = calculateReturnDate(istToday, interval);
         const returnDateFormatted = returnDate.toISOString().split('T')[0];
         returnDateInput.value = returnDateFormatted;
 
         issueDateInput.addEventListener('change', function() {
             const issueDate = new Date(issueDateInput.value);
-            const istIssueDate = new Date(issueDate.getTime() + localOffset + istOffset);
-            const returnDate = new Date(istIssueDate);
-            returnDate.setDate(returnDate.getDate() + interval);
+            const istIssueDate = convertUTCtoIST(issueDate);
+            const returnDate = calculateReturnDate(istIssueDate, interval);
             const returnDateFormatted = returnDate.toISOString().split('T')[0];
             returnDateInput.value = returnDateFormatted;
         });
     }
+
+    // Function to convert UTC date to IST
+    function convertUTCtoIST(date) {
+        const offsetIST = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
+        const istDate = new Date(date.getTime() + offsetIST);
+        return istDate;
+    }
+
+    // Function to calculate return date considering Sundays
+    function calculateReturnDate(startDate, interval) {
+        let returnDate = new Date(startDate);
+        returnDate.setDate(returnDate.getDate() + interval);
+        if (returnDate.getDay() === 0) { // Sunday
+            returnDate.setDate(returnDate.getDate() + 1);
+        }
+        return returnDate;
+    }
 });
+
 
 // Handle the submission of the additional info form
 document.getElementById('additionalInfoForm').addEventListener('submit', function(event) {

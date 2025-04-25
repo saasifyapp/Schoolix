@@ -105,11 +105,12 @@ function collectAcademicInformation() {
         admissionDate: formattedAdmissionDate,
         standard: document.getElementById('standard').value.trim(),
         division: document.getElementById('division').value.trim(),
+        classOfAdmission: document.getElementById('class_of_admission').value.trim(), // Added new field
         saralId: document.getElementById('saralId').value.trim(),
         aaparId: document.getElementById('aaparId').value.trim(),
         penId: document.getElementById('penId').value.trim(),
         lastSchoolAttended: document.getElementById('lastSchoolAttended').value.trim(),
-        classCompleted: document.getElementById('classCompleted').value.trim(),
+        last_school_class_completed: document.getElementById('classCompleted').value.trim(),
         percentage: document.getElementById('percentage').value.trim(),
         newAdmission: document.getElementById('newAdmission').checked // Capture checkbox status
     };
@@ -202,7 +203,7 @@ function collectTransportInformation() {
             transport_tagged: document.getElementById('vehicleRunning').value.trim(), // Assuming 'vehicleRunning' is now 'transport_tagged'
             transport_pickup_drop: document.getElementById('pickDropAddress').value.trim(), // Assuming 'pickDropAddress' is 'transport_pickup_drop'
             vehicleDetails: document.getElementById('vehicleInfo')
-                ? document.getElementById('vehicleInfo').innerText.trim()
+                ? document.getElementById('vehicleRunning').innerText.trim()
                 : null,
             noVehicleFound: document.getElementById('noVehicleFound').checked
         };
@@ -399,7 +400,58 @@ document.getElementById('guardian-next').addEventListener('click', function () {
 
         document.getElementById('guardian-information').style.display = 'none';
         document.getElementById('academic-information').style.display = 'block';
-    }
+    } 
+});
+
+
+// Add event listener for Local Guardian radio buttons to clear fields when "No" is selected
+const localGuardianRadios = document.querySelectorAll('input[name="localGuardianNeeded"]');
+localGuardianRadios.forEach(radio => {
+    radio.addEventListener('change', function () {
+        if (this.value === 'no') {
+            const localGuardianFields = [
+                'guardianName',
+                'guardianContact',
+                'guardianRelation',
+                'guardian_fullAddress',
+                'guardianAddressLandmark',
+                'guardianpinCode',
+            ];
+
+            localGuardianFields.forEach(fieldId => {
+                const inputElement = document.getElementById(fieldId);
+                if (inputElement) {
+                    inputElement.value = ''; // Clear the field value
+                }
+            });
+        }
+    });
+});
+
+// Add event listener for Transport radio buttons to clear fields when "No" is selected
+const transportRadios = document.querySelectorAll('input[name="transportNeeded"]');
+transportRadios.forEach(radio => {
+    radio.addEventListener('change', function () {
+        if (this.value === 'No') {
+            const transportFields = [
+                'pickDropAddress',
+                'vehicleRunning',
+            ];
+
+            transportFields.forEach(fieldId => {
+                const inputElement = document.getElementById(fieldId);
+                if (inputElement) {
+                    inputElement.value = ''; // Clear the field value
+                }
+            });
+
+            // Additional: Hide the transport details section when 'No' is selected
+            toggleTransportDetails(false);
+        } else if (this.value === 'Yes') {
+            // Show the transport details section when 'Yes' is selected
+            toggleTransportDetails(true);
+        }
+    });
 });
 
 document.getElementById('academic-next').addEventListener('click', function () {
@@ -412,6 +464,7 @@ document.getElementById('academic-next').addEventListener('click', function () {
         { id: 'admissionDate', label: 'Admission Date' },
         { id: 'standard', label: 'Standard' },
         { id: 'division', label: 'Division' },
+        { id: 'class_of_admission', label: 'Class of Admission' },
     ];
 
     // Validate each field
@@ -556,7 +609,6 @@ document.getElementById('transport-next').addEventListener('click', function () 
             { id: 'transportStandard', label: 'Standard' },
             { id: 'transportDivision', label: 'Division' },
             { id: 'pickDropAddress', label: 'Pick/Drop Address' },
-            { id: 'vehicleRunning', label: 'Vehicle Running' }
         ];
 
         // Validate each transport-related field
@@ -569,53 +621,49 @@ document.getElementById('transport-next').addEventListener('click', function () 
         });
 
         // Validation for transport information
-        const noVehicleFound = document.getElementById('noVehicleFound').checked;
+        const noVehicleFoundCheckbox = document.getElementById('noVehicleFound');
         const vehicleRunningField = document.getElementById('vehicleRunning');
         const vehicleRunning = vehicleRunningField.value.trim();
 
-        if (noVehicleFound) {
-            // If "No Vehicle Found" is checked, ensure "Vehicle Running" is empty
-            if (vehicleRunning !== "") {
-                // Clear the vehicle running field if it's not empty
-                vehicleRunningField.value = "";
-                console.log("Vehicle Running field cleared as 'No Vehicle Found' is checked.");
-            }
-            // Skip further validation for "Vehicle Running"
-            isFormValid = true;
+        // Validate the checkbox status and vehicle running field based on your new rules
+        if ((noVehicleFoundCheckbox.checked && vehicleRunning === "") || (!noVehicleFoundCheckbox.checked && vehicleRunning !== "")) {
+            // This condition passes as per the user's new rule
         } else {
-            // If "No Vehicle Found" is not checked, validate "Vehicle Running"
-            if (!vehicleRunning) {
-                missingFields.push('Vehicle Running (Specify if no vehicle is found)');
-                isFormValid = false; // Mark form as invalid
+            // If checked and has value OR unchecked and empty
+            isFormValid = false;
+            if (noVehicleFoundCheckbox.checked && vehicleRunning !== "") {
+                missingFields.push('Vehicle Running should be empty if "No Vehicle Found" is checked.');
+            }
+            if (!noVehicleFoundCheckbox.checked && vehicleRunning === "") {
+                missingFields.push('Vehicle Running must be specified. If "No Vehicle Found", please check the checkbox.');
             }
         }
-
-
     }
 
-   // If the form is invalid, show an alert with the missing fields
-   if (!isFormValid) {
-    let errorContent = '';
+    // If the form is invalid, show an alert with the missing fields
+    if (!isFormValid) {
+        let errorContent = '';
 
-    if (errorMessage) {
-        errorContent = `<p>${errorMessage}</p>`;
+        if (errorMessage) {
+            errorContent = `<p>${errorMessage}</p>`;
+        }
+
+        if (missingFields.length > 0) {
+            errorContent += `<p>The following fields are required:</p><ul>${missingFields.map(field => `<li>${field}</li>`).join('')}</ul>`;
+        }
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Incomplete Form',
+            html: errorContent,
+        });
+        return; // Stop execution if form is invalid
     }
-
-    if (missingFields.length > 0) {
-        errorContent += `<p>The following fields are required:</p><ul>${missingFields.map(field => `<li>${field}</li>`).join('')}</ul>`;
-    }
-
-    Swal.fire({
-        icon: 'error',
-        title: 'Incomplete Form',
-        html: errorContent,
-    });
-    return; // Stop execution if form is invalid
-}
 
     // If form is valid, proceed to the next section
     if (isFormValid) {
-        console.log(formData);
+        // Assuming formData is defined somewhere before
+        console.log('Form Data:', formData);
         collectTransportInformation(); // Collect transport data
         populateReviewValues(); // Populate review section with collected data
 
@@ -816,6 +864,7 @@ function populateReviewValues() {
     setField("review-grNo", academicInfo.grNo);
     setField("review-standard", academicInfo.standard);
     setField("review-division", academicInfo.division);
+    setField("review-classofAdmission", academicInfo.classOfAdmission);
     setField("review-saralId", academicInfo.saralId);
     setField("review-aaparId", academicInfo.aaparId);
     setField("review-penId", academicInfo.penId);
@@ -832,7 +881,7 @@ function populateReviewValues() {
     } else {
         previousSchoolDetails.style.display = "block"; // Show previous school details
         setField("review-lastSchool", academicInfo.lastSchoolAttended || "N/A");
-        setField("review-classCompleted", academicInfo.classCompleted || "N/A");
+        setField("review-classCompleted", academicInfo.last_school_class_completed || "N/A");
         setField("review-percentage", academicInfo.percentage || "N/A");
     }
 
@@ -978,26 +1027,54 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("review-next").addEventListener("click", function (event) {
         event.preventDefault(); // Prevent the default button behavior
 
-        // Validate that all consents are checked
-        const allChecked = validateConsents();
+        const formMode = document.getElementById('formMode')?.value || '';
 
-        if (!allChecked) {
-            // Display an alert if any checkbox is not checked
-            Swal.fire({
-                title: "Incomplete Consent",
-                text: "Please ensure all consents are checked before proceeding.",
-                icon: "warning",
-                confirmButtonText: "OK"
-            });
-            return; // Prevent submission
+        if (formMode === 'insert') {
+            handleInsertMode();
+        } else if (formMode === 'update') {
+            handleUpdateMode();
+        } else {
+            handleInvalidMode();
         }
 
-        // If all consents are checked, proceed with collectConsent and form submission
-        collectConsent();
-        //Submit all the form data
-        submitForm(); 
+        console.log("Current mode:", formMode);
     });
 });
+
+function handleInsertMode() {
+    // Validate that all consents are checked
+    const allChecked = validateConsents();
+    if (!allChecked) {
+        // Display an alert if any checkbox is not checked
+        Swal.fire({
+            title: "Incomplete Consent",
+            text: "Please ensure all consents are checked before proceeding.",
+            icon: "warning",
+            confirmButtonText: "OK"
+        });
+        return; // Prevent submission
+    }
+
+    // If all consents are checked, proceed with collectConsent and form submission
+    collectConsent();
+    submitForm('/submitEnrollmentForm', 'Form submitted successfully!');
+}
+
+function handleUpdateMode() {
+    // Optional: collect consent if consents don’t change on update
+    collectConsent();
+    submitForm('/updateStudentDetails', 'Student details updated successfully!', true);
+}
+
+function handleInvalidMode() {
+    // Handle invalid form mode
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Invalid form mode',
+        confirmButtonText: 'OK'
+    });
+}
 
 // Function to validate consents
 function validateConsents() {
@@ -1024,7 +1101,7 @@ function collectConsent() {
     const consents = [
         { id: "consent-policies", text: "I agree to the School Policies" },
         { id: "consent-photo", text: "I consent to Photo/Video use in School Activities" },
-        { id: "consent-trips", text: " I consent to Participate in Field Trips and Extracurricular Activities" },
+        { id: "consent-trips", text: "I consent to Participate in Field Trips and Extracurricular Activities" },
         { id: "consent-medical", text: "I consent to Emergency Medical Treatment" },
         { id: "consent-accuracy", text: "Declaration of Information Accuracy" },
         { id: "consent-fees", text: "Agreement to Pay Fees as per the chosen plan" },
@@ -1036,7 +1113,7 @@ function collectConsent() {
         .map(consent => consent.text) // Get the text of each selected consent
         .join(", "); // Combine the texts into a comma-separated string
 
-          // Ensure that formData.consent is initialized
+    // Ensure that formData.consent is initialized
     if (!formData.consent) {
         formData.consent = {};
     }
@@ -1046,14 +1123,22 @@ function collectConsent() {
     console.log(formData);
 }
 
-function submitForm() {
+// Reusable submit function
+function submitForm(endpoint, successMessage, isUpdate = false) {
     // Show the loading animation
     const overlay = document.getElementById('loadingOverlay');
     const loadingText = document.getElementById('loadingText');
     overlay.style.visibility = 'visible';
 
     // Steps to display
-    const steps = [
+    const steps = isUpdate ? [
+        'Updating student information...',
+        'Updating guardian information...',
+        'Updating academic information...',
+        'Updating fees information...',
+        'Updating transport information...',
+        'Updating consent...'
+    ] : [
         'Submitting student information...',
         'Submitting guardian information...',
         'Submitting academic information...',
@@ -1078,18 +1163,17 @@ function submitForm() {
     const minimumLoadingTime = 6000; // 6 seconds
     const startTime = Date.now();
 
-    fetch('/submitEnrollmentForm', {
+    fetch(endpoint, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
     })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) throw new Error(`Server error: ${response.status}`);
+            return response.json();
+        })
         .then(data => {
-            if (data.error) {
-                throw new Error(data.error); // Trigger the error handler
-            }
+            if (data.error) throw new Error(data.error);
 
             // Calculate remaining time for the animation
             const elapsedTime = Date.now() - startTime;
@@ -1099,16 +1183,39 @@ function submitForm() {
                 // Hide the loading animation
                 overlay.style.visibility = 'hidden';
 
-                // Display success alert
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Form submitted successfully!',
-                    confirmButtonText: 'OK'
-                });
+                if (isUpdate && data.changes) {
+                    let changeDetails = '<p>Changes made:</p><ul style="text-align: left; margin: 0; padding: 0 0 0 20px;">';
+                    for (const [key, value] of Object.entries(data.changes)) {
+                        changeDetails += `<li style="margin-bottom: 10px;"><b>${key}</b>: ${value.old} → ${value.new}</li>`;
+                    }
+                    changeDetails += '</ul>';
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        html: `${successMessage}<br>${changeDetails}`,
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            popup: 'swal-wide'
+                        }
+                    }).then(() => {
+                        window.location.href = '/student_Enrollment_Form/manage_student';
+                    });
+                } else {
+                    // Display success alert for non-update submissions
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: successMessage,
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = '/student_Enrollment_Form/manage_student';
+                    });
+                }
             }, remainingTime); // Ensure animation lasts at least 6 seconds
         })
         .catch(error => {
+            console.error('Submission error:', error);
+
             // Hide the loading animation immediately on error
             overlay.style.visibility = 'hidden';
 
@@ -1121,3 +1228,11 @@ function submitForm() {
             });
         });
 }
+
+const swalStyles = document.createElement('style');
+swalStyles.innerHTML = `
+    .swal-wide {
+        width: auto !important;
+    }
+`;
+document.head.appendChild(swalStyles);
