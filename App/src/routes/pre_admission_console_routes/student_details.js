@@ -28,7 +28,7 @@ router.post('/submit', (req, res) => {
             res.status(500).send('Error inserting data');
             return;
         }
-        console.log('Inserted ' + result.affectedRows + ' row(s)');
+        //console.log('Inserted ' + result.affectedRows + ' row(s)');
         res.status(200).send('Data inserted successfully');
     });
 });
@@ -116,7 +116,7 @@ router.post("/move-to-admitted", (req, res) => {
             return;
         }
         
-        console.log("Student admitted successfully:", updateResult);
+        //console.log("Student admitted successfully:", updateResult);
         res.status(200).send("Student admitted successfully");
     });
 });
@@ -141,7 +141,7 @@ router.delete("/remove-student", (req, res) => {
             res.status(404).send("Student not found");
             return;
         }
-        console.log("Student removed:", result);
+        //console.log("Student removed:", result);
         res.status(200).send("Student removed successfully");
     });
 
@@ -222,7 +222,7 @@ router.delete("/remove-adm-student", (req, res) => {
             res.status(404).send("Student not found");
             return;
         }
-        console.log("Student removed:", result);
+        //console.log("Student removed:", result);
         res.status(200).send("Student removed successfully");
     });
 

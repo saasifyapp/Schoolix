@@ -261,7 +261,7 @@ async function fetchTcSchoolDetails(data, connection) {
     //console.log('Parameters:', [loginName, schoolName]);
 
     return new Promise((resolve, reject) => {
-        connection.query(sql, [loginName, schoolName], (error, results) => {
+        connection_auth.query(sql, [loginName, schoolName], (error, results) => {
             if (error) {
                 return reject(error);
             }
@@ -292,7 +292,7 @@ async function deactivateStudent(data, connection) {
         throw new Error("Invalid section parameter");
     }
 
-    const query = `UPDATE ${tableName} SET is_active = 1 WHERE Grno = ?`;
+    const query = `UPDATE ${tableName} SET is_active = 0 WHERE Grno = ?`;
     
     //console.log('SQL Query:', query);
     //console.log('Parameters:', [grno]);
@@ -331,7 +331,7 @@ async function deleteAndroidUser(data, connection) {
     //console.log('Parameters:', [grno]);
 
     return new Promise((resolve, reject) => {
-        connection.query(fetchUidQuery, [grno], (error, results) => {
+        connection_auth.query(fetchUidQuery, [grno], (error, results) => {
             if (error) {
                 return reject(error);
             }
@@ -346,7 +346,7 @@ async function deleteAndroidUser(data, connection) {
             //console.log('SQL Query (delete):', deleteQuery);
             //console.log('Parameters:', [appUid]);
 
-            connection.query(deleteQuery, [appUid], deleteError => {
+            connection_auth.query(deleteQuery, [appUid], deleteError => {
                 if (deleteError) {
                     return reject(deleteError);
                 }

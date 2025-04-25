@@ -21,7 +21,7 @@ router.post('/submit_teacher', (req, res) => {
             res.status(500).send('Internal Server Error');
             return;
         }
-        console.log('Inserted ' + result.affectedRows + ' row(s)');
+        //console.log('Inserted ' + result.affectedRows + ' row(s)');
         res.status(200).send('Data inserted successfully');
     });
 });
@@ -64,7 +64,7 @@ router.post("/move-to-admitted-teacher", (req, res) => {
             return res.status(404).send("Teacher not found");
         }
 
-        console.log("Teacher admitted successfully:", updateResult);
+        //console.log("Teacher admitted successfully:", updateResult);
         res.status(200).send("Teacher admitted successfully");
     });
 });
@@ -101,7 +101,7 @@ router.delete("/remove-teacher", (req, res) => {
             // If no teacher was deleted (i.e., teacher not found), send a 404 response
             return res.status(404).send("Teacher not found");
         }
-        console.log("Teacher removed:", result);
+        //console.log("Teacher removed:", result);
         res.status(200).send("Teacher removed successfully");
     });
 });
@@ -152,7 +152,7 @@ router.delete("/remove-adm-teacher", (req, res) => {
             // If no teacher was deleted (i.e., teacher not found), send a 404 response
             return res.status(404).send("Teacher not found");
         }
-        console.log("Teacher removed:", result);
+        //console.log("Teacher removed:", result);
         res.status(200).send("Teacher removed successfully");
     });
 });
