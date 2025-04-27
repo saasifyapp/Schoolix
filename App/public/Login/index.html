@@ -45,10 +45,17 @@
         </div>
     </div>
     <footer>
-        <p>&copy; 2024 SAASIFYAPPS. All rights reserved.</p>
+        <p>&copy; <span id="current-year"></span> SAASIFYAPPS. All rights reserved.</p>
     </footer>
 
     <script src="../js/Login/login.js"></script>
+    <script>
+            // Get the current year
+    const currentYear = new Date().getFullYear();
+    
+    // Set the current year to the span with id 'current-year'
+    document.getElementById('current-year').textContent = currentYear;
+    </script>
 </body>
 
 </html>
