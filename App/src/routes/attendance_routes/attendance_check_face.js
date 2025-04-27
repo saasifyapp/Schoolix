@@ -43,7 +43,7 @@ router.post('/retrieve-stored-embeddings', async (req, res) => {
             });
 
             // Send stored embeddings to FastAPI server
-            fetch('http://localhost:8000/store-retrieve-embeddings', {
+            fetch('https://scaling-happiness-69vj59jvppvrf4rwp-8000.app.github.dev/store-retrieve-embeddings', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(storedEmbeddings)
@@ -88,7 +88,7 @@ router.post("/check-user-face-existence", async (req, res) => {
 
 
     try {
-        const response = await fetch('http://localhost:8000/embedd-live-face', {
+        const response = await fetch('https://scaling-happiness-69vj59jvppvrf4rwp-8000.app.github.dev/embedd-live-face', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ image: image }) // Send the original base64 string to FastAPI
