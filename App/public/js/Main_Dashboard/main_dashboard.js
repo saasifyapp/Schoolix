@@ -1019,7 +1019,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-////////////////////// CALENDAR VISUALS ///////////////
+////////////////////// CALENDAR OVERLAY ///////////////
 
 document.addEventListener("DOMContentLoaded", function() {
   const overlay = document.getElementById("calendar_overlay");
@@ -1122,9 +1122,11 @@ document.addEventListener("DOMContentLoaded", function() {
         function convertExcelDate(excelDate) {
           if (typeof excelDate === 'number') {
             // Convert serial date, where base date is January 1, 1900
-            return moment(new Date(1899, 11, 30 + excelDate)).format('DD-MM-YYYY');
+            const utcDate = new Date(1899, 11, 30 + excelDate); // Correct base date for Excel with serial number
+            const istDate = moment.utc(utcDate).utcOffset('+05:30'); // Correctly adjust to IST
+            return istDate.format('DD-MM-YYYY');
           } else if (typeof excelDate === 'string') {
-            // Return as-is if already string
+            // If already a string format, pass as-is
             return excelDate;
           }
           return "Invalid Date";
