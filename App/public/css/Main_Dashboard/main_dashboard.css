@@ -1290,48 +1290,134 @@ body.dark {
 
 /* --------------- CALENDAR OVERLAY ----------    */
 
-/* CSS for overlay heading */
 .overlay-heading {
     text-align: center;
     font-size: 24px;
     margin-bottom: 20px;
     color: #707070;
-  }
+}
 
+.dotlottie-container {
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    margin: auto; /* Ensure it takes remaining space */
+}
 
-/* CSS for calendar message */
 .calendar-message {
-    text-align: left; /* Align the text to the left */
+    text-align: left;
     margin-bottom: 20px;
-    font-size: 18px;
+    font-size: 16px;
     color: #333;
-    flex-grow: 1; /* Allow it to grow and fill available space */
-    margin-left: 20%; /* Add left margin to ensure proper alignment */
-  }
+    flex-grow: 1;
+    margin-left: 0%;
+}
 
 .calendar-message p {
-    margin: 10px 0; /* Add gap between the steps */
-  }
+    margin: 10px 0;
+}
 
-  /* CSS for overlay bottom */
-  .overlay-bottom {
+.table-container {
+    height: 100px; /* Increase height for the table container */
+    margin-top: 0.725rem;
+    border-radius: 10px 10px 0 0;
+}
+
+.styled-table {
+    border-collapse: collapse;
+    width: 100%;
+    box-shadow: 0 0 0 1px #dddddd;
+    margin: auto;
+    animation: fadeUp 0.5s ease-in-out;
+    animation-delay: 0.4s;
+    animation-fill-mode: backwards;
+}
+
+.styled-table th,
+.styled-table td {
+    border: 1px solid #dddddd;
+    text-align: center;
+    padding: 0.5rem;
+    box-sizing: border-box;
+    font-size: 12px; /* Reduce font size */
+}
+
+.styled-table th {
+    background-color: lightblue;
+    color: black;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.styled-table td {
+    border: 1px solid #dddddd;
+    padding: 0px;
+    text-align: center;
+    height: 50px;
+    overflow: hidden;
+}
+
+.styled-table td button {
+    max-height: 100%;
+}
+
+.styled-table tr {
+    background-color: #fff;
+}
+
+.styled-table tr:hover {
+    background-color: #D6DBDF;
+}
+
+.styled-table tr td {
+    transition: background-color 0.3s ease;
+}
+
+.overlay-bottom {
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin-top: auto; /* Make sure it sticks to the bottom */
-  }
-  
-  /* CSS for individual buttons */
-  .overlay-btn {
-    background-color: #4CAF50;
-    color: white;
+    margin-top: auto;
+    margin-bottom: 20px; /* Add bottom margin */
+}
+
+.overlay-btn {
+    background-color: white;
     border: none;
-    padding: 10px 20px;
+    width: 200px; /* Adjusted width */
+    padding: 10px;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 15px;
     font-size: 16px;
-  }
-  
-  .overlay-btn:hover {
-    background-color: #45a049;
-  }
+    display: flex;
+    align-items: center; /* Center the content vertically */
+    gap: 10px; /* Space between icon and text */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Initial shadow */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Add smooth transition */
+}
+
+#download_excel.overlay-btn {
+    background-color: #76d7c4; /* Download button color */
+    color: #566573;
+}
+
+#upload_excel.overlay-btn {
+    background-color: #f7dc6f; /* Upload button color */
+    color: #566573;
+}
+
+#download_excel.overlay-btn:hover {
+    background-color: #48c9b0; /* Download button hover color */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Darker shadow */
+}
+
+#upload_excel.overlay-btn:hover {
+    background-color: #f4d03f; /* Upload button hover color */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Darker shadow */
+}
+
+.button-icon {
+    width: 30px; /* Adjust size */
+    height: 30px; /* Adjust size */
+}

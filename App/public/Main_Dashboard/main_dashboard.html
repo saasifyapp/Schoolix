@@ -572,28 +572,53 @@
       </div>
     </div>
 
-    <!-- Modal for Calendar -->
-    <div class="overlay" id="calendar_overlay">
-      <div class="overlay-content" id="calendar_overlay-content">
-        <button id="calendar_close" class="close-button">&times;</button>
-        <h2 class="overlay-heading">Academic Calendar</h2>
-        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
-          type="module"></script>
-        <dotlottie-player class="dotlottie-container"
-        src="https://lottie.host/a546ef8a-0093-427f-8b0d-210b70b0cecb/OepvyEkrgH.lottie"background="transparent"
-          speed="1" style="width: 50%; height: 50%;" loop autoplay></dotlottie-player>
-        <div id="calendar_message" class="calendar-message">
-          <!-- Message will be dynamically added here -->
-        </div>
-        <div class="overlay-bottom">
-          <button class="overlay-btn" id="download_excel">Download Excel</button>
-          <button class="overlay-btn" id="upload_excel">Upload Excel</button>
-        </div>
+<!-- Modal for Calendar -->
+<div class="overlay" id="calendar_overlay">
+  <div class="overlay-content" id="calendar_overlay-content">
+    <button id="calendar_close" class="close-button">&times;</button>
+    <h2 class="overlay-heading">Academic Calendar</h2>
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+      type="module"></script>
+    <dotlottie-player class="dotlottie-container"
+    src="https://lottie.host/a546ef8a-0093-427f-8b0d-210b70b0cecb/OepvyEkrgH.lottie"
+    background="transparent" speed="1" style="width: 50%; height: 50%;" loop autoplay></dotlottie-player>
+    <div class="calendar-message">
+      <p><strong>Step 1:</strong> Download the Excel.</p>
+      <p><strong>Step 2:</strong> Add the holidays and events.</p>
+      <p><strong>Note:</strong> Make sure to follow below while adding data to excel:</p>
+      <div class="table-container">
+        <table class="styled-table">
+          <tr>
+            <th>Sr_No</th>
+            <th>Name</th>
+            <th>Start_Date</th>
+            <th>End_Date</th>
+            <th>Type</th>
+          </tr>
+          <tr>
+            <td>Digit</td>
+            <td>No digit or special characters</td>
+            <td>dd-mm-yyyy</td>
+            <td>dd-mm-yyyy</td>
+            <td>holiday/event</td>
+          </tr>
+        </table>
       </div>
+      <p><strong>Step 3:</strong> Upload the Excel.</p>
     </div>
-
-
+    <div class="overlay-bottom">
+      <button class="overlay-btn" id="download_excel">
+        <img src="../images/file.png" alt="Download Icon" class="button-icon"> 
+        Download Excel
+      </button>
+      <button class="overlay-btn" id="upload_excel">
+        <img src="../images/submit.png" alt="Upload Icon" class="button-icon"> 
+        Upload Excel
+      </button>
+    </div>
   </div>
+</div>
+
 
 
   <!--- <div class="main_container">

@@ -1024,20 +1024,11 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener("DOMContentLoaded", function() {
   const overlay = document.getElementById("calendar_overlay");
   const closeBtn = document.getElementById("calendar_close");
-  const messageContainer = document.getElementById("calendar_message");
 
   // Function to display the overlay with the message
   window.showOverlay = async function(event) {
     event.preventDefault(); // Prevent page reload
-
-    // Always display the fixed message
-    messageContainer.innerHTML = `
-      <p><strong>Step 1:</strong> Download the Excel.</p>
-      <p><strong>Step 2:</strong> Add the holidays and events.</p>
-      <p><strong>Step 3:</strong> Upload the Excel.</p>
-    `;
-
-    overlay.style.display = "block";
+    overlay.style.display = "flex";
   };
 
   // Function to hide the overlay
@@ -1092,8 +1083,20 @@ document.addEventListener("DOMContentLoaded", function() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Excel file downloaded successfully.',
+      });
+
       console.log('Download Excel button clicked');
     } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error downloading Excel file: ' + error.message,
+      });
+
       console.error('Error downloading Excel file:', error);
     }
   });
@@ -1165,11 +1168,24 @@ document.addEventListener("DOMContentLoaded", function() {
           const result = await response.json();
 
           if (result.success) {
-            alert('Excel file uploaded and data inserted successfully.');
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Excel file uploaded and calendar updated successfully.',
+            });
           } else {
-            alert('Error: ' + result.error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Error: ' + result.error,
+            });
           }
         } catch (error) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error uploading Excel file: ' + error.message,
+          });
           console.error('Error uploading Excel file:', error);
         }
       };
