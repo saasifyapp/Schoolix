@@ -17,7 +17,9 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  
   <!-- SweetAlert2 CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <!-- SweetAlert2 JS -->
@@ -183,11 +185,11 @@
         </li>
 
         <li class="item">
-          <a href="" class="nav_link">
+          <a class="nav_link" onclick="showOverlay(event)" style="cursor: pointer;">
             <span class="navlink_icon">
               <img src="/images/events.png" alt="Custom Icon" class="custom_icon">
             </span>
-            <span class="navlink" style="margin-top: -8px">Events</span>
+            <span class="navlink" style="margin-top: -8px">Calendar</span>
           </a>
         </li>
 
@@ -546,8 +548,8 @@
               </ul>
             </div>
             <div class="card location-card">
-              <h4><i class="fas fa-map-marked-alt"></i> Live Location</h4>             
-               <ul>
+              <h4><i class="fas fa-map-marked-alt"></i> Live Location</h4>
+              <ul>
                 <!-- Vehicle details will be dynamically inserted here -->
               </ul>
             </div>
@@ -569,6 +571,27 @@
         <div id="map"></div>
       </div>
     </div>
+
+    <!-- Modal for Calendar -->
+    <div class="overlay" id="calendar_overlay">
+      <div class="overlay-content" id="calendar_overlay-content">
+        <button id="calendar_close" class="close-button">&times;</button>
+        <h2 class="overlay-heading">Academic Calendar</h2>
+        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+          type="module"></script>
+        <dotlottie-player class="dotlottie-container"
+        src="https://lottie.host/a546ef8a-0093-427f-8b0d-210b70b0cecb/OepvyEkrgH.lottie"background="transparent"
+          speed="1" style="width: 50%; height: 50%;" loop autoplay></dotlottie-player>
+        <div id="calendar_message" class="calendar-message">
+          <!-- Message will be dynamically added here -->
+        </div>
+        <div class="overlay-bottom">
+          <button class="overlay-btn" id="download_excel">Download Excel</button>
+          <button class="overlay-btn" id="upload_excel">Upload Excel</button>
+        </div>
+      </div>
+    </div>
+
 
   </div>
 

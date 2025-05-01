@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
+const xlsx = require('xlsx');
 
 const connectionManager = require('../middleware/connectionManager'); // Adjust the path to match the new location
 const { connection_auth } = require('../../main_server'); // Adjust the path as needed
@@ -432,6 +433,60 @@ router.get('/main_dashboard_transport_data', async (req, res) => {
     }
 });
 
+
+///////////////////////// CALENDAR EVENTS ///////////////////////////
+
+// Middleware to handle JSON bodies
+router.use(express.json());
+router.use(express.urlencoded({ extended: true }));
+
+// GET endpoint to fetch up to 8 records from the academic_calendar table
+router.get('/calendar_events', async (req, res) => {
+    const dataQuery = 'SELECT * FROM academic_calendar ORDER BY Sr_No LIMIT 8';
+    const columnQuery = 'SHOW COLUMNS FROM academic_calendar';
+  
+    try {
+      const [dataResults, columnResults] = await Promise.all([
+        runQuery(req.connectionPool, dataQuery, []),
+        runQuery(req.connectionPool, columnQuery, [])
+      ]);
+  
+      // Process column names
+      const columnNames = columnResults.map(column => column.Field);
+  
+      res.json({ data: dataResults, columns: columnNames });
+    } catch (error) {
+      console.error('Error querying MySQL for calendar events:', error);
+      res.status(500).json({ error: 'Error fetching calendar events from MySQL' });
+    }
+  });
+  
+// POST endpoint to upload data from Excel file
+router.post('/upload_excel', async (req, res) => {
+    try {
+      let data = req.body;
+  
+      // Sort data by Sr_No in ascending order
+    data = data.sort((a, b) => parseInt(a.Sr_No) - parseInt(b.Sr_No));
+  
+      // Truncate the table before inserting new data
+      await runQuery(req.connectionPool, 'TRUNCATE TABLE academic_calendar', []);
+  
+      const query = 'INSERT INTO academic_calendar (Sr_No, Name, Start_Date, End_Date, Type) VALUES (?, ?, ?, ?, ?)';
+  
+      // Insert data into database ordered by Sr_No
+      const promises = data.map(entry =>
+        runQuery(req.connectionPool, query, [entry.Sr_No, entry.Name, entry.Start_Date, entry.End_Date, entry.Type])
+      );
+      await Promise.all(promises);
+  
+      res.json({ success: true, message: 'Data inserted successfully' });
+    } catch (error) {
+      console.error('Error inserting data into MySQL:', error);
+      res.status(500).json({ error: 'Error inserting data into MySQL' });
+    }
+  });
+  
 /////////////////////// AUTOCREATE TABLES /////////////////////////////////////////
 
 

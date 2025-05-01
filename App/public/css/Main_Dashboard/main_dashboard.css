@@ -1166,17 +1166,22 @@ body.dark {
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
+/* CSS for overlay content */
 .overlay-content {
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 600px; /* Adjust the width for map */
-    height: 600px; /* Adjust the height for map */
+    width: 600px; /* Adjust the width */
+    height: 80%; /* Adjust the height as needed */
     border-radius: 15px; /* Add rounded corners to the modal */
     box-sizing: border-box; /* Include padding and border in width and height */
     position: relative; /* Ensure absolute positioning of child elements */
-}
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Ensure contents are spaced appropriately */
+  }
+
 
 #map {
     height: 100%;
@@ -1280,3 +1285,53 @@ body.dark {
 .shift2-card h4 i {
     margin-right: 10px; /* Adjust the margin as needed */
 }
+
+
+
+/* --------------- CALENDAR OVERLAY ----------    */
+
+/* CSS for overlay heading */
+.overlay-heading {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #707070;
+  }
+
+
+/* CSS for calendar message */
+.calendar-message {
+    text-align: left; /* Align the text to the left */
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #333;
+    flex-grow: 1; /* Allow it to grow and fill available space */
+    margin-left: 20%; /* Add left margin to ensure proper alignment */
+  }
+
+.calendar-message p {
+    margin: 10px 0; /* Add gap between the steps */
+  }
+
+  /* CSS for overlay bottom */
+  .overlay-bottom {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: auto; /* Make sure it sticks to the bottom */
+  }
+  
+  /* CSS for individual buttons */
+  .overlay-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .overlay-btn:hover {
+    background-color: #45a049;
+  }

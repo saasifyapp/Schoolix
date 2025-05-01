@@ -1017,3 +1017,165 @@ document.addEventListener('DOMContentLoaded', function() {
       };
   }
 });
+
+
+////////////////////// CALENDAR VISUALS ///////////////
+
+document.addEventListener("DOMContentLoaded", function() {
+  const overlay = document.getElementById("calendar_overlay");
+  const closeBtn = document.getElementById("calendar_close");
+  const messageContainer = document.getElementById("calendar_message");
+
+  // Function to display the overlay with the message
+  window.showOverlay = async function(event) {
+    event.preventDefault(); // Prevent page reload
+
+    // Always display the fixed message
+    messageContainer.innerHTML = `
+      <p><strong>Step 1:</strong> Download the Excel.</p>
+      <p><strong>Step 2:</strong> Add the holidays and events.</p>
+      <p><strong>Step 3:</strong> Upload the Excel.</p>
+    `;
+
+    overlay.style.display = "block";
+  };
+
+  // Function to hide the overlay
+  window.hideOverlay = async function() {
+    overlay.style.display = "none";
+  };
+
+  // Event listener to close overlay when close button is clicked
+  closeBtn.addEventListener("click", async function() {
+    await hideOverlay();
+  });
+
+  document.getElementById('download_excel').addEventListener('click', async () => {
+    try {
+      const response = await fetch('/calendar_events');
+      const result = await response.json();
+      const { data } = result;
+
+      // Create a new workbook
+      const workbook = XLSX.utils.book_new();
+
+      // Define headers with additional information
+      const headers = ['Sr_No', 'Name', 'Start_Date (dd-mm-yyyy)', 'End_Date (dd-mm-yyyy)', 'Type (holiday/event)'];
+
+      // Convert the headers and data to a worksheet
+      const worksheet = XLSX.utils.json_to_sheet([], { header: headers });
+
+      // Append data rows
+      XLSX.utils.sheet_add_json(worksheet, data, { skipHeader: true, origin: 'A2' });
+
+      // Apply style to the headers (bold)
+      headers.forEach((_, index) => {
+        const cell = worksheet[XLSX.utils.encode_cell({ r: 0, c: index })];
+        if (cell) {
+          cell.s = { font: { bold: true } };
+        }
+      });
+
+      // Append the worksheet to the workbook
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Academic Calendar');
+
+      // Write the workbook as an Excel file and trigger download
+      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'academic_calendar.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      console.log('Download Excel button clicked');
+    } catch (error) {
+      console.error('Error downloading Excel file:', error);
+    }
+  });
+
+  document.getElementById('upload_excel').addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.xlsx';
+
+    input.onchange = async (event) => {
+      const file = event.target.files[0];
+
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: true });
+
+        // Function to convert Excel serial dates to string (dd-mm-yyyy). This may be necessary for numeric dates.
+        function convertExcelDate(excelDate) {
+          if (typeof excelDate === 'number') {
+            // Convert serial date, where base date is January 1, 1900
+            return moment(new Date(1899, 11, 30 + excelDate)).format('DD-MM-YYYY');
+          } else if (typeof excelDate === 'string') {
+            // Return as-is if already string
+            return excelDate;
+          }
+          return "Invalid Date";
+        }
+
+        // Function to replace special characters with underscores
+        function replaceSpecialChars(str) {
+          if (typeof str === 'string') {
+            return str.replace(/[^\w\s]/gi, '_');
+          }
+          return str;
+        }
+
+        // Log the entire data read from the Excel file to the console
+        console.log('Raw Excel Data:', jsonData);
+
+        // Exclude header row and map data to object structure
+        let dataToSend = jsonData.slice(1).map(row => ({
+          Sr_No: row[0],
+          Name: replaceSpecialChars(row[1]), // Replace special characters
+          Start_Date: convertExcelDate(row[2]), // Convert date
+          End_Date: convertExcelDate(row[3]), // Convert date
+          Type: replaceSpecialChars(row[4]) // Replace special characters
+        }));
+
+        // Sort data by Sr_No in ascending order
+        dataToSend = dataToSend.sort((a, b) => a.Sr_No - b.Sr_No);
+
+        // Log the data to be sent to the server
+        console.log('Data to be sent:', dataToSend);
+
+        try {
+          const response = await fetch('/upload_excel', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSend)
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            alert('Excel file uploaded and data inserted successfully.');
+          } else {
+            alert('Error: ' + result.error);
+          }
+        } catch (error) {
+          console.error('Error uploading Excel file:', error);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    };
+
+    input.click();
+  });
+});

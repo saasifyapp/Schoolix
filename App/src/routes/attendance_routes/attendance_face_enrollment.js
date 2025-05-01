@@ -220,22 +220,22 @@ router.post('/send-face-data-to-enroll', async (req, res) => {
 });
 
 // Keep GitHub API alive by sending a request every 5 minutes
-setInterval(async () => {
-    try {
-        // URL of your FastAPI service (you can replace '/keep-alive' with an existing route in your FastAPI app)
-        const url = 'https://scaling-happiness-69vj59jvppvrf4rwp-8000.app.github.dev/keep-alive';
-
-        // Send a GET request to the keep-alive endpoint
-        await fetch(url, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        });
-
-        console.log("✅ Sent periodic ping to keep FastAPI alive.");
-    } catch (pingError) {
-        console.error("❌ Failed to send keep-alive ping:", pingError.message);
-    }
-}, 5 * 60 * 1000); // Ping every 5 minutes (300,000 ms)
+//setInterval(async () => {
+//    try {
+//        // URL of your FastAPI service (you can replace '/keep-alive' with an existing route in your FastAPI app)
+//        const url = 'https://scaling-happiness-69vj59jvppvrf4rwp-8000.app.github.dev/keep-alive';
+//
+//        // Send a GET request to the keep-alive endpoint
+//        await fetch(url, {
+//            method: 'GET',
+//            headers: { 'Content-Type': 'application/json' }
+//        });
+//
+//        console.log("✅ Sent periodic ping to keep FastAPI alive.");
+//    } catch (pingError) {
+//        console.error("❌ Failed to send keep-alive ping:", pingError.message);
+//    }
+//}, 5 * 60 * 1000); // Ping every 5 minutes (300,000 ms)
 
 
 
