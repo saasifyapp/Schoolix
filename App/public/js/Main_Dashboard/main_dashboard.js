@@ -1197,3 +1197,84 @@ document.addEventListener("DOMContentLoaded", function() {
     input.click();
   });
 });
+
+///////////Calender Visualization///////////  
+let currentWeekStart = moment().startOf('week');
+    let isAnimating = false;
+
+    function updateCalendar(direction = null) {
+      if (isAnimating) return;
+      isAnimating = true;
+
+      const weekDaysContainer = document.querySelector('.week-days-container');
+      const holidaysContent = document.querySelector('.holidays-birthdays-content');
+
+      // Generate new content for week-days
+      const days = Array.from({ length: 7 }, (_, i) => currentWeekStart.clone().add(i, 'days'));
+      const newWeekDaysContent = document.createElement('div');
+      newWeekDaysContent.className = 'week-days-content';
+      newWeekDaysContent.innerHTML = days.map(day => `
+        <div class="day-item">
+          <span class="day-name">${day.format('ddd')}</span>
+          <span class="day-date">${day.format('D MMM')}</span>
+        </div>
+      `).join('');
+
+      // Generate new content for holidays-birthdays (no animation)
+      const events = [
+        { name: "Teacher's Day", type: "holiday", date: "2025-05-05" },
+        { name: "John's Birthday", type: "birthday", date: "2025-05-06" }
+      ];
+      holidaysContent.innerHTML = `
+        <h4>Holidays & Birthdays</h4>
+        <ul class="event-list">
+          ${events
+            .filter(event => moment(event.date).isBetween(currentWeekStart, currentWeekStart.clone().endOf('week'), null, '[]'))
+            .map(event => `
+              <li class="event-item">
+                <span class="event-icon">${event.type === 'holiday' ? '🎉' : '🎂'}</span>
+                ${event.name}
+              </li>
+            `).join('')}
+        </ul>
+      `;
+
+      // Animate week-days with reversed direction
+      if (direction) {
+        weekDaysContainer.appendChild(newWeekDaysContent);
+        // Reverse animation: 'prev' slides right, 'next' slides left
+        const animationClass = direction === 'prev' ? 'slide-right' : 'slide-left';
+        weekDaysContainer.classList.add(animationClass);
+
+        // Clean up after animation
+        setTimeout(() => {
+          weekDaysContainer.classList.remove('slide-left', 'slide-right');
+          weekDaysContainer.style.transform = 'translateX(0)';
+          weekDaysContainer.innerHTML = '';
+          weekDaysContainer.appendChild(newWeekDaysContent);
+          isAnimating = false;
+        }, 500); // Match animation duration
+      } else {
+        // Initial load, no animation
+        weekDaysContainer.innerHTML = '';
+        weekDaysContainer.appendChild(newWeekDaysContent);
+        isAnimating = false;
+      }
+    }
+
+    document.getElementById('prev-week').addEventListener('click', () => {
+      if (!isAnimating) {
+        currentWeekStart.subtract(1, 'week');
+        updateCalendar('prev');
+      }
+    });
+
+    document.getElementById('next-week').addEventListener('click', () => {
+      if (!isAnimating) {
+        currentWeekStart.add(1, 'week');
+        updateCalendar('next');
+      }
+    });
+
+    // Initial calendar update
+    updateCalendar();

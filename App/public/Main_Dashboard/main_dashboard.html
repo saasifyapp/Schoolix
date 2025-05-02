@@ -19,7 +19,7 @@
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-  
+
   <!-- SweetAlert2 CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <!-- SweetAlert2 JS -->
@@ -315,7 +315,7 @@
               </span>
               <span class="navlink">Upload new</span>
             </a>
-          </li>
+          </li> 
         </ul>
         -->
 
@@ -373,6 +373,65 @@
 
   <div class="dashboard_contents">
     <!-- Existing sub_containers here -->
+
+    <div class="calender-details">
+      <div class="week-days">
+        <div class="calendar-nav">
+          <button class="nav-arrow" id="prev-week"><i class="bx bx-chevron-left"></i></button>
+          <button class="nav-arrow" id="next-week"><i class="bx bx-chevron-right"></i></button>
+        </div>
+        <div class="week-days-container">
+          <div class="week-days-content">
+            <!-- Dynamically populated with 7 days of the current week -->
+            <div class="day-item">
+              <span class="day-name"></span>
+              <span class="day-date"></span>
+              <span></span>
+            </div>
+            <div class="day-item">
+              <span class="day-name"></span>
+              <span class="day-date"></span>
+              <span></span>
+            </div>
+            <div class="day-item">
+              <span class="day-name"></span>
+              <span class="day-date"></span>
+              <span></span>
+            </div>
+            <div class="day-item">
+              <span class="day-name"></span>
+              <span class="day-date"> </span>
+              <span></span>
+            </div>
+            <div class="day-item">
+              <span class="day-name"></span>
+              <span class="day-date"> </span>
+              <span></span>
+            </div>
+            <div class="day-item">
+              <span class="day-name"></span>
+              <span class="day-date"> </span>
+              <span></span>
+            </div>
+            <div class="day-item">
+              <span class="day-name"></span>
+              <span class="day-date"> </span>
+              <span>Details</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="holidays-birthdays">
+        <div class="holidays-birthdays-content">
+          <h4>Holidays & Birthdays</h4>
+          <ul class="event-list">
+            <!-- Dynamically populated with holidays and birthdays -->
+            <li class="event-item"><span class="event-icon">🎉</span>Teacher's Day</li>
+            <li class="event-item"><span class="event-icon">🎂</span>John's Birthday</li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
     <!-- New user_details container -->
     <div class="user_details">
@@ -572,144 +631,61 @@
       </div>
     </div>
 
-<!-- Modal for Calendar -->
-<div class="overlay" id="calendar_overlay">
-  <div class="overlay-content" id="calendar_overlay-content">
-    <button id="calendar_close" class="close-button">&times;</button>
-    <h2 class="overlay-heading">Academic Calendar</h2>
-    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
-      type="module"></script>
-    <dotlottie-player class="dotlottie-container"
-    src="https://lottie.host/a546ef8a-0093-427f-8b0d-210b70b0cecb/OepvyEkrgH.lottie"
-    background="transparent" speed="1" style="width: 50%; height: 50%;" loop autoplay></dotlottie-player>
-    <div class="calendar-message">
-      <p><strong>Step 1:</strong> Download the Excel.</p>
-      <p><strong>Step 2:</strong> Add the holidays and events.</p>
-      <p><strong>Note:</strong> Make sure to follow below while adding data to excel:</p>
-      <div class="table-container">
-        <table class="styled-table">
-          <tr>
-            <th>Sr_No</th>
-            <th>Name</th>
-            <th>Start_Date</th>
-            <th>End_Date</th>
-            <th>Type</th>
-          </tr>
-          <tr>
-            <td>Digit</td>
-            <td>No digit or special characters</td>
-            <td>dd-mm-yyyy</td>
-            <td>dd-mm-yyyy</td>
-            <td>holiday/event</td>
-          </tr>
-        </table>
+    <!-- Modal for Calendar -->
+    <div class="overlay" id="calendar_overlay">
+      <div class="overlay-content" id="calendar_overlay-content">
+        <button id="calendar_close" class="close-button">&times;</button>
+        <h2 class="overlay-heading">Academic Calendar</h2>
+        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+          type="module"></script>
+        <dotlottie-player class="dotlottie-container"
+          src="https://lottie.host/a546ef8a-0093-427f-8b0d-210b70b0cecb/OepvyEkrgH.lottie" background="transparent"
+          speed="1" style="width: 50%; height: 50%;" loop autoplay></dotlottie-player>
+        <div class="calendar-message">
+          <p><strong>Step 1:</strong> Download the Excel.</p>
+          <p><strong>Step 2:</strong> Add the holidays and events.</p>
+          <p><strong>Note:</strong> Make sure to follow below while adding data to excel:</p>
+          <div class="table-container">
+            <table class="styled-table">
+              <tr>
+                <th>Sr_No</th>
+                <th>Name</th>
+                <th>Start_Date</th>
+                <th>End_Date</th>
+                <th>Type</th>
+              </tr>
+              <tr>
+                <td>Digit</td>
+                <td>No digit or special characters</td>
+                <td>dd-mm-yyyy</td>
+                <td>dd-mm-yyyy</td>
+                <td>holiday/event</td>
+              </tr>
+            </table>
+          </div>
+          <p><strong>Step 3:</strong> Upload the Excel.</p>
+        </div>
+        <div class="overlay-bottom">
+          <button class="overlay-btn" id="download_excel">
+            <img src="../images/file.png" alt="Download Icon" class="button-icon">
+            Download Excel
+          </button>
+          <button class="overlay-btn" id="upload_excel">
+            <img src="../images/submit.png" alt="Upload Icon" class="button-icon">
+            Upload Excel
+          </button>
+        </div>
       </div>
-      <p><strong>Step 3:</strong> Upload the Excel.</p>
     </div>
-    <div class="overlay-bottom">
-      <button class="overlay-btn" id="download_excel">
-        <img src="../images/file.png" alt="Download Icon" class="button-icon"> 
-        Download Excel
-      </button>
-      <button class="overlay-btn" id="upload_excel">
-        <img src="../images/submit.png" alt="Upload Icon" class="button-icon"> 
-        Upload Excel
-      </button>
-    </div>
-  </div>
-</div>
 
 
 
-  <!--- <div class="main_container">
-    <div class="sub_container">
-      <div class="count_details">
-        <div class="title" id="registered_students_title">Registered Students</div>
-        <div class="count" id="registeredStudentsCount"></div>
-      </div>
-      <div class="count_img">
-        <img src="/images/registered_student.gif" alt="Your Image" height="98%" width="98%">
-      </div>
-    </div>
-    <div class="sub_container">
-      <div class="count_details">
-        <div class="title" id="admitted_students_title">Admitted Students</div>
-        <div class="count" id="admittedStudentsCount"></div>
-      </div>
-      <div class="count_img">
-        <img src="/images/admitted_student.gif" alt="Your Image" height="95%" width="95%">
-      </div>
-    </div>
-    <div class="sub_container">
-      <div class="count_details">
-        <div class="title" id="registered_teachers_title">Registered Teachers</div>
-        <div class="count" id="registeredTeachersCount"></div>
-      </div>
-      <div class="count_img">
-        <img src="/images/registered_teacher.gif" alt="Your Image" height="95%" width="95%">
-      </div>
-    </div>
-    <div class="sub_container">
-      <div class="count_details">
-        <div class="title" id="admitted_teachers_title">Admitted Teachers</div>
-        <div class="count" id="admittedTeachersCount"></div>
-      </div>
-      <div class="count_img">
-        <img src="/images/admitted_teacher.gif" alt="Your Image" height="95%" width="95%">
-      </div>
-    </div>
-  </div> -->
-
-  <!-- <div class="second_main_container">
-
-    <div class="sub_container">
-      <div class="count_details">
-        <div class="title" id="total_books_title">Total Books</div>
-        <div class="count" id="totalBooksCount"></div>
-      </div>
-      <div class="count_img">
-        <img src="/images/total_books.gif" alt="Total Books Image" height="98%" width="98%">
-      </div>
-    </div>
-    
-
-    <div class="sub_container">
-      <div class="count_details">
-        <div class="title" id="books_issued_title">Books Issued</div>
-        <div class="count" id="booksIssuedCount"></div>
-      </div>
-      <div class="count_img">
-        <img src="/images/books_issued.gif" alt="Books Issued Image" height="95%" width="95%">
-      </div>
-    </div>
-  
-    
-    <div class="sub_container">
-      <div class="count_details">
-        <div class="title" id="member_count_title">Member Count</div>
-        <div class="count" id="memberCount"></div>
-      </div>
-      <div class="count_img">
-        <img src="/images/member_count.gif" alt="Member Count Image" height="95%" width="95%">
-      </div>
-    </div>
-  
-
-    <div class="sub_container">
-      <div class="count_details">
-        <div class="title" id="outstanding_books_title">Outstanding Books</div>
-        <div class="count" id="outstandingBooksCount"></div>
-      </div>
-      <div class="count_img">
-        <img src="/images/outstanding_books.gif" alt="Outstanding Books Image" height="95%" width="95%">
-      </div>
-    </div>
-  </div> -->
 
 
-  <!-- JavaScript -->
-  <script src="/js/Main_Dashboard/main_dashboard.js"></script>
-  <script src="/js/Universal_Components_JS/handle_session.js"></script>
+
+    <!-- JavaScript -->
+    <script src="/js/Main_Dashboard/main_dashboard.js"></script>
+    <script src="/js/Universal_Components_JS/handle_session.js"></script>
 
 
 
