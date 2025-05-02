@@ -627,6 +627,7 @@ body.dark {
     /* Adjusted to match the height of the navbar */
     display: grid;
     grid-template-columns: 1fr;
+    gap: 1%;
     /* Single column layout */
     grid-auto-rows: min-content;
     /* Adjust row height based on content */
@@ -645,7 +646,7 @@ body.dark {
     grid-column: 1 / -1;
     border-radius: 20px;
     display: flex;
-    gap: 2%;
+    gap: 0.7%;
     padding: 4px;
     box-sizing: border-box;
     overflow: hidden;
@@ -947,9 +948,9 @@ body.dark {
     /* Distribute space between the two containers */
     width: 100%;
     /* Ensure the container takes full width */
-    margin-top: 20px;
+    margin-top: 10px;
     /* Add some space above the new containers */
-    gap: 10px;
+    gap: 1.2%;
 }
 
 /* Define the slide-in animation from the left */
@@ -1149,7 +1150,7 @@ h3 {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     /* 4 equal-width containers per row */
-    gap: 10px;
+    gap: 1.3%;
     /* Add gap between containers */
     width: 100%;
     /* Full width for the items container */
@@ -1774,55 +1775,44 @@ h3 {
     /* Add bottom margin */
 }
 
-.overlay-btn {
-    background-color: white;
-    border: none;
-    width: 200px;
-    /* Adjusted width */
-    padding: 10px;
+.downloadexcel, .uploadexcel {
+    margin-bottom: 15px;
     cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    color: black;
+    border: none;
     border-radius: 15px;
-    font-size: 16px;
+    height: 2.3rem;
+    width: 12rem;
+    font-size: 1rem;
     display: flex;
     align-items: center;
-    /* Center the content vertically */
-    gap: 10px;
-    /* Space between icon and text */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    /* Initial shadow */
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    /* Add smooth transition */
-}
+    justify-content: center;
+    padding: 0 8px;
+    transition: all 0.3s;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
+  }
 
-#download_excel.overlay-btn {
-    background-color: #76d7c4;
-    /* Download button color */
-    color: #566573;
-}
+  .downloadexcel {
+    background-color: #76D7C4;
+  }
 
-#upload_excel.overlay-btn {
-    background-color: #f7dc6f;
-    /* Upload button color */
-    color: #566573;
-}
+  .uploadexcel {
+    background-color: #F7DC6F;
+  }
 
-#download_excel.overlay-btn:hover {
-    background-color: #48c9b0;
-    /* Download button hover color */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    /* Darker shadow */
-}
+  .downloadexcel img, .uploadexcel img {
+    height: 80%;
+    margin-right: 5px;
+  }
 
-#upload_excel.overlay-btn:hover {
-    background-color: #f4d03f;
-    /* Upload button hover color */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    /* Darker shadow */
-}
+  .downloadexcel:hover {
+    background-color: #48C9B0;
+    transform: scale(1.05);
+  }
 
-.button-icon {
-    width: 30px;
-    /* Adjust size */
-    height: 30px;
-    /* Adjust size */
-}
+  .uploadexcel:hover {
+    background-color: #F4D03F;
+    transform: scale(1.05);
+  }
