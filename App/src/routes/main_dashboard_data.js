@@ -9,10 +9,32 @@ const { connection_auth } = require('../../main_server'); // Adjust the path as 
 // Use the connection manager middleware
 router.use(connectionManager);
 
-// Helper function to wrap connection query in a promise
-const runQuery = (connection, query, params) => {
+
+const checkSession = (req, res, next) => {
+    if (!req.session?.user || !req.session?.dbCredentials || !req.connectionPool) {
+        return res.status(401).json({ success: false, error: 'Session expired or invalid. Please log in again.' });
+    }
+    if (req.connectionPool._closed) {
+        return res.status(500).json({ success: false, error: 'Connection pool is closed.' });
+    }
+    next();
+};
+
+const checkPoolAvailability = (req, res, next) => {
+    if (!req.connectionPool || req.connectionPool._closed) {
+       // console.warn('Connection pool is closed or unavailable. Endpoint will not be executed.');
+        return res.status(500).json({ error: 'Connection pool is closed or unavailable.' });
+    }
+    next();
+};
+
+const runQuery = (pool, sql, params = []) => {
     return new Promise((resolve, reject) => {
-        connection.query(query, params, (error, results) => {
+        if (!pool || pool._closed) {
+            //console.warn('Connection pool is closed or unavailable. Query will not be executed.');
+            return resolve(null);  // Safely do nothing if pool is closed
+        }
+        pool.query(sql, params, (error, results) => {
             if (error) {
                 return reject(error);
             }
@@ -21,11 +43,10 @@ const runQuery = (connection, query, params) => {
     });
 };
 
-
 ///////////////// LOCATION PROMPT ///////////////////
 
 // POST endpoint to check confirmation status
-router.post('/check-confirmation-status', async (req, res) => {
+router.post('/check-confirmation-status',checkPoolAvailability, async (req, res) => {
     const { loginName } = req.body;
 
     if (!connection_auth) {
@@ -51,7 +72,7 @@ router.post('/check-confirmation-status', async (req, res) => {
 });
 
 // POST endpoint to confirm user location
-router.post('/confirm-location', async (req, res) => {
+router.post('/confirm-location',checkPoolAvailability, async (req, res) => {
     const { loginName, latitude, longitude } = req.body;
 
     if (!connection_auth) {
@@ -75,7 +96,7 @@ router.post('/confirm-location', async (req, res) => {
 ///////////////////////// ENDPOINT TO FETCH USER COUNTS (STUDENT,TEACHE, ADMINS )////////////////////)
 
 // Route to fetch user counts for main dashboard
-router.get('/fetch-user-counts-for-main-dashboard', async (req, res) => {
+router.get('/fetch-user-counts-for-main-dashboard',checkPoolAvailability, async (req, res) => {
     try {
         // Define queries to get the count from both tables
         const primaryQuery = `SELECT COUNT(*) AS count FROM primary_student_details WHERE is_active = 1`;
@@ -180,7 +201,7 @@ router.get('/fetch-user-counts-for-main-dashboard', async (req, res) => {
 ///////////////////////////////////// PIE CHART //////////////////////////////////////////////////
 
 // GET endpoint to fetch main dashboard data
-router.get('/main_dashboard_data', (req, res) => {
+router.get('/main_dashboard_data',checkPoolAvailability, (req, res) => {
     const counts = {};
     const tableNames = ['pre_adm_registered_students', 'pre_adm_admitted_students', 'pre_adm_registered_teachers', 'pre_adm_admitted_teachers'];
 
@@ -201,7 +222,7 @@ router.get('/main_dashboard_data', (req, res) => {
 });
 
 // GET endpoint to get student counts
-router.get('/student_counts', (req, res) => {
+router.get('/student_counts',checkPoolAvailability, (req, res) => {
     const counts = {};
     const queries = {
         primary_totalStudents: 'SELECT COUNT(*) AS count FROM primary_student_details WHERE is_active = 1',
@@ -237,7 +258,7 @@ router.get('/student_counts', (req, res) => {
 
 
 // GET endpoint to fetch main dashboard library data
-router.get('/main_dashboard_library_data', (req, res) => {
+router.get('/main_dashboard_library_data',checkPoolAvailability, (req, res) => {
     const counts = {};
     const queries = {
         totalBooks: 'SELECT COUNT(*) AS count FROM library_book_details',
@@ -272,7 +293,7 @@ router.get('/main_dashboard_library_data', (req, res) => {
 /////////////////////// ATTENDANCE BAR GRAPH ////////////////////////////
 
 
-router.get('/fetch-attendance-data-for-main-dashboard', async (req, res) => {
+router.get('/fetch-attendance-data-for-main-dashboard',checkPoolAvailability, async (req, res) => {
     try {
       let daysCount = 6; // Tracks days, skipping Sundays
       const sixDaysData = [];
@@ -353,7 +374,7 @@ router.get('/fetch-attendance-data-for-main-dashboard', async (req, res) => {
 /////////////////////////// TRANSPORT INSIGHTS CARDS DATA /////////////////////////////
 
 // GET endpoint to fetch main dashboard transport data
-router.get('/main_dashboard_transport_data', async (req, res) => {
+router.get('/main_dashboard_transport_data',checkPoolAvailability, async (req, res) => {
     const queries = {
         get_no_of_vehicle: 'SELECT COUNT(DISTINCT vehicle_no) AS vehicle_count FROM transport_driver_conductor_details LIMIT 100',
         get_no_of_drivers: 'SELECT COUNT(*) AS driver_count FROM transport_driver_conductor_details WHERE driver_conductor_type = "Driver"',
@@ -441,7 +462,7 @@ router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
 
 // GET endpoint to fetch up to 8 records from the academic_calendar table
-router.get('/calendar_events', async (req, res) => {
+router.get('/calendar_events',checkPoolAvailability, async (req, res) => {
     const dataQuery = 'SELECT * FROM academic_calendar ORDER BY Sr_No LIMIT 8';
     const columnQuery = 'SHOW COLUMNS FROM academic_calendar';
   
@@ -462,7 +483,7 @@ router.get('/calendar_events', async (req, res) => {
   });
   
 // POST endpoint to upload data from Excel file
-router.post('/upload_excel', async (req, res) => {
+router.post('/upload_excel',checkPoolAvailability, async (req, res) => {
     try {
       let data = req.body;
   
@@ -492,7 +513,7 @@ router.post('/upload_excel', async (req, res) => {
 
 
 // Endpoint to automatically create tables if they do not exist
-router.get('/create_tables', async (req, res) => {
+router.get('/create_tables',checkPoolAvailability, async (req, res) => {
     const tableQueries = [
         {
             query: `CREATE TABLE IF NOT EXISTS pre_adm_teacher_details (

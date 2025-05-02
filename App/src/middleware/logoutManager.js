@@ -1,50 +1,45 @@
-// logoutManager.js
-module.exports = (req, res, next) => {
-    // Log the username of the user logging out
-    console.log('User logged out:', req.session.user?.username);
+const { connectionPools } = require('../middleware/connectionManager');
 
-    // If the user has a userConnectionPool, end it
-    if (req.session.userConnectionPool) {
-        req.session.userConnectionPool.end((err) => {
+module.exports = (req, res, next) => {
+    const username = req.session?.user?.username || 'Anonymous';
+    const dbUser = req.session?.dbCredentials?.user;
+
+    console.log(`User logged out: ${username}`);
+
+    const userPool = connectionPools[dbUser];
+
+    if (dbUser && userPool) {
+        userPool.end((err) => {
             if (err) {
-                console.error('Error closing MySQL connection:', err);
-            } else {
-                console.log('User-specific database disconnected on signout.');
+                console.error('Error closing connection pool:', err);
             }
 
-            // Destroy the session after closing the connection pool
+            delete connectionPools[dbUser];
+            console.log(`Connection pools remaining after logout: ${JSON.stringify(Object.keys(connectionPools))}`);
+
             req.session.destroy((err) => {
                 if (err) {
                     console.error('Error destroying session:', err);
-                    // Send a response to indicate error in session destruction
-                    res.status(500).send('Error logging out.');
-                } else {
-                    // Clear cookies after session is destroyed
-                    res.clearCookie('jwt');
-                    res.clearCookie('schoolName');
-                    res.clearCookie('username');
-                    res.clearCookie('session_cookie');
-                    // Redirect to the home page
-                    res.redirect('/');
+                    return res.status(500).send('Error logging out.');
                 }
-            });
-        });
-    } else {
-        // If there's no userConnectionPool, just destroy the session
-        req.session.destroy((err) => {
-            if (err) {
-                console.error('Error destroying session:', err);
-                // Send a response to indicate error in session destruction
-                res.status(500).send('Error logging out.');
-            } else {
-                // Clear cookies after session is destroyed
                 res.clearCookie('jwt');
                 res.clearCookie('schoolName');
                 res.clearCookie('username');
                 res.clearCookie('session_cookie');
-                // Redirect to the home page
-                res.redirect('/');
+                return res.redirect('/');
+            });
+        });
+    } else {
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Error destroying session:', err);
+                return res.status(500).send('Error logging out.');
             }
+            res.clearCookie('jwt');
+            res.clearCookie('schoolName');
+            res.clearCookie('username');
+            res.clearCookie('session_cookie');
+            return res.redirect('/');
         });
     }
 };

@@ -13,7 +13,6 @@ const connectionManager = (req, res, next) => {
 
     // Create or reuse connection pool based on dbCredentials.user
     if (!connectionPools[user]) {
-        // Log the creation of a new connection pool
         console.log(`Creating new connection pool for user: ${user}`);
 
         // Create new connection pool if not already exists
@@ -21,17 +20,18 @@ const connectionManager = (req, res, next) => {
             host: dbCredentials.host,
             user: dbCredentials.user,
             password: dbCredentials.password,
-            database: dbCredentials.database
+            database: dbCredentials.database,
+            connectionLimit: 10, // Limit the number of connections in the pool
+            queueLimit: 0, // No limit on the number of queued connection requests
+            waitForConnections: true, // Wait for a connection to be released
         });
-    } else {
-        // Log the reuse of the existing connection pool
-        //console.log(`Reusing existing connection pool for user: ${user}`);
+
+        console.log(`Allocated 10 sessions for user: ${user}`);
     }
 
-    
     req.connectionPool = connectionPools[user]; // Attach the connection pool to the request object
-
     next();
 };
 
 module.exports = connectionManager;
+module.exports.connectionPools = connectionPools;

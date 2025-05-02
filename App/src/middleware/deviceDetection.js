@@ -5,10 +5,10 @@ const deviceDetection = (req, res, next) => {
     // Log the user agent and the type of device detected only for the root URL
     if (req.path === '/') {
         if (isMobile) {
-            console.log(`Mobile device detected: ${userAgent}`);
+           // console.log(`Mobile device detected: ${userAgent}`);
             res.status(403).send('Access denied. Please use a desktop browser.');
         } else {
-            console.log(`Desktop device detected: ${userAgent}`);
+            //console.log(`Desktop device detected: ${userAgent}`);
             next();
         }
     } else {
