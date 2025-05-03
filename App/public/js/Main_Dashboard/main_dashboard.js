@@ -1203,13 +1203,12 @@ document.addEventListener("DOMContentLoaded", function() {
 let currentWeekStart = moment().startOf('week');
 let isAnimating = false;
 
-// Function to fetch calendar events from the endpoint
 async function fetchCalendarEvents() {
   try {
     const response = await fetch('/get_calendar_events');
     const result = await response.json();
     if (result.success) {
-      console.log(result.data); // Log fetched results to the browser's console
+      console.log(result.data);
       return result.data;
     } else {
       throw new Error('Failed to fetch calendar events');
@@ -1233,11 +1232,12 @@ function adjustFontSize() {
 
 function showEventDetails(dateString, eventsForDay) {
   const day = moment(dateString, 'YYYY-MM-DD');
-  const eventList = eventsForDay.length ? 
-    eventsForDay.map(event => `
-      <div>${event.type === 'holiday' ? '🎉' : '📅'} ${event.name}</div>
-    `).join('') : '<div>No planned Events</div>';
-    
+  const eventList = eventsForDay.length
+    ? eventsForDay
+        .map(event => `<div>${event.type === 'holiday' ? '🎉' : '📅'} ${event.name}</div>`)
+        .join('')
+    : '<div>No planned Events</div>';
+
   Swal.fire({
     title: `${day.format('dddd, MMMM D')}`,
     html: eventList,
@@ -1246,11 +1246,24 @@ function showEventDetails(dateString, eventsForDay) {
   });
 }
 
-async function updateCalendar(direction = null) {
+async function updateCalendar() {
   if (isAnimating) return;
   isAnimating = true;
 
   const weekDaysContainer = document.querySelector('.week-days-container');
+
+  // Create placeholder content with shimmer effect
+  const placeholderContent = document.createElement('div');
+  placeholderContent.className = 'week-days-content';
+  placeholderContent.innerHTML = Array.from({ length: 7 }, (_, i) => `
+    <div class="day-item loading">
+      <span class="day-name">Loading</span>
+      <span class="day-date">Loading</span>
+      <div class="day-events">Loading</div>
+    </div>
+  `).join('');
+  weekDaysContainer.innerHTML = '';
+  weekDaysContainer.appendChild(placeholderContent);
 
   // Fetch events from the API
   const fetchedEvents = await fetchCalendarEvents();
@@ -1265,7 +1278,7 @@ async function updateCalendar(direction = null) {
       type: event.Type,
       name: event.Name,
       startDate: event.Start_Date,
-      endDate: event.End_Date
+      endDate: event.End_Date,
     });
     return acc;
   }, {});
@@ -1274,98 +1287,85 @@ async function updateCalendar(direction = null) {
   const days = Array.from({ length: 7 }, (_, i) => currentWeekStart.clone().add(i, 'days'));
   const newWeekDaysContent = document.createElement('div');
   newWeekDaysContent.className = 'week-days-content';
-  newWeekDaysContent.innerHTML = days.map(day => {
-    const eventsForDay = eventDetails[day.format('YYYY-MM-DD')] || [];
-    let eventsHtml = '';
-    if (eventsForDay.length === 1) {
-      const event = eventsForDay[0];
-      eventsHtml = `<span class="day-event">${event.type === 'holiday' ? '🎉' : '📅'} ${event.name}</span>`;
-    } else if (eventsForDay.length > 1) {
-      eventsHtml = `<span class="day-event">${eventsForDay.length} Planned Events</span>`;
-    }
-    return `
-    <div class="day-item ${day.isSame(moment(), 'day') ? 'active' : ''}" data-date="${day.format('YYYY-MM-DD')}">
-      <span class="day-name">${day.format('dddd')}</span>
-      <span class="day-date">${day.format('MMMM D')}</span>
-      <div class="day-events">
-        ${eventsHtml}
-      </div>
-    </div>
-  `;
-  }).join('');
+  newWeekDaysContent.innerHTML = days
+    .map(day => {
+      const eventsForDay = eventDetails[day.format('YYYY-MM-DD')] || [];
+      let eventsHtml = '';
+      if (eventsForDay.length === 1) {
+        const event = eventsForDay[0];
+        eventsHtml = `<span class="day-event">${event.type === 'holiday' ? '🎉' : '📅'} ${event.name}</span>`;
+      } else if (eventsForDay.length > 1) {
+        eventsHtml = `<span class="day-event">${eventsForDay.length} Planned Events</span>`;
+      }
+      return `
+        <div class="day-item ${day.isSame(moment(), 'day') ? 'active' : ''}" data-date="${day.format('YYYY-MM-DD')}">
+          <span class="day-name">${day.format('dddd')}</span>
+          <span class="day-date">${day.format('MMMM D')}</span>
+          <div class="day-events">
+            ${eventsHtml}
+          </div>
+        </div>
+      `;
+    })
+    .join('');
 
-  // Animate week-days with reversed direction
-  if (direction) {
-    weekDaysContainer.appendChild(newWeekDaysContent);
-    const animationClass = direction === 'prev' ? 'slide-right' : 'slide-left';
-    weekDaysContainer.classList.add(animationClass);
-
-    // Clean up after animation
-    setTimeout(() => {
-      weekDaysContainer.classList.remove('slide-left', 'slide-right');
-      weekDaysContainer.style.transform = 'translateX(0)';
-      weekDaysContainer.innerHTML = '';
-      weekDaysContainer.appendChild(newWeekDaysContent);
-      isAnimating = false;
-      adjustFontSize(); // Adjust font size after content is added
-    }, 800); // Match animation duration
-  } else {
-    // Initial load, no animation
+  // Replace placeholder with actual content after a short delay
+  setTimeout(() => {
     weekDaysContainer.innerHTML = '';
     weekDaysContainer.appendChild(newWeekDaysContent);
     isAnimating = false;
-    adjustFontSize(); // Adjust font size after content is added
-  }
+    adjustFontSize();
 
-  // Add event listeners to day items after updating the calendar
-  document.querySelectorAll('.day-item').forEach(item => {
-    item.addEventListener('click', (e) => {
-      const date = item.getAttribute('data-date');
-      const eventsForDay = eventDetails[date] || [];
-      showEventDetails(date, eventsForDay);
+    // Add event listeners to day items
+    document.querySelectorAll('.day-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        const date = item.getAttribute('data-date');
+        const eventsForDay = eventDetails[date] || [];
+        showEventDetails(date, eventsForDay);
+      });
     });
-  });
+  }, 1000); // Simulate loading delay for shimmer effect
 }
 
 document.getElementById('prev-week').addEventListener('click', () => {
   if (!isAnimating) {
     currentWeekStart.subtract(1, 'week');
-    updateCalendar('prev');
+    updateCalendar();
   }
 });
 
 document.getElementById('next-week').addEventListener('click', () => {
   if (!isAnimating) {
     currentWeekStart.add(1, 'week');
-    updateCalendar('next');
+    updateCalendar();
   }
 });
 
 // Initial call to update calendar
 updateCalendar();
 
-
-
 // Initialize the Holidays & Birthdays section
 function initializeHolidaysBirthdays() {
   const holidaysContent = document.querySelector('.holidays-birthdays-content');
   const events = [
     { name: "Teacher's Day", type: "holiday", date: "2025-05-05" },
-    { name: "John's Birthday", type: "birthday", date: "2025-05-06" }
+    { name: "John's Birthday", type: "birthday", date: "2025-05-06" },
   ];
   holidaysContent.innerHTML = `
     <h4>Holidays & Birthdays</h4>
     <ul class="event-list">
-      ${events.map(event => `
+      ${events
+        .map(
+          event => `
         <li class="event-item">
           <span class="event-icon">${event.type === 'holiday' ? '🎉' : '🎂'}</span>
           ${event.name}
         </li>
-      `).join('')}
+      `
+        )
+        .join('')}
     </ul>
   `;
 }
 
-// Initial calendar update and Holidays & Birthdays initialization
-updateCalendar();
 initializeHolidaysBirthdays();
