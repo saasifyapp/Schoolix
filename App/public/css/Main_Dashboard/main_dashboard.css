@@ -682,15 +682,11 @@ body.dark {
 }
 
 .week-days-container {
-    display: flex;
-    justify-content: center;   
-    gap: 10px;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);    */
-    top: 0;
-    left: 0;
+    position: relative;
+    overflow: visible;
+    /* Prevent clipping of absolutely positioned children */
+    min-height: 100px;
+    /* Ensure enough vertical space for the buttons */
 }
 
 
@@ -774,15 +770,16 @@ body.dark {
 
 /* Adjust calendar-nav positioning to prevent overlap and ensure visibility */
 .calendar-nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 100%;
-  padding: 0 15px;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: space-between;
-  z-index: 10;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    padding: 0 15px;
+    /* Increase padding to ensure buttons are fully visible */
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    z-index: 10;
 }
 
 
@@ -801,6 +798,71 @@ body.dark {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
+
+/* Media query for smaller screens (80% and below) */
+@media (max-width: 1200px) {
+    .week-days-container {
+      padding: 0 40px; /* Add padding to ensure buttons aren't clipped */
+    }
+  
+    .calendar-nav {
+      padding: 0 10px; /* Adjust padding for smaller screens */
+    }
+  
+    .nav-arrow {
+      width: 25px; /* Slightly smaller buttons for better fit */
+      height: 25px;
+      font-size: 16px;
+    }
+  
+    .week-days-content {
+      grid-template-columns: repeat(7, minmax(60px, 1fr)); /* Adjust column width for smaller screens */
+      gap: 5px; /* Reduce gap to fit content better */
+    }
+  
+    .day-item {
+      width: 100%; /* Allow day items to adjust to container width */
+      padding: 8px; /* Slightly reduce padding */
+    }
+  
+    .day-name {
+      font-size: 12px; /* Adjust font size for smaller screens */
+    }
+  
+    .day-date {
+      font-size: 16px;
+    }
+  
+    .day-event {
+      font-size: 10px;
+    }
+  }
+  
+  /* Additional media query for very small screens (e.g., mobile) */
+  @media (max-width: 768px) {
+    .week-days-content {
+      grid-template-columns: repeat(7, minmax(50px, 1fr)); /* Further reduce column width */
+      gap: 3px;
+    }
+  
+    .nav-arrow {
+      width: 20px;
+      height: 20px;
+      font-size: 14px;
+    }
+  
+    .day-name {
+      font-size: 10px;
+    }
+  
+    .day-date {
+      font-size: 14px;
+    }
+  
+    .day-event {
+      font-size: 8px;
+    }
+  }
 
 .nav-arrow:hover {
     background-color: #48c9b0;
@@ -1064,9 +1126,9 @@ body.dark {
     /* Distribute space between the two containers */
     width: 100%;
     /* Ensure the container takes full width */
-    margin-top: 10px;
+    /* margin-top: 10px; */
     /* Add some space above the new containers */
-    gap: 1.2%;
+    gap: 0.7%;
 }
 
 /* Define the slide-in animation from the left */
@@ -1365,7 +1427,7 @@ h3 {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    margin-top: 20px;
+    /* margin-top: 20px; */
     gap: 2px;
 }
 
