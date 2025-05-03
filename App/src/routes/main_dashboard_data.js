@@ -461,9 +461,9 @@ router.get('/main_dashboard_transport_data',checkPoolAvailability, async (req, r
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
 
-// GET endpoint to fetch up to 8 records from the academic_calendar table
+// GET endpoint to fetch  records from the academic_calendar table
 router.get('/calendar_events',checkPoolAvailability, async (req, res) => {
-    const dataQuery = 'SELECT * FROM academic_calendar ORDER BY Sr_No LIMIT 8';
+    const dataQuery = 'SELECT * FROM academic_calendar ORDER BY Sr_No';
     const columnQuery = 'SHOW COLUMNS FROM academic_calendar';
   
     try {
@@ -507,6 +507,21 @@ router.post('/upload_excel',checkPoolAvailability, async (req, res) => {
       res.status(500).json({ error: 'Error inserting data into MySQL' });
     }
   });
+
+
+// GET endpoint to retrieve data from academic_calendar table
+router.get('/get_calendar_events', async (req, res) => {
+    try {
+      const query = 'SELECT Name, Start_Date, End_Date, Type FROM academic_calendar';
+      const results = await runQuery(req.connectionPool, query, []);
+      
+      res.json({ success: true, data: results });
+    } catch (error) {
+      console.error('Error retrieving data from MySQL:', error);
+      res.status(500).json({ error: 'Error retrieving data from MySQL' });
+    }
+  });
+  
   
 /////////////////////// AUTOCREATE TABLES /////////////////////////////////////////
 

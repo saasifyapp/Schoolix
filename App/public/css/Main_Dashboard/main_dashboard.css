@@ -639,10 +639,12 @@ body.dark {
     /* Include padding in the element's total width and height */
 }
 
+/*----------------- CALENDAR AND EVENTS --------------*/
+
 .calender-details {
     background-color: transparent;
     width: 100%;
-    height: 80px;
+    height: 100px;
     grid-column: 1 / -1;
     border-radius: 20px;
     display: flex;
@@ -666,16 +668,73 @@ body.dark {
 }
 
 .week-days {
-    width: 80%;
-    background-color: #D6EAF8;
+    width: 100%;
     border-radius: 10px;
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 2px;
+    display: flex;
+    justify-content: center; /* Center items in the container */
+    gap: 10px;
     padding: 5px;
     box-sizing: border-box;
     position: relative;
     overflow: hidden;
+}
+
+.week-days-container {
+    display: flex;
+    justify-content: center; /* Center items in the container */
+    gap: 10px;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ensure shadow is applied on all sides */
+}
+
+.week-days-content {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(80px, 1fr)); /* Set a minimum width for day items */
+    gap: 10px;
+    padding: 5px;
+    flex-shrink: 0;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add equal-sided shadow */
+}
+
+.day-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 10px;
+    background-color: #f3f4f6; /* Light gray */
+    padding: 10px;
+    color: #2c3e50;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    width: 150px; /* Set fixed width */
+}
+
+.day-item.active {
+    background-color: #a3e4d7; /* Dark color for active day */
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.day-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reduced shadow effect */
+}
+
+.day-name {
+    font-size: 14px; /* Bigger font size for better visibility */
+    color: #5d6d7e;
+    margin-bottom: 2px;
+}
+
+.day-date {
+    font-size: 18px; /* Bigger font size for better visibility */
+    font-weight: 600;
 }
 
 .calendar-nav {
@@ -748,6 +807,23 @@ body.dark {
 .day-date {
     font-size: 14px;
     font-weight: 600;
+}
+
+.day-events {
+    margin-top: 5px;
+}
+
+.day-event {
+    font-size: 12px;
+    color: #5d6d7e;
+    display: block; /* Ensure each event is on a new line */
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Display ellipsis (...) for overflow text */
+}
+
+.day-item {
+    cursor: pointer; /* Change cursor to pointer to indicate click */
 }
 
 .holidays-birthdays {
@@ -837,6 +913,8 @@ body.dark {
       transform: translateX(100%);
     }
   }
+
+  /*  -------------- USER DETAILS -------------------*/
 
 .user_details {
     background-color: transparent;

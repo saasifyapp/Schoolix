@@ -1199,82 +1199,173 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 ///////////Calender Visualization///////////  
+
 let currentWeekStart = moment().startOf('week');
-    let isAnimating = false;
+let isAnimating = false;
 
-    function updateCalendar(direction = null) {
-      if (isAnimating) return;
-      isAnimating = true;
-
-      const weekDaysContainer = document.querySelector('.week-days-container');
-      const holidaysContent = document.querySelector('.holidays-birthdays-content');
-
-      // Generate new content for week-days
-      const days = Array.from({ length: 7 }, (_, i) => currentWeekStart.clone().add(i, 'days'));
-      const newWeekDaysContent = document.createElement('div');
-      newWeekDaysContent.className = 'week-days-content';
-      newWeekDaysContent.innerHTML = days.map(day => `
-        <div class="day-item">
-          <span class="day-name">${day.format('ddd')}</span>
-          <span class="day-date">${day.format('D MMM')}</span>
-        </div>
-      `).join('');
-
-      // Generate new content for holidays-birthdays (no animation)
-      const events = [
-        { name: "Teacher's Day", type: "holiday", date: "2025-05-05" },
-        { name: "John's Birthday", type: "birthday", date: "2025-05-06" }
-      ];
-      holidaysContent.innerHTML = `
-        <h4>Holidays & Birthdays</h4>
-        <ul class="event-list">
-          ${events
-            .filter(event => moment(event.date).isBetween(currentWeekStart, currentWeekStart.clone().endOf('week'), null, '[]'))
-            .map(event => `
-              <li class="event-item">
-                <span class="event-icon">${event.type === 'holiday' ? '🎉' : '🎂'}</span>
-                ${event.name}
-              </li>
-            `).join('')}
-        </ul>
-      `;
-
-      // Animate week-days with reversed direction
-      if (direction) {
-        weekDaysContainer.appendChild(newWeekDaysContent);
-        // Reverse animation: 'prev' slides right, 'next' slides left
-        const animationClass = direction === 'prev' ? 'slide-right' : 'slide-left';
-        weekDaysContainer.classList.add(animationClass);
-
-        // Clean up after animation
-        setTimeout(() => {
-          weekDaysContainer.classList.remove('slide-left', 'slide-right');
-          weekDaysContainer.style.transform = 'translateX(0)';
-          weekDaysContainer.innerHTML = '';
-          weekDaysContainer.appendChild(newWeekDaysContent);
-          isAnimating = false;
-        }, 500); // Match animation duration
-      } else {
-        // Initial load, no animation
-        weekDaysContainer.innerHTML = '';
-        weekDaysContainer.appendChild(newWeekDaysContent);
-        isAnimating = false;
-      }
+// Function to fetch calendar events from the endpoint
+async function fetchCalendarEvents() {
+  try {
+    const response = await fetch('/get_calendar_events');
+    const result = await response.json();
+    if (result.success) {
+      console.log(result.data); // Log fetched results to the browser's console
+      return result.data;
+    } else {
+      throw new Error('Failed to fetch calendar events');
     }
+  } catch (error) {
+    console.error('Error fetching calendar events:', error);
+    return [];
+  }
+}
 
-    document.getElementById('prev-week').addEventListener('click', () => {
-      if (!isAnimating) {
-        currentWeekStart.subtract(1, 'week');
-        updateCalendar('prev');
-      }
+function adjustFontSize() {
+  const events = document.querySelectorAll('.day-event');
+  events.forEach(event => {
+    let fontSize = 12;
+    while (event.scrollWidth > event.clientWidth && fontSize > 8) {
+      fontSize--;
+      event.style.fontSize = fontSize + 'px';
+    }
+  });
+}
+
+function showEventDetails(dateString, eventsForDay) {
+  const day = moment(dateString, 'YYYY-MM-DD');
+  const eventList = eventsForDay.length ? 
+    eventsForDay.map(event => `
+      <div>${event.type === 'holiday' ? '🎉' : '📅'} ${event.name}</div>
+    `).join('') : '<div>No planned Events</div>';
+    
+  Swal.fire({
+    title: `${day.format('dddd, MMMM D')}`,
+    html: eventList,
+    icon: 'info',
+    confirmButtonText: 'Close',
+  });
+}
+
+async function updateCalendar(direction = null) {
+  if (isAnimating) return;
+  isAnimating = true;
+
+  const weekDaysContainer = document.querySelector('.week-days-container');
+
+  // Fetch events from the API
+  const fetchedEvents = await fetchCalendarEvents();
+
+  // Define events using fetched data
+  const eventDetails = fetchedEvents.reduce((acc, event) => {
+    const dateKey = moment(event.Start_Date, 'DD-MM-YYYY').format('YYYY-MM-DD');
+    if (!acc[dateKey]) {
+      acc[dateKey] = [];
+    }
+    acc[dateKey].push({
+      type: event.Type,
+      name: event.Name,
+      startDate: event.Start_Date,
+      endDate: event.End_Date
     });
+    return acc;
+  }, {});
 
-    document.getElementById('next-week').addEventListener('click', () => {
-      if (!isAnimating) {
-        currentWeekStart.add(1, 'week');
-        updateCalendar('next');
-      }
+  // Generate new content for week-days
+  const days = Array.from({ length: 7 }, (_, i) => currentWeekStart.clone().add(i, 'days'));
+  const newWeekDaysContent = document.createElement('div');
+  newWeekDaysContent.className = 'week-days-content';
+  newWeekDaysContent.innerHTML = days.map(day => {
+    const eventsForDay = eventDetails[day.format('YYYY-MM-DD')] || [];
+    let eventsHtml = '';
+    if (eventsForDay.length === 1) {
+      const event = eventsForDay[0];
+      eventsHtml = `<span class="day-event">${event.type === 'holiday' ? '🎉' : '📅'} ${event.name}</span>`;
+    } else if (eventsForDay.length > 1) {
+      eventsHtml = `<span class="day-event">${eventsForDay.length} Planned Events</span>`;
+    }
+    return `
+    <div class="day-item ${day.isSame(moment(), 'day') ? 'active' : ''}" data-date="${day.format('YYYY-MM-DD')}">
+      <span class="day-name">${day.format('dddd')}</span>
+      <span class="day-date">${day.format('MMMM D')}</span>
+      <div class="day-events">
+        ${eventsHtml}
+      </div>
+    </div>
+  `;
+  }).join('');
+
+  // Animate week-days with reversed direction
+  if (direction) {
+    weekDaysContainer.appendChild(newWeekDaysContent);
+    const animationClass = direction === 'prev' ? 'slide-right' : 'slide-left';
+    weekDaysContainer.classList.add(animationClass);
+
+    // Clean up after animation
+    setTimeout(() => {
+      weekDaysContainer.classList.remove('slide-left', 'slide-right');
+      weekDaysContainer.style.transform = 'translateX(0)';
+      weekDaysContainer.innerHTML = '';
+      weekDaysContainer.appendChild(newWeekDaysContent);
+      isAnimating = false;
+      adjustFontSize(); // Adjust font size after content is added
+    }, 800); // Match animation duration
+  } else {
+    // Initial load, no animation
+    weekDaysContainer.innerHTML = '';
+    weekDaysContainer.appendChild(newWeekDaysContent);
+    isAnimating = false;
+    adjustFontSize(); // Adjust font size after content is added
+  }
+
+  // Add event listeners to day items after updating the calendar
+  document.querySelectorAll('.day-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      const date = item.getAttribute('data-date');
+      const eventsForDay = eventDetails[date] || [];
+      showEventDetails(date, eventsForDay);
     });
+  });
+}
 
-    // Initial calendar update
-    updateCalendar();
+document.getElementById('prev-week').addEventListener('click', () => {
+  if (!isAnimating) {
+    currentWeekStart.subtract(1, 'week');
+    updateCalendar('prev');
+  }
+});
+
+document.getElementById('next-week').addEventListener('click', () => {
+  if (!isAnimating) {
+    currentWeekStart.add(1, 'week');
+    updateCalendar('next');
+  }
+});
+
+// Initial call to update calendar
+updateCalendar();
+
+
+
+// Initialize the Holidays & Birthdays section
+function initializeHolidaysBirthdays() {
+  const holidaysContent = document.querySelector('.holidays-birthdays-content');
+  const events = [
+    { name: "Teacher's Day", type: "holiday", date: "2025-05-05" },
+    { name: "John's Birthday", type: "birthday", date: "2025-05-06" }
+  ];
+  holidaysContent.innerHTML = `
+    <h4>Holidays & Birthdays</h4>
+    <ul class="event-list">
+      ${events.map(event => `
+        <li class="event-item">
+          <span class="event-icon">${event.type === 'holiday' ? '🎉' : '🎂'}</span>
+          ${event.name}
+        </li>
+      `).join('')}
+    </ul>
+  `;
+}
+
+// Initial calendar update and Holidays & Birthdays initialization
+updateCalendar();
+initializeHolidaysBirthdays();
