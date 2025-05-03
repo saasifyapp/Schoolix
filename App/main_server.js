@@ -301,12 +301,22 @@ app.use('/', app_transportRoutes);
 // Function to Authenticate //
 
 function authenticateToken(req, res, next) {
+    // Check if session exists
     if (!req.session.user) {
-        return res.redirect('/');
+        return logoutManager(req, res, next);
     }
+    
+    // Check for required cookies
+    const requiredCookies = ['jwt', 'schoolName', 'session_cookie', 'username'];
+    for (let cookieName of requiredCookies) {
+        if (!req.cookies[cookieName]) {
+            return logoutManager(req, res, next);
+        }
+    }
+
+    // Proceed if session and cookies are valid
     next();
 }
-
 
 app.get('/get-variable', (req, res) => {
     res.json({ token });
