@@ -489,40 +489,84 @@ confirmSchoolLocation(username); // Replace with the actual login name
 
 ///////////////////////////////////////// GET VALUES FOR STUDENT/ TEACHER/ ADMIN COUNT ON DASHBOARD ////////////////////////////
 
+// Select all user detail items
+const userDetailItems = document.querySelectorAll('.user_detail_item');
+
+// Apply loading state to each user detail item
+userDetailItems.forEach(item => {
+  item.classList.add('loading');
+  // Set placeholder content to ensure shimmer effect covers the card
+  const title = item.querySelector('.detail_title').textContent;
+  item.querySelector('.detail_count').textContent = 'Loading...';
+  // Optionally hide the icon or other elements if needed
+  const icon = item.querySelector('.user_icon');
+  if (icon) icon.style.visibility = 'hidden';
+});
+
 fetch('/fetch-user-counts-for-main-dashboard')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        // Update the containers with the counts
-        document.querySelectorAll('.user_detail_item').forEach(item => {
-            const title = item.querySelector('.detail_title').textContent;
-            if (title === 'Students') {
-                item.querySelector('.detail_count').textContent = data.Students;
-            } else if (title === 'Teachers') {
-                item.querySelector('.detail_count').textContent = data.Teachers;
-            } else if (title === 'Admins') {
-                item.querySelector('.detail_count').textContent = data.Admins;
-            } else if (title === 'Support Staff') {
-                item.querySelector('.detail_count').textContent = data.SupportStaff;
-            } else if (title === 'Employees') {
-                item.querySelector('.detail_count').textContent = data.Employees;
-            }
-        });
-    })
-    .catch(error => console.error('Error fetching user counts for main dashboard:', error));
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    // Update the containers with the counts
+    userDetailItems.forEach(item => {
+      const title = item.querySelector('.detail_title').textContent;
+      if (title === 'Students') {
+        item.querySelector('.detail_count').textContent = data.Students;
+      } else if (title === 'Teachers') {
+        item.querySelector('.detail_count').textContent = data.Teachers;
+      } else if (title === 'Admins') {
+        item.querySelector('.detail_count').textContent = data.Admins;
+      } else if (title === 'Support Staff') {
+        item.querySelector('.detail_count').textContent = data.SupportStaff;
+      } else if (title === 'Employees') {
+        item.querySelector('.detail_count').textContent = data.Employees;
+      }
+      // Remove loading class after updating content
+      item.classList.remove('loading');
+      // Restore visibility of icon or other elements if hidden
+      const icon = item.querySelector('.user_icon');
+      if (icon) icon.style.visibility = 'visible';
+    });
+  })
+  .catch(error => {
+    console.error('Error fetching user counts for main dashboard:', error);
+    // Remove loading class even if there's an error to prevent infinite loading
+    userDetailItems.forEach(item => {
+      item.classList.remove('loading');
+      item.querySelector('.detail_count').textContent = 'Error';
+      const icon = item.querySelector('.user_icon');
+      if (icon) icon.style.visibility = 'visible';
+    });
+  });
 
 ///////////////////////////////////////// GET VALUES FOR STUDENT PIE CHART AND LIBRARY CONSOLE ON DASHBOARD ////////////////////////////
 
 // Get Library Details //
-fetch("/main_dashboard_library_data")
-  .then((response) => response.json())
-  .then((data) => {
-    //console.log(data);
+// Select all library items
+const libraryItems = document.querySelectorAll('.library_item');
 
+// Apply loading state to each library item
+libraryItems.forEach(item => {
+  item.classList.add('loading');
+  // Set placeholder content for counts
+  const countElement = item.querySelector('span[id]');
+  if (countElement) {
+    countElement.textContent = 'Loading...';
+  }
+});
+
+fetch("/main_dashboard_library_data")
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then((data) => {
     // Update counts with the fetched data
     document.getElementById('totalBooksCount').textContent = data.totalBooks;
     document.getElementById('memberCount').textContent = data.memberCount;
@@ -532,11 +576,16 @@ fetch("/main_dashboard_library_data")
     document.getElementById('booksIssuedTodayCount').textContent = data.booksIssuedToday;
     document.getElementById('booksReturnedTodayCount').textContent = data.booksReturnedToday;
     document.getElementById('penaltiesCollectedCount').textContent = data.penaltiesCollected;
+
+    // Remove loading state from all library items
+    libraryItems.forEach(item => {
+      item.classList.remove('loading');
+    });
   })
   .catch((error) => {
     console.error("Error fetching counts:", error);
 
-    // Display error messages if needed
+    // Display error messages and remove loading state
     document.getElementById('totalBooksCount').textContent = 'Error';
     document.getElementById('memberCount').textContent = 'Error';
     document.getElementById('booksIssuedCount').textContent = 'Error';
@@ -545,62 +594,118 @@ fetch("/main_dashboard_library_data")
     document.getElementById('booksIssuedTodayCount').textContent = 'Error';
     document.getElementById('booksReturnedTodayCount').textContent = 'Error';
     document.getElementById('penaltiesCollectedCount').textContent = 'Error';
+
+    // Remove loading state even if there's an error
+    libraryItems.forEach(item => {
+      item.classList.remove('loading');
+    });
   });
 
 
 // Get Students COunts
+// Select chart containers
+const primaryChartContainer = document.querySelector('.male_female_graph');
+const prePrimaryChartContainer = document.querySelector('.fee_status');
+
+// Apply loading state to chart containers
+primaryChartContainer.classList.add('loading');
+prePrimaryChartContainer.classList.add('loading');
+
+// Set placeholder content
+document.getElementById('totalStudents').textContent = 'Loading...';
+document.getElementById('maleCount').textContent = 'Loading...';
+document.getElementById('femaleCount').textContent = 'Loading...';
+document.getElementById('prePrimaryTotal').textContent = 'Loading...';
+document.getElementById('prePrimaryMaleCount').textContent = 'Loading...';
+document.getElementById('prePrimaryFemaleCount').textContent = 'Loading...';
+
+// Function to generate SVG path for a pie slice
+function createPieSlicePath(cx, cy, r, percentage) {
+  const angle = (percentage / 100) * 360; // Convert percentage to degrees
+  const radians = (angle * Math.PI) / 180;
+  const x = cx + r * Math.cos(radians - Math.PI / 2); // Adjust for clockwise fill
+  const y = cy + r * Math.sin(radians - Math.PI / 2);
+  const largeArcFlag = angle <= 180 ? 0 : 1;
+  return `M${cx},${cy} L${cx},${cy - r} A${r},${r} 0 ${largeArcFlag},1 ${x},${y} Z`;
+}
+
+// Function to animate the pie slice
+function animatePieSlice(pathElement, finalPercentage, duration) {
+  let startTime = null;
+  const animate = (currentTime) => {
+    if (!startTime) startTime = currentTime;
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1); // Progress from 0 to 1
+    const currentPercentage = progress * finalPercentage;
+    pathElement.setAttribute('d', createPieSlicePath(100, 100, 90, currentPercentage));
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    }
+  };
+  requestAnimationFrame(animate);
+}
+
 fetch("/student_counts")
-    .then((response) => response.json())
-    .then((data) => {
-        // Primary Data
-        const totalStudents = data.primary_totalStudents;
-        const maleStudents = data.primary_maleStudents;
-        const femaleStudents = data.primary_femaleStudents;
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then((data) => {
+    // Primary Data
+    const totalStudents = data.primary_totalStudents;
+    const maleStudents = data.primary_maleStudents;
+    const femaleStudents = data.primary_femaleStudents;
 
-        // Calculate percentages for primary
-        const malePercentage = (maleStudents / totalStudents) * 100;
-        const femalePercentage = 100 - malePercentage;
+    // Calculate percentages for primary
+    const malePercentage = (maleStudents / totalStudents) * 100;
 
-        // Update Primary Pie Chart
-        document.querySelector('.male_female_graph .chart').style.background = 
-          `conic-gradient(#82afe3 ${malePercentage}%, #8cefda ${malePercentage}%)`;
+    // Update Primary Pie Chart with round circle fill animation
+    const primaryMaleFill = document.querySelector('.male-fill');
+    animatePieSlice(primaryMaleFill, malePercentage, 1500); // Animate over 1.5 seconds
 
-        // Update Primary Labels
-        document.getElementById('totalStudents').textContent = totalStudents;
-        document.getElementById('maleCount').textContent = maleStudents;
-        document.getElementById('femaleCount').textContent = femaleStudents;
+    // Update Primary Labels
+    document.getElementById('totalStudents').textContent = totalStudents;
+    document.getElementById('maleCount').textContent = maleStudents;
+    document.getElementById('femaleCount').textContent = femaleStudents;
 
-        // Pre-Primary Data
-        const prePrimaryTotalStudents = data.pre_primary_totalStudents;
-        const prePrimaryMaleStudents = data.pre_primary_maleStudents;
-        const prePrimaryFemaleStudents = data.pre_primary_femaleStudents;
+    // Pre-Primary Data
+    const prePrimaryTotalStudents = data.pre_primary_totalStudents;
+    const prePrimaryMaleStudents = data.pre_primary_maleStudents;
+    const prePrimaryFemaleStudents = data.pre_primary_femaleStudents;
 
-        // Calculate percentages for pre-primary
-        const prePrimaryMalePercentage = (prePrimaryMaleStudents / prePrimaryTotalStudents) * 100;
-        const prePrimaryFemalePercentage = 100 - prePrimaryMalePercentage;
+    // Calculate percentages for pre-primary
+    const prePrimaryMalePercentage = (prePrimaryMaleStudents / prePrimaryTotalStudents) * 100;
 
-        // Update Pre-Primary Pie Chart
-        document.querySelector('.fee_status .chart').style.background = 
-          `conic-gradient(#c3ebfa ${prePrimaryMalePercentage}%, #fae27c ${prePrimaryMalePercentage}%)`;
+    // Update Pre-Primary Pie Chart with round circle fill animation
+    const prePrimaryMaleFill = document.querySelector('.pre-male-fill');
+    animatePieSlice(prePrimaryMaleFill, prePrimaryMalePercentage, 1500); // Animate over 1.5 seconds
 
-        // Update Pre-Primary Labels
-        document.getElementById('prePrimaryTotal').textContent = prePrimaryTotalStudents;
-        document.getElementById('prePrimaryMaleCount').textContent = prePrimaryMaleStudents;
-        document.getElementById('prePrimaryFemaleCount').textContent = prePrimaryFemaleStudents;
-    })
-    .catch((error) => {
-        console.error("Error fetching student counts:", error);
+    // Update Pre-Primary Labels
+    document.getElementById('prePrimaryTotal').textContent = prePrimaryTotalStudents;
+    document.getElementById('prePrimaryMaleCount').textContent = prePrimaryMaleStudents;
+    document.getElementById('prePrimaryFemaleCount').textContent = prePrimaryFemaleStudents;
 
-        // Update UI to show error message for both charts
-        document.getElementById('totalStudents').textContent = 'Error';
-        document.getElementById('maleCount').textContent = 'Error';
-        document.getElementById('femaleCount').textContent = 'Error';
+    // Remove loading state
+    primaryChartContainer.classList.remove('loading');
+    prePrimaryChartContainer.classList.remove('loading');
+  })
+  .catch((error) => {
+    console.error("Error fetching student counts:", error);
 
-        document.getElementById('prePrimaryTotal').textContent = 'Error';
-        document.getElementById('prePrimaryMaleCount').textContent = 'Error';
-        document.getElementById('prePrimaryFemaleCount').textContent = 'Error';
-    });
+    // Update UI to show error message for both charts
+    document.getElementById('totalStudents').textContent = 'Error';
+    document.getElementById('maleCount').textContent = 'Error';
+    document.getElementById('femaleCount').textContent = 'Error';
+    document.getElementById('prePrimaryTotal').textContent = 'Error';
+    document.getElementById('prePrimaryMaleCount').textContent = 'Error';
+    document.getElementById('prePrimaryFemaleCount').textContent = 'Error';
 
+    // Remove loading state even if there's an error
+    primaryChartContainer.classList.remove('loading');
+    prePrimaryChartContainer.classList.remove('loading');
+  });
 
 // Function to handle password for PURCHASE console
 
@@ -705,6 +810,11 @@ async function fetchAttendanceData() {
   }
 }
 
+// Ensure Chart.js is loaded (if not already included)
+const script = document.createElement('script');
+script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js';
+document.head.appendChild(script);
+
 function getPastWeekData(data) {
   const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const labels = [];
@@ -712,19 +822,17 @@ function getPastWeekData(data) {
   const teachersData = [];
   const visitorsData = [];
 
-  // Populate data for the past 6 days excluding Sunday
   for (const entry of data) {
-      const dateParts = entry.date.split('-'); // format: DD-MM-YYYY
-      const dateObj = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
-      const dayOfWeek = weekDays[dateObj.getDay()];
-      const formattedDate = `${dayOfWeek}, ${dateObj.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}`;
-      labels.push(formattedDate);
-      studentsData.push(entry.students_count);
-      teachersData.push(entry.teachers_count);
-      visitorsData.push(entry.visitors_count);
+    const dateParts = entry.date.split('-');
+    const dateObj = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
+    const dayOfWeek = weekDays[dateObj.getDay()];
+    const formattedDate = `${dayOfWeek}, ${dateObj.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}`;
+    labels.push(formattedDate);
+    studentsData.push(entry.students_count);
+    teachersData.push(entry.teachers_count);
+    visitorsData.push(entry.visitors_count);
   }
 
-  // Reverse the arrays to show the oldest date first
   labels.reverse();
   studentsData.reverse();
   teachersData.reverse();
@@ -733,157 +841,206 @@ function getPastWeekData(data) {
   return { labels, studentsData, teachersData, visitorsData };
 }
 
-async function setupChart() {
-  // Fetch attendance data
-  const attendanceData = await fetchAttendanceData();
+async function fetchAttendanceData() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([
+        { date: '29-04-2025', students_count: 120, teachers_count: 15, visitors_count: 5 },
+        { date: '30-04-2025', students_count: 118, teachers_count: 14, visitors_count: 3 },
+        { date: '01-05-2025', students_count: 122, teachers_count: 16, visitors_count: 7 },
+        { date: '02-05-2025', students_count: 119, teachers_count: 15, visitors_count: 4 },
+        { date: '03-05-2025', students_count: 121, teachers_count: 14, visitors_count: 6 },
+        { date: '04-05-2025', students_count: 123, teachers_count: 15, visitors_count: 5 }
+      ]);
+    }, 1000);
+  });
+}
 
-  // Extract labels and data arrays
-  const { labels, studentsData, teachersData, visitorsData } = getPastWeekData(attendanceData);
+function setupChart() {
+  // Select the attendance container
+  const attendanceContainer = document.querySelector('.attendance');
+  
+  // Apply loading state immediately
+  if (attendanceContainer) {
+    attendanceContainer.classList.add('loading');
+  } else {
+    console.error('Attendance container not found');
+    return;
+  }
 
-  // Initialize Chart
-  const ctx = document.getElementById('attendanceChart').getContext('2d');
-  const attendanceChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
+  // Fetch and render chart
+  fetchAttendanceData()
+    .then((attendanceData) => {
+      const { labels, studentsData, teachersData, visitorsData } = getPastWeekData(attendanceData);
+
+      const ctx = document.getElementById('attendanceChart').getContext('2d');
+      const attendanceChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
           labels: labels,
           datasets: [
-              {
-                  label: 'Students',
-                  data: studentsData,
-                  backgroundColor: '#8cefda',
-                  borderColor: 'rgba(0, 0, 0, 0)',
-                  borderWidth: 0
-              },
-              {
-                  label: 'Teachers',
-                  data: teachersData,
-                  backgroundColor: '#fae27c',
-                  borderColor: 'rgba(0, 0, 0, 0)',
-                  borderWidth: 0
-              },
-              {
-                  label: 'Visitors',
-                  data: visitorsData,
-                  backgroundColor: '#ff9999',
-                  borderColor: 'rgba(0, 0, 0, 0)',
-                  borderWidth: 0
-              }
+            {
+              label: 'Students',
+              data: studentsData,
+              backgroundColor: '#8cefda',
+              borderColor: 'rgba(0, 0, 0, 0)',
+              borderWidth: 0
+            },
+            {
+              label: 'Teachers',
+              data: teachersData,
+              backgroundColor: '#fae27c',
+              borderColor: 'rgba(0, 0, 0, 0)',
+              borderWidth: 0
+            },
+            {
+              label: 'Visitors',
+              data: visitorsData,
+              backgroundColor: '#ff9999',
+              borderColor: 'rgba(0, 0, 0, 0)',
+              borderWidth: 0
+            }
           ]
-      },
-      options: {
+        },
+        options: {
           scales: {
-              x: {
-                  ticks: {
-                      autoSkip: true,
-                      maxRotation: 45,
-                      minRotation: 0,
-                      padding: 5,
-                      maxTicksLimit: 6
-                  },
-                  grid: {
-                      display: false
-                  }
+            x: {
+              ticks: {
+                autoSkip: true,
+                maxRotation: 45,
+                minRotation: 0,
+                padding: 5,
+                maxTicksLimit: 6
               },
-              y: {
-                  beginAtZero: true,
-                  ticks: {
-                      beginAtZero: true,
-                      stepSize: 1, // Ensure only integer values are displayed
-                  },
-                  grid: {
-                      drawBorder: false,
-                      color: 'rgba(0, 0, 0, 0.1)',
-                      borderDash: [2, 2],
-                      drawOnChartArea: true,
-                      drawTicks: false
-                  }
+              grid: {
+                display: false
               }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                beginAtZero: true,
+                stepSize: 1,
+              },
+              grid: {
+                drawBorder: false,
+                color: 'rgba(0, 0, 0, 0.1)',
+                borderDash: [2, 2],
+                drawOnChartArea: true,
+                drawTicks: false
+              }
+            }
           },
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-              legend: {
-                  display: true,
-                  position: 'top',
-                  align: 'end',
-                  labels: {
-                      boxWidth: 15
-                  }
-              },
-              tooltip: {
-                  enabled: true,
-                  mode: 'index',
-                  intersect: false
+            legend: {
+              display: true,
+              position: 'top',
+              align: 'end',
+              labels: {
+                boxWidth: 15
               }
+            },
+            tooltip: {
+              enabled: true,
+              mode: 'index',
+              intersect: false
+            }
           },
           layout: {
-              padding: {
-                  top: 0,
-                  bottom: 10
-              }
+            padding: {
+              top: 0,
+              bottom: 10
+            }
           },
           barPercentage: 0.7,
           categoryPercentage: 0.8,
           hover: {
-              mode: 'index',
-              intersect: false
+            mode: 'index',
+            intersect: false
           }
-      },
-      plugins: [{
+        },
+        plugins: [{
           id: 'customRoundedBars',
           beforeDatasetsDraw: function(chart) {
-              const ctx = chart.ctx;
-              chart.data.datasets.forEach(function(dataset, datasetIndex) {
-                  const meta = chart.getDatasetMeta(datasetIndex);
-                  meta.data.forEach((bar, index) => {
-                      const x = bar.x;
-                      const y = bar.y;
-                      const width = bar.width;
-                      const height = Math.max(bar.height, 0);
-                      const minCurveHeight = 0;
+            const ctx = chart.ctx;
+            chart.data.datasets.forEach(function(dataset, datasetIndex) {
+              const meta = chart.getDatasetMeta(datasetIndex);
+              meta.data.forEach((bar, index) => {
+                const x = bar.x;
+                const y = bar.y;
+                const width = bar.width;
+                const height = Math.max(bar.height, 0);
+                const minCurveHeight = 0;
 
-                      ctx.beginPath();
-                      ctx.moveTo(x - width / 2, height < minCurveHeight ? y + minCurveHeight : y + height);
-                      ctx.lineTo(x - width / 2, y);
-                      ctx.quadraticCurveTo(x - width / 2, y, x - width / 2 + 20, y);
-                      ctx.lineTo(x + width / 2 - 20, y);
-                      ctx.quadraticCurveTo(x + width / 2, y, x + width / 2, height < minCurveHeight ? y : y + minCurveHeight);
-                      ctx.lineTo(x + width / 2, height < minCurveHeight ? y + minCurveHeight : y + height);
-                      ctx.closePath();
+                ctx.beginPath();
+                ctx.moveTo(x - width / 2, height < minCurveHeight ? y + minCurveHeight : y + height);
+                ctx.lineTo(x - width / 2, y);
+                ctx.quadraticCurveTo(x - width / 2, y, x - width / 2 + 20, y);
+                ctx.lineTo(x + width / 2 - 20, y);
+                ctx.quadraticCurveTo(x + width / 2, y, x + width / 2, height < minCurveHeight ? y : y + minCurveHeight);
+                ctx.lineTo(x + width / 2, height < minCurveHeight ? y + minCurveHeight : y + height);
+                ctx.closePath();
 
-                      ctx.fillStyle = dataset.backgroundColor;
-                      ctx.fill();
-                  });
+                ctx.fillStyle = dataset.backgroundColor;
+                ctx.fill();
               });
+            });
           }
-      }]
-  });
+        }]
+      });
+
+      // Remove loading state after chart is rendered
+      attendanceContainer.classList.remove('loading');
+    })
+    .catch((error) => {
+      console.error("Error setting up attendance chart:", error);
+
+      const ctx = document.getElementById('attendanceChart').getContext('2d');
+      ctx.font = '20px Arial';
+      ctx.fillStyle = '#5d6d7e';
+      ctx.textAlign = 'center';
+      ctx.fillText('Error loading data', ctx.canvas.width / 2, ctx.canvas.height / 2);
+
+      attendanceContainer.classList.remove('loading');
+    });
 }
 
-// Setup chart on page load
-window.addEventListener('load', setupChart);
+// Setup chart when DOM is fully loaded
+document.addEventListener('DOMContentLoaded', setupChart);
 
 
 /////////////////////////////// TRANSPORT INSIGHTS ///////////////////////
 
 document.addEventListener('DOMContentLoaded', function() {
-  let scrollPosition = 0; // Initial scroll position
+  let scrollPosition = 0;
   const cardContainer = document.querySelector('.transport_cards');
-  const numberOfVisibleCards = 2; // Number of visible cards at a time
-  const scrollInterval = 5000; // Time between each scroll in milliseconds (5 seconds)
+  const transportWrapper = document.querySelector('.transport_wrapper');
+  const numberOfVisibleCards = 2;
+  const scrollInterval = 5000;
   const scrollAmount = cardContainer.clientWidth / numberOfVisibleCards;
-  let isHovered = false; // State to track hover
-  let isMapOpen = false; // State to track if map overlay is open
+  let isHovered = false;
+  let isMapOpen = false;
+  let isLoading = true; // Track loading state for auto-scroll
+
+  // Apply loading state immediately
+  if (transportWrapper) {
+    transportWrapper.classList.add('loading');
+  } else {
+    console.error('Transport wrapper not found');
+    return;
+  }
 
   // Function to scroll the cards
   function autoScroll() {
-      if (!isHovered && !isMapOpen) {
-          scrollPosition += scrollAmount; // Increase the scroll position
-          if (scrollPosition >= cardContainer.scrollWidth) {
-              scrollPosition = 0; // Reset scroll position if at the end
-          }
-          cardContainer.style.transform = `translateX(-${scrollPosition}px)`;
+    if (!isHovered && !isMapOpen && !isLoading) {
+      scrollPosition += scrollAmount;
+      if (scrollPosition >= cardContainer.scrollWidth) {
+        scrollPosition = 0;
       }
+      cardContainer.style.transform = `translateX(-${scrollPosition}px)`;
+    }
   }
 
   // Set an interval to auto-scroll the cards
@@ -891,133 +1048,144 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Event listeners to track hover state
   cardContainer.addEventListener('mouseover', () => {
-      isHovered = true;
+    isHovered = true;
   });
 
   cardContainer.addEventListener('mouseout', () => {
-      isHovered = false;
+    isHovered = false;
   });
 
   // Fetch transport data and update DOM
   fetch('/main_dashboard_transport_data')
-      .then(response => response.json())
-      .then(data => {
-          document.getElementById('vehicleCount').textContent = data.counts.get_no_of_vehicle || 0;
-          document.getElementById('driverCount').textContent = data.counts.get_no_of_drivers || 0;
-          document.getElementById('passengerCount').textContent = data.counts.total_passengers || 0;
-          document.getElementById('routeCount').textContent = data.counts.get_no_of_distinct_routes || 0;
-          document.getElementById('shiftCount').textContent = data.counts.get_no_of_distinct_shifts || 0;
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      document.getElementById('vehicleCount').textContent = data.counts.get_no_of_vehicle || 0;
+      document.getElementById('driverCount').textContent = data.counts.get_no_of_drivers || 0;
+      document.getElementById('passengerCount').textContent = data.counts.total_passengers || 0;
+      document.getElementById('routeCount').textContent = data.counts.get_no_of_distinct_routes || 0;
+      document.getElementById('shiftCount').textContent = data.counts.get_no_of_distinct_shifts || 0;
 
-          const locationCard = document.querySelector('.location-card ul');
-          locationCard.innerHTML = ''; // Clear existing list items
+      const locationCard = document.querySelector('.location-card ul');
+      locationCard.innerHTML = '';
 
-          const promises = data.vehicleDetails.map(detail => {
-              if (detail.latitude && detail.longitude) {
-                  const url = `https://nominatim.openstreetmap.org/reverse?lat=${detail.latitude}&lon=${detail.longitude}&format=json`;
-                  return fetch(url)
-                      .then(response => response.json())
-                      .then(geocodeData => {
-                          const address = geocodeData.address;
-                          const locationDetails = [address.road, address.suburb, address.county].filter(Boolean).join(', ');
-                          const listItem = document.createElement('li');
-                          listItem.innerHTML = `<i class="fas fa-map-pin"></i> ${detail.vehicle_no} | ${detail.name} :- ${locationDetails}`;
-                          listItem.addEventListener('click', () => showMap(detail.latitude, detail.longitude, locationDetails));
-                          locationCard.appendChild(listItem);
-                      })
-                      .catch(error => {
-                          console.error(`Error fetching location for vehicle ${detail.vehicle_no}:`, error);
-                          const listItem = document.createElement('li');
-                          listItem.innerHTML = `<i class="fas fa-map-pin"></i> ${detail.vehicle_no} | ${detail.name} :- Location Error`;
-                          locationCard.appendChild(listItem);
-                      });
-              } else {
-                  const listItem = document.createElement('li');
-                  listItem.innerHTML = `<i class="fas fa-map-pin"></i> ${detail.vehicle_no} | ${detail.name} :- Invalid coordinates`;
-                  locationCard.appendChild(listItem);
-              }
-          });
-
-          Promise.all(promises).then(() => {
-              console.log('All vehicle locations processed');
-          });
-
-          // Dynamic update of shift labels
-          updateShiftLabels(data.shifts);
-
-      })
-      .catch(error => {
-          console.error('Error fetching transport data:', error);
+      const promises = data.vehicleDetails.map(detail => {
+        if (detail.latitude && detail.longitude) {
+          const url = `https://nominatim.openstreetmap.org/reverse?lat=${detail.latitude}&lon=${detail.longitude}&format=json`;
+          return fetch(url)
+            .then(response => response.json())
+            .then(geocodeData => {
+              const address = geocodeData.address;
+              const locationDetails = [address.road, address.suburb, address.county].filter(Boolean).join(', ');
+              const listItem = document.createElement('li');
+              listItem.innerHTML = `<i class="fas fa-map-pin"></i> ${detail.vehicle_no} | ${detail.name} :- ${locationDetails}`;
+              listItem.addEventListener('click', () => showMap(detail.latitude, detail.longitude, locationDetails));
+              locationCard.appendChild(listItem);
+            })
+            .catch(error => {
+              console.error(`Error fetching location for vehicle ${detail.vehicle_no}:`, error);
+              const listItem = document.createElement('li');
+              listItem.innerHTML = `<i class="fas fa-map-pin"></i> ${detail.vehicle_no} | ${detail.name} :- Location Error`;
+              locationCard.appendChild(listItem);
+            });
+        } else {
+          const listItem = document.createElement('li');
+          listItem.innerHTML = `<i class="fas fa-map-pin"></i> ${detail.vehicle_no} | ${detail.name} :- Invalid coordinates`;
+          locationCard.appendChild(listItem);
+        }
       });
 
+      return Promise.all(promises).then(() => {
+        console.log('All vehicle locations processed');
+        updateShiftLabels(data.shifts);
+      });
+    })
+    .then(() => {
+      isLoading = false; // Update loading state
+      transportWrapper.classList.remove('loading');
+    })
+    .catch(error => {
+      console.error('Error fetching transport data:', error);
+
+      const summaryCard = document.querySelector('.summary-card ul');
+      summaryCard.innerHTML = '<li>Error loading data</li>';
+      const locationCard = document.querySelector('.location-card ul');
+      locationCard.innerHTML = '<li>Error loading data</li>';
+      document.getElementById('shift1').innerHTML = '<h4><i class="fas fa-sun"></i> Shift - Error</h4>';
+      document.getElementById('shift2').innerHTML = '<h4><i class="fas fa-cloud-sun"></i> Shift - Error</h4>';
+
+      isLoading = false;
+      transportWrapper.classList.remove('loading');
+    });
+
   function updateShiftLabels(shifts) {
-      if (shifts && Array.isArray(shifts)) {
-          shifts.forEach((shift, index) => {
-              const shiftCardId = `shift${index + 1}`;
-              const shiftCard = document.getElementById(shiftCardId);
+    if (shifts && Array.isArray(shifts)) {
+      shifts.forEach((shift, index) => {
+        const shiftCardId = `shift${index + 1}`;
+        const shiftCard = document.getElementById(shiftCardId);
 
-              if (shiftCard) {
-                  const shiftNameElement = shiftCard.querySelector('h4');
-                  shiftNameElement.innerHTML = `<i class="fas fa-${index === 0 ? 'sun' : 'cloud-sun'}"></i> Shift - ${shift.shift_name || 'Unnamed Shift'}`;
+        if (shiftCard) {
+          const shiftNameElement = shiftCard.querySelector('h4');
+          shiftNameElement.innerHTML = `<i class="fas fa-${index === 0 ? 'sun' : 'cloud-sun'}"></i> Shift - ${shift.shift_name || 'Unnamed Shift'}`;
 
-                  const detailsList = document.createElement('ul');
-                  shift.details.forEach(detail => {
-                    const detailItem = document.createElement('li');
-                    detailItem.innerHTML = `<i class="fas fa-bus"></i>${detail.vehicle_no || 'N/A'} | ${detail.driver_name || 'N/A'}<br>Students: ${detail.students_tagged ?? 0}, Seats: ${detail.available_seats ?? 0}`;
-                    detailsList.appendChild(detailItem);
-                });
-                  shiftCard.appendChild(detailsList);
-              } else {
-                  console.warn(`Shift card with ID ${shiftCardId} not found`);
-              }
+          const detailsList = document.createElement('ul');
+          shift.details.forEach(detail => {
+            const detailItem = document.createElement('li');
+            detailItem.innerHTML = `<i class="fas fa-bus"></i>${detail.vehicle_no || 'N/A'} | ${detail.driver_name || 'N/A'}<br>Students: ${detail.students_tagged ?? 0}, Seats: ${detail.available_seats ?? 0}`;
+            detailsList.appendChild(detailItem);
           });
-      } else {
-          console.error('Shifts data is not available or invalid');
-      }
+          shiftCard.appendChild(detailsList);
+        } else {
+          console.warn(`Shift card with ID ${shiftCardId} not found`);
+        }
+      });
+    } else {
+      console.error('Shifts data is not available or invalid');
+    }
   }
 
   function showMap(lat, lon, location) {
-      isMapOpen = true; // Set map open state to true
-      const modal = document.getElementById('mapModal');
-      const closeBtn = modal.querySelector('.close-button');
-      modal.style.display = 'block';
-      const mapContainer = document.getElementById('map');
-      mapContainer.innerHTML = ''; // Clear the map container
+    isMapOpen = true;
+    const modal = document.getElementById('mapModal');
+    const closeBtn = modal.querySelector('.close-button');
+    modal.style.display = 'block';
+    const mapContainer = document.getElementById('map');
+    mapContainer.innerHTML = '';
 
-      // Initialize the map
-      const map = L.map('map').setView([lat, lon], 15); // Zoom in more (15)
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      }).addTo(map);
+    const map = L.map('map').setView([lat, lon], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
 
-      // Add the bus icon marker
-      const busIcon = L.icon({
-          iconUrl: '/images/busIcon.png', // Use a bus icon URL
-          iconSize: [35, 35], // Size of the icon
-          iconAnchor: [12.5, 25], // Anchor point
-          popupAnchor: [0, -25] // Popup position
-      });
+    const busIcon = L.icon({
+      iconUrl: '/images/busIcon.png',
+      iconSize: [35, 35],
+      iconAnchor: [12.5, 25],
+      popupAnchor: [0, -25]
+    });
 
-      const marker = L.marker([lat, lon], { icon: busIcon }).addTo(map);
-      marker.bindPopup(location).openPopup();
+    const marker = L.marker([lat, lon], { icon: busIcon }).addTo(map);
+    marker.bindPopup(location).openPopup();
 
-      // Close the modal when the close button is clicked
-      closeBtn.onclick = function() {
-          modal.style.display = 'none';
-          map.remove(); // Remove map instance
-          isMapOpen = false; // Reset map open state to false
-      };
+    closeBtn.onclick = function() {
+      modal.style.display = 'none';
+      map.remove();
+      isMapOpen = false;
+    };
 
-      // Close the modal when clicking outside the modal content
-      window.onclick = function(event) {
-          if (event.target == modal) {
-              modal.style.display = 'none';
-              map.remove(); // Remove map instance
-              isMapOpen = false; // Reset map open state to false
-          }
-      };
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = 'none';
+        map.remove();
+        isMapOpen = false;
+      }
+    };
   }
 });
-
 
 ////////////////////// CALENDAR OVERLAY ///////////////
 
@@ -1347,25 +1515,50 @@ updateCalendar();
 // Initialize the Holidays & Birthdays section
 function initializeHolidaysBirthdays() {
   const holidaysContent = document.querySelector('.holidays-birthdays-content');
-  const events = [
-    { name: "Teacher's Day", type: "holiday", date: "2025-05-05" },
-    { name: "John's Birthday", type: "birthday", date: "2025-05-06" },
-  ];
+  
+  // Add loading class to the parent holidays-birthdays container
+  const holidaysContainer = document.querySelector('.holidays-birthdays');
+  holidaysContainer.classList.add('loading');
+  
+  // Create placeholder content (optional, but ensures the structure is visible during loading)
   holidaysContent.innerHTML = `
-    <h4>Holidays & Birthdays</h4>
+    <h4>Loading...</h4>
     <ul class="event-list">
-      ${events
-        .map(
-          event => `
-        <li class="event-item">
-          <span class="event-icon">${event.type === 'holiday' ? '🎉' : '🎂'}</span>
-          ${event.name}
-        </li>
-      `
-        )
-        .join('')}
+      <li class="event-item">Loading...</li>
+      <li class="event-item">Loading...</li>
     </ul>
   `;
+
+  // Simulate loading delay and then render actual content
+  setTimeout(() => {
+    const events = [
+      { name: "Teacher's Day", type: "holiday", date: "2025-05-05" },
+      { name: "John's Birthday", type: "birthday", date: "2025-05-06" },
+    ];
+    holidaysContent.innerHTML = `
+      <h4>Holidays & Birthdays</h4>
+      <ul class="event-list">
+        ${events
+          .map(
+            event => `
+              <li class="event-item">
+                <span class="event-icon">${event.type === 'holiday' ? '🎉' : '🎂'}</span>
+                ${event.name}
+              </li>
+            `
+          )
+          .join('')}
+      </ul>
+    `;
+    
+    // Remove loading class after content is rendered
+    holidaysContainer.classList.remove('loading');
+  }, 1000); // Simulate a 1-second loading delay for shimmer effect
 }
 
 initializeHolidaysBirthdays();
+
+
+
+////////////Shimmer Loader//////////////////
+

@@ -653,7 +653,7 @@ body.dark {
     box-sizing: border-box;
     overflow: hidden;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    animation: slideInFromTop 0.7s ease-out;
+    /* animation: slideInFromTop 0.7s ease-out; */
 }
 
 @keyframes slideInFromTop {
@@ -802,67 +802,76 @@ body.dark {
 /* Media query for smaller screens (80% and below) */
 @media (max-width: 1200px) {
     .week-days-container {
-      padding: 0 40px; /* Add padding to ensure buttons aren't clipped */
+        padding: 0 40px;
+        /* Add padding to ensure buttons aren't clipped */
     }
-  
+
     .calendar-nav {
-      padding: 0 10px; /* Adjust padding for smaller screens */
+        padding: 0 10px;
+        /* Adjust padding for smaller screens */
     }
-  
+
     .nav-arrow {
-      width: 25px; /* Slightly smaller buttons for better fit */
-      height: 25px;
-      font-size: 16px;
+        width: 25px;
+        /* Slightly smaller buttons for better fit */
+        height: 25px;
+        font-size: 16px;
     }
-  
+
     .week-days-content {
-      grid-template-columns: repeat(7, minmax(60px, 1fr)); /* Adjust column width for smaller screens */
-      gap: 5px; /* Reduce gap to fit content better */
+        grid-template-columns: repeat(7, minmax(60px, 1fr));
+        /* Adjust column width for smaller screens */
+        gap: 5px;
+        /* Reduce gap to fit content better */
     }
-  
+
     .day-item {
-      width: 100%; /* Allow day items to adjust to container width */
-      padding: 8px; /* Slightly reduce padding */
+        width: 100%;
+        /* Allow day items to adjust to container width */
+        padding: 8px;
+        /* Slightly reduce padding */
     }
-  
+
     .day-name {
-      font-size: 12px; /* Adjust font size for smaller screens */
+        font-size: 12px;
+        /* Adjust font size for smaller screens */
     }
-  
+
     .day-date {
-      font-size: 16px;
+        font-size: 16px;
     }
-  
+
     .day-event {
-      font-size: 10px;
+        font-size: 10px;
     }
-  }
-  
-  /* Additional media query for very small screens (e.g., mobile) */
-  @media (max-width: 768px) {
+}
+
+/* Additional media query for very small screens (e.g., mobile) */
+@media (max-width: 768px) {
     .week-days-content {
-      grid-template-columns: repeat(7, minmax(50px, 1fr)); /* Further reduce column width */
-      gap: 3px;
+        grid-template-columns: repeat(7, minmax(50px, 1fr));
+        /* Further reduce column width */
+        gap: 3px;
     }
-  
+
     .nav-arrow {
-      width: 20px;
-      height: 20px;
-      font-size: 14px;
+        width: 20px;
+        height: 20px;
+        font-size: 14px;
     }
-  
+
     .day-name {
-      font-size: 10px;
+        font-size: 10px;
     }
-  
+
     .day-date {
-      font-size: 14px;
+        font-size: 14px;
     }
-  
+
     .day-event {
-      font-size: 8px;
+        font-size: 8px;
     }
-  }
+}
 
 .nav-arrow:hover {
     background-color: #48c9b0;
@@ -934,6 +943,29 @@ body.dark {
     justify-content: center;
     box-sizing: border-box;
 }
+
+.holidays-birthdays.loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    color: transparent;
+}
+
+.holidays-birthdays.loading * {
+    visibility: hidden;
+}
+
+/* Reusing the shimmer keyframes already defined for day-item */
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
 
 .holidays-birthdays-content {
     width: 100%;
@@ -1035,7 +1067,7 @@ body.dark {
     /* Include padding in the element's total width and height */
     overflow: hidden;
     /* Hide any overflow content */
-    animation: slideInFromTop 0.7s ease-out;
+    /* animation: slideInFromTop 0.7s ease-out; */
 }
 
 @keyframes slideInFromTop {
@@ -1074,6 +1106,30 @@ body.dark {
     /* box-shadow: 0 0 8px rgba(0, 0, 0, 0.1); /* Add shadow on all sides */
 
 }
+
+/* Shimmer loading effect for user_detail_item */
+.user_detail_item.loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    color: transparent;
+}
+
+.user_detail_item.loading * {
+    visibility: hidden;
+}
+
+/* Reusing the shimmer keyframes already defined */
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
 
 .detail_text {
     display: flex;
@@ -1150,7 +1206,7 @@ body.dark {
     width: 48%;
     /* Adjust width for better spacing */
     gap: 10px;
-    animation: slideInFromLeft 0.9s ease-out;
+    /* animation: slideInFromLeft 0.9s ease-out; */
     /* Add the slide-in animation */
 }
 
@@ -1191,6 +1247,46 @@ body.dark {
 
 }
 
+/* Shimmer loading effect for chart containers */
+.male_female_graph.loading,
+.fee_status.loading {
+    position: relative;
+    /* Ensure positioning context for pseudo-element */
+    color: transparent;
+    /* Hide text content */
+}
+
+.male_female_graph.loading *,
+.fee_status.loading * {
+    visibility: hidden;
+    /* Hide child elements */
+}
+
+.male_female_graph.loading::before,
+.fee_status.loading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    z-index: 1;
+}
+
+/* Reusing the shimmer keyframes already defined */
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
 .chart-container {
     text-align: center;
 }
@@ -1198,13 +1294,12 @@ body.dark {
 .chart {
     width: 200px;
     height: 200px;
-    border-radius: 50%;
-    background: conic-gradient(#4A90E2 60%, #50E3C2 60%);
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0 auto;
+    z-index: 2;
 }
 
 .total_students {
@@ -1212,9 +1307,7 @@ body.dark {
     font-size: 24px;
     font-weight: bold;
     color: #000;
-    background-color: white;
-    padding: 54px;
-    border-radius: 100px;
+    text-align: center;
 }
 
 .legend {
@@ -1246,13 +1339,36 @@ body.dark {
 }
 
 .male_female_graph .chart {
-    background: conic-gradient(#82afe3 60%, #8cefda 60%);
+    background: conic-gradient(#82afe3 var(--percentage), #8cefda 0%);
+    animation: fluidFill 1.5s ease-in-out forwards;
 }
 
+/* Pre-Primary chart with fluid fill */
 .fee_status .chart {
-    background: conic-gradient(#c3ebfa 75%, #fae27c 75%);
+    background: conic-gradient(#c3ebfa var(--percentage), #fae27c 0%);
+    animation: fluidFill 1.5s ease-in-out forwards;
 }
 
+@keyframes fluidFill {
+    0% {
+        --percentage: 0%;
+    }
+
+    100% {
+        --percentage: var(--final-percentage);
+        /* Set in JavaScript */
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
 
 .pre-male {
     background-color: #c3ebfa;
@@ -1302,7 +1418,7 @@ h3 {
     /* Stack heading and items vertically */
     align-items: center;
     /* Center align the content horizontally */
-    animation: slideInFromRight 0.9s ease-out;
+    /* animation: slideInFromRight 0.9s ease-out; */
     /* Add the slide-in animation */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     /* Add shadow on all sides */
@@ -1353,6 +1469,29 @@ h3 {
     /* Include padding in the element's total width and height */
     overflow: hidden;
     /* Hide any overflow content */
+}
+
+/* Shimmer loading effect for library_item */
+.library_item.loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    color: transparent;
+}
+
+.library_item.loading * {
+    visibility: hidden;
+}
+
+/* Reusing the shimmer keyframes already defined */
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
 }
 
 .count_icon_container {
@@ -1470,8 +1609,42 @@ h3 {
     font-size: 20px;
     font-weight: 600;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    animation: slideInFromLeft 0.9s ease-out;
+    /* animation: slideInFromLeft 0.9s ease-out; */
 }
+
+/* Shimmer loading effect for attendance container */
+.attendance.loading {
+    position: relative;
+    color: transparent;
+  }
+  
+  .attendance.loading * {
+    visibility: hidden;
+  }
+  
+  .attendance.loading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    z-index: 1;
+    border-radius: 10px;
+  }
+  
+  /* Reusing the shimmer keyframes already defined */
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
 
 
 /* Heading styles */
@@ -1554,7 +1727,7 @@ h3 {
     font-size: 20px;
     font-weight: 600;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    animation: slideInFromRight 0.9s ease-out;
+    /* animation: slideInFromRight 0.9s ease-out; */
     overflow: hidden;
     position: relative;
 }
@@ -1570,6 +1743,47 @@ h3 {
     flex-grow: 1;
     /* Ensure the cards take the full height of the parent */
 }
+
+/* Shimmer loading effect for transport_wrapper */
+.transport_wrapper.loading {
+    position: relative;
+    color: transparent;
+    overflow: hidden;
+  }
+  
+  .transport_wrapper.loading * {
+    visibility: hidden;
+  }
+  
+  .transport_wrapper.loading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 100% 100%;
+    animation: shimmer 1.5s infinite;
+    z-index: 1;
+    border-radius: 10px;
+  }
+  
+  .transport_wrapper {
+    flex-grow: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
 
 .transport_cards .card {
     width: 50%;
