@@ -58,6 +58,10 @@ router.get('/get_student_details', async (req, res) => {
     }
 });
 
-
+// Keep-alive route FIRST — before any auth/session middleware
+router.get('/keep-alive', (req, res) => {
+    console.log(`✅ [KEEP-ALIVE] Server is alive at ${new Date().toLocaleString()}`);
+    res.status(200).json({ message: 'Server is alive!' });
+});
 
 module.exports = router;
