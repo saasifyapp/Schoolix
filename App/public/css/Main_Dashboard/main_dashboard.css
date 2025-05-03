@@ -652,6 +652,7 @@ body.dark {
     padding: 4px;
     box-sizing: border-box;
     overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     animation: slideInFromTop 0.7s ease-out;
 }
 
@@ -682,15 +683,16 @@ body.dark {
 
 .week-days-container {
     display: flex;
-    justify-content: center;
-    /* Center items in the container */
+    justify-content: center;   
     gap: 10px;
-    position: relative;
+    position: absolute;
     width: 100%;
     height: 100%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    /* Ensure shadow is applied on all sides */
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);    */
+    top: 0;
+    left: 0;
 }
+
 
 /* Shimmer loading effect */
 .day-item.loading {
@@ -770,16 +772,19 @@ body.dark {
     font-weight: 600;
 }
 
+/* Adjust calendar-nav positioning to prevent overlap and ensure visibility */
 .calendar-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    padding: 0 10px;
-    z-index: 10;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  padding: 0 15px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  z-index: 10;
 }
+
 
 .nav-arrow {
     background-color: #76d7c4;
@@ -802,14 +807,7 @@ body.dark {
     transform: scale(1.1);
 }
 
-.week-days-container {
-    display: flex;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-}
+
 
 .week-days-content {
     width: 100%;
