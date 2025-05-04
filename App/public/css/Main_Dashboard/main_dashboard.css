@@ -642,7 +642,7 @@ body.dark {
 /*----------------- CALENDAR AND EVENTS --------------*/
 
 .calender-details {
-    background-color: white;
+    background-color: transparent;
     width: 100%;
     height: 100px;
     grid-column: 1 / -1;
@@ -680,8 +680,8 @@ body.dark {
     position: relative;
     overflow: hidden;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: white;
 }
 
 .week-days-container {
@@ -1203,6 +1203,9 @@ body.dark {
     }
 }
 
+
+/*------------------------ PIE CHART -----------*/
+
 /* Apply the animation to the container */
 .graph {
     display: flex;
@@ -1342,34 +1345,24 @@ body.dark {
 }
 
 .male_female_graph .chart {
-    background: conic-gradient(#82afe3 var(--percentage), #8cefda 0%);
+    background: conic-gradient(#82afe3 var(--male-percentage), white 0%);
     animation: fluidFill 1.5s ease-in-out forwards;
 }
 
 /* Pre-Primary chart with fluid fill */
 .fee_status .chart {
-    background: conic-gradient(#c3ebfa var(--percentage), #fae27c 0%);
+    background: conic-gradient(#c3ebfa var(--pre-male-percentage), white 0%);
     animation: fluidFill 1.5s ease-in-out forwards;
 }
 
 @keyframes fluidFill {
     0% {
-        --percentage: 0%;
+        --male-percentage: 0%;
+        --pre-male-percentage: 0%;
     }
-
     100% {
-        --percentage: var(--final-percentage);
-        /* Set in JavaScript */
-    }
-}
-
-@keyframes shimmer {
-    0% {
-        background-position: 200% 0;
-    }
-
-    100% {
-        background-position: -200% 0;
+        --male-percentage: var(--final-male-percentage);
+        --pre-male-percentage: var(--final-pre-male-percentage);
     }
 }
 
@@ -1380,6 +1373,7 @@ body.dark {
 .pre-female {
     background-color: #fae27c;
 }
+
 
 h3 {
     margin-top: 20px;

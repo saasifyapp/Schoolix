@@ -604,6 +604,8 @@ fetch("/main_dashboard_library_data")
 
 // Get Students COunts
 // Select chart containers
+
+// Select chart containers
 const primaryChartContainer = document.querySelector('.male_female_graph');
 const prePrimaryChartContainer = document.querySelector('.fee_status');
 
@@ -620,24 +622,39 @@ document.getElementById('prePrimaryMaleCount').textContent = 'Loading...';
 document.getElementById('prePrimaryFemaleCount').textContent = 'Loading...';
 
 // Function to generate SVG path for a pie slice
-function createPieSlicePath(cx, cy, r, percentage) {
-  const angle = (percentage / 100) * 360; // Convert percentage to degrees
-  const radians = (angle * Math.PI) / 180;
-  const x = cx + r * Math.cos(radians - Math.PI / 2); // Adjust for clockwise fill
-  const y = cy + r * Math.sin(radians - Math.PI / 2);
-  const largeArcFlag = angle <= 180 ? 0 : 1;
-  return `M${cx},${cy} L${cx},${cy - r} A${r},${r} 0 ${largeArcFlag},1 ${x},${y} Z`;
+function createPieSlicePath(cx, cy, r, startPercentage, endPercentage) {
+  const startAngle = (startPercentage / 100) * 360; // Convert start percentage to degrees
+  const endAngle = (endPercentage / 100) * 360; // Convert end percentage to degrees
+  const startRadians = (startAngle * Math.PI) / 180 - Math.PI / 2;
+  const endRadians = (endAngle * Math.PI) / 180 - Math.PI / 2;
+  const startX = cx + r * Math.cos(startRadians);
+  const startY = cy + r * Math.sin(startRadians);
+  const endX = cx + r * Math.cos(endRadians);
+  const endY = cy + r * Math.sin(endRadians);
+  const largeArcFlag = (endAngle - startAngle) <= 180 ? 0 : 1;
+  return `M${cx},${cy} L${startX},${startY} A${r},${r} 0 ${largeArcFlag},1 ${endX},${endY} Z`;
 }
 
-// Function to animate the pie slice
-function animatePieSlice(pathElement, finalPercentage, duration) {
+// Function to animate the pie slices for both male and female
+function animatePieSlice(malePath, femalePath, malePercentage, femalePercentage, duration) {
+  if (!malePath || !femalePath) {
+    console.error('One or more SVG paths not found');
+    return;
+  }
   let startTime = null;
   const animate = (currentTime) => {
     if (!startTime) startTime = currentTime;
     const elapsed = currentTime - startTime;
     const progress = Math.min(elapsed / duration, 1); // Progress from 0 to 1
-    const currentPercentage = progress * finalPercentage;
-    pathElement.setAttribute('d', createPieSlicePath(100, 100, 90, currentPercentage));
+
+    const currentMalePercentage = progress * malePercentage;
+    const currentFemalePercentage = progress * femalePercentage;
+
+    // Male slice: from 0% to malePercentage
+    malePath.setAttribute('d', createPieSlicePath(100, 100, 90, 0, currentMalePercentage));
+    // Female slice: from malePercentage to (malePercentage + femalePercentage)
+    femalePath.setAttribute('d', createPieSlicePath(100, 100, 90, currentMalePercentage, currentMalePercentage + currentFemalePercentage));
+
     if (progress < 1) {
       requestAnimationFrame(animate);
     }
@@ -645,6 +662,7 @@ function animatePieSlice(pathElement, finalPercentage, duration) {
   requestAnimationFrame(animate);
 }
 
+// Fetch student counts and update the charts
 fetch("/student_counts")
   .then((response) => {
     if (!response.ok) {
@@ -654,16 +672,22 @@ fetch("/student_counts")
   })
   .then((data) => {
     // Primary Data
-    const totalStudents = data.primary_totalStudents;
-    const maleStudents = data.primary_maleStudents;
-    const femaleStudents = data.primary_femaleStudents;
+    const totalStudents = data.primary_totalStudents || 0;
+    const maleStudents = data.primary_maleStudents || 0;
+    const femaleStudents = data.primary_femaleStudents || 0;
 
     // Calculate percentages for primary
-    const malePercentage = (maleStudents / totalStudents) * 100;
+    const malePercentage = totalStudents > 0 ? (maleStudents / totalStudents) * 100 : 0;
+    const femalePercentage = totalStudents > 0 ? (femaleStudents / totalStudents) * 100 : 0;
 
     // Update Primary Pie Chart with round circle fill animation
     const primaryMaleFill = document.querySelector('.male-fill');
-    animatePieSlice(primaryMaleFill, malePercentage, 1500); // Animate over 1.5 seconds
+    const primaryFemaleFill = document.querySelector('.female-fill');
+    if (primaryMaleFill && primaryFemaleFill) {
+      animatePieSlice(primaryMaleFill, primaryFemaleFill, malePercentage, femalePercentage, 1500);
+    } else {
+      console.error('Primary chart SVG paths not found');
+    }
 
     // Update Primary Labels
     document.getElementById('totalStudents').textContent = totalStudents;
@@ -671,16 +695,22 @@ fetch("/student_counts")
     document.getElementById('femaleCount').textContent = femaleStudents;
 
     // Pre-Primary Data
-    const prePrimaryTotalStudents = data.pre_primary_totalStudents;
-    const prePrimaryMaleStudents = data.pre_primary_maleStudents;
-    const prePrimaryFemaleStudents = data.pre_primary_femaleStudents;
+    const prePrimaryTotalStudents = data.pre_primary_totalStudents || 0;
+    const prePrimaryMaleStudents = data.pre_primary_maleStudents || 0;
+    const prePrimaryFemaleStudents = data.pre_primary_femaleStudents || 0;
 
     // Calculate percentages for pre-primary
-    const prePrimaryMalePercentage = (prePrimaryMaleStudents / prePrimaryTotalStudents) * 100;
+    const prePrimaryMalePercentage = prePrimaryTotalStudents > 0 ? (prePrimaryMaleStudents / prePrimaryTotalStudents) * 100 : 0;
+    const prePrimaryFemalePercentage = prePrimaryTotalStudents > 0 ? (prePrimaryFemaleStudents / prePrimaryTotalStudents) * 100 : 0;
 
     // Update Pre-Primary Pie Chart with round circle fill animation
     const prePrimaryMaleFill = document.querySelector('.pre-male-fill');
-    animatePieSlice(prePrimaryMaleFill, prePrimaryMalePercentage, 1500); // Animate over 1.5 seconds
+    const prePrimaryFemaleFill = document.querySelector('.pre-female-fill');
+    if (prePrimaryMaleFill && prePrimaryFemaleFill) {
+      animatePieSlice(prePrimaryMaleFill, prePrimaryFemaleFill, prePrimaryMalePercentage, prePrimaryFemalePercentage, 1500);
+    } else {
+      console.error('Pre-Primary chart SVG paths not found');
+    }
 
     // Update Pre-Primary Labels
     document.getElementById('prePrimaryTotal').textContent = prePrimaryTotalStudents;
@@ -706,6 +736,7 @@ fetch("/student_counts")
     primaryChartContainer.classList.remove('loading');
     prePrimaryChartContainer.classList.remove('loading');
   });
+  ////////////////////////////////////////////////////////////////////
 
 // Function to handle password for PURCHASE console
 
