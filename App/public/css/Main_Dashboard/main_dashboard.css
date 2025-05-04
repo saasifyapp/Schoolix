@@ -642,7 +642,7 @@ body.dark {
 /*----------------- CALENDAR AND EVENTS --------------*/
 
 .calender-details {
-    background-color: transparent;
+    background-color: white;
     width: 100%;
     height: 100px;
     grid-column: 1 / -1;
@@ -652,7 +652,7 @@ body.dark {
     padding: 4px;
     box-sizing: border-box;
     overflow: hidden;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
     /* animation: slideInFromTop 0.7s ease-out; */
 }
 
@@ -679,6 +679,9 @@ body.dark {
     box-sizing: border-box;
     position: relative;
     overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: white;
 }
 
 .week-days-container {
@@ -722,7 +725,7 @@ body.dark {
     flex-shrink: 0;
     background-color: #fff;
     border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
     /* Add equal-sided shadow */
 }
 
@@ -1306,7 +1309,7 @@ body.dark {
     position: absolute;
     font-size: 24px;
     font-weight: bold;
-    color: #000;
+    color: #34495e;
     text-align: center;
 }
 
