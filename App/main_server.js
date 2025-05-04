@@ -54,10 +54,10 @@ const connection_auth = mysql.createPool({
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
     port: process.env.DB_PORT,
-    waitForConnections: true,
     connectionLimit: 20,
     queueLimit: 0,
-    //idleTimeoutMillis: 30000 // 30 seconds
+    waitForConnections: true,
+   // idleTimeoutMillis: 60000, // 60 seconds
 });
 
 // Export connection_auth
@@ -668,9 +668,111 @@ const attendance_reports = require('./src/routes/attendance_routes/attendance_re
 app.use('/', attendance_reports);
 
 
+/*
 
 // Start the server 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+
+*/
+
+
+///////////////////////////////// SERVER TERMINATION /////////////////
+
+
+// Graceful Shutdown Function
+function gracefulShutdown(server, connection_auth, sessionStore) {
+    return async () => {
+        console.log('Received shutdown signal. Initiating graceful shutdown...');
+
+        // Step 1: Stop accepting new connections
+        server.close(() => {
+            console.log('Closed all new connections.');
+        });
+
+        try {
+            // Step 2: Clear all sessions from MySQLStore
+            console.log('Clearing all sessions from MySQLStore...');
+            await new Promise((resolve, reject) => {
+                sessionStore.clear((err) => {
+                    if (err) {
+                        console.error('Error clearing sessions:', err);
+                        reject(err);
+                    } else {
+                        console.log('All sessions cleared.');
+                        resolve();
+                    }
+                });
+            });
+
+            // Step 3: Close all user connection pools
+            console.log('Closing all user connection pools...');
+            await Promise.all(
+                Object.keys(connectionPools).map(async (dbUser) => {
+                    const pool = connectionPools[dbUser];
+                    if (pool) {
+                        await new Promise((resolve, reject) => {
+                            pool.end((err) => {
+                                if (err) {
+                                    console.error(`Error closing pool for ${dbUser}:`, err);
+                                    reject(err);
+                                } else {
+                                    console.log(`Closed pool for ${dbUser}`);
+                                    delete connectionPools[dbUser];
+                                    resolve();
+                                }
+                            });
+                        });
+                    }
+                })
+            );
+
+            // Step 4: Close the connection_auth pool
+            console.log('Closing connection_auth pool...');
+            await new Promise((resolve, reject) => {
+                connection_auth.end((err) => {
+                    if (err) {
+                        console.error('Error closing connection_auth pool:', err);
+                        reject(err);
+                    } else {
+                        console.log('connection_auth pool closed.');
+                        resolve();
+                    }
+                });
+            });
+
+            // Step 5: Close the sessionStore connection
+            console.log('Closing sessionStore connection...');
+            await new Promise((resolve, reject) => {
+                sessionStore.close((err) => {
+                    if (err) {
+                        console.error('Error closing sessionStore:', err);
+                        reject(err);
+                    } else {
+                        console.log('sessionStore closed.');
+                        resolve();
+                    }
+                });
+            });
+
+            console.log('Graceful shutdown completed.');
+            process.exit(0);
+        } catch (err) {
+            console.error('Error during graceful shutdown:', err);
+            process.exit(1);
+        }
+    };
+}
+
+// Start the server with PORT defined
+const PORT = process.env.PORT || 4000;
+const server = app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+// Handle termination signals
+process.on('SIGTERM', gracefulShutdown(server, connection_auth, sessionStore));
+process.on('SIGINT', gracefulShutdown(server, connection_auth, sessionStore));

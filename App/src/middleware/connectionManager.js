@@ -21,9 +21,10 @@ const connectionManager = (req, res, next) => {
             user: dbCredentials.user,
             password: dbCredentials.password,
             database: dbCredentials.database,
-            connectionLimit: 10, // Limit the number of connections in the pool
+            connectionLimit: 20, // Limit the number of connections in the pool
             queueLimit: 0, // No limit on the number of queued connection requests
             waitForConnections: true, // Wait for a connection to be released
+            idleTimeoutMillis: 60000 // 60 seconds
         });
 
         console.log(`Allocated 10 sessions for user: ${user}`);
