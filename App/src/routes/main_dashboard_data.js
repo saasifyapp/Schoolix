@@ -293,82 +293,81 @@ router.get('/main_dashboard_library_data',checkPoolAvailability, (req, res) => {
 /////////////////////// ATTENDANCE BAR GRAPH ////////////////////////////
 
 
-router.get('/fetch-attendance-data-for-main-dashboard',checkPoolAvailability, async (req, res) => {
+router.get('/fetch-attendance-data-for-main-dashboard', checkPoolAvailability, async (req, res) => {
     try {
-      let daysCount = 6; // Tracks days, skipping Sundays
-      const sixDaysData = [];
-      let tempDate = new Date();
-  
-      while (sixDaysData.length < daysCount) {
-        if (tempDate.getDay() !== 0) { // Skip Sundays
-          const day = String(tempDate.getDate()).padStart(2, '0');
-          const month = String(tempDate.getMonth() + 1).padStart(2, '0');
-          const year = tempDate.getFullYear();
-          const formattedDate = `${day}-${month}-${year}`; // Format to DD-MM-YYYY
-          sixDaysData.push(formattedDate);
+        let daysCount = 6; // Tracks days, skipping Sundays
+        const sixDaysData = [];
+        let tempDate = new Date();
+    
+        while (sixDaysData.length < daysCount) {
+            if (tempDate.getDay() !== 0) { // Skip Sundays
+                const day = String(tempDate.getDate()).padStart(2, '0');
+                const month = String(tempDate.getMonth() + 1).padStart(2, '0');
+                const year = tempDate.getFullYear();
+                const formattedDate = `${day}-${month}-${year}`; // Format to DD-MM-YYYY
+                sixDaysData.push(formattedDate);
+            }
+            tempDate.setDate(tempDate.getDate() - 1);
         }
-        tempDate.setDate(tempDate.getDate() - 1);
-      }
-  
-      const formattedDates = sixDaysData.map(date => `STR_TO_DATE('${date}', '%d-%m-%Y')`).join(', ');
-  
-      const studentAndTeacherQuery = `
-          SELECT DATE_FORMAT(STR_TO_DATE(date_of_attendance, '%d-%m-%Y'), '%d-%m-%Y') AS formatted_date,
-                 COUNT(DISTINCT CASE WHEN section IN ('Primary', 'Pre-Primary') THEN user_id END) AS students_count,
-                 COUNT(DISTINCT CASE WHEN section IN ('Teacher', 'Admin') THEN user_id END) AS teachers_count
-          FROM attendance_user_logs
-          WHERE STR_TO_DATE(date_of_attendance, '%d-%m-%Y') IN (${formattedDates})
-          GROUP BY formatted_date
-          ORDER BY formatted_date DESC;
-      `;
-  
-      const visitorQuery = `
-          SELECT DATE_FORMAT(STR_TO_DATE(date_of_attendance, '%d-%m-%Y'), '%d-%m-%Y') AS formatted_date,
-                 COUNT(DISTINCT CONCAT(user_id, in_time)) AS visitors_count
-          FROM attendance_user_logs
-          WHERE section = 'Visitor'
-            AND STR_TO_DATE(date_of_attendance, '%d-%m-%Y') IN (${formattedDates})
-          GROUP BY formatted_date
-          ORDER BY formatted_date DESC;
-      `;
-  
-      // Execute both queries
-      req.connectionPool.query(studentAndTeacherQuery, [], (studentTeacherError, studentTeacherResults) => {
-        if (studentTeacherError) {
-          console.error('Database query failed', studentTeacherError);
-          return res.status(500).json({ error: 'Database query failed' });
-        }
-  
-        req.connectionPool.query(visitorQuery, [], (visitorError, visitorResults) => {
-          if (visitorError) {
-            console.error('Database query failed', visitorError);
-            return res.status(500).json({ error: 'Database query failed' });
-          }
-  
-          // Combine results from both queries by date
-          const combinedResults = studentTeacherResults.map(studentTeacherRow => {
-            const visitorRow = visitorResults.find(vRow => vRow.formatted_date === studentTeacherRow.formatted_date);
-            return {
-              date: studentTeacherRow.formatted_date,
-              students_count: studentTeacherRow.students_count,
-              teachers_count: studentTeacherRow.teachers_count,
-              visitors_count: visitorRow ? visitorRow.visitors_count : 0
-            };
-          });
-  
-          // Log counts to the console
-         // console.log(combinedResults);
-  
-          // Send the combined counts to the client
-          res.status(200).json(combinedResults);
-        });
-      });
-    } catch (error) {
-      console.error('Internal Server Error', error);
-      res.status(500).json({ error: 'Internal Server Error', details: error.message });
-    }
-  });
+    
+        const formattedDates = sixDaysData.map(date => `STR_TO_DATE('${date}', '%d-%m-%Y')`).join(', ');
 
+        const studentAndTeacherQuery = `
+            SELECT DATE_FORMAT(STR_TO_DATE(date_of_attendance, '%d-%m-%Y'), '%d-%m-%Y') AS formatted_date,
+                   COUNT(DISTINCT CASE WHEN section IN ('Primary', 'Pre-Primary') THEN user_id END) AS students_count,
+                   COUNT(DISTINCT CASE WHEN section IN ('Teacher', 'Admin') THEN user_id END) AS teachers_count
+            FROM attendance_user_logs
+            WHERE STR_TO_DATE(date_of_attendance, '%d-%m-%Y') IN (${formattedDates})
+            GROUP BY formatted_date
+            ORDER BY STR_TO_DATE(formatted_date, '%d-%m-%Y') ASC;
+        `;
+    
+        const visitorQuery = `
+            SELECT DATE_FORMAT(STR_TO_DATE(date_of_attendance, '%d-%m-%Y'), '%d-%m-%Y') AS formatted_date,
+                   COUNT(DISTINCT CONCAT(user_id, in_time)) AS visitors_count
+            FROM attendance_user_logs
+            WHERE section = 'Visitor'
+              AND STR_TO_DATE(date_of_attendance, '%d-%m-%Y') IN (${formattedDates})
+            GROUP BY formatted_date
+            ORDER BY STR_TO_DATE(formatted_date, '%d-%m-%Y') ASC;
+        `;
+    
+        // Execute both queries
+        req.connectionPool.query(studentAndTeacherQuery, [], (studentTeacherError, studentTeacherResults) => {
+            if (studentTeacherError) {
+                console.error('Database query failed', studentTeacherError);
+                return res.status(500).json({ error: 'Database query failed' });
+            }
+    
+            req.connectionPool.query(visitorQuery, [], (visitorError, visitorResults) => {
+                if (visitorError) {
+                    console.error('Database query failed', visitorError);
+                    return res.status(500).json({ error: 'Database query failed' });
+                }
+    
+                // Combine results from both queries by date
+                const combinedResults = studentTeacherResults.map(studentTeacherRow => {
+                    const visitorRow = visitorResults.find(vRow => vRow.formatted_date === studentTeacherRow.formatted_date);
+                    return {
+                        date: studentTeacherRow.formatted_date,
+                        students_count: studentTeacherRow.students_count,
+                        teachers_count: studentTeacherRow.teachers_count,
+                        visitors_count: visitorRow ? visitorRow.visitors_count : 0
+                    };
+                });
+    
+                // Log counts to the console
+                console.log(combinedResults);
+    
+                // Send the combined counts to the client
+                res.status(200).json(combinedResults);
+            });
+        });
+    } catch (error) {
+        console.error('Internal Server Error', error);
+        res.status(500).json({ error: 'Internal Server Error', details: error.message });
+    }
+});
 
 
 /////////////////////////// TRANSPORT INSIGHTS CARDS DATA /////////////////////////////

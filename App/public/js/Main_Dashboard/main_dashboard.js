@@ -833,28 +833,14 @@ function getPastWeekData(data) {
     visitorsData.push(entry.visitors_count);
   }
 
-  labels.reverse();
-  studentsData.reverse();
-  teachersData.reverse();
-  visitorsData.reverse();
+  //labels.reverse();
+  //studentsData.reverse();
+  //teachersData.reverse();
+ // visitorsData.reverse();
 
   return { labels, studentsData, teachersData, visitorsData };
 }
 
-async function fetchAttendanceData() {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([
-        { date: '29-04-2025', students_count: 120, teachers_count: 15, visitors_count: 5 },
-        { date: '30-04-2025', students_count: 118, teachers_count: 14, visitors_count: 3 },
-        { date: '01-05-2025', students_count: 122, teachers_count: 16, visitors_count: 7 },
-        { date: '02-05-2025', students_count: 119, teachers_count: 15, visitors_count: 4 },
-        { date: '03-05-2025', students_count: 121, teachers_count: 14, visitors_count: 6 },
-        { date: '04-05-2025', students_count: 123, teachers_count: 15, visitors_count: 5 }
-      ]);
-    }, 1000);
-  });
-}
 
 function setupChart() {
   // Select the attendance container
