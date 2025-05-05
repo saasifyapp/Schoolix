@@ -644,89 +644,45 @@ body.dark {
 .calender-details {
     background-color: transparent;
     width: 100%;
-    height: 100px;
-    grid-column: 1 / -1;
-    border-radius: 20px;
+    min-height: 100px;
+    border-radius: 10px;
     display: flex;
-    gap: 0.7%;
-    padding: 4px;
+    flex-direction: row;
+    gap: 10px;
+    padding: 8px;
     box-sizing: border-box;
     overflow: hidden;
-    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
-    /* animation: slideInFromTop 0.7s ease-out; */
-}
-
-@keyframes slideInFromTop {
-    0% {
-        transform: translateY(-100%);
-        opacity: 0;
-    }
-
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
 }
 
 .week-days {
-    width: 100%;
+    flex: 1;
     border-radius: 10px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    /* Center items in the container */
-    gap: 10px;
-    /* padding: 5px; */
+    gap: 8px;
     box-sizing: border-box;
     position: relative;
     overflow: hidden;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .week-days-container {
     position: relative;
     overflow: visible;
-    /* Prevent clipping of absolutely positioned children */
-    min-height: 100px;
-    /* Ensure enough vertical space for the buttons */
-}
-
-
-/* Shimmer loading effect */
-.day-item.loading {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    color: transparent;
-}
-
-.day-item.loading * {
-    visibility: hidden;
-}
-
-@keyframes shimmer {
-    0% {
-        background-position: 200% 0;
-    }
-
-    100% {
-        background-position: -200% 0;
-    }
+    min-height: 80px;
 }
 
 .week-days-content {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(7, minmax(80px, 1fr));
-    /* Set a minimum width for day items */
-    gap: 10px;
-    padding: 5px;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+    padding: 8px 40px; /* Increased padding to accommodate nav arrows */
     flex-shrink: 0;
     background-color: #fff;
-    border-radius: 15px;
-    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
-    /* Add equal-sided shadow */
+    border-radius: 10px;
 }
 
 .day-item {
@@ -735,20 +691,19 @@ body.dark {
     align-items: center;
     justify-content: center;
     text-align: center;
-    border-radius: 10px;
+    border-radius: 8px;
     background-color: #f3f4f6;
-    /* Light gray */
-    padding: 10px;
+    padding: 8px;
     color: #2c3e50;
     transition: transform 0.3s ease, background-color 0.3s ease;
-    width: 150px;
-    height: 80px;
-    /* Set fixed width */
+    min-width: 0;
+    cursor: pointer; /* Ensure day items are clickable */
+    position: relative;
+    z-index: 20; /* Higher z-index to ensure clickability */
 }
 
 .day-item.active {
     background-color: #a3e4d7;
-    /* Dark color for active day */
     color: #2c3e50;
     font-weight: 600;
 }
@@ -756,35 +711,38 @@ body.dark {
 .day-item:hover {
     transform: scale(1.05);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    /* Reduced shadow effect */
 }
 
 .day-name {
-    font-size: 14px;
-    /* Bigger font size for better visibility */
+    font-size: clamp(10px, 2vw, 12px);
     color: #5d6d7e;
     margin-bottom: 2px;
 }
 
 .day-date {
-    font-size: 18px;
-    /* Bigger font size for better visibility */
+    font-size: clamp(12px, 3vw, 14px);
     font-weight: 600;
 }
 
-/* Adjust calendar-nav positioning to prevent overlap and ensure visibility */
+
+.day-event{
+    font-size: 10px;
+}
+
+
 .calendar-nav {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     width: 100%;
-    padding: 0 15px;
-    /* Increase padding to ensure buttons are fully visible */
+    padding: 0 10px;
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
-    z-index: 10;
+    z-index: 10; /* Lower z-index than day-item */
+    pointer-events: none; /* Prevent nav from capturing clicks */
 }
+
 
 
 .nav-arrow {
@@ -792,89 +750,16 @@ body.dark {
     color: #fff;
     border: none;
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
+    width: clamp(25px, 5vw, 30px);
+    height: clamp(25px, 5vw, 30px);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 18px;
+    font-size: clamp(14px, 3vw, 16px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-/* Media query for smaller screens (80% and below) */
-@media (max-width: 1200px) {
-    .week-days-container {
-        padding: 0 40px;
-        /* Add padding to ensure buttons aren't clipped */
-    }
-
-    .calendar-nav {
-        padding: 0 10px;
-        /* Adjust padding for smaller screens */
-    }
-
-    .nav-arrow {
-        width: 25px;
-        /* Slightly smaller buttons for better fit */
-        height: 25px;
-        font-size: 16px;
-    }
-
-    .week-days-content {
-        grid-template-columns: repeat(7, minmax(60px, 1fr));
-        /* Adjust column width for smaller screens */
-        gap: 5px;
-        /* Reduce gap to fit content better */
-    }
-
-    .day-item {
-        width: 100%;
-        /* Allow day items to adjust to container width */
-        padding: 8px;
-        /* Slightly reduce padding */
-    }
-
-    .day-name {
-        font-size: 12px;
-        /* Adjust font size for smaller screens */
-    }
-
-    .day-date {
-        font-size: 16px;
-    }
-
-    .day-event {
-        font-size: 10px;
-    }
-}
-
-/* Additional media query for very small screens (e.g., mobile) */
-@media (max-width: 768px) {
-    .week-days-content {
-        grid-template-columns: repeat(7, minmax(50px, 1fr));
-        /* Further reduce column width */
-        gap: 3px;
-    }
-
-    .nav-arrow {
-        width: 20px;
-        height: 20px;
-        font-size: 14px;
-    }
-
-    .day-name {
-        font-size: 10px;
-    }
-
-    .day-date {
-        font-size: 14px;
-    }
-
-    .day-event {
-        font-size: 8px;
-    }
+    pointer-events: auto; /* Allow clicks on arrows */
 }
 
 .nav-arrow:hover {
@@ -882,94 +767,16 @@ body.dark {
     transform: scale(1.1);
 }
 
-
-
-.week-days-content {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 2px;
-    padding: 5px;
-    flex-shrink: 0;
-}
-
-.day-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: #2c3e50;
-    font-size: 12px;
-    font-weight: 500;
-}
-
-.day-name {
-    font-size: 10px;
-    color: #5d6d7e;
-    margin-bottom: 2px;
-}
-
-.day-date {
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.day-events {
-    margin-top: 5px;
-}
-
-.day-event {
-    font-size: 12px;
-    color: #5d6d7e;
-    display: block;
-    /* Ensure each event is on a new line */
-    white-space: nowrap;
-    /* Prevent text from wrapping */
-    overflow: hidden;
-    /* Hide overflow text */
-    text-overflow: ellipsis;
-    /* Display ellipsis (...) for overflow text */
-}
-
-.day-item {
-    cursor: pointer;
-    /* Change cursor to pointer to indicate click */
-}
-
 .holidays-birthdays {
-    width: 20%;
+    width: clamp(150px, 25%, 200px);
     background-color: #fdf6d8;
     border-radius: 10px;
-    padding: 5px;
+    padding: 8px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     box-sizing: border-box;
 }
-
-.holidays-birthdays.loading {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    color: transparent;
-}
-
-.holidays-birthdays.loading * {
-    visibility: hidden;
-}
-
-/* Reusing the shimmer keyframes already defined for day-item */
-@keyframes shimmer {
-    0% {
-        background-position: 200% 0;
-    }
-
-    100% {
-        background-position: -200% 0;
-    }
-}
-
 
 .holidays-birthdays-content {
     width: 100%;
@@ -980,7 +787,7 @@ body.dark {
 }
 
 .holidays-birthdays h4 {
-    font-size: 12px;
+    font-size: clamp(12px, 2.5vw, 14px);
     font-weight: 600;
     color: #5d6d7e;
     margin-bottom: 5px;
@@ -989,7 +796,7 @@ body.dark {
 
 .event-list {
     list-style: none;
-    max-height: 50px;
+    max-height: 100px;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #28a745 #fdf6d8;
@@ -1009,7 +816,7 @@ body.dark {
 }
 
 .event-item {
-    font-size: 10px;
+    font-size: clamp(10px, 2vw, 12px);
     color: #2c3e50;
     margin-bottom: 3px;
     display: flex;
@@ -1018,10 +825,31 @@ body.dark {
 
 .event-icon {
     margin-right: 5px;
-    font-size: 12px;
+    font-size: clamp(10px, 2vw, 12px);
 }
 
-/* Slide animations for week-days */
+.day-item.loading,
+.holidays-birthdays.loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    color: transparent;
+}
+
+.day-item.loading *,
+.holidays-birthdays.loading * {
+    visibility: hidden;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
 .slide-left {
     animation: slideLeft 0.5s ease-in-out forwards;
 }
@@ -1034,7 +862,6 @@ body.dark {
     0% {
         transform: translateX(0);
     }
-
     100% {
         transform: translateX(-100%);
     }
@@ -1044,9 +871,80 @@ body.dark {
     0% {
         transform: translateX(0);
     }
-
     100% {
         transform: translateX(100%);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .calender-details {
+        flex-direction: column;
+        gap: 8px;
+        padding: 6px;
+    }
+
+    .week-days {
+        width: 100%;
+    }
+
+    .holidays-birthdays {
+        width: 100%;
+        max-width: none;
+    }
+
+    .week-days-content {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 4px;
+        padding: 6px 30px; /* Adjusted padding for smaller screens */
+    }
+
+    .day-item {
+        padding: 6px;
+    }
+
+    .calendar-nav {
+        padding: 0 8px;
+    }
+
+    .nav-arrow {
+        width: 25px;
+        height: 25px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .week-days-content {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 2px;
+        padding: 4px 20px; /* Further reduced padding */
+    }
+
+    .day-item {
+        padding: 4px;
+    }
+
+    .day-name {
+        font-size: 10px;
+    }
+
+    .day-date {
+        font-size: 12px;
+    }
+
+    .nav-arrow {
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+    }
+
+    .holidays-birthdays h4 {
+        font-size: 12px;
+    }
+
+    .event-item {
+        font-size: 10px;
     }
 }
 
