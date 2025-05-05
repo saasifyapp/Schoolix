@@ -357,7 +357,7 @@ router.get('/fetch-attendance-data-for-main-dashboard', checkPoolAvailability, a
                 });
     
                 // Log counts to the console
-                console.log(combinedResults);
+               // console.log(combinedResults);
     
                 // Send the combined counts to the client
                 res.status(200).json(combinedResults);
