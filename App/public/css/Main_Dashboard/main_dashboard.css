@@ -675,7 +675,7 @@ body.dark {
     justify-content: center;
     /* Center items in the container */
     gap: 10px;
-    padding: 5px;
+    /* padding: 5px; */
     box-sizing: border-box;
     position: relative;
     overflow: hidden;
@@ -742,6 +742,7 @@ body.dark {
     color: #2c3e50;
     transition: transform 0.3s ease, background-color 0.3s ease;
     width: 150px;
+    height: 80px;
     /* Set fixed width */
 }
 
@@ -1360,6 +1361,7 @@ body.dark {
         --male-percentage: 0%;
         --pre-male-percentage: 0%;
     }
+
     100% {
         --male-percentage: var(--final-male-percentage);
         --pre-male-percentage: var(--final-pre-male-percentage);
@@ -1613,13 +1615,13 @@ h3 {
 .attendance.loading {
     position: relative;
     color: transparent;
-  }
-  
-  .attendance.loading * {
+}
+
+.attendance.loading * {
     visibility: hidden;
-  }
-  
-  .attendance.loading::before {
+}
+
+.attendance.loading::before {
     content: '';
     position: absolute;
     top: 0;
@@ -1631,17 +1633,18 @@ h3 {
     animation: shimmer 1.5s infinite;
     z-index: 1;
     border-radius: 10px;
-  }
-  
-  /* Reusing the shimmer keyframes already defined */
-  @keyframes shimmer {
+}
+
+/* Reusing the shimmer keyframes already defined */
+@keyframes shimmer {
     0% {
-      background-position: 200% 0;
+        background-position: 200% 0;
     }
+
     100% {
-      background-position: -200% 0;
+        background-position: -200% 0;
     }
-  }
+}
 
 
 /* Heading styles */
@@ -1732,27 +1735,37 @@ h3 {
 /* Card container styles */
 .transport_cards {
     display: flex;
-    transition: transform 0.5s ease;
-    width: 200%;
-    /* Ensure full width is utilized for scrolling */
+    width: 400%; /* Double the width since cards are duplicated */
     height: 100%;
-    /* Take full height of parent */
     flex-grow: 1;
-    /* Ensure the cards take the full height of the parent */
+    transition: transform 0.3s ease-out; /* Smooth transform updates */
 }
+
+
+@keyframes slide {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+        /* Move to the start of the duplicated cards */
+    }
+}
+
 
 /* Shimmer loading effect for transport_wrapper */
 .transport_wrapper.loading {
     position: relative;
     color: transparent;
     overflow: hidden;
-  }
-  
-  .transport_wrapper.loading * {
+}
+
+.transport_wrapper.loading * {
     visibility: hidden;
-  }
-  
-  .transport_wrapper.loading::before {
+}
+
+.transport_wrapper.loading::before {
     content: '';
     position: absolute;
     top: 0;
@@ -1764,46 +1777,39 @@ h3 {
     animation: shimmer 1.5s infinite;
     z-index: 1;
     border-radius: 10px;
-  }
-  
-  .transport_wrapper {
+}
+
+.transport_wrapper {
     flex-grow: 1;
     position: relative;
     overflow: hidden;
-  }
-  
-  @keyframes shimmer {
+}
+
+@keyframes shimmer {
     0% {
-      background-position: 200% 0;
+        background-position: 200% 0;
     }
+
     100% {
-      background-position: -200% 0;
+        background-position: -200% 0;
     }
-  }
+}
 
 
 .transport_cards .card {
-    width: 50%;
-    /* Each card occupies 50% of parent */
+    width: 25%; /* Each card is 25% of the container (4 cards visible, 8 total with duplicates) */
     height: 95%;
-    /* Adjust height to leave some space at the bottom */
     display: flex;
     flex-direction: column;
-    /* Ensure content inside the card is arranged vertically */
     align-items: center;
-    /* Center the content horizontally */
     border-radius: 10px;
     margin: 0;
-    /* Remove margin to fit exactly */
     font-size: 16px;
     font-weight: 600;
     color: #5d6d7e;
     margin-right: 10px;
-    /* Add gap between cards */
     margin-bottom: 10px;
-    /* Add gap at the bottom */
     padding-top: 10px;
-    /* Add gap between the card top and the heading */
 }
 
 /* Apply colors to alternating cards */

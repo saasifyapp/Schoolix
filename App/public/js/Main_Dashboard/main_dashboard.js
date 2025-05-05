@@ -1031,15 +1031,15 @@ document.addEventListener('DOMContentLoaded', setupChart);
 /////////////////////////////// TRANSPORT INSIGHTS ///////////////////////
 
 document.addEventListener('DOMContentLoaded', function() {
-  let scrollPosition = 0;
-  const cardContainer = document.querySelector('.transport_cards');
-  const transportWrapper = document.querySelector('.transport_wrapper');
-  const numberOfVisibleCards = 2;
-  const scrollInterval = 5000;
-  const scrollAmount = cardContainer.clientWidth / numberOfVisibleCards;
   let isHovered = false;
   let isMapOpen = false;
-  let isLoading = true; // Track loading state for auto-scroll
+  let isLoading = true;
+  const cardContainer = document.querySelector('.transport_cards');
+  const transportWrapper = document.querySelector('.transport_wrapper');
+  let scrollPosition = 0;
+  let velocity = 1; // Pixels per frame (controls sliding speed)
+  const deceleration = 0.05; // Rate of slowing down on hover
+  let animationFrameId = null;
 
   // Apply loading state immediately
   if (transportWrapper) {
@@ -1049,21 +1049,49 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
 
-  // Function to scroll the cards
-  function autoScroll() {
-    if (!isHovered && !isMapOpen && !isLoading) {
-      scrollPosition += scrollAmount;
-      if (scrollPosition >= cardContainer.scrollWidth) {
-        scrollPosition = 0;
+  // Duplicate cards for seamless looping
+  const cards = cardContainer.innerHTML;
+  cardContainer.innerHTML += cards; // Append duplicate cards
+
+  // Animation loop for smooth sliding
+  function slideCards() {
+    if (!isLoading && !isMapOpen) {
+      if (isHovered) {
+        // Decelerate on hover
+        velocity = Math.max(0, velocity - deceleration);
+      } else {
+        // Restore full speed when not hovered
+        velocity = 1;
       }
-      cardContainer.style.transform = `translateX(-${scrollPosition}px)`;
+
+      scrollPosition += velocity;
+      // Calculate the width of one set of cards (half the total scrollWidth)
+      const setWidth = cardContainer.scrollWidth / 2;
+      // Reset position for seamless looping
+      if (scrollPosition >= setWidth) {
+        scrollPosition -= setWidth; // Subtract setWidth to align with the duplicate set
+        // Temporarily disable transition to avoid flicker during reset
+        cardContainer.style.transition = 'none';
+        cardContainer.style.transform = `translateX(-${scrollPosition}px)`;
+        // Re-enable transition after a brief delay to ensure DOM update
+        setTimeout(() => {
+          cardContainer.style.transition = 'transform 0.3s ease-out';
+        }, 0);
+      } else {
+        cardContainer.style.transform = `translateX(-${scrollPosition}px)`;
+      }
+    }
+    animationFrameId = requestAnimationFrame(slideCards);
+  }
+
+  // Start animation after loading
+  function startAnimation() {
+    if (!isLoading && !animationFrameId) {
+      animationFrameId = requestAnimationFrame(slideCards);
     }
   }
 
-  // Set an interval to auto-scroll the cards
-  const autoScrollInterval = setInterval(autoScroll, scrollInterval);
-
-  // Event listeners to track hover state
+  // Pause/resume animation on hover
   cardContainer.addEventListener('mouseover', () => {
     isHovered = true;
   });
@@ -1122,19 +1150,18 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     })
     .then(() => {
-      isLoading = false; // Update loading state
+      isLoading = false;
       transportWrapper.classList.remove('loading');
+      startAnimation(); // Start animation after loading
     })
     .catch(error => {
       console.error('Error fetching transport data:', error);
-
       const summaryCard = document.querySelector('.summary-card ul');
       summaryCard.innerHTML = '<li>Error loading data</li>';
       const locationCard = document.querySelector('.location-card ul');
       locationCard.innerHTML = '<li>Error loading data</li>';
       document.getElementById('shift1').innerHTML = '<h4><i class="fas fa-sun"></i> Shift - Error</h4>';
       document.getElementById('shift2').innerHTML = '<h4><i class="fas fa-cloud-sun"></i> Shift - Error</h4>';
-
       isLoading = false;
       transportWrapper.classList.remove('loading');
     });
@@ -1144,11 +1171,9 @@ document.addEventListener('DOMContentLoaded', function() {
       shifts.forEach((shift, index) => {
         const shiftCardId = `shift${index + 1}`;
         const shiftCard = document.getElementById(shiftCardId);
-
         if (shiftCard) {
           const shiftNameElement = shiftCard.querySelector('h4');
           shiftNameElement.innerHTML = `<i class="fas fa-${index === 0 ? 'sun' : 'cloud-sun'}"></i> Shift - ${shift.shift_name || 'Unnamed Shift'}`;
-
           const detailsList = document.createElement('ul');
           shift.details.forEach(detail => {
             const detailItem = document.createElement('li');
@@ -1172,33 +1197,34 @@ document.addEventListener('DOMContentLoaded', function() {
     modal.style.display = 'block';
     const mapContainer = document.getElementById('map');
     mapContainer.innerHTML = '';
-
     const map = L.map('map').setView([lat, lon], 15);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);
-
     const busIcon = L.icon({
       iconUrl: '/images/busIcon.png',
       iconSize: [35, 35],
       iconAnchor: [12.5, 25],
       popupAnchor: [0, -25]
     });
-
     const marker = L.marker([lat, lon], { icon: busIcon }).addTo(map);
     marker.bindPopup(location).openPopup();
-
     closeBtn.onclick = function() {
       modal.style.display = 'none';
       map.remove();
       isMapOpen = false;
+      if (!isHovered && !isLoading) {
+        velocity = 1; // Reset velocity when resuming
+      }
     };
-
     window.onclick = function(event) {
       if (event.target == modal) {
         modal.style.display = 'none';
         map.remove();
         isMapOpen = false;
+        if (!isHovered && !isLoading) {
+          velocity = 1; // Reset velocity when resuming
+        }
       }
     };
   }
