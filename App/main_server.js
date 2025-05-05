@@ -57,7 +57,7 @@ const connection_auth = mysql.createPool({
     connectionLimit: 10,
     queueLimit: 0,
     waitForConnections: true,
-   // idleTimeoutMillis: 60000, // 60 seconds
+   idleTimeout: 60000, // 60 seconds
 });
 
 // Export connection_auth
