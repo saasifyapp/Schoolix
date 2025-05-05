@@ -54,7 +54,7 @@ const connection_auth = mysql.createPool({
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
     port: process.env.DB_PORT,
-    connectionLimit: 20,
+    connectionLimit: 10,
     queueLimit: 0,
     waitForConnections: true,
    // idleTimeoutMillis: 60000, // 60 seconds
