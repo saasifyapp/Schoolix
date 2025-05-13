@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/NavButtons.css">
+    <link rel="stylesheet" href="/css/Teacher_Enrollment_Form_CSS/enrollment.css">
+    <link rel="stylesheet" href="/css/Teacher_Enrollment_Form_CSS/enrollment-form-control.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Teacher Enrollment Form</title>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo_item">
+            <img id="logo" src="" alt="Logo">
+        </div>
+        <div class="navbar_center">
+            <button onclick="window.location.href='/dashboard'"><i class='bx' id="backButton"><img
+                        src="/images/back.png" alt="Previous Icon"></i></button>
+            <button onclick="window.location.href='/dashboard'"><i class='bx' id="homeButton"><img
+                        src="/images/homeicon.png" alt="Dashboard Icon"></i></button>
+            <button id="logoutButton"><i class='bx' id="signoutButton"><img src="/images/logout.png"
+                        alt="Signout Icon"></i></button>
+        </div>
+        <div class="navbar_content"></div>
+    </nav>
+
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-box">
+            <div class="spinner"></div>
+            <div id="loadingText" class="loading-text"></div>
+        </div>
+    </div>
+
+    <div class="enrollment-form">
+        <input type="hidden" id="formMode" name="formMode" value="insert">
+        <div class="form-navigation">
+            <ul>
+                <li id="personal-info" class="active">
+                    <img src="/images/personal-information.gif" alt="Teacher Icon" class="nav-icon">
+                    Personal Information <span class="done-icon" style="display: none;">✔</span>
+                </li>
+                <li id="guardian-info">
+                    <img src="/images/professor.gif" alt="Guardian Icon" class="nav-icon">
+                    Guardian/Emergency Contact <span class="done-icon" style="display: none;">✔</span>
+                </li>
+                <li id="professional-info">
+                    <img src="/images/professionality.gif" alt="Professional Icon" class="nav-icon">
+                    Professional Information <span class="done-icon" style="display: none;">✔</span>
+                </li>
+                <li id="onboarding-info">
+                    <img src="/images/handshake.gif" alt="Onboarding Icon" class="nav-icon">
+                    Onboarding Details <span class="done-icon" style="display: none;">✔</span>
+                </li>
+                <li id="subject-mapping">
+                    <img src="/images/geography.gif" alt="Subject Icon" class="nav-icon">
+                    Subject-Class Mapping <span class="done-icon" style="display: none;">✔</span>
+                </li>
+                <li id="transport-info">
+                    <img src="/images/busIcon.png" alt="Transport Icon" class="nav-icon">
+                    Transport Service <span class="done-icon" style="display: none;">✔</span>
+                </li>
+                <li id="review-info">
+                    <img src="/images/cheque.gif" alt="Review Icon" class="nav-icon">
+                    Review and Consent <span class="done-icon" style="display: none;">✔</span>
+                </li>
+            </ul>
+            <div class="progress-bar-container">
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" id="progress-bar-fill"></div>
+                </div>
+                <span class="progress-bar-text" id="progress-bar-text">0%</span>
+            </div>
+        </div>
+
+        <div class="form-content">
+            <!-- Personal Information Section -->
+            <div id="personal-information" class="form-section">
+                <h2><img src="/images/personal-information.gif" alt="Teacher Icon" class="heading-icon">Personal Information</h2>
+                <div class="input-container">
+                    <h3>Basic Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="firstName" placeholder=" ">
+                            <span class="form-control-placeholder">First Name</span>
+                            <div id="firstNameError" class="error-message"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="middleName" placeholder=" ">
+                            <span class="form-control-placeholder">Middle Name</span>
+                            <div id="middleNameError" class="error-message"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="lastName" placeholder=" ">
+                            <span class="form-control-placeholder">Last Name</span>
+                            <div id="lastNameError" class="error-message"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="fullName" placeholder=" " readonly>
+                            <span class="form-control-placeholder">Full Name</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="gender" placeholder=" ">
+                            <span class="form-control-placeholder">Gender</span>
+                            <div id="genderSuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="date" class="form-control" id="dob" placeholder=" ">
+                            <span class="form-control-placeholder">Date of Birth</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="mobileNo" placeholder=" " maxlength="10">
+                            <span class="form-control-placeholder">Mobile Number</span>
+                            <div id="mobileNoError" class="error-message"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="aadhaar" placeholder=" " maxlength="12">
+                            <span class="form-control-placeholder">Aadhaar Number</span>
+                            <div id="aadhaarError" class="error-message"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-container">
+                    <h3>Address Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="city_village" placeholder=" ">
+                            <span class="form-control-placeholder">City/Village</span>
+                            <div id="cityVillageSuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="landmark" placeholder=" ">
+                            <span class="form-control-placeholder">Landmark</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="pinCode" placeholder=" " maxlength="6">
+                            <span class="form-control-placeholder">PIN Code</span>
+                            <div id="pinCodeError" class="error-message"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-navigation-buttons" style="justify-content: flex-end;">
+                    <button class="btn next-button" type="button" id="personal-next">
+                        <img src="/images/nextPrev.png" alt="Next Icon"> Next
+                    </button>
+                </div>
+            </div>
+
+            <!-- Guardian/Emergency Contact Section -->
+            <div id="guardian-information" class="form-section" style="display: none;">
+                <h2><img src="/images/professor.gif" alt="Guardian Icon" class="heading-icon">Guardian/Emergency Contact
+                </h2>
+                <div class="input-container">
+                    <h3>Emergency Contact Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="guardianFullName" placeholder=" ">
+                            <span class="form-control-placeholder">Guardian's Full Name</span>
+                            <div id="guardianFullNameError" class="error-message"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="guardianContact" placeholder=" " maxlength="10">
+                            <span class="form-control-placeholder">Guardian's Contact</span>
+                            <div id="guardianContactError" class="error-message"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="guardianRelation" placeholder=" ">
+                            <span class="form-control-placeholder">Relationship with Guardian</span>
+                            <div id="guardianRelationSuggestions" class="suggestions"></div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="guardianAddress" placeholder=" ">
+                            <span class="form-control-placeholder">Guardian's Address</span>
+                            <div id="guardianAddressSuggestions" class="suggestions"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-navigation-buttons">
+                    <button type="button" class="btn prev-button" id="guardian-prev"><img src="/images/nextPrev.png"
+                            alt="Previous Icon">Previous</button>
+                    <button type="button" class="btn next-button" id="guardian-next"><img src="/images/nextPrev.png"
+                            alt="Next Icon">Next</button>
+                </div>
+            </div>
+
+            <!-- Professional Information Section -->
+            <div id="professional-information" class="form-section" style="display: none;">
+                <h2><img src="/images/professionality.gif" alt="Professional Icon" class="heading-icon">Professional
+                    Information</h2>
+                <div class="input-container">
+                    <h3>Qualification and Experience</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="qualification" placeholder=" ">
+                            <span class="form-control-placeholder">Qualification</span>
+                            <div id="qualificationSuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="experience" placeholder=" ">
+                            <span class="form-control-placeholder">Experience (Years)</span>
+                            <div id="experienceError" class="error-message"></div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="previousEmployment" placeholder=" ">
+                            <span class="form-control-placeholder">Previous Employment Details</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-navigation-buttons">
+                    <button type="button" class="btn prev-button" id="professional-prev"><img src="/images/nextPrev.png"
+                            alt="Previous Icon">Previous</button>
+                    <button type="button" class="btn next-button" id="professional-next"><img src="/images/nextPrev.png"
+                            alt="Next Icon">Next</button>
+                </div>
+            </div>
+
+            <!-- Onboarding Details Section -->
+            <div id="onboarding-information" class="form-section" style="display: none;">
+                <h2><img src="/images/handshake.gif" alt="Onboarding Icon" class="heading-icon">Onboarding Details</h2>
+                <div class="input-container">
+                    <h3>Joining Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="date" class="form-control" id="dateOfJoining" placeholder=" ">
+                            <span class="form-control-placeholder">Date of Joining</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="department" placeholder=" ">
+                            <span class="form-control-placeholder">Department</span>
+                            <div id="departmentSuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="category" placeholder=" ">
+                            <span class="form-control-placeholder">Category</span>
+                            <div id="categorySuggestions" class="suggestions"></div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="designation" placeholder=" ">
+                            <span class="form-control-placeholder">Designation</span>
+                            <div id="designationSuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="salaryPerMonth" placeholder=" ">
+                            <span class="form-control-placeholder">Salary Per Month</span>
+                            <div id="salaryError" class="error-message"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-navigation-buttons">
+                    <button type="button" class="btn prev-button" id="onboarding-prev"><img src="/images/nextPrev.png"
+                            alt="Previous Icon">Previous</button>
+                    <button type="button" class="btn next-button" id="onboarding-next"><img src="/images/nextPrev.png"
+                            alt="Next Icon">Next</button>
+                </div>
+            </div>
+
+            <!-- Subject-Class Mapping Section -->
+            <div id="subject-mapping-information" class="form-section" style="display: none;">
+                <h2><img src="/images/geography.gif" alt="Subject Icon" class="heading-icon">Subject-Class Mapping</h2>
+                <div class="input-container">
+                    <h3>Class and Subject Assignment</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="classAllotted" placeholder=" ">
+                            <span class="form-control-placeholder">Class Allotted</span>
+                            <div id="classAllottedSuggestions" class="suggestions"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="subjectTaught" placeholder=" ">
+                            <span class="form-control-placeholder">Subject Taught</span>
+                            <div id="subjectTaughtSuggestions" class="suggestions"></div>
+                        </div>
+                        <button type="button" class="btn generate-package-button" id="mapButton">Map</button>
+                    </div>
+                    <div class="form-row">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Class Allotted</th>
+                                    <th>Subject Taught</th>
+                                </tr>
+                            </thead>
+                            <tbody id="subjectClassTable">
+                                <!-- Rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="form-navigation-buttons">
+                    <button type="button" class="btn prev-button" id="mapping-prev"><img src="/images/nextPrev.png"
+                            alt="Previous Icon">Previous</button>
+                    <button type="button" class="btn next-button" id="mapping-next"><img src="/images/nextPrev.png"
+                            alt="Next Icon">Next</button>
+                </div>
+            </div>
+
+            <!-- Transport Services Section -->
+            <div id="transport-information" class="form-section" style="display: none;">
+                <h2><img src="/images/busIcon.png" alt="Transport Icon" class="heading-icon">Transport Services</h2>
+                <div class="input-container">
+                    <h3>Transport Requirement</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <span>Transport Needed</span>
+                            <div class="radio-group" style="margin-bottom: 10px;">
+                                <label>
+                                    <input type="radio" name="transportNeeded" value="Yes"
+                                        onclick="toggleTransportDetails(true)">
+                                    Yes
+                                </label>
+                                <label>
+                                    <input type="radio" name="transportNeeded" value="No"
+                                        onclick="toggleTransportDetails(false)">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="transportDetails">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="pickDropAddress" placeholder=" ">
+                                <span class="form-control-placeholder">Pick/Drop Address</span>
+                                <div id="pickDropAddressSuggestions" class="suggestions"></div>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="vehicleRunning" placeholder=" ">
+                                <span class="form-control-placeholder">Vehicle Running</span>
+                                <div id="vehicleRunningSuggestions" class="suggestions"></div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div id="vehicleInfo" class="info-container">
+                                <!-- Vehicle info will be displayed here -->
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="checkbox" id="noVehicleFound">
+                                <label for="noVehicleFound">Select if no vehicle is found</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-navigation-buttons">
+                    <button type="button" class="btn prev-button" id="transport-prev"><img src="/images/nextPrev.png"
+                            alt="Previous Icon">Previous</button>
+                    <button type="button" class="btn next-button" id="transport-next"><img src="/images/nextPrev.png"
+                            alt="Next Icon">Submit</button>
+                </div>
+            </div>
+
+            <div id="review-information" class="form-section" style="display: none;">
+                <h2><img src="/images/cheque.gif" alt="Review Icon" class="heading-icon">Review and Consent</h2>
+                <div class="main-content">
+                  
+                    <!-- Personal Information -->
+                    <div class="review-section">
+                        <h3>Personal Information</h3>
+                        <div class="review-item"><span>Full Name:</span> <span id="review-fullName"></span></div>
+                        <div class="review-item"><span>Date of Birth:</span> <span id="review-dob"></span></div>
+                        <div class="review-item"><span>Gender:</span> <span id="review-gender"></span></div>
+                        <div class="review-item"><span>Mobile Number:</span> <span id="review-mobileNo"></span></div>
+                        <div class="review-item"><span>Aadhaar Number:</span> <span id="review-aadhaar"></span></div>
+                        <div class="review-item"><span>Address:</span> <span id="review-address"></span></div>
+                    </div>
+
+                    <!-- Guardian/Emergency Contact Information -->
+                    <div class="review-section">
+                        <h3>Guardian/Emergency Contact</h3>
+                        <div class="review-item"><span>Guardian's Full Name:</span> <span
+                                id="review-guardianFullName"></span></div>
+                        <div class="review-item"><span>Guardian's Contact:</span> <span
+                                id="review-guardianContact"></span></div>
+                        <div class="review-item"><span>Relationship with Guardian:</span> <span
+                                id="review-guardianRelation"></span></div>
+                        <div class="review-item"><span>Guardian's Address:</span> <span
+                                id="review-guardianAddress"></span></div>
+                    </div>
+
+                    <!-- Professional Information -->
+                    <div class="review-section">
+                        <h3>Professional Information</h3>
+                        <div class="review-item"><span>Qualification:</span> <span id="review-qualification"></span>
+                        </div>
+                        <div class="review-item"><span>Experience (Years):</span> <span id="review-experience"></span>
+                        </div>
+                        <div class="review-item"><span>Previous Employment Details:</span> <span
+                                id="review-previousEmployment"></span></div>
+                    </div>
+
+                    <!-- Onboarding Information -->
+                    <div class="review-section">
+                        <h3>Onboarding Information</h3>
+                        <div class="review-item"><span>Date of Joining:</span> <span id="review-dateOfJoining"></span>
+                        </div>
+                        <div class="review-item"><span>Department:</span> <span id="review-department"></span></div>
+                        <div class="review-item"><span>Category:</span> <span id="review-category"></span></div>
+                        <div class="review-item"><span>Designation:</span> <span id="review-designation"></span></div>
+                        <div class="review-item"><span>Salary Per Month:</span> <span id="review-salaryPerMonth"></span>
+                        </div>
+                    </div>
+
+                    <!-- Subject-Class Mapping Information -->
+                    <div class="review-section">
+                        <h3>Subject-Class Mapping</h3>
+                        <table id="subjectClassTableReview" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Class Allotted</th>
+                                    <th>Subject Taught</th>
+                                </tr>
+                            </thead>
+                            <tbody id="subjectClassTableBodyReview">
+                                <!-- Rows will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Transport Information -->
+                    <div class="review-section">
+                        <h3>Transport Information</h3>
+                        <div class="review-item">
+                            <span>Transport Needed:</span> <span id="review-transportNeeded"></span>
+                        </div>
+                        <div id="transportDetailsSection" style="display: none;">
+                            <div class="review-item"><span>Pick/Drop Address:</span> <span
+                                    id="review-pickDropAddress"></span></div>
+                            <div class="review-item"><span>Vehicle Running:</span> <span
+                                    id="review-vehicleRunning"></span></div>
+                            <div class="review-item"><span>No Vehicle Found:</span> <span
+                                    id="review-noVehicleFound"></span></div>
+                        </div>
+                    </div>
+
+                    <!-- Consent Section -->
+                    <div class="review-section">
+                        <h3>Consent</h3>
+                        <div class="review-item">
+                            <span>
+                                <label>
+                                    <input type="checkbox" id="select-all-checkbox">
+                                    Select All
+                                </label>
+                            </span>
+                        </div>
+                        <div class="review-item">
+                            <span>
+                                <label>
+                                    <input type="checkbox" id="consent-policies" class="consent-checkbox">
+                                    I agree to the School Policies.
+                                </label>
+                            </span>
+                        </div>
+                        <div class="review-item">
+                            <span>
+                                <label>
+                                    <input type="checkbox" id="consent-photo" class="consent-checkbox">
+                                    I consent to Photo/Video use in School Activities.
+                                </label>
+                            </span>
+                        </div>
+                        <div class="review-item">
+                            <span>
+                                <label>
+                                    <input type="checkbox" id="consent-activities" class="consent-checkbox">
+                                    I consent to participate in School Activities and Events.
+                                </label>
+                            </span>
+                        </div>
+                        <div class="review-item">
+                            <span>
+                                <label>
+                                    <input type="checkbox" id="consent-medical" class="consent-checkbox">
+                                    I consent to Emergency Medical Treatment.
+                                </label>
+                            </span>
+                        </div>
+                        <div class="review-item">
+                            <span>
+                                <label>
+                                    <input type="checkbox" id="consent-accuracy" class="consent-checkbox">
+                                    Declaration that all provided information is accurate and complete.
+                                </label>
+                            </span>
+                        </div>
+                        <div class="review-item">
+                            <span>
+                                <label>
+                                    <input type="checkbox" id="consent-rules" class="consent-checkbox">
+                                    Confirmation of understanding of school rules and regulations.
+                                </label>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Date of Submission -->
+                    <div class="review-section">
+                        <h3>Date of Submission</h3>
+                        <div class="review-item">
+                            <span>Date of Submission:</span>
+                            <span id="submission-date"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-navigation-buttons">
+                    <button type="button" class="btn prev-button" id="review-prev"><img src="/images/nextPrev.png"
+                            alt="Previous Icon">Previous</button>
+                    <button type="button" class="btn next-button" id="review-next"><img src="/images/nextPrev.png"
+                            alt="Next Icon">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <script>
+        // Placeholder for JavaScript functionality
+        function toggleTransportDetails(show) {
+            document.getElementById('transportDetails').style.display = show ? 'block' : 'none';
+        }
+    </script> -->
+    <script src="/js/Inventory_js/All.js"></script>
+    <script src="/js/Universal_Components_JS/handle_session.js"></script>
+    <script src="/js/Teacher_Enrollment_Form/teacher_enrollment_form.js"></script>
