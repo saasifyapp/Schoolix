@@ -441,6 +441,10 @@ app.get('/teacher_enrollment_form', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'Teacher_Enrollment_Form', 'teacher_enrollment_form.html'));
 });
 
+app.get('/teacher_enrollment_form/manage_teacher', authenticateToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Teacher_Enrollment_Form', 'manage_teacher.html'));
+});
+
 
 /////////////////////// ROUTES FOR MAIN DASHBOARD COMPONENTS ///////////////////////////////////////
 
