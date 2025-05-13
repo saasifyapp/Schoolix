@@ -23,6 +23,74 @@ body {
     transition: all 0.5s ease;
 }
 
+/* Apply inversion to the entire page when dark mode is active */
+html.dark {
+  filter: invert(100%) hue-rotate(180deg);
+  background: #000000d4;
+  /* Ensure the background is black after inversion */
+}
+
+/* Prevent inversion for specific elements (images, icons, etc.) */
+/* img,
+svg,
+canvas,
+.navbar img,
+.custom_icon,
+.user_detail_icon,
+.library_icon,
+.navlink_icon,
+.event-icon,
+.location-card i,
+.shift1-card i,
+.shift2-card i,
+.summary-card i,
+.location-card i {
+    filter: invert(100%) hue-rotate(180deg); 
+} */
+
+/* Ensure charts (canvas elements) are not inverted */
+.chart-container canvas {
+  filter: invert(100%) hue-rotate(180deg);
+}
+
+/* Adjust elements that need special handling in dark mode */
+body.dark .navbar,
+body.dark .sidebar,
+body.dark .user_detail_item,
+body.dark .library_item,
+body.dark .week-days,
+body.dark .holidays-birthdays,
+body.dark .male_female_graph,
+body.dark .fee_status,
+body.dark .transport_cards .card,
+body.dark .attendance,
+body.dark .transport {
+  background: #000;
+  /* Ensure backgrounds are dark after inversion */
+}
+
+/* Smooth transition for the filter effect */
+html {
+  transition: filter 0.3s ease;
+}
+
+.theme-toggle {
+  background: #58D68D;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background: #2ECC71;
+}
+
 
 
 /* navbar */
