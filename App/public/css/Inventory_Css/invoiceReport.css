@@ -6,7 +6,7 @@ body {
 }
 
 .main {
-    margin-top: 4rem;
+    margin-top: -0.6rem;
 }
 
 
@@ -16,7 +16,8 @@ body {
     color: var(--grey-color);
     text-align: center;
     margin-top: 5rem;
-    animation: fadeInFromUp 1s ease-out; /* Animation applied here */
+    animation: fadeInFromUp 1s ease-out;
+    /* Animation applied here */
 }
 
 /* Apply the animation to the .filter-container class */
@@ -25,11 +26,12 @@ body {
     justify-content: center;
     gap: 30px;
     margin-top: -10px;
-    animation: fadeInFromUp 1s ease-out; /* Animation applied here */
+    animation: fadeInFromUp 1s ease-out;
+    /* Animation applied here */
 }
 
 
-.filter-container label{
+.filter-container label {
     color: var(--grey-color);
 }
 
@@ -41,7 +43,7 @@ body {
 
 .dropdown label {
     margin-bottom: 5px;
-    font-weight: bold;    
+    font-weight: bold;
 }
 
 .custom-input-container,
@@ -52,25 +54,33 @@ body {
 }
 
 .common-height {
-    height: 2.8125rem; /* Adjust the height as needed */
+    height: 2.8125rem;
+    /* Adjust the height as needed */
 }
 
 .custom-input,
 .custom-dropdown {
-    padding-left: 2.5rem; /* Add padding to the left for the icon */
-    padding-right: 2.5rem; /* Add padding to the right for the right icon */
-    border: 0.0625rem solid #ccc; /* Adjust border as needed */
-    border-radius: 0.625rem; /* Adjust border-radius as needed */
-    font-size: 1rem; /* Adjust font size as needed */
+    padding-left: 2.5rem;
+    /* Add padding to the left for the icon */
+    padding-right: 2.5rem;
+    /* Add padding to the right for the right icon */
+    border: 0.0625rem solid #ccc;
+    /* Adjust border as needed */
+    border-radius: 0.625rem;
+    /* Adjust border-radius as needed */
+    font-size: 1rem;
+    /* Adjust font size as needed */
     cursor: pointer;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Add transition for smooth effect */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    /* Add transition for smooth effect */
 }
 
 .custom-input:hover,
 .custom-input:focus,
 .custom-dropdown:hover,
 .custom-dropdown:focus {
-    box-shadow: 0 0 10px #5DADE2; /* Add shadow on hover and focus */   
+    box-shadow: 0 0 10px #5DADE2;
+    /* Add shadow on hover and focus */
     border: 1px solid #85C1E9;
     outline: none;
 }
@@ -79,23 +89,30 @@ body {
 .custom-dropdown-left-icon,
 .custom-dropdown-right-icon {
     position: absolute;
-    width: 1.5rem; /* Adjust the size as needed */
-    height: 1.5rem; /* Adjust the size as needed */
-    pointer-events: none; /* Ensure the icon does not interfere with input */
+    width: 1.5rem;
+    /* Adjust the size as needed */
+    height: 1.5rem;
+    /* Adjust the size as needed */
+    pointer-events: none;
+    /* Ensure the icon does not interfere with input */
     border-radius: 15px;
-    mix-blend-mode: multiply; /* Add this property */
+    mix-blend-mode: multiply;
+    /* Add this property */
 }
 
 .custom-input-icon {
-    left: 0.75rem; /* Adjust the position as needed */
+    left: 0.75rem;
+    /* Adjust the position as needed */
 }
 
 .custom-dropdown-left-icon {
-    left: 0.5rem; /* Adjust the position as needed */
+    left: 0.5rem;
+    /* Adjust the position as needed */
 }
 
 .custom-dropdown-right-icon {
-    right: 0.5rem; /* Adjust the position as needed */
+    right: 0.5rem;
+    /* Adjust the position as needed */
 }
 
 /* Hide the default dropdown arrow */
@@ -103,8 +120,10 @@ body {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background: none; /* Remove the default background */
-    background-position: right 0.5rem center; /* Position the custom right icon */
+    background: none;
+    /* Remove the default background */
+    background-position: right 0.5rem center;
+    /* Position the custom right icon */
 }
 
 /* Override default styles for dropdown arrow */
@@ -118,75 +137,83 @@ body {
 /* Toggle Switch */
 /* Container around the switch */
 
-    .toggle-switch {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .switch-label {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        color: var(--grey-color);
-        font-weight: bold;
-    }
-    
-    .switch {
-        display: flex;
-        align-items: center;        
-    }
-    
-    .toggle-icon {
-        width: 2.2rem; /* Adjust size as needed */
-        height: 2.2rem; /* Adjust size as needed */
-        background-color: transparent;
-        border-radius: 15px;
-    }
-    
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-    
-    .slider {
-        position: relative;
-        cursor: pointer;
-        width: 50px; /* Increased width for a larger button */
-        height: 24px; /* Increased height for a larger button */
-        background-color: #ccc;
-        border-radius: 34px;
-        transition: .4s;
-    }
-    
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 18px; /* Adjust height to match the larger button */
-        width: 18px; /* Adjust width to match the larger button */
-        left: 4px;
-        bottom: 3px; /* Adjust bottom to center the knob */
-        background-color: white;
-        transition: .4s;
-        border-radius: 50%;
-    }
-    
-    input:checked + .slider {
-        background-color: #2196F3;
-    }
-    
-    input:checked + .slider:before {
-        transform: translateX(26px); /* Adjusted for larger button */
-    }
-    
+.toggle-switch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
 
-    
+.switch-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--grey-color);
+    font-weight: bold;
+}
+
+.switch {
+    display: flex;
+    align-items: center;
+}
+
+.toggle-icon {
+    width: 2.2rem;
+    /* Adjust size as needed */
+    height: 2.2rem;
+    /* Adjust size as needed */
+    background-color: transparent;
+    border-radius: 15px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: relative;
+    cursor: pointer;
+    width: 50px;
+    /* Increased width for a larger button */
+    height: 24px;
+    /* Increased height for a larger button */
+    background-color: #ccc;
+    border-radius: 34px;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    /* Adjust height to match the larger button */
+    width: 18px;
+    /* Adjust width to match the larger button */
+    left: 4px;
+    bottom: 3px;
+    /* Adjust bottom to center the knob */
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: #2196F3;
+}
+
+input:checked+.slider:before {
+    transform: translateX(26px);
+    /* Adjusted for larger button */
+}
+
+
+
 .section {
     display: flex;
     width: 100%;
-    height: 400px;
+    /* height: 400px; */
     margin-top: 1rem;
 }
 
@@ -195,6 +222,7 @@ body {
     flex: 1;
     padding: 20px;
 }
+
 /* Remove background color from left-section */
 .left-section {
     /* No background color */
@@ -210,53 +238,71 @@ body {
 .container {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Adjust spacing between elements */
+    gap: 10px;
+    /* Adjust spacing between elements */
     color: var(--grey-color);
     background-color: #fff;
     padding: 0.2rem;
     padding-bottom: 3rem;
     border-radius: 10px;
-    
+
 }
 
 .container h3 {
-    margin-bottom: -1rem; /* Space between the heading and date */
-    font-size: 1.25rem; /* Adjust font size as needed */
+    margin-bottom: -1rem;
+    /* Space between the heading and date */
+    font-size: 1.25rem;
+    /* Adjust font size as needed */
     margin-top: 0rem;
     text-align: left;
 }
 
 .container p {
-    margin: 0; /* Remove default margin */
-    font-size: 1rem; /* Adjust font size as needed */
-    color: var(--grey-color); /* Ensure consistency with other text elements */
+    margin: 0;
+    /* Remove default margin */
+    font-size: 1rem;
+    /* Adjust font size as needed */
+    color: var(--grey-color);
+    /* Ensure consistency with other text elements */
     margin-bottom: 0.5rem;
 }
 
 .container .box-container {
     display: flex;
-    justify-content: space-around; /* Align boxes horizontally with space between */
-    gap: 10px; /* Adjust spacing between boxes */
+    justify-content: space-around;
+    /* Align boxes horizontally with space between */
+    gap: 10px;
+    /* Adjust spacing between boxes */
 }
 
 
 /* Enhanced box styling */
 .box {
-    background-color: white; /* White background */
-    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3); /* Box shadow for depth */
-    padding: 15px; /* Increased padding for better spacing */
-    border-radius: 10px; /* Rounded corners */
-    min-width: 120px; /* Minimum width */
-    width: auto; /* Auto width to expand as needed */
+    background-color: white;
+    /* White background */
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+    /* Box shadow for depth */
+    padding: 15px;
+    /* Increased padding for better spacing */
+    border-radius: 10px;
+    /* Rounded corners */
+    min-width: 120px;
+    /* Minimum width */
+    width: auto;
+    /* Auto width to expand as needed */
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-items: center; /* Center align items */
-    position: relative; /* Position for icon */
+    align-items: center;
+    /* Center align items */
+    position: relative;
+    /* Position for icon */
     transition: box-shadow 0.3s ease;
-    opacity: 0; /* Initial opacity for fade effect */
-    animation: fadeUp 1s forwards; /* Animation properties */
+    opacity: 0;
+    /* Initial opacity for fade effect */
+    animation: fadeUp 1s forwards;
+    /* Animation properties */
 }
 
 .box:hover {
@@ -284,21 +330,29 @@ body {
     justify-content: center;
     flex-shrink: 0;
 }
+
 .box-heading {
-    font-size: 1rem; /* Adjust heading font size */
-    font-weight: bold; /* Bold heading text */
-    margin-bottom: 10px; /* Space between heading and number */
+    font-size: 1rem;
+    /* Adjust heading font size */
+    font-weight: bold;
+    /* Bold heading text */
+    margin-bottom: 10px;
+    /* Space between heading and number */
 }
 
 .box-number {
     display: flex;
-    justify-content: space-between; /* Space between text and icon */
-    width: 100%; /* Ensure the icon and text are aligned within the box */
+    justify-content: space-between;
+    /* Space between text and icon */
+    width: 100%;
+    /* Ensure the icon and text are aligned within the box */
 }
 
 .box-number .box-icon {
-    width: 40px; /* Icon size */
-    height: 40px; /* Icon size */
+    width: 40px;
+    /* Icon size */
+    height: 40px;
+    /* Icon size */
     /* Align icon to the right */
     display: flex;
     align-items: center;
@@ -308,9 +362,12 @@ body {
     margin: 0;
     font-size: 1.25rem;
     font-weight: bold;
-    color: var(--grey-color); /* Ensure consistency with other text elements */
-    flex: 1; /* Allow text to take up available space */
+    color: var(--grey-color);
+    /* Ensure consistency with other text elements */
+    flex: 1;
+    /* Allow text to take up available space */
 }
+
 .box-col2 img {
     width: 40px;
     height: 40px;
@@ -328,7 +385,8 @@ body {
     display: block;
     height: calc(100vh - 20rem);
     overflow-y: auto;
-    overflow-x: auto; /* Enable horizontal scrolling */
+    overflow-x: auto;
+    /* Enable horizontal scrolling */
     border: 1px solid #ddd;
     animation: fadeUp 0.5s ease-out;
     border-radius: 10px 10px 0 0;
@@ -341,7 +399,7 @@ body {
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
-    border-radius: 1rem;  
+    border-radius: 1rem;
     box-shadow: 0 0 0 1px #dddddd;
     margin: auto;
 }
@@ -349,14 +407,17 @@ body {
 #invoice-table th,
 #invoice-table td {
     width: auto;
-    max-width: 110px; /* Example: Set a maximum width for columns */
+    max-width: 110px;
+    /* Example: Set a maximum width for columns */
     border: 1px solid #ddd;
     padding: 8px;
     text-align: center;
     box-sizing: border-box;
     text-align: center;
-    opacity: 0; /* Initial opacity for fade effect */
-    animation: fadeUp 1s forwards; /* Animation properties */
+    opacity: 0;
+    /* Initial opacity for fade effect */
+    animation: fadeUp 1s forwards;
+    /* Animation properties */
 }
 
 #invoice-table th {
@@ -386,8 +447,10 @@ body {
     text-align: center;
     height: 50px;
     overflow: hidden;
-    white-space: nowrap; /* Prevent text wrapping */
-    text-overflow: ellipsis; /* Show ellipsis for overflow text */
+    white-space: nowrap;
+    /* Prevent text wrapping */
+    text-overflow: ellipsis;
+    /* Show ellipsis for overflow text */
 }
 
 #invoice-table tr:hover td {
@@ -396,12 +459,13 @@ body {
 }
 
 
-#table-heading{
+#table-heading {
     color: var(--grey-color);
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
+
     #invoice-table th,
     #invoice-table td {
         padding: 0.5rem;
@@ -417,6 +481,7 @@ body {
 }
 
 @media (max-width: 480px) {
+
     #invoice-table th,
     #invoice-table td {
         padding: 0.25rem;
@@ -430,10 +495,14 @@ body {
         font-size: 0.75rem;
     }
 }
+
 @media (max-width: 768px) {
-    #invoice-table th, #invoice-table td {
+
+    #invoice-table th,
+    #invoice-table td {
         /* Adjust styles for smaller screens */
-        max-width: none; /* Reset max-width if necessary */
+        max-width: none;
+        /* Reset max-width if necessary */
     }
 }
 
@@ -445,6 +514,7 @@ body {
         opacity: 0;
         transform: translateY(20px);
     }
+
     100% {
         opacity: 1;
         transform: translateY(0);
@@ -456,6 +526,7 @@ body {
         opacity: 0;
         transform: translateY(-20px);
     }
+
     100% {
         opacity: 1;
         transform: translateY(0);
@@ -468,6 +539,7 @@ body {
         opacity: 0;
         transform: translateY(-20px);
     }
+
     100% {
         opacity: 1;
         transform: translateY(0);
@@ -501,23 +573,23 @@ body {
     display: block;
     transform-style: preserve-3d;
     transform: rotateX(-20deg);
-  }
-  
-  .wrapper {
+}
+
+.wrapper {
     position: relative;
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
     animation: spin 4s linear infinite;
-  }
-  
-  @keyframes spin {
+}
+
+@keyframes spin {
     100% {
-      transform: rotateY(360deg);
+        transform: rotateY(360deg);
     }
-  }
-  
-  .pyramid-loader .wrapper .side {
+}
+
+.pyramid-loader .wrapper .side {
     width: 70px;
     height: 70px;
     background: linear-gradient(to bottom right, #FFA500, #FF4500);
@@ -529,29 +601,29 @@ body {
     margin: auto;
     transform-origin: center top;
     clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-  }
-  
-  .pyramid-loader .wrapper .side1 {
+}
+
+.pyramid-loader .wrapper .side1 {
     transform: rotateZ(-30deg) rotateY(90deg);
     background: linear-gradient(to bottom right, #FF4500, #FFA500);
-  }
-  
-  .pyramid-loader .wrapper .side2 {
+}
+
+.pyramid-loader .wrapper .side2 {
     transform: rotateZ(30deg) rotateY(90deg);
     background: linear-gradient(to bottom right, #FFA500, #FF4500);
-  }
-  
-  .pyramid-loader .wrapper .side3 {
+}
+
+.pyramid-loader .wrapper .side3 {
     transform: rotateX(30deg);
     background: linear-gradient(to bottom right, #FFA500, #FF4500);
-  }
-  
-  .pyramid-loader .wrapper .side4 {
+}
+
+.pyramid-loader .wrapper .side4 {
     transform: rotateX(-30deg);
     background: linear-gradient(to bottom right, #FF4500, #FFA500);
-  }
-  
-  .pyramid-loader .wrapper .shadow {
+}
+
+.pyramid-loader .wrapper .shadow {
     width: 60px;
     height: 60px;
     background: #FF8C00;
@@ -563,9 +635,9 @@ body {
     margin: auto;
     transform: rotateX(90deg) translateZ(-40px);
     filter: blur(12px);
-  }
+}
 
-  /* Toast container to hold multiple toasts */
+/* Toast container to hold multiple toasts */
 .toast-container {
     position: fixed;
     top: 20px;
@@ -643,14 +715,14 @@ body {
     /* Add a 5px margin to the right of the image */
 }
 
-#refreshButton:hover{
+#refreshButton:hover {
     background-color: #76D7C4;
     /* Change background color on hover */
     transform: scale(1.09);
     /* Increase size on hover */
 }
 
-#export_registered_students:hover{
-    background-color: #27AE60 ;
+#export_registered_students:hover {
+    background-color: #27AE60;
     transform: scale(1.09);
 }
