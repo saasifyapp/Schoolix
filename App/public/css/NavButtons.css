@@ -1,3 +1,71 @@
+/* Apply inversion to the entire page when dark mode is active */
+html.dark {
+  filter: invert(100%) hue-rotate(180deg);
+  background: #000000d4;
+  /* Ensure the background is black after inversion */
+}
+
+/* Prevent inversion for specific elements (images, icons, etc.) */
+/* img,
+svg,
+canvas,
+.navbar img,
+.custom_icon,
+.user_detail_icon,
+.library_icon,
+.navlink_icon,
+.event-icon,
+.location-card i,
+.shift1-card i,
+.shift2-card i,
+.summary-card i,
+.location-card i {
+    filter: invert(100%) hue-rotate(180deg); 
+} */
+
+/* Ensure charts (canvas elements) are not inverted */
+.chart-container canvas {
+  filter: invert(100%) hue-rotate(180deg);
+}
+
+/* Adjust elements that need special handling in dark mode */
+body.dark .navbar,
+body.dark .sidebar,
+body.dark .user_detail_item,
+body.dark .library_item,
+body.dark .week-days,
+body.dark .holidays-birthdays,
+body.dark .male_female_graph,
+body.dark .fee_status,
+body.dark .transport_cards .card,
+body.dark .attendance,
+body.dark .transport {
+  background: #000;
+  /* Ensure backgrounds are dark after inversion */
+}
+
+/* Smooth transition for the filter effect */
+html {
+  transition: filter 0.3s ease;
+}
+
+.theme-toggle {
+  background: #58D68D;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background: #2ECC71;
+}
+
 @keyframes slide-in {
   from {
     transform: translateY(-50px);
@@ -177,7 +245,7 @@
 
 .navbar_center {
   position: absolute;
-  right: 6rem; 
+  right: 6rem;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
@@ -189,11 +257,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px; /* Set a fixed width for the icons */
-  height: 30px; /* Set a fixed height for the icons */
-  cursor: pointer; /* Change cursor to pointer */
-  transition: transform 0.1s ease, box-shadow 0.2s ease; /* Smooth transition for hover effect */
-  transform: translateY(-100%); /* Start with translateY for animation */
+  width: 30px;
+  /* Set a fixed width for the icons */
+  height: 30px;
+  /* Set a fixed height for the icons */
+  cursor: pointer;
+  /* Change cursor to pointer */
+  transition: transform 0.1s ease, box-shadow 0.2s ease;
+  /* Smooth transition for hover effect */
+  transform: translateY(-100%);
+  /* Start with translateY for animation */
   animation: slideFromTop 0.5s ease forwards;
 }
 
@@ -201,28 +274,33 @@
 
 @keyframes slideFromTop {
   0% {
-      transform: translateY(-100%);
-      opacity: 0;
+    transform: translateY(-100%);
+    opacity: 0;
   }
+
   100% {
-      transform: translateY(0);
-      opacity: 1;
+    transform: translateY(0);
+    opacity: 1;
   }
 }
 
 .navbar_center i:hover {
-  transform: scale(1.1); /* Slightly enlarge the icon on hover */  
-  filter: drop-shadow(4px 6px rgba(0.1, 0.1, 0.1, 0.1));  /* Add box shadow for button effect */
+  transform: scale(1.1);
+  /* Slightly enlarge the icon on hover */
+  filter: drop-shadow(4px 6px rgba(0.1, 0.1, 0.1, 0.1));
+  /* Add box shadow for button effect */
 }
 
 .navbar_center img {
-  max-width: 100%; /* Ensure the image fits within the icon */
-  max-height: 100%; /* Ensure the image fits within the icon */     
+  max-width: 100%;
+  /* Ensure the image fits within the icon */
+  max-height: 100%;
+  /* Ensure the image fits within the icon */
   display: block;
 }
 
 .navbar_center button {
-  border-style: none; 
+  border-style: none;
   background-color: transparent;
 }
 
@@ -250,10 +328,10 @@
 
 @keyframes slideFromTop {
   0% {
-      transform: translateY(-500%);
+    transform: translateY(-500%);
   }
+
   100% {
-      transform: translateY(0);
+    transform: translateY(0);
   }
 }
-

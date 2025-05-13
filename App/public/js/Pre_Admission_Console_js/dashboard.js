@@ -115,6 +115,8 @@ function decodeURIComponentSafe(encodedURIComponent) {
   
   // Call the function to display the dynamic username and logo
   displayUserInfo('schoolName', 'user_name', 'logo');
+
+  
   
   
 

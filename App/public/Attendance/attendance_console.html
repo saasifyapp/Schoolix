@@ -4,6 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Boxicons CSS -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+
+
     <title>Attendance Console</title>
     <link rel="stylesheet" href="/css/NavButtons.css">
     <link rel="stylesheet" href="/css/Attendence_Css/AllAttendance.css">
@@ -38,9 +50,10 @@
         </div>
 
         <div class="navbar_content">
-            <!-- <i class="bi bi-grid"></i>
-      <i class='bx bx-bell'></i> -->
+           
+
         </div>
+        
     </nav>
 
     <div class="adm-head">
@@ -407,7 +420,7 @@
                         <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
                     </button>
                 </div>
-            </div>           
+            </div>
 
             <button class="export_registered_students"
                 onclick="exportTableToCSV('attendanceSummaryTable', 'Attendance_Summary.csv')">

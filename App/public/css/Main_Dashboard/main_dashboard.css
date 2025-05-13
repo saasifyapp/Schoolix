@@ -15,22 +15,15 @@
     --grey-color-light: #aaa;
 }
 
+
+
 body {
     /* background-color: #F7F9F9;  */
     background-image: linear-gradient(to right, #E3FDF5 10%, #FFE6FA 100%);
     transition: all 0.5s ease;
 }
 
-body.dark {
-    background-color: #333;
-}
 
-body.dark {
-    --white-color: #333;
-    --blue-color: #fff;
-    --grey-color: #f2f2f2;
-    --grey-color-light: #aaa;
-}
 
 /* navbar */
 .navbar {
