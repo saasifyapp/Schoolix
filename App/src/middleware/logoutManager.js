@@ -6,6 +6,8 @@ module.exports = (req, res, next) => {
     const sessionID = req.sessionID; // Unique session ID for this session
     const poolKey = dbUser ? `${dbUser}_${sessionID}` : null; // Key for session-specific pool
 
+    console.log('');
+    console.log(`============= LOGOUT ATTEMPT :- ${username} =============`);
     console.log(`User logged out: ${username} (Session: ${sessionID})`);
 
     const userPool = poolKey ? connectionPools[poolKey] : null;

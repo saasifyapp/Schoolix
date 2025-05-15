@@ -199,31 +199,7 @@ window.addEventListener("popstate", function (event) {
 // Push a new state to the history when the page is loaded
 window.history.pushState({ loggedOut: false }, null, window.location.href);
 
-document
-  .getElementById("logoutbtn")
-  .addEventListener("click", function (event) {
-    // Prevent the default action of the click event
-    event.preventDefault();
 
-    // Make an AJAX request to logout route
-    const confirmation = confirm(`Are you sure you want to logout ?`);
-    if (confirmation) {
-      fetch("/logout", {
-        method: "GET",
-        credentials: "same-origin", // Send cookies with the request
-      })
-        .then((response) => {
-          if (response.ok) {
-            // Redirect to homepage or login page
-            window.location.href = "/";
-          } else {
-            console.error("Logout failed");
-            // showToast('Logout failed');
-          }
-        })
-        .catch((error) => console.error("Error during logout:", error));
-    }
-  });
 
 ///////////////////STAY TUNED ALERT  /////////////////
 
@@ -1300,7 +1276,7 @@ document.addEventListener("DOMContentLoaded", function() {
         text: 'Excel file downloaded successfully.',
       });
 
-      console.log('Download Excel button clicked');
+      //console.log('Download Excel button clicked');
     } catch (error) {
       Swal.fire({
         icon: 'error',
@@ -1352,7 +1328,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // Log the entire data read from the Excel file to the console
-        console.log('Raw Excel Data:', jsonData);
+        //console.log('Raw Excel Data:', jsonData);
 
         // Exclude header row and map data to object structure
         let dataToSend = jsonData.slice(1).map(row => ({
@@ -1367,7 +1343,7 @@ document.addEventListener("DOMContentLoaded", function() {
         dataToSend = dataToSend.sort((a, b) => a.Sr_No - b.Sr_No);
 
         // Log the data to be sent to the server
-        console.log('Data to be sent:', dataToSend);
+        //console.log('Data to be sent:', dataToSend);
 
         try {
           const response = await fetch('/upload_excel', {
@@ -1419,7 +1395,7 @@ async function fetchCalendarEvents() {
     const response = await fetch('/get_calendar_events');
     const result = await response.json();
     if (result.success) {
-      console.log(result.data);
+      //console.log(result.data);
       return result.data;
     } else {
       throw new Error('Failed to fetch calendar events');

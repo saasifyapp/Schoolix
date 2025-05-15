@@ -15,6 +15,8 @@ const connectionManager = (req, res, next) => {
 
     // Create or reuse connection pool based on dbUser_sessionID
     if (!connectionPools[poolKey]) {
+        console.log('');
+        console.log(`============ LOGIN ATTEMPT :- ${dbUser} ===============`);
         console.log(`Creating new connection pool for ${poolKey}`);
 
         // Create new connection pool
