@@ -119,23 +119,34 @@ function hideBigToast() {
 
 
 document.getElementById("logoutButton").addEventListener("click", function () {
-  // Make an AJAX request to logout route
-  const confirmation = confirm(`Are you sure you want to logout ?`);
-  if (confirmation) {
-    fetch("/logout", {
-      method: "GET",
-      credentials: "same-origin", // Send cookies with the request
-    })
-      .then((response) => {
-        if (response.ok) {
-          // Redirect to homepage or login page
-          window.location.href = "/";
-        } else {
-          console.error("Logout failed");
-        }
+  // Show SweetAlert2 confirmation dialog
+  Swal.fire({
+    title: 'Signout Alert !',
+    text: 'Do you want to signout?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, signout!',
+    cancelButtonText: 'Cancel'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Make an AJAX request to logout route
+      fetch("/logout", {
+        method: "GET",
+        credentials: "same-origin", // Send cookies with the request
       })
-      .catch((error) => console.error("Error during logout:", error));
-  }
+        .then((response) => {
+          if (response.ok) {
+            // Redirect to homepage or login page
+            window.location.href = "/";
+          } else {
+            console.error("Logout failed");
+          }
+        })
+        .catch((error) => console.error("Error during logout:", error));
+    }
+  });
 });
 
 // Function to show the loading animation
