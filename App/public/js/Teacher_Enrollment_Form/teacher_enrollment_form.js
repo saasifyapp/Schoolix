@@ -124,3 +124,157 @@ document.addEventListener("DOMContentLoaded", () => {
         updateDoneIconForSection(section.id);
     });
 }); 
+
+
+
+
+////////////////////////////////////// TEACHER FORM POPULATION //////////////////////////////
+
+//////////////////////////////// COMMON FUNCTIONS //////////////////////////
+
+// Function to display loading suggestions
+function showLoading(suggestionsContainer) {
+    suggestionsContainer.innerHTML = ''; 
+    const loadingItem = document.createElement('div');
+    loadingItem.classList.add('suggestion-item', 'no-results');
+    loadingItem.textContent = 'Loading...';
+    suggestionsContainer.appendChild(loadingItem);
+    suggestionsContainer.style.display = "block";
+}
+
+// Utility function to display no results found message
+function showNoResults(suggestionsContainer) {
+    suggestionsContainer.innerHTML = '';
+    const noResultsItem = document.createElement('div');
+    noResultsItem.classList.add('suggestion-item', 'no-results');
+    noResultsItem.textContent = 'No results found';
+    suggestionsContainer.appendChild(noResultsItem);
+}
+
+
+/////////////////////////////////////////// ALL NUMERIC VALIDATIONS //////////////////////////
+
+// General function to validate input
+function validateInput(inputId, errorId, length) {
+    const inputField = document.getElementById(inputId);
+    const errorElement = document.getElementById(errorId);
+    const value = inputField.value;
+
+    errorElement.innerHTML = ''; // Clear previous error message
+    inputField.classList.remove('error'); // Remove existing error styles
+
+    // Check for any spaces
+    if (/\s/.test(value)) {
+        errorElement.style.display = 'block'; // Show error message container
+        errorElement.innerHTML = 'Input must not contain any spaces.';
+        inputField.classList.add('error'); // Apply error styles
+        return false;
+    }
+
+    // Length Check
+    if (value.length !== length && value.length !== 0) {
+        errorElement.style.display = 'block'; // Show error message container
+        errorElement.innerHTML = `Input must be exactly ${length} characters long.`;
+        inputField.classList.add('error'); // Apply error styles
+        return false;
+    }
+
+    // Numeric Check
+    if (!/^\d*$/.test(value)) {
+        errorElement.style.display = 'block'; // Show error message container
+        errorElement.innerHTML = 'Input must contain only numeric digits.';
+        inputField.classList.add('error'); // Apply error styles
+        return false;
+    }
+
+    inputField.classList.remove('error'); // Remove error styles on success
+    errorElement.style.display = 'none'; // Hide error message container on success
+    return true;
+}
+
+// Function to add validation listeners and remove spaces in real-time
+function addValidationListeners(inputId, errorId, length) {
+    const inputField = document.getElementById(inputId);
+
+    inputField.addEventListener('input', function () {
+        inputField.value = inputField.value.replace(/\s/g, ''); // Remove any spaces
+        validateInput(inputId, errorId, length);
+    });
+
+    inputField.addEventListener('blur', function () {
+        if (validateInput(inputId, errorId, length)) {
+            document.getElementById(errorId).style.display = 'none';
+        }
+    });
+}
+
+// Add event listeners for each field
+addValidationListeners('mobileNo', 'mobileNoError', 10);
+addValidationListeners('aadhaar', 'aadhaarError', 12);
+addValidationListeners('pinCode', 'pinCodeError', 6);
+
+addValidationListeners('guardianContact', 'guardianContactError', 10);
+
+addValidationListeners('experience', 'experienceError', 2);
+
+//addValidationListeners('salaryPerMonth', 'salaryError', 5);
+
+
+////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////// ALL NAME VALIDATION //////////////////////
+
+// General function to validate name fields
+function validateNameInput(inputId, errorId) {
+    const inputField = document.getElementById(inputId);
+    const errorElement = document.getElementById(errorId);
+    const value = inputField.value;
+
+    errorElement.innerHTML = ''; // Clear previous error message
+    inputField.classList.remove('error'); // Remove existing error styles
+
+    // Check for any spaces (leading, trailing, or internal)
+    if (/\s/.test(value)) {
+        errorElement.style.display = 'block'; // Show error message container
+        errorElement.innerHTML = 'Name must not contain any spaces.';
+        inputField.classList.add('error'); // Apply error styles
+        return false;
+    }
+
+    // Check for special characters or numbers
+    if (/[^a-zA-Z]/.test(value)) {
+        errorElement.style.display = 'block'; // Show error message container
+        errorElement.innerHTML = 'Name must not contain special characters or numbers.';
+        inputField.classList.add('error'); // Apply error styles
+        return false;
+    }
+
+    inputField.classList.remove('error'); // Remove error styles on success
+    errorElement.style.display = 'none'; // Hide error message container on success
+    return true;
+}
+
+// Function to add event listeners for name inputs
+function addNameValidationListeners(inputId, errorId) {
+    const inputField = document.getElementById(inputId);
+
+    inputField.addEventListener('input', function () {
+        validateNameInput(inputId, errorId);
+    });
+
+    inputField.addEventListener('blur', function () {
+        if (validateNameInput(inputId, errorId)) {
+            document.getElementById(errorId).style.display = 'none';
+        }
+    });
+}
+
+// Add event listeners for name fields
+addNameValidationListeners('firstName', 'firstNameError');
+addNameValidationListeners('middleName', 'middleNameError');
+addNameValidationListeners('lastName', 'lastNameError');
+
+
+//addNameValidationListeners('guardianFullName', 'guardianFullNameError');
+
+/////////////////////////////////////////////////////////////

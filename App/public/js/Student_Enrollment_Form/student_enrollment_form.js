@@ -153,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Function to display loading suggestions
 function showLoading(suggestionsContainer) {
-    suggestionsContainer.innerHTML = '';
+    suggestionsContainer.innerHTML = ''; 
     const loadingItem = document.createElement('div');
     loadingItem.classList.add('suggestion-item', 'no-results');
     loadingItem.textContent = 'Loading...';
