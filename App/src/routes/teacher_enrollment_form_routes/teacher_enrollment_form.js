@@ -9,6 +9,54 @@ const { connection_auth } = require('../../../main_server'); // Adjust the path 
 router.use(connectionManager);
 
 
+router.get('/get-classes-to-allot', (req, res) => {
+    const sql = `
+        SELECT DISTINCT Standard, Division
+        FROM (
+            SELECT Standard, Division,
+                   CASE 
+                       WHEN Standard = 'Nursery' THEN 1
+                       WHEN Standard = 'LKG' THEN 2
+                       WHEN Standard = 'UKG' THEN 3
+                       ELSE 4
+                   END AS sort_order,
+                   CASE 
+                       WHEN Standard IN ('Nursery', 'LKG', 'UKG') THEN 0
+                       ELSE CAST(REGEXP_REPLACE(Standard, '[^0-9]', '') AS UNSIGNED)
+                   END AS numeric_standard
+            FROM pre_primary_student_details
+            UNION
+            SELECT Standard, Division,
+                   CASE 
+                       WHEN Standard = 'Nursery' THEN 1
+                       WHEN Standard = 'LKG' THEN 2
+                       WHEN Standard = 'UKG' THEN 3
+                       ELSE 4
+                   END AS sort_order,
+                   CASE 
+                       WHEN Standard IN ('Nursery', 'LKG', 'UKG') THEN 0
+                       ELSE CAST(REGEXP_REPLACE(Standard, '[^0-9]', '') AS UNSIGNED)
+                   END AS numeric_standard
+            FROM primary_student_details
+        ) AS combined
+        ORDER BY sort_order ASC, numeric_standard ASC, Division ASC;
+    `;
+
+    req.connectionPool.query(sql, (error, results) => {
+        if (error) {
+            console.error('Database query failed:', error);
+            return res.status(500).json({ success: false, error: 'Database query failed' });
+        }
+
+        if (results.length > 0) {
+            const classes = results.map(row => `${row.Standard} ${row.Division}`);
+            res.status(200).json({ success: true, classes });
+        } else {
+            res.status(200).json({ success: false, classes: [] });
+        }
+    });
+});
+
 // Endpoint to get distinct shift details
 router.get('/get-shift-details', (req, res) => {
     const sql = `

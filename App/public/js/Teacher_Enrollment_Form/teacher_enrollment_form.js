@@ -110,7 +110,7 @@ function updateDoneIconForSection(sectionId) {
 
 // Add event listeners to all inputs to dynamically update the specific section's icon
 document.querySelectorAll('.form-control').forEach(input => {
-    input.addEventListener('input', function() {
+    input.addEventListener('input', function () {
         const section = input.closest('.form-section');
         if (section) {
             updateDoneIconForSection(section.id);
@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.form-section').forEach(section => {
         updateDoneIconForSection(section.id);
     });
-}); 
+});
 
 
 
@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Function to display loading suggestions
 function showLoading(suggestionsContainer) {
-    suggestionsContainer.innerHTML = ''; 
+    suggestionsContainer.innerHTML = '';
     const loadingItem = document.createElement('div');
     loadingItem.classList.add('suggestion-item', 'no-results');
     loadingItem.textContent = 'Loading...';
@@ -1079,7 +1079,7 @@ async function displayQualificationSuggestions() {
         // Simulate an async data fetch
         setTimeout(() => {
             qualificationCache = [
-                "D.El.Ed", "B.Ed", "M.Ed", "B.A. B.Ed", "B.Sc." ,"B.Sc. B.Ed",
+                "D.El.Ed", "B.Ed", "M.Ed", "B.A. B.Ed", "B.Sc.", "B.Sc. B.Ed",
                 "B.T.C", "TGT", "PGT", "M.A.", "M.Sc.", "M.Com",
                 "Ph.D.", "NET", "SLET", "CTET", "TET", "Montessori Training"
             ];
@@ -1161,13 +1161,7 @@ document.addEventListener("DOMContentLoaded", function () {
 let departmentCache = [];
 let departmentDataFetched = false;
 
-function showLoading(container) {
-    container.innerHTML = '<div class="loading">Loading...</div>';
-}
 
-function showNoResults(container) {
-    container.innerHTML = '<div class="suggestion-item no-results">No results found</div>';
-}
 
 function displayDepartmentSuggestions() {
     const departmentInput = document.getElementById('department');
@@ -1255,13 +1249,7 @@ document.addEventListener("DOMContentLoaded", function () {
 let employeeTypeCache = [];
 let employeeTypeDataFetched = false;
 
-function showLoading(container) {
-    container.innerHTML = '<div class="loading">Loading...</div>';
-}
 
-function showNoResults(container) {
-    container.innerHTML = '<div class="suggestion-item no-results">No results found</div>';
-}
 
 function displayEmployeeTypeSuggestions() {
     const employeeTypeInput = document.getElementById('employee_type');
@@ -1275,7 +1263,7 @@ function displayEmployeeTypeSuggestions() {
 
         // Simulate an async data fetch
         setTimeout(() => {
-            employeeTypeCache = ["teacher", "support_staff" ,"admin"];
+            employeeTypeCache = ["teacher", "support_staff", "admin"];
             employeeTypeDataFetched = true;
             filterAndDisplayEmployeeTypeSuggestions(query, employeeTypeSuggestionsContainer);
         }, 500);
@@ -1341,13 +1329,7 @@ document.addEventListener("DOMContentLoaded", function () {
 let designationCache = [];
 let designationDataFetched = false;
 
-function showLoading(container) {
-    container.innerHTML = '<div class="loading">Loading...</div>';
-}
 
-function showNoResults(container) {
-    container.innerHTML = '<div class="suggestion-item no-results">No results found</div>';
-}
 
 function displayDesignationSuggestions() {
     const designationInput = document.getElementById('designation');
@@ -1442,8 +1424,321 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+///////////////////// CLASS SUBJECT MAPPING //////////////
 
-//////////////////// TRANSPORT REQUIREMENTS ////////////////
+/////////////// GET CLASS SUGGESTIONS /////////////
+
+
+// Function to fetch class suggestions from the API
+async function fetchClassSuggestions() {
+    try {
+        const response = await fetch('/get-classes-to-allot');
+        const data = await response.json();
+        if (data.success) {
+            return data.classes;
+        } else {
+            return [];
+        }
+    } catch (error) {
+        console.error('Error fetching class suggestions:', error);
+        return [];
+    }
+}
+
+// Prefetch class suggestions and store them in a global variable
+async function prefetchClassSuggestions() {
+    window.classSuggestions = (await fetchClassSuggestions()) || [];
+}
+prefetchClassSuggestions();
+
+// Function to display class suggestions
+function displayClassSuggestions(query, suggestionsContainer) {
+    suggestionsContainer.innerHTML = ''; // Clear previous suggestions
+
+    const filteredClasses = window.classSuggestions.filter(cls => cls.toLowerCase().startsWith(query.toLowerCase()));
+
+    if (filteredClasses.length > 0) {
+        filteredClasses.forEach(cls => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = cls;
+            suggestionItem.dataset.place = cls;
+            suggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        // If no results are found
+        const noResultsItem = document.createElement('div');
+        noResultsItem.classList.add('suggestion-item', 'no-results');
+        noResultsItem.style.fontStyle = 'italic';
+        noResultsItem.textContent = 'No results found';
+        suggestionsContainer.appendChild(noResultsItem);
+    }
+
+    suggestionsContainer.style.display = "block";
+}
+
+// Add event listeners to the classAllotted input field
+document.addEventListener("DOMContentLoaded", function () {
+    const classAllottedInput = document.getElementById('classAllotted');
+    const classAllottedSuggestionsContainer = document.getElementById('classAllottedSuggestions');
+
+    // Wrap the displayClassSuggestions function with debounce
+    const debouncedDisplaySuggestions = debounce(query => displayClassSuggestions(query, classAllottedSuggestionsContainer), 300);
+
+    // Add event listeners for input events
+    classAllottedInput.addEventListener('input', () => debouncedDisplaySuggestions(classAllottedInput.value.toLowerCase().trim()));
+    classAllottedInput.addEventListener('focus', () => {
+        if (!window.classSuggestions) {
+            displayLoadingSuggestions(classAllottedSuggestionsContainer);
+            prefetchClassSuggestions().then(() => {
+                debouncedDisplaySuggestions(classAllottedInput.value.toLowerCase().trim());
+            });
+        } else {
+            displayClassSuggestions(classAllottedInput.value.toLowerCase().trim(), classAllottedSuggestionsContainer);
+        }
+    });
+    classAllottedInput.addEventListener('click', () => {
+        if (!window.classSuggestions) {
+            displayLoadingSuggestions(classAllottedSuggestionsContainer);
+            prefetchClassSuggestions().then(() => {
+                debouncedDisplaySuggestions(classAllottedInput.value.toLowerCase().trim());
+            });
+        } else {
+            displayClassSuggestions(classAllottedInput.value.toLowerCase().trim(), classAllottedSuggestionsContainer);
+        }
+    });
+
+    classAllottedSuggestionsContainer.addEventListener('click', function (event) {
+        if (event.target.classList.contains('suggestion-item')) {
+            const selectedClass = event.target.dataset.place;
+            classAllottedInput.value = selectedClass;
+            classAllottedSuggestionsContainer.innerHTML = '';
+        }
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!classAllottedSuggestionsContainer.contains(event.target) && !classAllottedInput.contains(event.target)) {
+            classAllottedSuggestionsContainer.innerHTML = '';
+        }
+    });
+});
+
+// Function to show loading suggestions (if needed)
+function displayLoadingSuggestions(suggestionsContainer) {
+    suggestionsContainer.innerHTML = '';
+    const loadingItem = document.createElement('div');
+    loadingItem.classList.add('suggestion-item', 'no-results');
+    loadingItem.style.fontStyle = 'italic';
+    loadingItem.textContent = 'Loading...';
+    suggestionsContainer.appendChild(loadingItem);
+    suggestionsContainer.style.display = "block";
+}
+
+// Debounce function: To limit the rate at which suggestions are called
+function debounce(func, delay) {
+    let debounceTimer;
+    return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => func.apply(context, args), delay);
+    };
+}
+
+
+///////////////////// SUBJECT SUGGESTIONS ///////////////
+
+let subjectTaggedCache = [];
+let subjectTaggedDataFetched = false;
+
+
+
+function displaySubjectTaggedSuggestions() {
+    const subjectTaggedInput = document.getElementById('subjectTagged');
+    const subjectTaggedSuggestionsContainer = document.getElementById('subjectTaggedSuggestions');
+    const query = subjectTaggedInput.value.toLowerCase().trim();
+
+    subjectTaggedSuggestionsContainer.style.display = "block";
+
+    if (!subjectTaggedDataFetched) {
+        displayLoadingSuggestions(subjectTaggedSuggestionsContainer);
+
+        // Simulate an async data fetch
+        setTimeout(() => {
+            subjectTaggedCache = [
+                // Basic (Pre-primary and Primary)
+                "Drawing",
+                "English",
+                "General Knowledge",
+                "Hindi",
+                "Marathi",
+                "Mathematics",
+                "Moral Science",
+                "Science",
+                "Value Education",
+                // Intermediate (Secondary)
+                "Civics",
+                "Environmental Science",
+                "Geography",
+                "History",
+                "Sanskrit",
+                "Social Science",
+                // Advanced (Higher Secondary)
+                "Accountancy",
+                "Biology",
+                "Biotechnology",
+                "Business Studies",
+                "Chemistry",
+                "Computer Science",
+                "Economics",
+                "Informatics Practices",
+                "Legal Studies",
+                "Physics",
+                "Political Science",
+                "Psychology",
+                "Sociology",
+                // Co-curricular (All levels)
+                "Dance",
+                "Home Science",
+                "Music",
+                "Physical Education"
+            ];
+            subjectTaggedDataFetched = true;
+            filterAndDisplaySubjectTaggedSuggestions(query, subjectTaggedSuggestionsContainer);
+        }, 500);
+    } else {
+        filterAndDisplaySubjectTaggedSuggestions(query, subjectTaggedSuggestionsContainer);
+    }
+}
+
+function filterAndDisplaySubjectTaggedSuggestions(query, suggestionsContainer) {
+    const filteredSubjects = subjectTaggedCache.filter(subject =>
+        subject.toLowerCase().startsWith(query)
+    );
+
+    suggestionsContainer.innerHTML = '';
+
+    if (filteredSubjects.length > 0) {
+        filteredSubjects.forEach(subject => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = subject;
+            suggestionItem.dataset.value = subject;
+            suggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        showNoResults(suggestionsContainer);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const subjectTaggedInput = document.getElementById('subjectTagged');
+    const subjectTaggedSuggestionsContainer = document.getElementById('subjectTaggedSuggestions');
+    let timeout;
+
+    // Debounced input handler
+    subjectTaggedInput.addEventListener('input', () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(displaySubjectTaggedSuggestions, 300);
+    });
+    subjectTaggedInput.addEventListener('focus', displaySubjectTaggedSuggestions);
+    subjectTaggedInput.addEventListener('click', displaySubjectTaggedSuggestions);
+
+    // Handle suggestion selection
+    subjectTaggedSuggestionsContainer.addEventListener('click', function (event) {
+        if (event.target.classList.contains('suggestion-item') && !event.target.classList.contains('no-results')) {
+            const selectedSubject = event.target.dataset.value;
+            subjectTaggedInput.value = selectedSubject;
+            subjectTaggedSuggestionsContainer.innerHTML = '';
+            subjectTaggedSuggestionsContainer.style.display = "none";
+        }
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function (event) {
+        if (!subjectTaggedSuggestionsContainer.contains(event.target) && !subjectTaggedInput.contains(event.target)) {
+            subjectTaggedSuggestionsContainer.innerHTML = '';
+            subjectTaggedSuggestionsContainer.style.display = "none";
+        }
+    });
+
+    ////////////////////////// MAP BUTTON ////////////////
+
+    // Map button click handler
+    mapButton.addEventListener('click', function () {
+        const classValue = classAllotted.value.trim();
+        const subjectValue = subjectTagged.value.trim();
+
+        // Validate inputs
+        if (!classValue || !subjectValue) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Missing Fields',
+                html: 'Either <strong> Class </strong> or <strong> Subject </strong> is missing.'
+            });
+            return;
+        }
+
+        // Check if the combination already exists
+        const rows = subjectClassTableBody.querySelectorAll('tr');
+        for (let row of rows) {
+            const existingClass = row.cells[0].innerText.trim();
+            const existingSubject = row.cells[1].innerText.trim();
+            if (existingClass === classValue && existingSubject === subjectValue) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Mapping already exist',
+                    html: `${classValue} &rarr; ${subjectValue}`
+                });
+                return;
+            }
+        }
+
+
+        // Add new row to the table
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+        <td>${classValue}</td>
+        <td>${subjectValue}</td>
+               <td>
+            <button style="background-color: transparent; border: none; color: black; padding: 0; text-align: center; 
+                text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 14px;
+                cursor: pointer; max-height: 100%; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;"
+                class="delete-row-button"
+                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.2)';">
+                <img src="../images/delete_vendor.png" alt="Delete" style="width: 25px; height: 25px; margin: 5px;">
+                <span></span>
+            </button>
+        </td>   `;
+
+        subjectClassTableBody.appendChild(newRow);
+
+        // Clear input fields
+        classAllotted.value = '';
+        subjectTagged.value = '';
+
+        // Clear suggestions
+        classAllottedSuggestionsContainer.innerHTML = '';
+        classAllottedSuggestionsContainer.style.display = "none";
+        subjectTaggedSuggestionsContainer.innerHTML = '';
+        subjectTaggedSuggestionsContainer.style.display = "none";
+    });
+
+    // Event delegation to handle row deletion
+    subjectClassTableBody.addEventListener('click', function (event) {
+        if (event.target.closest('.delete-row-button')) {
+            const rowToDelete = event.target.closest('tr');
+            subjectClassTableBody.removeChild(rowToDelete);
+        }
+    });
+});
+
+
+
+
+/////////////////////////////// TRANSPORT REQUIREMENTS /////////////////////////
 
 ///////////////////////////// TRANSPORT SERVICE SECTION ////////////////////////
 
@@ -1763,7 +2058,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const vehicleRunningSuggestionsContainer = document.getElementById('vehicleRunningSuggestions');
     const pickDropAddressInput = document.getElementById('pickDropAddress');
     const noVehicleFoundCheckbox = document.getElementById('noVehicleFound');
-    
+
     // Enable the checkbox initially
     noVehicleFoundCheckbox.disabled = false;
 
