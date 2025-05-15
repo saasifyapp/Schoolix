@@ -832,8 +832,9 @@ function displayNationalitySuggestions() {
         setTimeout(() => {
             nationalityCache = [
                 "Indian", "Anglo-Indian", "Tibetan", "Nepali", "Bhutanese",
-                "Bangladeshi", "Pakistani", "Sri Lankan", "Maldivian",
-                "Burmese", "Thai", "Malaysian", "Other"
+                "Bangladeshi", "Pakistani", "Sri Lankan", "Maldivian", "Burmese",
+                "Thai", "Malaysian", "Afghan", "Chinese", "Iranian", "Iraqi",
+                "Sudanese", "Other"
             ];
 
             nationalityDataFetched = true;
@@ -903,9 +904,10 @@ function displayReligionSuggestions() {
         // Simulate an async data fetch
         setTimeout(() => {
             religionCache = [
-                "Hindu", "Muslim", "Buddhist", "Jain", "Christian",
-                "Sikh", "Parsi", "Jewish", "Baha'i", "Tribal/Animist",
-                "Atheist", "Agnostic", "Other"
+                "Hindu", "Muslim", "Christian", "Sikh", "Buddhist", "Jain",
+                "Parsi", "Jewish", "Baha'i", "Tribal/Animist", "Atheist",
+                "Agnostic", "Lingayat", "Sarna", "Sanamahi", "Donyi-Polo",
+                "Ravidassia", "Other"
             ];
 
             religionDataFetched = true;
@@ -975,9 +977,9 @@ function displayCategorySuggestions() {
         // Simulate an async data fetch
         setTimeout(() => {
             categoryCache = [
-                "SC", "ST", "OBC", "NT", "OPEN",
-                "NTC", "NTB", "NTD", "SEBC", "EWS",
-                "VJ", "SBC", "GEN"
+                "SC", "ST", "OBC", "EWS", "GEN", "NT", "VJ", "SBC", "SEBC", "MBC",
+                "BC", "EBC", "DT", "OPEN", "UR", "NTC", "NTB", "NTD", "OBC-NCL",
+                "OBC-CL", "BC-M", "BC-O"
             ];
 
             categoryDataFetched = true;
