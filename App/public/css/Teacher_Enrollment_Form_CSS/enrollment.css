@@ -219,6 +219,31 @@ h3{
     border-radius: 0px 0px 25px 25px;
 }
 
+/* Style for the suggestions container */
+.suggestions {
+    border-radius: 5px;
+    /* Rounded corners */
+    max-height: 10rem;
+    width: auto; /* Ensure it expands to fit content, but we will dynamically adjust it */
+    max-width: 18.7rem; /* Limit max width */
+    min-width: 100%; /* Allow it to stretch based on the input field */
+    overflow-y: auto;
+    position: absolute;
+    background: white;
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Optional: Add a subtle shadow */
+    color: black;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0;
+    top: 100%; /* Position it below the input box */
+    left: 0; /* Align it with the left of the input box */
+    border-radius: 0px 0px 25px 25px;
+}
+
 /* Style for each suggestion item */
 .suggestion-item {
     padding: 10px;
@@ -261,7 +286,6 @@ h3{
 .suggestions::-webkit-scrollbar-track {
     background: transparent;
 }
-
 
 .info-container {
     color: black;

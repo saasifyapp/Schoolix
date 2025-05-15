@@ -676,6 +676,13 @@ const attendance_reports = require('./src/routes/attendance_routes/attendance_re
 app.use('/', attendance_reports);
 
 
+///////////////////////// TEACHER ENROLLMENT FORM ROUTE ////////////
+
+/////////////////////////// ATTENDANCE REPORT  ROUTES //////////////////
+const teacher_enrollment = require('./src/routes/teacher_enrollment_form_routes/teacher_enrollment_form.js');
+app.use('/', teacher_enrollment);
+
+
 /*
 
 // Start the server 

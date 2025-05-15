@@ -151,6 +151,29 @@ function showNoResults(suggestionsContainer) {
     suggestionsContainer.appendChild(noResultsItem);
 }
 
+// Function to show a loading indicator
+function showLoading(container) {
+    container.innerHTML = '<div class="loading">Loading...</div>';
+}
+
+// Function to show "No Results" message
+function showNoResults(container) {
+    container.innerHTML = '<div class="no-results">No results found</div>';
+}
+
+// Function to display loading suggestions
+function displayLoadingSuggestions(suggestionsContainer) {
+    // Clear previous suggestions
+    suggestionsContainer.innerHTML = '';
+    // Create and append the loading item
+    const loadingItem = document.createElement('div');
+    loadingItem.classList.add('suggestion-item', 'no-results');
+    loadingItem.style.fontStyle = 'italic';
+    loadingItem.textContent = 'Loading...';
+    suggestionsContainer.appendChild(loadingItem);
+    suggestionsContainer.style.display = "block";
+}
+
 
 /////////////////////////////////////////// ALL NUMERIC VALIDATIONS //////////////////////////
 
@@ -316,6 +339,7 @@ addFullNameUpdateListeners();
 
 
 ///////////////////////////// GENDER SUGGESTIONS ///////////////////////////////
+
 // Gender field suggestion box
 document.addEventListener("DOMContentLoaded", function () {
     const genderInput = document.getElementById('gender');
@@ -328,7 +352,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Function to display suggestions
     function displayGenderSuggestions() {
         if (!genderSuggestionsLoaded) {
-            showLoading(genderSuggestionsContainer);
+            displayLoadingSuggestions(genderSuggestionsContainer);
             genderSuggestionsLoaded = true;
         }
 
@@ -379,6 +403,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+
 //////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////// IDENTITY DETAILS SUGGESTIONS /////////////////////////
@@ -411,7 +436,7 @@ function displayNationalitySuggestions() {
 
     // Check if the data has already been fetched
     if (!nationalityDataFetched) {
-        showLoading(nationalitySuggestionsContainer);
+        displayLoadingSuggestions(nationalitySuggestionsContainer);
 
         // Simulate an async data fetch
         setTimeout(() => {
@@ -421,7 +446,7 @@ function displayNationalitySuggestions() {
                 "Thai", "Malaysian", "Afghan", "Chinese", "Iranian", "Iraqi",
                 "Sudanese", "Other"
             ];
-            
+
             nationalityDataFetched = true;
             filterAndDisplayNationalitySuggestions(query, nationalitySuggestionsContainer);
         }, 500);
@@ -484,7 +509,7 @@ function displayReligionSuggestions() {
 
     // Check if the data has already been fetched
     if (!religionDataFetched) {
-        showLoading(religionSuggestionsContainer);
+        displayLoadingSuggestions(religionSuggestionsContainer);
 
         // Simulate an async data fetch
         setTimeout(() => {
@@ -557,7 +582,7 @@ function displayCategorySuggestions() {
 
     // Check if the data has already been fetched
     if (!categoryDataFetched) {
-        showLoading(categorySuggestionsContainer);
+        displayLoadingSuggestions(categorySuggestionsContainer);
 
         // Simulate an async data fetch
         setTimeout(() => {
@@ -645,7 +670,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Check if the data has already been fetched
         if (!casteDataFetched) {
-            showLoading(casteSuggestionsContainer);
+            displayLoadingSuggestions(casteSuggestionsContainer);
 
             await fetchCastes();
         }
@@ -882,7 +907,6 @@ function displayCombinedCitySuggestions(query, suggestionsContainer) {
 // Combined initialization of suggestion boxes
 document.addEventListener("DOMContentLoaded", function () {
     const config = [
-
         {
             inputId: 'city_village',
             suggestionsId: 'cityVillageSuggestions',
@@ -903,6 +927,11 @@ document.addEventListener("DOMContentLoaded", function () {
             suggestionsId: 'stateSuggestions',
             suggestionFunction: displayStateSuggestions
         },
+        {
+            inputId: 'pickDropAddress', // New input field ID
+            suggestionsId: 'pickDropAddressSuggestions', // New suggestions container ID
+            suggestionFunction: displayCombinedCitySuggestions // Use combined suggestions function
+        }
     ];
 
     config.forEach(({ inputId, suggestionsId, suggestionFunction }) => {
@@ -915,7 +944,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Add event listeners for input events
         inputField.addEventListener('input', () => debouncedDisplaySuggestions(inputField.value.toLowerCase().trim()));
         inputField.addEventListener('focus', () => {
-            if (!window.combinedCitySuggestions && (inputId === 'placeOfBirth' || inputId === 'city_village')) {
+            if (!window.combinedCitySuggestions && (inputId === 'placeOfBirth' || inputId === 'city_village' || inputId === 'pickDropAddress')) {
                 displayLoadingSuggestions(suggestionsContainer);
                 prefetchCombinedCitySuggestions().then(() => {
                     debouncedDisplaySuggestions(inputField.value.toLowerCase().trim());
@@ -925,7 +954,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
         inputField.addEventListener('click', () => {
-            if (!window.combinedCitySuggestions && (inputId === 'placeOfBirth' || inputId === 'city_village')) {
+            if (!window.combinedCitySuggestions && (inputId === 'placeOfBirth' || inputId === 'city_village' || inputId === 'pickDropAddress')) {
                 displayLoadingSuggestions(suggestionsContainer);
                 prefetchCombinedCitySuggestions().then(() => {
                     debouncedDisplaySuggestions(inputField.value.toLowerCase().trim());
@@ -969,7 +998,7 @@ function displayRelationshipSuggestions() {
 
     // Check if the data has already been fetched
     if (!relationshipDataFetched) {
-        showLoading(relationshipSuggestionsContainer);
+        displayLoadingSuggestions(relationshipSuggestionsContainer);
 
         // Simulate an async data fetch
         setTimeout(() => {
@@ -1031,4 +1060,726 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////// TEACHER QUALIFICATION SUGGESTIONS ////////
+
+
+let qualificationCache = [];
+let qualificationDataFetched = false;
+
+async function displayQualificationSuggestions() {
+    const qualificationInput = document.getElementById('qualification');
+    const qualificationSuggestionsContainer = document.getElementById('qualificationSuggestions');
+    const query = qualificationInput.value.toLowerCase().trim();
+
+    qualificationSuggestionsContainer.style.display = "block";
+
+    if (!qualificationDataFetched) {
+        displayLoadingSuggestions(qualificationSuggestionsContainer);
+
+        // Simulate an async data fetch
+        setTimeout(() => {
+            qualificationCache = [
+                "D.El.Ed", "B.Ed", "M.Ed", "B.A. B.Ed", "B.Sc." ,"B.Sc. B.Ed",
+                "B.T.C", "TGT", "PGT", "M.A.", "M.Sc.", "M.Com",
+                "Ph.D.", "NET", "SLET", "CTET", "TET", "Montessori Training"
+            ];
+
+            qualificationDataFetched = true;
+            filterAndDisplayQualificationSuggestions(query, qualificationSuggestionsContainer);
+        }, 500);
+    } else {
+        filterAndDisplayQualificationSuggestions(query, qualificationSuggestionsContainer);
+    }
+}
+
+function filterAndDisplayQualificationSuggestions(query, suggestionsContainer) {
+    const filteredQualifications = qualificationCache.filter(qualification =>
+        qualification.toLowerCase().startsWith(query)
+    );
+    suggestionsContainer.innerHTML = '';
+
+    if (filteredQualifications.length > 0) {
+        filteredQualifications.forEach(qualification => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = qualification;
+            suggestionItem.dataset.value = qualification;
+            suggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        showNoResults(suggestionsContainer);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const qualificationInput = document.getElementById('qualification');
+    const qualificationSuggestionsContainer = document.getElementById('qualificationSuggestions');
+    let timeout;
+
+    // Debounced input handler
+    qualificationInput.addEventListener('input', () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(displayQualificationSuggestions, 300);
+    });
+    qualificationInput.addEventListener('focus', displayQualificationSuggestions);
+    qualificationInput.addEventListener('click', displayQualificationSuggestions);
+
+    qualificationSuggestionsContainer.addEventListener('click', function (event) {
+        if (event.target.classList.contains('suggestion-item')) {
+            const selectedQualification = event.target.dataset.value;
+            qualificationInput.value = selectedQualification;
+            qualificationSuggestionsContainer.innerHTML = '';
+            qualificationSuggestionsContainer.style.display = "none";
+        }
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!qualificationSuggestionsContainer.contains(event.target) && !qualificationInput.contains(event.target)) {
+            qualificationSuggestionsContainer.innerHTML = '';
+            qualificationSuggestionsContainer.style.display = "none";
+        }
+    });
+});
+
+
+
+///////////////////// DATE of JOINING ///////////
+
+document.addEventListener("DOMContentLoaded", function () {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(today.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`; // Format: YYYY-MM-DD
+
+    document.getElementById('dateOfJoining').value = formattedDate;
+});
+
+
+///////////////// DEPARTMENT SUGGESTIONS //////////
+
+let departmentCache = [];
+let departmentDataFetched = false;
+
+function showLoading(container) {
+    container.innerHTML = '<div class="loading">Loading...</div>';
+}
+
+function showNoResults(container) {
+    container.innerHTML = '<div class="suggestion-item no-results">No results found</div>';
+}
+
+function displayDepartmentSuggestions() {
+    const departmentInput = document.getElementById('department');
+    const departmentSuggestionsContainer = document.getElementById('departmentSuggestions');
+    const query = departmentInput.value.toLowerCase().trim();
+
+    departmentSuggestionsContainer.style.display = "block";
+
+    if (!departmentDataFetched) {
+        displayLoadingSuggestions(departmentSuggestionsContainer);
+
+        // Simulate an async data fetch
+        setTimeout(() => {
+            departmentCache = [
+                "Teaching Staff", "Non-Teaching Staff", "Office Admin",
+                "Lab Incharge", "Library Incharge", "Sports Incharge", "Special Education",
+                "Arts and Culture", "Accounts", "HR", "IT Incharge",
+                "Counseling", "Transport Incharge", "Hostel Warden",
+                "Security Incharge", "Examination Incharge", "Event Coordinator",
+                "Discipline Incharge"
+            ];
+            departmentDataFetched = true;
+            filterAndDisplayDepartmentSuggestions(query, departmentSuggestionsContainer);
+        }, 500);
+    } else {
+        filterAndDisplayDepartmentSuggestions(query, departmentSuggestionsContainer);
+    }
+}
+
+function filterAndDisplayDepartmentSuggestions(query, suggestionsContainer) {
+    const filteredDepartments = departmentCache.filter(department =>
+        department.toLowerCase().startsWith(query)
+    );
+
+    suggestionsContainer.innerHTML = '';
+
+    if (filteredDepartments.length > 0) {
+        filteredDepartments.forEach(department => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = department;
+            suggestionItem.dataset.value = department;
+            suggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        showNoResults(suggestionsContainer);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const departmentInput = document.getElementById('department');
+    const departmentSuggestionsContainer = document.getElementById('departmentSuggestions');
+    let timeout;
+
+    // Debounced input handler
+    departmentInput.addEventListener('input', () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(displayDepartmentSuggestions, 300);
+    });
+    departmentInput.addEventListener('focus', displayDepartmentSuggestions);
+    departmentInput.addEventListener('click', displayDepartmentSuggestions);
+
+    // Handle suggestion selection
+    departmentSuggestionsContainer.addEventListener('click', function (event) {
+        if (event.target.classList.contains('suggestion-item') && !event.target.classList.contains('no-results')) {
+            const selectedDepartment = event.target.dataset.value;
+            departmentInput.value = selectedDepartment;
+            departmentSuggestionsContainer.innerHTML = '';
+            departmentSuggestionsContainer.style.display = "none";
+        }
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function (event) {
+        if (!departmentSuggestionsContainer.contains(event.target) && !departmentInput.contains(event.target)) {
+            departmentSuggestionsContainer.innerHTML = '';
+            departmentSuggestionsContainer.style.display = "none";
+        }
+    });
+});
+
+
+////////////////////// EMPLOYEE TYPE SUGGESTIONS ////////////
+
+let employeeTypeCache = [];
+let employeeTypeDataFetched = false;
+
+function showLoading(container) {
+    container.innerHTML = '<div class="loading">Loading...</div>';
+}
+
+function showNoResults(container) {
+    container.innerHTML = '<div class="suggestion-item no-results">No results found</div>';
+}
+
+function displayEmployeeTypeSuggestions() {
+    const employeeTypeInput = document.getElementById('employee_type');
+    const employeeTypeSuggestionsContainer = document.getElementById('employee_typeSuggestions');
+    const query = employeeTypeInput.value.toLowerCase().trim();
+
+    employeeTypeSuggestionsContainer.style.display = "block";
+
+    if (!employeeTypeDataFetched) {
+        displayLoadingSuggestions(employeeTypeSuggestionsContainer);
+
+        // Simulate an async data fetch
+        setTimeout(() => {
+            employeeTypeCache = ["teacher", "support_staff" ,"admin"];
+            employeeTypeDataFetched = true;
+            filterAndDisplayEmployeeTypeSuggestions(query, employeeTypeSuggestionsContainer);
+        }, 500);
+    } else {
+        filterAndDisplayEmployeeTypeSuggestions(query, employeeTypeSuggestionsContainer);
+    }
+}
+
+function filterAndDisplayEmployeeTypeSuggestions(query, suggestionsContainer) {
+    const filteredEmployeeTypes = employeeTypeCache.filter(employeeType =>
+        employeeType.toLowerCase().startsWith(query)
+    );
+
+    suggestionsContainer.innerHTML = '';
+
+    if (filteredEmployeeTypes.length > 0) {
+        filteredEmployeeTypes.forEach(employeeType => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = employeeType;
+            suggestionItem.dataset.value = employeeType;
+            suggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        showNoResults(suggestionsContainer);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const employeeTypeInput = document.getElementById('employee_type');
+    const employeeTypeSuggestionsContainer = document.getElementById('employee_typeSuggestions');
+    let timeout;
+
+    // Debounced input handler
+    employeeTypeInput.addEventListener('input', () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(displayEmployeeTypeSuggestions, 300);
+    });
+    employeeTypeInput.addEventListener('focus', displayEmployeeTypeSuggestions);
+    employeeTypeInput.addEventListener('click', displayEmployeeTypeSuggestions);
+
+    // Handle suggestion selection
+    employeeTypeSuggestionsContainer.addEventListener('click', function (event) {
+        if (event.target.classList.contains('suggestion-item') && !event.target.classList.contains('no-results')) {
+            const selectedEmployeeType = event.target.dataset.value;
+            employeeTypeInput.value = selectedEmployeeType;
+            employeeTypeSuggestionsContainer.innerHTML = '';
+            employeeTypeSuggestionsContainer.style.display = "none";
+        }
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function (event) {
+        if (!employeeTypeSuggestionsContainer.contains(event.target) && !employeeTypeInput.contains(event.target)) {
+            employeeTypeSuggestionsContainer.innerHTML = '';
+            employeeTypeSuggestionsContainer.style.display = "none";
+        }
+    });
+});
+
+/////////////////////// DESIGNATION SUGGESTIONS ///////////
+
+let designationCache = [];
+let designationDataFetched = false;
+
+function showLoading(container) {
+    container.innerHTML = '<div class="loading">Loading...</div>';
+}
+
+function showNoResults(container) {
+    container.innerHTML = '<div class="suggestion-item no-results">No results found</div>';
+}
+
+function displayDesignationSuggestions() {
+    const designationInput = document.getElementById('designation');
+    const designationSuggestionsContainer = document.getElementById('designationSuggestions');
+    const query = designationInput.value.toLowerCase().trim();
+
+    designationSuggestionsContainer.style.display = "block";
+
+    if (!designationDataFetched) {
+        displayLoadingSuggestions(designationSuggestionsContainer);
+
+        // Simulate an async data fetch
+        setTimeout(() => {
+            designationCache = [
+                "Teacher", "Assistant Teacher", "Head Teacher", "Subject Coordinator",
+                "Clerk", "Peon", "Lab Assistant", "Library Assistant",
+                "Office Administrator", "Receptionist", "Office Assistant",
+                "Lab Technician", "Lab Supervisor",
+                "Librarian", "Assistant Librarian",
+                "Sports Coach", "Physical Education Teacher",
+                "Special Educator", "Remedial Teacher",
+                "Art Teacher", "Music Teacher", "Dance Instructor",
+                "Accountant", "Accounts Assistant",
+                "HR Coordinator", "HR Assistant",
+                "IT Administrator", "IT Technician",
+                "School Counselor", "Career Counselor",
+                "Transport Coordinator", "Fleet Supervisor",
+                "Hostel Warden", "Assistant Warden",
+                "Security Supervisor", "Security Officer",
+                "Exam Coordinator", "Invigilator",
+                "Event Organizer", "Activity Coordinator",
+                "Discipline Coordinator", "Student Supervisor"
+            ];
+            designationDataFetched = true;
+            filterAndDisplayDesignationSuggestions(query, designationSuggestionsContainer);
+        }, 500);
+    } else {
+        filterAndDisplayDesignationSuggestions(query, designationSuggestionsContainer);
+    }
+}
+
+function filterAndDisplayDesignationSuggestions(query, suggestionsContainer) {
+    const filteredDesignations = designationCache.filter(designation =>
+        designation.toLowerCase().startsWith(query)
+    );
+
+    suggestionsContainer.innerHTML = '';
+
+    if (filteredDesignations.length > 0) {
+        filteredDesignations.forEach(designation => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = designation;
+            suggestionItem.dataset.value = designation;
+            suggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        showNoResults(suggestionsContainer);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const designationInput = document.getElementById('designation');
+    const designationSuggestionsContainer = document.getElementById('designationSuggestions');
+    let timeout;
+
+    // Debounced input handler
+    designationInput.addEventListener('input', () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(displayDesignationSuggestions, 300);
+    });
+    designationInput.addEventListener('focus', displayDesignationSuggestions);
+    designationInput.addEventListener('click', displayDesignationSuggestions);
+
+    // Handle suggestion selection
+    designationSuggestionsContainer.addEventListener('click', function (event) {
+        if (event.target.classList.contains('suggestion-item') && !event.target.classList.contains('no-results')) {
+            const selectedDesignation = event.target.dataset.value;
+            designationInput.value = selectedDesignation;
+            designationSuggestionsContainer.innerHTML = '';
+            designationSuggestionsContainer.style.display = "none";
+        }
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function (event) {
+        if (!designationSuggestionsContainer.contains(event.target) && !designationInput.contains(event.target)) {
+            designationSuggestionsContainer.innerHTML = '';
+            designationSuggestionsContainer.style.display = "none";
+        }
+    });
+});
+
+
+
+//////////////////// TRANSPORT REQUIREMENTS ////////////////
+
+///////////////////////////// TRANSPORT SERVICE SECTION ////////////////////////
+
+// Function to toggle visibility and disable transport details
+function toggleTransportDetails(isVisible) {
+    const transportDetails = document.getElementById('transportDetails');
+    const inputs = transportDetails.getElementsByTagName('input');
+    const textareas = transportDetails.getElementsByTagName('textarea');
+
+    if (isVisible) {
+        transportDetails.style.display = 'block';
+        for (let i = 0; i < inputs.length; i++) {
+            inputs[i].disabled = false;
+        }
+        for (let i = 0; i < textareas.length; i++) {
+            textareas[i].disabled = false;
+        }
+    } else {
+        transportDetails.style.display = 'none';
+        for (let i = 0; i < inputs.length; i++) {
+            inputs[i].disabled = true;
+        }
+        for (let i = 0; i < textareas.length; i++) {
+            textareas[i].disabled = true;
+        }
+    }
+}
+
+// Execute toggleTransportDetails with false to ensure initial state is applied correctly
+document.addEventListener('DOMContentLoaded', () => {
+    toggleTransportDetails(false);
+});
+
+
+//////////////////////////////// GET SHIFT SUGGESTIONS ////////////////////////
+
+// Function to fetch shift suggestions from the API
+async function fetchShiftSuggestions() {
+    try {
+        const response = await fetch('/get-shift-details');
+        const data = await response.json();
+        if (data.success) {
+            return data.shifts;
+        } else {
+            return [];
+        }
+    } catch (error) {
+        console.error('Error fetching shift suggestions:', error);
+        return [];
+    }
+}
+
+// Prefetch shift suggestions and store them in a global variable
+async function prefetchShiftSuggestions() {
+    window.shiftSuggestions = (await fetchShiftSuggestions()) || [];
+}
+prefetchShiftSuggestions();
+
+// Function to display shift suggestions
+function displayShiftSuggestions(query, suggestionsContainer) {
+    suggestionsContainer.innerHTML = ''; // Clear previous suggestions
+
+    const filteredShifts = window.shiftSuggestions.filter(shift => shift.toLowerCase().startsWith(query.toLowerCase()));
+
+    if (filteredShifts.length > 0) {
+        filteredShifts.forEach(shift => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = shift;
+            suggestionItem.dataset.place = shift;
+            suggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        // If no results are found
+        const noResultsItem = document.createElement('div');
+        noResultsItem.classList.add('suggestion-item', 'no-results');
+        noResultsItem.style.fontStyle = 'italic';
+        noResultsItem.textContent = 'No results found';
+        suggestionsContainer.appendChild(noResultsItem);
+    }
+
+    suggestionsContainer.style.display = "block";
+}
+
+// Add event listeners to the shift input field
+document.addEventListener("DOMContentLoaded", function () {
+    const shiftInput = document.getElementById('shift');
+    const shiftSuggestionsContainer = document.getElementById('shiftSuggestions');
+
+    // Wrap the displayShiftSuggestions function with debounce
+    const debouncedDisplaySuggestions = debounce(query => displayShiftSuggestions(query, shiftSuggestionsContainer), 300);
+
+    // Add event listeners for input events
+    shiftInput.addEventListener('input', () => debouncedDisplaySuggestions(shiftInput.value.toLowerCase().trim()));
+    shiftInput.addEventListener('focus', () => {
+        if (!window.shiftSuggestions) {
+            displayLoadingSuggestions(shiftSuggestionsContainer);
+            prefetchShiftSuggestions().then(() => {
+                debouncedDisplaySuggestions(shiftInput.value.toLowerCase().trim());
+            });
+        } else {
+            displayShiftSuggestions(shiftInput.value.toLowerCase().trim(), shiftSuggestionsContainer);
+        }
+    });
+    shiftInput.addEventListener('click', () => {
+        if (!window.shiftSuggestions) {
+            displayLoadingSuggestions(shiftSuggestionsContainer);
+            prefetchShiftSuggestions().then(() => {
+                debouncedDisplaySuggestions(shiftInput.value.toLowerCase().trim());
+            });
+        } else {
+            displayShiftSuggestions(shiftInput.value.toLowerCase().trim(), shiftSuggestionsContainer);
+        }
+    });
+
+    shiftSuggestionsContainer.addEventListener('click', function (event) {
+        if (event.target.classList.contains('suggestion-item')) {
+            const selectedShift = event.target.dataset.place;
+            shiftInput.value = selectedShift;
+            shiftSuggestionsContainer.innerHTML = '';
+        }
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!shiftSuggestionsContainer.contains(event.target) && !shiftInput.contains(event.target)) {
+            shiftSuggestionsContainer.innerHTML = '';
+        }
+    });
+});
+
+
+
+//////////////////////////////// VEHICLE RUNNING SUGGESTIONS /////////////////////
+
+let vehicleRunningFetchedForTeacher = false;
+let vehicleRunningCacheForTeacher = [];
+
+// Function to reset vehicle running cache for teacher
+function resetVehicleRunningCacheForTeacher() {
+    vehicleRunningFetchedForTeacher = false;
+    vehicleRunningCacheForTeacher = [];
+}
+
+// Function to display vehicle running suggestions for teacher
+function displayVehicleRunningSuggestionsForTeacher() {
+    const vehicleRunningInput = document.getElementById('vehicleRunning');
+    const vehicleRunningSuggestionsContainer = document.getElementById('vehicleRunningSuggestions');
+    const noVehicleCheckbox = document.getElementById('noVehicleFound');
+
+    // Show suggestion box
+    vehicleRunningSuggestionsContainer.style.display = "block";
+    const query = vehicleRunningInput.value.toLowerCase().trim();
+
+    // Check the value in pickDropAddress and shift before calling the API
+    const routeStops = document.getElementById('pickDropAddress').value.trim();
+    const shiftName = document.getElementById('shift').value.trim();
+
+    if (!routeStops || !shiftName) {
+        clearVehicleRunningInfo();
+        showNoResults(vehicleRunningSuggestionsContainer);
+        return;
+    }
+
+    if (!vehicleRunningFetchedForTeacher) {
+        showLoading(vehicleRunningSuggestionsContainer);
+
+        fetch('/get-Vehicle-Running-for-teacher', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ routeStops, shiftName })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    vehicleRunningCacheForTeacher = data.vehicles;
+                    vehicleRunningFetchedForTeacher = true;
+                    filterAndDisplayVehicleRunningForTeacher(query, vehicleRunningSuggestionsContainer, vehicleRunningInput);
+                } else {
+                    showNoResults(vehicleRunningSuggestionsContainer);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching vehicle data:', error);
+                vehicleRunningSuggestionsContainer.style.display = "none";
+            });
+    } else {
+        filterAndDisplayVehicleRunningForTeacher(query, vehicleRunningSuggestionsContainer, vehicleRunningInput);
+    }
+}
+
+// Function to filter and display vehicle running suggestions for teacher
+function filterAndDisplayVehicleRunningForTeacher(query, suggestionsContainer, vehicleRunningInput) {
+    const filteredVehicles = vehicleRunningCacheForTeacher.filter(vehicle =>
+        vehicle.vehicle_no.toLowerCase().includes(query) ||
+        vehicle.driver_name.toLowerCase().includes(query)
+    );
+    suggestionsContainer.innerHTML = '';
+
+    if (filteredVehicles.length > 0) {
+        filteredVehicles.forEach(vehicle => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = `${vehicle.vehicle_no} | ${vehicle.driver_name}`;
+            suggestionItem.dataset.value = vehicle.vehicle_no;
+            suggestionsContainer.appendChild(suggestionItem);
+        });
+    } else {
+        showNoResults(suggestionsContainer);
+    }
+
+    // Add event listeners for selection
+    suggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', function () {
+            vehicleRunningInput.value = this.dataset.value;
+            fetchVehicleInfo(this.dataset.value);
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.style.display = "none";
+            document.getElementById('noVehicleFound').disabled = true;  // Disable the checkbox when an item is selected
+            noVehicleCheckbox.checked = false;  // Uncheck the checkbox
+        });
+    });
+}
+
+// Add event listener to the checkbox to enable/disable input
+document.getElementById('noVehicleFound').addEventListener('change', function () {
+    const vehicleRunningInput = document.getElementById('vehicleRunning');
+    const vehicleInfoContainer = document.getElementById('vehicleInfo');
+
+    if (this.checked) {
+        // Disable the input field and clear its value
+        vehicleRunningInput.disabled = true;
+        vehicleRunningInput.value = '';
+        vehicleInfoContainer.innerHTML = '';
+        vehicleInfoContainer.style.display = 'none';
+    } else {
+        // Enable the input field
+        vehicleRunningInput.disabled = false;
+    }
+});
+
+// Add event listener to the vehicleRunning input field
+document.getElementById('vehicleRunning').addEventListener('click', displayVehicleRunningSuggestionsForTeacher);
+
+// Function to clear vehicle running info (if needed)
+function clearVehicleRunningInfo() {
+    const vehicleInfoContainer = document.getElementById('vehicleInfo');
+    vehicleInfoContainer.innerHTML = '';
+    vehicleInfoContainer.style.display = 'none';
+}
+
+
+function fetchVehicleInfo(selectedVehicleNo) {
+    const vehicleInfoContainer = document.getElementById('vehicleInfo'); // Ensure this is defined
+
+    // Extract additional parameters
+    const route = document.getElementById('pickDropAddress').value.trim();
+    const shift = document.getElementById('shift').value.trim();
+
+    fetch(`/get-vehicle-info-for-teacher?vehicleNo=${encodeURIComponent(selectedVehicleNo)}&route=${encodeURIComponent(route)}&shift=${encodeURIComponent(shift)}`)
+        .then((response) => response.json())
+        .then((data) => {
+            // Clear any previous data
+            vehicleInfoContainer.innerHTML = '';
+
+            if (data.length > 0) {
+                const vehicleInfo = data[0];
+                vehicleInfoContainer.innerHTML = `
+                    <strong>Vehicle No:</strong> ${vehicleInfo.vehicle_no}<br>
+                    <strong>Driver Name:</strong> ${vehicleInfo.driver_name}<br>
+                    <strong>Total Capacity:</strong> ${vehicleInfo.vehicle_capacity}<br>
+                    <strong>Available Seats:</strong> ${vehicleInfo.available_seats}<br>
+                `;
+                vehicleInfoContainer.style.display = 'block'; // Show the container with data
+                vehicleInfoContainer.style.maxHeight = '100px';
+                vehicleInfoContainer.style.width = '90%';
+            } else {
+                vehicleInfoContainer.innerHTML = 'No vehicle info found';
+                vehicleInfoContainer.style.display = 'block'; // Show the container even if no data is found
+                vehicleInfoContainer.style.maxHeight = '65px';
+                vehicleInfoContainer.style.width = '90%';
+            }
+        })
+        .catch((error) => console.error('Error:', error));
+}
+
+// Function to clear vehicle running info (if needed)
+function clearVehicleRunningInfo() {
+    const vehicleRunningInput = document.getElementById('vehicleRunning');
+    const vehicleRunningSuggestionsContainer = document.getElementById('vehicleRunningSuggestions');
+    const vehicleInfoContainer = document.getElementById('vehicleInfo');
+    const noVehicleFoundCheckbox = document.getElementById('noVehicleFound');
+
+    vehicleRunningInput.value = '';
+    vehicleRunningSuggestionsContainer.innerHTML = '';
+    vehicleRunningSuggestionsContainer.style.display = 'none';
+    vehicleInfoContainer.innerHTML = '';
+    vehicleInfoContainer.style.display = 'none';
+    noVehicleFoundCheckbox.disabled = false; // Enable the checkbox
+}
+
+// Add event listener to the vehicleRunning input to handle enabling/disabling of the checkbox
+function handleVehicleRunningInput() {
+    const vehicleRunningInput = document.getElementById('vehicleRunning');
+    const noVehicleFoundCheckbox = document.getElementById('noVehicleFound');
+
+    if (vehicleRunningInput.value.trim() === '') {
+        noVehicleFoundCheckbox.disabled = false;
+    } else {
+        noVehicleFoundCheckbox.disabled = true;
+        noVehicleFoundCheckbox.checked = false;
+    }
+}
+
+// Initialization of vehicle running suggestion box
+document.addEventListener("DOMContentLoaded", function () {
+    const vehicleRunningInput = document.getElementById('vehicleRunning');
+    const vehicleRunningSuggestionsContainer = document.getElementById('vehicleRunningSuggestions');
+    const pickDropAddressInput = document.getElementById('pickDropAddress');
+    const noVehicleFoundCheckbox = document.getElementById('noVehicleFound');
+    
+    // Enable the checkbox initially
+    noVehicleFoundCheckbox.disabled = false;
+
+    // Add event listeners for input, focus, and click events
+    vehicleRunningInput.addEventListener('input', () => {
+        displayVehicleRunningSuggestionsForTeacher();
+        handleVehicleRunningInput();
+    });
+    vehicleRunningInput.addEventListener('focus', displayVehicleRunningSuggestionsForTeacher);
+    vehicleRunningInput.addEventListener('click', displayVehicleRunningSuggestionsForTeacher);
+    pickDropAddressInput.addEventListener('change', clearVehicleRunningInfo);
+    vehicleRunningInput.addEventListener('change', clearVehicleRunningInfo);
+
+    document.addEventListener('click', function (event) {
+        if (!vehicleRunningSuggestionsContainer.contains(event.target) && !vehicleRunningInput.contains(event.target)) {
+            vehicleRunningSuggestionsContainer.style.display = "none";
+        }
+    });
+});
