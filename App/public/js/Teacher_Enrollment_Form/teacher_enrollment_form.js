@@ -43,21 +43,21 @@ document.querySelectorAll('.form-section').forEach((section, index, sections) =>
         });
     }
 
-    // Show the next section
-    if (nextButton) {
-        nextButton.addEventListener('click', () => {
-            if (index < sections.length - 1) {
-                sections[index].style.display = 'none';
-                sections[index + 1].style.display = 'block';
+    // // Show the next section
+    // if (nextButton) {
+    //     nextButton.addEventListener('click', () => {
+    //         if (index < sections.length - 1) {
+    //             sections[index].style.display = 'none';
+    //             sections[index + 1].style.display = 'block';
 
-                // Update active navigation item
-                document.querySelectorAll('.form-navigation li').forEach(nav => {
-                    nav.classList.remove('active');
-                });
-                document.querySelectorAll('.form-navigation li')[index + 1].classList.add('active');
-            }
-        });
-    }
+    //             // Update active navigation item
+    //             document.querySelectorAll('.form-navigation li').forEach(nav => {
+    //                 nav.classList.remove('active');
+    //             });
+    //             document.querySelectorAll('.form-navigation li')[index + 1].classList.add('active');
+    //         }
+    //     });
+    // }
 });
 
 // Function to calculate and update the progress bar
