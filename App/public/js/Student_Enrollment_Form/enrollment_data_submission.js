@@ -1023,58 +1023,58 @@ function autofillFormFields() {
 
 ///////////////////////////////////   SUBMIT DATA TO SERVER (FORM SUBMISSION) ////////////////////////////////////
 
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("review-next").addEventListener("click", function (event) {
-        event.preventDefault(); // Prevent the default button behavior
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("review-next").addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent the default button behavior
 
-        const formMode = document.getElementById('formMode')?.value || '';
+            const formMode = document.getElementById('formMode')?.value || '';
 
-        if (formMode === 'insert') {
-            handleInsertMode();
-        } else if (formMode === 'update') {
-            handleUpdateMode();
-        } else {
-            handleInvalidMode();
+            if (formMode === 'insert') {
+                handleInsertMode();
+            } else if (formMode === 'update') {
+                handleUpdateMode();
+            } else {
+                handleInvalidMode();
+            }
+
+            console.log("Current mode:", formMode);
+        });
+    });
+
+    function handleInsertMode() {
+        // Validate that all consents are checked
+        const allChecked = validateConsents();
+        if (!allChecked) {
+            // Display an alert if any checkbox is not checked
+            Swal.fire({
+                title: "Incomplete Consent",
+                text: "Please ensure all consents are checked before proceeding.",
+                icon: "warning",
+                confirmButtonText: "OK"
+            });
+            return; // Prevent submission
         }
 
-        console.log("Current mode:", formMode);
-    });
-});
-
-function handleInsertMode() {
-    // Validate that all consents are checked
-    const allChecked = validateConsents();
-    if (!allChecked) {
-        // Display an alert if any checkbox is not checked
-        Swal.fire({
-            title: "Incomplete Consent",
-            text: "Please ensure all consents are checked before proceeding.",
-            icon: "warning",
-            confirmButtonText: "OK"
-        });
-        return; // Prevent submission
+        // If all consents are checked, proceed with collectConsent and form submission
+        collectConsent();
+        submitForm('/submitEnrollmentForm', 'Form submitted successfully!');
     }
 
-    // If all consents are checked, proceed with collectConsent and form submission
-    collectConsent();
-    submitForm('/submitEnrollmentForm', 'Form submitted successfully!');
-}
+    function handleUpdateMode() {
+        // Optional: collect consent if consents don’t change on update
+        collectConsent();
+        submitForm('/updateStudentDetails', 'Student details updated successfully!', true);
+    }
 
-function handleUpdateMode() {
-    // Optional: collect consent if consents don’t change on update
-    collectConsent();
-    submitForm('/updateStudentDetails', 'Student details updated successfully!', true);
-}
-
-function handleInvalidMode() {
-    // Handle invalid form mode
-    Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Invalid form mode',
-        confirmButtonText: 'OK'
-    });
-}
+    function handleInvalidMode() {
+        // Handle invalid form mode
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Invalid form mode',
+            confirmButtonText: 'OK'
+        });
+    }
 
 // Function to validate consents
 function validateConsents() {

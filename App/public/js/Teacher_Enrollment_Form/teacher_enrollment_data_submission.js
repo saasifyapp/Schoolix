@@ -1,323 +1,219 @@
-let teacherformData = {
-    teacherpersonalInformation: {},
-    teacherguardianInformation: {},
-    teacherprofessionalInformation: {},
-    teacheronboardingDetails: {},
-    mappingInformation: {},
-    transportInformation: {},
-    consent: {
-        selected: '' // Initialize consent.selected with an empty string
-    }
-};
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("review-next").addEventListener("click", function (event) {
+        event.preventDefault(); // Prevent default button behavior
 
-// Function to format the date from yyyy-mm-dd to dd-mm-yyyy
-function formatDateToDDMMYYYY(dateString) {
-    if (!dateString) return '';
-    const [year, month, day] = dateString.split('-');
-    return `${day}-${month}-${year}`;
-}
+        const formMode = document.getElementById('formMode')?.value || '';
 
-// Function to collect data from the Teacher Personal Information section
-function collectTeacherPersonalInformation() {
-    const teacherDob = document.getElementById('dob').value;
-    const formattedTeacherDob = formatDateToDDMMYYYY(teacherDob);
-
-    teacherformData.teacherpersonalInformation = {
-        teacherFirstName: document.getElementById('firstName').value.trim(),
-        teacherMiddleName: document.getElementById('middleName').value.trim(),
-        teacherLastName: document.getElementById('lastName').value.trim(),
-        teacherFullName: document.getElementById('fullName').value.trim(),
-        teacherGender: document.getElementById('gender').value.trim(),
-        teacherDob: formattedTeacherDob,
-        teacherMobileNo: document.getElementById('mobileNo').value.trim(),
-        teacherAadhaarNo: document.getElementById('aadhaar').value.trim(),
-        teacherCaste: document.getElementById('caste').value.trim(),
-        teacherCategory: document.getElementById('category').value.trim(),
-        teacherReligion: document.getElementById('religion').value.trim(),
-        teacherNationality: document.getElementById('nationality').value.trim(),
-        teacherAddress: {
-            teacherCityVillage: document.getElementById('city_village').value.trim(),
-            teacherLandmark: document.getElementById('landmark').value.trim(),
-            teacherTaluka: document.getElementById('taluka').value.trim(),
-            teacherDistrict: document.getElementById('district').value.trim(),
-            teacherState: document.getElementById('state').value.trim(),
-            teacherPinCode: document.getElementById('pinCode').value.trim()
-        }
-    };
-    console.log('Collected teacher personal information:', teacherformData); // Debugging log
-}
-
-function collectTeacherGuardianInformation() {
-    teacherformData.teacherguardianInformation = {
-        teacherGuardianFullName: document.getElementById('guardianFullName').value.trim(),
-        teacherGuardianContact: document.getElementById('guardianContact').value.trim(),
-        teacherGuardianRelation: document.getElementById('guardianRelation').value.trim(),
-        teacherGuardianAddress: document.getElementById('guardianAddress').value.trim()
-    };
-    console.log('Collected teacher guardian information:', teacherformData); // Debugging log
-}
-
-//Collects data from the Professional Information section
-function collectTeacherProfessionalInformation() {
-    teacherformData.teacherprofessionalInformation = {
-        teacherQualification: document.getElementById('qualification').value.trim(),
-        teacherExperienceYears: document.getElementById('experience').value.trim(),
-        teacherPreviousEmployment: document.getElementById('previousEmployment').value.trim()
-    };
-    console.log('Collected teacher professional information:', teacherformData); // Debugging log
-}
-
-//Collects data from the Onboarding Details section
- 
-function collectTeacherOnboardingInformation() {
-    const teacherJoiningDate = document.getElementById('dateOfJoining').value;
-    const formattedTeacherJoiningDate = formatDateToDDMMYYYY(teacherJoiningDate);
-
-    teacherformData.teacheronboardingDetails = {
-        teacherDateOfJoining: formattedTeacherJoiningDate,
-        teacherDepartment: document.getElementById('department').value.trim(),
-        teacherEmployeeType: document.getElementById('employee_type').value.trim(),
-        teacherDesignation: document.getElementById('designation').value.trim(),
-        teacherSalaryPerMonth: document.getElementById('salaryPerMonth').value.trim()
-    };
-    console.log('Collected teacher onboarding information:', teacherformData); // Debugging log
-}
-
-//Collects data from the Subject-Class Mapping section
- 
-function collectTeacherSubjectMappingInformation() {
-    const tableBody = document.getElementById('subjectClassTableBody');
-    const mappings = Array.from(tableBody.rows).map(row => ({
-        teacherClassAllotted: row.cells[0].textContent.trim(),
-        teacherSubjectTaught: row.cells[1].textContent.trim()
-    }));
-
-    teacherformData.mappingInformation = {
-        teacherClassAllotted: document.getElementById('classAllotted').value.trim(),
-        teacherSubjectTagged: document.getElementById('subjectTagged').value.trim(),
-        teacherMappings: mappings
-    };
-    console.log('Collected teacher subject mapping information:', teacherformData); // Debugging log
-}
-
-//Collects data from the Transport Services section
-
-function collectTeacherTransportInformation() {
-    const teacherTransportNeeded = document.querySelector('input[name="transportNeeded"]:checked')
-        ? document.querySelector('input[name="transportNeeded"]:checked').value
-        : null;
-
-    if (teacherTransportNeeded === "No") {
-        teacherformData.transportInformation = {
-            teacherTransportNeeded: 0,
-            teacherTransportTagged: null,
-            teacherTransportPickupDrop: null,
-            teacherTransportShift: null,
-            teacherVehicleDetails: null,
-            teacherNoVehicleFound: false
-        };
-    } else if (teacherTransportNeeded === "Yes") {
-        teacherformData.transportInformation = {
-            teacherTransportNeeded: 1,
-            teacherTransportTagged: document.getElementById('vehicleRunning').value.trim(),
-            teacherTransportPickupDrop: document.getElementById('pickDropAddress').value.trim(),
-            teacherTransportShift: document.getElementById('shift').value.trim(),
-            teacherVehicleDetails: document.getElementById('vehicleInfo')
-                ? document.getElementById('vehicleInfo').innerText.trim()
-                : null,
-            teacherNoVehicleFound: document.getElementById('noVehicleFound').checked
-        };
-    } else {
-        teacherformData.transportInformation = {
-            teacherTransportNeeded: null,
-            teacherTransportTagged: null,
-            teacherTransportPickupDrop: null,
-            teacherTransportShift: null,
-            teacherVehicleDetails: null,
-            teacherNoVehicleFound: false
-        };
-    }
-    console.log('Collected teacher transport information:', teacherformData); // Debugging log
-}
-document.getElementById('personal-next').addEventListener('click', collectTeacherPersonalInformation);
-document.getElementById('guardian-next').addEventListener('click', collectTeacherGuardianInformation);
-document.getElementById('professional-next').addEventListener('click', collectTeacherProfessionalInformation);
-document.getElementById('onboarding-next').addEventListener('click', collectTeacherOnboardingInformation);
-document.getElementById('mapping-next').addEventListener('click', collectTeacherSubjectMappingInformation);
-document.getElementById('transport-next').addEventListener('click', collectTeacherTransportInformation);
-
-
-//Populates the Review and Consent section with data from teacherformData
-function populateTeacherReviewValues() {
-    // Helper function to set values or defaults
-    function setTeacherField(id, value) {
-        const element = document.getElementById(id);
-        if (element) {
-            const displayValue = value === null || value === undefined || value.trim() === "" ? "Not Provided" : value;
-            element.textContent = displayValue;
+        if (formMode === 'insert') {
+            handleTeacherInsertMode();
+        } else if (formMode === 'update') {
+            handleTeacherUpdateMode();
         } else {
-            console.error(`Element with id "${id}" not found.`);
+            handleTeacherInvalidMode();
         }
-    }
 
-    // Personal Information
-    const teacherPersonalInfo = teacherformData.teacherpersonalInformation || {};
-    setTeacherField("review-fullName", teacherPersonalInfo.teacherFullName);
-    setTeacherField("review-dob", teacherPersonalInfo.teacherDob);
-    setTeacherField("review-gender", teacherPersonalInfo.teacherGender);
-    setTeacherField("review-mobileNo", teacherPersonalInfo.teacherMobileNo);
-    setTeacherField("review-aadhaar", teacherPersonalInfo.teacherAadhaarNo);
-    const teacherAddress = teacherPersonalInfo.teacherAddress || {};
-    const addressString = `${teacherAddress.teacherCityVillage || "Not Provided"}, ${teacherAddress.teacherTaluka || "Not Provided"}, ${teacherAddress.teacherDistrict || "Not Provided"}, ${teacherAddress.teacherState || "Not Provided"} - ${teacherAddress.teacherPinCode || "Not Provided"}`;
-    setTeacherField("review-address", addressString);
+        console.log("Current mode:", formMode);
+    });
+});
 
-    // Guardian/Emergency Contact Information
-    const teacherGuardianInfo = teacherformData.teacherguardianInformation || {};
-    setTeacherField("review-guardianFullName", teacherGuardianInfo.teacherGuardianFullName);
-    setTeacherField("review-guardianContact", teacherGuardianInfo.teacherGuardianContact);
-    setTeacherField("review-guardianRelation", teacherGuardianInfo.teacherGuardianRelation);
-    setTeacherField("review-guardianAddress", teacherGuardianInfo.teacherGuardianAddress);
-
-    // Professional Information
-    const teacherProfessionalInfo = teacherformData.teacherprofessionalInformation || {};
-    setTeacherField("review-qualification", teacherProfessionalInfo.teacherQualification);
-    setTeacherField("review-experience", teacherProfessionalInfo.teacherExperienceYears);
-    setTeacherField("review-previousEmployment", teacherProfessionalInfo.teacherPreviousEmployment);
-
-    // Onboarding Information
-    const teacherOnboardingInfo = teacherformData.teacheronboardingDetails || {};
-    setTeacherField("review-dateOfJoining", teacherOnboardingInfo.teacherDateOfJoining);
-    setTeacherField("review-department", teacherOnboardingInfo.teacherDepartment);
-    setTeacherField("review-category", teacherPersonalInfo.teacherCategory || "Not Provided"); // Using teacherCategory from personal info
-    setTeacherField("review-designation", teacherOnboardingInfo.teacherDesignation);
-    setTeacherField("review-salaryPerMonth", teacherOnboardingInfo.teacherSalaryPerMonth);
-
-    // Subject-Class Mapping Information
-    const teacherMappingInfo = teacherformData.mappingInformation || {};
-    const subjectClassTableBody = document.getElementById("subjectClassTableBodyReview");
-    subjectClassTableBody.innerHTML = ""; // Clear existing rows
-    const mappings = teacherMappingInfo.teacherMappings || [];
-    if (mappings.length > 0) {
-        mappings.forEach(mapping => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${mapping.teacherClassAllotted || "Not Provided"}</td>
-                <td>${mapping.teacherSubjectTaught || "Not Provided"}</td>
-            `;
-            subjectClassTableBody.appendChild(row);
+function handleTeacherInsertMode() {
+    // Validate that all consents are checked
+    const allChecked = validateTeacherConsents();
+    if (!allChecked) {
+        // Display an alert if any checkbox is not checked
+        Swal.fire({
+            title: "Incomplete Consent",
+            html: "Please ensure all consents are checked before proceeding.",
+            icon: "warning",
+            confirmButtonText: "OK"
         });
-    } else {
-        const emptyRow = document.createElement("tr");
-        emptyRow.innerHTML = `<td colspan="2">No Subject-Class Mappings Available</td>`;
-        subjectClassTableBody.appendChild(emptyRow);
+        return; // Prevent submission
     }
 
-    // Transport Information
-    const teacherTransportInfo = teacherformData.transportInformation || {};
-    const transportDetailsSection = document.getElementById("transportDetailsSection");
-    const transportNeededValue = teacherTransportInfo.teacherTransportNeeded === 1 ? "Yes" : teacherTransportInfo.teacherTransportNeeded === 0 ? "No" : "Not Provided";
-    setTeacherField("review-transportNeeded", transportNeededValue);
-
-    if (transportNeededValue === "Yes") {
-        transportDetailsSection.style.display = "block";
-        setTeacherField("review-pickDropAddress", teacherTransportInfo.teacherTransportPickupDrop);
-        setTeacherField("review-vehicleRunning", teacherTransportInfo.teacherTransportTagged);
-        setTeacherField("review-noVehicleFound", teacherTransportInfo.teacherNoVehicleFound ? "Yes" : "No");
-    } else {
-        transportDetailsSection.style.display = "none";
-    }
-
-    // Date of Submission
-    const today = new Date();
-    const formattedSubmissionDate = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
-    setTeacherField("submission-date", formattedSubmissionDate);
+    // Collect consents and submit form
+    collectTeacherConsents();
+    submitTeacherForm('/submitTeacherForm', 'Teacher form submitted successfully!');
 }
 
-// Event listener for Transport Next button to populate review section
-// document.getElementById('transport-next').addEventListener('click', function() {
-//     // collectTeacherTransportInformation(); // Collect transport data
-//     populateTeacherReviewValues(); // Populate review section
-// });
+function handleTeacherUpdateMode() {
+    // Collect consents (optional, as consents may not change on update)
+    collectTeacherConsents();
+    submitTeacherForm('/updateTeacherDetails', 'Teacher details updated successfully!', true);
+}
 
-document.getElementById('transport-next').addEventListener('click', populateTeacherReviewValues);
+function handleTeacherInvalidMode() {
+    // Handle invalid form mode
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Invalid form mode',
+        confirmButtonText: 'OK'
+    });
+}
 
 /**
- * Validates that all teacher consent checkboxes are checked
- * @returns {boolean} True if all consents are checked, false otherwise
+ * Flattens and transforms teacherformData to match teacher_details table
+ * @param {Object} formData - The teacherformData object
+ * @returns {Object} Flattened data ready for submission
  */
-function validateTeacherConsents() {
-    // List of teacher consent checkbox IDs
-    const teacherConsentIds = [
-        "consent-policies",
-        "consent-photo",
-        "consent-activities",
-        "consent-medical",
-        "consent-accuracy",
-        "consent-rules"
+function prepareTeacherSubmitData(formData) {
+    const mappings = formData.mappingInformation?.teacherMappings || [];
+    return {
+        id: formData.id || null, // For updates, null for inserts
+        name: formData.teacherpersonalInformation?.teacherFullName || '',
+        first_name: formData.teacherpersonalInformation?.firstName || '',
+        last_name: formData.teacherpersonalInformation?.lastName || '',
+        designation: formData.teacheronboardingDetails?.teacherDesignation || '',
+        gender: formData.teacherpersonalInformation?.teacherGender || '',
+        date_of_birth: formData.teacherpersonalInformation?.teacherDob || '',
+        date_of_joining: formData.teacheronboardingDetails?.teacherDateOfJoining || '',
+        mobile_no: formData.teacherpersonalInformation?.teacherMobileNo || '',
+        address_city: formData.teacherpersonalInformation?.teacherAddress?.teacherCityVillage || '',
+        teacher_uid_no: formData.teacherpersonalInformation?.teacherAadhaarNo || '',
+        department: formData.teacheronboardingDetails?.teacherDepartment || '',
+        qualification: formData.teacherprofessionalInformation?.teacherQualification || '',
+        experience: formData.teacherprofessionalInformation?.teacherExperienceYears || '',
+        subjects_taught: mappings.map(m => m.teacherSubjectTaught).join(', ') || '',
+        salary: formData.teacheronboardingDetails?.teacherSalaryPerMonth || '',
+        transport_needed: formData.transportInformation?.teacherTransportNeeded ? 1 : 0,
+        transport_tagged: formData.transportInformation?.teacherTransportTagged || '',
+        transport_pickup_drop: formData.transportInformation?.teacherTransportPickupDrop || '',
+        classes_alloted: mappings.map(m => m.teacherClassAllotted).join(', ') || '',
+        is_active: formData.is_active || 'true',
+        subject_class_mapping: JSON.stringify(mappings),
+        previous_employment_details: formData.teacherprofessionalInformation?.teacherPreviousEmployment || '',
+        guardian_name: formData.teacherguardianInformation?.teacherGuardianFullName || '',
+        guardian_contact: formData.teacherguardianInformation?.teacherGuardianContact || '',
+        relation_with_guardian: formData.teacherguardianInformation?.teacherGuardianRelation || '',
+        guardian_address: formData.teacherguardianInformation?.teacherGuardianAddress || '',
+        teacher_landmark: formData.teacherpersonalInformation?.teacherAddress?.teacherLandmark || '',
+        teacher_pincode: formData.teacherpersonalInformation?.teacherAddress?.teacherPinCode || '',
+        app_uid: formData.app_uid || '',
+        category: formData.teacheronboardingDetails?.employee_type || 'teacher',
+        taluka: formData.teacherpersonalInformation?.teacherAddress?.teacherTaluka || '',
+        district: formData.teacherpersonalInformation?.teacherAddress?.teacherDistrict || '',
+        state: formData.teacherpersonalInformation?.teacherAddress?.teacherState || '',
+        teacher_caste: formData.teacherpersonalInformation?.teacherCaste || '',
+        teacher_category: formData.teacherpersonalInformation?.teacherCategory || '',
+        teacher_religion: formData.teacherpersonalInformation?.teacherReligion || '',
+        teacher_nationality: formData.teacherpersonalInformation?.teacherNationality || '',
+        consent: formData.consent?.selected || '' // Include consents if needed
+    };
+}
+
+/**
+ * Reusable function to submit teacher form data
+ * @param {string} endpoint - API endpoint for submission
+ * @param {string} successMessage - Success message for SweetAlert
+ * @param {boolean} isUpdate - Whether this is an update operation
+ */
+function submitTeacherForm(endpoint, successMessage, isUpdate = false) {
+    // Show the loading animation
+    const overlay = document.getElementById('loadingOverlay');
+    const loadingText = document.getElementById('loadingText');
+    overlay.style.visibility = 'visible';
+
+    // Steps to display
+    const steps = isUpdate ? [
+        'Updating teacher information...',
+        'Updating guardian information...',
+        'Updating professional information...',
+        'Updating onboarding information...',
+        'Updating subject-class mapping...',
+        'Updating transport information...',
+        'Updating consent...'
+    ] : [
+        'Submitting teacher information...',
+        'Submitting guardian information...',
+        'Submitting professional information...',
+        'Submitting onboarding information...',
+        'Submitting subject-class mapping...',
+        'Submitting transport information...',
+        'Submitting consent...'
     ];
 
-    // Check if all consents are checked
-    return teacherConsentIds.every(id => {
-        const checkbox = document.getElementById(id);
-        return checkbox && checkbox.checked;
-    });
-}
+    // Display each step with a delay
+    let stepIndex = 0;
+    const stepInterval = 1000; // 1 second per step
+    const displaySteps = setInterval(() => {
+        if (stepIndex < steps.length) {
+            loadingText.textContent = steps[stepIndex];
+            stepIndex++;
+        } else {
+            clearInterval(displaySteps);
+        }
+    }, stepInterval);
 
-//Collects all selected teacher consents and stores them in teacherformData
+    // Simulate loading duration (minimum 6 seconds)
+    const minimumLoadingTime = 6000; // 6 seconds
+    const startTime = Date.now();
 
-function collectTeacherConsents() {
-    const teacherConsents = [
-        { id: "consent-policies", text: "I agree to the School Policies" },
-        { id: "consent-photo", text: "I consent to Photo/Video use in School Activities" },
-        { id: "consent-activities", text: "I consent to participate in School Activities and Events" },
-        { id: "consent-medical", text: "I consent to Emergency Medical Treatment" },
-        { id: "consent-accuracy", text: "Declaration that all provided information is accurate and complete" },
-        { id: "consent-rules", text: "Confirmation of understanding of school rules and regulations" }
-    ];
+    // Prepare form data for submission
+    const submitData = prepareTeacherSubmitData(teacherformData);
 
-    const selectedTeacherConsents = teacherConsents
-        .filter(consent => document.getElementById(consent.id).checked) // Only include checked boxes
-        .map(consent => consent.text) // Get the text of each selected consent
-        .join(", "); // Combine the texts into a comma-separated string
+    fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(submitData)
+    })
+        .then(response => {
+            if (!response.ok) throw new Error(`Server error: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) throw new Error(data.error);
 
-    // Ensure that teacherformData.consent is initialized
-    if (!teacherformData.consent) {
-        teacherformData.consent = {};
-    }
+            // Calculate remaining time for the animation
+            const elapsedTime = Date.now() - startTime;
+            const remainingTime = Math.max(0, minimumLoadingTime - elapsedTime);
 
-    // Store the collected consents in the teacherformData object
-    teacherformData.consent.selected = selectedTeacherConsents;
-    // console.log('Collected teacher consents:', teacherformData); // Debugging log
-}
+            setTimeout(() => {
+                // Hide the loading animation
+                overlay.style.visibility = 'hidden';
 
-//Handles the Select All checkbox to toggle all teacher consent checkboxes
+                if (isUpdate && data.changes) {
+                    let changeDetails = '<p>Changes made:</p><ul style="text-align: left; margin: 0; padding: 0 0 0 20px;">';
+                    for (const [key, value] of Object.entries(data.changes)) {
+                        changeDetails += `<li style="margin-bottom: 10px;"><b>${key}</b>: ${value.old} → ${value.new}</li>`;
+                    }
+                    changeDetails += '</ul>';
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        html: `${successMessage}<br>${changeDetails}`,
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            popup: 'swal-wide'
+                        }
+                    }).then(() => {
+                        window.location.href = '/teacher_Management_Form/manage_teacher';
+                    });
+                } else {
+                    // Display success alert for non-update submissions
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: successMessage,
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = '/teacher_Management_Form/manage_teacher';
+                    });
+                }
+            }, remainingTime); // Ensure animation lasts at least 6 seconds
+        })
+        .catch(error => {
+            console.error('Submission error:', error);
 
-function handleTeacherSelectAll() {
-    const selectAllCheckbox = document.getElementById("select-all-checkbox");
-    const teacherConsentCheckboxes = document.querySelectorAll(".consent-checkbox");
+            // Hide the loading animation immediately on error
+            overlay.style.visibility = 'hidden';
+            clearInterval(displaySteps);
 
-    selectAllCheckbox.addEventListener("change", function() {
-        teacherConsentCheckboxes.forEach(checkbox => {
-            checkbox.checked = selectAllCheckbox.checked;
+            // Display error alert
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'Failed to submit teacher form',
+                confirmButtonText: 'OK'
+            });
         });
-    });
-
-    // Update Select All checkbox state based on individual checkboxes
-    teacherConsentCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener("change", function() {
-            const allChecked = Array.from(teacherConsentCheckboxes).every(cb => cb.checked);
-            selectAllCheckbox.checked = allChecked;
-        });
-    });
 }
-
-// Initialize Select All handler
-handleTeacherSelectAll();
-
-// Event listener for Submit button to validate and collect consents
-document.getElementById('review-next').addEventListener('click', function() {
-    collectTeacherConsents(); // Collect selected consents
-    const isValid = validateTeacherConsents(); // Validate consents
-    console.log('Teacher consents valid:', isValid); // Debugging log
-    // Add further submission logic here if needed
-});

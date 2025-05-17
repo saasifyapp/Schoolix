@@ -139,39 +139,39 @@ function validateTeacherTransportInformation() {
     return true; // No further validation if transport is not needed
 }
 
-/**
- * Validates that all teacher consent checkboxes are checked
- * @returns {boolean} True if all consents are checked, false otherwise
- */
-function validateTeacherConsents() {
-    const teacherConsentFields = [
-        { id: 'consent-policies', label: 'I agree to the School Policies' },
-        { id: 'consent-photo', label: 'I consent to Photo/Video use in School Activities' },
-        { id: 'consent-activities', label: 'I consent to participate in School Activities and Events' },
-        { id: 'consent-medical', label: 'I consent to Emergency Medical Treatment' },
-        { id: 'consent-accuracy', readily: 'Declaration that all provided information is accurate and complete' },
-        { id: 'consent-rules', label: 'Confirmation of understanding of school rules and regulations' }
-    ];
+// /**
+//  * Validates that all teacher consent checkboxes are checked
+//  * @returns {boolean} True if all consents are checked, false otherwise
+//  */
+// function validateTeacherConsents() {
+//     const teacherConsentFields = [
+//         { id: 'consent-policies', label: 'I agree to the School Policies' },
+//         { id: 'consent-photo', label: 'I consent to Photo/Video use in School Activities' },
+//         { id: 'consent-activities', label: 'I consent to participate in School Activities and Events' },
+//         { id: 'consent-medical', label: 'I consent to Emergency Medical Treatment' },
+//         { id: 'consent-accuracy', readily: 'Declaration that all provided information is accurate and complete' },
+//         { id: 'consent-rules', label: 'Confirmation of understanding of school rules and regulations' }
+//     ];
 
-    const missingConsents = teacherConsentFields.filter(field => {
-        const checkbox = document.getElementById(field.id);
-        return checkbox && !checkbox.checked;
-    });
+//     const missingConsents = teacherConsentFields.filter(field => {
+//         const checkbox = document.getElementById(field.id);
+//         return checkbox && !checkbox.checked;
+//     });
 
-    if (missingConsents.length > 0) {
-        // const missingConsentList = missingConsents
-        //     .map(field => `<li><strong>${field.label}</strong></li>`)
-        //     .join('');
-        // Swal.fire({
-        //     icon: 'error',
-        //     title: 'Missing Consents',
-        //     html: `Please accept all policies and consents:<ul>${missingConsentList}</ul>`,
-        //     confirmButtonText: 'OK'
-        // });
-        return false;
-    }
-    return true;
-}
+//     if (missingConsents.length > 0) {
+//         // const missingConsentList = missingConsents
+//         //     .map(field => `<li><strong>${field.label}</strong></li>`)
+//         //     .join('');
+//         // Swal.fire({
+//         //     icon: 'error',
+//         //     title: 'Missing Consents',
+//         //     html: `Please accept all policies and consents:<ul>${missingConsentList}</ul>`,
+//         //     confirmButtonText: 'OK'
+//         // });
+//         return false;
+//     }
+//     return true;
+// }
 
 /**
  * Navigates to the next section
@@ -238,19 +238,19 @@ document.getElementById('transport-next').addEventListener('click', function() {
     }
 });
 
-// Review section Next button with consent validation
-document.getElementById('review-next').addEventListener('click', function() {
-    const isConsentValid = validateTeacherConsents();
-    if (isConsentValid) {
-        collectTeacherConsents();
-        // Navigate to next section or handle submission
-        // navigateToNextTeacherSection(6, teacherSections);
-    } else{
-        Swal.fire({
-            icon: 'error',
-            title: 'Missing Consents',
-            html: `Please accept all policies and consents`,
-            confirmButtonText: 'OK'
-        });
-    }
-});
+// // Review section Next button with consent validation
+// document.getElementById('review-next').addEventListener('click', function() {
+//     const isConsentValid = validateTeacherConsents();
+//     if (isConsentValid) {
+//         collectTeacherConsents();
+//         // Navigate to next section or handle submission
+//         // navigateToNextTeacherSection(6, teacherSections);
+//     } else{
+//         Swal.fire({
+//             icon: 'error',
+//             title: 'Missing Consents',
+//             html: `Please accept all policies and consents`,
+//             confirmButtonText: 'OK'
+//         });
+//     }
+// });

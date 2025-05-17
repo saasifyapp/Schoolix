@@ -682,6 +682,9 @@ app.use('/', attendance_reports);
 const teacher_enrollment = require('./src/routes/teacher_enrollment_form_routes/teacher_enrollment_form.js');
 app.use('/', teacher_enrollment);
 
+const teacher_submission = require('./src/routes/teacher_enrollment_form_routes/teacher_data_submission_route');
+app.use('/', teacher_submission);
+
 
 /*
 
