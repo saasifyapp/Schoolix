@@ -20,7 +20,6 @@ function handleTeacherInsertMode() {
     // Validate that all consents are checked
     const allChecked = validateTeacherConsents();
     if (!allChecked) {
-        // Display an alert if any checkbox is not checked
         Swal.fire({
             title: "Incomplete Consent",
             html: "Please ensure all consents are checked before proceeding.",
@@ -30,12 +29,24 @@ function handleTeacherInsertMode() {
         return; // Prevent submission
     }
 
+    // Validate all form sections
+    const isValid = validateTeacherForm();
+    if (!isValid) {
+        return; // Prevent submission if any section is invalid
+    }
+
     // Collect consents and submit form
     collectTeacherConsents();
-    submitTeacherForm('/submitTeacherForm', 'Teacher form submitted successfully!');
+    submitTeacherForm('/submitTeacherForm', 'Teacher form submitted successfully!', false);
 }
 
 function handleTeacherUpdateMode() {
+    // Validate all form sections (optional for updates, but ensures data integrity)
+    const isValid = validateTeacherForm();
+    if (!isValid) {
+        return; // Prevent submission if any section is invalid
+    }
+
     // Collect consents (optional, as consents may not change on update)
     collectTeacherConsents();
     submitTeacherForm('/updateTeacherDetails', 'Teacher details updated successfully!', true);
@@ -52,6 +63,28 @@ function handleTeacherInvalidMode() {
 }
 
 /**
+ * Validates all teacher form sections
+ * @returns {boolean} True if all sections are valid, false otherwise
+ */
+function validateTeacherForm() {
+    const validators = [
+        { fn: validateTeacherPersonalInformation, name: 'Personal Information' },
+        { fn: validateTeacherGuardianInformation, name: 'Guardian Information' },
+        { fn: validateTeacherProfessionalInformation, name: 'Professional Information' },
+        { fn: validateTeacherOnboardingInformation, name: 'Onboarding Information' },
+        { fn: validateTeacherSubjectMappingInformation, name: 'Subject-Class Mapping' },
+        { fn: validateTeacherTransportInformation, name: 'Transport Information' }
+    ];
+
+    for (const validator of validators) {
+        if (!validator.fn()) {
+            return false; // Stop on first invalid section
+        }
+    }
+    return true;
+}
+
+/**
  * Flattens and transforms teacherformData to match teacher_details table
  * @param {Object} formData - The teacherformData object
  * @returns {Object} Flattened data ready for submission
@@ -59,10 +92,10 @@ function handleTeacherInvalidMode() {
 function prepareTeacherSubmitData(formData) {
     const mappings = formData.mappingInformation?.teacherMappings || [];
     return {
-        id: formData.id || null, // For updates, null for inserts
+        // id: formData.id || null, // For updates, null for inserts
         name: formData.teacherpersonalInformation?.teacherFullName || '',
-        first_name: formData.teacherpersonalInformation?.firstName || '',
-        last_name: formData.teacherpersonalInformation?.lastName || '',
+        first_name: formData.teacherpersonalInformation?.teacherFirstName || '',
+        last_name: formData.teacherpersonalInformation?.teacherLastName || '',
         designation: formData.teacheronboardingDetails?.teacherDesignation || '',
         gender: formData.teacherpersonalInformation?.teacherGender || '',
         date_of_birth: formData.teacherpersonalInformation?.teacherDob || '',
@@ -75,7 +108,7 @@ function prepareTeacherSubmitData(formData) {
         experience: formData.teacherprofessionalInformation?.teacherExperienceYears || '',
         subjects_taught: mappings.map(m => m.teacherSubjectTaught).join(', ') || '',
         salary: formData.teacheronboardingDetails?.teacherSalaryPerMonth || '',
-        transport_needed: formData.transportInformation?.teacherTransportNeeded ? 1 : 0,
+        transport_needed: formData.transportInformation?.teacherTransportNeeded === 'Yes' ? 1 : 0,
         transport_tagged: formData.transportInformation?.teacherTransportTagged || '',
         transport_pickup_drop: formData.transportInformation?.teacherTransportPickupDrop || '',
         classes_alloted: mappings.map(m => m.teacherClassAllotted).join(', ') || '',
@@ -107,7 +140,7 @@ function prepareTeacherSubmitData(formData) {
  * @param {string} successMessage - Success message for SweetAlert
  * @param {boolean} isUpdate - Whether this is an update operation
  */
-function submitTeacherForm(endpoint, successMessage, isUpdate = false) {
+function submitTeacherForm(endpoint, successMessage, isUpdate) {
     // Show the loading animation
     const overlay = document.getElementById('loadingOverlay');
     const loadingText = document.getElementById('loadingText');
@@ -150,6 +183,7 @@ function submitTeacherForm(endpoint, successMessage, isUpdate = false) {
 
     // Prepare form data for submission
     const submitData = prepareTeacherSubmitData(teacherformData);
+    console.log('Submitting data:', submitData); // Debug log to inspect payload
 
     fetch(endpoint, {
         method: 'POST',
@@ -157,7 +191,11 @@ function submitTeacherForm(endpoint, successMessage, isUpdate = false) {
         body: JSON.stringify(submitData)
     })
         .then(response => {
-            if (!response.ok) throw new Error(`Server error: ${response.status}`);
+            if (!response.ok) {
+                return response.json().then(err => {
+                    throw new Error(err.error || `Server error: ${response.status}`);
+                });
+            }
             return response.json();
         })
         .then(data => {
@@ -196,7 +234,7 @@ function submitTeacherForm(endpoint, successMessage, isUpdate = false) {
                         text: successMessage,
                         confirmButtonText: 'OK'
                     }).then(() => {
-                        window.location.href = '/teacher_Management_Form/manage_teacher';
+                        window.location.href = '/teacher_enrollment_form';
                     });
                 }
             }, remainingTime); // Ensure animation lasts at least 6 seconds

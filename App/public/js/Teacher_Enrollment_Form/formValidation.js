@@ -43,6 +43,7 @@ function validateTeacherPersonalInformation() {
         { id: 'caste', label: 'Caste' },
         { id: 'category', label: 'Category' },
         { id: 'religion', label: 'Religion' },
+        { id: 'landmark', label: 'Landmark' },
         { id: 'nationality', label: 'Nationality' },
         { id: 'city_village', label: 'City/Village' },
         { id: 'taluka', label: 'Taluka' },
@@ -254,3 +255,110 @@ document.getElementById('transport-next').addEventListener('click', function() {
 //         });
 //     }
 // });
+
+
+
+
+/**
+ * Autopopulates the teacher form fields with test data for testing purposes.
+ * Call from Chrome console: autoPopulateTeacherForm()
+ */
+function autoPopulateTeacherForm() {
+    try {
+        console.log('Starting teacher form autopopulation...');
+
+        // Helper function to set input value
+        function setInputValue(id, value) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.value = value;
+                element.dispatchEvent(new Event('input', { bubbles: true }));
+            } else {
+                console.warn(`Element with ID ${id} not found`);
+            }
+        }
+
+        // Helper function to check radio button
+        function setRadioValue(name, value) {
+            const radio = document.querySelector(`input[name="${name}"][value="${value}"]`);
+            if (radio) {
+                radio.checked = true;
+                radio.dispatchEvent(new Event('change', { bubbles: true }));
+            } else {
+                console.warn(`Radio button with name ${name} and value ${value} not found`);
+            }
+        }
+
+        // Helper function to check checkbox
+        function setCheckbox(id, checked = true) {
+            const checkbox = document.getElementById(id);
+            if (checkbox) {
+                checkbox.checked = checked;
+                checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+            } else {
+                console.warn(`Checkbox with ID ${id} not found`);
+            }
+        }
+
+        // 1. Personal Information
+        setInputValue('firstName', 'John');
+        setInputValue('middleName', 'Seren');
+        setInputValue('lastName', 'Doe');
+        setRadioValue('gender', 'Male');
+        setInputValue('dob', '1980-05-15');
+        setInputValue('mobileNo', '9876543210');
+        setInputValue('aadhaar', '123456789012');
+        setInputValue('caste', 'General');
+        setInputValue('category', 'OBC');
+        setInputValue('religion', 'Hindu');
+        setInputValue('nationality', 'Indian');
+        setInputValue('city_village', 'Mumbai');
+        setInputValue('taluka', 'Kurla');
+        setInputValue('district', 'Mumbai');
+        setInputValue('state', 'Maharashtra');
+        setInputValue('pinCode', '400001');
+
+        // 2. Guardian/Emergency Contact
+        setInputValue('guardianFullName', 'Jane Doe');
+        setInputValue('guardianContact', '8765432109');
+        setInputValue('guardianRelation', 'Spouse');
+        setInputValue('guardianAddress', '456 Elm St, Mumbai');
+
+        // 3. Professional Information
+        setInputValue('qualification', 'M.Sc. Mathematics');
+        setInputValue('experience', '10');
+        setInputValue('previousEmployment', 'ABC School, 2010-2020');
+
+        // 4. Onboarding Details
+        setInputValue('dateOfJoining', '2025-01-01');
+        setInputValue('department', 'Mathematics');
+        setRadioValue('employee_type', 'teacher');
+        setInputValue('designation', 'Senior Teacher');
+        setInputValue('salaryPerMonth', '50000');
+
+
+        // 6. Transport Services
+        setRadioValue('transportNeeded', 'No');
+
+        // 7. Consents
+        const consentIds = [
+            'consent-policies',
+            'consent-photo',
+            'consent-activities',
+            'consent-medical',
+            'consent-accuracy',
+            'consent-rules'
+        ];
+        consentIds.forEach(id => setCheckbox(id, true));
+
+        console.log('Teacher form autopopulation completed successfully!');
+    } catch (error) {
+        console.error('Autopopulation error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Autopopulation Failed',
+            text: 'An error occurred while autopopulating the form. Check the console for details.',
+            confirmButtonText: 'OK'
+        });
+    }
+}

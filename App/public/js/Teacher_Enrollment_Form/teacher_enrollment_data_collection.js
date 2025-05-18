@@ -314,10 +314,10 @@ function handleTeacherSelectAll() {
 // Initialize Select All handler
 handleTeacherSelectAll();
 
-// Event listener for Submit button to validate and collect consents
-document.getElementById('review-next').addEventListener('click', function() {
-    collectTeacherConsents(); // Collect selected consents
-    const isValid = validateTeacherConsents(); // Validate consents
-    console.log('Teacher consents valid:', isValid); // Debugging log
-    // Add further submission logic here if needed
-});
+// // Event listener for Submit button to validate and collect consents
+// document.getElementById('review-next').addEventListener('click', function() {
+//     collectTeacherConsents(); // Collect selected consents
+//     const isValid = validateTeacherConsents(); // Validate consents
+//     console.log('Teacher consents valid:', isValid); // Debugging log
+//     // Add further submission logic here if needed
+// });
