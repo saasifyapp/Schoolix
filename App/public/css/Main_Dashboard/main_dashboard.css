@@ -74,11 +74,8 @@ html {
   transition: filter 0.3s ease;
 }
 
-.theme-toggle {
-  background: #58D68D;
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
+.theme-toggle {  
+  border: none;  
   border-radius: 5px;
   cursor: pointer;
   display: flex;
@@ -87,9 +84,6 @@ html {
   transition: background-color 0.3s ease;
 }
 
-.theme-toggle:hover {
-  background: #2ECC71;
-}
 
 
 
