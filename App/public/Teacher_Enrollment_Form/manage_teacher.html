@@ -5,16 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Teacher</title>
-    <link rel="stylesheet" href="/css/NavButtons.css">   
+    <link rel="stylesheet" href="/css/NavButtons.css">
     <link rel="stylesheet" href="/css/Teacher_Enrollment_Form_CSS/enrollment-form-control.css">
-    <link rel="stylesheet" href="/css/Teacher_Enrollment_Form_CSS/manage_teacher_console.css"> 
-    <link rel="stylesheet" href="/css/Universal_Components/autoFill_student_details.css">    
+    <link rel="stylesheet" href="/css/Teacher_Enrollment_Form_CSS/manage_teacher_console.css">
+    <link rel="stylesheet" href="/css/Universal_Components/autoFill_student_details.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 </head>
 
-<body> 
+<body>
 
 
     <nav class="navbar">
@@ -48,25 +48,25 @@
     <div class="cards-container">
         <div class="card" id="">
             <div class="dotlottie-container">
-              
+
             </div>
             <h3>Update Teacher</h3>
-        </div>       
+        </div>
 
 
         <div class="card">
-            <button id="">
+            <button id="searchTeacherButton">
                 <div class="dotlottie-container">
-                  
+
                 </div>
                 <h3>Search Teacher</h3>
             </button>
         </div>
 
-      <div class="card">
+        <div class="card">
             <button id="">
                 <div class="dotlottie-container">
-                  
+
                 </div>
                 <h3>Generate Experience Cer</h3>
             </button>
@@ -74,12 +74,114 @@
 
 
         <div class="card">
-            <button id="">
+            <button id="deleteTeacherButton">
                 <div class="dotlottie-container" style="padding: 10px">
-                    
+
                 </div>
                 <h3>Delete Teacher</h3>
             </button>
+        </div>
+    </div>
+
+
+    <!-- Overlay for Search Teacher -->
+    <div id="searchTeacherOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeSearchTeacherOverlay" class="close-button">×</button>
+            <img src="/images/searchteacher.gif" alt="Overlay Icon" class="overlay-icon">
+            <h2 class="overlay-search-head">Search Teacher</h2>
+            <div class="search-container">
+                <div class="form-Searchgroup">
+                    <div class="form-Searchgroup">
+                        <img class="searchIcon" src="/images/search.gif" alt="Search Icon"
+                            style="right: 25px; left: 405px;">
+                        <input type="text" class="form-control" id="searchTeacherInput" name="teacherSearch"
+                            placeholder=" " oninput="searchTeacherDetails()" style="width: 400px;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search by Name or Employee
+                            ID</span>
+                    </div>
+                    <select id="teacherFilter" class="form-control"
+                        style="width: 200px; margin-right: 10px; margin-left: 10px;">
+                        <option value="all">All Departments</option>
+                        <option value="primary">Primary</option>
+                        <option value="pre_primary">Pre-primary</option>
+                        <option value="secondary">Secondary</option>
+                    </select>
+                    <button class="filterButton" onclick="filterTeacherDetails()"
+                        style="margin-top: 10px; margin-left: 10px;">
+                        <img src="/images/filter.png" alt="Filter Icon"> Filter
+                    </button>
+                    <button class="refreshButton" onclick="fetchAndPopulateTeachers()"
+                        style="margin-top: 10px; margin-left: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
+                </div>
+            </div>
+            <button class="export_registered_teachers" onclick="exportTeachersTable()">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+            <div class="table-container">
+                <table id="teachersTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Employee ID</th>
+                            <th>Teacher Name</th>
+                            <th>Department</th>
+                            <th>Contact</th>
+                            <th>Gender</th>
+                            <th>Address</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teachersTablebody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Teacher Overlay -->
+    <div id="deleteTeacherOverlay" class="overlay-search" style="display: none;">
+        <div class="overlay-content-search">
+            <button id="closeDeleteTeacherOverlay" class="close-button">×</button>
+            <img src="/images/delete_teacher.gif" alt="Overlay Icon" class="overlay-icon">
+            <h2 class="overlay-search-head">Delete Teacher</h2>
+            <div class="delete-container">
+                <div class="search-container">
+                    <div class="form-Searchgroup">
+                        <img class="searchIcon" src="/images/search.gif" alt="Search Icon"
+                            style="right: 25px; left: 405px;">
+                        <input type="text" class="form-control" id="deleteTeacherSearch" name="teacherSearch"
+                            placeholder=" " oninput="deleteTeacherEnrolled()" style="width: 400px;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search by Name or Employee
+                            ID</span>
+                    </div>
+                    <select id="deleteTeacherFilter" class="form-control"
+                        style="width: 200px; margin-right: 10px; margin-left: 10px;">
+                        <option value="all">All Departments</option>
+                        <option value="primary">Primary</option>
+                        <option value="pre_primary">Pre-primary</option>
+                        <option value="secondary">Secondary</option>
+                    </select>
+                </div>
+            </div>
+            <div class="table-container">
+                <table id="deleteTeachersTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Employee ID</th>
+                            <th>Teacher Name</th>
+                            <th>Department</th>
+                            <th>Contact</th>
+                            <th>Gender</th>
+                            <th>Address</th>
+                        </tr>
+                    </thead>
+                    <tbody id="deleteTeachersTablebody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -90,7 +192,7 @@
     <script src="/js/Universal_Components_JS/handle_session.js"></script>
 
     <script src="/js/Teacher_Enrollment_Form/manage_teacher.js"></script>
-    
+
 
 
 

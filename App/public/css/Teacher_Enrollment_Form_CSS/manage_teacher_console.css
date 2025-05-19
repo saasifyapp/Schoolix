@@ -516,7 +516,7 @@ input[type="checkbox"] {
 
 
 .refreshButton,
-.export_registered_students,
+.export_registered_teachers,
 .export_routes,
 .filterButton,
 .apply-button {
@@ -542,7 +542,7 @@ input[type="checkbox"] {
 }
 
 .refreshButton img,
-.export_registered_students img,
+.export_registered_teachers img,
 .export_routes img,
 .filterButton img,
 .apply-button img {
@@ -554,7 +554,7 @@ input[type="checkbox"] {
 }
 
 
-.export_registered_students:hover,
+.export_registered_teachers:hover,
 .export_routes:hover {
     background-color: #27AE60;
     /* Change background color on hover */
@@ -583,7 +583,7 @@ input[type="checkbox"] {
     /* Increase size on hover */
 }
 
-.export_registered_students,
+.export_registered_teachers,
 .export_routes {
     position: absolute;
     top: 10px;
