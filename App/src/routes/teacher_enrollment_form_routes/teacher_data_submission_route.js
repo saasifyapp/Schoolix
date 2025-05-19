@@ -8,7 +8,7 @@ const { connection_auth } = require('../../../main_server'); // Adjust the path 
 // Use the connection manager middleware
 router.use(connectionManager);
 
-// Insert new teacher
+// Insert new teacher 
 router.post('/submitTeacherForm', (req, res) => {
     const data = req.body;
     console.log(data)
