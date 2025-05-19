@@ -561,7 +561,7 @@ function populateTeacherReviewValues() {
     const teacherOnboardingInfo = teacherformData.teacheronboardingDetails || {};
     setTeacherField("review-dateOfJoining", teacherOnboardingInfo.teacherDateOfJoining);
     setTeacherField("review-department", teacherOnboardingInfo.teacherDepartment);
-    setTeacherField("review-category", teacherPersonalInfo.teacherCategory || "Not Provided"); // Using teacherCategory from personal info
+    setTeacherField("review-category", teacherOnboardingInfo.teacherEmployeeType); 
     setTeacherField("review-designation", teacherOnboardingInfo.teacherDesignation);
     setTeacherField("review-salaryPerMonth", teacherOnboardingInfo.teacherSalaryPerMonth);
 
@@ -794,6 +794,8 @@ function validateTeacherForm() {
  */
 function prepareTeacherSubmitData(formData) {
     const mappings = formData.mappingInformation?.teacherMappings || [];
+    const subjectClassMapping = mappings.map(m => `${m.teacherClassAllotted}: ${m.teacherSubjectTaught}`).join(', ');
+
     return {
         // id: formData.id || null, // For updates, null for inserts
         name: formData.teacherpersonalInformation?.teacherFullName || '',
@@ -811,12 +813,12 @@ function prepareTeacherSubmitData(formData) {
         experience: formData.teacherprofessionalInformation?.teacherExperienceYears || '',
         subjects_taught: mappings.map(m => m.teacherSubjectTaught).join(', ') || '',
         salary: formData.teacheronboardingDetails?.teacherSalaryPerMonth || '',
-        transport_needed: formData.transportInformation?.teacherTransportNeeded === 'Yes' ? 1 : 0,
+        transport_needed: formData.transportInformation?.teacherTransportNeeded === 1 ? 1 : 0,
         transport_tagged: formData.transportInformation?.teacherTransportTagged || '',
         transport_pickup_drop: formData.transportInformation?.teacherTransportPickupDrop || '',
         classes_alloted: mappings.map(m => m.teacherClassAllotted).join(', ') || '',
-        is_active: formData.is_active || 'true',
-        subject_class_mapping: JSON.stringify(mappings),
+        is_active: formData.is_active || 1,
+        subject_class_mapping: subjectClassMapping,
         previous_employment_details: formData.teacherprofessionalInformation?.teacherPreviousEmployment || '',
         guardian_name: formData.teacherguardianInformation?.teacherGuardianFullName || '',
         guardian_contact: formData.teacherguardianInformation?.teacherGuardianContact || '',
@@ -825,7 +827,7 @@ function prepareTeacherSubmitData(formData) {
         teacher_landmark: formData.teacherpersonalInformation?.teacherAddress?.teacherLandmark || '',
         teacher_pincode: formData.teacherpersonalInformation?.teacherAddress?.teacherPinCode || '',
         app_uid: formData.app_uid || '',
-        category: formData.teacheronboardingDetails?.employee_type || 'teacher',
+        category: formData.teacheronboardingDetails?.teacherEmployeeType || '',
         taluka: formData.teacherpersonalInformation?.teacherAddress?.teacherTaluka || '',
         district: formData.teacherpersonalInformation?.teacherAddress?.teacherDistrict || '',
         state: formData.teacherpersonalInformation?.teacherAddress?.teacherState || '',
