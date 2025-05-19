@@ -37,6 +37,7 @@ function generateUsernameAndPassword(fullName, schoolName, id) {
 router.post('/submitTeacherForm', (req, res) => {
     const data = req.body;
 
+
     // Validate required fields
     const requiredFields = [
         'name', 'first_name', 'last_name', 'designation', 'gender', 'date_of_birth', 'date_of_joining',
@@ -160,16 +161,80 @@ router.post('/submitTeacherForm', (req, res) => {
                             });
                         }
 
-                        connection.commit(commitError => {
-                            if (commitError) {
-                                return connection.rollback(() => {
-                                    console.error('Transaction commit failed:', commitError);
-                                    res.status(500).json({ error: 'Transaction commit failed' });
-                                });
-                            }
+                     // If transport-related information is needed, insert into the transport schedule table
+                        if (data.transport_needed === 1) {
+                            const transportPickDropAddress = data.transport_pickup_drop;
+                            const vehicleNo = data.transport_tagged;
 
-                            res.json({ success: true, id: newTeacherId, username, password });
-                        });
+                            // First, get the id using vehicle_no, teacher_shift, and route_stops
+                            const getIdQuery = `
+                                SELECT id 
+                                FROM transport_schedule_details
+                                WHERE vehicle_no = ? 
+                                AND shift_name = ? 
+                                AND route_stops LIKE ?
+                            `;
+
+                            connection.query(getIdQuery, [vehicleNo, data.teacher_shift, `%${transportPickDropAddress}%`], (getIdError, results) => {
+                                if (getIdError) {
+                                    return connection.rollback(() => {
+                                        console.error('Error fetching transport schedule id:', getIdError);
+                                        res.status(500).json({ error: 'Error fetching transport schedule id' });
+                                    });
+                                }
+
+                                if (results.length === 0) {
+                                    return res.status(404).json({ error: 'No transport schedule found for the provided details' });
+                                }
+
+                                const transportId = results[0].id; // Getting the id
+
+                                // Now, update the transport_schedule_details using the retrieved id
+                                const transportUpdateQuery = `
+                                    UPDATE transport_schedule_details
+                                    SET available_seats = available_seats - 1,
+                                        students_tagged = COALESCE(students_tagged, 0) + 1
+                                    WHERE id = ?
+                                `;
+
+                                connection.query(transportUpdateQuery, [transportId], (transportUpdateError, updateResult) => {
+                                    if (transportUpdateError) {
+                                        return connection.rollback(() => {
+                                            console.error('Error updating transport schedule:', transportUpdateError);
+                                            res.status(500).json({ error: 'Error updating transport schedule' });
+                                        });
+                                    }
+
+                                    if (updateResult.affectedRows === 0) {
+                                        return res.status(500).json({ error: 'No records were updated.' });
+                                    }
+
+                                    // Commit transaction after all queries are successful
+                                    connection.commit(commitError => {
+                                        if (commitError) {
+                                            return connection.rollback(() => {
+                                                console.error('Transaction commit failed:', commitError);
+                                                res.status(500).json({ error: 'Transaction commit failed' });
+                                            });
+                                        }
+
+                                        res.json({ success: true, id: newTeacherId, username, password });
+                                    });
+                                });
+                            });
+                        } else {
+                            // Commit transaction without transport-related insertion
+                            connection.commit(commitError => {
+                                if (commitError) {
+                                    return connection.rollback(() => {
+                                        console.error('Error committing transaction:', commitError);
+                                        res.status(500).json({ error: 'Error committing transaction' });
+                                    });
+                                }
+
+                                res.json({ success: true, id: newTeacherId, username, password });
+                            });
+                        }
                     });
                 });
             });

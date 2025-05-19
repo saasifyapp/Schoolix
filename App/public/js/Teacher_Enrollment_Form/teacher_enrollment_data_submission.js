@@ -594,6 +594,7 @@ function populateTeacherReviewValues() {
     if (transportNeededValue === "Yes") {
         transportDetailsSection.style.display = "block";
         setTeacherField("review-pickDropAddress", teacherTransportInfo.teacherTransportPickupDrop);
+        setTeacherField("review-shift", teacherTransportInfo.teacherTransportShift);
         setTeacherField("review-vehicleRunning", teacherTransportInfo.teacherTransportTagged);
         setTeacherField("review-noVehicleFound", teacherTransportInfo.teacherNoVehicleFound ? "Yes" : "No");
     } else {
@@ -816,6 +817,7 @@ function prepareTeacherSubmitData(formData) {
         transport_needed: formData.transportInformation?.teacherTransportNeeded === 1 ? 1 : 0,
         transport_tagged: formData.transportInformation?.teacherTransportTagged || '',
         transport_pickup_drop: formData.transportInformation?.teacherTransportPickupDrop || '',
+        teacher_shift: formData.transportInformation?.teacherTransportShift || '',
         classes_alloted: mappings.map(m => m.teacherClassAllotted).join(', ') || '',
         is_active: formData.is_active || 1,
         subject_class_mapping: subjectClassMapping,
