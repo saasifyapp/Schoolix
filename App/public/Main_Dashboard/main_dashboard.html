@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <!-- SweetAlert2 JS -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 
@@ -636,19 +636,16 @@
             <div class="card summary-card">
               <h4><i class="fas fa-clipboard-list"></i> Summary</h4>
               <ul>
-                <li><i class="fas fa-bus"></i> Number of Vehicles: <span id="vehicleCount">0</span></li>
-                <li><i class="fas fa-user-tie"></i> Number of Drivers: <span id="driverCount">0</span></li>
-                <!-- <li><i class="fas fa-user"></i> Number of Conductors: <span id="conductorCount">0</span></li> -->
-                <li><i class="fas fa-users"></i> Number of Passengers: <span id="passengerCount">0</span></li>
-                <li><i class="fas fa-route"></i> Number of Routes: <span id="routeCount">0</span></li>
-                <li><i class="fas fa-calendar-alt"></i> Number of Shifts: <span id="shiftCount">0</span></li>
+                <li><i class="fas fa-bus"></i> Number of Vehicles: <span class="vehicleCount">0</span></li>
+                <li><i class="fas fa-user-tie"></i> Number of Drivers: <span class="driverCount">0</span></li>
+                <li><i class="fas fa-users"></i> Number of Passengers: <span class="passengerCount">0</span></li>
+                <li><i class="fas fa-route"></i> Number of Routes: <span class="routeCount">0</span></li>
+                <li><i class="fas fa-calendar-alt"></i> Number of Shifts: <span class="shiftCount">0</span></li>
               </ul>
             </div>
             <div class="card location-card">
               <h4><i class="fas fa-map-marked-alt"></i> Live Location</h4>
-              <ul>
-                <!-- Vehicle details will be dynamically inserted here -->
-              </ul>
+              <ul class="location-list"></ul>
             </div>
             <div class="card shift1-card" id="shift1">
               <h4><i class="fas fa-sun"></i> Shift - NA</h4>

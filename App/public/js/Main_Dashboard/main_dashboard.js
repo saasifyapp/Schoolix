@@ -1005,7 +1005,6 @@ document.addEventListener('DOMContentLoaded', setupChart);
 
 
 /////////////////////////////// TRANSPORT INSIGHTS ///////////////////////
-
 document.addEventListener('DOMContentLoaded', function() {
   let isHovered = false;
   let isMapOpen = false;
@@ -1027,7 +1026,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Duplicate cards for seamless looping
   const cards = cardContainer.innerHTML;
-  cardContainer.innerHTML += cards; // Append duplicate cards
+  cardContainer.innerHTML += cards; // Append one set of duplicate cards
 
   // Animation loop for smooth sliding
   function slideCards() {
@@ -1041,18 +1040,23 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
       scrollPosition += velocity;
-      // Calculate the width of one set of cards (half the total scrollWidth)
+      // Calculate the width of one set of cards
       const setWidth = cardContainer.scrollWidth / 2;
+      // Get the location card's width (since issue occurs around it)
+      const locationCard = cardContainer.querySelector('.location-card:last-child');
+      const locationCardWidth = locationCard ? locationCard.offsetWidth : 300; // Fallback width
+      // Add a larger buffer to ensure the location card is fully out of view
+      const resetThreshold = setWidth + (locationCardWidth * 1.5); // Increased buffer
+
       // Reset position for seamless looping
-      if (scrollPosition >= setWidth) {
-        scrollPosition -= setWidth; // Subtract setWidth to align with the duplicate set
-        // Temporarily disable transition to avoid flicker during reset
+      if (scrollPosition >= resetThreshold) {
+        scrollPosition -= setWidth; // Reset to the start of the duplicated set
         cardContainer.style.transition = 'none';
         cardContainer.style.transform = `translateX(-${scrollPosition}px)`;
-        // Re-enable transition after a brief delay to ensure DOM update
+        // Re-enable transition after a slightly longer delay
         setTimeout(() => {
-          cardContainer.style.transition = 'transform 0.3s ease-out';
-        }, 0);
+          cardContainer.style.transition = 'transform 0.4s ease-out'; // Smoother transition
+        }, 20); // Increased delay
       } else {
         cardContainer.style.transform = `translateX(-${scrollPosition}px)`;
       }
@@ -1085,14 +1089,28 @@ document.addEventListener('DOMContentLoaded', function() {
       return response.json();
     })
     .then(data => {
-      document.getElementById('vehicleCount').textContent = data.counts.get_no_of_vehicle || 0;
-      document.getElementById('driverCount').textContent = data.counts.get_no_of_drivers || 0;
-      document.getElementById('passengerCount').textContent = data.counts.total_passengers || 0;
-      document.getElementById('routeCount').textContent = data.counts.get_no_of_distinct_routes || 0;
-      document.getElementById('shiftCount').textContent = data.counts.get_no_of_distinct_shifts || 0;
+      // Update summary card data
+      document.querySelectorAll('.vehicleCount').forEach(el => {
+        el.textContent = data.counts.get_no_of_vehicle || 0;
+      });
+      document.querySelectorAll('.driverCount').forEach(el => {
+        el.textContent = data.counts.get_no_of_drivers || 0;
+      });
+      document.querySelectorAll('.passengerCount').forEach(el => {
+        el.textContent = data.counts.total_passengers || 0;
+      });
+      document.querySelectorAll('.routeCount').forEach(el => {
+        el.textContent = data.counts.get_no_of_distinct_routes || 0;
+      });
+      document.querySelectorAll('.shiftCount').forEach(el => {
+        el.textContent = data.counts.get_no_of_distinct_shifts || 0;
+      });
 
-      const locationCard = document.querySelector('.location-card ul');
-      locationCard.innerHTML = '';
+      // Update location card for all instances
+      const locationLists = document.querySelectorAll('.location-card .location-list');
+      locationLists.forEach(ul => {
+        ul.innerHTML = ''; // Clear existing content
+      });
 
       const promises = data.vehicleDetails.map(detail => {
         if (detail.latitude && detail.longitude) {
@@ -1102,21 +1120,27 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(geocodeData => {
               const address = geocodeData.address;
               const locationDetails = [address.road, address.suburb, address.county].filter(Boolean).join(', ');
-              const listItem = document.createElement('li');
-              listItem.innerHTML = `<i class="fas fa-map-pin"></i> ${detail.vehicle_no} | ${detail.name} :- ${locationDetails}`;
-              listItem.addEventListener('click', () => showMap(detail.latitude, detail.longitude, locationDetails));
-              locationCard.appendChild(listItem);
+              locationLists.forEach(ul => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<i class="fas fa-map-pin"></i> ${detail.vehicle_no} | ${detail.name} :- ${locationDetails}`;
+                listItem.addEventListener('click', () => showMap(detail.latitude, detail.longitude, locationDetails));
+                ul.appendChild(listItem);
+              });
             })
             .catch(error => {
               console.error(`Error fetching location for vehicle ${detail.vehicle_no}:`, error);
-              const listItem = document.createElement('li');
-              listItem.innerHTML = `<i class="fas fa-map-pin"></i> ${detail.vehicle_no} | ${detail.name} :- Location Error`;
-              locationCard.appendChild(listItem);
+              locationLists.forEach(ul => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<i class="fas fa-map-pin"></i> ${detail.vehicle_no} | ${detail.name} :- Location Error`;
+                ul.appendChild(listItem);
+              });
             });
         } else {
-          const listItem = document.createElement('li');
-          listItem.innerHTML = `<i class="fas fa-map-pin"></i> ${detail.vehicle_no} | ${detail.name} :- Invalid coordinates`;
-          locationCard.appendChild(listItem);
+          locationLists.forEach(ul => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `<i class="fas fa-map-pin"></i> ${detail.vehicle_no} | ${detail.name} :- Invalid coordinates`;
+            ul.appendChild(listItem);
+          });
         }
       });
 
@@ -1128,16 +1152,22 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(() => {
       isLoading = false;
       transportWrapper.classList.remove('loading');
-      startAnimation(); // Start animation after loading
+      startAnimation();
     })
     .catch(error => {
       console.error('Error fetching transport data:', error);
-      const summaryCard = document.querySelector('.summary-card ul');
-      summaryCard.innerHTML = '<li>Error loading data</li>';
-      const locationCard = document.querySelector('.location-card ul');
-      locationCard.innerHTML = '<li>Error loading data</li>';
-      document.getElementById('shift1').innerHTML = '<h4><i class="fas fa-sun"></i> Shift - Error</h4>';
-      document.getElementById('shift2').innerHTML = '<h4><i class="fas fa-cloud-sun"></i> Shift - Error</h4>';
+      document.querySelectorAll('.summary-card ul').forEach(ul => {
+        ul.innerHTML = '<li>Error loading data</li>';
+      });
+      document.querySelectorAll('.location-card .location-list').forEach(ul => {
+        ul.innerHTML = '<li>Error loading data</li>';
+      });
+      document.querySelectorAll('#shift1').forEach(card => {
+        card.innerHTML = '<h4><i class="fas fa-sun"></i> Shift - Error</h4>';
+      });
+      document.querySelectorAll('#shift2').forEach(card => {
+        card.innerHTML = '<h4><i class="fas fa-cloud-sun"></i> Shift - Error</h4>';
+      });
       isLoading = false;
       transportWrapper.classList.remove('loading');
     });
@@ -1146,9 +1176,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (shifts && Array.isArray(shifts)) {
       shifts.forEach((shift, index) => {
         const shiftCardId = `shift${index + 1}`;
-        const shiftCard = document.getElementById(shiftCardId);
-        if (shiftCard) {
-          const shiftNameElement = shiftCard.querySelector('h4');
+        document.querySelectorAll(`#${shiftCardId}`).forEach(shiftCard => {
+          const shiftNameElement = shiftCard.querySelector('h4') || document.createElement('h4');
           shiftNameElement.innerHTML = `<i class="fas fa-${index === 0 ? 'sun' : 'cloud-sun'}"></i> Shift - ${shift.shift_name || 'Unnamed Shift'}`;
           const detailsList = document.createElement('ul');
           shift.details.forEach(detail => {
@@ -1156,10 +1185,10 @@ document.addEventListener('DOMContentLoaded', function() {
             detailItem.innerHTML = `<i class="fas fa-bus"></i>${detail.vehicle_no || 'N/A'} | ${detail.driver_name || 'N/A'}<br>Students: ${detail.students_tagged ?? 0}, Seats: ${detail.available_seats ?? 0}`;
             detailsList.appendChild(detailItem);
           });
+          shiftCard.innerHTML = ''; // Clear existing content
+          shiftCard.appendChild(shiftNameElement);
           shiftCard.appendChild(detailsList);
-        } else {
-          console.warn(`Shift card with ID ${shiftCardId} not found`);
-        }
+        });
       });
     } else {
       console.error('Shifts data is not available or invalid');
@@ -1205,7 +1234,6 @@ document.addEventListener('DOMContentLoaded', function() {
     };
   }
 });
-
 ////////////////////// CALENDAR OVERLAY ///////////////
 
 document.addEventListener("DOMContentLoaded", function() {
