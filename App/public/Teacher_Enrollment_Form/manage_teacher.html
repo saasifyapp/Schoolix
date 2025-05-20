@@ -46,7 +46,7 @@
     </div>
 
     <div class="cards-container">
-        <div class="card" id="">
+        <div class="card" id="updateTeacherButton">
             <div class="dotlottie-container">
 
             </div>
@@ -58,17 +58,23 @@
             <button id="searchTeacherButton">
                 <div class="dotlottie-container">
 
+
                 </div>
                 <h3>Search Teacher</h3>
             </button>
         </div>
 
         <div class="card">
-            <button id="">
+            <button id="generateExperienceCertificateButton">
                 <div class="dotlottie-container">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/24accba7-fe8b-47b3-954b-008af858a76a/CISClpqnzb.lottie"
+                        background="transparent" speed="1" style="width: 270px; height: 240px" loop
+                        autoplay></dotlottie-player>
 
                 </div>
-                <h3>Generate Experience Cer</h3>
+                <h3>Experience Certificate</h3>
             </button>
         </div>
 
@@ -76,9 +82,50 @@
         <div class="card">
             <button id="deleteTeacherButton">
                 <div class="dotlottie-container" style="padding: 10px">
+                    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                        type="module"></script>
+                    <dotlottie-player src="https://lottie.host/c41f9226-1838-4e19-a721-422c88c46515/FohZm1zhOe.lottie"
+                        background="transparent" speed="1" style="width: 260px; height: 220px" loop
+                        autoplay></dotlottie-player>
 
                 </div>
                 <h3>Delete Teacher</h3>
+            </button>
+        </div>
+    </div>
+
+    <div id="updateTeacherOverlay" class="overlay">
+        <div class="overlay-content">
+            <div class="icon-container">
+                <i><img class="topicon" src="/images/search.gif" alt="Search Icon"></i>
+            </div>
+            <button id="closeUpdateTeacherOverlay" class="close-button">×</button>
+
+            <h2 class="overlay-title">Search Teacher</h2>
+
+            <!-- Dropdown for Department Selection -->
+            <div class="form-row">
+                <div class="form-group">
+                    <select id="departmentSelect" name="departmentSelect" class="form-control"
+                        style="text-align: center; width: 120px; background-color: white;">
+                        <option value="" disabled selected>Select Department</option>
+                        <option value="primary">Primary</option>
+                        <option value="pre_primary">Pre-primary</option>
+                    </select>
+                </div>
+
+                <!-- Input Field for Search -->
+                <div class="form-group">
+                    <input type="text" id="teacherSearchInput" name="teacherSearchInput" class="form-control"
+                        placeholder=" ">
+                    <span class="form-control-placeholder">Search by Name or ID</span>
+                    <div id="teacherSuggestions" class="suggestions"></div>
+                </div>
+            </div>
+
+            <button type="submit" class="search-button">
+                <img src="/images/search.gif" alt="Search Button">
+                <span>Search</span>
             </button>
         </div>
     </div>
@@ -88,7 +135,7 @@
     <div id="searchTeacherOverlay" class="overlay-search">
         <div class="overlay-content-search">
             <button id="closeSearchTeacherOverlay" class="close-button">×</button>
-            <img src="/images/searchteacher.gif" alt="Overlay Icon" class="overlay-icon">
+            <img src="/images/searchstudent.gif" alt="Overlay Icon" class="overlay-icon">
             <h2 class="overlay-search-head">Search Teacher</h2>
             <div class="search-container">
                 <div class="form-Searchgroup">
@@ -104,8 +151,7 @@
                         style="width: 200px; margin-right: 10px; margin-left: 10px;">
                         <option value="all">All Departments</option>
                         <option value="primary">Primary</option>
-                        <option value="pre_primary">Pre-primary</option>
-                        <option value="secondary">Secondary</option>
+                        <option value="pre_primary">Pre-primary</option>                        <
                     </select>
                     <button class="filterButton" onclick="filterTeacherDetails()"
                         style="margin-top: 10px; margin-left: 10px;">
@@ -140,11 +186,118 @@
         </div>
     </div>
 
+    <div id="generateExperienceCertificateOverlay" class="overlay" style="z-index: 1;">
+        <div class="overlay-content-inner">
+            <h2> Experience Certificate</h2>
+            <button id="closeGenerateExperienceCertificateOverlay" class="close-button">×</button>
+            <div class="button-container">
+                <div class="option-card">
+                    <span id="generateExperienceCertificate">
+                        <img src="/images/generate.gif" alt="">
+                        Generate  
+                    </span>
+                </div>
+                <div class="option-card">
+                    <span id="searchExperienceCertificate">
+                        <img src="/images/search.gif" alt="">
+                        Search  
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="searchExperienceCertificateFormOverlay" class="overlay">
+        <div class="overlay-content">
+            <div class="icon-container">
+                <i><img class="topicon" src="/images/search.gif" alt="Search Icon"></i>
+            </div>
+            <button id="closeSearchExperienceCertificateFormOverlay" class="close-button">×</button>
+
+            <h2 class="overlay-title">Search Using</h2>
+
+            <!-- Dropdown for Department Selection -->
+            <div class="form-row">
+                <div class="form-group">
+                    <select id="selectDepartmentForExperience" name="departmentSelect" class="form-control"
+                        style="text-align: center; width: 120px; background-color: white;">
+                        <option value="" disabled selected>Select Department</option>
+                        <option value="primary">Primary</option>
+                        <option value="pre_primary">Pre-primary</option>
+                    </select>
+                </div>
+
+                <!-- Input Field for Search -->
+                <div class="form-group">
+                    <input type="text" id="searchInputForExperience" name="searchInput" class="form-control"
+                        placeholder=" ">
+                    <span class="form-control-placeholder">Search by Name or ID</span>
+                    <div id="experienceSuggestions" class="suggestions"></div>
+                </div>
+            </div>
+
+            <button type="submit" class="search-button" id="search-teacherForExperience">
+                <img src="/images/search.gif" alt="Search Button">
+                <span>Search</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="searchExperienceCertificateOverlay" class="overlay-search">
+        <div class="overlay-content-search">
+            <button id="closeSearchExperienceCertificateOverlay" class="close-button">×</button>
+            <img src="/images/searchTc.gif" alt="Overlay Icon" class="overlay-icon">
+            <h2 class="overlay-search-head">Search Experience Certificate</h2>
+            <div class="search-container">
+                <div class="form-Searchgroup">
+                    <div class="form-Searchgroup">
+                        <img class="vendorIcon" src="/images/search.gif" alt="Search Icon"
+                            style="right: 25px; left: 405px;">
+                        <input type="text" class="form-control" id="searchExperienceTeacherInput"
+                            name="experienceSearch" placeholder=" " oninput="searchExperienceTeacher()"
+                            style="width: 400px;">
+                        <span class="form-control-placeholder" style="left: 3.75rem;">Search by teacher name</span>
+                    </div>
+                    <button class="refreshButton" onclick="refreshExperienceData()" style="margin-top: 10px;">
+                        <img src="/images/refresh.png" alt="Refresh Icon"> Refresh
+                    </button>
+                </div>
+            </div>
+            <button class="export_registered_teachers" onclick="exportExperienceTable()">
+                <img src="/images/export.png" alt="Export Icon"> Export
+            </button>
+            <div class="table-container">
+                <table id="experienceTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Certificate No</th>
+                            <th>Teacher ID</th>
+                            <th>Teacher Name</th>
+                            <th>Date of Joining</th>
+                            <th>Date of Leaving</th>
+                            <th>Department</th>
+                            <th>Position</th>
+                            <th>Years of Service</th>
+                            <th>Performance</th>
+                            <th>Remark</th>
+                            <th>Issue Date</th>
+                            <th>Generation Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="experienceTablebody">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <!-- Delete Teacher Overlay -->
     <div id="deleteTeacherOverlay" class="overlay-search" style="display: none;">
         <div class="overlay-content-search">
             <button id="closeDeleteTeacherOverlay" class="close-button">×</button>
-            <img src="/images/delete_teacher.gif" alt="Overlay Icon" class="overlay-icon">
+            <img src="/images/delete_student.gif" alt="Overlay Icon" class="overlay-icon">
             <h2 class="overlay-search-head">Delete Teacher</h2>
             <div class="delete-container">
                 <div class="search-container">
@@ -160,8 +313,7 @@
                         style="width: 200px; margin-right: 10px; margin-left: 10px;">
                         <option value="all">All Departments</option>
                         <option value="primary">Primary</option>
-                        <option value="pre_primary">Pre-primary</option>
-                        <option value="secondary">Secondary</option>
+                        <option value="pre_primary">Pre-primary</option>                      
                     </select>
                 </div>
             </div>
