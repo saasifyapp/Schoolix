@@ -100,6 +100,15 @@ function validateTeacherOnboardingInformation() {
  * Validates Subject-Class Mapping section
  */
 function validateTeacherSubjectMappingInformation() {
+    const employeeType = teacherformData.teacheronboardingDetails?.employee_type || 
+                         document.getElementById('employee_type')?.value || '';
+    console.log('employeeType (Subject Mapping Validation):', employeeType);
+
+    // Skip validation for non-teachers
+    if (employeeType.toLowerCase() !== 'teacher') {
+        return true;
+    }
+
     const tableBody = document.getElementById('subjectClassTableBody');
     const hasMappings = tableBody && tableBody.rows.length > 0;
     if (!hasMappings) {
@@ -184,19 +193,63 @@ function validateTeacherTransportInformation() {
  */
 function navigateToNextTeacherSection(index, sections) {
     if (index < sections.length - 1) {
+        let nextIndex = index + 1;
+
+        // Skip Subject-Class Mapping (index 4) if employee_type is not 'teacher'
+        if (index === 3) { // Onboarding Details
+            const employeeType = teacherformData.teacheronboardingDetails?.employee_type || 
+                                 document.getElementById('employee_type')?.value || '';
+            console.log('employeeType (Next):', employeeType);
+            if (employeeType.toLowerCase() !== 'teacher') {
+                nextIndex = 5; // Jump to Transport
+                // Clear mapping data to ensure empty values
+                teacherformData.mappingInformation = { teacherMappings: [] };
+            }
+        }
+
         sections[index].style.display = 'none';
-        sections[index + 1].style.display = 'block';
+        sections[nextIndex].style.display = 'block';
 
         // Update active navigation item
         document.querySelectorAll('.form-navigation li').forEach(nav => {
             nav.classList.remove('active');
         });
-        document.querySelectorAll('.form-navigation li')[index + 1].classList.add('active');
+        document.querySelectorAll('.form-navigation li')[nextIndex].classList.add('active');
     }
 }
 
 /**
- * Event listeners for Next buttons with validation and navigation
+ * Navigates to the previous section
+ * @param {number} index - Current section index
+ * @param {HTMLElement[]} sections - Array of section elements
+ */
+function navigateToPreviousTeacherSection(index, sections) {
+    if (index > 0) {
+        let prevIndex = index - 1;
+
+            // Skip Subject-Class Mapping (index 4) if employee_type is not 'teacher'
+            if (index === 5) { // Transport
+                const employeeType = teacherformData.teacheronboardingDetails?.employee_type || 
+                                     document.getElementById('employee_type')?.value || '';
+                console.log('employeeType (Prev):', employeeType);
+                if (employeeType.toLowerCase() !== 'teacher') {
+                    prevIndex = 3; // Jump to Onboarding Details
+                }
+            }
+
+        sections[index].style.display = 'none';
+        sections[prevIndex].style.display = 'block';
+
+        // Update active navigation item
+        document.querySelectorAll('.form-navigation li').forEach(nav => {
+            nav.classList.remove('active');
+        });
+        document.querySelectorAll('.form-navigation li')[prevIndex].classList.add('active');
+    }
+}
+
+/**
+ * Event listeners for Next and Previous buttons with validation and navigation
  */
 const teacherSections = document.querySelectorAll('.form-section');
 document.getElementById('personal-next').addEventListener('click', function() {
@@ -240,6 +293,35 @@ document.getElementById('transport-next').addEventListener('click', function() {
         populateTeacherReviewValues();
         navigateToNextTeacherSection(5, teacherSections);
     }
+});
+
+// Previous button handlers
+document.getElementById('personal-prev')?.addEventListener('click', function() {
+    // No previous section
+});
+
+document.getElementById('guardian-prev')?.addEventListener('click', function() {
+    navigateToPreviousTeacherSection(1, teacherSections);
+});
+
+document.getElementById('professional-prev')?.addEventListener('click', function() {
+    navigateToPreviousTeacherSection(2, teacherSections);
+});
+
+document.getElementById('onboarding-prev')?.addEventListener('click', function() {
+    navigateToPreviousTeacherSection(3, teacherSections);
+});
+
+document.getElementById('mapping-prev')?.addEventListener('click', function() {
+    navigateToPreviousTeacherSection(4, teacherSections);
+});
+
+document.getElementById('transport-prev')?.addEventListener('click', function() {
+    navigateToPreviousTeacherSection(5, teacherSections);
+});
+
+document.getElementById('consents-prev')?.addEventListener('click', function() {
+    navigateToPreviousTeacherSection(6, teacherSections);
 });
 
 // // Review section Next button with consent validation

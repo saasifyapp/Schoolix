@@ -23,25 +23,25 @@ document.querySelectorAll('.form-navigation li').forEach(item => {
 });
 
 // Add event listeners for navigation buttons
-document.querySelectorAll('.form-section').forEach((section, index, sections) => {
-    const prevButton = section.querySelector('.prev-button');
-    const nextButton = section.querySelector('.next-button');
+// document.querySelectorAll('.form-section').forEach((section, index, sections) => {
+//     const prevButton = section.querySelector('.prev-button');
+//     const nextButton = section.querySelector('.next-button');
 
-    // Show the previous section
-    if (prevButton) {
-        prevButton.addEventListener('click', () => {
-            if (index > 0) {
-                sections[index].style.display = 'none';
-                sections[index - 1].style.display = 'block';
+//     // Show the previous section
+//     if (prevButton) {
+//         prevButton.addEventListener('click', () => {
+//             if (index > 0) {
+//                 sections[index].style.display = 'none';
+//                 sections[index - 1].style.display = 'block';
 
-                // Update active navigation item
-                document.querySelectorAll('.form-navigation li').forEach(nav => {
-                    nav.classList.remove('active');
-                });
-                document.querySelectorAll('.form-navigation li')[index - 1].classList.add('active');
-            }
-        });
-    }
+//                 // Update active navigation item
+//                 document.querySelectorAll('.form-navigation li').forEach(nav => {
+//                     nav.classList.remove('active');
+//                 });
+//                 document.querySelectorAll('.form-navigation li')[index - 1].classList.add('active');
+//             }
+//         });
+//     }
 
     // // Show the next section
     // if (nextButton) {
@@ -58,7 +58,7 @@ document.querySelectorAll('.form-section').forEach((section, index, sections) =>
     //         }
     //     });
     // }
-});
+// });
 
 // Function to calculate and update the progress bar
 function updateProgressBar() {
