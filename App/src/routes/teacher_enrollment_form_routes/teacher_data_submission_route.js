@@ -116,7 +116,7 @@ router.post('/submitTeacherForm', (req, res) => {
                     data.transport_pickup_drop || null,
                     data.classes_alloted || null,
                     data.is_active || '1',
-                    data.subject_class_mapping || '[]',
+                    data.subject_class_mapping || null,
                     data.previous_employment_details || null,
                     data.guardian_name || null,
                     data.guardian_contact || null,

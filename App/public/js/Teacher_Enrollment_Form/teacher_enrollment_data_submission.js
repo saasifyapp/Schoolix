@@ -877,8 +877,7 @@ function validateTeacherForm() {
  */
 function prepareTeacherSubmitData(formData) {
     const mappings = formData.mappingInformation?.teacherMappings || [];
-    const subjectClassMapping = mappings.map(m => `${m.teacherClassAllotted}: ${m.teacherSubjectTaught}`).join(', ');
-
+    const subjectClassMapping = mappings.length > 0 ? mappings.map(m => `${m.teacherClassAllotted}: ${m.teacherSubjectTaught}`).join(', ') : null;
     return {
         // id: formData.id || null, // For updates, null for inserts
         name: formData.teacherpersonalInformation?.teacherFullName || '',
