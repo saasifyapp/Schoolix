@@ -102,7 +102,7 @@ function validateTeacherOnboardingInformation() {
 function validateTeacherSubjectMappingInformation() {
     const employeeType = teacherformData.teacheronboardingDetails?.employee_type || 
                          document.getElementById('employee_type')?.value || '';
-    console.log('employeeType (Subject Mapping Validation):', employeeType);
+    // console.log('employeeType (Subject Mapping Validation):', employeeType);
 
     // Skip validation for non-teachers
     if (employeeType.toLowerCase() !== 'teacher') {
@@ -199,7 +199,7 @@ function navigateToNextTeacherSection(index, sections) {
         if (index === 3) { // Onboarding Details
             const employeeType = teacherformData.teacheronboardingDetails?.employee_type || 
                                  document.getElementById('employee_type')?.value || '';
-            console.log('employeeType (Next):', employeeType);
+            // console.log('employeeType (Next):', employeeType);
             if (employeeType.toLowerCase() !== 'teacher') {
                 nextIndex = 5; // Jump to Transport
                 // Clear mapping data to ensure empty values
@@ -231,7 +231,7 @@ function navigateToPreviousTeacherSection(index, sections) {
             if (index === 5) { // Transport
                 const employeeType = teacherformData.teacheronboardingDetails?.employee_type || 
                                      document.getElementById('employee_type')?.value || '';
-                console.log('employeeType (Prev):', employeeType);
+                // console.log('employeeType (Prev):', employeeType);
                 if (employeeType.toLowerCase() !== 'teacher') {
                     prevIndex = 3; // Jump to Onboarding Details
                 }
@@ -499,7 +499,7 @@ function collectTeacherPersonalInformation() {
             teacherPinCode: document.getElementById('pinCode').value.trim()
         }
     };
-    console.log('Collected teacher personal information:', teacherformData); // Debugging log
+    // console.log('Collected teacher personal information:', teacherformData); // Debugging log
 }
 
 function collectTeacherGuardianInformation() {
@@ -509,7 +509,7 @@ function collectTeacherGuardianInformation() {
         teacherGuardianRelation: document.getElementById('guardianRelation').value.trim(),
         teacherGuardianAddress: document.getElementById('guardianAddress').value.trim()
     };
-    console.log('Collected teacher guardian information:', teacherformData); // Debugging log
+    // console.log('Collected teacher guardian information:', teacherformData); // Debugging log
 }
 
 //Collects data from the Professional Information section
@@ -519,7 +519,7 @@ function collectTeacherProfessionalInformation() {
         teacherExperienceYears: document.getElementById('experience').value.trim(),
         teacherPreviousEmployment: document.getElementById('previousEmployment').value.trim()
     };
-    console.log('Collected teacher professional information:', teacherformData); // Debugging log
+    // console.log('Collected teacher professional information:', teacherformData); // Debugging log
 }
 
 //Collects data from the Onboarding Details section
@@ -535,7 +535,7 @@ function collectTeacherOnboardingInformation() {
         teacherDesignation: document.getElementById('designation').value.trim(),
         teacherSalaryPerMonth: document.getElementById('salaryPerMonth').value.trim()
     };
-    console.log('Collected teacher onboarding information:', teacherformData); // Debugging log
+    // console.log('Collected teacher onboarding information:', teacherformData); // Debugging log
 }
 
 //Collects data from the Subject-Class Mapping section
@@ -552,7 +552,7 @@ function collectTeacherSubjectMappingInformation() {
         teacherSubjectTagged: document.getElementById('subjectTagged').value.trim(),
         teacherMappings: mappings
     };
-    console.log('Collected teacher subject mapping information:', teacherformData); // Debugging log
+    // console.log('Collected teacher subject mapping information:', teacherformData); // Debugging log
 }
 
 //Collects data from the Transport Services section
@@ -592,14 +592,14 @@ function collectTeacherTransportInformation() {
             teacherNoVehicleFound: false
         };
     }
-    console.log('Collected teacher transport information:', teacherformData); // Debugging log
+    // console.log('Collected teacher transport information:', teacherformData); // Debugging log
 }
-document.getElementById('personal-next').addEventListener('click', collectTeacherPersonalInformation);
-document.getElementById('guardian-next').addEventListener('click', collectTeacherGuardianInformation);
-document.getElementById('professional-next').addEventListener('click', collectTeacherProfessionalInformation);
-document.getElementById('onboarding-next').addEventListener('click', collectTeacherOnboardingInformation);
-document.getElementById('mapping-next').addEventListener('click', collectTeacherSubjectMappingInformation);
-document.getElementById('transport-next').addEventListener('click', collectTeacherTransportInformation);
+// document.getElementById('personal-next').addEventListener('click', collectTeacherPersonalInformation);
+// document.getElementById('guardian-next').addEventListener('click', collectTeacherGuardianInformation);
+// document.getElementById('professional-next').addEventListener('click', collectTeacherProfessionalInformation);
+// document.getElementById('onboarding-next').addEventListener('click', collectTeacherOnboardingInformation);
+// document.getElementById('mapping-next').addEventListener('click', collectTeacherSubjectMappingInformation);
+// document.getElementById('transport-next').addEventListener('click', collectTeacherTransportInformation);
 
 
 //Populates the Review and Consent section with data from teacherformData
